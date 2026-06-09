@@ -1,7 +1,7 @@
 {
   "name": "@dooph-software/design-system",
   "version": "1.0.2",
-  "description": "dooph standard design system component library",
+  "description": "dooph. standard design system component library",
   "type": "module",
   "license": "MIT",
   "private": false,

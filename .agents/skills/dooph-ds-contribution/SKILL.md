@@ -134,7 +134,7 @@ When adding a new `--ui-*` token:
 After any change to `text-style-*` utilities or `--ui-font-var-*` tokens, verify in Storybook that:
 1. Button labels render with correct glyph weight (Google Sans Flex, `wdth 100, GRAD 11`)
 2. Body text has slightly heavier optical weight than button text (`GRAD 19`)
-3. Label text (IBM Plex Sans) renders at 12px, correct weight
+3. Label text (Host Grotesk) renders at 12px, correct weight
 4. Title/hero text (Bricolage Grotesque) renders at 23px/36px
 
 The `preview-head.html` Google Fonts URL must include all axes: `GRAD,ROND,opsz,slnt,wdth,wght`. If any axis is missing from the URL, `font-variation-settings` will silently fail for that axis.

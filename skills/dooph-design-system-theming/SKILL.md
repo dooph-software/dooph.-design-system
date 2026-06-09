@@ -53,7 +53,7 @@ Mirror the package selector shape so overrides apply in both default light (`:ro
   --ui-color-focus-ring: color-mix(in srgb, var(--accent-700) 28%, transparent);
 
   --ui-font-sans: var(--font-google-sans-flex), system-ui, sans-serif;
-  --ui-font-label: var(--font-ibm-plex-sans), system-ui, sans-serif;
+  --ui-font-label: var(--font-host-grotesk), system-ui, sans-serif;
   --ui-font-heading: var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui, sans-serif;
 }
 
@@ -173,7 +173,7 @@ import '@dooph-software/design-system/styles.css';
 import './theme.css';
 import {
   Google_Sans_Flex,
-  IBM_Plex_Sans,
+  Host_Grotesk,
   Bricolage_Grotesque,
 } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
@@ -185,10 +185,10 @@ const googleSansFlex = Google_Sans_Flex({
   axes: ['GRAD', 'ROND', 'opsz', 'slnt', 'wdth'],
 });
 
-const ibmPlexSans = IBM_Plex_Sans({
+const hostGrotesk = Host_Grotesk({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
-  variable: '--font-ibm-plex-sans',
+  variable: '--font-host-grotesk',
   display: 'swap',
 });
 
@@ -202,7 +202,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${googleSansFlex.variable} ${ibmPlexSans.variable} ${bricolageGrotesque.variable}`}
+      className={`${googleSansFlex.variable} ${hostGrotesk.variable} ${bricolageGrotesque.variable}`}
       suppressHydrationWarning
     >
       <body>

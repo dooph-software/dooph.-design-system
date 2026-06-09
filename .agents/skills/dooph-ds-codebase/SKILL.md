@@ -47,6 +47,17 @@ src/
   preview.ts                  ← decorator: .dark toggle on <html>, body bg
   preview-head.html           ← Google Fonts CDN (NOT shipped in package)
 skills/                       ← distributed skills for consuming projects (not for this repo's maintenance)
+.agents/skills/               ← authoring-side skills for this repo (canonical source)
+  dooph-ds-architecture/      ← architecture rules skill
+  dooph-ds-codebase/          ← this file
+  dooph-ds-contribution/      ← contribution guide skill
+  dooph-ds-loading-indicators/← loading indicator component skill
+  radix-ui-design-system/     ← Radix UI patterns skill
+.claude/skills/               ← Claude-specific skill directory
+  dooph-ds-architecture  →    symlink → ../../.agents/skills/dooph-ds-architecture
+  dooph-ds-codebase      →    symlink → ../../.agents/skills/dooph-ds-codebase
+  dooph-ds-contribution  →    symlink → ../../.agents/skills/dooph-ds-contribution
+  dooph-ds-loading-indicators/← real copy (not symlinked)
 bin/init.mjs                  ← init-skills CLI shipped with npm package
 scripts/
   generate-icon-exports.mjs   ← regenerates Icons/index.ts from svg components
@@ -216,3 +227,30 @@ Variant/size consts: `ButtonVariant`, `ButtonSize`, `TabVariant`, `TabSize`, `To
 Types: `ButtonProps`, `TabsTriggerProps`, `TwoWayToggleProps`, `TwoWayToggleItemProps`, `SegmentedTabSelectProps`, `SegmentedTabItemProps`, `ShapeButtonProps`, `ShapeButtonShape`, `DropdownTriggerProps`, `TextDropdownTriggerProps`, `TypeableDropdownTriggerProps`, `InputProps`, `SearchBoxProps`, `ToastProviderProps`, `ToastRootProps`, `ToastTitleProps`, `ToastDescriptionProps`, `TooltipContentProps`, `TooltipTitleProps`, `TooltipBodyProps`, `AvatarProps`, `HotkeyIndicatorProps`, `OutlineSectionProps`, `OutlineButtonProps`, `BaseTextProps`, `ButtonTextProps`, `BodyTextProps`, `LabelTextProps`, `HeadingTextProps`, `TitleTextProps`, `HeroTextProps`
 
 Utilities: `cn`, `buttonVariants`, `tabTriggerVariants`
+
+---
+
+## Skill Symlink Maintenance
+
+Three entries under `.claude/skills/` are directory symlinks into `.agents/skills/`:
+
+| Symlink | Target |
+| ------- | ------ |
+| `.claude/skills/dooph-ds-architecture` | `../../.agents/skills/dooph-ds-architecture` |
+| `.claude/skills/dooph-ds-codebase` | `../../.agents/skills/dooph-ds-codebase` |
+| `.claude/skills/dooph-ds-contribution` | `../../.agents/skills/dooph-ds-contribution` |
+
+**Always edit skills in `.agents/skills/`** — the `.claude/` entries are read-only aliases.
+
+### Restoring broken symlinks (Windows)
+
+Git stores these as mode `120000` (symlink) blobs, but `core.symlinks = false` in this repo causes git to materialize them as real directories on checkout. If they appear as regular directories instead of symlinks, restore them:
+
+```powershell
+Remove-Item -Recurse -Force ".claude\skills\dooph-ds-architecture", ".claude\skills\dooph-ds-codebase", ".claude\skills\dooph-ds-contribution"
+cmd /c mklink /D ".claude\skills\dooph-ds-architecture" "..\..\.agents\skills\dooph-ds-architecture"
+cmd /c mklink /D ".claude\skills\dooph-ds-codebase" "..\..\.agents\skills\dooph-ds-codebase"
+cmd /c mklink /D ".claude\skills\dooph-ds-contribution" "..\..\.agents\skills\dooph-ds-contribution"
+```
+
+Verify with `cmd /c dir /AL ".claude\skills"` — each entry should show `<SYMLINKD>`.

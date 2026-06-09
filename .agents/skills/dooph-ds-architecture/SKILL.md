@@ -202,7 +202,7 @@ Omitting any of these axes causes `font-variation-settings` to silently fail in 
 
 ### Consuming project responsibilities
 
-- Load Google Sans Flex (all axes), IBM Plex Sans, and Bricolage Grotesque by any means appropriate to their framework.
+- Load Google Sans Flex (all axes), Host Grotesk, and Bricolage Grotesque by any means appropriate to their framework.
 - Map the loaded font family names into `--ui-font-sans`, `--ui-font-label`, `--ui-font-heading` in their root CSS.
 - In Next.js: use `next/font/google` with `variable` option + `axes` array, then map the CSS variable to the dooph token.
 

@@ -6,7 +6,7 @@ Define light values on `:root` and optionally mirror them under `.light` (same s
 
 If you remap tokens (radii, colors, typography), duplicate light overrides across `:root`/`.light` whenever your app paints an explicit `class="light"`, so branded values apply in forced-light mode too.
 
-The package defines font-family tokens but does not load font files. Consumers must load Google Sans Flex, IBM Plex Sans, and Bricolage Grotesque, or approved substitutes, then map the loaded families/variables to `--ui-font-*`. Google Sans Flex should be loaded with `GRAD`, `ROND`, `opsz`, `slnt`, `wdth`, and `wght` available so the design-system axis tokens can render.
+The package defines font-family tokens but does not load font files. Consumers must load Google Sans Flex, Host Grotesk, and Bricolage Grotesque, or approved substitutes, then map the loaded families/variables to `--ui-font-*`. Google Sans Flex should be loaded with `GRAD`, `ROND`, `opsz`, `slnt`, `wdth`, and `wght` available so the design-system axis tokens can render.
 
 **Subtree islands.** Any ancestor with **`class="light"`** or **`class="dark"`** re-establishes the corresponding **`--ui-*`** palette for itself and descendants (inheritance). Use that to force a light region under **`<html class="dark">`** (or the reverse). **Portals** rendered outside that subtree won’t inherit — add **`light`** / **`dark`** on the surfaced content or portal container.
 
@@ -46,7 +46,7 @@ For per-instance color control without touching the token, use the `glowColor1` 
 - `--ui-font-var-button`, `--ui-font-var-body`, `--ui-font-var-heading`
 - `--ui-tracking-body`, `--ui-tracking-label`, `--ui-tracking-hero`
 
-Only Google Sans Flex styles use `--ui-font-var-*`. Do not apply those axis tokens to IBM Plex Sans label text or Bricolage Grotesque title/hero text.
+Only Google Sans Flex styles use `--ui-font-var-*`. Do not apply those axis tokens to Host Grotesk label text or Bricolage Grotesque title/hero text.
 
 ## Sizing And Shape
 

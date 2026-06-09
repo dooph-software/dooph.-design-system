@@ -2,6 +2,8 @@
 
 React component primitives and tokenized CSS. The package is framework-agnostic at runtime: use it from Next.js, Vite, or any React shell that can import CSS.
 
+**This is a read-only publication of the design system we use at dooph. Licensed with MIT. Usage of this design system never grants you access or rights to dooph intellectual property including but not limited to the trade name 'Dooph LLC', brand name 'dooph', the wordmark and logomark, and anything else reasonably attributed to the brand.**
+
 ## Installation
 
 ```bash
@@ -9,13 +11,13 @@ npm install @dooph-software/design-system
 ```
 
 ```tsx
-import { Button } from '@dooph-software/design-system';
-import '@dooph-software/design-system/styles.css';
+import { Button } from "@dooph-software/design-system";
+import "@dooph-software/design-system/styles.css";
 ```
 
 ## Initialize (agent skills)
 
-After installing, run the initializer to copy agent skills into your project:
+If you want your agent to implement stuff from this design system more accurately, you can run a command to copy agent skills into your project:
 
 ```bash
 npx @dooph-software/design-system init-skills
@@ -28,9 +30,9 @@ This copies the bundled skills into the agent directories of your choice (`.agen
 This package does **not** ship font files or load remote fonts. It defines default font-family tokens only:
 
 ```css
---ui-font-sans: 'Google Sans Flex', system-ui, sans-serif;
---ui-font-label: 'IBM Plex Sans', system-ui, sans-serif;
---ui-font-heading: 'Bricolage Grotesque', system-ui, sans-serif;
+--ui-font-sans: "Google Sans Flex", system-ui, sans-serif;
+--ui-font-label: "Host Grotesk", system-ui, sans-serif;
+--ui-font-heading: "Bricolage Grotesque", system-ui, sans-serif;
 ```
 
 Consuming apps are responsible for loading fonts and mapping loaded font variables or family names into:
@@ -49,39 +51,43 @@ Use `next/font/google` where available, assign CSS variables, then map those var
 
 ```tsx
 // app/layout.tsx
-import '@dooph-software/design-system/styles.css';
-import './theme.css';
+import "@dooph-software/design-system/styles.css";
+import "./theme.css";
 import {
   Google_Sans_Flex,
-  IBM_Plex_Sans,
+  Host_Grotesk,
   Bricolage_Grotesque,
-} from 'next/font/google';
+} from "next/font/google";
 
 const googleSansFlex = Google_Sans_Flex({
-  subsets: ['latin'],
-  variable: '--font-google-sans-flex',
-  display: 'swap',
-  axes: ['GRAD', 'ROND', 'wdth'],
+  subsets: ["latin"],
+  variable: "--font-google-sans-flex",
+  display: "swap",
+  axes: ["GRAD", "ROND", "wdth"],
 });
 
-const ibmPlexSans = IBM_Plex_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-ibm-plex-sans',
-  display: 'swap',
+const hostGrotesk = Host_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-host-grotesk",
+  display: "swap",
 });
 
 const bricolageGrotesque = Bricolage_Grotesque({
-  subsets: ['latin'],
-  variable: '--font-bricolage-grotesque',
-  display: 'swap',
+  subsets: ["latin"],
+  variable: "--font-bricolage-grotesque",
+  display: "swap",
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"
-      className={`${googleSansFlex.variable} ${ibmPlexSans.variable} ${bricolageGrotesque.variable}`}
+      className={`${googleSansFlex.variable} ${hostGrotesk.variable} ${bricolageGrotesque.variable}`}
     >
       <body>{children}</body>
     </html>
@@ -93,8 +99,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 /* app/theme.css */
 :root {
   --ui-font-sans: var(--font-google-sans-flex), system-ui, sans-serif;
-  --ui-font-label: var(--font-ibm-plex-sans), system-ui, sans-serif;
-  --ui-font-heading: var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui, sans-serif;
+  --ui-font-label: var(--font-host-grotesk), system-ui, sans-serif;
+  --ui-font-heading:
+    var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui,
+    sans-serif;
 }
 ```
 
@@ -105,23 +113,24 @@ If a specific Google font is not supported by the installed Next.js version, loa
 Load fonts with `@font-face`, provider CSS, or a `<link>` in the app shell, then map families to dooph tokens.
 
 ```css
-@import '@dooph-software/design-system/styles.css';
-@import './theme.css';
+@import "@dooph-software/design-system/styles.css";
+@import "./theme.css";
 ```
 
 ```css
 /* src/theme.css */
 @font-face {
-  font-family: 'IBM Plex Sans';
-  src: url('/fonts/ibm-plex-sans.woff2') format('woff2');
+  font-family: "Host Grotesk";
+  src: url("/fonts/host-grotesk.woff2") format("woff2");
   font-weight: 400 700;
   font-display: swap;
 }
 
 :root {
-  --ui-font-sans: 'Google Sans Flex', system-ui, sans-serif;
-  --ui-font-label: 'IBM Plex Sans', system-ui, sans-serif;
-  --ui-font-heading: 'Bricolage Grotesque', 'Google Sans Flex', system-ui, sans-serif;
+  --ui-font-sans: "Google Sans Flex", system-ui, sans-serif;
+  --ui-font-label: "Host Grotesk", system-ui, sans-serif;
+  --ui-font-heading:
+    "Bricolage Grotesque", "Google Sans Flex", system-ui, sans-serif;
 }
 ```
 
