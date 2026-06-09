@@ -7,9 +7,9 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/dooph-software/dooph-Design-System.git"
+    "url": "https://github.com/dooph-software/dooph.-design-system.git"
   },
-  "homepage": "https://github.com/dooph-software/dooph-Design-System#readme",
+  "homepage": "https://github.com/dooph-software/dooph.-design-system#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
