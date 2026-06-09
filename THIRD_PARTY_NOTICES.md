@@ -11,6 +11,12 @@ Icons under `src/components/Icons/` may be derived from or inspired by the follo
 open-source icon libraries. Individual icons are not tracked to a specific source;
 this notice covers the libraries collectively.
 
+### Material Symbols (Google)
+- **License:** Apache 2.0
+- **Copyright:** Google LLC
+- **Source:** https://fonts.google.com/icons
+- **License text:** https://github.com/google/material-design-icons/blob/master/LICENSE
+
 ### Lucide
 - **License:** ISC
 - **Copyright:** Copyright (c) 2026 Lucide Icons and Contributors

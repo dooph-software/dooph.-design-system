@@ -1,28 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { ShapeButton, ShapeButtons } from './ShapeButton';
-
-const StarIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-    <path
-      d="M8 2l1.5 3.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5L8 2z"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
+import type { Meta, StoryObj } from "@storybook/react";
+import { SendIcon } from "../Icons";
+import { ShapeButton, ShapeButtons } from "./ShapeButton";
 
 const meta = {
-  title: 'Buttons & inputs/ShapeButton',
+  title: "Buttons & inputs/ShapeButton",
   component: ShapeButton,
-  parameters: { layout: 'centered' },
-  tags: ['autodocs'],
+  parameters: { layout: "centered" },
+  tags: ["autodocs"],
   argTypes: {
     shape: {
-      control: 'select',
+      control: "select",
       options: Object.values(ShapeButtons),
     },
-    disabled: { control: 'boolean' },
+    disabled: { control: "boolean" },
   },
 } satisfies Meta<typeof ShapeButton>;
 
@@ -30,23 +20,23 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Clover: Story = {
-  args: { shape: ShapeButtons.clover, children: <StarIcon /> },
+  args: { shape: ShapeButtons.clover, children: <SendIcon /> },
 };
 
 export const Cookie: Story = {
-  args: { shape: ShapeButtons.cookie, children: <StarIcon /> },
+  args: { shape: ShapeButtons.cookie, children: <SendIcon /> },
 };
 
 export const Pentagon: Story = {
-  args: { shape: ShapeButtons.pentagon, children: <StarIcon /> },
+  args: { shape: ShapeButtons.pentagon, children: <SendIcon /> },
 };
 
 export const Gem: Story = {
-  args: { shape: ShapeButtons.gem, children: <StarIcon /> },
+  args: { shape: ShapeButtons.gem, children: <SendIcon /> },
 };
 
 export const Disabled: Story = {
-  args: { shape: ShapeButtons.clover, children: <StarIcon />, disabled: true },
+  args: { shape: ShapeButtons.clover, children: <SendIcon />, disabled: true },
 };
 
 export const AllShapes: Story = {
@@ -55,7 +45,7 @@ export const AllShapes: Story = {
       {Object.entries(ShapeButtons).map(([label, shape]) => (
         <div key={shape} className="flex flex-col items-center gap-2">
           <ShapeButton shape={shape}>
-            <StarIcon />
+            <SendIcon />
           </ShapeButton>
           <span className="text-style-label text-text-secondary">{label}</span>
         </div>
@@ -68,11 +58,15 @@ export const AllStates: Story = {
   render: () => (
     <div className="flex items-center gap-4 p-4">
       <div className="flex flex-col items-center gap-2">
-        <ShapeButton shape={ShapeButtons.gem}><StarIcon /></ShapeButton>
+        <ShapeButton shape={ShapeButtons.gem}>
+          <SendIcon />
+        </ShapeButton>
         <span className="text-style-label text-text-secondary">Default</span>
       </div>
       <div className="flex flex-col items-center gap-2">
-        <ShapeButton shape={ShapeButtons.gem} disabled><StarIcon /></ShapeButton>
+        <ShapeButton shape={ShapeButtons.gem} disabled>
+          <SendIcon />
+        </ShapeButton>
         <span className="text-style-label text-text-secondary">Disabled</span>
       </div>
     </div>

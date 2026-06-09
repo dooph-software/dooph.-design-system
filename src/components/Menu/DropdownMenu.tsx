@@ -57,7 +57,9 @@ const DropdownMenuContent = forwardRef<
         ref={ref}
         sideOffset={sideOffset}
         {...(handleOpenAutoFocus
-          ? ({ onOpenAutoFocus: handleOpenAutoFocus } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>)
+          ? ({
+              onOpenAutoFocus: handleOpenAutoFocus,
+            } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>)
           : {})}
         className={cn(
           "z-50 overflow-hidden rounded-soft border border-solid border-border-strong bg-surface",
@@ -149,7 +151,7 @@ const DropdownMenuLabel = forwardRef<
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn(
-      "flex h-[30px] items-center",
+      "flex h-[30px] items-center px-sm",
       "text-style-label text-ghost-fg",
       className,
     )}
