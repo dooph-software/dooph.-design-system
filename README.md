@@ -2,6 +2,8 @@
 
 React component primitives and tokenized CSS. The package is framework-agnostic at runtime: use it from Next.js, Vite, or any React shell that can import CSS.
 
+Use defaults or override tokens on an individual basis in your consuming project for a custom look!
+
 **This is a read-only publication of the design system we use at dooph. Licensed with MIT. Usage of this design system never grants you access or rights to dooph intellectual property including but not limited to the trade name 'Dooph LLC', brand name 'dooph', the wordmark and logomark, and anything else reasonably attributed to the brand.**
 
 ## Installation
