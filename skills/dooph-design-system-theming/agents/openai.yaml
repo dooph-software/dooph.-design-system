@@ -1,0 +1,6 @@
+interface:
+  display_name: "dooph DS Theming"
+  short_description: "Extend dooph with clean token overrides"
+  default_prompt: "Use $dooph-design-system-theming to set up branded token overrides for this app."
+policy:
+  allow_implicit_invocation: true

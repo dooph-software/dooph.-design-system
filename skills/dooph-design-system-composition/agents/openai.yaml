@@ -1,0 +1,6 @@
+interface:
+  display_name: "dooph DS Composition"
+  short_description: "Compose dooph UI without visual drift"
+  default_prompt: "Use $dooph-design-system-composition to build this UI with dooph components and no visual drift."
+policy:
+  allow_implicit_invocation: true

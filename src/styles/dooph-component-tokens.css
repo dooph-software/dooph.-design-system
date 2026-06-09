@@ -1,0 +1,155 @@
+/*
+ * Layout and state helpers bound to design tokens (--ui-*).
+ *
+ * Prefer these plain CSS utilities over Tailwind arbitrary `*-(--var)` or
+ * `[var(--var)]` in component source: the JSX references stable class names
+ * while declarations stay vanilla CSS compatible with shipped styles.css —
+ * Tailwind-only syntax is avoided for token wiring so the sheet remains
+ * approachable for consumers who bundle CSS without Tailwind.
+ */
+
+@layer utilities {
+  /* Disabled / inactive (native + aria-invalid disabled pattern) */
+  .ds-disabled-state:is(:disabled, [aria-disabled="true"]) {
+    cursor: not-allowed;
+    opacity: var(--ui-opacity-disabled);
+  }
+
+  /*
+   * Radix primitives set data-disabled on menu items etc.
+   * Does not imply :disabled; keep separate from ds-disabled-state.
+   */
+  .ds-radix-data-disabled[data-disabled] {
+    cursor: not-allowed;
+    opacity: var(--ui-opacity-disabled);
+  }
+
+  /*
+   * Native disabled only — for controls that don't use aria-disabled.
+   */
+  .ds-disabled-control:disabled {
+    cursor: not-allowed;
+    opacity: var(--ui-opacity-disabled);
+  }
+
+  .ds-shape-button-focus-visible:focus-visible {
+    outline: 2px solid var(--ui-color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  .ds-focus-visible-ring {
+    outline: 4px solid transparent;
+    outline-offset: 0;
+  }
+
+  .ds-focus-visible-ring:focus-visible {
+    outline-color: var(--ui-color-focus-ring);
+  }
+
+  .ds-focus-within-ring {
+    outline: 4px solid transparent;
+    outline-offset: 0;
+  }
+
+  .ds-focus-within-ring:focus-within {
+    outline-color: var(--ui-color-focus-ring);
+  }
+
+  .ds-focus-ring-on-focus {
+    outline: 4px solid transparent;
+    outline-offset: 0;
+  }
+
+  .ds-focus-ring-on-focus:focus {
+    outline-color: var(--ui-color-focus-ring);
+  }
+
+  .ds-focus-ring-destructive-on-focus:focus {
+    outline-color: var(--ui-color-destructive-focus-ring);
+  }
+
+  .ds-focus-ring {
+    outline: 4px solid var(--ui-color-focus-ring);
+    outline-offset: 0;
+  }
+
+  /* Radix DropdownMenu content — follows Radix transform-origin injection */
+  .ds-radix-dropdown-content-origin {
+    transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+  }
+
+  .ds-radix-dropdown-match-trigger-width {
+    min-width: max(var(--radix-dropdown-menu-trigger-width), var(--ui-min-w-menu));
+  }
+
+  .ds-min-w-menu {
+    min-width: var(--ui-min-w-menu);
+  }
+
+  .ds-px-ui-sm {
+    padding-inline: var(--ui-spacing-sm);
+  }
+
+  /* Toast sizing — fixed design widths capped to the available viewport. */
+  .ds-toast-viewport {
+    width: min(
+      var(--ui-width-toast-viewport),
+      calc(100vw - (var(--ui-spacing-md) * 2))
+    );
+  }
+
+  .ds-toast-width {
+    width: min(var(--ui-width-toast), 100%);
+  }
+
+  .ds-toast-action-width {
+    width: min(var(--ui-width-toast-action), 100%);
+  }
+
+  .ds-tooltip-inverse-theme {
+    background-color: var(--ui-color-tooltip-inverse-surface);
+    border-color: var(--ui-color-tooltip-inverse-border);
+    color: var(--ui-color-tooltip-inverse-text);
+  }
+
+  .ds-tooltip-matching-theme {
+    background-color: var(--ui-color-tooltip-matching-surface);
+    border-color: var(--ui-color-tooltip-matching-border);
+    color: var(--ui-color-tooltip-matching-text);
+  }
+
+  /* spacing — semantic names mirror token stems */
+  .ds-gap-ui-xs {
+    gap: var(--ui-spacing-xs);
+  }
+  .ds-p-ui-xs {
+    padding: var(--ui-spacing-xs);
+  }
+  .ds-px-ui-xs {
+    padding-inline: var(--ui-spacing-xs);
+  }
+  .ds-py-ui-xs {
+    padding-block: var(--ui-spacing-xs);
+  }
+  .ds-py-ui-xxs {
+    padding-block: var(--ui-spacing-xxs);
+  }
+  .ds-py-ui-rg {
+    padding-block: var(--ui-spacing-rg);
+  }
+  .ds-pl-ui-md {
+    padding-left: var(--ui-spacing-md);
+  }
+  .ds-pl-ui-rg {
+    padding-left: var(--ui-spacing-rg);
+  }
+  .ds-pr-ui-rg {
+    padding-right: var(--ui-spacing-rg);
+  }
+  .ds-pr-ui-sm {
+    padding-right: var(--ui-spacing-sm);
+  }
+  .ds-my-ui-xs {
+    margin-block: var(--ui-spacing-xs);
+  }
+}

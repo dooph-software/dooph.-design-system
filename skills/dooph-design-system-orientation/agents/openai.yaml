@@ -1,0 +1,6 @@
+interface:
+  display_name: "dooph DS Orientation"
+  short_description: "Use the dooph design system correctly"
+  default_prompt: "Use $dooph-design-system-orientation to align this UI work with the internal design system."
+policy:
+  allow_implicit_invocation: true

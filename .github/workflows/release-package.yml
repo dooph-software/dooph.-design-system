@@ -1,0 +1,52 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # required for npm OIDC trusted publishing
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # ── Preferred: npm Trusted Publishing (OIDC, no long-lived token) ──────────
+      # Provenance attestation is generated automatically.
+      # Requires one-time setup on npmjs.com before the first automated publish:
+      #   npmjs.com → @dooph-software/design-system → Settings → Trusted publishers
+      #   → Add publisher → GitHub Actions
+      #   → Org: dooph-software  Repo: dooph-Design-System  Workflow: release-package.yml
+      # The package must already exist on npm before trusted publishing can be configured.
+      # For the very first publish, use the TOKEN FALLBACK below, then switch here.
+      # - name: Publish to npm (OIDC)
+      #   run: npm publish --access public
+      # No NODE_AUTH_TOKEN needed — npm CLI detects the OIDC environment automatically.
+
+      # ── Fallback: token-based publishing ─────────────────────────────────────
+      # Use this until the package exists on npm and trusted publishing is configured.
+      # Steps:
+      #   1. Create a Granular Access Token at npmjs.com (publish-only, scoped to this package).
+      #   2. Add it as NPM_TOKEN in GitHub repo → Settings → Secrets → Actions.
+      #   3. Swap the publish step above for the one below (comment out OIDC step, uncomment this).
+      #   4. After the first publish, configure Trusted Publishing and revert to the OIDC step.
+      #
+      - name: Publish to npm (token fallback)
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

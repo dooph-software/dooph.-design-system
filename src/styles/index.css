@@ -1,0 +1,189 @@
+@import "tailwindcss";
+/* Scan design-system source so dist/styles.css always includes every utility used in components. */
+@source "../**/*.{js,ts,jsx,tsx}";
+@import "./tokens.css";
+@import "./dooph-component-tokens.css";
+@plugin "tailwindcss-animate";
+
+/*
+ * @theme inline — maps --ui-* tokens into Tailwind utility namespaces.
+ * "inline" means Tailwind emits var(--ui-*) references instead of the
+ * resolved values, so overriding --ui-* at :root automatically updates
+ * all generated utilities.
+ */
+/* __GENERATED_THEME_START__ */
+@theme inline {
+  --color-primary: var(--ui-color-primary);
+  --color-primary-fg: var(--ui-color-primary-foreground);
+  --color-primary-hover: var(--ui-color-primary-hover);
+  --color-primary-active: var(--ui-color-primary-active);
+  --color-primary-disabled: var(--ui-color-primary-disabled);
+  --color-secondary: var(--ui-color-secondary);
+  --color-secondary-fg: var(--ui-color-secondary-foreground);
+  --color-secondary-hover: var(--ui-color-secondary-hover);
+  --color-secondary-active: var(--ui-color-secondary-active);
+  --color-secondary-disabled: var(--ui-color-secondary-disabled);
+  --color-brand: var(--ui-color-brand);
+  --color-brand-fg: var(--ui-color-brand-foreground);
+  --color-brand-hover: var(--ui-color-brand-hover);
+  --color-brand-active: var(--ui-color-brand-active);
+  --color-destructive: var(--ui-color-destructive);
+  --color-destructive-fg: var(--ui-color-destructive-foreground);
+  --color-destructive-hover: var(--ui-color-destructive-hover);
+  --color-destructive-active: var(--ui-color-destructive-active);
+  --color-destructive-disabled: var(--ui-color-destructive-disabled);
+  --color-ghost: var(--ui-color-ghost);
+  --color-ghost-fg: var(--ui-color-ghost-foreground);
+  --color-ghost-hover: var(--ui-color-ghost-hover);
+  --color-ghost-active: var(--ui-color-ghost-active);
+  --color-ghost-fg-active: var(--ui-color-ghost-foreground-active);
+  --color-surface: var(--ui-color-surface);
+  --color-surface-secondary: var(--ui-color-surface-secondary);
+  --color-surface-page: var(--ui-color-surface-page);
+  --color-modal-surface: var(--ui-color-modal-surface);
+  --color-modal-border: var(--ui-color-modal-border);
+  --color-modal-backdrop: var(--ui-color-modal-backdrop);
+  --color-tooltip-inverse-surface: var(--ui-color-tooltip-inverse-surface);
+  --color-tooltip-inverse-text: var(--ui-color-tooltip-inverse-text);
+  --color-tooltip-inverse-border: var(--ui-color-tooltip-inverse-border);
+  --color-tooltip-matching-surface: var(--ui-color-tooltip-matching-surface);
+  --color-tooltip-matching-text: var(--ui-color-tooltip-matching-text);
+  --color-tooltip-matching-border: var(--ui-color-tooltip-matching-border);
+  --color-accent: var(--ui-accent-color);
+  --color-border: var(--ui-color-border);
+  --color-border-hover: var(--ui-color-border-hover);
+  --color-border-focus: var(--ui-color-border-focus);
+  --color-border-strong: var(--ui-color-border-strong);
+  --color-border-disabled: var(--ui-color-border-disabled);
+  --color-text: var(--ui-color-text);
+  --color-text-secondary: var(--ui-color-text-secondary);
+  --color-text-tertiary: var(--ui-color-text-tertiary);
+  --color-logo: var(--ui-color-logo);
+  --color-logo-alt: var(--ui-color-logo-alt);
+  --color-avatar-bg: var(--ui-color-avatar-bg);
+  --font-sans: var(--ui-font-sans);
+  --font-label: var(--ui-font-label);
+  --font-heading: var(--ui-font-heading);
+  --text-label: var(--ui-text-label);
+  --text-body: var(--ui-text-body);
+  --text-heading: var(--ui-text-heading);
+  --text-title: var(--ui-text-title);
+  --text-hero: var(--ui-text-hero);
+  --spacing-xxs: var(--ui-spacing-xxs);
+  --spacing-xs: var(--ui-spacing-xs);
+  --spacing-sm: var(--ui-spacing-sm);
+  --spacing-rg: var(--ui-spacing-rg);
+  --spacing-md: var(--ui-spacing-md);
+  --spacing-lg: var(--ui-spacing-lg);
+  --spacing-xl: var(--ui-spacing-xl);
+  --spacing-xxl: var(--ui-spacing-xxl);
+  --radius-tight: var(--ui-radius-tight);
+  --radius-standard: var(--ui-radius-standard);
+  --radius-soft: var(--ui-radius-soft);
+  --radius-checkbox: var(--ui-radius-checkbox);
+  --radius-avatar: var(--ui-radius-avatar);
+  --radius-avatar-sm: var(--ui-radius-avatar-sm);
+  --shadow-button: var(--ui-shadow-button);
+  --shadow-button-hover: var(--ui-shadow-button-hover);
+  --shadow-button-active: var(--ui-shadow-button-active);
+  --shadow-menu: var(--ui-shadow-menu);
+  --shadow-focus: var(--ui-shadow-focus);
+
+  /* Focus ring with destructive  */
+  --shadow-focus-destructive: 0 0 0 4px var(--ui-color-destructive-focus-ring);
+}
+/* __GENERATED_THEME_END__ */
+
+/*
+ * Composite text-style utilities — apply full typographic intent in one class.
+ * These encode font-variation-settings which has no Tailwind utility.
+ */
+@layer utilities {
+  .text-style-button {
+    font-family: var(--ui-font-sans);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-body);
+    font-style: normal;
+    font-weight: var(--ui-weight-button);
+    font-variation-settings: var(--ui-font-var-button);
+    line-height: 1;
+  }
+
+  .text-style-body {
+    font-family: var(--ui-font-sans);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-body);
+    font-style: normal;
+    font-weight: var(--ui-weight-body);
+    font-variation-settings: var(--ui-font-var-body);
+    letter-spacing: var(--ui-tracking-body);
+    line-height: 1;
+  }
+
+  .text-style-label {
+    font-family: var(--ui-font-label);
+    font-size: var(--ui-text-label);
+    font-weight: var(--ui-weight-label);
+    letter-spacing: var(--ui-tracking-label);
+    line-height: 1;
+  }
+
+  .text-style-title {
+    font-family: var(--ui-font-heading);
+    font-size: var(--ui-text-title);
+    font-weight: var(--ui-weight-title);
+    line-height: 1;
+  }
+
+  .text-style-heading {
+    font-family: var(--ui-font-sans);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-heading);
+    font-style: normal;
+    font-weight: var(--ui-weight-heading);
+    font-variation-settings: var(--ui-font-var-heading);
+    line-height: 1;
+  }
+
+  .text-style-hero {
+    font-family: var(--ui-font-heading);
+    font-size: var(--ui-text-hero);
+    font-weight: var(--ui-weight-hero);
+    letter-spacing: var(--ui-tracking-hero);
+    line-height: 1;
+  }
+
+  /* Sized to button height tokens */
+  .h-button {
+    height: var(--ui-height-button);
+  }
+  .h-button-sm {
+    height: var(--ui-height-button-sm);
+  }
+  .size-button {
+    width: var(--ui-height-button);
+    height: var(--ui-height-button);
+  }
+  .size-button-sm {
+    width: var(--ui-height-button-sm);
+    height: var(--ui-height-button-sm);
+  }
+  .size-checkbox {
+    width: var(--ui-size-checkbox);
+    height: var(--ui-size-checkbox);
+  }
+}
+
+/*
+ * Loading spinner keyframes — defined outside @layer so they are globally
+ * reachable from SVG element animations applied via inline style.
+ *
+ * ds-spinner-rotate: continuous 360° spin for the wavy LoadingSpinner SVG
+ * container. The flat variant is now fully rAF-driven and does not use CSS
+ * animation; this keyframe is only referenced by WavySpinner.
+ */
+@keyframes ds-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
