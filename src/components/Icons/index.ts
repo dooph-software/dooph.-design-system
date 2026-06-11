@@ -25,6 +25,7 @@ export { GraphIcon } from "./GraphIcon";
 export { HeartFillIcon } from "./HeartFillIcon";
 export { HelpIcon } from "./HelpIcon";
 export { HideMoneyIcon } from "./HideMoneyIcon";
+export { InfoIcon } from "./InfoIcon";
 export { LeftSidebarClosedIcon } from "./LeftSidebarClosedIcon";
 export { LeftSidebarOpenedIcon } from "./LeftSidebarOpenedIcon";
 export { LightModeIcon } from "./LightModeIcon";
