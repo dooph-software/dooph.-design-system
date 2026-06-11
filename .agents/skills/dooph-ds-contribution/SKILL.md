@@ -90,7 +90,7 @@ npm run storybook     # smoke check new stories
 
 1. Access the Figma node via MCP before making any change.
 2. Diff the Figma spec against the current implementation: sizing, spacing, colors, states.
-3. Token changes (new or updated `--ui-*` values) → edit `tokens.css`, then run `npm run sync-tokens` to update the `@theme inline` block in `index.css`.
+3. Token changes (new or updated `--ui-*` values) → edit `tokens.css`, then run `npm run sync-tokens` to regenerate the `@theme inline` block in `index.css` AND the standalone `theme.css` consumer preset (one command updates both).
 4. Tailwind utility changes → edit the `cva` variant maps or base class strings in the component file.
 5. Remove deprecated variants/sizes from both the `cva` map AND the exported const object.
 6. Update stories to remove deprecated demos and add new ones.
@@ -102,7 +102,7 @@ npm run storybook     # smoke check new stories
 
 When adding a new `--ui-*` token:
 1. Add it to `tokens.css` in `:root`/`.light`; add a `.dark` override only if the value changes in dark mode.
-2. Run `npm run sync-tokens` — this script reads `tokens.css` and regenerates the `@theme inline` block in `index.css`.
+2. Run `npm run sync-tokens` — reads `tokens.css` and regenerates the `@theme inline` block in `index.css` AND the `theme.css` preset. If the auto-derived Tailwind name is wrong, add an `ALIASES` entry in `sync-theme.mjs`; if the token should not become a utility (raw `var()` use only), add it to `EXCLUDED`.
 3. If the token needs a `ds-*` helper class (for values that Tailwind can't express as a utility), add it to `dooph-component-tokens.css` under `@layer utilities`.
 4. Reference the new Tailwind utility (e.g. `h-tab`) in the component — never the raw `var(--ui-*)`.
 

@@ -1,276 +1,140 @@
 ---
 name: dooph-design-system-theming
-description: Use when installing, theming, branding, or extending @dooph-software/design-system in a consuming React app, especially Next.js or Vite. Enforces token-based overrides with Tailwind v4 and forbids hardcoded or inline styling.
+description: Use when installing, setting up, branding, theming, or configuring @dooph-software/design-system in a consuming React app (Next.js, Vite, or other) — importing styles, wiring its Tailwind v4 preset, loading fonts, enabling dark mode, or rebranding by overriding --ui-* tokens. Covers the setup that makes the package render correctly and on-brand. For writing UI with the components themselves, use dooph-design-system-usage.
 metadata:
-  short-description: Extend dooph with clean token overrides
+  short-description: Install, theme, and rebrand dooph cleanly
 ---
 
-# dooph Design System Theming
+# Theming the dooph Design System
 
-Use this skill when a consuming app needs branded styling, font integration, dark mode, or framework setup for `@dooph-software/design-system`.
+This skill covers app-level setup: imports, the Tailwind preset, fonts, dark
+mode, and rebranding. The system is themed entirely by overriding `--ui-*`
+tokens in CSS — never by editing package files, inline styles, or hardcoded
+colors/radii on components. Get the setup right once and every component adopts
+the brand automatically, in light and dark.
 
-## Non-Negotiables
-
-- Never theme by editing package CSS in `node_modules`.
-- Never use inline styles or hardcoded component colors/radii/shadows to brand dooph components.
-- Override deterministic `--ui-*` tokens in app CSS: **`:root, .light`** for the light palette and **`.dark`** for the dark palette (after importing package CSS). Use the **same selectors** everywhere you remap so branding applies for default light, forced-light class, forced dark, and **root theme** no matter Next.js (`next-themes`), Vite, or another toggle.
-- Import order matters: package CSS first, app theme CSS after it.
-- Keep Tailwind utilities semantic: use mapped tokens like `bg-primary`, `text-text`, `border-border`, `shadow-button`; avoid arbitrary one-off values except when introducing a new documented token.
-- Default palette control is **`class`/`:root`** on **`document.documentElement`**, not per-component theme props. Optionally force a **subtree** to the light palette with **`className="light"`** on a wrapper (**`--ui-*` inherit** downward; see § Subtheme island). Prefer remapping **`--ui-*`** over **`dark:`** one-offs or inline colors on **dooph** surfaces.
-- The package does not load font files. Consumers must load fonts and map them into `--ui-font-sans`, `--ui-font-label`, and `--ui-font-heading`.
-- Google Sans Flex must be loaded with its custom axes available; the package applies `GRAD`, `ROND`, `slnt`, and `wdth` only to Google Sans Flex text styles.
-
-## Required CSS Order
+## 1. Imports (required, in this order)
 
 ```css
-@import '@dooph-software/design-system/styles.css';
-@import './theme.css';
+@import "tailwindcss";                              /* only if the app uses Tailwind */
+@import "@dooph-software/design-system/styles.css"; /* tokens + component styles */
+@import "@dooph-software/design-system/theme.css";  /* Tailwind preset — see § 2 */
+@import "./theme.css";                              /* YOUR --ui-* overrides */
 ```
 
-`styles.css` defines default tokens and Tailwind v4 `@theme inline` mappings. Your `theme.css` should override `--ui-*` values so all package utilities and components adopt the app brand automatically.
+Order matters: package styles before your overrides so your tokens win.
+`styles.css` is required for every consumer. `theme.css` (the preset) is only
+for apps that run their own Tailwind build. Your app's `theme.css` holds the
+`--ui-*` overrides and font mapping.
 
-## Root Theme Pattern
+## 2. The Tailwind preset (`theme.css`) — read this if the app uses Tailwind
 
-Mirror the package selector shape so overrides apply in both default light (`:root`), explicit forced light (`:root`/`.light`), and dark (`.dark`):
+`styles.css` is *compiled* Tailwind: it ships the tokens plus the exact utility
+classes dooph components use internally. But your own Tailwind build doesn't know
+the dooph token namespace. So when **you** write `p-md`, `gap-sm`,
+`rounded-standard`, or `font-label`, your Tailwind never generates them, and
+same-named Tailwind defaults (`font-sans`, the numeric spacing scale) silently
+win. That mismatch is why apps used to need a manual `@theme inline` remap.
+
+Importing `@dooph-software/design-system/theme.css` fixes it: it registers every
+`--ui-*` token in your Tailwind build, so all dooph utilities generate and
+colliding defaults are overridden. Values still resolve from `styles.css` at
+runtime, so your `--ui-*` overrides keep working. **No manual remap needed.**
+
+Apps that don't use Tailwind skip the preset entirely.
+
+## 3. Fonts (always the app's job)
+
+The package defines font-family *tokens* but ships **no font files**. Load fonts
+yourself, then map the loaded families/variables to the three font tokens:
 
 ```css
-:root,
-.light {
-  --ui-color-primary: var(--brand-950);
-  --ui-color-primary-foreground: white;
-  --ui-color-primary-hover: var(--brand-900);
-  --ui-color-primary-active: var(--brand-800);
-
-  --ui-color-brand: var(--accent-700);
-  --ui-color-brand-foreground: white;
-  --ui-color-brand-hover: var(--accent-800);
-  --ui-color-brand-active: var(--accent-900);
-
-  --ui-color-surface-page: var(--app-bg);
-  --ui-color-surface: var(--app-surface);
-  --ui-color-border: var(--app-border);
-  --ui-color-border-focus: var(--accent-700);
-  --ui-color-focus-ring: color-mix(in srgb, var(--accent-700) 28%, transparent);
-
+:root, .light {
   --ui-font-sans: var(--font-google-sans-flex), system-ui, sans-serif;
   --ui-font-label: var(--font-host-grotesk), system-ui, sans-serif;
   --ui-font-heading: var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui, sans-serif;
 }
+```
+
+Load **Google Sans Flex with its axes available** (`GRAD`, `ROND`, `opsz`,
+`slnt`, `wdth`, `wght`) — the design system applies axis settings only to Google
+Sans Flex text styles, and loading `wght` only will flatten them. `--ui-font-var-*`
+axis tokens apply to Google Sans Flex text, not to Host Grotesk labels or
+Bricolage Grotesque titles/hero.
+
+**Next.js:** assign each `next/font` loader a `variable`, put the variables on
+`<html className>`, and map them in `theme.css`. If the Next version can't load
+Google Sans Flex axes, use `next/font/local` or provider CSS with the full axis
+request and keep the same token mapping.
+
+**Vite / other:** load via `@font-face`, a hosted `<link>`, or provider CSS, then
+map families to `--ui-font-*`. The Google Fonts request must include the axes
+above, not just `wght`.
+
+## 4. Dark mode
+
+- **Light palette** lives on `:root` and `.light` (the package ships both with
+  identical values). **Dark palette** lives on `.dark`.
+- The package does **not** read `prefers-color-scheme`. "System mode" is the
+  app's job: your provider/toggle adds or removes `.dark` on `document.documentElement`.
+  - Next.js: `next-themes` `ThemeProvider attribute="class" enableSystem` toggles `.dark`.
+  - Vite/other: `document.documentElement.classList.toggle("dark", isDark)`.
+- Components read `var(--ui-*)` from the nearest ancestor that set them, so an
+  ancestor with `class="light"` (or `class="dark"`) forces that palette on its
+  subtree — useful for a light preview region inside a dark app.
+  - **Portals caveat:** menus/modals appended to `document.body` don't inherit a
+    `div.light` ancestor. Decorate the portalled content (or portal container)
+    with `light`/`dark` per surface if you need it.
+
+## 5. Rebranding by overriding tokens
+
+Override `--ui-*` in your app `theme.css`, mirroring the package's selector shape
+so branding applies in default light, forced `.light`, and `.dark`:
+
+```css
+:root, .light {
+  --ui-color-primary: var(--brand-950);
+  --ui-color-primary-foreground: white;
+  --ui-color-brand: var(--accent-700);
+  --ui-color-surface-page: var(--app-bg);
+  --ui-color-border-focus: var(--accent-700);
+  --ui-color-focus-ring: color-mix(in srgb, var(--accent-700) 28%, transparent);
+}
 
 .dark {
   --ui-color-surface-page: var(--app-bg-dark);
-  --ui-color-surface: var(--app-surface-dark);
-  --ui-color-text: var(--app-text-dark);
-  --ui-color-text-secondary: var(--app-text-secondary-dark);
-  --ui-color-text-tertiary: var(--app-text-tertiary-dark);
-  --ui-color-border: var(--app-border-dark);
   --ui-color-primary: var(--brand-100);
   --ui-color-primary-foreground: var(--brand-950);
-  --ui-color-ghost-hover: color-mix(in srgb, white 6%, transparent);
-  --ui-color-ghost-active: color-mix(in srgb, white 10%, transparent);
 }
 ```
 
-If you never use an explicit `.light` class (only “no `.dark`” for light), you may scope light overrides to `:root` only for brevity.
+Notes:
+- If you never paint an explicit `class="light"`, `:root`-only light overrides
+  are fine. If you might, mirror important overrides under `.light` too.
+- Mode-invariant tokens (spacing, radius, sizing, fonts) are defined once on
+  `:root`/`.light`; add a `.dark` value only for what actually changes.
+- Prefer token overrides over `dark:` one-offs or inline colors on dooph
+  surfaces. Don't theme via component props or React theme objects — keep it in CSS.
 
-## Overriding tokens (any provider)
+### Component branding hooks
 
-Regardless of Next.js (`next-themes`), Vite, or a custom toggle, remap **`--ui-*`** in **`theme.css` after** **`@import '@dooph-software/design-system/styles.css'`** using the package’s selectors:
+- **`OutlineButton` accent:** override `--ui-accent-color` (the hover glow), or
+  pass `glowColor1`/`glowColor2` per instance.
+- **`Tooltip`:** token-driven, not theme-detected. Defaults to `themeInverse`;
+  override `--ui-color-tooltip-*` to restyle. Pass `themeInverse={false}` for a
+  matching-theme tooltip.
+- **`Toast` widths:** `--ui-width-toast`, `--ui-width-toast-action`,
+  `--ui-width-toast-viewport` — override only if your product needs other widths.
+- **`Avatar`:** the package owns the surface/padding/radius and
+  `--ui-color-avatar-bg`; the app owns the logo/image content (and any
+  light/dark logo swap).
 
-```css
-/* Light (default + forced `class="light"` on `<html>` or wrappers) */
-:root,
-.light {
-  --ui-radius-tight: 10px;
-  --ui-color-surface-page: var(--brand-page);
-}
+## Adding new values
 
-/* Dark */
-.dark {
-  --ui-radius-tight: 10px;
-  --ui-color-surface-page: var(--brand-page-dark);
-}
-```
+When the app needs a repeated value the tokens don't cover, define an app-level
+semantic token (e.g. `--app-warning-bg`) and map it to a `--ui-*` token only if
+it should change a dooph component. Don't scatter `#hex`, `rgb()`, `style={{}}`,
+or arbitrary utility values across feature files.
 
-If you **never** add **`class="light"`** anywhere, `:root`-only overrides are fine; if you might, mirror important overrides under **`.light`** too so forced light stays on-brand.
-
-## Theme classes (light / dark)
-
-The package ships **defaults** only: **`:root`/`.light`** share the light palette; **`.dark`** is dark. No **`prefers-color-scheme`** in the bundle — **system mode** belongs in your app (**Next**: e.g. `ThemeProvider attribute="class" enableSystem`; **Vite**: toggle **`dark`** with **`document.documentElement.classList`**).
-
-Components resolve **`var(--ui-*)`** from the nearest ancestor that set them. Rebrand globally by overriding **`--ui-*`** on **`:root`**, **`.light`**, and **`.dark`** (same shape as snippets above).
-
-Avoid **`dark:`** / inline palettes for **dooph** internals unless composing **app-only** chrome around them.
-
-Mode-invariant sizing, radius, spacing, and font tokens do not need `.dark` duplicates. Define them once under `:root`/`.light`; add `.dark` overrides only for values that actually change.
-
-## Subtheme island (`className="light"` on a wrapper)
-
-**Yes — `.light` on a subtree forces the light `--ui-*` palette for that branch.** The package’s **`.light`** rule applies the full light token set **on that element**; custom properties inherit, so primitives under the wrapper (**`bg-surface`**, **`text-text`**, radii wired to **`--ui-radius-*`**, etc.) render light while **`<html>`** can stay **`class="dark"`**.
-
-**Portals caveat:** overlays/menus appended under **`document.body`** do **not** inherit from **`div.light`** unless the portalled subtree is decorated with **`light`** (`className` on the surfaced content / `Portal` container) — fix per surface.
-
-Example: **`<html class="dark">`** with **`<main class="light">…</main>`** for a light preview region.
-
-An equivalent **`className="dark"`** subtree works for a dark island inside an otherwise light tree (dark **`--ui-*`** from that ancestor).
-
-## Component Branding Hooks
-
-### Avatar
-
-`Avatar` is a composable shell. The package owns the square surface, padding, radius, and `--ui-color-avatar-bg`; consuming apps own logo/image/icon content.
-
-```tsx
-<Avatar>
-  <img src={logoUrl} alt="" />
-</Avatar>
-```
-
-If the logo changes between light and dark, handle that in app code or app CSS. Do not edit package code or expect a package-level logo provider.
-
-### Tooltip
-
-Tooltips are token-driven, not runtime theme-detected. `TooltipContent` defaults to `themeInverse={true}` and uses inverse tooltip tokens. Pass `themeInverse={false}` for a matching-theme tooltip.
-
-Override these if your brand changes tooltip treatment:
-
-```css
-:root,
-.light {
-  --ui-color-tooltip-inverse-surface: var(--ui-color-primary);
-  --ui-color-tooltip-inverse-text: var(--ui-color-primary-foreground);
-  --ui-color-tooltip-inverse-border: var(--ui-color-primary);
-  --ui-color-tooltip-matching-surface: var(--ui-color-secondary);
-  --ui-color-tooltip-matching-text: var(--ui-color-secondary-foreground);
-  --ui-color-tooltip-matching-border: var(--ui-color-border);
-}
-
-.dark {
-  /* Optional only if your dark-mode tooltip values differ from token references above. */
-}
-```
-
-### Toast
-
-Toast width is tokenized so stacked standard/action toasts keep stable widths:
-
-```css
-:root,
-.light {
-  --ui-width-toast: 230px;
-  --ui-width-toast-action: 360px;
-  --ui-width-toast-viewport: var(--ui-width-toast-action);
-}
-```
-
-Override these only if your product needs different toast widths. They usually do not need dark-mode overrides.
-
-## Next.js App Router
-
-```tsx
-// app/layout.tsx
-import '@dooph-software/design-system/styles.css';
-import './theme.css';
-import {
-  Google_Sans_Flex,
-  Host_Grotesk,
-  Bricolage_Grotesque,
-} from 'next/font/google';
-import { ThemeProvider } from 'next-themes';
-
-const googleSansFlex = Google_Sans_Flex({
-  subsets: ['latin'],
-  variable: '--font-google-sans-flex',
-  display: 'swap',
-  axes: ['GRAD', 'ROND', 'opsz', 'slnt', 'wdth'],
-});
-
-const hostGrotesk = Host_Grotesk({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-host-grotesk',
-  display: 'swap',
-});
-
-const bricolageGrotesque = Bricolage_Grotesque({
-  subsets: ['latin'],
-  variable: '--font-bricolage-grotesque',
-  display: 'swap',
-});
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html
-      lang="en"
-      className={`${googleSansFlex.variable} ${hostGrotesk.variable} ${bricolageGrotesque.variable}`}
-      suppressHydrationWarning
-    >
-      <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
-  );
-}
-```
-
-Assign each `next/font` loader a CSS variable and map those variables to `--ui-font-sans`, `--ui-font-label`, and `--ui-font-heading` in `theme.css`. If the installed Next.js version does not support Google Sans Flex custom axes, load it with `next/font/local` or provider CSS and keep the same token mapping. For provider CSS, request the full axis surface:
-
-```html
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:GRAD,ROND,opsz,slnt,wdth,wght@0..100,0..100,6..144,0,25..151,1..1000&display=swap" rel="stylesheet">
-```
-
-With `next-themes`, `attribute="class"` toggles **`dark`** on `<html>` for dark mode; resolved light clears that class (`:root` defaults apply). If you want an explicit **`light`** class too (helps some three-way setups), configure the provider’s **theme-value mapping** per `next-themes` docs (`value={{ light: 'light', dark: 'dark' }}`) so `<html>` can be `light` or `dark` — duplicate brand overrides across **`:root, .light`** in your `theme.css`. Keep **`--ui-*`** values in CSS, not React theme objects.
-
-## Vite React
-
-```tsx
-// src/main.tsx
-import '@dooph-software/design-system/styles.css';
-import './theme.css';
-```
-
-Load fonts via `@font-face`, a hosted stylesheet, or app shell markup; then map those font families to `--ui-font-*` in `theme.css`. When using Google Fonts for Google Sans Flex, request `GRAD`, `ROND`, `opsz`, `slnt`, `wdth`, and `wght`; loading only `wght` will prevent the design-system axis tokens from rendering.
-
-Example without `next-themes` — drive **`dark`** from saved preference / `prefers-color-scheme` yourself; apply it on **`document.documentElement`** (keep **`theme.css`** overriding **`--ui-*`** on **`.dark`** as usual):
-
-```ts
-document.documentElement.classList.toggle(
-  'dark',
-  preference === 'dark' ||
-    (preference === 'system' &&
-      matchMedia('(prefers-color-scheme: dark)').matches),
-);
-```
-
-Many apps omit a **`light`** class on **`<html>`** and rely on removing **`dark`** for light mode. Add **`document.documentElement.classList.toggle('light', …)`** only if your product uses **`class="light"`** explicitly on **`<html>`**.
-
-## Tailwind Consumer Remap
-
-This package emits global Tailwind utility classes because component recipes use Tailwind internally. If a consuming app also emits Tailwind after importing the package, the app should remap same-named theme utilities to dooph tokens:
-
-```css
-@theme inline {
-  --font-sans: var(--ui-font-sans);
-  --font-label: var(--ui-font-label);
-  --font-heading: var(--ui-font-heading);
-
-  --radius-tight: var(--ui-radius-tight);
-  --radius-standard: var(--ui-radius-standard);
-  --radius-soft: var(--ui-radius-soft);
-}
-```
-
-Do this in app CSS after the app imports Tailwind and the design-system CSS.
-
-## Adding New Tokens
-
-When app needs a new repeated value:
-
-1. Add an app-level semantic token, e.g. `--app-warning-bg`.
-2. Map it to a dooph token only if it changes existing components.
-3. If creating a reusable local extension, define a local component/class that consumes tokens.
-4. Do not scatter `#hex`, `rgb()`, `style={{}}`, or arbitrary utility values across feature files.
-
-For the full token surface and the Tailwind conflict contract, read `references/token-contract.md`.
+The full token surface and Tailwind mappings live in
+`references/token-contract.md` — read it when you need the exhaustive list.

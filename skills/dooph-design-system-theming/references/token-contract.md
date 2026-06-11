@@ -70,21 +70,19 @@ The package maps `--ui-*` tokens into Tailwind v4 with `@theme inline`, includin
 
 Prefer mapped utilities over arbitrary values when composing local UI.
 
-## Tailwind Consumer Remap
+## Tailwind Consumer Preset
 
-When a consuming app also builds Tailwind v4, a later app-generated `.rounded-standard`, `.font-sans`, or other shared utility can override the package's generated rule. Use an app-level `@theme inline` remap so the later utility still resolves to dooph tokens:
+`styles.css` is compiled Tailwind: it ships the tokens plus the exact utility classes dooph components use, but the consuming app's own Tailwind build has no knowledge of the dooph token namespace. So app-authored classes like `p-md`, `gap-sm`, `rounded-standard`, or `font-label` never generate, and same-named Tailwind defaults (`font-sans`, numeric spacing) win.
+
+When the app runs its own Tailwind v4 build, import the shipped preset so the app's Tailwind learns every `--ui-*` token:
 
 ```css
-@theme inline {
-  --font-sans: var(--ui-font-sans);
-  --font-label: var(--ui-font-label);
-  --font-heading: var(--ui-font-heading);
-
-  --radius-tight: var(--ui-radius-tight);
-  --radius-standard: var(--ui-radius-standard);
-  --radius-soft: var(--ui-radius-soft);
-}
+@import "tailwindcss";
+@import "@dooph-software/design-system/styles.css";
+@import "@dooph-software/design-system/theme.css";
 ```
+
+This makes every dooph utility generate in the app build and overrides colliding defaults; values still resolve from `styles.css` at runtime. No manual `@theme inline` remap is needed. Apps without Tailwind ignore `theme.css`.
 
 ## Dark Mode Rules
 

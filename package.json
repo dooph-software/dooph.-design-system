@@ -23,7 +23,8 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./dist/styles.css",
+    "./theme.css": "./dist/theme.css"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -40,7 +41,8 @@
     "generate-icon-exports": "node scripts/generate-icon-exports.mjs",
     "sync-tokens": "node scripts/sync-theme.mjs",
     "build:js": "tsup",
-    "build:css": "tailwindcss -i src/styles/index.css -o dist/styles.css",
+    "build:css": "tailwindcss -i src/styles/index.css -o dist/styles.css && npm run copy-theme",
+    "copy-theme": "node scripts/copy-theme.mjs",
     "build": "npm run generate-icon-exports && npm run sync-tokens && npm run build:js",
     "build:watch": "tsup --watch",
     "storybook": "storybook dev -p 6006",

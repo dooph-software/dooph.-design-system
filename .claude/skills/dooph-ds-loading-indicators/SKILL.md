@@ -22,7 +22,7 @@ All enums follow the dot-accessible pattern required by architecture Rule 1:
 ```ts
 LoadingSpinnerVariant.flat / .wavy
 LoadingSpinnerColor.primary / .brand   // or arbitrary hex via color prop
-LoadingSpinnerSize.sm / .rg / .md / .xl  // 10px / 16px / 22px / 40px diameter
+LoadingSpinnerSize.sm / .rg / .md / .xl  // 16px / 22px / 32px / 40px diameter
 WavyDividerVariant.high / .low
 ```
 
@@ -260,9 +260,9 @@ Track always uses `var(--ui-color-border)` — never the indicator color.
 
 Four size tokens in `tokens.css` (not `@theme inline`):
 ```css
---ui-size-spinner-sm: 10px;
---ui-size-spinner-rg: 16px;
---ui-size-spinner-md: 22px;
+--ui-size-spinner-sm: 16px;
+--ui-size-spinner-rg: 22px;
+--ui-size-spinner-md: 32px;
 --ui-size-spinner-xl: 40px;
 ```
 

@@ -138,25 +138,34 @@ Load fonts with `@font-face`, provider CSS, or a `<link>` in the app shell, then
 
 ## Tailwind v4 Consumer Contract
 
-The package CSS is compiled from Tailwind v4 and emits global utility classes such as `.rounded-tight`, `.rounded-standard`, `.rounded-soft`, `.font-sans`, and `.shadow-button` because component recipes use Tailwind utilities internally.
+`styles.css` is **compiled** Tailwind. It contains the design-system tokens plus
+the exact utility classes the dooph components use internally — but your own
+Tailwind build has no knowledge of the dooph token namespace. So when you write
+`p-md`, `gap-sm`, `rounded-standard`, or `font-label` in **your** code, your
+Tailwind never generates them, and same-named Tailwind defaults (`font-sans`,
+the numeric spacing scale, etc.) silently win.
 
-If a consuming app also builds Tailwind CSS after importing this package, the app's later utilities can override same-named package utilities. The supported strategy is to map the app's Tailwind theme tokens back to dooph's `--ui-*` tokens so whichever utility wins still resolves to the same design-system value.
-
-In the app's root CSS, after `@import 'tailwindcss';` and after the package CSS import, include:
+If your app runs its own Tailwind v4 build, import the shipped **theme preset**
+so your Tailwind learns every `--ui-*` token. Order matters — Tailwind first,
+then the package styles, then the preset:
 
 ```css
-@theme inline {
-  --font-sans: var(--ui-font-sans);
-  --font-label: var(--ui-font-label);
-  --font-heading: var(--ui-font-heading);
-
-  --radius-tight: var(--ui-radius-tight);
-  --radius-standard: var(--ui-radius-standard);
-  --radius-soft: var(--ui-radius-soft);
-}
+@import "tailwindcss";
+@import "@dooph-software/design-system/styles.css";
+@import "@dooph-software/design-system/theme.css";
 ```
 
-Keep branded values in `--ui-*` overrides, not in one-off component classes or inline styles.
+That single import makes every dooph utility (`bg-primary`, `text-text`,
+`rounded-soft`, `p-md`, `gap-sm`, `font-label`, …) generate in your build and
+overrides colliding defaults. Token **values** still resolve from `styles.css`
+at runtime, so overriding `--ui-*` in your own CSS keeps working. No manual
+`@theme inline` remap is needed.
+
+Apps that do **not** use Tailwind can ignore `theme.css` and just import
+`styles.css`.
+
+Keep branded values in `--ui-*` overrides, not in one-off component classes or
+inline styles.
 
 ## License
 
