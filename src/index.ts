@@ -17,6 +17,7 @@ export * from './components/OutlineButton';
 export * from './components/ShapeButton';
 export * from './components/Modal';
 export * from './components/SearchBox';
+export * from './components/Table';
 export * from './components/Toast';
 export * from './components/Tooltip';
 

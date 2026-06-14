@@ -15,7 +15,7 @@ const buttonVariants = cva(
     "inline-flex items-center justify-center gap-2 whitespace-nowrap",
     "border border-solid rounded-tight",
     "transition-all duration-150 ease-out cursor-pointer select-none",
-    "ds-focus-ring",
+    "ds-focus-visible-ring",
     "ds-disabled-state",
     "text-style-button",
   ],
