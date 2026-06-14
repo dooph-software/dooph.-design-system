@@ -15,7 +15,7 @@ const buttonVariants = cva(
     "inline-flex items-center justify-center gap-2 whitespace-nowrap",
     "border border-solid rounded-tight",
     "transition-all duration-150 ease-out cursor-pointer select-none",
-    "ds-focus-visible-ring",
+    "ds-focus-ring",
     "ds-disabled-state",
     "text-style-button",
   ],
@@ -62,6 +62,10 @@ const buttonVariants = cva(
         "icon-sm": "size-button-sm p-0",
       },
     },
+    compoundVariants: [
+      { variant: "secondary", size: "icon", className: "shadow-none" },
+      { variant: "secondary", size: "icon-sm", className: "shadow-none" },
+    ],
     defaultVariants: {
       variant: "secondary",
       size: "default",

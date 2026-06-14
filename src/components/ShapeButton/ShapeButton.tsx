@@ -76,9 +76,9 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
           "size-[46px] cursor-pointer select-none",
           "outline-none ds-shape-button-focus-visible",
           "transition-shadow duration-150",
-          "hover:shadow-button-secondary",
-          // active uses hover shadow intentionally
-          "active:shadow-button-hover",
+          "shadow-button-secondary",
+          "hover:shadow-button-hover active:shadow-button-hover",
+          "disabled:shadow-none",
           "ds-disabled-state",
           className,
         )}
@@ -94,13 +94,12 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
           <path
             d={path}
             className={cn(
-              "fill-secondary stroke-border transition-all duration-150",
-              "group-hover:fill-secondary-hover group-hover:stroke-border-hover",
+              "fill-secondary transition-all duration-150",
+              "group-hover:fill-secondary-hover",
               "group-active:fill-secondary-active",
-              "group-disabled:fill-secondary-disabled group-disabled:stroke-border-disabled",
+              "group-disabled:fill-secondary-disabled",
             )}
-            strokeWidth="1"
-            strokeLinejoin="round"
+            strokeWidth="0"
           />
         </svg>
 
