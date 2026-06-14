@@ -87,6 +87,7 @@
 
   /* Focus ring */
   --ui-color-focus-ring: rgba(70, 86, 92, 0.35);
+  --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.17);
   --ui-color-destructive-focus-ring: rgba(233, 59, 59, 0.3);
 
   /* Brand identity (logo) */
@@ -174,10 +175,13 @@
   /* ── Shadows ─────────────────────────────────────────────────────────── */
 
   --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.1);
   --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --ui-shadow-button-active: 0 1px 1px rgba(0, 0, 0, 0.2);
+  /* defaults to hover shadow — kept as a separate token for manual override */
+  --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.2);
   --ui-shadow-menu: 0 1px 4px 0 rgba(56, 56, 56, 0.15);
-  --ui-shadow-focus: 0 0 0 4px var(--ui-color-focus-ring);
+  --ui-shadow-focus-brand: 0 0 0 4px var(--ui-color-focus-ring);
+  --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
 
   /* ── Menu min-widths ─────────────────────────────────────────────────── */
 
@@ -237,10 +241,12 @@
   --ui-color-text-tertiary: #717171;
 
   --ui-color-focus-ring: rgba(70, 86, 92, 0.15);
+  --ui-color-focus-ring-primary: rgba(249, 249, 249, 0.17);
 
   --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.65);
+  --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.65);
   --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.85);
-  --ui-shadow-button-active: 0 1px 1px rgba(0, 0, 0, 0.65);
+  --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.85);
   --ui-shadow-menu: 0 2px 8px rgba(0, 0, 0, 0.7);
 
   --ui-opacity-disabled: 0.5;

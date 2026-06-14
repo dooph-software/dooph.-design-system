@@ -27,8 +27,9 @@ const checkboxVariants = cva(
     "group inline-flex size-checkbox shrink-0 items-center justify-center overflow-hidden align-middle",
     "rounded-checkbox border border-solid border-border bg-transparent text-primary-fg",
     "cursor-pointer select-none transition-all duration-150 ease-out",
-    "data-[state=unchecked]:hover:bg-secondary-hover data-[state=unchecked]:hover:border-border",
-    "active:border-border-focus",
+    "data-[state=unchecked]:hover:bg-secondary-hover data-[state=unchecked]:hover:border-border data-[state=unchecked]:hover:shadow-button-secondary",
+    // active bg stays at hover color intentionally
+    "active:bg-secondary-hover",
     "focus-visible:border-border-focus ds-focus-visible-ring",
     "data-[disabled]:bg-secondary-disabled data-[disabled]:border-border-disabled ds-radix-data-disabled",
   ],
@@ -38,10 +39,13 @@ const checkboxVariants = cva(
         brand: [
           "data-[state=checked]:bg-brand data-[state=checked]:border-brand data-[state=checked]:text-brand-fg",
           "data-[state=indeterminate]:bg-brand data-[state=indeterminate]:border-brand data-[state=indeterminate]:text-brand-fg",
+          // active border matches typeabletrigger hover, not brand
+          "active:border-border-hover active:shadow-focus-brand",
         ],
         primary: [
           "data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-fg",
           "data-[state=indeterminate]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:text-primary-fg",
+          "active:border-primary active:shadow-focus-primary",
         ],
       },
     },

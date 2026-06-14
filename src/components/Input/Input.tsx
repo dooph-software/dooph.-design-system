@@ -15,7 +15,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           "ds-pl-ui-rg ds-pr-ui-sm",
           "text-style-button text-text placeholder:text-text-tertiary",
           "transition-all duration-100 ds-focus-ring-on-focus",
-          "hover:border-border-hover",
+          "hover:border-border-hover hover:shadow-button-secondary",
           "focus:border-border-focus",
           "disabled:bg-secondary-disabled disabled:border-border-disabled ds-disabled-state",
           hasError &&

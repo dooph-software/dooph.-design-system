@@ -89,10 +89,12 @@
   --radius-avatar: var(--ui-radius-avatar);
   --radius-avatar-sm: var(--ui-radius-avatar-sm);
   --shadow-button: var(--ui-shadow-button);
+  --shadow-button-secondary: var(--ui-shadow-button-secondary);
   --shadow-button-hover: var(--ui-shadow-button-hover);
   --shadow-button-active: var(--ui-shadow-button-active);
   --shadow-menu: var(--ui-shadow-menu);
-  --shadow-focus: var(--ui-shadow-focus);
+  --shadow-focus-brand: var(--ui-shadow-focus-brand);
+  --shadow-focus-primary: var(--ui-shadow-focus-primary);
 
   /* Focus ring with destructive  */
   --shadow-focus-destructive: 0 0 0 4px var(--ui-color-destructive-focus-ring);

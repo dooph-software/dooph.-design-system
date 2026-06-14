@@ -28,7 +28,7 @@ const buttonVariants = cva(
           "[&:not(:disabled):not([aria-disabled=true])]:active:bg-primary-active [&:not(:disabled):not([aria-disabled=true])]:active:border-primary-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
         ],
         secondary: [
-          "bg-secondary text-secondary-fg border-border shadow-button",
+          "bg-secondary text-secondary-fg border-border shadow-button-secondary",
           "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
           "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
           "disabled:bg-secondary-disabled disabled:border-border-disabled aria-disabled:bg-secondary-disabled aria-disabled:border-border-disabled",
@@ -39,9 +39,9 @@ const buttonVariants = cva(
           "[&:not(:disabled):not([aria-disabled=true])]:active:bg-brand-active [&:not(:disabled):not([aria-disabled=true])]:active:border-brand-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
         ],
         destructive: [
-          "bg-destructive text-destructive-fg border-destructive shadow-button",
-          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-destructive-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-destructive-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
-          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-destructive-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
+          "bg-destructive text-destructive-fg border-destructive",
+          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-destructive-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-destructive-hover",
+          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-destructive-active",
           "disabled:bg-destructive-disabled disabled:border-destructive-disabled aria-disabled:bg-destructive-disabled aria-disabled:border-destructive-disabled",
         ],
         ghost: [

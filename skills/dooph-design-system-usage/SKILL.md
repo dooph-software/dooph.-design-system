@@ -141,7 +141,7 @@ Use the semantic, token-backed utilities. The common ones:
   `xxs xs sm rg md lg xl xxl`.
 - Radius: `rounded-tight` (controls), `rounded-standard` (triggers/inputs),
   `rounded-soft` (panels/modals).
-- Shadow: `shadow-button`, `shadow-menu`, `shadow-focus`.
+- Shadow: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`.
 - Typography: prefer a Text component. If you must apply a type style to an
   existing element, use `text-style-body` / `-label` / `-heading` / `-title` /
   `-hero` / `-button` (these also set `font-variation-settings`, which no plain

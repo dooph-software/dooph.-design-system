@@ -54,7 +54,7 @@ Only Google Sans Flex styles use `--ui-font-var-*`. Do not apply those axis toke
 - `--ui-spacing-xxs`, `--ui-spacing-xs`, `--ui-spacing-sm`, `--ui-spacing-rg`, `--ui-spacing-md`, `--ui-spacing-lg`, `--ui-spacing-xl`, `--ui-spacing-xxl`
 - `--ui-icon-tiny`, `--ui-icon-standard`, `--ui-icon-medium`, `--ui-icon-stroke`
 - `--ui-radius-tight`, `--ui-radius-standard`, `--ui-radius-soft`
-- `--ui-shadow-button`, `--ui-shadow-button-hover`, `--ui-shadow-button-active`, `--ui-shadow-menu`, `--ui-shadow-focus`
+- `--ui-shadow-button`, `--ui-shadow-button-secondary`, `--ui-shadow-button-hover`, `--ui-shadow-button-active`, `--ui-shadow-menu`, `--ui-shadow-focus-brand`, `--ui-shadow-focus-primary`
 - `--ui-opacity-disabled`
 
 ## Tailwind Mappings
@@ -63,7 +63,7 @@ The package maps `--ui-*` tokens into Tailwind v4 with `@theme inline`, includin
 
 - Colors: `bg-primary`, `text-primary-fg`, `bg-secondary`, `text-text`, `border-border`, `bg-surface`
 - Fonts: `font-sans`, `font-label`, `font-heading`
-- Shadows: `shadow-button`, `shadow-menu`, `shadow-focus`
+- Shadows: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`
 - Radii: `rounded-tight`, `rounded-standard`, `rounded-soft` (and directional variants such as `rounded-l-standard`)
 - Spacing utilities where mapped (see `@theme`)
 - Composite utilities: `text-style-button`, `text-style-body`, `text-style-label`, `text-style-title`, `text-style-heading`, `text-style-hero`, `h-button`, `h-button-sm`, `size-button`, `size-button-sm`

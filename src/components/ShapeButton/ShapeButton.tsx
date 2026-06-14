@@ -75,6 +75,10 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
           "group relative inline-flex items-center justify-center",
           "size-[46px] cursor-pointer select-none",
           "outline-none ds-shape-button-focus-visible",
+          "transition-shadow duration-150",
+          "hover:shadow-button-secondary",
+          // active uses hover shadow intentionally
+          "active:shadow-button-hover",
           "ds-disabled-state",
           className,
         )}
@@ -91,7 +95,7 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
             d={path}
             className={cn(
               "fill-secondary stroke-border transition-all duration-150",
-              "group-hover:fill-secondary-hover",
+              "group-hover:fill-secondary-hover group-hover:stroke-border-hover",
               "group-active:fill-secondary-active",
               "group-disabled:fill-secondary-disabled group-disabled:stroke-border-disabled",
             )}

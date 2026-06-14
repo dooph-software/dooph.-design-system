@@ -83,6 +83,7 @@ const EXCLUDED = new Set([
   "ui-opacity-disabled",
   // Focus ring colors — only used inside shadow values
   "ui-color-focus-ring",
+  "ui-color-focus-ring-primary",
   "ui-color-destructive-focus-ring",
 ]);
 
