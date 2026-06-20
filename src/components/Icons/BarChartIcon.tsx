@@ -1,6 +1,6 @@
 import { BaseIcon, IconProps } from "./BaseIcon";
 
-export const ArrowDownLeftIcon = (props: IconProps) => {
+export const BarChartIcon = (props: IconProps) => {
   return (
     <BaseIcon {...props}>
       <path d="M3 3v16a2 2 0 0 0 2 2h16" />
@@ -11,4 +11,4 @@ export const ArrowDownLeftIcon = (props: IconProps) => {
   );
 };
 
-export default ArrowDownLeftIcon;
+export default BarChartIcon;
