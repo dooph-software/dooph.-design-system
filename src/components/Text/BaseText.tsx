@@ -77,10 +77,10 @@ export type TextFontWeight =
   (typeof TextFontWeight)[keyof typeof TextFontWeight];
 
 const textFontWeightClass: Record<TextFontWeight, string> = {
-  regular: "font-regular",
-  medium: "font-medium",
-  semibold: "font-semibold",
-  bold: "font-bold",
+  regular: "ds-font-weight-regular",
+  medium: "ds-font-weight-medium",
+  semibold: "ds-font-weight-semibold",
+  bold: "ds-font-weight-bold",
 };
 
 type BaseTextOwnProps = {

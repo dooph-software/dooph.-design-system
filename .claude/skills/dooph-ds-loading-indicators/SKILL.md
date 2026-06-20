@@ -121,9 +121,10 @@ Pure SVG with a `<pattern>` element. No React state or animation.
 
 - `width="100%"` fills any container without JS.
 - `currentColor` for stroke — tint with `className="text-border"` or any text-color utility.
-- `strokeWeight` passes through to the repeated path's `strokeWidth` and defaults to `var(--ui-stroke-border)`.
-- The design wavelength is 15 units. The SVG high-frequency tile is 20 units, so design amplitude 6 scales to SVG amplitude 8.
-- Two cubic bezier segments per tile are generated from the geometry constants; the control points overshoot by `4 / 3` so the actual midpoint peak/trough reaches the scaled amplitude.
+- `strokeWeight` passes through to the repeated path's `strokeWidth` and defaults to `2` (px).
+- Tile widths match the Figma node exactly: `high` = 20px period, `low` = 40px period. Both render in a fixed 12px band (`HEIGHT`).
+- `AMPLITUDE` is a fixed `2.88` px (centerline peak from baseline, ~5.76px peak-to-peak) and is **not** a prop — keep it shallow per the Figma spec. The 12px band gives enough vertical headroom that strokes up to ~6px never clip the host container.
+- Two cubic bezier segments per tile form one trough + one crest; the control points overshoot by `4 / 3` so the curve's midpoint peak/trough reaches `AMPLITUDE` exactly (independent of control-point x positions).
 - `useId()` generates a unique pattern ID per instance. **Never use a static `id` string.**
 
 ---

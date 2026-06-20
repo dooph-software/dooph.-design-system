@@ -105,7 +105,7 @@
     font-family: var(--ui-font-sans);
     font-optical-sizing: auto;
     font-size: var(--ui-text-body);
-    font-style: regular;
+    font-style: normal;
     font-weight: var(--ui-weight-button);
     font-variation-settings: var(--ui-font-var-button);
     line-height: 1;
@@ -115,7 +115,7 @@
     font-family: var(--ui-font-sans);
     font-optical-sizing: auto;
     font-size: var(--ui-text-body);
-    font-style: regular;
+    font-style: normal;
     font-weight: var(--ui-weight-body);
     font-variation-settings: var(--ui-font-var-body);
     letter-spacing: var(--ui-tracking-body);
@@ -141,7 +141,7 @@
     font-family: var(--ui-font-sans);
     font-optical-sizing: auto;
     font-size: var(--ui-text-heading);
-    font-style: regular;
+    font-style: normal;
     font-weight: var(--ui-weight-heading);
     font-variation-settings: var(--ui-font-var-heading);
     line-height: 1;
@@ -153,6 +153,21 @@
     font-weight: var(--ui-weight-hero);
     letter-spacing: var(--ui-tracking-hero);
     line-height: 1;
+  }
+
+  /* Font-weight overrides for BaseText; declared after text-style-* so they win.
+   * Values come from tokens so consumers can retune them. */
+  .ds-font-weight-regular {
+    font-weight: var(--ui-weight-regular);
+  }
+  .ds-font-weight-medium {
+    font-weight: var(--ui-weight-medium);
+  }
+  .ds-font-weight-semibold {
+    font-weight: var(--ui-weight-semibold);
+  }
+  .ds-font-weight-bold {
+    font-weight: var(--ui-weight-bold);
   }
 
   /* Sized to button height tokens */

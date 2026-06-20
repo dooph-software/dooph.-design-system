@@ -4,46 +4,37 @@ import { cn } from "../../utils/cn";
 // ── Variant enum ─────────────────────────────────────────────────────────────
 
 export const WavyDividerVariant = {
-  /** Tighter wave — 20 px period, higher visual frequency. */
+  /** Tight wave — 20px period (Figma "High Frequency"). */
   high: "high",
-  /** Broader wave — 40 px period, lower visual frequency. */
+  /** Broad wave — 40px period (Figma "Low Frequency"). */
   low: "low",
 } as const;
 export type WavyDividerVariant =
   (typeof WavyDividerVariant)[keyof typeof WavyDividerVariant];
 
-// ── SVG wave path constants ───────────────────────────────────────────────────
+// ── Wave geometry (px) ───────────────────────────────────────────────────────
+// Mirrors the Figma "Wavy Divider" node: one crest + one trough per period with
+// a deliberately shallow, fixed amplitude. The wave lives in a 12px band so the
+// stroke stays inside the host container (default 2px → strokes up to ~6px never
+// clip), and the pattern repeats horizontally to fill any width — no JS measuring.
 
-/** Wave geometry — one full sine cycle per high-frequency tile. */
-const DESIGN_WAVELENGTH = 15;
-const HIGH_FREQ_TILE_WIDTH = 20;
-const LOW_FREQ_TILE_WIDTH = 40;
-const DESIGN_AMPLITUDE = 6;
-const SVG_UNIT_SCALE = HIGH_FREQ_TILE_WIDTH / DESIGN_WAVELENGTH;
-const WAVE_AMPLITUDE = DESIGN_AMPLITUDE * SVG_UNIT_SCALE;
-const WAVE_CENTER_Y = WAVE_AMPLITUDE;
-const WAVE_CONTROL_Y_DELTA = WAVE_AMPLITUDE * (4 / 3);
+const TILE_WIDTH: Record<WavyDividerVariant, number> = { high: 20, low: 40 };
+const HEIGHT = 12;
+const CENTER_Y = HEIGHT / 2;
+const AMPLITUDE = 2.88;
+// Symmetric cubic control points overshoot by 4/3 so the curve's midpoint peak
+// lands exactly at AMPLITUDE.
+const CONTROL_DELTA = AMPLITUDE * (4 / 3);
 
-/** Height of the wave tile (and the rendered SVG element) in SVG units. */
-const WAVE_HEIGHT = WAVE_AMPLITUDE * 2;
-
-function formatSvgNumber(value: number) {
-  return Number(value.toFixed(4));
-}
-
-function createWavePath(tileWidth: number) {
-  const halfTileWidth = tileWidth / 2;
-  const topControlY = WAVE_CENTER_Y - WAVE_CONTROL_Y_DELTA;
-  const bottomControlY = WAVE_CENTER_Y + WAVE_CONTROL_Y_DELTA;
-
+/** One full period: a trough then a crest, vertically centered. */
+function wavePath(tileWidth: number) {
+  const half = tileWidth / 2;
+  const trough = CENTER_Y + CONTROL_DELTA;
+  const crest = CENTER_Y - CONTROL_DELTA;
   return [
-    `M 0,${formatSvgNumber(WAVE_CENTER_Y)}`,
-    `C ${formatSvgNumber(halfTileWidth * 0.35)},${formatSvgNumber(topControlY)}`,
-    `${formatSvgNumber(halfTileWidth * 0.65)},${formatSvgNumber(topControlY)}`,
-    `${formatSvgNumber(halfTileWidth)},${formatSvgNumber(WAVE_CENTER_Y)}`,
-    `C ${formatSvgNumber(tileWidth - halfTileWidth * 0.65)},${formatSvgNumber(bottomControlY)}`,
-    `${formatSvgNumber(tileWidth - halfTileWidth * 0.35)},${formatSvgNumber(bottomControlY)}`,
-    `${formatSvgNumber(tileWidth)},${formatSvgNumber(WAVE_CENTER_Y)}`,
+    `M 0 ${CENTER_Y}`,
+    `C ${half / 3} ${trough} ${(half * 2) / 3} ${trough} ${half} ${CENTER_Y}`,
+    `C ${half + half / 3} ${crest} ${half + (half * 2) / 3} ${crest} ${tileWidth} ${CENTER_Y}`,
   ].join(" ");
 }
 
@@ -51,6 +42,7 @@ function createWavePath(tileWidth: number) {
 
 export type WavyDividerProps = {
   variant?: WavyDividerVariant;
+  /** Stroke weight in px (default 2). Accepts any SVG stroke-width value. */
   strokeWeight?: ComponentPropsWithoutRef<"path">["strokeWidth"];
   className?: string;
 } & Omit<ComponentPropsWithoutRef<"svg">, "children" | "className">;
@@ -58,9 +50,10 @@ export type WavyDividerProps = {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 /**
- * Decorative horizontal wave divider. Fills the full width of its flex or
- * block container via `width="100%"`. Stroke color inherits from CSS
- * `color` (`currentColor`) so consumers can tint it with a text-* utility.
+ * Decorative horizontal wave divider. Fills the full width of its container via
+ * `width="100%"` and an SVG `<pattern>` that tiles automatically — no hooks,
+ * resize observers, or layout measuring. Stroke color inherits from CSS `color`
+ * (`currentColor`), so tint it with any text-* utility.
  *
  * ```tsx
  * <WavyDivider variant={WavyDividerVariant.high} className="text-border" />
@@ -68,21 +61,12 @@ export type WavyDividerProps = {
  */
 export const WavyDivider = forwardRef<SVGSVGElement, WavyDividerProps>(
   (
-    {
-      variant = WavyDividerVariant.high,
-      strokeWeight = "1",
-      className,
-      ...props
-    },
+    { variant = WavyDividerVariant.high, strokeWeight = 2, className, ...props },
     ref,
   ) => {
-    // useId gives a stable, SSR-safe unique string per instance so each SVG's
-    // <pattern> id does not collide when multiple dividers appear on the page.
-    const uid = useId().replace(/[^a-zA-Z0-9]/g, "");
-    const isHigh = variant === WavyDividerVariant.high;
-    const tileWidth = isHigh ? HIGH_FREQ_TILE_WIDTH : LOW_FREQ_TILE_WIDTH;
-    const wavePath = createWavePath(tileWidth);
-    const patternId = `ds-wave-${uid}`;
+    // Stable, SSR-safe unique id so multiple dividers' <pattern>s never collide.
+    const patternId = `ds-wave-${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+    const tileWidth = TILE_WIDTH[variant];
 
     return (
       <svg
@@ -90,8 +74,8 @@ export const WavyDivider = forwardRef<SVGSVGElement, WavyDividerProps>(
         role="presentation"
         aria-hidden="true"
         width="100%"
-        height={WAVE_HEIGHT}
-        className={cn("overflow-visible", className)}
+        height={HEIGHT}
+        className={cn("block", className)}
         {...props}
       >
         <defs>
@@ -100,21 +84,19 @@ export const WavyDivider = forwardRef<SVGSVGElement, WavyDividerProps>(
             x="0"
             y="0"
             width={tileWidth}
-            height={WAVE_HEIGHT}
+            height={HEIGHT}
             patternUnits="userSpaceOnUse"
-            overflow="visible"
           >
             <path
-              d={wavePath}
+              d={wavePath(tileWidth)}
               fill="none"
               stroke="currentColor"
               strokeWidth={strokeWeight}
               strokeLinecap="round"
-              strokeLinejoin="round"
             />
           </pattern>
         </defs>
-        <rect width="100%" height={WAVE_HEIGHT} fill={`url(#${patternId})`} />
+        <rect width="100%" height={HEIGHT} fill={`url(#${patternId})`} />
       </svg>
     );
   },

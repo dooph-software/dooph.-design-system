@@ -109,13 +109,19 @@
   --ui-text-title: 23px;
   --ui-text-hero: 36px;
 
-  /* Font weights */
+  /* Font weights — by role */
   --ui-weight-body: 400;
   --ui-weight-button: 500;
   --ui-weight-label: 400;
   --ui-weight-heading: 600;
   --ui-weight-title: 700;
   --ui-weight-hero: 700;
+
+  /* Font weights — by name (BaseText `fontWeight` prop; consumer-overridable) */
+  --ui-weight-regular: 400;
+  --ui-weight-medium: 500;
+  --ui-weight-semibold: 600;
+  --ui-weight-bold: 700;
 
   /* Variable font axes for Google Sans Flex text styles */
   --ui-font-var-button: "wdth" 100, "GRAD" 11, "ROND" 100, "slnt" 0;

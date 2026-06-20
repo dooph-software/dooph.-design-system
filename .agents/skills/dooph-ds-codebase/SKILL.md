@@ -205,6 +205,8 @@ The `__GENERATED_*__` block is managed by `scripts/sync-theme.mjs` — do not ha
 
 `text-style-button`, `text-style-body`, `text-style-label`, `text-style-title`, `text-style-heading`, `text-style-hero` — apply full typographic intent (family, size, weight, optical sizing, variation settings) in a single class. Use these everywhere instead of composing individual font utilities.
 
+`BaseText fontWeight` overrides use `ds-font-weight-regular`, `ds-font-weight-medium`, `ds-font-weight-semibold`, and `ds-font-weight-bold`, declared after `text-style-*` so they override the composite style's token weight. Do not map `TextFontWeight` to Tailwind's default `font-normal/font-medium/font-semibold`; those can be emitted earlier than `text-style-*` and lose in compiled consumer CSS.
+
 ### Height/size utilities (in `index.css`)
 
 `h-button`, `h-button-sm`, `size-button`, `size-button-sm` — keyed to `--ui-height-button` and `--ui-height-button-sm` tokens.

@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react";
 import {
   BaseText,
   TextVariant,
+  TextFontFamily,
+  TextFontSize,
+  TextFontWeight,
   ButtonText,
   HeadingText,
   HeroText,
@@ -29,9 +32,20 @@ const meta = {
       control: "select",
       options: Object.values(TextVariant),
     },
-    as: {
+    fontFamily: {
+      name: "FontFamily",
       control: "select",
-      options: ["span", "p", "div", "h1", "h2", "h3", "h4", "label"],
+      options: Object.values(TextFontFamily),
+    },
+    fontSize: {
+      name: "FontSize",
+      control: "select",
+      options: Object.values(TextFontSize),
+    },
+    fontWeight: {
+      name: "FontWeight",
+      control: "select",
+      options: Object.values(TextFontWeight),
     },
     children: { control: "text" },
   },
@@ -41,35 +55,62 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Button: Story = {
-  args: { children: "Button Text", variant: TextVariant.button },
+  args: {
+    children: "Button Text",
+    variant: TextVariant.button,
+    fontFamily: TextFontFamily.sans,
+    fontSize: TextFontSize.body,
+    fontWeight: TextFontWeight.medium,
+  },
 };
 
 export const Heading: Story = {
-  args: { children: "Heading Text", variant: TextVariant.heading },
+  args: {
+    children: "Heading Text",
+    variant: TextVariant.heading,
+    fontFamily: TextFontFamily.sans,
+    fontSize: TextFontSize.heading,
+    fontWeight: TextFontWeight.semibold,
+  },
 };
 
 export const Hero: Story = {
-  args: { children: "Hero Text", variant: TextVariant.hero },
+  args: {
+    children: "Hero Text",
+    variant: TextVariant.hero,
+    fontFamily: TextFontFamily.heading,
+    fontSize: TextFontSize.hero,
+    fontWeight: TextFontWeight.bold,
+  },
 };
 
 export const Title: Story = {
-  args: { children: "Title Text", variant: TextVariant.title },
+  args: {
+    children: "Title Text",
+    variant: TextVariant.title,
+    fontFamily: TextFontFamily.heading,
+    fontSize: TextFontSize.title,
+    fontWeight: TextFontWeight.bold,
+  },
 };
 
 export const Body: Story = {
-  args: { children: "Body Text", variant: TextVariant.body },
+  args: {
+    children: "Body Text",
+    variant: TextVariant.body,
+    fontFamily: TextFontFamily.sans,
+    fontSize: TextFontSize.body,
+    fontWeight: TextFontWeight.regular,
+  },
 };
 
 export const Label: Story = {
-  args: { children: "Label Text", variant: TextVariant.label },
-};
-
-export const PolymorphicHeading: Story = {
-  name: "Polymorphic — as heading",
   args: {
-    children: "Rendered as an h2",
-    variant: TextVariant.body,
-    as: "h2",
+    children: "Label Text",
+    variant: TextVariant.label,
+    fontFamily: TextFontFamily.label,
+    fontSize: TextFontSize.label,
+    fontWeight: TextFontWeight.regular,
   },
 };
 
@@ -78,9 +119,9 @@ export const AllVariants: Story = {
     <div className="flex flex-col gap-4 p-6">
       {textVariantExamples.map(({ variant, label, children }) => (
         <div key={variant} className="flex flex-col gap-1">
-          <span className="text-xs uppercase tracking-wide opacity-40">
+          <LabelText className="uppercase tracking-wide opacity-40">
             {label}
-          </span>
+          </LabelText>
           <BaseText variant={variant}>{children}</BaseText>
         </div>
       ))}
@@ -93,66 +134,41 @@ export const PreComposedVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-4 p-6">
       <div className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-wide opacity-40">
+        <LabelText className="uppercase tracking-wide opacity-40">
           ButtonText
-        </span>
+        </LabelText>
         <ButtonText>Button Text</ButtonText>
       </div>
       <div className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-wide opacity-40">
+        <LabelText className="uppercase tracking-wide opacity-40">
           HeadingText
-        </span>
+        </LabelText>
         <HeadingText>Heading Text</HeadingText>
       </div>
       <div className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-wide opacity-40">
+        <LabelText className="uppercase tracking-wide opacity-40">
           HeroText
-        </span>
+        </LabelText>
         <HeroText>Hero Text</HeroText>
       </div>
       <div className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-wide opacity-40">
+        <LabelText className="uppercase tracking-wide opacity-40">
           TitleText
-        </span>
+        </LabelText>
         <TitleText>Title Text</TitleText>
       </div>
       <div className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-wide opacity-40">
+        <LabelText className="uppercase tracking-wide opacity-40">
           BodyText
-        </span>
+        </LabelText>
         <BodyText>Body Text</BodyText>
       </div>
       <div className="flex flex-col gap-1">
-        <span className="text-xs uppercase tracking-wide opacity-40">
+        <LabelText className="uppercase tracking-wide opacity-40">
           LabelText
-        </span>
+        </LabelText>
         <LabelText>Label Text</LabelText>
       </div>
-    </div>
-  ),
-};
-
-export const PolymorphicElements: Story = {
-  name: "Polymorphic — multiple HTML elements",
-  render: () => (
-    <div className="flex flex-col gap-3 p-6">
-      {(
-        [
-          { as: "span", label: "span" },
-          { as: "p", label: "p" },
-          { as: "h3", label: "h3" },
-          { as: "label", label: "label" },
-        ] as const
-      ).map(({ as, label }) => (
-        <div key={label} className="flex items-baseline gap-3">
-          <span className="w-14 text-xs uppercase tracking-wide opacity-40 shrink-0">
-            {label}
-          </span>
-          <BaseText as={as} variant={TextVariant.body}>
-            Rendered as &lt;{label}&gt;
-          </BaseText>
-        </div>
-      ))}
     </div>
   ),
 };

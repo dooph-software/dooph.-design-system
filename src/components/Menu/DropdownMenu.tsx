@@ -63,10 +63,15 @@ const DropdownMenuContent = forwardRef<
           : {})}
         className={cn(
           "z-50 overflow-hidden rounded-soft border border-solid border-border-strong bg-surface",
-          "ds-min-w-menu ds-py-ui-xs",
+          "ds-py-ui-xs",
           "shadow-menu",
           "ds-radix-dropdown-content-origin",
-          matchTriggerWidth && "ds-radix-dropdown-match-trigger-width",
+          // Both helpers set min-width; apply only one so neither clobbers the
+          // other in the cascade. The match helper already bakes in the
+          // --ui-min-w-menu floor via max(), so it fully replaces ds-min-w-menu.
+          matchTriggerWidth
+            ? "ds-radix-dropdown-match-trigger-width"
+            : "ds-min-w-menu",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-100",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-1.5 data-[state=closed]:duration-150",
           "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
