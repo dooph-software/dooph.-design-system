@@ -109,12 +109,13 @@ Reach for these before writing local UI:
   `destructive` | `ghost` | `text`; `ButtonSize`: `default` | `sm` | `icon` |
   `iconSm`), `SplitButton` (+ `SplitButtonAction`, `SplitButtonTrigger`),
   `OutlineButton` (`inverseTheme`, `glowing`, `glowColor1`/`glowColor2`),
-  `ShapeButton` (`ShapeButtons`: `Clover` | `Cookie` | `Pentagon` | `Gem`).
+  `ShapeButton` (`ShapeButtons`: `arrow` | `clover` | `cookie` | `gem` |
+  `pentagon` | `puff`).
 - **Inputs:** `Input`, `SearchBox`, `Checkbox`, `TwoWayToggle` (+ `TwoWayToggleItem`).
 - **Menus:** `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`,
   `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`,
   `DropdownMenuSeparator`, `DropdownMenuSection`.
-- **Triggers:** `DropdownTrigger`, `TypeableDropdownTrigger`, `TextDropdownTrigger`.
+- **Triggers:** `DropdownTrigger`, optional `DropdownTriggerContent`, `TypeableDropdownTrigger`, `TextDropdownTrigger`.
 - **Navigation:** `Tabs` (+ `TabsList`, `TabsTrigger`, `TabsContent`),
   `SegmentedTabSelect` (+ `SegmentedTabItem`).
 - **Overlays:** `Modal`, `ModalTrigger`, `ModalContent`, `ModalOverlay`,
@@ -201,6 +202,8 @@ export function SaveButton({ busy, disabled, children = "Save", ...props }: Butt
 - **`TypeableDropdownTrigger`:** only as a child of `DropdownMenuTrigger asChild`,
   and set `focusOnOpen={false}` on `DropdownMenuContent`. It has no `type` prop
   by design — don't try to add one.
+- **`DropdownTriggerContent`:** optional consumer wrapper for trigger labels/meta;
+  triggers do not add it automatically.
 - **Radix-backed components** (menu, tabs, toggle, tooltip, modal) own
   accessibility. Don't replace them with div/button click handlers.
 - **`OutlineButton`:** override `--ui-accent-color` for the brand glow, or pass

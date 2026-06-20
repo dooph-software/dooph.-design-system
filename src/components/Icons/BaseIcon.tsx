@@ -14,9 +14,11 @@ export const IconSizes = {
 export type IconSizes = (typeof IconSizes)[keyof typeof IconSizes] | string;
 
 export interface IconProps {
-  size?: IconSizes;
+  size?: IconSizes | number;
   color?: string;
-  strokeWidth?: number;
+  strokeWidth?: number | string;
+  strokeColor?: string;
+  fillColor?: string;
   className?: string;
   children?: React.ReactNode;
   "aria-hidden"?: boolean | "true" | "false";
@@ -36,7 +38,9 @@ export const BaseIcon = ({
   size = IconSizes.standard,
   color,
   strokeWidth,
+  strokeColor,
   className,
+  fillColor,
   children,
   "aria-hidden": ariaHidden = true,
 }: IconProps) => (
@@ -51,7 +55,8 @@ export const BaseIcon = ({
     style={{
       width: size,
       height: size,
-      stroke: color ?? "currentColor",
+      fill: fillColor ?? undefined,
+      stroke: strokeColor ?? color ?? "currentColor",
       strokeWidth: strokeWidth ?? "var(--ui-icon-stroke)",
     }}
   >

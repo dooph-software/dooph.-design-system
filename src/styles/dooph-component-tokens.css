@@ -37,6 +37,25 @@
     outline-offset: 2px;
   }
 
+  .ds-shape-button-shadow {
+    filter: drop-shadow(var(--ui-shadow-button-secondary));
+    transition:
+      color 150ms,
+      filter 150ms;
+  }
+
+  .group:not(:disabled):not([aria-disabled="true"]):hover .ds-shape-button-shadow {
+    filter: drop-shadow(var(--ui-shadow-button-hover));
+  }
+
+  .group:not(:disabled):not([aria-disabled="true"]):active .ds-shape-button-shadow {
+    filter: drop-shadow(var(--ui-shadow-button-active));
+  }
+
+  .group:is(:disabled, [aria-disabled="true"]) .ds-shape-button-shadow {
+    filter: none;
+  }
+
   .ds-focus-visible-ring {
     outline: 4px solid transparent;
     outline-offset: 0;

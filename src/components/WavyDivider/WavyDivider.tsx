@@ -14,28 +14,44 @@ export type WavyDividerVariant =
 
 // ── SVG wave path constants ───────────────────────────────────────────────────
 
-/**
- * Wave paths — one full sine cycle per tile, approximated with two cubic
- * bezier segments. The wave is centred vertically at y=6 inside a 12 px
- * tall tile. Amplitude is ±4.5 px (top peak at y≈1.5, trough at y≈10.5).
- *
- * Control point placement (35 % / 65 % of each half-period) minimises
- * deviation from a true sine wave while keeping the SVG simple.
- */
+/** Wave geometry — one full sine cycle per high-frequency tile. */
+const DESIGN_WAVELENGTH = 15;
 const HIGH_FREQ_TILE_WIDTH = 20;
-const HIGH_FREQ_PATH =
-  "M 0,6 C 3.5,1.5 6.5,1.5 10,6 C 13.5,10.5 16.5,10.5 20,6";
-
 const LOW_FREQ_TILE_WIDTH = 40;
-const LOW_FREQ_PATH = "M 0,6 C 7,1.5 13,1.5 20,6 C 27,10.5 33,10.5 40,6";
+const DESIGN_AMPLITUDE = 6;
+const SVG_UNIT_SCALE = HIGH_FREQ_TILE_WIDTH / DESIGN_WAVELENGTH;
+const WAVE_AMPLITUDE = DESIGN_AMPLITUDE * SVG_UNIT_SCALE;
+const WAVE_CENTER_Y = WAVE_AMPLITUDE;
+const WAVE_CONTROL_Y_DELTA = WAVE_AMPLITUDE * (4 / 3);
 
-/** Height of the wave tile (and the rendered SVG element) in px. */
-const WAVE_HEIGHT = 12;
+/** Height of the wave tile (and the rendered SVG element) in SVG units. */
+const WAVE_HEIGHT = WAVE_AMPLITUDE * 2;
+
+function formatSvgNumber(value: number) {
+  return Number(value.toFixed(4));
+}
+
+function createWavePath(tileWidth: number) {
+  const halfTileWidth = tileWidth / 2;
+  const topControlY = WAVE_CENTER_Y - WAVE_CONTROL_Y_DELTA;
+  const bottomControlY = WAVE_CENTER_Y + WAVE_CONTROL_Y_DELTA;
+
+  return [
+    `M 0,${formatSvgNumber(WAVE_CENTER_Y)}`,
+    `C ${formatSvgNumber(halfTileWidth * 0.35)},${formatSvgNumber(topControlY)}`,
+    `${formatSvgNumber(halfTileWidth * 0.65)},${formatSvgNumber(topControlY)}`,
+    `${formatSvgNumber(halfTileWidth)},${formatSvgNumber(WAVE_CENTER_Y)}`,
+    `C ${formatSvgNumber(tileWidth - halfTileWidth * 0.65)},${formatSvgNumber(bottomControlY)}`,
+    `${formatSvgNumber(tileWidth - halfTileWidth * 0.35)},${formatSvgNumber(bottomControlY)}`,
+    `${formatSvgNumber(tileWidth)},${formatSvgNumber(WAVE_CENTER_Y)}`,
+  ].join(" ");
+}
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export type WavyDividerProps = {
   variant?: WavyDividerVariant;
+  strokeWeight?: ComponentPropsWithoutRef<"path">["strokeWidth"];
   className?: string;
 } & Omit<ComponentPropsWithoutRef<"svg">, "children" | "className">;
 
@@ -51,13 +67,21 @@ export type WavyDividerProps = {
  * ```
  */
 export const WavyDivider = forwardRef<SVGSVGElement, WavyDividerProps>(
-  ({ variant = WavyDividerVariant.high, className, ...props }, ref) => {
+  (
+    {
+      variant = WavyDividerVariant.high,
+      strokeWeight = "1",
+      className,
+      ...props
+    },
+    ref,
+  ) => {
     // useId gives a stable, SSR-safe unique string per instance so each SVG's
     // <pattern> id does not collide when multiple dividers appear on the page.
     const uid = useId().replace(/[^a-zA-Z0-9]/g, "");
     const isHigh = variant === WavyDividerVariant.high;
     const tileWidth = isHigh ? HIGH_FREQ_TILE_WIDTH : LOW_FREQ_TILE_WIDTH;
-    const wavePath = isHigh ? HIGH_FREQ_PATH : LOW_FREQ_PATH;
+    const wavePath = createWavePath(tileWidth);
     const patternId = `ds-wave-${uid}`;
 
     return (
@@ -78,12 +102,13 @@ export const WavyDivider = forwardRef<SVGSVGElement, WavyDividerProps>(
             width={tileWidth}
             height={WAVE_HEIGHT}
             patternUnits="userSpaceOnUse"
+            overflow="visible"
           >
             <path
               d={wavePath}
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.5"
+              strokeWidth={strokeWeight}
               strokeLinecap="round"
               strokeLinejoin="round"
             />

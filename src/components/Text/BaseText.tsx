@@ -39,7 +39,8 @@ export const TextFontFamily = {
   label: "label",
   heading: "heading",
 } as const;
-export type TextFontFamily = (typeof TextFontFamily)[keyof typeof TextFontFamily];
+export type TextFontFamily =
+  (typeof TextFontFamily)[keyof typeof TextFontFamily];
 
 const textFontFamilyClass: Record<TextFontFamily, string> = {
   sans: "font-sans",
@@ -67,15 +68,16 @@ const textFontSizeClass: Record<TextFontSize, string> = {
 
 /** Dot-accessible font weight override. Aligned to the --ui-weight-* token values. */
 export const TextFontWeight = {
-  normal: "normal",
+  regular: "regular",
   medium: "medium",
   semibold: "semibold",
   bold: "bold",
 } as const;
-export type TextFontWeight = (typeof TextFontWeight)[keyof typeof TextFontWeight];
+export type TextFontWeight =
+  (typeof TextFontWeight)[keyof typeof TextFontWeight];
 
 const textFontWeightClass: Record<TextFontWeight, string> = {
-  normal: "font-normal",
+  regular: "font-regular",
   medium: "font-medium",
   semibold: "font-semibold",
   bold: "font-bold",

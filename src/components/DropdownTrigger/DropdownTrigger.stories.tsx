@@ -1,5 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { DropdownTrigger, TypeableDropdownTrigger, TextDropdownTrigger } from './DropdownTrigger';
+import {
+  DropdownTrigger,
+  DropdownTriggerContent,
+  TypeableDropdownTrigger,
+  TextDropdownTrigger,
+} from './DropdownTrigger';
 
 const meta = {
   title: 'Menus/DropdownTriggers',
@@ -12,6 +17,17 @@ type Story = StoryObj;
 
 export const Secondary: Story = {
   render: () => <DropdownTrigger>Select option</DropdownTrigger>,
+};
+
+export const SecondaryWithContentWrapper: Story = {
+  render: () => (
+    <DropdownTrigger>
+      <DropdownTriggerContent>
+        <span>Primary label</span>
+        <span className="text-text-tertiary">Meta</span>
+      </DropdownTriggerContent>
+    </DropdownTrigger>
+  ),
 };
 
 export const SecondaryDisabled: Story = {

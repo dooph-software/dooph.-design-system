@@ -13,7 +13,7 @@ Three components form the M3E-inspired indicator family. They share geometry hel
 
 | Component           | Variant          | Prop surface                                               |
 | ------------------- | ---------------- | ---------------------------------------------------------- |
-| `WavyDivider`       | `high` \| `low`  | `variant`, `className` + SVG spread                        |
+| `WavyDivider`       | `high` \| `low`  | `variant`, `strokeWeight`, `className` + SVG spread        |
 | `LoadingSpinner`    | `flat` \| `wavy` | `variant`, `color`, `size`, + SVG spread                   |
 | `ProgressIndicator` | `flat` \| `wavy` | `progress` (0–1), `variant`, `color`, `size`, + SVG spread |
 
@@ -121,9 +121,9 @@ Pure SVG with a `<pattern>` element. No React state or animation.
 
 - `width="100%"` fills any container without JS.
 - `currentColor` for stroke — tint with `className="text-border"` or any text-color utility.
-- Two cubic bezier segments per tile:
-  - High (20 px tile): `M 0,6 C 3.5,1.5 6.5,1.5 10,6 C 13.5,10.5 16.5,10.5 20,6`
-  - Low (40 px tile): `M 0,6 C 7,1.5 13,1.5 20,6 C 27,10.5 33,10.5 40,6`
+- `strokeWeight` passes through to the repeated path's `strokeWidth` and defaults to `var(--ui-stroke-border)`.
+- The design wavelength is 15 units. The SVG high-frequency tile is 20 units, so design amplitude 6 scales to SVG amplitude 8.
+- Two cubic bezier segments per tile are generated from the geometry constants; the control points overshoot by `4 / 3` so the actual midpoint peak/trough reaches the scaled amplitude.
 - `useId()` generates a unique pattern ID per instance. **Never use a static `id` string.**
 
 ---

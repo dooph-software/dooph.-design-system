@@ -14,6 +14,7 @@ export * from './components/DropdownTrigger';
 export * from './components/SplitButton';
 export * from './components/OutlineSection';
 export * from './components/OutlineButton';
+export * from './components/Shapes';
 export * from './components/ShapeButton';
 export * from './components/Modal';
 export * from './components/SearchBox';

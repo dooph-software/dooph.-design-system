@@ -105,7 +105,7 @@
     font-family: var(--ui-font-sans);
     font-optical-sizing: auto;
     font-size: var(--ui-text-body);
-    font-style: normal;
+    font-style: regular;
     font-weight: var(--ui-weight-button);
     font-variation-settings: var(--ui-font-var-button);
     line-height: 1;
@@ -115,7 +115,7 @@
     font-family: var(--ui-font-sans);
     font-optical-sizing: auto;
     font-size: var(--ui-text-body);
-    font-style: normal;
+    font-style: regular;
     font-weight: var(--ui-weight-body);
     font-variation-settings: var(--ui-font-var-body);
     letter-spacing: var(--ui-tracking-body);
@@ -141,7 +141,7 @@
     font-family: var(--ui-font-sans);
     font-optical-sizing: auto;
     font-size: var(--ui-text-heading);
-    font-style: normal;
+    font-style: regular;
     font-weight: var(--ui-weight-heading);
     font-variation-settings: var(--ui-font-var-heading);
     line-height: 1;

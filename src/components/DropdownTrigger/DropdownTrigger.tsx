@@ -29,6 +29,16 @@ type DropdownTriggerComponent = <TElement extends ElementType = "button">(
   },
 ) => ReactElement | null;
 
+export type DropdownTriggerContentProps = ComponentPropsWithoutRef<"div">;
+
+const DropdownTriggerContent = forwardRef<
+  HTMLDivElement,
+  DropdownTriggerContentProps
+>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("flex flex-row gap-xs", className)} {...props} />
+));
+DropdownTriggerContent.displayName = "DropdownTriggerContent";
+
 const DropdownTriggerBase = forwardRef<
   HTMLElement,
   DropdownTriggerProps<ElementType>
@@ -302,4 +312,9 @@ TextDropdownTriggerBase.displayName = "TextDropdownTrigger";
 const TextDropdownTrigger =
   TextDropdownTriggerBase as TextDropdownTriggerComponent;
 
-export { DropdownTrigger, TextDropdownTrigger, TypeableDropdownTrigger };
+export {
+  DropdownTrigger,
+  DropdownTriggerContent,
+  TextDropdownTrigger,
+  TypeableDropdownTrigger,
+};
