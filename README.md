@@ -17,6 +17,28 @@ import { Button } from "@dooph-software/design-system";
 import "@dooph-software/design-system/styles.css";
 ```
 
+## React Server Components (Next.js App Router)
+
+RSC support is built in. Interactive components ship a per-module `"use client"`
+directive that is preserved into the published bundle, so you can import directly
+from a **Server Component** — no local `"use client"` re-export wrapper barrel is
+needed:
+
+```tsx
+// app/page.tsx — a Server Component (note: no "use client")
+import { Button, Tooltip, DropdownMenu } from "@dooph-software/design-system";
+
+export default function Page() {
+  return <Button>Works in an RSC build</Button>;
+}
+```
+
+`next build` runs with no `createContext is not a function` error. Pure,
+presentational exports (text, icons, shapes, variant enums, the `cn` helper) stay
+server-safe and render in the RSC layer; everything interactive is a client
+boundary automatically. Non-Next frameworks (Vite, Storybook, plain
+Rollup/webpack) are unaffected — the directive is inert outside an RSC bundler.
+
 ## Initialize (agent skills)
 
 If you want your agent to implement stuff from this design system more accurately, you can run a command to copy agent skills into your project:

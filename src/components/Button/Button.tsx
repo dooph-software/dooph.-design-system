@@ -1,3 +1,5 @@
+"use client";
+
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import {
@@ -73,27 +75,8 @@ const buttonVariants = cva(
   },
 );
 
-/**
- * Dot-accessible button variant and size constants.
- * Usage: <Button variant={ButtonVariant.primary} size={ButtonSize.sm} />
- */
-export const ButtonVariant = {
-  primary: "primary",
-  secondary: "secondary",
-  brand: "brand",
-  destructive: "destructive",
-  ghost: "ghost",
-  text: "text",
-} as const;
-export type ButtonVariant = (typeof ButtonVariant)[keyof typeof ButtonVariant];
-
-export const ButtonSize = {
-  default: "default",
-  sm: "sm",
-  icon: "icon",
-  iconSm: "icon-sm",
-} as const;
-export type ButtonSize = (typeof ButtonSize)[keyof typeof ButtonSize];
+// ButtonVariant / ButtonSize (+ their types) live in ./constants — kept server-safe
+// (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
 
 type ButtonOwnProps = VariantProps<typeof buttonVariants> & {
   asChild?: boolean;

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, ButtonVariant } from "../Button";
-import { ToastProvider, ToastTypes, useToast } from "./Toast";
+import { ToastProvider, useToast } from "./Toast";
+import { ToastTypes } from "./constants";
 
 const meta = {
   title: "Overlays/Toast",

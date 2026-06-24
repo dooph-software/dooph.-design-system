@@ -3,8 +3,8 @@ export {
   DropdownTriggerContent,
   TypeableDropdownTrigger,
   TextDropdownTrigger,
-  TextDropdownSize,
 } from './DropdownTrigger';
+export { TextDropdownSize } from './constants';
 export type {
   DropdownTriggerProps,
   DropdownTriggerContentProps,

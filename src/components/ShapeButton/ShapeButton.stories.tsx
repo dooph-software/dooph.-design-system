@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { SendIcon } from "../Icons";
-import { ShapeButton, ShapeButtons } from "./ShapeButton";
+import { ShapeButton } from "./ShapeButton";
+import { ShapeButtons } from "./constants";
 
 const meta = {
   title: "Buttons & inputs/ShapeButton",

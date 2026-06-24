@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { TabSize, TabVariant, Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs';
+import { TabSize, TabVariant } from './constants';
 
 const meta = {
   title: 'Navigation/Tabs',

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { LeftSidebarClosedIcon } from "../Icons";
-import { Button, ButtonSize, ButtonVariant } from "./Button";
+import { Button } from "./Button";
+import { ButtonSize, ButtonVariant } from "./constants";
 
 const meta = {
   title: "Buttons & inputs/Button",

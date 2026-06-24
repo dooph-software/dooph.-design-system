@@ -1,3 +1,5 @@
+"use client";
+
 import * as ToastPrimitive from "@radix-ui/react-toast";
 import { cva } from "class-variance-authority";
 import {
@@ -16,13 +18,9 @@ import { ButtonSize, ButtonVariant, buttonVariants } from "../Button";
 import { BaseText, TextVariant, type BaseTextProps } from "../Text";
 import { CloseCancelIcon } from "../Icons";
 
-export const ToastTypes = {
-  standard: "standard",
-  brand: "brand",
-  error: "error",
-  action: "action",
-} as const;
-export type ToastTypes = (typeof ToastTypes)[keyof typeof ToastTypes];
+// ToastTypes (+ its type) lives in ./constants (server-safe), re-exported via
+// index.ts; imported here for internal variant resolution.
+import { ToastTypes } from "./constants";
 
 type ToastOptions = {
   title?: string;

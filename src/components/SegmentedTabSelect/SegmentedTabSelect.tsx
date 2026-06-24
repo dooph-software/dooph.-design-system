@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   forwardRef,
@@ -6,7 +8,8 @@ import {
   type ComponentRef,
 } from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
-import { TabsList, TabsTrigger, TabVariant, TabSize, type TabsTriggerProps } from '../Tabs/Tabs';
+import { TabsList, TabsTrigger, type TabsTriggerProps } from '../Tabs/Tabs';
+import { TabSize, TabVariant } from '../Tabs/constants';
 import { cn } from '../../utils/cn';
 
 /**
@@ -30,16 +33,9 @@ const SegmentedTabContext = createContext<{
  * | primary            | ✓     | primary          | default   |
  * | primary-small      | ✓     | primary          | default   |
  */
-export const SegmentedVariant = {
-  ghost: 'ghost',
-  ghostSmall: 'ghost-small',
-  secondary: 'secondary',
-  secondarySmall: 'secondary-small',
-  primary: 'primary',
-  primarySmall: 'primary-small',
-} as const;
-export type SegmentedVariant =
-  (typeof SegmentedVariant)[keyof typeof SegmentedVariant];
+// SegmentedVariant (+ its type) lives in ./constants (server-safe), re-exported
+// via index.ts; imported here for internal variant resolution.
+import { SegmentedVariant } from './constants';
 
 export interface SegmentedTabSelectProps
   extends ComponentPropsWithoutRef<typeof TabsPrimitive.Root> {

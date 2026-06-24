@@ -1,6 +1,9 @@
+"use client";
+
 import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
-import { Button, ButtonSize, ButtonVariant } from "../Button/Button";
+import { Button } from "../Button/Button";
+import { ButtonSize, ButtonVariant } from "../Button/constants";
 import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
 import { ChevronsUpDownIcon } from "../Icons/ChevronsUpDownIcon";
 import { ChevronUpIcon } from "../Icons/ChevronUpIcon";

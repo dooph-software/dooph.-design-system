@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { SegmentedTabItem, SegmentedTabSelect, SegmentedVariant } from './SegmentedTabSelect';
+import { SegmentedTabItem, SegmentedTabSelect } from './SegmentedTabSelect';
+import { SegmentedVariant } from './constants';
 
 const meta = {
   title: 'Navigation/SegmentedTabSelect',

@@ -23,15 +23,36 @@ function emitCssAssets() {
 }
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  // Every source module is its own entry point (Storybook stories excluded).
+  // This makes tsup behave like Rollup's `preserveModules`: instead of inlining
+  // the whole library into one barrel, each module emits its own dist file. That
+  // is what lets per-module "use client" directives survive into dist — interactive
+  // components keep the directive at the top of THEIR chunk, while pure/server-safe
+  // modules (cn, types, icons, BaseText) stay free of it. dist/index.js remains the
+  // single public entry, now re-exporting sibling chunks rather than an inlined blob.
+  entry: ['src/**/*.{ts,tsx}', '!src/**/*.stories.tsx', '!src/**/*.test.{ts,tsx}'],
   format: ['esm', 'cjs'],
   dts: true,
-  splitting: false,
+  // `splitting` is required so esbuild keeps the module graph as separate chunks
+  // (shared code is factored out instead of duplicated) — without it the barrel
+  // would re-inline client code and the directive would land on the whole bundle.
+  splitting: true,
+  // metafile gives the post-build stamp (scripts/add-use-client.mjs) a precise
+  // input→output map so it tags only the output chunks whose source actually
+  // carried "use client". The stamp runs in onSuccess because tsup writes files
+  // itself (esbuild `write: false`), so an esbuild plugin mutating outputFiles in
+  // onEnd is ignored — the directive must be applied after the real files land.
+  metafile: true,
   sourcemap: true,
   clean: true,
   external: ['react', 'react-dom', 'react/jsx-runtime'],
-  treeshake: true,
+  // NOTE: tsup's `treeshake` runs an extra Rollup pass that emits a
+  // MODULE_LEVEL_DIRECTIVE warning for every "use client" file and strips the
+  // directive anyway. The per-module output below already lets consumer bundlers
+  // tree-shake (combined with the package "sideEffects" field), so we skip it to
+  // keep the build warning-free and preserve directives cleanly.
   onSuccess: async () => {
+    execSync('node scripts/add-use-client.mjs', { stdio: 'inherit', cwd: process.cwd() });
     emitCssAssets();
   },
 });

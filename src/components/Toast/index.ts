@@ -5,10 +5,10 @@ export {
   ToastProvider,
   ToastRoot,
   ToastTitle,
-  ToastTypes,
   ToastViewport,
   useToast,
 } from "./Toast";
+export { ToastTypes } from "./constants";
 export type {
   ToastDescriptionProps,
   ToastProviderProps,

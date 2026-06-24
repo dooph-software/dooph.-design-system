@@ -9,8 +9,8 @@ import {
   TooltipProvider,
   TooltipTitle,
   TooltipTrigger,
-  TooltipTypes,
 } from "./Tooltip";
+import { TooltipTypes } from "./constants";
 
 const meta = {
   title: "Overlays/Tooltip",

@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, type InputHTMLAttributes } from 'react';
 import { cn } from '../../utils/cn';
 import { HotkeyIndicator } from '../HotkeyIndicator/HotkeyIndicator';

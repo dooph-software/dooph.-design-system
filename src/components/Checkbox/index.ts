@@ -1,8 +1,3 @@
-export {
-  Checkbox,
-  CheckboxChecked,
-  CheckboxIndicator,
-  CheckboxVariant,
-  checkboxVariants,
-} from './Checkbox';
+export { Checkbox, CheckboxIndicator, checkboxVariants } from './Checkbox';
+export { CheckboxChecked, CheckboxVariant } from './constants';
 export type { CheckboxProps } from './Checkbox';

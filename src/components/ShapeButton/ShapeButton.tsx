@@ -1,3 +1,5 @@
+"use client";
+
 import { Slot } from "@radix-ui/react-slot";
 import {
   forwardRef,
@@ -19,18 +21,8 @@ import {
   Shapes,
 } from "../Shapes";
 
-/**
- * Dot-accessible shape constants.
- * Usage: <ShapeButton shape={ShapeButtons.gem} />
- */
-export const ShapeButtons = {
-  arrow: "arrow",
-  clover: "clover",
-  cookie: "cookie",
-  gem: "gem",
-  pentagon: "pentagon",
-  puff: "puff",
-} as const satisfies Record<string, Shapes>;
+// ShapeButtons lives in ./constants — kept server-safe (no "use client") so RSC
+// code can read the enum values. Re-exported via index.ts.
 
 type ShapeButtonOwnProps = {
   shape?: Shapes;

@@ -1,3 +1,5 @@
+"use client";
+
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import {
   forwardRef,
@@ -7,12 +9,9 @@ import {
 import { cn } from "../../utils/cn";
 import { BaseText, TextVariant, type BaseTextProps } from "../Text";
 
-export const TooltipTypes = {
-  simple: "simple",
-  rich: "rich",
-  complex: "complex",
-} as const;
-export type TooltipTypes = (typeof TooltipTypes)[keyof typeof TooltipTypes];
+// TooltipTypes (+ its type) lives in ./constants (server-safe), re-exported via
+// index.ts; imported here for internal variant resolution.
+import { TooltipTypes } from "./constants";
 
 const Tooltip = TooltipPrimitive.Root;
 const TooltipTrigger = TooltipPrimitive.Trigger;

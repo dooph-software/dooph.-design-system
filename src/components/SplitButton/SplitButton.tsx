@@ -1,3 +1,5 @@
+"use client";
+
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../utils/cn";
 import { ChevronDownIcon } from "../Icons";

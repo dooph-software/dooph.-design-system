@@ -1,2 +1,3 @@
-export { TabSize, TabVariant, Tabs, TabsList, TabsTrigger, TabsContent, tabTriggerVariants } from './Tabs';
+export { Tabs, TabsList, TabsTrigger, TabsContent, tabTriggerVariants } from './Tabs';
+export { TabSize, TabVariant } from './constants';
 export type { TabsTriggerProps } from './Tabs';

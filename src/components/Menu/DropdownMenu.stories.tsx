@@ -13,7 +13,8 @@ import {
   DropdownTrigger,
   TypeableDropdownTrigger,
 } from '../DropdownTrigger/DropdownTrigger';
-import { Button, ButtonVariant } from '../Button/Button';
+import { Button } from '../Button/Button';
+import { ButtonVariant } from '../Button/constants';
 
 const meta = {
   title: 'Menus/DropdownMenu',

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { Checkbox } from './Checkbox';
 import {
-  Checkbox,
   CheckboxChecked,
   CheckboxVariant,
   type CheckboxChecked as CheckboxCheckedValue,
-} from './Checkbox';
+} from './constants';
 import { LabelText } from '../Text';
 
 const meta = {

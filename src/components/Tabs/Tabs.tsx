@@ -1,3 +1,5 @@
+"use client";
+
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cva, type VariantProps } from "class-variance-authority";
 import {
@@ -67,25 +69,8 @@ const tabTriggerVariants = cva(
   },
 );
 
-/**
- * Dot-accessible tab size constant.
- * Usage: <TabsTrigger size={TabSize.icon} />
- */
-export const TabSize = {
-  default: "default",
-  icon: "icon",
-} as const;
-export type TabSize = (typeof TabSize)[keyof typeof TabSize];
-
-/**
- * Dot-accessible tab variant constant.
- * Usage: <TabsTrigger variant={TabVariant.primary} />
- */
-export const TabVariant = {
-  ghost: "ghost",
-  primary: "primary",
-} as const;
-export type TabVariant = (typeof TabVariant)[keyof typeof TabVariant];
+// TabSize / TabVariant (+ their types) live in ./constants — kept server-safe
+// (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
 
 export interface TabsTriggerProps
   extends

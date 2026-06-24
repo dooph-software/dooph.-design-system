@@ -1,3 +1,5 @@
+"use client";
+
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import {
   createContext,
@@ -8,24 +10,9 @@ import {
 } from "react";
 import { cn } from "../../utils/cn";
 
-/**
- * Dot-accessible toggle variant and size constants.
- * Usage: <TwoWayToggleItem variant={ToggleVariant.primary} size={ToggleSize.sm} />
- *
- * primary — selected item gets primary (dark) button fill; resting text is dark (text-text)
- * secondary — selected item gets ghost-active fill; resting text is ghost-fg
- */
-export const ToggleVariant = {
-  primary: "primary",
-  secondary: "secondary",
-} as const;
-export type ToggleVariant = (typeof ToggleVariant)[keyof typeof ToggleVariant];
-
-export const ToggleSize = {
-  default: "default",
-  sm: "sm",
-} as const;
-export type ToggleSize = (typeof ToggleSize)[keyof typeof ToggleSize];
+// ToggleVariant / ToggleSize (+ their types) live in ./constants (server-safe),
+// re-exported via index.ts; imported here for internal variant/size resolution.
+import { ToggleSize, ToggleVariant } from "./constants";
 
 const itemBase = [
   "inline-flex items-center justify-center whitespace-nowrap",

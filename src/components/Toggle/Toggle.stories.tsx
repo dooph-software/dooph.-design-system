@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { TwoWayToggle, TwoWayToggleItem, ToggleSize, ToggleVariant } from './Toggle';
+import { TwoWayToggle, TwoWayToggleItem } from './Toggle';
+import { ToggleSize, ToggleVariant } from './constants';
 
 const meta = {
   title: 'Buttons & inputs/TwoWayToggle',

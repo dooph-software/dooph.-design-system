@@ -1,3 +1,5 @@
+"use client";
+
 import { Slot } from "@radix-ui/react-slot";
 import {
   forwardRef,
@@ -12,6 +14,9 @@ import {
 } from "react";
 import { cn } from "../../utils/cn";
 import { ChevronDownIcon, IconSize, SearchIcon } from "../Icons";
+// TextDropdownSize (+ its type) lives in ./constants (server-safe), re-exported
+// via index.ts; imported here for internal size resolution.
+import { TextDropdownSize } from "./constants";
 
 /* DropdownTrigger (secondary button style) */
 
@@ -238,17 +243,6 @@ const TypeableDropdownTrigger = forwardRef<
 TypeableDropdownTrigger.displayName = "TypeableDropdownTrigger";
 
 /* TextDropdownTrigger */
-
-/**
- * Dot-accessible size constant for TextDropdownTrigger.
- * Usage: <TextDropdownTrigger size={TextDropdownSize.sm} />
- */
-export const TextDropdownSize = {
-  default: "default",
-  sm: "sm",
-} as const;
-export type TextDropdownSize =
-  (typeof TextDropdownSize)[keyof typeof TextDropdownSize];
 
 type TextDropdownTriggerOwnProps = {
   size?: TextDropdownSize;

@@ -8,7 +8,8 @@ import {
   ModalTrigger,
   ModalClose,
 } from './Modal';
-import { Button, ButtonVariant, ButtonSize } from '../Button/Button';
+import { Button } from '../Button/Button';
+import { ButtonVariant, ButtonSize } from '../Button/constants';
 
 const meta = {
   title: 'Overlays/Modal',

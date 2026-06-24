@@ -1,3 +1,5 @@
+"use client";
+
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { cva, type VariantProps } from "class-variance-authority";
 import {
@@ -7,20 +9,9 @@ import {
 } from "react";
 import { cn } from "../../utils/cn";
 
-export const CheckboxChecked = {
-  checked: true,
-  unchecked: false,
-  indeterminate: "indeterminate",
-} as const;
-export type CheckboxChecked =
-  (typeof CheckboxChecked)[keyof typeof CheckboxChecked];
-
-export const CheckboxVariant = {
-  brand: "brand",
-  primary: "primary",
-} as const;
-export type CheckboxVariant =
-  (typeof CheckboxVariant)[keyof typeof CheckboxVariant];
+// CheckboxChecked / CheckboxVariant (+ their types) live in ./constants — kept
+// server-safe (no "use client") so RSC code can read the enum values.
+// Re-exported via index.ts.
 
 const checkboxVariants = cva(
   [

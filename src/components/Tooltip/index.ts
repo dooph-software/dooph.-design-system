@@ -5,8 +5,8 @@ export {
   TooltipProvider,
   TooltipTitle,
   TooltipTrigger,
-  TooltipTypes,
 } from "./Tooltip";
+export { TooltipTypes } from "./constants";
 export type {
   TooltipBodyProps,
   TooltipContentProps,
