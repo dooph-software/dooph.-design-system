@@ -40,13 +40,13 @@
   --color-brand-fg: var(--ui-color-brand-foreground);
   --color-brand-border-disabled: var(--ui-color-brand-border-disabled);
   --color-destructive: var(--ui-color-destructive);
-  --color-destructive-fg: var(--ui-color-destructive-foreground);
-  --color-destructive-hover: var(--ui-color-destructive-hover);
-  --color-destructive-active: var(--ui-color-destructive-active);
-  --color-destructive-disabled: var(--ui-color-destructive-disabled);
   --color-destructive-border: var(--ui-color-destructive-border);
+  --color-destructive-hover: var(--ui-color-destructive-hover);
   --color-destructive-border-hover: var(--ui-color-destructive-border-hover);
+  --color-destructive-active: var(--ui-color-destructive-active);
   --color-destructive-border-active: var(--ui-color-destructive-border-active);
+  --color-destructive-fg: var(--ui-color-destructive-foreground);
+  --color-destructive-disabled: var(--ui-color-destructive-disabled);
   --color-destructive-border-disabled: var(--ui-color-destructive-border-disabled);
   --color-ghost-fg: var(--ui-color-ghost-foreground);
   --color-ghost-hover: var(--ui-color-ghost-hover);
