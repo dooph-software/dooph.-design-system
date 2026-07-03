@@ -180,7 +180,7 @@ The package defines font tokens but loads NO font files.
 
 ### What the package owns
 
-- `--ui-font-sans`, `--ui-font-label`, `--ui-font-heading` in `tokens.css` — font family stacks pointing to named families the consumer is responsible for loading.
+- Per-role font family tokens in `tokens.css` — `--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero` — stacks pointing to named families the consumer is responsible for loading. Each text role is independently overridable (defaults: body/button/heading → Google Sans Flex, label → Host Grotesk, title/hero → Bricolage Grotesque).
 - `--ui-font-var-button/body/heading` — `font-variation-settings` values for Google Sans Flex axes (`GRAD`, `ROND`, `slnt`, `wdth`).
 - `text-style-*` utility classes in `index.css` — composite font utilities that reference the tokens above.
 
@@ -203,7 +203,7 @@ Omitting any of these axes causes `font-variation-settings` to silently fail in 
 ### Consuming project responsibilities
 
 - Load Google Sans Flex (all axes), Host Grotesk, and Bricolage Grotesque by any means appropriate to their framework.
-- Map the loaded font family names into `--ui-font-sans`, `--ui-font-label`, `--ui-font-heading` in their root CSS.
+- Map the loaded font family names into the per-role tokens (`--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero`) in their root CSS. Overriding a single role (e.g. only `--ui-font-button`) is supported and leaves the others at their defaults.
 - In Next.js: use `next/font/google` with `variable` option + `axes` array, then map the CSS variable to the dooph token.
 
 ---

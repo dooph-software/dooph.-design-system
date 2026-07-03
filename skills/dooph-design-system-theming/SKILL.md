@@ -45,16 +45,24 @@ Apps that don't use Tailwind skip the preset entirely.
 
 ## 3. Fonts (always the app's job)
 
-The package defines font-family *tokens* but ships **no font files**. Load fonts
-yourself, then map the loaded families/variables to the three font tokens:
+The package defines font-family *tokens* but ships **no font files**. There is
+one token per text role — `body`, `button`, `heading`, `label`, `title`, `hero`
+— so each role can be overridden independently. Load fonts yourself, then map
+the loaded families/variables to the role tokens:
 
 ```css
 :root, .light {
-  --ui-font-sans: var(--font-google-sans-flex), system-ui, sans-serif;
+  --ui-font-body: var(--font-google-sans-flex), system-ui, sans-serif;
+  --ui-font-button: var(--font-google-sans-flex), system-ui, sans-serif;
+  --ui-font-heading: var(--font-google-sans-flex), system-ui, sans-serif;
   --ui-font-label: var(--font-host-grotesk), system-ui, sans-serif;
-  --ui-font-heading: var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui, sans-serif;
+  --ui-font-title: var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui, sans-serif;
+  --ui-font-hero: var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui, sans-serif;
 }
 ```
+
+Only override the roles you want to change — e.g. to render button labels in a
+different face while leaving body text alone, set just `--ui-font-button`.
 
 Load **Google Sans Flex with its axes available** (`GRAD`, `ROND`, `opsz`,
 `slnt`, `wdth`, `wght`) — the design system applies axis settings only to Google

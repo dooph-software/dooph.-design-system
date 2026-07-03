@@ -22,7 +22,7 @@ const checkboxVariants = cva(
     // active bg stays at hover color intentionally
     "active:bg-secondary-hover",
     "focus-visible:border-border-focus ds-focus-visible-ring",
-    "data-[disabled]:bg-secondary-disabled data-[disabled]:border-border-disabled ds-radix-data-disabled",
+    "data-[disabled]:bg-secondary-disabled data-[disabled]:border-secondary-border-disabled ds-radix-data-disabled",
   ],
   {
     variants: {
@@ -31,7 +31,7 @@ const checkboxVariants = cva(
           "data-[state=checked]:bg-brand data-[state=checked]:border-brand data-[state=checked]:text-brand-fg",
           "data-[state=indeterminate]:bg-brand data-[state=indeterminate]:border-brand data-[state=indeterminate]:text-brand-fg",
           // active border matches typeabletrigger hover, not brand
-          "active:border-border-hover active:shadow-focus-brand",
+          "active:border-trigger-border-hover active:shadow-focus-brand",
         ],
         primary: [
           "data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-fg",

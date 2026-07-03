@@ -111,8 +111,8 @@ function toThemeEntry(fullName) {
   const radiusM = key.match(/^ui-radius-(.+)$/);
   if (radiusM) return `--radius-${radiusM[1]}: var(${fullName});`;
 
-  // --ui-font-sans|label|heading  →  --font-X  (families only)
-  const fontM = key.match(/^ui-font-(sans|label|heading)$/);
+  // --ui-font-<role>  →  --font-<role>  (family stacks only; excludes --ui-font-var-*)
+  const fontM = key.match(/^ui-font-(body|button|heading|label|title|hero)$/);
   if (fontM) return `--font-${fontM[1]}: var(${fullName});`;
 
   // --ui-text-X  →  --text-X  (font sizes)

@@ -174,7 +174,7 @@ Notable component tokens:
 Maps `--ui-*` tokens into Tailwind utility namespaces:
 
 - `--color-primary` → `bg-primary`, `text-primary`, `border-primary`
-- `--font-sans` → `font-sans`
+- `--font-body` → `font-body` (also `font-button`, `font-heading`, `font-label`, `font-title`, `font-hero`)
 - `--shadow-button` → `shadow-button`
 - `--radius-tight` → `rounded-tight`
 - etc. (full map in `index.css` between `__GENERATED_THEME_START__` and `__GENERATED_THEME_END__`)

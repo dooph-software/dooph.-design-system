@@ -33,19 +33,31 @@ const textVariantClassName: Record<TextVariant, string> = {
   [TextVariant.label]: "text-style-label",
 };
 
-/** Dot-accessible font family override. Maps to the --ui-font-* token family stacks. */
+/**
+ * Dot-accessible font family override. Maps to the per-role --ui-font-* token
+ * family stacks, each independently overridable by consuming projects.
+ *
+ * BREAKING (font token split): `TextFontFamily.sans` was removed along with
+ * `--ui-font-sans`; use `TextFontFamily.body` (same default stack).
+ */
 export const TextFontFamily = {
-  sans: "sans",
-  label: "label",
+  body: "body",
+  button: "button",
   heading: "heading",
+  label: "label",
+  title: "title",
+  hero: "hero",
 } as const;
 export type TextFontFamily =
   (typeof TextFontFamily)[keyof typeof TextFontFamily];
 
 const textFontFamilyClass: Record<TextFontFamily, string> = {
-  sans: "font-sans",
-  label: "font-label",
+  body: "font-body",
+  button: "font-button",
   heading: "font-heading",
+  label: "font-label",
+  title: "font-title",
+  hero: "font-hero",
 };
 
 /** Dot-accessible font size override. Maps to the --ui-text-* token sizes. */

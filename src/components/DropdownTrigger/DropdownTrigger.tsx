@@ -63,7 +63,7 @@ const DropdownTriggerBase = forwardRef<
         "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active",
         "ds-focus-visible-ring",
         "ds-disabled-state",
-        "disabled:bg-secondary-disabled disabled:border-border-disabled aria-disabled:bg-secondary-disabled aria-disabled:border-border-disabled",
+        "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled aria-disabled:bg-secondary-disabled aria-disabled:border-secondary-border-disabled",
         className,
       )}
       {...props}
@@ -173,7 +173,7 @@ const TypeableDropdownTrigger = forwardRef<
           "min-w-40 rounded-tight border border-solid border-border",
           "bg-secondary ds-pl-ui-rg ds-pr-ui-sm",
           "transition-all duration-150 ease-out",
-          "[&:hover:not(:focus-within)]:border-border-hover [&:hover:not(:focus-within)]:shadow-button-secondary",
+          "[&:hover:not(:focus-within)]:border-trigger-border-hover [&:hover:not(:focus-within)]:shadow-button-secondary",
           "focus-within:border-border-focus ds-focus-within-ring",
           "data-[state=open]:border-border-focus data-[state=open]:ds-focus-ring",
           disabled ? "cursor-not-allowed" : "cursor-text",

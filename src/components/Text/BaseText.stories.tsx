@@ -58,7 +58,7 @@ export const Button: Story = {
   args: {
     children: "Button Text",
     variant: TextVariant.button,
-    fontFamily: TextFontFamily.sans,
+    fontFamily: TextFontFamily.button,
     fontSize: TextFontSize.body,
     fontWeight: TextFontWeight.medium,
   },
@@ -68,7 +68,7 @@ export const Heading: Story = {
   args: {
     children: "Heading Text",
     variant: TextVariant.heading,
-    fontFamily: TextFontFamily.sans,
+    fontFamily: TextFontFamily.heading,
     fontSize: TextFontSize.heading,
     fontWeight: TextFontWeight.semibold,
   },
@@ -78,7 +78,7 @@ export const Hero: Story = {
   args: {
     children: "Hero Text",
     variant: TextVariant.hero,
-    fontFamily: TextFontFamily.heading,
+    fontFamily: TextFontFamily.hero,
     fontSize: TextFontSize.hero,
     fontWeight: TextFontWeight.bold,
   },
@@ -88,7 +88,7 @@ export const Title: Story = {
   args: {
     children: "Title Text",
     variant: TextVariant.title,
-    fontFamily: TextFontFamily.heading,
+    fontFamily: TextFontFamily.title,
     fontSize: TextFontSize.title,
     fontWeight: TextFontWeight.bold,
   },
@@ -98,7 +98,7 @@ export const Body: Story = {
   args: {
     children: "Body Text",
     variant: TextVariant.body,
-    fontFamily: TextFontFamily.sans,
+    fontFamily: TextFontFamily.body,
     fontSize: TextFontSize.body,
     fontWeight: TextFontWeight.regular,
   },

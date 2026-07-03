@@ -68,7 +68,7 @@ const ModalContent = forwardRef<
       className={cn(
         'fixed left-1/2 top-1/2 z-50',
         '-translate-x-1/2 -translate-y-1/2',
-        'bg-modal-surface border border-solid border-modal-border',
+        'bg-modal-surface border border-solid border-border-popovers',
         'rounded-soft overflow-hidden',
         'shadow-menu',
         'focus-visible:outline-none',

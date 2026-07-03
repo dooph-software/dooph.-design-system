@@ -25,7 +25,7 @@ const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
         "hover:enabled:bg-secondary-hover",
         "active:enabled:bg-secondary-active",
         "ds-focus-visible-ring",
-        "ds-disabled-state disabled:border-border-disabled",
+        "ds-disabled-state disabled:border-secondary-border-disabled",
         className,
       )}
       {...props}
@@ -56,7 +56,7 @@ const SplitButtonTrigger = forwardRef<
       "hover:enabled:bg-secondary-hover",
       "active:enabled:bg-secondary-active",
       "ds-focus-visible-ring",
-      "ds-disabled-state disabled:border-border-disabled",
+      "ds-disabled-state disabled:border-secondary-border-disabled",
       className,
     )}
     {...props}

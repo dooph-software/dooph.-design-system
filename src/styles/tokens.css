@@ -18,32 +18,50 @@
 .light {
   /* ── Colors ─────────────────────────────────────────────────────────── */
 
-  /* Primary (dark neutral) */
+  /* Primary (dark neutral) — borders match bg per state (Figma); alias so a
+   * consumer bg override propagates, or override the border tokens directly */
   --ui-color-primary: #171717;
   --ui-color-primary-foreground: #ffffff;
   --ui-color-primary-hover: #2c2c2c;
   --ui-color-primary-active: #3d3d3d;
   --ui-color-primary-disabled: #5c5c5c;
+  --ui-color-primary-border: var(--ui-color-primary);
+  --ui-color-primary-border-hover: var(--ui-color-primary-hover);
+  --ui-color-primary-border-active: var(--ui-color-primary-active);
+  --ui-color-primary-border-disabled: var(--ui-color-primary-disabled);
 
-  /* Secondary (light surface) */
+  /* Secondary (light surface) — borders are distinct from bg (Figma literals) */
   --ui-color-secondary: #fdfdfd;
   --ui-color-secondary-foreground: #161616;
   --ui-color-secondary-hover: #efefef;
   --ui-color-secondary-active: #e3e3e3;
   --ui-color-secondary-disabled: #f5f5f5;
+  --ui-color-secondary-border: #e2e3e4;
+  --ui-color-secondary-border-hover: #e2e3e4;
+  --ui-color-secondary-border-active: #e2e3e4;
+  --ui-color-secondary-border-disabled: #e9e9e9;
 
-  /* Brand (teal) */
+  /* Brand (teal) — borders match bg per state (Figma); disabled border is
+   * transparent in Figma */
   --ui-color-brand: #4f666d;
   --ui-color-brand-foreground: #ffffff;
   --ui-color-brand-hover: #45555b;
   --ui-color-brand-active: #323d41;
+  --ui-color-brand-border: var(--ui-color-brand);
+  --ui-color-brand-border-hover: var(--ui-color-brand-hover);
+  --ui-color-brand-border-active: var(--ui-color-brand-active);
+  --ui-color-brand-border-disabled: transparent;
 
-  /* Destructive (danger red) */
+  /* Destructive (danger red) — borders are distinct from bg (Figma literals) */
   --ui-color-destructive: #e93b3b;
   --ui-color-destructive-foreground: #ffffff;
   --ui-color-destructive-hover: #db3838;
   --ui-color-destructive-active: #c92c2c;
   --ui-color-destructive-disabled: #ef9b9b;
+  --ui-color-destructive-border: #ea3f3f;
+  --ui-color-destructive-border-hover: #dc3c3c;
+  --ui-color-destructive-border-active: #ca3030;
+  --ui-color-destructive-border-disabled: #ef9b9b;
 
   /* Ghost (transparent) */
   --ui-color-ghost: transparent;
@@ -59,7 +77,6 @@
 
   /* Modals */
   --ui-color-modal-surface: #fcfcfc;
-  --ui-color-modal-border: #ebebeb;
   --ui-color-modal-backdrop: rgba(0, 0, 0, 0.35);
 
   /* Tooltips */
@@ -73,12 +90,16 @@
   /* Accent (brand color for interactive effects — override per project) */
   --ui-accent-color: #44c0e5;
 
-  /* Borders */
-  --ui-color-border: #e2e3e4;
-  --ui-color-border-hover: #b4b4b4;
-  --ui-color-border-focus: #4f666d;
-  --ui-color-border-strong: #ebebeb;
-  --ui-color-border-disabled: #e9e9e9;
+  /* Borders
+   * border          — borderStandard (Figma): general control/container border
+   * border-popovers — borderPopovers (Figma borderModal): modal/menu/toast panels
+   * border-focus    — typeable trigger + control focus border; aliases the brand
+   *                   button border per Figma
+   * trigger-border-hover — typeable trigger / input hover border */
+  --ui-color-border: #dfe3e5;
+  --ui-color-border-popovers: #ebebeb;
+  --ui-color-border-focus: var(--ui-color-brand-border);
+  --ui-color-trigger-border-hover: #b4b4b4;
 
   /* Text */
   --ui-color-text: #161616;
@@ -97,10 +118,14 @@
 
   /* ── Typography ──────────────────────────────────────────────────────── */
 
-  /* Font family contract — consumers load fonts and may override these stacks */
-  --ui-font-sans: "Google Sans Flex", system-ui, sans-serif;
+  /* Font family contract — one token per text role. Consumers load fonts and
+   * may override any role independently (e.g. only buttons in a display face). */
+  --ui-font-body: "Google Sans Flex", system-ui, sans-serif;
+  --ui-font-button: "Google Sans Flex", system-ui, sans-serif;
+  --ui-font-heading: "Google Sans Flex", system-ui, sans-serif;
   --ui-font-label: "Host Grotesk", system-ui, sans-serif;
-  --ui-font-heading: "Bricolage Grotesque", system-ui, sans-serif;
+  --ui-font-title: "Bricolage Grotesque", system-ui, sans-serif;
+  --ui-font-hero: "Bricolage Grotesque", system-ui, sans-serif;
 
   /* Font sizes */
   --ui-text-label: 12px;
@@ -214,6 +239,10 @@
   --ui-color-secondary-hover: #2b2b2d;
   --ui-color-secondary-active: #313235;
   --ui-color-secondary-disabled: #222224;
+  --ui-color-secondary-border: #303235;
+  --ui-color-secondary-border-hover: #313235;
+  --ui-color-secondary-border-active: #3a3b3f;
+  --ui-color-secondary-border-disabled: #1f1f21;
 
   --ui-color-brand: #5a6f75;
 
@@ -221,6 +250,10 @@
   --ui-color-destructive-hover: #e5614f;
   --ui-color-destructive-active: #e2432e;
   --ui-color-destructive-disabled: #9c655f;
+  --ui-color-destructive-border: #d82a13;
+  --ui-color-destructive-border-hover: #dd2f18;
+  --ui-color-destructive-border-active: #b12814;
+  --ui-color-destructive-border-disabled: #bd5547;
 
   --ui-color-ghost-hover: rgba(255, 255, 255, 0.04);
   --ui-color-ghost-active: rgba(255, 255, 255, 0.08);
@@ -232,15 +265,13 @@
   --ui-color-surface-page: #161719;
 
   --ui-color-modal-surface: #212124;
-  --ui-color-modal-border: #36363b;
   --ui-color-modal-backdrop: rgba(0, 0, 0, 0.7);
 
   --ui-color-avatar-bg: #2f3a40;
 
   --ui-color-border: #333437;
-  --ui-color-border-hover: #3a3b3e;
-  --ui-color-border-strong: #393a40;
-  --ui-color-border-disabled: #1f1f21;
+  --ui-color-border-popovers: #36363b;
+  --ui-color-trigger-border-hover: #3a3b3f;
 
   --ui-color-text: #ffffff;
   --ui-color-text-secondary: #afafaf;

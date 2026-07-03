@@ -18,17 +18,35 @@ The package defines font-family tokens but does not load font files. Consumers m
 - `--ui-color-destructive`, `--ui-color-destructive-foreground`, `--ui-color-destructive-hover`, `--ui-color-destructive-active`, `--ui-color-destructive-disabled`
 - `--ui-color-ghost`, `--ui-color-ghost-foreground`, `--ui-color-ghost-hover`, `--ui-color-ghost-active`, `--ui-color-ghost-foreground-active`
 - `--ui-color-surface`, `--ui-color-surface-secondary`, `--ui-color-surface-page`
-- `--ui-color-border`, `--ui-color-border-hover`, `--ui-color-border-focus`, `--ui-color-border-strong`, `--ui-color-border-disabled`
 - `--ui-color-text`, `--ui-color-text-secondary`, `--ui-color-text-tertiary`
 - `--ui-color-focus-ring`, `--ui-color-destructive-focus-ring`
+
+## Button Borders
+
+Every button variant carries its own border tokens for default/hover/active (plus disabled where Figma defines one), independently overridable from the background — e.g. give brand buttons a contrasting outline without touching `--ui-color-brand`.
+
+- Primary (defaults alias the matching bg tokens): `--ui-color-primary-border`, `--ui-color-primary-border-hover`, `--ui-color-primary-border-active`, `--ui-color-primary-border-disabled`
+- Secondary (distinct literals — the visible outline on light buttons): `--ui-color-secondary-border`, `--ui-color-secondary-border-hover`, `--ui-color-secondary-border-active`, `--ui-color-secondary-border-disabled`
+- Brand (defaults alias the matching bg tokens; disabled is `transparent`): `--ui-color-brand-border`, `--ui-color-brand-border-hover`, `--ui-color-brand-border-active`, `--ui-color-brand-border-disabled`
+- Destructive (distinct literals): `--ui-color-destructive-border`, `--ui-color-destructive-border-hover`, `--ui-color-destructive-border-active`, `--ui-color-destructive-border-disabled`
+
+Ghost and text buttons have no border tokens (transparent borders).
+
+## General Borders
+
+- `--ui-color-border` — borderStandard: general control/container border (inputs, triggers, tables, cards)
+- `--ui-color-border-popovers` — floating panel border shared by menus, modals, and toasts
+- `--ui-color-border-focus` — focus border for typeable triggers/inputs/controls; defaults to `var(--ui-color-brand-border)` so it follows brand
+- `--ui-color-trigger-border-hover` — hover border for typeable triggers, inputs, and search boxes
 
 ## Modals
 
 Used by `ModalContent` and `ModalOverlay`. Override to match the app surface treatment.
 
 - `--ui-color-modal-surface` — background of the modal panel
-- `--ui-color-modal-border` — border of the modal panel
 - `--ui-color-modal-backdrop` — fullscreen overlay behind the modal (accepts any color or `rgba`)
+
+The modal panel border uses the shared `--ui-color-border-popovers` (see General Borders).
 
 ## Accent
 
@@ -40,7 +58,7 @@ For per-instance color control without touching the token, use the `glowColor1` 
 
 ## Typography
 
-- `--ui-font-sans`, `--ui-font-label`, `--ui-font-heading`
+- `--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero` — one family stack per text role, each independently overridable (defaults: body/button/heading → Google Sans Flex, label → Host Grotesk, title/hero → Bricolage Grotesque)
 - `--ui-text-label`, `--ui-text-body`, `--ui-text-heading`, `--ui-text-title`, `--ui-text-hero`
 - `--ui-weight-body`, `--ui-weight-button`, `--ui-weight-label`, `--ui-weight-heading`, `--ui-weight-title`, `--ui-weight-hero`
 - `--ui-font-var-button`, `--ui-font-var-body`, `--ui-font-var-heading`
@@ -62,7 +80,7 @@ Only Google Sans Flex styles use `--ui-font-var-*`. Do not apply those axis toke
 The package maps `--ui-*` tokens into Tailwind v4 with `@theme inline`, including:
 
 - Colors: `bg-primary`, `text-primary-fg`, `bg-secondary`, `text-text`, `border-border`, `bg-surface`
-- Fonts: `font-sans`, `font-label`, `font-heading`
+- Fonts: `font-body`, `font-button`, `font-heading`, `font-label`, `font-title`, `font-hero`
 - Shadows: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`
 - Radii: `rounded-tight`, `rounded-standard`, `rounded-soft` (and directional variants such as `rounded-l-standard`)
 - Spacing utilities where mapped (see `@theme`)

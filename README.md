@@ -51,21 +51,18 @@ This copies the bundled skills into the agent directories of your choice (`.agen
 
 ## Font Contract
 
-This package does **not** ship font files or load remote fonts. It defines default font-family tokens only:
+This package does **not** ship font files or load remote fonts. It defines default font-family tokens only — one per text role, so each role can be overridden independently:
 
 ```css
---ui-font-sans: "Google Sans Flex", system-ui, sans-serif;
+--ui-font-body: "Google Sans Flex", system-ui, sans-serif;
+--ui-font-button: "Google Sans Flex", system-ui, sans-serif;
+--ui-font-heading: "Google Sans Flex", system-ui, sans-serif;
 --ui-font-label: "Host Grotesk", system-ui, sans-serif;
---ui-font-heading: "Bricolage Grotesque", system-ui, sans-serif;
+--ui-font-title: "Bricolage Grotesque", system-ui, sans-serif;
+--ui-font-hero: "Bricolage Grotesque", system-ui, sans-serif;
 ```
 
-Consuming apps are responsible for loading fonts and mapping loaded font variables or family names into:
-
-```css
---ui-font-sans
---ui-font-label
---ui-font-heading
-```
+Consuming apps are responsible for loading fonts and mapping loaded font variables or family names into the `--ui-font-*` role tokens above. Override only the roles you want to change — e.g. set just `--ui-font-button` to give buttons a different face while body text keeps its default.
 
 This keeps the package framework-agnostic and lets each app choose `next/font`, local files, provider CSS, or system fallbacks.
 
@@ -122,9 +119,14 @@ export default function RootLayout({
 ```css
 /* app/theme.css */
 :root {
-  --ui-font-sans: var(--font-google-sans-flex), system-ui, sans-serif;
+  --ui-font-body: var(--font-google-sans-flex), system-ui, sans-serif;
+  --ui-font-button: var(--font-google-sans-flex), system-ui, sans-serif;
+  --ui-font-heading: var(--font-google-sans-flex), system-ui, sans-serif;
   --ui-font-label: var(--font-host-grotesk), system-ui, sans-serif;
-  --ui-font-heading:
+  --ui-font-title:
+    var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui,
+    sans-serif;
+  --ui-font-hero:
     var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui,
     sans-serif;
 }
@@ -151,9 +153,13 @@ Load fonts with `@font-face`, provider CSS, or a `<link>` in the app shell, then
 }
 
 :root {
-  --ui-font-sans: "Google Sans Flex", system-ui, sans-serif;
+  --ui-font-body: "Google Sans Flex", system-ui, sans-serif;
+  --ui-font-button: "Google Sans Flex", system-ui, sans-serif;
+  --ui-font-heading: "Google Sans Flex", system-ui, sans-serif;
   --ui-font-label: "Host Grotesk", system-ui, sans-serif;
-  --ui-font-heading:
+  --ui-font-title:
+    "Bricolage Grotesque", "Google Sans Flex", system-ui, sans-serif;
+  --ui-font-hero:
     "Bricolage Grotesque", "Google Sans Flex", system-ui, sans-serif;
 }
 ```

@@ -25,26 +25,26 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary: [
-          "bg-primary text-primary-fg border-primary shadow-button",
-          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-primary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-primary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
-          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-primary-active [&:not(:disabled):not([aria-disabled=true])]:active:border-primary-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
+          "bg-primary text-primary-fg border-primary-border shadow-button",
+          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-primary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-primary-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
+          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-primary-active [&:not(:disabled):not([aria-disabled=true])]:active:border-primary-border-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
         ],
         secondary: [
-          "bg-secondary text-secondary-fg border-border shadow-button-secondary",
-          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
-          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
-          "disabled:bg-secondary-disabled disabled:border-border-disabled aria-disabled:bg-secondary-disabled aria-disabled:border-border-disabled",
+          "bg-secondary text-secondary-fg border-secondary-border shadow-button-secondary",
+          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-secondary-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
+          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active [&:not(:disabled):not([aria-disabled=true])]:active:border-secondary-border-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
+          "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled aria-disabled:bg-secondary-disabled aria-disabled:border-secondary-border-disabled",
         ],
         brand: [
-          "bg-brand text-brand-fg border-brand shadow-button",
-          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-brand-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-brand-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
-          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-brand-active [&:not(:disabled):not([aria-disabled=true])]:active:border-brand-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
+          "bg-brand text-brand-fg border-brand-border shadow-button",
+          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-brand-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-brand-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
+          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-brand-active [&:not(:disabled):not([aria-disabled=true])]:active:border-brand-border-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
         ],
         destructive: [
-          "bg-destructive text-destructive-fg border-destructive",
-          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-destructive-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-destructive-hover",
-          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-destructive-active",
-          "disabled:bg-destructive-disabled disabled:border-destructive-disabled aria-disabled:bg-destructive-disabled aria-disabled:border-destructive-disabled",
+          "bg-destructive text-destructive-fg border-destructive-border",
+          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-destructive-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-destructive-border-hover",
+          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-destructive-active [&:not(:disabled):not([aria-disabled=true])]:active:border-destructive-border-active",
+          "disabled:bg-destructive-disabled disabled:border-destructive-border-disabled aria-disabled:bg-destructive-disabled aria-disabled:border-destructive-border-disabled",
         ],
         ghost: [
           "bg-transparent text-ghost-fg border-transparent",

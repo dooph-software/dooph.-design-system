@@ -64,7 +64,7 @@ const DropdownMenuContent = forwardRef<
             } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>)
           : {})}
         className={cn(
-          "z-50 overflow-hidden rounded-soft border border-solid border-border-strong bg-surface",
+          "z-50 overflow-hidden rounded-soft border border-solid border-border-popovers bg-surface",
           "ds-py-ui-xs",
           "shadow-menu",
           "ds-radix-dropdown-content-origin",
@@ -173,7 +173,7 @@ const DropdownMenuSeparator = forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("ds-my-ui-xs h-px bg-border-strong", className)}
+    className={cn("ds-my-ui-xs h-px bg-border-popovers", className)}
     {...props}
   />
 ));
