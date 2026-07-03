@@ -39,6 +39,9 @@
   ],
   "scripts": {
     "generate-icon-exports": "node scripts/generate-icon-exports.mjs",
+    "prep-release:patch": "npm version patch && npm run build",
+    "prep-release:major": "npm version major && npm run build",
+    "prep-release:minor": "npm version minor && npm run build",
     "sync-tokens": "node scripts/sync-theme.mjs",
     "build:js": "tsup",
     "build:css": "tailwindcss -i src/styles/index.css -o dist/styles.css && npm run copy-theme",
@@ -48,8 +51,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "tsc --noEmit",
-    "prepublishOnly": "npm run build",
-    "prep-release": "npm version patch && npm run build"
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "react": ">=19",
