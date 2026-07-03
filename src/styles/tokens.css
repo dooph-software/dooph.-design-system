@@ -54,16 +54,16 @@
 
   /* Destructive (danger red) — borders are distinct from bg (Figma literals) */
   --ui-color-destructive: #e93b3b;
-  --ui-color-destructive-foreground: #ffffff;
-  --ui-color-destructive-hover: #db3838;
-  --ui-color-destructive-active: #c92c2c;
-  --ui-color-destructive-disabled: #ef9b9b;
   --ui-color-destructive-border: #ea3f3f;
+  --ui-color-destructive-hover: #db3838;
   --ui-color-destructive-border-hover: #dc3c3c;
+  --ui-color-destructive-active: #c92c2c;
   --ui-color-destructive-border-active: #ca3030;
+  --ui-color-destructive-foreground: #ffffff;
+  --ui-color-destructive-disabled: #ef9b9b;
   --ui-color-destructive-border-disabled: #ef9b9b;
 
-  /* Ghost (no bg at rest; hover/active are translucent overlays) */
+  /* Ghost (transparent) */
   --ui-color-ghost-foreground: #4a4a4a;
   --ui-color-ghost-hover: rgba(0, 0, 0, 0.04);
   --ui-color-ghost-active: rgba(0, 0, 0, 0.08);
