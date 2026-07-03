@@ -16,7 +16,7 @@ The package defines font-family tokens but does not load font files. Consumers m
 - `--ui-color-secondary`, `--ui-color-secondary-foreground`, `--ui-color-secondary-hover`, `--ui-color-secondary-active`, `--ui-color-secondary-disabled`
 - `--ui-color-brand`, `--ui-color-brand-foreground`, `--ui-color-brand-hover`, `--ui-color-brand-active`
 - `--ui-color-destructive`, `--ui-color-destructive-foreground`, `--ui-color-destructive-hover`, `--ui-color-destructive-active`, `--ui-color-destructive-disabled`
-- `--ui-color-ghost`, `--ui-color-ghost-foreground`, `--ui-color-ghost-hover`, `--ui-color-ghost-active`, `--ui-color-ghost-foreground-active`
+- `--ui-color-ghost-foreground`, `--ui-color-ghost-hover`, `--ui-color-ghost-active`, `--ui-color-ghost-foreground-active` (ghost/text buttons have no rest bg — hover/active are translucent overlays)
 - `--ui-color-surface`, `--ui-color-surface-secondary`, `--ui-color-surface-page`
 - `--ui-color-text`, `--ui-color-text-secondary`, `--ui-color-text-tertiary`
 - `--ui-color-focus-ring`, `--ui-color-destructive-focus-ring`

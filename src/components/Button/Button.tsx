@@ -47,12 +47,12 @@ const buttonVariants = cva(
           "disabled:bg-destructive-disabled disabled:border-destructive-border-disabled aria-disabled:bg-destructive-disabled aria-disabled:border-destructive-border-disabled",
         ],
         ghost: [
-          "bg-transparent text-ghost-fg border-transparent",
+          "text-ghost-fg border-transparent",
           "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-ghost-hover [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
           "[&:not(:disabled):not([aria-disabled=true])]:active:bg-ghost-active [&:not(:disabled):not([aria-disabled=true])]:active:text-ghost-fg-active",
         ],
         text: [
-          "bg-transparent text-ghost-fg border-transparent",
+          "text-ghost-fg border-transparent",
           "[&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
           "[&:not(:disabled):not([aria-disabled=true])]:active:text-ghost-fg-active",
         ],
