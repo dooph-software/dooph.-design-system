@@ -284,9 +284,9 @@ const TextDropdownTriggerBase = forwardRef<
           "ds-focus-visible-ring",
           "ds-disabled-state",
           size === TextDropdownSize.default &&
-            "h-[30px] ds-px-ui-xs text-style-button text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+            "h-[30px] text-style-button text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
           size === TextDropdownSize.sm &&
-            "ds-px-ui-xs text-style-label text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+            "text-style-label text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
           className,
         )}
         {...props}
