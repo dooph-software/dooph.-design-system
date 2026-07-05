@@ -59,6 +59,7 @@ export { ShowMoneyIcon } from "./ShowMoneyIcon";
 export { SiloIcon } from "./SiloIcon";
 export { SortAscendingIcon } from "./SortAscendingIcon";
 export { SortDescendingIcon } from "./SortDescendingIcon";
+export { StopFilledIcon } from "./StopFilledIcon";
 export { StopIcon } from "./StopIcon";
 export { SystemThemeIcon } from "./SystemThemeIcon";
 export { TableIcon } from "./TableIcon";
