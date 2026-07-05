@@ -13,6 +13,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          # Provenance signing needs a populated git ref. On the `release`
+          # event newer checkout versions detach HEAD without a ref, which
+          # drops SourceRepositoryRef from the sigstore cert and causes npm
+          # to reject the publish with a 422 (npm/cli#8699, checkout#2280).
+          ref: ${{ github.event.release.tag_name }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
