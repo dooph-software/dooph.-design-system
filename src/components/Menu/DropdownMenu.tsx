@@ -8,6 +8,7 @@ import {
   type HTMLAttributes,
 } from "react";
 import { cn } from "../../utils/cn";
+import CheckIcon from "../Icons/CheckIcon";
 
 /** Non-modal by default so page UI stays interactable while a menu is open. Pass modal={true} for dialog-like focus trapping. */
 function DropdownMenuRoot({
@@ -108,25 +109,13 @@ const DropdownMenuItem = forwardRef<
     className={cn(
       itemBase,
       "hover:bg-ghost-hover hover:text-ghost-fg-active",
-      "data-[highlighted]:bg-ghost-hover data-[highlighted]:text-ghost-fg-active",
+      "data-highlighted:bg-ghost-hover data-highlighted:text-ghost-fg-active",
       className,
     )}
     {...props}
   />
 ));
 DropdownMenuItem.displayName = "DropdownMenuItem";
-
-const CheckIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-    <path
-      d="M2.5 7L5.5 10L11.5 4"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 const DropdownMenuCheckboxItem = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.CheckboxItem>,
@@ -138,7 +127,7 @@ const DropdownMenuCheckboxItem = forwardRef<
     className={cn(
       itemBase,
       "hover:bg-ghost-hover hover:text-ghost-fg-active",
-      "data-[highlighted]:bg-ghost-hover data-[highlighted]:text-ghost-fg-active",
+      "data-highlighted:bg-ghost-hover data-highlighted:text-ghost-fg-active",
       className,
     )}
     {...props}
