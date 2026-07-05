@@ -52,7 +52,7 @@ export { RightSidebarClosedIcon } from "./RightSidebarClosedIcon";
 export { RightSidebarOpenedIcon } from "./RightSidebarOpenedIcon";
 export { SearchIcon } from "./SearchIcon";
 export { SendIcon } from "./SendIcon";
-export { SettingsIcon } from "./SettingsIcon";
+export { SleekSettingsIcon as SettingsIcon } from "./SettingsBoltIcon";
 export { ShowMoneyIcon } from "./ShowMoneyIcon";
 export { SiloIcon } from "./SiloIcon";
 export { SortAscendingIcon } from "./SortAscendingIcon";

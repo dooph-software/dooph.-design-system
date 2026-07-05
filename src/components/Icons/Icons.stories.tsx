@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BaseIcon, IconProps, IconSizes } from "./BaseIcon";
 import { BugReportIcon } from "./BugReportIcon";
+import CheckIcon from "./CheckIcon";
 import { ChevronDownIcon } from "./ChevronDownIcon";
 import { CloseCancelIcon } from "./CloseCancelIcon";
 import { DarkModeIcon } from "./DarkModeIcon";
@@ -15,7 +16,8 @@ import { RightSidebarClosedIcon } from "./RightSidebarClosedIcon";
 import { RightSidebarOpenedIcon } from "./RightSidebarOpenedIcon";
 import { SearchIcon } from "./SearchIcon";
 import { SendIcon } from "./SendIcon";
-import { SettingsIcon } from "./SettingsIcon";
+import { SettingsBoltIcon } from "./SettingsBoltIcon";
+import { SettingsGearIcon } from "./SettingsGearIcon";
 
 const meta = {
   component: BaseIcon,
@@ -146,13 +148,18 @@ export const SettingsIcons: Story = {
         label="Extensions"
       />
       <IconCell
-        icon={(props) => <SettingsIcon {...props} />}
-        label="Settings"
+        icon={(props) => <SettingsGearIcon {...props} />}
+        label="SettingsGear"
+      />
+      <IconCell
+        icon={(props) => <SettingsBoltIcon {...props} />}
+        label="SettingsBolt"
       />
       <IconCell
         icon={(props) => <BugReportIcon {...props} />}
         label="BugReport"
       />
+      <IconCell icon={(props) => <CheckIcon {...props} />} label="Check" />
     </div>
   ),
 };
@@ -161,9 +168,11 @@ export const Sizes: Story = {
   name: "Icon Sizes",
   render: () => (
     <div style={{ display: "flex", gap: "1.5rem", alignItems: "end" }}>
-      {[IconSizes.tiny, IconSizes.standard, IconSizes.medium].map((size) => (
+      {(
+        Object.entries(IconSizes) as [keyof typeof IconSizes, IconSizes][]
+      ).map(([name, size]) => (
         <div
-          key={size as IconSizes}
+          key={name}
           style={{
             display: "flex",
             flexDirection: "column",
@@ -171,8 +180,8 @@ export const Sizes: Story = {
             gap: "0.5rem",
           }}
         >
-          <SettingsIcon size={IconSizes.standard} />
-          <span style={{ fontSize: 12 }}>{size}</span>
+          <SettingsBoltIcon size={size} />
+          <span style={{ fontSize: 12 }}>{name}</span>
         </div>
       ))}
     </div>
