@@ -123,6 +123,9 @@ Reach for these before writing local UI:
   panel counterpart to Modal (`SheetContent side={SheetSide.left/right/top/bottom}`,
   plus `SheetTrigger`/`SheetClose`/`SheetTitle`/`SheetDescription`; always include
   a `SheetTitle`, `sr-only` when the design shows none); `Tooltip` family.
+  For rendering the same content as a Modal on desktop and a Sheet under a
+  breakpoint, see `references/responsive-sheet-modal.md` (app-side wrapper —
+  intentionally not a packaged component).
 - **Layout / surfaces:** `OutlineSection`, `Avatar`, `HotkeyIndicator`.
 - **Text & icons:** `BaseText` (+ `ButtonText`, `BodyText`, `LabelText`,
   `HeadingText`, `TitleText`, `HeroText`), `BaseIcon`, `ChevronDownIcon`,
