@@ -37,6 +37,7 @@ src/
     SearchBox/
     SegmentedTabSelect/
     ShapeButton/
+    Sheet/
     SplitButton/
     Tabs/
     Text/
@@ -131,6 +132,11 @@ scripts/
 | `ModalOverlay`                                | same                  | styled backdrop                                                           |
 | `ModalContent`                                | same                  | panel; `withOverlay` bool                                                 |
 | `ModalTitle`, `ModalDescription`              | same                  | a11y helpers                                                              |
+| `Sheet`                                       | `Sheet/Sheet.tsx`     | `@radix-ui/react-dialog` — edge-anchored panel counterpart to Modal       |
+| `SheetTrigger`, `SheetPortal`, `SheetClose`   | same                  | pass-throughs                                                             |
+| `SheetOverlay`                                | same                  | styled backdrop; fade synced to panel (300ms in / 200ms out)              |
+| `SheetContent`                                | same                  | panel; `side` = `SheetSide.left/right/top/bottom` (default right); `withOverlay` bool; full-distance push via `slide-*-full` (NOT unsuffixed `slide-*` — Tailwind v4 resolves that to 0.25rem); 300ms in `cubic-bezier(0.32,0.72,0,1)`, 200ms out; timing set as arbitrary `[animation-timing-function:…]` property |
+| `SheetTitle`, `SheetDescription`              | same                  | a11y helpers                                                              |
 | `Tooltip`                                     | `Tooltip/Tooltip.tsx` | `@radix-ui/react-tooltip`                                                 |
 | `TooltipContent`                              | same                  | variants: `TooltipTypes.simple/rich/complex`; token-driven `themeInverse` |
 | `ToastProvider`, `ToastRoot`, `ToastViewport` | `Toast/Toast.tsx`     | `@radix-ui/react-toast`                                                   |
@@ -235,9 +241,9 @@ CSS assets (`styles.css` + `theme.css`) are emitted together by tsup's `onSucces
 
 All of the following must be exported. If adding a component, add it here.
 
-Components: `Button`, `SplitButton`, `SplitButtonAction`, `SplitButtonTrigger`, `OutlineButton`, `ShapeButton`, `Input`, `SearchBox`, `TwoWayToggle`, `TwoWayToggleItem`, `Checkbox`, `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`, `SegmentedTabSelect`, `SegmentedTabItem`, `DropdownMenu`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuSection`, `DropdownMenuGroup`, `DropdownMenuSub`, `DropdownMenuRadioGroup`, `DropdownMenuTrigger`, `DropdownMenuPortal`, `DropdownTrigger`, `DropdownTriggerContent`, `TextDropdownTrigger`, `TypeableDropdownTrigger`, `Modal`, `ModalTrigger`, `ModalPortal`, `ModalOverlay`, `ModalContent`, `ModalClose`, `ModalTitle`, `ModalDescription`, `ToastProvider`, `ToastRoot`, `ToastViewport`, `ToastAction`, `ToastClose`, `TooltipProvider`, `Tooltip`, `TooltipTrigger`, `TooltipContent`, `TooltipTitle`, `TooltipBody`, `Avatar`, `HotkeyIndicator`, `OutlineSection`, `BaseText`, `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `TitleText`, `HeroText`, all Icon components, `BaseIcon`
+Components: `Button`, `SplitButton`, `SplitButtonAction`, `SplitButtonTrigger`, `OutlineButton`, `ShapeButton`, `Input`, `SearchBox`, `TwoWayToggle`, `TwoWayToggleItem`, `Checkbox`, `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`, `SegmentedTabSelect`, `SegmentedTabItem`, `DropdownMenu`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuSection`, `DropdownMenuGroup`, `DropdownMenuSub`, `DropdownMenuRadioGroup`, `DropdownMenuTrigger`, `DropdownMenuPortal`, `DropdownTrigger`, `DropdownTriggerContent`, `TextDropdownTrigger`, `TypeableDropdownTrigger`, `Modal`, `ModalTrigger`, `ModalPortal`, `ModalOverlay`, `ModalContent`, `ModalClose`, `ModalTitle`, `ModalDescription`, `Sheet`, `SheetTrigger`, `SheetPortal`, `SheetOverlay`, `SheetContent`, `SheetClose`, `SheetTitle`, `SheetDescription`, `ToastProvider`, `ToastRoot`, `ToastViewport`, `ToastAction`, `ToastClose`, `TooltipProvider`, `Tooltip`, `TooltipTrigger`, `TooltipContent`, `TooltipTitle`, `TooltipBody`, `Avatar`, `HotkeyIndicator`, `OutlineSection`, `BaseText`, `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `TitleText`, `HeroText`, all Icon components, `BaseIcon`
 
-Variant/size consts: `ButtonVariant`, `ButtonSize`, `TabVariant`, `TabSize`, `ToggleVariant`, `ToggleSize`, `SegmentedVariant`, `TextDropdownSize`, `ShapeButtons`, `TextVariant`, `TextFontFamily`, `TextFontSize`, `TextFontWeight`, `CheckboxChecked`, `IconSize`, `ToastTypes`, `TooltipTypes`, `AvatarSize`
+Variant/size consts: `ButtonVariant`, `ButtonSize`, `TabVariant`, `TabSize`, `ToggleVariant`, `ToggleSize`, `SegmentedVariant`, `TextDropdownSize`, `ShapeButtons`, `SheetSide`, `TextVariant`, `TextFontFamily`, `TextFontSize`, `TextFontWeight`, `CheckboxChecked`, `IconSize`, `ToastTypes`, `TooltipTypes`, `AvatarSize`
 
 Types: `ButtonProps`, `TabsTriggerProps`, `TwoWayToggleProps`, `TwoWayToggleItemProps`, `SegmentedTabSelectProps`, `SegmentedTabItemProps`, `ShapeButtonProps`, `ShapeButtonShape`, `DropdownTriggerProps`, `DropdownTriggerContentProps`, `TextDropdownTriggerProps`, `TypeableDropdownTriggerProps`, `InputProps`, `SearchBoxProps`, `ToastProviderProps`, `ToastRootProps`, `ToastTitleProps`, `ToastDescriptionProps`, `TooltipContentProps`, `TooltipTitleProps`, `TooltipBodyProps`, `AvatarProps`, `HotkeyIndicatorProps`, `OutlineSectionProps`, `OutlineButtonProps`, `BaseTextProps`, `ButtonTextProps`, `BodyTextProps`, `LabelTextProps`, `HeadingTextProps`, `TitleTextProps`, `HeroTextProps`
 

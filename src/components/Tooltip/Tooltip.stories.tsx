@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, ButtonSize, ButtonVariant } from "../Button";
-import { HelpIcon, SettingsIcon } from "../Icons";
 import { HotkeyIndicator } from "../HotkeyIndicator";
+import { HelpIcon, SettingsGearIcon } from "../Icons";
 import {
   Tooltip,
   TooltipBody,
@@ -70,12 +70,12 @@ export const Composable: Story = {
     <Tooltip>
       <TooltipTrigger asChild>
         <Button variant={ButtonVariant.ghost} size={ButtonSize.icon}>
-          <SettingsIcon />
+          <SettingsGearIcon />
         </Button>
       </TooltipTrigger>
       <TooltipContent variant={TooltipTypes.complex}>
         <div className="flex items-center gap-3 p-3">
-          <SettingsIcon />
+          <SettingsGearIcon />
           <div className="flex flex-col gap-1">
             <TooltipTitle>Settings</TooltipTitle>
             <HotkeyIndicator keys={["⌘", ","]} />

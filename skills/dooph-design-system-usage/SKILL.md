@@ -119,7 +119,10 @@ Reach for these before writing local UI:
 - **Navigation:** `Tabs` (+ `TabsList`, `TabsTrigger`, `TabsContent`),
   `SegmentedTabSelect` (+ `SegmentedTabItem`).
 - **Overlays:** `Modal`, `ModalTrigger`, `ModalContent`, `ModalOverlay`,
-  `ModalClose`, `ModalTitle`, `ModalDescription`; `Tooltip` family.
+  `ModalClose`, `ModalTitle`, `ModalDescription`; `Sheet` family — edge-anchored
+  panel counterpart to Modal (`SheetContent side={SheetSide.left/right/top/bottom}`,
+  plus `SheetTrigger`/`SheetClose`/`SheetTitle`/`SheetDescription`; always include
+  a `SheetTitle`, `sr-only` when the design shows none); `Tooltip` family.
 - **Layout / surfaces:** `OutlineSection`, `Avatar`, `HotkeyIndicator`.
 - **Text & icons:** `BaseText` (+ `ButtonText`, `BodyText`, `LabelText`,
   `HeadingText`, `TitleText`, `HeroText`), `BaseIcon`, `ChevronDownIcon`,

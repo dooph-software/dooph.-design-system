@@ -42,6 +42,7 @@ The type is always derived from the const — never a hand-written union type th
 | `SegmentedVariant` | `variant` | `<SegmentedTabSelect variant={SegmentedVariant.secondary} />` |
 | `TextDropdownSize` | `size`    | `<TextDropdownTrigger size={TextDropdownSize.sm} />`          |
 | `ShapeButtons`     | `shape`   | `<ShapeButton shape={ShapeButtons.gem} />`                    |
+| `SheetSide`        | `side`    | `<SheetContent side={SheetSide.right} />`                     |
 | `TextVariant`      | `variant`    | `<BaseText variant={TextVariant.body} />`                          |
 | `TextFontFamily`   | `fontFamily` | `<BaseText fontFamily={TextFontFamily.heading} />`                 |
 | `TextFontSize`     | `fontSize`   | `<BaseText fontSize={TextFontSize.label} />`                       |
@@ -53,7 +54,7 @@ The type is always derived from the const — never a hand-written union type th
 - Const keys are **camelCase** (e.g. `iconSm`, not `IconSm` or `icon-sm`). The string VALUE may differ (`"icon-sm"` to match cva key).
 - The const object and the derived type share the **same identifier** (TypeScript allows a value and a type to share a name).
 - All these exports must be re-exported from `src/index.ts`.
-- Prop name is always `variant` (not `styleVariant`, not `type`, not `kind`). Size prop is always `size`. Shape is the only exception (`shape`).
+- Prop name is always `variant` (not `styleVariant`, not `type`, not `kind`). Size prop is always `size`. The only exceptions are geometry props with established Radix/industry names: `shape` (ShapeButton) and `side` (SheetContent, matching Radix's own `side` convention).
 
 ---
 
