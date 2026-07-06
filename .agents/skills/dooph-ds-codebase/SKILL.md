@@ -135,7 +135,7 @@ scripts/
 | `Sheet`                                       | `Sheet/Sheet.tsx`     | `@radix-ui/react-dialog` — edge-anchored panel counterpart to Modal       |
 | `SheetTrigger`, `SheetPortal`, `SheetClose`   | same                  | pass-throughs                                                             |
 | `SheetOverlay`                                | same                  | styled backdrop; fade synced to panel (300ms in / 200ms out)              |
-| `SheetContent`                                | same                  | panel; `side` = `SheetSide.left/right/top/bottom` (default right); `withOverlay` bool; full-distance push via `slide-*-full` (NOT unsuffixed `slide-*` — Tailwind v4 resolves that to 0.25rem); 300ms in `cubic-bezier(0.32,0.72,0,1)`, 200ms out; timing set as arbitrary `[animation-timing-function:…]` property |
+| `SheetContent`                                | same                  | panel; `side` = `SheetSide.left/right/top/bottom` (default right); `withOverlay` bool; settle-tail push: enters from 20% offset + fade via `slide-*-[20%]` + `fade-in-0` (explicit value required — unsuffixed `slide-*` resolves to 0.25rem in Tailwind v4); 300ms in `cubic-bezier(0.32,0.72,0,1)`, 200ms out; timing set as arbitrary `[animation-timing-function:…]` property |
 | `SheetTitle`, `SheetDescription`              | same                  | a11y helpers                                                              |
 | `Tooltip`                                     | `Tooltip/Tooltip.tsx` | `@radix-ui/react-tooltip`                                                 |
 | `TooltipContent`                              | same                  | variants: `TooltipTypes.simple/rich/complex`; token-driven `themeInverse` |

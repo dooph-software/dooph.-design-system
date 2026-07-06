@@ -47,12 +47,12 @@ SheetOverlay.displayName = "SheetOverlay";
 /* ── Content (the sliding panel itself) ────────────────────────────── */
 
 /**
- * Per-side geometry + push animation. The panel slides its full distance from
- * the owning edge: a tight 300ms push in on a long-deceleration curve
- * (fast start, gentle settle), 200ms accelerating push out. No panel fade —
- * an opaque surface entering from off-screen needs movement, not opacity.
- * The slide distance uses the explicit `slide-*-full` utilities (100%) —
- * under Tailwind v4 the unsuffixed `slide-*` resolves to the 0.25rem translate
+ * Per-side geometry + push animation. Like DropdownMenu, the panel shows only
+ * the settle tail of the movement: it enters from a 20% offset (already 80%
+ * of the way in) while fading in — 300ms on a long-deceleration curve — and
+ * exits 20% back out while fading, 200ms accelerating.
+ * The slide distance must be an explicit value (`slide-*-[20%]`) — under
+ * Tailwind v4 the unsuffixed `slide-*` resolves to the 0.25rem translate
  * DEFAULT, not the plugin's 100%. The timing function is set as an arbitrary property because
  * `animation-timing-function` has no unambiguous utility (core `ease-*`
  * targets transitions).
@@ -70,8 +70,8 @@ const sheetVariants = cva(
     "bg-modal-surface border-solid border-border-popovers",
     "shadow-menu overflow-hidden",
     "focus-visible:outline-none",
-    "data-[state=open]:animate-in data-[state=open]:duration-300 data-[state=open]:[animation-timing-function:cubic-bezier(0.32,0.72,0,1)]",
-    "data-[state=closed]:animate-out data-[state=closed]:duration-200 data-[state=closed]:[animation-timing-function:cubic-bezier(0.4,0,1,1)]",
+    "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-300 data-[state=open]:[animation-timing-function:cubic-bezier(0.32,0.72,0,1)]",
+    "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:duration-200 data-[state=closed]:[animation-timing-function:cubic-bezier(0.4,0,1,1)]",
     "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
   ),
   {
@@ -79,19 +79,19 @@ const sheetVariants = cva(
       side: {
         left: cn(
           "inset-y-0 left-0 h-full w-3/4 max-w-96 border-r",
-          "data-[state=open]:slide-in-from-left-full data-[state=closed]:slide-out-to-left-full",
+          "data-[state=open]:slide-in-from-left-[20%] data-[state=closed]:slide-out-to-left-[20%]",
         ),
         right: cn(
           "inset-y-0 right-0 h-full w-3/4 max-w-96 border-l",
-          "data-[state=open]:slide-in-from-right-full data-[state=closed]:slide-out-to-right-full",
+          "data-[state=open]:slide-in-from-right-[20%] data-[state=closed]:slide-out-to-right-[20%]",
         ),
         top: cn(
           "inset-x-0 top-0 w-full border-b",
-          "data-[state=open]:slide-in-from-top-full data-[state=closed]:slide-out-to-top-full",
+          "data-[state=open]:slide-in-from-top-[20%] data-[state=closed]:slide-out-to-top-[20%]",
         ),
         bottom: cn(
           "inset-x-0 bottom-0 w-full border-t",
-          "data-[state=open]:slide-in-from-bottom-full data-[state=closed]:slide-out-to-bottom-full",
+          "data-[state=open]:slide-in-from-bottom-[20%] data-[state=closed]:slide-out-to-bottom-[20%]",
         ),
       },
     },
