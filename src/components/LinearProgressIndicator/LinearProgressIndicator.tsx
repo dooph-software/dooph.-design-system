@@ -29,12 +29,14 @@ const LinearProgressIndicator = forwardRef<
     },
     ref,
   ) => {
-    const pct = max > 0 ? (Math.min(Math.max(value ?? 0, 0), max) / max) * 100 : 0;
+    const safeMax = max > 0 ? max : 100;
+    const clamped = Math.min(Math.max(value ?? 0, 0), safeMax);
+    const pct = (clamped / safeMax) * 100;
     return (
       <ProgressPrimitive.Root
         ref={ref}
-        value={value}
-        max={max}
+        value={clamped}
+        max={safeMax}
         style={{ '--progress-pct': pct } as CSSProperties}
         className={cn('relative h-[4px] w-full', className)}
         {...props}
@@ -50,7 +52,7 @@ const LinearProgressIndicator = forwardRef<
           aria-hidden
           className={cn(
             'absolute inset-y-0 right-0 rounded-full bg-border-primary',
-            'left-[min(100%,calc(var(--progress-pct)*1%+2px))]',
+            'left-[max(4px,min(100%,calc(var(--progress-pct)*1%+2px)))]',
             'data-[hidden]:hidden',
           )}
           data-hidden={pct >= 100 || undefined}
