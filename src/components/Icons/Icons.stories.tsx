@@ -54,7 +54,7 @@ const IconCell = ({
       style={{
         fontSize: 11,
         textAlign: "center",
-        color: "var(--color-fg-secondary)",
+        color: "var(--color-text-secondary)",
       }}
     >
       {label}
@@ -192,13 +192,16 @@ export const Colors: Story = {
   name: "Icon Colors",
   render: () => (
     <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
-      <LightModeIcon size={IconSizes.medium} color="var(--color-fg)" />
+      <LightModeIcon size={IconSizes.medium} color="var(--color-text)" />
       <LightModeIcon
         size={IconSizes.medium}
-        color="var(--color-fg-secondary)"
+        color="var(--color-text-secondary)"
       />
-      <LightModeIcon size={IconSizes.medium} color="var(--color-fg-tertiary)" />
-      <LightModeIcon size={IconSizes.medium} color="var(--color-aspect-logo)" />
+      <LightModeIcon
+        size={IconSizes.medium}
+        color="var(--color-text-tertiary)"
+      />
+      <LightModeIcon size={IconSizes.medium} color="var(--color-brand-color)" />
     </div>
   ),
 };

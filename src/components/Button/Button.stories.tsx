@@ -108,19 +108,19 @@ export const IconSizeComparison: Story = {
               <Button variant={variant} size={ButtonSize.icon}>
                 <LeftSidebarClosedIcon size={IconSize.standard} />
               </Button>
-              <span className="text-xs text-gray-500">icon (38px)</span>
+              <span className="text-xs text-text-secondary">icon (38px)</span>
             </div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.iconSm}>
                 <LeftSidebarClosedIcon size={IconSize.standard} />
               </Button>
-              <span className="text-xs text-gray-500">icon-sm (34px)</span>
+              <span className="text-xs text-text-secondary">icon-sm (34px)</span>
             </div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.iconMicro}>
                 <LeftSidebarClosedIcon size={IconSize.standard} />
               </Button>
-              <span className="text-xs text-gray-500">icon-micro (26px)</span>
+              <span className="text-xs text-text-secondary">icon-micro (26px)</span>
             </div>
           </div>
         ),

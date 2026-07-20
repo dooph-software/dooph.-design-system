@@ -18,7 +18,7 @@ const REVERT_MS = 2000;
 export interface CopyButtonProps
   extends Omit<
     ComponentPropsWithoutRef<typeof Button>,
-    "variant" | "size" | "children"
+    "variant" | "size" | "children" | "asChild"
   > {
   /** Text written to the clipboard. */
   value: string;
@@ -50,12 +50,17 @@ const CopyButton = forwardRef<HTMLElement, CopyButtonProps>(
     const handleClick = useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
         onClick?.(e as never);
-        void navigator.clipboard.writeText(value).then(() => {
-          setCopied(true);
-          onCopied?.(value);
-          if (timer.current) clearTimeout(timer.current);
-          timer.current = setTimeout(() => setCopied(false), REVERT_MS);
-        });
+        void navigator.clipboard
+          .writeText(value)
+          .then(() => {
+            setCopied(true);
+            onCopied?.(value);
+            if (timer.current) clearTimeout(timer.current);
+            timer.current = setTimeout(() => setCopied(false), REVERT_MS);
+          })
+          .catch(() => {
+            // clipboard blocked (insecure context / denied) — no success feedback
+          });
       },
       [value, onClick, onCopied],
     );
