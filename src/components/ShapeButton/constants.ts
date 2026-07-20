@@ -14,4 +14,5 @@ export const ShapeButtons = {
   gem: "gem",
   pentagon: "pentagon",
   puff: "puff",
+  star: "star",
 } as const satisfies Record<string, Shapes>;
