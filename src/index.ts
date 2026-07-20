@@ -8,6 +8,7 @@ export * from './components/Input';
 export * from './components/Tabs';
 export * from './components/SegmentedTabSelect';
 export * from './components/Text';
+export * from './components/TextLink';
 export * from './components/Toggle';
 export * from './components/Menu';
 export * from './components/DropdownTrigger';
