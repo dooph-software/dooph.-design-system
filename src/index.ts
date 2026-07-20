@@ -29,6 +29,7 @@ export * from './components/Slider';
 export * from './components/WavyDivider/WavyDivider';
 export * from './components/LoadingSpinner/LoadingSpinner';
 export * from './components/ProgressIndicator/ProgressIndicator';
+export * from './components/LinearProgressIndicator';
 
 // Utilities
 export { cn } from './utils/cn';
