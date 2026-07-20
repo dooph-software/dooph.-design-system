@@ -29,7 +29,7 @@ const Table = forwardRef<HTMLDivElement, TableProps>(
     <div
       ref={ref}
       className={cn(
-        "flex flex-col w-full border border-border rounded-standard",
+        "flex flex-col w-full border border-border-primary rounded-standard",
         className,
       )}
       style={
@@ -51,7 +51,7 @@ const TableHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("grid border-b border-border py-xs px-xxs", className)}
+      className={cn("grid border-b border-border-primary py-xs px-xxs", className)}
       style={{ gridTemplateColumns: "var(--table-cols)" }}
       {...props}
     />
@@ -114,7 +114,7 @@ const TableRow = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={cn(
-        "grid border-b border-border",
+        "grid border-b border-border-primary",
         "not-last:border-b",
         "hover:bg-ghost-hover transition-colors duration-100",
         className,

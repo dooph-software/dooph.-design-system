@@ -62,7 +62,7 @@ const ShapeCell = ({
   size?: number;
   fillColor?: string;
 }) => (
-  <div className="flex flex-col items-center gap-3 rounded-standard border border-border bg-surface p-4">
+  <div className="flex flex-col items-center gap-3 rounded-standard border border-border-primary bg-surface-primary p-4">
     <Shape size={size} strokeColor="transparent" fillColor={fillColor} />
     <span className="text-style-label text-text-secondary">{label}</span>
   </div>

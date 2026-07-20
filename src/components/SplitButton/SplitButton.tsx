@@ -18,7 +18,7 @@ const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
         "inline-flex h-button items-center",
         "ds-gap-ui-xs pl-4 pr-4",
         "rounded-l-tight rounded-r-none",
-        "border border-solid border-border border-r-0",
+        "border border-solid border-border-primary border-r-0",
         "bg-secondary text-secondary-fg",
         "text-style-button cursor-pointer select-none",
         "transition-all duration-100",
@@ -50,7 +50,7 @@ const SplitButtonTrigger = forwardRef<
     className={cn(
       "inline-flex size-button items-center justify-center",
       "rounded-r-tight rounded-l-none",
-      "border border-solid border-border",
+      "border border-solid border-border-primary",
       "bg-secondary text-secondary-fg",
       "cursor-pointer select-none transition-all duration-100",
       "hover:enabled:bg-secondary-hover",

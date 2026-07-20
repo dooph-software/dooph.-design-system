@@ -31,9 +31,9 @@ type OutlineButtonOwnProps = {
    * the cursor around the interior of the button.
    */
   glowing?: boolean;
-  /** Background color for the left / larger orb. Defaults to `var(--ui-accent-color)`. */
+  /** Background color for the left / larger orb. Defaults to `var(--ui-brand-color-alt)`. */
   glowColor1?: string;
-  /** Background color for the right / smaller orb. Defaults to `var(--ui-accent-color)`. */
+  /** Background color for the right / smaller orb. Defaults to `var(--ui-brand-color-alt)`. */
   glowColor2?: string;
 };
 
@@ -130,8 +130,8 @@ const OutlineButtonBase = forwardRef<
       el.style.setProperty("--gy", "0.5");
     }, [glowing]);
 
-    const color1 = glowColor1 ?? "var(--ui-accent-color)";
-    const color2 = glowColor2 ?? "var(--ui-accent-color)";
+    const color1 = glowColor1 ?? "var(--ui-brand-color-alt)";
+    const color2 = glowColor2 ?? "var(--ui-brand-color-alt)";
 
     // Shared classes that disable the glow when the button itself is disabled
     const disabledGlowClass = cn(
@@ -144,7 +144,7 @@ const OutlineButtonBase = forwardRef<
       <div
         className={cn(
           "inline-flex flex-col items-center justify-center",
-          "border border-solid border-border rounded-[28px]",
+          "border border-solid border-border-primary rounded-[28px]",
           "ds-p-ui-xs",
           inverseTheme && "border-primary",
           className,
@@ -164,7 +164,7 @@ const OutlineButtonBase = forwardRef<
             "ds-disabled-state",
             inverseTheme
               ? "bg-primary border-primary text-primary-fg"
-              : "bg-secondary border-border text-secondary-fg",
+              : "bg-secondary border-border-primary text-secondary-fg",
           )}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}

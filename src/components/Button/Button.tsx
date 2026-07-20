@@ -40,11 +40,11 @@ const buttonVariants = cva(
           "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-brand-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-brand-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
           "[&:not(:disabled):not([aria-disabled=true])]:active:bg-brand-active [&:not(:disabled):not([aria-disabled=true])]:active:border-brand-border-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
         ],
-        destructive: [
-          "bg-destructive text-destructive-fg border-destructive-border",
-          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-destructive-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-destructive-border-hover",
-          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-destructive-active [&:not(:disabled):not([aria-disabled=true])]:active:border-destructive-border-active",
-          "disabled:bg-destructive-disabled disabled:border-destructive-border-disabled aria-disabled:bg-destructive-disabled aria-disabled:border-destructive-border-disabled",
+        danger: [
+          "bg-danger text-danger-fg border-danger-border",
+          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-danger-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-danger-border-hover",
+          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-danger-active [&:not(:disabled):not([aria-disabled=true])]:active:border-danger-border-active",
+          "disabled:bg-danger-disabled disabled:border-danger-border-disabled aria-disabled:bg-danger-disabled aria-disabled:border-danger-border-disabled",
         ],
         ghost: [
           "text-ghost-fg border-transparent",

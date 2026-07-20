@@ -65,7 +65,7 @@ const DropdownMenuContent = forwardRef<
             } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>)
           : {})}
         className={cn(
-          "z-50 overflow-hidden rounded-soft border border-solid border-border-popovers bg-surface",
+          "z-50 overflow-hidden rounded-soft border border-solid border-border-popovers bg-surface-primary",
           "ds-py-ui-xs",
           "shadow-menu",
           "ds-radix-dropdown-content-origin",

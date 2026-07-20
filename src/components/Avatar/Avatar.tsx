@@ -17,7 +17,9 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
       <div
         ref={ref}
         className={cn(
-          "inline-flex shrink-0 items-center justify-center bg-avatar-bg text-logo *:size-full *:object-contain",
+          "inline-flex shrink-0 items-center justify-center",
+          "bg-surface-secondary border border-solid border-border-secondary",
+          "text-brand-color *:size-full *:object-contain",
           size === AvatarSize.standard && "size-[38px] rounded-avatar p-xs",
           size === AvatarSize.small && "size-[22px] rounded-avatar-sm p-xxs",
           className,

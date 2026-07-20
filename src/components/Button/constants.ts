@@ -9,7 +9,7 @@ export const ButtonVariant = {
   primary: "primary",
   secondary: "secondary",
   brand: "brand",
-  destructive: "destructive",
+  danger: "danger",
   ghost: "ghost",
   text: "text",
 } as const;

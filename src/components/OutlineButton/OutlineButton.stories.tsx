@@ -75,7 +75,7 @@ export const Glowing: Story = {
   args: { children: "Find anything", glowing: true },
 };
 
-/** Per-orb color overrides. Both orbs default to `--ui-accent-color`. */
+/** Per-orb color overrides. Both orbs default to `--ui-brand-color-alt`. */
 export const CustomGlowColors: Story = {
   render: () => (
     <OutlineButton glowColor1="#c084fc" glowColor2="#42e6f5">
@@ -87,7 +87,7 @@ export const CustomGlowColors: Story = {
 
 export const CustomAccent: Story = {
   render: () => (
-    <div style={{ "--ui-accent-color": "#c084fc" } as React.CSSProperties}>
+    <div style={{ "--ui-brand-color-alt": "#c084fc" } as React.CSSProperties}>
       <OutlineButton>
         <SearchIcon />
         Custom accent token

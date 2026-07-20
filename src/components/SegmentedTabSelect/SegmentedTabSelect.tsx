@@ -79,7 +79,7 @@ const SegmentedTabSelect = forwardRef<
         <TabsList
           className={cn(
             hasShell &&
-              'rounded-soft border border-solid border-border bg-secondary p-1.5',
+              'rounded-soft border border-solid border-border-primary bg-secondary p-1.5',
             isSmall && hasShell && 'gap-1',
             className
           )}

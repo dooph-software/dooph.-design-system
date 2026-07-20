@@ -35,7 +35,7 @@ const DemoBody = ({ side }: { side: SheetSide }) => (
         {['First item', 'Second item', 'Third item'].map((item) => (
           <div
             key={item}
-            className="flex items-center justify-between rounded-standard border border-border px-4 py-3"
+            className="flex items-center justify-between rounded-standard border border-border-primary px-4 py-3"
           >
             <span className="text-style-button text-text">{item}</span>
             <Button variant={ButtonVariant.ghost} size={ButtonSize.sm}>

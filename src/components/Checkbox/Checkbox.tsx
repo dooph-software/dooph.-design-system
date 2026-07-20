@@ -16,9 +16,9 @@ import { cn } from "../../utils/cn";
 const checkboxVariants = cva(
   [
     "group inline-flex size-checkbox shrink-0 items-center justify-center overflow-hidden align-middle",
-    "rounded-checkbox border border-solid border-border bg-transparent text-primary-fg",
+    "rounded-checkbox border border-solid border-border-primary bg-transparent text-primary-fg",
     "cursor-pointer select-none transition-all duration-150 ease-out",
-    "data-[state=unchecked]:hover:bg-secondary-hover data-[state=unchecked]:hover:border-border data-[state=unchecked]:hover:shadow-button-secondary",
+    "data-[state=unchecked]:hover:bg-secondary-hover data-[state=unchecked]:hover:border-border-primary data-[state=unchecked]:hover:shadow-button-secondary",
     // active bg stays at hover color intentionally
     "active:bg-secondary-hover",
     "focus-visible:border-border-focus ds-focus-visible-ring",

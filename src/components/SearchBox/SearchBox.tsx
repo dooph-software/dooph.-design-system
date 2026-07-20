@@ -25,7 +25,7 @@ const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
       <div
         className={cn(
           'flex items-center gap-2',
-          'bg-secondary border border-solid border-border',
+          'bg-secondary border border-solid border-border-primary',
           'rounded-soft',
           'ds-pl-ui-md ds-pr-ui-rg ds-py-ui-rg',
           'min-w-[324px]',
