@@ -179,4 +179,37 @@
   .ds-my-ui-xs {
     margin-block: var(--ui-spacing-xs);
   }
+
+  /*
+   * CopyButton — stacked clipboard/check icons swap via [data-copied].
+   * Both icons share the same grid cell (parent has `grid place-items-center`)
+   * so the swap is a cross-fade + scale instead of a layout shift.
+   */
+  .ds-copy-icon-clipboard,
+  .ds-copy-icon-check {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    transition:
+      opacity 120ms ease-out,
+      transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  [data-copied] .ds-copy-icon-clipboard {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  .ds-copy-icon-check {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  [data-copied] .ds-copy-icon-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-copy-icon-clipboard,
+    .ds-copy-icon-check {
+      transition: none;
+    }
+  }
 }

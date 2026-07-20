@@ -25,6 +25,7 @@ export { ChevronsRightLeftIcon } from "./ChevronsRightLeftIcon";
 export { ChevronsUpDownIcon } from "./ChevronsUpDownIcon";
 export { ChevronUpIcon } from "./ChevronUpIcon";
 export { ClearFilterFunnelIcon } from "./ClearFilterFunnelIcon";
+export { ClipboardIcon } from "./ClipboardIcon";
 export { CloseCancelIcon } from "./CloseCancelIcon";
 export { DarkModeIcon } from "./DarkModeIcon";
 export { DropdownIcon } from "./DropdownIcon";

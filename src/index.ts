@@ -1,5 +1,6 @@
 // Components
 export * from './components/Button';
+export * from './components/CopyButton';
 export * from './components/Avatar';
 export * from './components/Checkbox';
 export * from './components/HotkeyIndicator';
