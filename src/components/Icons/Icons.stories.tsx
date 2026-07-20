@@ -7,17 +7,17 @@ import { CloseCancelIcon } from "./CloseCancelIcon";
 import { DarkModeIcon } from "./DarkModeIcon";
 import { DropdownIcon } from "./DropdownIcon";
 import { ExtensionsIcon } from "./ExtensionsIcon";
-import { LeftSidebarClosedIcon } from "./LeftSidebarClosedIcon";
 import { LeftSidebarOpenedIcon } from "./LeftSidebarOpenedIcon";
 import { LightModeIcon } from "./LightModeIcon";
 import { NewChatIcon } from "./NewChatIcon";
 import { RecentsIcon } from "./RecentsIcon";
 import { RightSidebarClosedIcon } from "./RightSidebarClosedIcon";
-import { RightSidebarOpenedIcon } from "./RightSidebarOpenedIcon";
 import { SearchIcon } from "./SearchIcon";
 import { SendIcon } from "./SendIcon";
 import { SettingsBoltIcon } from "./SettingsBoltIcon";
 import { SettingsGearIcon } from "./SettingsGearIcon";
+import { SidebarLeftIcon } from "./SidebarLeftIcon";
+import { SidebarRightIcon } from "./SidebarRightIcon";
 
 const meta = {
   component: BaseIcon,
@@ -105,7 +105,7 @@ export const SidebarIcons: Story = {
       }}
     >
       <IconCell
-        icon={(props) => <LeftSidebarClosedIcon {...props} />}
+        icon={(props) => <SidebarLeftIcon {...props} />}
         label="LeftSidebar Closed"
       />
       <IconCell
@@ -117,7 +117,7 @@ export const SidebarIcons: Story = {
         label="RightSidebar Closed"
       />
       <IconCell
-        icon={(props) => <RightSidebarOpenedIcon {...props} />}
+        icon={(props) => <SidebarRightIcon {...props} />}
         label="RightSidebar Open"
       />
     </div>
@@ -168,22 +168,22 @@ export const Sizes: Story = {
   name: "Icon Sizes",
   render: () => (
     <div style={{ display: "flex", gap: "1.5rem", alignItems: "end" }}>
-      {(
-        Object.entries(IconSizes) as [keyof typeof IconSizes, IconSizes][]
-      ).map(([name, size]) => (
-        <div
-          key={name}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "0.5rem",
-          }}
-        >
-          <SettingsBoltIcon size={size} />
-          <span style={{ fontSize: 12 }}>{name}</span>
-        </div>
-      ))}
+      {(Object.entries(IconSizes) as [keyof typeof IconSizes, IconSizes][]).map(
+        ([name, size]) => (
+          <div
+            key={name}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <SettingsBoltIcon size={size} />
+            <span style={{ fontSize: 12 }}>{name}</span>
+          </div>
+        ),
+      )}
     </div>
   ),
 };
