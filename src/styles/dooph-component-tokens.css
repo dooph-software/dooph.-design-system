@@ -33,7 +33,7 @@
   }
 
   .ds-shape-button-focus-visible:focus-visible {
-    outline: 2px solid var(--ui-color-focus-ring);
+    outline: 2px solid var(--ui-color-focus-ring-brand);
     outline-offset: 2px;
   }
 
@@ -62,7 +62,7 @@
   }
 
   .ds-focus-visible-ring:focus-visible {
-    outline-color: var(--ui-color-focus-ring);
+    outline-color: var(--ui-color-focus-ring-brand);
   }
 
   .ds-focus-within-ring {
@@ -71,7 +71,7 @@
   }
 
   .ds-focus-within-ring:focus-within {
-    outline-color: var(--ui-color-focus-ring);
+    outline-color: var(--ui-color-focus-ring-brand);
   }
 
   .ds-focus-ring-on-focus {
@@ -80,16 +80,24 @@
   }
 
   .ds-focus-ring-on-focus:focus {
-    outline-color: var(--ui-color-focus-ring);
+    outline-color: var(--ui-color-focus-ring-brand);
   }
 
-  .ds-focus-ring-destructive-on-focus:focus {
-    outline-color: var(--ui-color-destructive-focus-ring);
+  .ds-focus-ring-error-on-focus:focus {
+    outline-color: var(--ui-color-focus-ring-error);
   }
 
   .ds-focus-ring {
-    outline: 4px solid var(--ui-color-focus-ring);
+    outline: 4px solid var(--ui-color-focus-ring-brand);
     outline-offset: 0;
+  }
+
+  /* Slider fills that need transparency over tokens (Figma applies alpha on top) */
+  .ds-slider-fill-primary {
+    background-color: color-mix(in srgb, var(--ui-color-primary) 45%, transparent);
+  }
+  .ds-slider-dot-active {
+    background-color: color-mix(in srgb, var(--ui-color-text) 40%, transparent);
   }
 
   /* Radix DropdownMenu content — follows Radix transform-origin injection */
