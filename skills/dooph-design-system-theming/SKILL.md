@@ -104,13 +104,13 @@ so branding applies in default light, forced `.light`, and `.dark`:
   --ui-color-primary: var(--brand-950);
   --ui-color-primary-foreground: white;
   --ui-color-brand: var(--accent-700);
-  --ui-color-surface-page: var(--app-bg);
+  --ui-color-page-background: var(--app-bg);
   --ui-color-border-focus: var(--accent-700);
-  --ui-color-focus-ring: color-mix(in srgb, var(--accent-700) 28%, transparent);
+  --ui-color-focus-ring-brand: color-mix(in srgb, var(--accent-700) 28%, transparent);
 }
 
 .dark {
-  --ui-color-surface-page: var(--app-bg-dark);
+  --ui-color-page-background: var(--app-bg-dark);
   --ui-color-primary: var(--brand-100);
   --ui-color-primary-foreground: var(--brand-950);
 }
@@ -126,16 +126,25 @@ Notes:
 
 ### Component branding hooks
 
-- **`OutlineButton` accent:** override `--ui-accent-color` (the hover glow), or
-  pass `glowColor1`/`glowColor2` per instance.
+- **`OutlineButton` accent:** override `--ui-brand-color-alt` (both glow orbs
+  default to it), or pass `glowColor1`/`glowColor2` per instance.
 - **`Tooltip`:** token-driven, not theme-detected. Defaults to `themeInverse`;
   override `--ui-color-tooltip-*` to restyle. Pass `themeInverse={false}` for a
   matching-theme tooltip.
 - **`Toast` widths:** `--ui-width-toast`, `--ui-width-toast-action`,
   `--ui-width-toast-viewport` — override only if your product needs other widths.
-- **`Avatar`:** the package owns the surface/padding/radius and
-  `--ui-color-avatar-bg`; the app owns the logo/image content (and any
-  light/dark logo swap).
+- **`Avatar`:** the package owns the surface/padding/radius via
+  `--ui-color-surface-secondary`, `--ui-color-border-secondary`, and
+  `--ui-brand-color` (icon/content tint) — there is no dedicated avatar-bg
+  token; the app owns the logo/image content (and any light/dark logo swap)
+  as `children`.
+- **`Slider*`:** brand/primary fill via `SliderVariant`; geometry tokens
+  `--ui-height-slider-track`, `--ui-radius-slider-inner`, `--ui-slider-track-gap`,
+  `--ui-width-slider-handle`, `--ui-height-slider-handle` control track/handle
+  sizing, not colors.
+- **`ShimmerText`:** override `--ui-shimmer-base`/`--ui-shimmer-highlight` to
+  retune the animated sheen; children must not set an explicit text color
+  while shimmering (the parent owns `color` via `background-clip: text`).
 
 ## Adding new values
 

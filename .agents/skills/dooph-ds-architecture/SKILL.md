@@ -20,7 +20,7 @@ export const ButtonVariant = {
   primary: "primary",
   secondary: "secondary",
   brand: "brand",
-  destructive: "destructive",
+  danger: "danger",
   ghost: "ghost",
   text: "text",
 } as const;
@@ -28,6 +28,8 @@ export type ButtonVariant = (typeof ButtonVariant)[keyof typeof ButtonVariant];
 ```
 
 The type is always derived from the const — never a hand-written union type that duplicates the keys.
+
+v3 renamed `ButtonVariant.destructive` → `ButtonVariant.danger` (matching the Figma `dangerButton` token group and `--ui-color-danger*`). `destructive` no longer exists — do not reintroduce it.
 
 ### Naming conventions
 
@@ -48,6 +50,9 @@ The type is always derived from the const — never a hand-written union type th
 | `TextFontSize`     | `fontSize`   | `<BaseText fontSize={TextFontSize.label} />`                       |
 | `TextFontWeight`   | `fontWeight` | `<BaseText fontWeight={TextFontWeight.semibold} />`                |
 | `CheckboxChecked`  | `checked`    | `<Checkbox checked={CheckboxChecked.indeterminate} />`             |
+| `CopyButtonVariant` | `variant` | `<CopyButton variant={CopyButtonVariant.secondary} value="npm install" />` |
+| `SliderVariant`    | `variant` | `<SliderContinuous variant={SliderVariant.primary} />`             |
+| `LinearProgressVariant` | `variant` | `<LinearProgressIndicator variant={LinearProgressVariant.primary} />` |
 
 ### Invariants
 

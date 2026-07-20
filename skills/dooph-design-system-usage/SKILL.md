@@ -106,12 +106,15 @@ overrides) covered by the theming skill — not per-component style rules.
 Reach for these before writing local UI:
 
 - **Actions:** `Button` (`ButtonVariant`: `primary` | `secondary` | `brand` |
-  `destructive` | `ghost` | `text`; `ButtonSize`: `default` | `sm` | `icon` |
-  `iconSm`), `SplitButton` (+ `SplitButtonAction`, `SplitButtonTrigger`),
+  `danger` | `ghost` | `text`; `ButtonSize`: `default` | `sm` | `icon` |
+  `iconSm` | `iconMicro`), `SplitButton` (+ `SplitButtonAction`, `SplitButtonTrigger`),
   `OutlineButton` (`inverseTheme`, `glowing`, `glowColor1`/`glowColor2`),
   `ShapeButton` (`ShapeButtons`: `arrow` | `clover` | `cookie` | `gem` |
-  `pentagon` | `puff`).
-- **Inputs:** `Input`, `SearchBox`, `Checkbox`, `TwoWayToggle` (+ `TwoWayToggleItem`).
+  `pentagon` | `puff` | `star`), `CopyButton` (writes `value` to the clipboard,
+  swaps its icon to a checkmark for 2s; `CopyButtonVariant`: `ghost` | `secondary`).
+- **Inputs:** `Input`, `SearchBox`, `Checkbox`, `TwoWayToggle` (+ `TwoWayToggleItem`),
+  `SliderContinuous` / `SliderStepped` / `SliderLabeled` (Radix Slider;
+  `SliderVariant`: `brand` | `primary`; `SliderLabeled` adds `labels: { start, end }`).
 - **Menus:** `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`,
   `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`,
   `DropdownMenuSeparator`, `DropdownMenuSection`.
@@ -127,11 +130,16 @@ Reach for these before writing local UI:
   breakpoint, see `references/responsive-sheet-modal.md` (app-side wrapper —
   intentionally not a packaged component).
 - **Layout / surfaces:** `OutlineSection`, `Avatar`, `HotkeyIndicator`.
+- **Links:** `TextLink` (body-text anchor; ghost foreground at rest, primary
+  text on hover/active, no underline; `asChild` for `<Link>` composition).
 - **Text & icons:** `BaseText` (+ `ButtonText`, `BodyText`, `LabelText`,
-  `HeadingText`, `TitleText`, `HeroText`), `BaseIcon`, `ChevronDownIcon`,
-  `SearchIcon`.
+  `HeadingText`, `TitleText`, `HeroText`), `ShimmerText` (animated "working"
+  sheen masked to child glyphs — children must not set an explicit text color),
+  `RollChangeText` (rolls old content out / new content in when `changeKey`
+  or string/number children change), `BaseIcon`, `ChevronDownIcon`, `SearchIcon`.
 - **Feedback / motion:** `Toast` family, `LoadingSpinner`, `ProgressIndicator`,
-  `WavyDivider`.
+  `LinearProgressIndicator` (Radix Progress; `LinearProgressVariant`: `brand` |
+  `primary`), `WavyDivider`.
 - **Utility:** `cn`.
 
 If something genuinely doesn't exist, compose it from these primitives and
@@ -141,14 +149,16 @@ tokens — don't rebuild a styled lookalike.
 
 Use the semantic, token-backed utilities. The common ones:
 
-- Color: `bg-primary` / `text-primary-fg`, `bg-secondary`, `bg-surface`,
-  `bg-surface-secondary`, `text-text` / `text-text-secondary` / `text-text-tertiary`,
-  `border-border`, `bg-brand`, `bg-destructive`.
+- Color: `bg-primary` / `text-primary-fg`, `bg-secondary`, `bg-surface-primary`,
+  `bg-surface-secondary`, `bg-page-background`, `text-text` / `text-text-secondary` /
+  `text-text-tertiary`, `border-border-primary` / `border-border-secondary` /
+  `border-border-popovers` / `border-border-focus`, `bg-brand`, `text-brand-color`,
+  `bg-danger`.
 - Spacing (named, not numeric): `p-md`, `px-rg`, `gap-xs`, `m-lg` … stems are
   `xxs xs sm rg md lg xl xxl`.
 - Radius: `rounded-tight` (controls), `rounded-standard` (triggers/inputs),
   `rounded-soft` (panels/modals).
-- Shadow: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`.
+- Shadow: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`, `shadow-focus-error`.
 - Typography: prefer a Text component. If you must apply a type style to an
   existing element, use `text-style-body` / `-label` / `-heading` / `-title` /
   `-hero` / `-button` (these also set `font-variation-settings`, which no plain
@@ -212,8 +222,9 @@ export function SaveButton({ busy, disabled, children = "Save", ...props }: Butt
   triggers do not add it automatically.
 - **Radix-backed components** (menu, tabs, toggle, tooltip, modal) own
   accessibility. Don't replace them with div/button click handlers.
-- **`OutlineButton`:** override `--ui-accent-color` for the brand glow, or pass
-  `glowColor1`/`glowColor2` per instance.
+- **`OutlineButton`:** override `--ui-brand-color-alt` for the brand glow (both
+  `glowColor1`/`glowColor2` default to it), or pass `glowColor1`/`glowColor2`
+  per instance.
 
 ## Review Checklist
 

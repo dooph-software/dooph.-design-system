@@ -10,6 +10,7 @@ Build: tsup (ESM + CJS + `.d.ts`); tsup `onSuccess` emits `dist/styles.css` (Tai
 React peerDep: `>=19`
 Tailwind: v4 with `@theme inline`
 Package exports: `.` (JS), `./styles.css` (compiled), `./theme.css` (raw `@theme` preset for consumer Tailwind builds)
+Radix deps (`dependencies`, not devDependencies): `@radix-ui/react-checkbox`, `@radix-ui/react-dialog`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-progress`, `@radix-ui/react-slider`, `@radix-ui/react-slot`, `@radix-ui/react-tabs`, `@radix-ui/react-toast`, `@radix-ui/react-toggle-group`, `@radix-ui/react-tooltip` — `react-progress` and `react-slider` are v3 additions backing `LinearProgressIndicator` and the `Slider*` family.
 
 ---
 
@@ -25,26 +26,36 @@ src/
     dooph-component-tokens.css ← @layer utilities: ds-* helpers (spacing, disabled states, radix origin)
     theme.css                 ← GENERATED preset (sync-theme.mjs): standalone @theme inline block shipped as ./theme.css for consumer Tailwind builds. Do not hand-edit.
   components/
+    Avatar/
     Button/
+    Checkbox/
+    CopyButton/                 ← v3: clipboard-copy Button wrapper; CopyButtonVariant
     DropdownTrigger/
     HotkeyIndicator/
     Icons/
     Input/
+    LinearProgressIndicator/    ← v3: Radix Progress; LinearProgressVariant
+    LoadingSpinner/
     Menu/
     Modal/
     OutlineButton/
     OutlineSection/
+    ProgressIndicator/
     SearchBox/
     SegmentedTabSelect/
     ShapeButton/
+    Shapes/                     ← v3 adds StarShape (ShapeButtons.star)
     Sheet/
+    Slider/                     ← v3: Radix Slider; SliderContinuous/Stepped/Labeled, SliderVariant
     SplitButton/
+    Table/
     Tabs/
-    Text/
+    Text/                       ← v3 adds ShimmerText, RollChangeText
+    TextLink/                   ← v3: anchor-styled body text
     Toast/
     Toggle/
     Tooltip/
-    Avatar/
+    WavyDivider/
 .storybook/
   main.ts                     ← @storybook/react-vite + @tailwindcss/vite
   preview.ts                  ← decorator: .dark toggle on <html>, body bg
@@ -84,6 +95,11 @@ scripts/
 | `SplitButtonTrigger` | same                              | –      | –                              | ❌      |
 | `OutlineButton`      | `OutlineButton/OutlineButton.tsx` | `Slot` | `inverseTheme` bool; `glowing` bool; `glowColor1`/`glowColor2` strings | ✅      |
 | `ShapeButton`        | `ShapeButton/ShapeButton.tsx`     | `Slot` | `ShapeButtons` (shape)         | ✅      |
+| `CopyButton`         | `CopyButton/CopyButton.tsx`       | –      | `CopyButtonVariant` (`ghost`\|`secondary`) — wraps `Button` (ghost→`ButtonSize.iconMicro`, secondary→`ButtonSize.iconSm`) | via `Button` |
+
+`ButtonVariant` (v3): `primary`\|`secondary`\|`brand`\|`danger`\|`ghost`\|`text` — `danger` replaces the removed `destructive` key. `ButtonSize` (v3): `default`\|`sm`\|`icon`\|`icon-sm`\|`icon-micro` (`ButtonSize.iconMicro`, backs `--ui-height-button-micro` via `size-button-micro`).
+
+`Shapes/` (`src/components/Shapes/`): `ArrowShape`, `CloverShape`, `CookieShape`, `GemShape`, `PentagonShape`, `PuffShape`, `StarShape` (v3) — plain SVG shape primitives (`size`, `strokeColor`, `fillColor`, `strokeWeight` props). `Shapes` const (from `Shapes/index.ts`) enumerates the same keys (`arrow`\|`clover`\|`cookie`\|`gem`\|`pentagon`\|`puff`\|`star`) and types the shared `Shapes` type. `ShapeButtons` (from `ShapeButton/constants.ts`) is the dot-accessible const consumers pass to `ShapeButton shape=`, `satisfies Record<string, Shapes>` against the same keys.
 
 ### Input / control family
 
@@ -142,12 +158,38 @@ scripts/
 | `ToastProvider`, `ToastRoot`, `ToastViewport` | `Toast/Toast.tsx`     | `@radix-ui/react-toast`                                                   |
 | `ToastAction`, `ToastClose`                   | same                  | reuse `buttonVariants`; action toasts use text dismiss + primary action   |
 
+### Slider family (v3 — Radix Slider)
+
+| Component          | File                | Radix                     | Notes |
+| ------------------ | ------------------- | ------------------------- | ----- |
+| `SliderContinuous` | `Slider/Slider.tsx` | `@radix-ui/react-slider`  | `SliderBase` with `showSteps={false}`; `variant` = `SliderVariant.brand\|primary` |
+| `SliderStepped`    | same                | same                      | `SliderBase` with `showSteps={true}`; renders step dots (`ds-slider-dot-active` when passed) |
+| `SliderLabeled`    | same                | same                      | wraps either variant in a column with `labels: { start, end }` rendered as `LabelText` below the track; optional `stepped` bool |
+
+Fill geometry uses literal `calc()` class strings (not concatenated) keyed to `--ui-slider-track-gap` / `--ui-width-slider-handle` / `--ui-height-slider-handle`; `variant={SliderVariant.primary}` uses `.ds-slider-fill-primary` (45%-alpha primary) instead of a solid `bg-brand` fill.
+
+### Progress indicators
+
+| Component                 | File                                             | Radix                       | Notes |
+| -------------------------- | ------------------------------------------------ | ---------------------------- | ----- |
+| `LinearProgressIndicator` | `LinearProgressIndicator/LinearProgressIndicator.tsx` | `@radix-ui/react-progress` (v3) | `variant` = `LinearProgressVariant.brand\|primary`; clamps `value` into `[0, max]` before computing `--progress-pct`; remainder track hides itself via `data-hidden` once `pct >= 100` so it never overlaps the 0% nub |
+| `LoadingSpinner`           | `LoadingSpinner/LoadingSpinner.tsx`              | –                             | see `dooph-ds-loading-indicators` skill for the wave/geometry model |
+| `ProgressIndicator`        | `ProgressIndicator/ProgressIndicator.tsx`        | –                             | see `dooph-ds-loading-indicators` skill |
+
+### Links
+
+| Component  | File                     | Radix   | Notes |
+| ---------- | ------------------------ | ------- | ----- |
+| `TextLink` | `TextLink/TextLink.tsx`  | `Slot`  | body-text anchor; ghost foreground at rest, primary text on hover/active, color change only (no underline); `asChild` for `<Link>` composition |
+
 ### Text
 
 | Export                                                                        | Description                                                                                                             |
 | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `BaseText`                                                                    | Generic text component; `variant` prop = `TextVariant` (composite style); optional `fontFamily`, `fontSize`, `fontWeight` overrides via `TextFontFamily`, `TextFontSize`, `TextFontWeight` — layered on top of the variant via tailwind-merge |
 | `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `TitleText`, `HeroText` | Pre-composed variants of `BaseText`                                                                                     |
+| `ShimmerText` (v3)                                                            | `<span>` wrapper applying `ds-shimmer-text` (animated gradient masked to glyphs via `background-clip: text`); children keep their own typography but must not set an explicit text color while shimmering; tune via `--ui-shimmer-base`/`--ui-shimmer-highlight`; respects `prefers-reduced-motion` |
+| `RollChangeText` (v3)                                                         | `<span>` wrapper that animates old content rolling down + blurring out while new content rolls in from above on `changeKey` (or string/number `children`) change; keyframes `ds-roll-out`/`ds-roll-in` |
 
 ### Icons
 
@@ -173,7 +215,8 @@ Notable component tokens:
 
 - Tooltip themes: `--ui-color-tooltip-inverse-*` and `--ui-color-tooltip-matching-*`. `TooltipContent themeInverse` switches between `ds-tooltip-inverse-theme` and `ds-tooltip-matching-theme`; there is no runtime theme detection.
 - Toast widths: `--ui-width-toast`, `--ui-width-toast-action`, `--ui-width-toast-viewport`, consumed by `ds-toast-width`, `ds-toast-action-width`, and `ds-toast-viewport`.
-- Avatar surface: `--ui-color-avatar-bg`; brand/logo content is supplied by consumers as children, not via a package provider.
+- Avatar surface (v3): no dedicated `--ui-color-avatar-bg` token — `Avatar` composes `bg-surface-secondary` + `border-border-secondary` + `text-brand-color`; brand/logo content is supplied by consumers as children, not via a package provider.
+- **v3 token vocabulary** (see `tokens.css` and the theming skill's `token-contract.md` for the full list): `--ui-color-danger*` (replaces `destructive*`), `--ui-color-border-primary`/`-secondary` (replaces the single `--ui-color-border`), `--ui-color-surface-primary`/`--ui-color-page-background` (replaces `surface`/`surface-page`), `--ui-brand-color`/`--ui-brand-color-alt` (the brand-identity pair; `OutlineButton`'s `glowColor1`/`glowColor2` now default to `var(--ui-brand-color-alt)` — the old standalone `--ui-accent-color` token no longer exists in `tokens.css`), `--ui-color-focus-ring-brand`/`-primary`/`-error` (replaces the single `--ui-color-focus-ring`), `--ui-color-trigger-border-error-focus`, slider sizing tokens (`--ui-height-slider-track`, `--ui-radius-slider-inner`, `--ui-slider-track-gap`, `--ui-width-slider-handle`, `--ui-height-slider-handle`), `--ui-height-button-micro`, and shimmer tokens (`--ui-shimmer-base`, `--ui-shimmer-highlight`).
 
 ### Tailwind theme (`@theme inline` in `index.css`)
 
@@ -199,13 +242,15 @@ The `__GENERATED_*__` block is managed by `scripts/sync-theme.mjs` — do not ha
 - `ds-radix-data-disabled` — same but for `[data-disabled]` (Radix menu items)
 - `ds-disabled-control` — native `:disabled` only
 - `ds-shape-button-focus-visible` — custom focus outline for ShapeButton
-- Focus ring helpers: `ds-focus-visible-ring`, `ds-focus-within-ring`, `ds-focus-ring-on-focus`, `ds-focus-ring-destructive-on-focus`, `ds-focus-ring` — token-backed outline rings for controls that need external focus affordances without `box-shadow` overflow clipping
+- Focus ring helpers: `ds-focus-visible-ring`, `ds-focus-within-ring`, `ds-focus-ring-on-focus`, `ds-focus-ring-error-on-focus`, `ds-focus-ring` — token-backed outline rings for controls that need external focus affordances without `box-shadow` overflow clipping (the error variant is named `-error-`, not `-destructive-`, matching the v3 `--ui-color-focus-ring-error` token)
 - `ds-radix-dropdown-content-origin` — `transform-origin: var(--radix-dropdown-menu-content-transform-origin)`
 - `ds-radix-dropdown-match-trigger-width` — trigger width with `--ui-min-w-menu` floor
 - `ds-min-w-menu` — `min-width: var(--ui-min-w-menu)`
 - Toast helpers: `ds-toast-viewport`, `ds-toast-width`, `ds-toast-action-width`
 - Tooltip helpers: `ds-tooltip-inverse-theme`, `ds-tooltip-matching-theme`
 - Spacing helpers: `ds-gap-ui-xs`, `ds-p-ui-xs`, `ds-px-ui-xs`, `ds-px-ui-sm`, `ds-py-ui-xs`, `ds-py-ui-xxs`, `ds-py-ui-rg`, `ds-pl-ui-md`, `ds-pl-ui-rg`, `ds-pr-ui-rg`, `ds-pr-ui-sm`, `ds-my-ui-xs`
+- Slider fills (v3): `ds-slider-fill-primary` (`color-mix(in srgb, var(--ui-color-primary) 45%, transparent)`), `ds-slider-dot-active` (`color-mix(in srgb, var(--ui-color-text) 40%, transparent)`) — used because Figma applies alpha over the token color, which Tailwind's `bg-primary/45` opacity shorthand can't express against a custom property
+- CopyButton icon-swap helpers (v3): `ds-copy-icon-clipboard`, `ds-copy-icon-check` — both icons share one grid cell; `[data-copied]` cross-fades/scales between them (skipped under `prefers-reduced-motion`)
 
 ### Composite text utilities (in `index.css`)
 
@@ -213,9 +258,11 @@ The `__GENERATED_*__` block is managed by `scripts/sync-theme.mjs` — do not ha
 
 `BaseText fontWeight` overrides use `ds-font-weight-regular`, `ds-font-weight-medium`, `ds-font-weight-semibold`, and `ds-font-weight-bold`, declared after `text-style-*` so they override the composite style's token weight. Do not map `TextFontWeight` to Tailwind's default `font-normal/font-medium/font-semibold`; those can be emitted earlier than `text-style-*` and lose in compiled consumer CSS.
 
+`ds-shimmer-text` (v3, also in `index.css`, not `dooph-component-tokens.css`) — animated gradient `background-clip: text` utility backing `ShimmerText`; `@keyframes ds-shimmer` plus the reduced-motion fallback live alongside it. `ds-roll-out`/`ds-roll-in` keyframes back `RollChangeText`.
+
 ### Height/size utilities (in `index.css`)
 
-`h-button`, `h-button-sm`, `size-button`, `size-button-sm` — keyed to `--ui-height-button` and `--ui-height-button-sm` tokens.
+`h-button`, `h-button-sm`, `size-button`, `size-button-sm` — keyed to `--ui-height-button` and `--ui-height-button-sm` tokens. v3 adds `size-button-micro` (keyed to `--ui-height-button-micro`, backs `ButtonSize.iconMicro`) and `h-slider-track` (keyed to `--ui-height-slider-track`, used by the `Slider*` track).
 
 ---
 
@@ -241,13 +288,15 @@ CSS assets (`styles.css` + `theme.css`) are emitted together by tsup's `onSucces
 
 All of the following must be exported. If adding a component, add it here.
 
-Components: `Button`, `SplitButton`, `SplitButtonAction`, `SplitButtonTrigger`, `OutlineButton`, `ShapeButton`, `Input`, `SearchBox`, `TwoWayToggle`, `TwoWayToggleItem`, `Checkbox`, `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`, `SegmentedTabSelect`, `SegmentedTabItem`, `DropdownMenu`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuSection`, `DropdownMenuGroup`, `DropdownMenuSub`, `DropdownMenuRadioGroup`, `DropdownMenuTrigger`, `DropdownMenuPortal`, `DropdownTrigger`, `DropdownTriggerContent`, `TextDropdownTrigger`, `TypeableDropdownTrigger`, `Modal`, `ModalTrigger`, `ModalPortal`, `ModalOverlay`, `ModalContent`, `ModalClose`, `ModalTitle`, `ModalDescription`, `Sheet`, `SheetTrigger`, `SheetPortal`, `SheetOverlay`, `SheetContent`, `SheetClose`, `SheetTitle`, `SheetDescription`, `ToastProvider`, `ToastRoot`, `ToastViewport`, `ToastAction`, `ToastClose`, `TooltipProvider`, `Tooltip`, `TooltipTrigger`, `TooltipContent`, `TooltipTitle`, `TooltipBody`, `Avatar`, `HotkeyIndicator`, `OutlineSection`, `BaseText`, `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `TitleText`, `HeroText`, all Icon components, `BaseIcon`
+Components: `Button`, `SplitButton`, `SplitButtonAction`, `SplitButtonTrigger`, `OutlineButton`, `ShapeButton`, `CopyButton`, `TextLink`, `Input`, `SearchBox`, `TwoWayToggle`, `TwoWayToggleItem`, `Checkbox`, `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`, `SegmentedTabSelect`, `SegmentedTabItem`, `DropdownMenu`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuSection`, `DropdownMenuGroup`, `DropdownMenuSub`, `DropdownMenuRadioGroup`, `DropdownMenuTrigger`, `DropdownMenuPortal`, `DropdownTrigger`, `DropdownTriggerContent`, `TextDropdownTrigger`, `TypeableDropdownTrigger`, `Modal`, `ModalTrigger`, `ModalPortal`, `ModalOverlay`, `ModalContent`, `ModalClose`, `ModalTitle`, `ModalDescription`, `Sheet`, `SheetTrigger`, `SheetPortal`, `SheetOverlay`, `SheetContent`, `SheetClose`, `SheetTitle`, `SheetDescription`, `ToastProvider`, `ToastRoot`, `ToastViewport`, `ToastAction`, `ToastClose`, `TooltipProvider`, `Tooltip`, `TooltipTrigger`, `TooltipContent`, `TooltipTitle`, `TooltipBody`, `Avatar`, `HotkeyIndicator`, `OutlineSection`, `BaseText`, `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `TitleText`, `HeroText`, `ShimmerText`, `RollChangeText`, `SliderContinuous`, `SliderStepped`, `SliderLabeled`, `LinearProgressIndicator`, `ArrowShape`, `CloverShape`, `CookieShape`, `GemShape`, `PentagonShape`, `PuffShape`, `StarShape`, `BaseShape`, `WavyDivider`, `LoadingSpinner`, `ProgressIndicator`, all Icon components, `BaseIcon`
 
-Variant/size consts: `ButtonVariant`, `ButtonSize`, `TabVariant`, `TabSize`, `ToggleVariant`, `ToggleSize`, `SegmentedVariant`, `TextDropdownSize`, `ShapeButtons`, `SheetSide`, `TextVariant`, `TextFontFamily`, `TextFontSize`, `TextFontWeight`, `CheckboxChecked`, `IconSize`, `ToastTypes`, `TooltipTypes`, `AvatarSize`
+Variant/size consts: `ButtonVariant` (v3: `danger` replaces `destructive`), `ButtonSize` (v3 adds `iconMicro`), `TabVariant`, `TabSize`, `ToggleVariant`, `ToggleSize`, `SegmentedVariant`, `TextDropdownSize`, `ShapeButtons` (v3 adds `star`), `Shapes`, `SheetSide`, `TextVariant`, `TextFontFamily`, `TextFontSize`, `TextFontWeight`, `CheckboxChecked`, `IconSize`, `ToastTypes`, `TooltipTypes`, `AvatarSize`, `CopyButtonVariant` (v3), `SliderVariant` (v3), `LinearProgressVariant` (v3)
 
-Types: `ButtonProps`, `TabsTriggerProps`, `TwoWayToggleProps`, `TwoWayToggleItemProps`, `SegmentedTabSelectProps`, `SegmentedTabItemProps`, `ShapeButtonProps`, `ShapeButtonShape`, `DropdownTriggerProps`, `DropdownTriggerContentProps`, `TextDropdownTriggerProps`, `TypeableDropdownTriggerProps`, `InputProps`, `SearchBoxProps`, `ToastProviderProps`, `ToastRootProps`, `ToastTitleProps`, `ToastDescriptionProps`, `TooltipContentProps`, `TooltipTitleProps`, `TooltipBodyProps`, `AvatarProps`, `HotkeyIndicatorProps`, `OutlineSectionProps`, `OutlineButtonProps`, `BaseTextProps`, `ButtonTextProps`, `BodyTextProps`, `LabelTextProps`, `HeadingTextProps`, `TitleTextProps`, `HeroTextProps`
+Types: `ButtonProps`, `TabsTriggerProps`, `TwoWayToggleProps`, `TwoWayToggleItemProps`, `SegmentedTabSelectProps`, `SegmentedTabItemProps`, `ShapeButtonProps`, `ShapeButtonShape`, `DropdownTriggerProps`, `DropdownTriggerContentProps`, `TextDropdownTriggerProps`, `TypeableDropdownTriggerProps`, `InputProps`, `SearchBoxProps`, `ToastProviderProps`, `ToastRootProps`, `ToastTitleProps`, `ToastDescriptionProps`, `TooltipContentProps`, `TooltipTitleProps`, `TooltipBodyProps`, `AvatarProps`, `HotkeyIndicatorProps`, `OutlineSectionProps`, `OutlineButtonProps`, `BaseTextProps`, `ButtonTextProps`, `BodyTextProps`, `LabelTextProps`, `HeadingTextProps`, `TitleTextProps`, `HeroTextProps`, `TextLinkProps` (v3), `CopyButtonProps` (v3), `SliderProps` (v3), `SliderLabeledProps` (v3), `LinearProgressIndicatorProps` (v3), `RollChangeTextProps` (v3), `ShimmerTextProps` (v3)
 
 Utilities: `cn`, `buttonVariants`, `tabTriggerVariants`
+
+(`WavyDivider`, `LoadingSpinner`, `ProgressIndicator` are pre-existing exports, documented in detail in `dooph-ds-loading-indicators`; they were missing from this list before this pass and are included above for completeness — not a v3 change.)
 
 ---
 

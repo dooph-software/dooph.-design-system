@@ -15,11 +15,11 @@ The package defines font-family tokens but does not load font files. Consumers m
 - `--ui-color-primary`, `--ui-color-primary-foreground`, `--ui-color-primary-hover`, `--ui-color-primary-active`, `--ui-color-primary-disabled`
 - `--ui-color-secondary`, `--ui-color-secondary-foreground`, `--ui-color-secondary-hover`, `--ui-color-secondary-active`, `--ui-color-secondary-disabled`
 - `--ui-color-brand`, `--ui-color-brand-foreground`, `--ui-color-brand-hover`, `--ui-color-brand-active`
-- `--ui-color-destructive`, `--ui-color-destructive-foreground`, `--ui-color-destructive-hover`, `--ui-color-destructive-active`, `--ui-color-destructive-disabled`
+- `--ui-color-danger`, `--ui-color-danger-foreground`, `--ui-color-danger-hover`, `--ui-color-danger-active`, `--ui-color-danger-disabled` (v3 — Figma `dangerButton`; replaces the removed `destructive*` tokens)
 - `--ui-color-ghost-foreground`, `--ui-color-ghost-hover`, `--ui-color-ghost-active`, `--ui-color-ghost-foreground-active` (ghost/text buttons have no rest bg — hover/active are translucent overlays)
-- `--ui-color-surface`, `--ui-color-surface-secondary`, `--ui-color-surface-page`
+- `--ui-color-surface-primary`, `--ui-color-surface-secondary`, `--ui-color-page-background` (v3 — Figma `pageBackground`/`surfacePrimary`/`surfaceSecondary`; replaces `surface`/`surface-page`)
 - `--ui-color-text`, `--ui-color-text-secondary`, `--ui-color-text-tertiary`
-- `--ui-color-focus-ring`, `--ui-color-destructive-focus-ring`
+- `--ui-color-focus-ring-brand`, `--ui-color-focus-ring-primary`, `--ui-color-focus-ring-error` (v3 — Figma `Dropdowns/focusRingBrand|Primary|Error`; replaces the single `--ui-color-focus-ring`/`--ui-color-destructive-focus-ring`)
 
 ## Button Borders
 
@@ -28,16 +28,18 @@ Every button variant carries its own border tokens for default/hover/active (plu
 - Primary (defaults alias the matching bg tokens): `--ui-color-primary-border`, `--ui-color-primary-border-hover`, `--ui-color-primary-border-active`, `--ui-color-primary-border-disabled`
 - Secondary (distinct literals — the visible outline on light buttons): `--ui-color-secondary-border`, `--ui-color-secondary-border-hover`, `--ui-color-secondary-border-active`, `--ui-color-secondary-border-disabled`
 - Brand (defaults alias the matching bg tokens; disabled is `transparent`): `--ui-color-brand-border`, `--ui-color-brand-border-hover`, `--ui-color-brand-border-active`, `--ui-color-brand-border-disabled`
-- Destructive (distinct literals): `--ui-color-destructive-border`, `--ui-color-destructive-border-hover`, `--ui-color-destructive-border-active`, `--ui-color-destructive-border-disabled`
+- Danger (distinct literals; v3 name — was `destructive-border*`): `--ui-color-danger-border`, `--ui-color-danger-border-hover`, `--ui-color-danger-border-active`, `--ui-color-danger-border-disabled`
 
 Ghost and text buttons have no border tokens (transparent borders).
 
 ## General Borders
 
-- `--ui-color-border` — borderStandard: general control/container border (inputs, triggers, tables, cards)
-- `--ui-color-border-popovers` — floating panel border shared by menus, modals, and toasts
+- `--ui-color-border-primary` — Figma `borderPrimary`: general control/container border (inputs, triggers, tables, cards). v3 splits the old single `--ui-color-border` into `-primary`/`-secondary`.
+- `--ui-color-border-secondary` — Figma `borderSecondary`: a second general-purpose border tone (e.g. `Avatar`'s shell border) distinct from `-primary`.
+- `--ui-color-border-popovers` — floating panel border shared by menus, modals, and toasts. The DS name is kept even though the Figma source calls the equivalent `borderModal` (deliberate naming choice — this token is shared across more than modals).
 - `--ui-color-border-focus` — focus border for typeable triggers/inputs/controls; defaults to `var(--ui-color-brand-border)` so it follows brand
 - `--ui-color-trigger-border-hover` — hover border for typeable triggers, inputs, and search boxes
+- `--ui-color-trigger-border-error-focus` (v3) — focus border for typeable triggers/inputs in an error state; defaults to `var(--ui-color-danger-border)`
 
 ## Modals
 
@@ -48,13 +50,14 @@ Used by `ModalContent` and `ModalOverlay`. Override to match the app surface tre
 
 The modal panel border uses the shared `--ui-color-border-popovers` (see General Borders).
 
-## Accent
+## Brand Identity
 
-Used by `OutlineButton` for the hover color-blur effect. Override once per project to match the brand.
+Figma `brandColor`/`brandColorAlt` — the two-color brand identity pair, distinct from the `--ui-color-brand` *button* tokens above. v3 replaces the earlier standalone `logo`/`logo-alt`/`--ui-accent-color` tokens with this pair; there is no separate accent token anymore.
 
-- `--ui-accent-color` — the splash color rendered on button hover (default: `#5ea4b5`)
+- `--ui-brand-color` — primary brand identity color (e.g. `Avatar` content tint via `text-brand-color`)
+- `--ui-brand-color-alt` — secondary/alt brand identity color; also the default for `OutlineButton`'s hover color-blur orbs
 
-For per-instance color control without touching the token, use the `glowColor1` and `glowColor2` props directly on `OutlineButton`. Both default to `var(--ui-accent-color)` when omitted. Use `glowing` to make the glow always visible (not hover-gated), and `inverseTheme` to swap the inner surface to primary tokens when the button sits on a dark or primary-colored background.
+`OutlineButton`'s `glowColor1` and `glowColor2` props both default to `var(--ui-brand-color-alt)` when omitted — override the token globally, or pass the props per instance. Use `glowing` to make the glow always visible (not hover-gated), and `inverseTheme` to swap the inner surface to primary tokens when the button sits on a dark or primary-colored background.
 
 ## Typography
 
@@ -68,23 +71,39 @@ Only Google Sans Flex styles use `--ui-font-var-*`. Do not apply those axis toke
 
 ## Sizing And Shape
 
-- `--ui-height-button`, `--ui-height-button-sm`
+- `--ui-height-button`, `--ui-height-button-sm`, `--ui-height-button-micro` (v3 — backs `ButtonSize.iconMicro` / `size-button-micro`)
 - `--ui-spacing-xxs`, `--ui-spacing-xs`, `--ui-spacing-sm`, `--ui-spacing-rg`, `--ui-spacing-md`, `--ui-spacing-lg`, `--ui-spacing-xl`, `--ui-spacing-xxl`
 - `--ui-icon-tiny`, `--ui-icon-standard`, `--ui-icon-medium`, `--ui-icon-stroke`
-- `--ui-radius-tight`, `--ui-radius-standard`, `--ui-radius-soft`
+- `--ui-radius-tight`, `--ui-radius-standard`, `--ui-radius-soft`, `--ui-radius-slider-inner` (v3 — inner corner radius on the `Slider*` track pills and thumb)
 - `--ui-shadow-button`, `--ui-shadow-button-secondary`, `--ui-shadow-button-hover`, `--ui-shadow-button-active`, `--ui-shadow-menu`, `--ui-shadow-focus-brand`, `--ui-shadow-focus-primary`
 - `--ui-opacity-disabled`
+
+## Slider Sizing (v3)
+
+Geometry-only tokens for `SliderContinuous`/`SliderStepped`/`SliderLabeled` — colors come from `SliderVariant` (`brand`/`primary`) plus the shared button/text tokens above, not from these:
+
+- `--ui-height-slider-track` — track height (Tailwind: `h-slider-track`)
+- `--ui-radius-slider-inner` — inner-edge radius where the active/inactive pills meet the thumb
+- `--ui-slider-track-gap` — gap the active/inactive fill pills each stop short of the thumb center
+- `--ui-width-slider-handle`, `--ui-height-slider-handle` — thumb dimensions
+
+## Text Shimmer (v3)
+
+Used by `ShimmerText`'s `ds-shimmer-text` utility (animated gradient masked to glyphs via `background-clip: text`):
+
+- `--ui-shimmer-base` — the gradient's resting color (default: `var(--ui-color-text-tertiary)`)
+- `--ui-shimmer-highlight` — the sweeping highlight color (default: `color-mix(in srgb, var(--ui-color-text-tertiary) 35%, transparent)`)
 
 ## Tailwind Mappings
 
 The package maps `--ui-*` tokens into Tailwind v4 with `@theme inline`, including:
 
-- Colors: `bg-primary`, `text-primary-fg`, `bg-secondary`, `text-text`, `border-border`, `bg-surface`
+- Colors: `bg-primary`, `text-primary-fg`, `bg-secondary`, `text-text`, `bg-surface-primary`, `bg-surface-secondary`, `bg-page-background`, `bg-danger`, `text-danger-fg`, `border-border-primary`, `border-border-secondary`, `border-border-popovers`, `border-border-focus`, `text-brand-color`, `bg-brand-color-alt`
 - Fonts: `font-body`, `font-button`, `font-heading`, `font-label`, `font-title`, `font-hero`
-- Shadows: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`
-- Radii: `rounded-tight`, `rounded-standard`, `rounded-soft` (and directional variants such as `rounded-l-standard`)
+- Shadows: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`, `shadow-focus-error` (v3)
+- Radii: `rounded-tight`, `rounded-standard`, `rounded-soft`, `rounded-slider-inner` (v3, and directional variants such as `rounded-l-standard`)
 - Spacing utilities where mapped (see `@theme`)
-- Composite utilities: `text-style-button`, `text-style-body`, `text-style-label`, `text-style-title`, `text-style-heading`, `text-style-hero`, `h-button`, `h-button-sm`, `size-button`, `size-button-sm`
+- Composite utilities: `text-style-button`, `text-style-body`, `text-style-label`, `text-style-title`, `text-style-heading`, `text-style-hero`, `h-button`, `h-button-sm`, `size-button`, `size-button-sm`, `size-button-micro` (v3), `h-slider-track` (v3)
 
 Prefer mapped utilities over arbitrary values when composing local UI.
 

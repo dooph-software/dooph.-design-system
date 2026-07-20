@@ -251,7 +251,7 @@ LoadingSpinnerColor.brand    → var(--ui-color-brand)
 <LoadingSpinner color="#e05252" />  // arbitrary hex passes through
 ```
 
-Track always uses `var(--ui-color-border)` — never the indicator color.
+Track always uses `var(--ui-color-border)` — never the indicator color. **Known v3 drift:** the v3 token rename (`2d0fe0b`) split `--ui-color-border` into `--ui-color-border-primary`/`--ui-color-border-secondary` and removed the old single-name token from `tokens.css`, but `LoadingSpinner.tsx`/`ProgressIndicator.tsx` still reference the now-undefined `var(--ui-color-border)` for the track stroke — this is a real bug in the component source (not just this doc), flagged separately; do not "fix" it by editing the doc alone.
 
 ---
 
