@@ -20,6 +20,7 @@ export const Default: Story = { args: { placeholder: 'Placeholder text' } };
 export const WithValue: Story = { args: { defaultValue: 'Input value', placeholder: 'Placeholder' } };
 export const Disabled: Story = { args: { placeholder: 'Disabled', disabled: true } };
 export const Error: Story = { args: { placeholder: 'Error state', hasError: true } };
+export const ErrorFocused: Story = { args: { placeholder: 'Error with focus ring', hasError: true, autoFocus: true } };
 
 export const AllStates: Story = {
   render: () => (
@@ -28,6 +29,7 @@ export const AllStates: Story = {
       <Input defaultValue="With value" />
       <Input placeholder="Disabled" disabled />
       <Input placeholder="Error" hasError />
+      <Input placeholder="Error with focus" hasError autoFocus />
     </div>
   ),
 };
