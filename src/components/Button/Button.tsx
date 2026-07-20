@@ -62,11 +62,13 @@ const buttonVariants = cva(
         sm: "h-button-sm px-3",
         icon: "size-button p-0",
         "icon-sm": "size-button-sm p-0",
+        "icon-micro": "size-button-micro p-0",
       },
     },
     compoundVariants: [
       { variant: "secondary", size: "icon", className: "shadow-none" },
       { variant: "secondary", size: "icon-sm", className: "shadow-none" },
+      { variant: "secondary", size: "icon-micro", className: "shadow-none" },
     ],
     defaultVariants: {
       variant: "secondary",

@@ -20,5 +20,6 @@ export const ButtonSize = {
   sm: "sm",
   icon: "icon",
   iconSm: "icon-sm",
+  iconMicro: "icon-micro",
 } as const;
 export type ButtonSize = (typeof ButtonSize)[keyof typeof ButtonSize];

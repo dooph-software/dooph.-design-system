@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { LeftSidebarClosedIcon } from "../Icons";
+import { LeftSidebarClosedIcon, IconSize } from "../Icons";
 import { Button } from "./Button";
 import { ButtonSize, ButtonVariant } from "./constants";
 
@@ -93,6 +93,38 @@ export const DisabledAll: Story = {
           {v}
         </Button>
       ))}
+    </div>
+  ),
+};
+
+export const IconSizeComparison: Story = {
+  render: () => (
+    <div className="flex flex-col gap-6 p-4">
+      {[ButtonVariant.ghost, ButtonVariant.secondary, ButtonVariant.brand].map(
+        (variant) => (
+          <div key={variant} className="flex items-center gap-4">
+            <div className="w-20 text-sm font-medium">{variant}</div>
+            <div className="flex items-center gap-3">
+              <Button variant={variant} size={ButtonSize.icon}>
+                <LeftSidebarClosedIcon size={IconSize.standard} />
+              </Button>
+              <span className="text-xs text-gray-500">icon (38px)</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant={variant} size={ButtonSize.iconSm}>
+                <LeftSidebarClosedIcon size={IconSize.standard} />
+              </Button>
+              <span className="text-xs text-gray-500">icon-sm (34px)</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant={variant} size={ButtonSize.iconMicro}>
+                <LeftSidebarClosedIcon size={IconSize.standard} />
+              </Button>
+              <span className="text-xs text-gray-500">icon-micro (26px)</span>
+            </div>
+          </div>
+        ),
+      )}
     </div>
   ),
 };
