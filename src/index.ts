@@ -24,6 +24,7 @@ export * from './components/SearchBox';
 export * from './components/Table';
 export * from './components/Toast';
 export * from './components/Tooltip';
+export * from './components/Slider';
 
 export * from './components/WavyDivider/WavyDivider';
 export * from './components/LoadingSpinner/LoadingSpinner';
