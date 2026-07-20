@@ -147,7 +147,7 @@ function FlatProgressIndicator({
         cy={cy}
         r={trackRadius}
         fill="none"
-        stroke="var(--ui-color-border)"
+        stroke="var(--ui-color-border-primary)"
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeDasharray={`${trackLength} ${circumference}`}
@@ -260,7 +260,7 @@ function WavyProgressIndicator({
         cy={cy}
         r={trackRadius}
         fill="none"
-        stroke="var(--ui-color-border)"
+        stroke="var(--ui-color-border-primary)"
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeDasharray={`${trackLength} ${circumference}`}

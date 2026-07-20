@@ -221,7 +221,7 @@ function FlatSpinner({
       <path
         ref={trackRef}
         fill="none"
-        stroke="var(--ui-color-border)"
+        stroke="var(--ui-color-border-primary)"
         strokeWidth={strokeWidth}
         strokeLinecap="round"
       />
