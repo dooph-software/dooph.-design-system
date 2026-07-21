@@ -19,6 +19,51 @@ Assume the new version is already installed. Nothing here modifies the package �
 you're only updating your app's overrides and usages. Work top-to-bottom; the
 verification grep at the end is the done-check.
 
+## Prerequisite: import the Tailwind preset (mandatory)
+
+**If your app runs its own Tailwind v4 build, this step is required** — and it's
+what makes the renamed v3 utilities (`bg-danger`, `bg-surface-primary`,
+`border-border-primary`) generate at all. Skip it only if your app does not use
+Tailwind (then you rely solely on the precompiled `styles.css` and this whole
+utility topic doesn't apply).
+
+Your app's Tailwind build doesn't know dooph's token scale on its own. Without
+the preset, authoring classes like `p-md`, `gap-rg`, `rounded-standard`,
+`bg-primary`, or `font-label` **never generate** — you're forced into ugly
+arbitrary values (`gap-[var(--ui-spacing-rg)]`) or, worse, a same-named Tailwind
+default silently wins (`font-sans`, the numeric spacing scale). The package ships
+a preset (`@dooph-software/design-system/theme.css`) — a standalone
+`@theme inline` block that registers every `--ui-*` token into your Tailwind — to
+fix exactly this.
+
+Import it in your Tailwind CSS entry, **in this order**:
+
+```css
+@import "tailwindcss";
+@import "@dooph-software/design-system/styles.css";  /* tokens + precompiled component classes */
+@import "@dooph-software/design-system/theme.css";   /* the preset — makes p-md, gap-rg, bg-danger generate */
+@import "./theme.css";                               /* your --ui-* overrides (see step 1) */
+```
+
+Order matters: `tailwindcss` first, the preset before your overrides. No
+`tailwind.config` or `@source` change is needed — the `@theme` block is picked up
+from the import, and because it's `@theme inline` the utilities emit
+`var(--ui-*)` so your token overrides keep resolving at runtime.
+
+Once imported, use the ergonomic utilities instead of arbitrary values:
+
+| Token family | Utilities you can now write |
+| --- | --- |
+| spacing (`xxs xs sm rg md lg xl xxl`) | `p-md`, `px-rg`, `gap-rg`, `m-xs`, `space-y-sm` |
+| radius (`tight standard soft`) | `rounded-tight`, `rounded-standard`, `rounded-soft` |
+| color | `bg-primary`, `text-danger-fg`, `border-border-primary`, `bg-surface-primary` |
+| font role | `font-body`, `font-button`, `font-label`, `font-heading` |
+| font size | `text-body`, `text-label`, `text-heading`, `text-title`, `text-hero` |
+
+So `gap-[var(--ui-spacing-rg)]` becomes `gap-rg`, and `p-[var(--ui-spacing-md)]`
+becomes `p-md`. (Composite typography classes like `text-style-button` ship
+precompiled in `styles.css` and work with or without the preset.)
+
 ## 0. Find the files that need editing
 
 - **Token overrides:** your app's theme CSS that sets `--ui-*` values (commonly
