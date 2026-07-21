@@ -7,11 +7,9 @@ import { CloseCancelIcon } from "./CloseCancelIcon";
 import { DarkModeIcon } from "./DarkModeIcon";
 import { DropdownIcon } from "./DropdownIcon";
 import { ExtensionsIcon } from "./ExtensionsIcon";
-import { LeftSidebarOpenedIcon } from "./LeftSidebarOpenedIcon";
 import { LightModeIcon } from "./LightModeIcon";
 import { NewChatIcon } from "./NewChatIcon";
 import { RecentsIcon } from "./RecentsIcon";
-import { RightSidebarClosedIcon } from "./RightSidebarClosedIcon";
 import { SearchIcon } from "./SearchIcon";
 import { SendIcon } from "./SendIcon";
 import { SettingsBoltIcon } from "./SettingsBoltIcon";
@@ -109,11 +107,11 @@ export const SidebarIcons: Story = {
         label="LeftSidebar Closed"
       />
       <IconCell
-        icon={(props) => <LeftSidebarOpenedIcon {...props} />}
+        icon={(props) => <SidebarLeftIcon {...props} />}
         label="LeftSidebar Open"
       />
       <IconCell
-        icon={(props) => <RightSidebarClosedIcon {...props} />}
+        icon={(props) => <SidebarRightIcon {...props} />}
         label="RightSidebar Closed"
       />
       <IconCell

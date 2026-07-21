@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { LeftSidebarClosedIcon, IconSize } from "../Icons";
+import { IconSize, SidebarLeftIcon } from "../Icons";
 import { Button } from "./Button";
 import { ButtonSize, ButtonVariant } from "./constants";
 
@@ -75,7 +75,7 @@ export const AllSizes: Story = {
         Small
       </Button>
       <Button variant={ButtonVariant.primary} size={ButtonSize.icon}>
-        <LeftSidebarClosedIcon />
+        <SidebarLeftIcon />
       </Button>
     </div>
   ),
@@ -106,21 +106,25 @@ export const IconSizeComparison: Story = {
             <div className="w-20 text-sm font-medium">{variant}</div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.icon}>
-                <LeftSidebarClosedIcon size={IconSize.standard} />
+                <SidebarLeftIcon size={IconSize.standard} />
               </Button>
               <span className="text-xs text-text-secondary">icon (38px)</span>
             </div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.iconSm}>
-                <LeftSidebarClosedIcon size={IconSize.standard} />
+                <SidebarLeftIcon size={IconSize.standard} />
               </Button>
-              <span className="text-xs text-text-secondary">icon-sm (34px)</span>
+              <span className="text-xs text-text-secondary">
+                icon-sm (34px)
+              </span>
             </div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.iconMicro}>
-                <LeftSidebarClosedIcon size={IconSize.standard} />
+                <SidebarLeftIcon size={IconSize.standard} />
               </Button>
-              <span className="text-xs text-text-secondary">icon-micro (26px)</span>
+              <span className="text-xs text-text-secondary">
+                icon-micro (26px)
+              </span>
             </div>
           </div>
         ),
