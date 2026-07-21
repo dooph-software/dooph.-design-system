@@ -80,7 +80,7 @@ Hardcoded values:
 <div className="p-[16px] rounded-[18px] bg-[#ffffff] shadow-[0_1px_4px_rgba(0,0,0,.15)]">
 
 // ✓ token-backed utilities — these re-theme and support dark mode for free
-<div className="p-md rounded-standard bg-surface shadow-menu">
+<div className="p-md rounded-standard bg-surface-primary shadow-menu">
 ```
 
 Bespoke stylesheet:
@@ -93,7 +93,7 @@ Bespoke stylesheet:
 
 ```tsx
 // ✓ express it in JSX with utilities + Text components; no app-authored CSS rules
-<div className="flex flex-col gap-xs p-md rounded-standard bg-surface">
+<div className="flex flex-col gap-xs p-md rounded-standard bg-surface-primary">
   <TitleText>Card title</TitleText>
 </div>
 ```

@@ -1,6 +1,6 @@
 ---
 name: dooph-design-system-v3-migration
-description: Use when upgrading a consuming project from @dooph-software/design-system v2.x to v3.x — after the new version is installed. A one-time, breaking token/API rename sweep: destructive→danger, the border/surface vocabulary split, brand-color/accent consolidation, plus new components. Once the project builds clean with no stale names, this migration is done and the skill no longer applies.
+description: Use when upgrading a consuming project from @dooph-software/design-system v2.x to v3.x, after the new version is installed. Symptoms that signal it: build breaks or silently-unstyled elements from removed v2 names — bare border/surface utilities, destructive/logo/accent-color tokens, or ButtonVariant.destructive. A one-time breaking upgrade; follow the skill's steps in order. No longer applies once the app builds clean with no stale names.
 metadata:
   short-description: Upgrade a consuming app from dooph DS v2 to v3
 ---
