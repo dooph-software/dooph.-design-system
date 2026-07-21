@@ -19,11 +19,15 @@ export interface SliderProps extends RootProps {
   variant?: SliderVariant;
 }
 
-// 8px inner padding, per Figma track — step dots are inset by this on each side.
-const SLIDER_PAD = 'var(--ui-spacing-xs)';
-
 const pctOf = (v: number, min: number, max: number) =>
   max === min ? 0 : ((v - min) / (max - min)) * 100;
+
+/* Thumb-aligned position for a value's percent. Radix insets the thumb by half
+ * its width at each end (center travels [handleW/2 … 100%-handleW/2]); step dots
+ * must use the SAME formula so a dot sits exactly under the thumb at its stop
+ * instead of a few px beside it. */
+const thumbAlignedLeft = (percent: number) =>
+  `calc(${percent} / 100 * (100% - var(--ui-width-slider-handle)) + var(--ui-width-slider-handle) / 2)`;
 
 /* Fill geometry: each pill stops (track-gap + half handle) short of the thumb
  * center. IMPORTANT: the calc() class strings below MUST stay as single literal
@@ -54,10 +58,16 @@ const SliderBase = forwardRef<
       defaultValue,
       value,
       onValueChange,
+      'aria-label': ariaLabel,
       ...props
     },
     ref,
   ) => {
+    // Interpolate the fill/thumb between step stops (stepped only); the
+    // continuous slider must track the pointer 1:1 with no transition lag.
+    const glide = showSteps
+      ? 'transition-[left,width] duration-150 ease-out motion-reduce:transition-none'
+      : '';
     const [internal, setInternal] = useState<number[]>(
       value ?? defaultValue ?? [min],
     );
@@ -97,27 +107,31 @@ const SliderBase = forwardRef<
         {...props}
       >
         <SliderPrimitive.Track className="relative h-slider-track w-full">
-          {/* active pill */}
+          {/* active pill — hidden at 0% so its borders don't paint a sliver */}
           <div
             aria-hidden
+            data-hidden={pct <= 0 || undefined}
             className={cn(
-              'absolute inset-y-0 left-0 overflow-hidden',
+              'absolute inset-y-0 left-0 overflow-hidden data-[hidden]:hidden',
               'rounded-l-tight rounded-r-slider-inner',
               'w-[max(0px,calc(var(--slider-pct)*1%-var(--ui-slider-track-gap)-var(--ui-width-slider-handle)/2))]',
               activeFill[variant],
+              glide,
             )}
           />
-          {/* inactive pill */}
+          {/* inactive pill — hidden at 100% so its borders don't paint a sliver */}
           <div
             aria-hidden
+            data-hidden={pct >= 100 || undefined}
             className={cn(
-              'absolute inset-y-0 right-0 overflow-hidden',
+              'absolute inset-y-0 right-0 overflow-hidden data-[hidden]:hidden',
               'rounded-r-tight rounded-l-slider-inner',
               'left-[min(100%,calc(var(--slider-pct)*1%+var(--ui-slider-track-gap)+var(--ui-width-slider-handle)/2))]',
               'bg-secondary border border-solid border-secondary-border',
+              glide,
             )}
           />
-          {/* step dots — absolute over the full track, inset by the 8px pad */}
+          {/* step dots — centers aligned to the thumb's stop positions */}
           {stepValues.map((v) => (
             <span
               key={v}
@@ -127,18 +141,17 @@ const SliderBase = forwardRef<
                 'absolute top-1/2 size-[6px] -translate-x-1/2 -translate-y-1/2 rounded-full',
                 'bg-secondary-border data-[active]:ds-slider-dot-active',
               )}
-              style={{
-                left: `calc(${SLIDER_PAD} + ${pctOf(v, min, max)} * (100% - 2 * ${SLIDER_PAD}) / 100)`,
-              }}
+              style={{ left: thumbAlignedLeft(pctOf(v, min, max)) }}
             />
           ))}
         </SliderPrimitive.Track>
         <SliderPrimitive.Thumb
-          aria-label={props['aria-label'] ?? 'Value'}
+          aria-label={ariaLabel ?? 'Value'}
           className={cn(
             'block h-[var(--ui-height-slider-handle)] w-[var(--ui-width-slider-handle)]',
             'rounded-slider-inner ds-focus-visible-ring cursor-grab active:cursor-grabbing',
             variant === SliderVariant.primary ? 'bg-primary' : 'bg-brand',
+            glide,
           )}
         />
       </SliderPrimitive.Root>
