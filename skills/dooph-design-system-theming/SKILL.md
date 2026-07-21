@@ -13,6 +13,12 @@ tokens in CSS — never by editing package files, inline styles, or hardcoded
 colors/radii on components. Get the setup right once and every component adopts
 the brand automatically, in light and dark.
 
+> **Upgrading from v2?** The `--ui-*` names below are the v3 contract. If your
+> app still uses v2 token overrides (`--ui-color-destructive*`, bare
+> `--ui-color-border` / `--ui-color-surface`, `--ui-color-logo`,
+> `--ui-accent-color`), do the one-time rename sweep in the
+> **dooph-design-system-v3-migration** skill first, then follow this skill.
+
 ## 1. Imports (required, in this order)
 
 ```css

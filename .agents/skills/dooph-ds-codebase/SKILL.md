@@ -63,6 +63,7 @@ src/
 skills/                       ← distributed skills for consuming projects (NOT this repo's maintenance); shipped via npm + init-skills
   dooph-design-system-usage/  ← consumer skill: build UI with components/tokens (replaces old orientation + composition)
   dooph-design-system-theming/← consumer skill: install, fonts, dark mode, theme.css preset, rebranding
+  dooph-design-system-v3-migration/← consumer skill: one-time v2→v3 breaking-rename sweep (destructive→danger, border/surface split, brand-color)
 .agents/skills/               ← authoring-side skills for this repo (canonical source)
   dooph-ds-architecture/      ← architecture rules skill
   dooph-ds-codebase/          ← this file
