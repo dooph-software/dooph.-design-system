@@ -167,6 +167,11 @@
   --ui-width-toast: 230px;
   --ui-width-toast-action: 360px;
   --ui-width-toast-viewport: var(--ui-width-toast-action);
+
+  /* Tooltip widths — the simple variant is intentionally hug (no token):
+   * it sets whitespace-nowrap and sizes to its content. */
+  --ui-max-w-tooltip-rich: 175px;
+  --ui-min-w-tooltip-complex: 242px;
   --ui-height-button-micro: 26px;
   --ui-height-slider-track: 22px;
   --ui-radius-slider-inner: 8px;

@@ -133,6 +133,16 @@
     width: min(var(--ui-width-toast-action), 100%);
   }
 
+  /* Tooltip sizing — token-backed so consumers can retune per brand.
+   * The simple variant has no helper: it hugs its content by design. */
+  .ds-max-w-tooltip-rich {
+    max-width: var(--ui-max-w-tooltip-rich);
+  }
+
+  .ds-min-w-tooltip-complex {
+    min-width: var(--ui-min-w-tooltip-complex);
+  }
+
   .ds-tooltip-inverse-theme {
     background-color: var(--ui-color-tooltip-inverse-surface);
     border-color: var(--ui-color-tooltip-inverse-border);

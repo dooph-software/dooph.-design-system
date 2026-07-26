@@ -85,6 +85,9 @@ const EXCLUDED = new Set([
   "ui-slider-track-gap",
   "ui-width-slider-handle",
   "ui-height-slider-handle",
+  // Tooltip widths — exposed via ds-* helpers
+  "ui-max-w-tooltip-rich",
+  "ui-min-w-tooltip-complex",
   // Menu widths — used as raw var() only
   "ui-min-w-menu",
   "ui-min-w-menu-action",
