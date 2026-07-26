@@ -105,12 +105,31 @@
     transform-origin: var(--radix-dropdown-menu-content-transform-origin);
   }
 
+  /* Menu width floor, selected by DropdownMenuVariant on the root and read here
+   * via --ds-menu-min-w. The floor applies in BOTH width modes: with
+   * matchTriggerWidth it is the lower bound of the max(), without it, it is the
+   * width. Falls back to the standard token when no variant class is present. */
+  .ds-menu-w-standard {
+    --ds-menu-min-w: var(--ui-min-w-menu);
+  }
+
+  .ds-menu-w-action {
+    --ds-menu-min-w: var(--ui-min-w-menu-action);
+  }
+
+  .ds-menu-w-complex {
+    --ds-menu-min-w: var(--ui-min-w-menu-complex);
+  }
+
   .ds-radix-dropdown-match-trigger-width {
-    min-width: max(var(--radix-dropdown-menu-trigger-width), var(--ui-min-w-menu));
+    min-width: max(
+      var(--radix-dropdown-menu-trigger-width),
+      var(--ds-menu-min-w, var(--ui-min-w-menu))
+    );
   }
 
   .ds-min-w-menu {
-    min-width: var(--ui-min-w-menu);
+    min-width: var(--ds-menu-min-w, var(--ui-min-w-menu));
   }
 
   .ds-px-ui-sm {
@@ -125,18 +144,18 @@
     );
   }
 
-  .ds-toast-width {
-    width: min(var(--ui-width-toast), 100%);
+  .ds-toast-width-simple {
+    width: min(var(--ui-width-toast-simple), 100%);
   }
 
-  .ds-toast-action-width {
-    width: min(var(--ui-width-toast-action), 100%);
+  .ds-toast-width-complex {
+    width: min(var(--ui-width-toast-complex), 100%);
   }
 
   /* Tooltip sizing — token-backed so consumers can retune per brand.
    * The simple variant has no helper: it hugs its content by design. */
-  .ds-max-w-tooltip-rich {
-    max-width: var(--ui-max-w-tooltip-rich);
+  .ds-width-tooltip-rich {
+    width: var(--ui-width-tooltip-rich);
   }
 
   .ds-min-w-tooltip-complex {

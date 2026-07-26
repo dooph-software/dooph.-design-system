@@ -66,18 +66,18 @@ const toastRootVariants = cva(
   {
     variants: {
       variant: {
-        standard:
-          "ds-toast-width flex-row items-center gap-xxl border border-solid border-border-popovers bg-modal-surface py-2 pl-4 pr-2 text-text",
+        simple:
+          "ds-toast-width-simple flex-row items-center gap-xxl border border-solid border-border-popovers bg-modal-surface py-2 pl-4 pr-2 text-text",
         brand:
-          "ds-toast-width flex-row items-center gap-xxl border border-solid border-brand bg-brand py-2 pl-4 pr-2 text-brand-fg",
+          "ds-toast-width-simple flex-row items-center gap-xxl border border-solid border-brand bg-brand py-2 pl-4 pr-2 text-brand-fg",
         error:
-          "ds-toast-width flex-row items-center gap-xxl bg-danger py-2 pl-4 pr-2 text-text",
-        action:
-          "ds-toast-action-width flex-col gap-md border border-solid border-border-popovers bg-modal-surface pb-3 pl-[14px] pr-3 pt-[14px] text-text",
+          "ds-toast-width-simple flex-row items-center gap-xxl bg-danger py-2 pl-4 pr-2 text-text",
+        complex:
+          "ds-toast-width-complex flex-col gap-md border border-solid border-border-popovers bg-modal-surface pb-3 pl-[14px] pr-3 pt-[14px] text-text",
       },
     },
     defaultVariants: {
-      variant: "standard",
+      variant: "simple",
     },
   },
 );
@@ -216,7 +216,7 @@ function ToastProvider({
         ...options,
         id,
         open: true,
-        variant: options.variant ?? ToastTypes.standard,
+        variant: options.variant ?? ToastTypes.simple,
       },
     ]);
     return id;
@@ -250,7 +250,7 @@ function ToastProvider({
             }
           }}
         >
-          {item.variant === ToastTypes.action ? (
+          {item.variant === ToastTypes.complex ? (
             <>
               <div className="flex w-full items-center justify-center pr-xxs">
                 <ToastTitle className="min-w-0 flex-1 wrap-break-word text-text">

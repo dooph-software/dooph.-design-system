@@ -12,3 +12,4 @@ export {
   DropdownMenuSeparator,
   DropdownMenuSection,
 } from './DropdownMenu';
+export { DropdownMenuVariant } from './constants';

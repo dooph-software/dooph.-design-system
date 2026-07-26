@@ -2,9 +2,9 @@
 // so these dot-accessible enums can be read from React Server Components.
 
 export const ToastTypes = {
-  standard: "standard",
+  simple: "simple",
   brand: "brand",
   error: "error",
-  action: "action",
+  complex: "complex",
 } as const;
 export type ToastTypes = (typeof ToastTypes)[keyof typeof ToastTypes];

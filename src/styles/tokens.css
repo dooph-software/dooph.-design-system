@@ -164,13 +164,15 @@
   --ui-size-spinner-rg: 22px;
   --ui-size-spinner-md: 32px;
   --ui-size-spinner-xl: 40px;
-  --ui-width-toast: 230px;
-  --ui-width-toast-action: 360px;
-  --ui-width-toast-viewport: var(--ui-width-toast-action);
+  /* Toast widths — pinned per layout variant (capped to the container so a
+   * narrow viewport can't overflow). */
+  --ui-width-toast-simple: 230px;
+  --ui-width-toast-complex: 360px;
+  --ui-width-toast-viewport: var(--ui-width-toast-complex);
 
   /* Tooltip widths — the simple variant is intentionally hug (no token):
    * it sets whitespace-nowrap and sizes to its content. */
-  --ui-max-w-tooltip-rich: 175px;
+  --ui-width-tooltip-rich: 175px;
   --ui-min-w-tooltip-complex: 242px;
   --ui-height-button-micro: 26px;
   --ui-height-slider-track: 22px;

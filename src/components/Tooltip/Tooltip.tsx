@@ -67,7 +67,7 @@ const TooltipContent = forwardRef<
           variant === TooltipTypes.simple &&
             "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-md text-style-body",
           variant === TooltipTypes.rich &&
-            "flex ds-max-w-tooltip-rich flex-col gap-xs rounded-tight border border-solid px-3 py-sm wrap-break-word",
+            "flex ds-width-tooltip-rich flex-col gap-xs rounded-tight border border-solid px-3 py-sm wrap-break-word",
           variant === TooltipTypes.complex &&
             "ds-min-w-tooltip-complex rounded-standard border border-solid",
           className,

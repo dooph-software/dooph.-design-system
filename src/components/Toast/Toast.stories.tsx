@@ -29,7 +29,7 @@ function ToastDemo({
         toast({
           title: label,
           description:
-            variant === ToastTypes.standard ? "dashboard.fig moved to trash" : undefined,
+            variant === ToastTypes.simple ? "dashboard.fig moved to trash" : undefined,
           variant,
         })
       }
@@ -42,7 +42,7 @@ function ToastDemo({
 export const Standard: Story = {
   render: () => (
     <ToastProvider>
-      <ToastDemo label="File deleted" variant={ToastTypes.standard} />
+      <ToastDemo label="File deleted" variant={ToastTypes.simple} />
     </ToastProvider>
   ),
 };
@@ -74,7 +74,7 @@ export const Action: Story = {
           onClick={() =>
             toast({
               title: "Export will be discarded. Continue?",
-              variant: ToastTypes.action,
+              variant: ToastTypes.complex,
               action: {
                 label: "Undo",
                 onClick: () => undefined,
@@ -140,7 +140,7 @@ export const AllVariants: Story = {
   render: () => (
     <ToastProvider>
       <div className="flex flex-wrap gap-3">
-        <ToastDemo label="Saved successfully" variant={ToastTypes.standard} />
+        <ToastDemo label="Saved successfully" variant={ToastTypes.simple} />
         <ToastDemo label="Published" variant={ToastTypes.brand} />
         <ToastDemo label="Upload failed" variant={ToastTypes.error} />
         <ActionButton />
@@ -158,7 +158,7 @@ function ActionButton() {
       onClick={() =>
         toast({
           title: "Export will be discarded. Continue?",
-          variant: ToastTypes.action,
+          variant: ToastTypes.complex,
           action: { label: "Undo", onClick: () => undefined },
         })
       }

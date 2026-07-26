@@ -9,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuSection,
 } from './DropdownMenu';
+import { DropdownMenuVariant } from './constants';
 import {
   DropdownTrigger,
   TypeableDropdownTrigger,
@@ -153,6 +154,62 @@ export const WithDisabledItems: Story = {
           <DropdownMenuItem>Enabled item</DropdownMenuItem>
           <DropdownMenuItem disabled>Disabled item</DropdownMenuItem>
           <DropdownMenuItem>Another enabled</DropdownMenuItem>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+};
+
+/**
+ * Width variants (Figma `dropdownWidths`). Set `variant` once on the
+ * `DropdownMenu` root — every `DropdownMenuContent` beneath it reads the value
+ * from context and adopts the matching min-width floor, so items inherit the
+ * width with no per-item props.
+ *
+ * The floor applies in both width modes: with `matchTriggerWidth` (default) it
+ * is the lower bound of `max(trigger-width, floor)`; with
+ * `matchTriggerWidth={false}` it is the width outright.
+ */
+export const WidthVariants: Story = {
+  render: () => (
+    <div className="flex flex-row items-start gap-xl">
+      {(
+        [
+          [DropdownMenuVariant.action, 'Action (144px)'],
+          [DropdownMenuVariant.standard, 'Standard (160px)'],
+          [DropdownMenuVariant.complex, 'Complex (324px)'],
+        ] as const
+      ).map(([variant, label]) => (
+        <DropdownMenu key={variant} variant={variant}>
+          <DropdownMenuTrigger asChild>
+            <Button variant={ButtonVariant.secondary}>{label}</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent matchTriggerWidth={false}>
+            <DropdownMenuSection>
+              <DropdownMenuItem>Rename</DropdownMenuItem>
+              <DropdownMenuItem>Duplicate</DropdownMenuItem>
+              <DropdownMenuItem>Delete</DropdownMenuItem>
+            </DropdownMenuSection>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ))}
+    </div>
+  ),
+};
+
+/** A single panel can opt out of the root's variant via its own `variant` prop. */
+export const WidthVariantPerPanelOverride: Story = {
+  render: () => (
+    <DropdownMenu variant={DropdownMenuVariant.action}>
+      <DropdownMenuTrigger asChild>
+        <Button variant={ButtonVariant.secondary}>Root=action, panel=complex</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        matchTriggerWidth={false}
+        variant={DropdownMenuVariant.complex}
+      >
+        <DropdownMenuSection>
+          <DropdownMenuItem>This panel overrides to 324px</DropdownMenuItem>
         </DropdownMenuSection>
       </DropdownMenuContent>
     </DropdownMenu>
