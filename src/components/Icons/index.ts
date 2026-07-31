@@ -4,7 +4,9 @@ export { BaseIcon, IconSizes as IconSize } from "./BaseIcon";
 export type { IconProps } from "./BaseIcon";
 
 export { AIContextIcon } from "./AIContextIcon";
-export { AIThinkingIcon as ThinkingIcon } from "./AIThinkingIcon";
+export { AIPlanIcon } from "./AIPlanIcon";
+export { AISkillIcon } from "./AISkillIcon";
+export { AIThinkingIcon } from "./AIThinkingIcon";
 export { ArrowDownIcon } from "./ArrowDownIcon";
 export { ArrowDownLeftIcon } from "./ArrowDownLeftIcon";
 export { ArrowDownRightIcon } from "./ArrowDownRightIcon";
@@ -13,6 +15,7 @@ export { ArrowRightIcon } from "./ArrowRightIcon";
 export { ArrowUpIcon } from "./ArrowUpIcon";
 export { ArrowUpLeftIcon } from "./ArrowUpLeftIcon";
 export { ArrowUpRightIcon } from "./ArrowUpRightIcon";
+export { AttachFileIcon } from "./AttachFileIcon";
 export { BarChartIcon } from "./BarChartIcon";
 export { BugReportIcon } from "./BugReportIcon";
 export { ChangelogIcon } from "./ChangelogIcon";
