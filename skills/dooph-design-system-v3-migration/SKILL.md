@@ -149,10 +149,30 @@ Caution on two of them:
 
 ## 3. Rename the component API (your TSX)
 
-- `ButtonVariant.destructive` → `ButtonVariant.danger` (find/replace).
+Two things changed — the button variant, and the sidebar icon set.
 
-That is the only renamed export. `ButtonSize`, other variant enums, and every
-component name are unchanged.
+**Button variant** (find/replace):
+
+- `ButtonVariant.destructive` → `ButtonVariant.danger`
+
+**Sidebar icons.** v2's four open/closed glyphs were **removed** and replaced by
+a rest/hover pair per side:
+
+| v2 (deleted) | v3 |
+| --- | --- |
+| `LeftSidebarOpenedIcon`, `LeftSidebarClosedIcon` | `SidebarLeftIcon` (rest), `SidebarLeftHoverIcon` (hover) |
+| `RightSidebarOpenedIcon`, `RightSidebarClosedIcon` | `SidebarRightIcon` (rest), `SidebarRightHoverIcon` (hover) |
+
+⚠️ **This is a semantic change, not a rename.** v2's pair encoded *panel state*
+(open vs closed); v3's encodes *interaction state* (rest vs hover). If your app
+swapped glyphs on an `expanded`/`isOpen` boolean, there is no drop-in v3
+equivalent — mapping both old names onto the single static icon silently removes
+the open/closed affordance from the button. Either convey state another way
+(e.g. rotate/mirror the icon, or a `data-state` style) or accept the loss
+deliberately. Use the `*HoverIcon` variants for hover, not for state.
+
+Those are the only changed exports — `ButtonSize`, every other variant enum, and
+all component names are unchanged.
 
 ## 4. Visual changes to expect (not bugs)
 
