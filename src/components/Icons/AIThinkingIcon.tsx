@@ -1,6 +1,6 @@
 import { BaseIcon, IconProps } from "./BaseIcon";
 
-export const ThinkingIcon = (props: IconProps) => {
+export const AIThinkingIcon = (props: IconProps) => {
   return (
     <BaseIcon {...props}>
       <path d="M12 18V5" />
@@ -15,4 +15,4 @@ export const ThinkingIcon = (props: IconProps) => {
   );
 };
 
-export default ThinkingIcon;
+export default AIThinkingIcon;

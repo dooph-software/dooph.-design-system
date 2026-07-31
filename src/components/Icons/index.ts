@@ -4,6 +4,7 @@ export { BaseIcon, IconSizes as IconSize } from "./BaseIcon";
 export type { IconProps } from "./BaseIcon";
 
 export { AIContextIcon } from "./AIContextIcon";
+export { AIThinkingIcon as ThinkingIcon } from "./AIThinkingIcon";
 export { ArrowDownIcon } from "./ArrowDownIcon";
 export { ArrowDownLeftIcon } from "./ArrowDownLeftIcon";
 export { ArrowDownRightIcon } from "./ArrowDownRightIcon";
@@ -64,4 +65,3 @@ export { StopFilledIcon } from "./StopFilledIcon";
 export { StopIcon } from "./StopIcon";
 export { SystemThemeIcon } from "./SystemThemeIcon";
 export { TableIcon } from "./TableIcon";
-export { ThinkingIcon } from "./ThinkingIcon";
