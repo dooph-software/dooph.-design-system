@@ -55,6 +55,8 @@ const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 const DropdownMenuContent = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Content>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & {
+    /** When true, the menu closes when focus leaves the browser window (devtools, screenshot tools, alt-tab). Default false. */
+    dismissOnFocusLoss?: boolean;
     /** When false, menu open does not move focus into the panel (required for TypeableDropdownTrigger). Default true. */
     focusOnOpen?: boolean;
     matchTriggerWidth?: boolean;
@@ -68,8 +70,11 @@ const DropdownMenuContent = forwardRef<
   (
     {
       className,
+      dismissOnFocusLoss = false,
       focusOnOpen = true,
       matchTriggerWidth = true,
+      onFocusOutside,
+      onInteractOutside,
       onOpenAutoFocus,
       sideOffset = 6,
       portal = true,
@@ -89,10 +94,31 @@ const DropdownMenuContent = forwardRef<
           onOpenAutoFocus?.(event);
         };
 
+    // Radix dismisses on any outside-interaction signal, including focus moving
+    // to devtools, a screenshot tool, or another OS window. Those are the only
+    // cases where the document itself has lost focus, so they are separable
+    // from a genuine click elsewhere on the page.
+    const handleFocusOutside: typeof onFocusOutside = (event) => {
+      onFocusOutside?.(event);
+      if (!dismissOnFocusLoss && !document.hasFocus()) {
+        event.preventDefault();
+      }
+    };
+
+    const handleInteractOutside: typeof onInteractOutside = (event) => {
+      onInteractOutside?.(event);
+      const target = event.target as Node | null;
+      if (!dismissOnFocusLoss && (!target || !document.contains(target))) {
+        event.preventDefault();
+      }
+    };
+
     const content = (
       <DropdownMenuPrimitive.Content
         ref={ref}
         sideOffset={sideOffset}
+        onFocusOutside={handleFocusOutside}
+        onInteractOutside={handleInteractOutside}
         {...(handleOpenAutoFocus
           ? ({
               onOpenAutoFocus: handleOpenAutoFocus,
