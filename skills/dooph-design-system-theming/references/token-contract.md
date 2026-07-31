@@ -80,12 +80,13 @@ Only Google Sans Flex styles use `--ui-font-var-*`. Do not apply those axis toke
 
 ## Slider Sizing (v3)
 
-Geometry-only tokens for `SliderContinuous`/`SliderStepped`/`SliderLabeled` — colors come from `SliderVariant` (`brand`/`primary`) plus the shared button/text tokens above, not from these:
+Geometry-only tokens for `SliderContinuous`/`SliderStepped`/`SliderLabeled` — the fill color comes from the component's `color` prop (token name or CSS color, default `primary`), not from these:
 
 - `--ui-height-slider-track` — track height (Tailwind: `h-slider-track`)
 - `--ui-radius-slider-inner` — inner-edge radius where the active/inactive pills meet the thumb
-- `--ui-slider-track-gap` — gap the active/inactive fill pills each stop short of the thumb center
+- `--ui-slider-track-gap` — gap the active/inactive fill pills each stop short of the thumb edge
 - `--ui-width-slider-handle`, `--ui-height-slider-handle` — thumb dimensions
+- `--ui-spacing-xs` — doubles as the stepped slider's end inset: how far the first/last dot (and the handle's travel) sit from the ends of the track
 
 ## Text Shimmer (v3)
 

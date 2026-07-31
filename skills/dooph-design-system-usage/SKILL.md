@@ -113,8 +113,9 @@ Reach for these before writing local UI:
   `pentagon` | `puff` | `star`), `CopyButton` (writes `value` to the clipboard,
   swaps its icon to a checkmark for 2s; `CopyButtonVariant`: `ghost` | `secondary`).
 - **Inputs:** `Input`, `SearchBox`, `Checkbox`, `TwoWayToggle` (+ `TwoWayToggleItem`),
-  `SliderContinuous` / `SliderStepped` / `SliderLabeled` (Radix Slider;
-  `SliderVariant`: `brand` | `primary`; `SliderLabeled` adds `labels: { start, end }`).
+  `SliderContinuous` / `SliderStepped` / `SliderLabeled` (Radix Slider; `color`
+  takes a token name or any CSS color, default `primary`; `SliderLabeled` adds
+  `labels: { start, end }`).
 - **Menus:** `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`,
   `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`,
   `DropdownMenuSeparator`, `DropdownMenuSection`.
@@ -138,8 +139,7 @@ Reach for these before writing local UI:
   `RollChangeText` (rolls old content out / new content in when `changeKey`
   or string/number children change), `BaseIcon`, `ChevronDownIcon`, `SearchIcon`.
 - **Feedback / motion:** `Toast` family, `LoadingSpinner`, `ProgressIndicator`,
-  `LinearProgressIndicator` (Radix Progress; `LinearProgressVariant`: `brand` |
-  `primary`), `WavyDivider`.
+  `LinearProgressIndicator` (Radix Progress; `color` as above), `WavyDivider`.
 - **Utility:** `cn`.
 
 If something genuinely doesn't exist, compose it from these primitives and
@@ -212,6 +212,11 @@ export function SaveButton({ busy, disabled, children = "Save", ...props }: Butt
 
 ### Component constraints worth knowing
 
+- **`color` on `Slider*` / `LinearProgressIndicator`:** the one sanctioned place
+  for a non-token color. Pass a token name (`color="text"`) whenever the design
+  is a DS color; pass a raw CSS color only when the value is genuinely external
+  and data-driven (`color={model.providerColor}`). It is not a shortcut around
+  rule 3 — don't hardcode a brand hex there that a token already covers.
 - **`Modal`:** use it for every dialog/overlay; never `position: fixed` +
   manual focus trap. Always include a `ModalTitle` (add `className="sr-only"`
   when there's no visible title) for screen readers.

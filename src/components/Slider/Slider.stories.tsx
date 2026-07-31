@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { SliderContinuous, SliderStepped, SliderLabeled } from './Slider';
-import { SliderVariant } from './constants';
+import { DS_COLOR_TOKENS } from '../../utils/color';
 import { LabelText } from '../Text';
 
 const meta = {
@@ -10,9 +10,9 @@ const meta = {
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
   argTypes: {
-    variant: {
+    color: {
       control: 'select',
-      options: Object.values(SliderVariant),
+      options: Object.keys(DS_COLOR_TOKENS),
     },
   },
 } satisfies Meta<typeof SliderContinuous>;
@@ -22,32 +22,13 @@ type Story = StoryObj<typeof meta>;
 
 const VALUES = [0, 25, 50, 75, 100];
 
-export const ContinuousBrand: Story = {
+export const Continuous: Story = {
   render: () => (
     <div className="flex w-64 flex-col gap-4">
       {VALUES.map((v) => (
         <div key={v} className="flex items-center gap-3">
           <LabelText className="w-8 text-text-tertiary">{v}</LabelText>
-          <SliderContinuous
-            variant={SliderVariant.brand}
-            defaultValue={[v]}
-          />
-        </div>
-      ))}
-    </div>
-  ),
-};
-
-export const ContinuousPrimary: Story = {
-  render: () => (
-    <div className="flex w-64 flex-col gap-4">
-      {VALUES.map((v) => (
-        <div key={v} className="flex items-center gap-3">
-          <LabelText className="w-8 text-text-tertiary">{v}</LabelText>
-          <SliderContinuous
-            variant={SliderVariant.primary}
-            defaultValue={[v]}
-          />
+          <SliderContinuous defaultValue={[v]} />
         </div>
       ))}
     </div>
@@ -56,61 +37,58 @@ export const ContinuousPrimary: Story = {
 
 const STEP_VALUES = [0, 1, 2, 3, 4];
 
-export const SteppedBrand: Story = {
+export const Stepped: Story = {
   render: () => (
     <div className="flex w-64 flex-col gap-4">
       {STEP_VALUES.map((v) => (
         <div key={v} className="flex items-center gap-3">
           <LabelText className="w-8 text-text-tertiary">{v}</LabelText>
-          <SliderStepped
-            variant={SliderVariant.brand}
-            min={0}
-            max={4}
-            step={1}
-            defaultValue={[v]}
-          />
+          <SliderStepped min={0} max={4} step={1} defaultValue={[v]} />
         </div>
       ))}
     </div>
   ),
 };
 
-export const SteppedPrimary: Story = {
+export const Colors: Story = {
+  name: 'Color prop',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`color` takes a DS token name or any CSS color. The handle renders it solid and the active track renders it at 45%.',
+      },
+    },
+  },
   render: () => (
     <div className="flex w-64 flex-col gap-4">
-      {STEP_VALUES.map((v) => (
-        <div key={v} className="flex items-center gap-3">
-          <LabelText className="w-8 text-text-tertiary">{v}</LabelText>
-          <SliderStepped
-            variant={SliderVariant.primary}
-            min={0}
-            max={4}
-            step={1}
-            defaultValue={[v]}
-          />
+      {(['primary', 'brand', 'text', 'danger'] as const).map((c) => (
+        <div key={c} className="flex items-center gap-3">
+          <LabelText className="w-16 text-text-tertiary">{c}</LabelText>
+          <SliderContinuous color={c} defaultValue={[60]} />
         </div>
       ))}
+      <div className="flex items-center gap-3">
+        <LabelText className="w-16 text-text-tertiary">#7c5cff</LabelText>
+        <SliderContinuous color="#7c5cff" defaultValue={[60]} />
+      </div>
+      <div className="flex items-center gap-3">
+        <LabelText className="w-16 text-text-tertiary">stepped</LabelText>
+        <SliderStepped color="#22a06b" min={0} max={4} step={1} defaultValue={[2]} />
+      </div>
     </div>
   ),
 };
 
-export const LabeledContinuous: Story = {
+export const Labeled: Story = {
   render: () => (
-    <div className="w-64">
+    <div className="flex w-64 flex-col gap-6">
       <SliderLabeled
-        variant={SliderVariant.brand}
         defaultValue={[50]}
         labels={{ start: 'Faster', end: 'Smarter' }}
       />
-    </div>
-  ),
-};
-
-export const LabeledStepped: Story = {
-  render: () => (
-    <div className="w-64">
       <SliderLabeled
-        variant={SliderVariant.primary}
+        color="brand"
         stepped
         min={0}
         max={4}
@@ -127,8 +105,31 @@ export const Controlled: Story = {
     const [value, setValue] = useState([50]);
     return (
       <div className="flex w-64 items-center gap-3">
-        <SliderContinuous
-          variant={SliderVariant.brand}
+        <SliderContinuous value={value} onValueChange={setValue} />
+        <LabelText className="w-8 text-text-tertiary">{value[0]}</LabelText>
+      </div>
+    );
+  },
+};
+
+export const ControlledStepped: Story = {
+  name: 'Controlled (stepped)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The handle follows the pointer continuously while dragging, but `onValueChange` only ever reports values on the step — watch the readout change in whole steps while the handle moves smoothly.',
+      },
+    },
+  },
+  render: () => {
+    const [value, setValue] = useState([2]);
+    return (
+      <div className="flex w-64 items-center gap-3">
+        <SliderStepped
+          min={0}
+          max={4}
+          step={1}
           value={value}
           onValueChange={setValue}
         />
@@ -141,19 +142,8 @@ export const Controlled: Story = {
 export const Disabled: Story = {
   render: () => (
     <div className="flex w-64 flex-col gap-4">
-      <SliderContinuous
-        variant={SliderVariant.brand}
-        defaultValue={[50]}
-        disabled
-      />
-      <SliderStepped
-        variant={SliderVariant.primary}
-        min={0}
-        max={4}
-        step={1}
-        defaultValue={[2]}
-        disabled
-      />
+      <SliderContinuous defaultValue={[50]} disabled />
+      <SliderStepped min={0} max={4} step={1} defaultValue={[2]} disabled />
     </div>
   ),
 };
@@ -164,13 +154,14 @@ export const KeyboardInteraction: Story = {
     docs: {
       description: {
         story:
-          'Focus the thumb (Tab) then use the Left/Right (or Up/Down) arrow keys to move the value by one step. Home/End jump to min/max. All keyboard behavior comes from Radix Slider — this story is a manual verification aid, not an automated test.',
+          'Focus the handle (Tab) then use Left/Right (or Up/Down) to move by one step; Home/End jump to min/max. The continuous slider gets this from Radix. The stepped slider handles it itself, because Radix is driven at a much finer step there to keep dragging smooth — so a key press must still move exactly one dot.',
       },
     },
   },
   render: () => (
-    <div className="w-64">
-      <SliderContinuous variant={SliderVariant.brand} defaultValue={[50]} />
+    <div className="flex w-64 flex-col gap-4">
+      <SliderContinuous defaultValue={[50]} />
+      <SliderStepped min={0} max={4} step={1} defaultValue={[2]} />
     </div>
   ),
 };

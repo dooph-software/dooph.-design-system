@@ -92,12 +92,44 @@
     outline-offset: 0;
   }
 
-  /* Slider fills that need transparency over tokens (Figma applies alpha on top) */
-  .ds-slider-fill-primary {
-    background-color: color-mix(in srgb, var(--ui-color-primary) 45%, transparent);
+  /* Active slider track — the handle color at 45% (Figma applies alpha on top).
+   * --ds-slider-color is set on the Slider root from its `color` prop. */
+  .ds-slider-fill {
+    background-color: color-mix(
+      in srgb,
+      var(--ds-slider-color, var(--ui-color-primary)) 45%,
+      transparent
+    );
   }
-  .ds-slider-dot-active {
+  /* Stepped slider dots. The active/inactive split is a plain attribute
+   * selector rather than a Tailwind `data-[active]:` variant — variants only
+   * compose with generated utilities, so pairing one with a class defined here
+   * silently produced no rule and every dot stayed the inactive tone. */
+  .ds-slider-dot {
+    background-color: var(--ui-color-secondary-border);
+  }
+
+  .ds-slider-dot[data-active] {
     background-color: color-mix(in srgb, var(--ui-color-text) 40%, transparent);
+  }
+
+  /* Stepped slider settling onto a dot after the pointer is released. The handle
+   * and both fills share one duration and easing so they arrive together — the
+   * handle is moved by Radix, which writes `left` on an unstyleable wrapper span
+   * (the root's last child), hence the structural selector. The class is only on
+   * the root while NOT dragging, so a drag still tracks the pointer 1:1. */
+  .ds-slider-glide > span:last-child,
+  .ds-slider-glide .ds-slider-part {
+    transition-property: left, width;
+    transition-duration: 180ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-slider-glide > span:last-child,
+    .ds-slider-glide .ds-slider-part {
+      transition-property: none;
+    }
   }
 
   /* Radix DropdownMenu content — follows Radix transform-origin injection */

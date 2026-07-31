@@ -33,3 +33,5 @@ export * from './components/LinearProgressIndicator';
 
 // Utilities
 export { cn } from './utils/cn';
+export { DS_COLOR_TOKENS, resolveDsColor } from './utils/color';
+export type { DsColor, DsColorToken } from './utils/color';

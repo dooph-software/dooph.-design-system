@@ -144,10 +144,13 @@ Notes:
   `--ui-brand-color` (icon/content tint) — there is no dedicated avatar-bg
   token; the app owns the logo/image content (and any light/dark logo swap)
   as `children`.
-- **`Slider*`:** brand/primary fill via `SliderVariant`; geometry tokens
-  `--ui-height-slider-track`, `--ui-radius-slider-inner`, `--ui-slider-track-gap`,
-  `--ui-width-slider-handle`, `--ui-height-slider-handle` control track/handle
-  sizing, not colors.
+- **`Slider*` / `LinearProgressIndicator`:** fill color comes from the `color`
+  prop (token name or CSS color, default `primary`), not from tokens — the
+  slider paints the handle in it and the active track at 45% of it. Geometry
+  tokens `--ui-height-slider-track`, `--ui-radius-slider-inner`,
+  `--ui-slider-track-gap`, `--ui-width-slider-handle`,
+  `--ui-height-slider-handle` control track/handle sizing, not colors. The
+  stepped slider insets its handle travel and end dots by `--ui-spacing-xs`.
 - **`ShimmerText`:** override `--ui-shimmer-base`/`--ui-shimmer-highlight` to
   retune the animated sheen; children must not set an explicit text color
   while shimmering (the parent owns `color` via `background-clip: text`).
