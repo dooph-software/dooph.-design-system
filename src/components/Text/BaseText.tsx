@@ -2,196 +2,140 @@ import {
   forwardRef,
   type ComponentPropsWithoutRef,
   type ComponentPropsWithRef,
+  type CSSProperties,
   type ElementType,
   type ForwardedRef,
   type ReactElement,
-} from "react";
-import { cn } from "../../utils/cn";
+} from 'react';
+import { cn } from '../../utils/cn';
+import { TEXT_VARIANT_CLASS, TextVariant } from './constants';
+import { buildTextStyle, type TextStyleProps } from './textStyle';
 
-/**
- * Dot-accessible text variant constants.
- * Maps directly to the `text-style-*` Tailwind utilities defined in index.css.
- *
- * Usage: <BaseText variant={TextVariant.button}>Label</BaseText>
- */
-export const TextVariant = {
-  button: "button",
-  heading: "heading",
-  hero: "hero",
-  title: "title",
-  body: "body",
-  label: "label",
-} as const;
-export type TextVariant = (typeof TextVariant)[keyof typeof TextVariant];
-
-const textVariantClassName: Record<TextVariant, string> = {
-  [TextVariant.button]: "text-style-button",
-  [TextVariant.heading]: "text-style-heading",
-  [TextVariant.hero]: "text-style-hero",
-  [TextVariant.title]: "text-style-title",
-  [TextVariant.body]: "text-style-body",
-  [TextVariant.label]: "text-style-label",
-};
-
-/**
- * Dot-accessible font family override. Maps to the per-role --ui-font-* token
- * family stacks, each independently overridable by consuming projects.
- *
- * BREAKING (font token split): `TextFontFamily.sans` was removed along with
- * `--ui-font-sans`; use `TextFontFamily.body` (same default stack).
- */
-export const TextFontFamily = {
-  body: "body",
-  button: "button",
-  heading: "heading",
-  label: "label",
-  title: "title",
-  hero: "hero",
-} as const;
-export type TextFontFamily =
-  (typeof TextFontFamily)[keyof typeof TextFontFamily];
-
-const textFontFamilyClass: Record<TextFontFamily, string> = {
-  body: "font-body",
-  button: "font-button",
-  heading: "font-heading",
-  label: "font-label",
-  title: "font-title",
-  hero: "font-hero",
-};
-
-/** Dot-accessible font size override. Maps to the --ui-text-* token sizes. */
-export const TextFontSize = {
-  label: "label",
-  body: "body",
-  heading: "heading",
-  title: "title",
-  hero: "hero",
-} as const;
-export type TextFontSize = (typeof TextFontSize)[keyof typeof TextFontSize];
-
-const textFontSizeClass: Record<TextFontSize, string> = {
-  label: "text-label",
-  body: "text-body",
-  heading: "text-heading",
-  title: "text-title",
-  hero: "text-hero",
-};
-
-/** Dot-accessible font weight override. Aligned to the --ui-weight-* token values. */
-export const TextFontWeight = {
-  regular: "regular",
-  medium: "medium",
-  semibold: "semibold",
-  bold: "bold",
-} as const;
-export type TextFontWeight =
-  (typeof TextFontWeight)[keyof typeof TextFontWeight];
-
-const textFontWeightClass: Record<TextFontWeight, string> = {
-  regular: "ds-font-weight-regular",
-  medium: "ds-font-weight-medium",
-  semibold: "ds-font-weight-semibold",
-  bold: "ds-font-weight-bold",
-};
-
-type BaseTextOwnProps = {
+type BaseTextOwnProps = TextStyleProps & {
+  /** Role providing the defaults. Ignored when `unstyled`. */
   variant?: TextVariant;
-  as?: ElementType;
-  fontFamily?: TextFontFamily;
-  fontSize?: TextFontSize;
-  fontWeight?: TextFontWeight;
+  /** Drop the role class entirely and style from props/className alone. */
+  unstyled?: boolean;
 };
 
-export type BaseTextProps<TElement extends ElementType = "span"> =
-  BaseTextOwnProps &
-    Omit<ComponentPropsWithoutRef<TElement>, keyof BaseTextOwnProps>;
+/* `as` is typed as the generic itself, not ElementType — that is what lets TS
+ * infer the element from the value and admit its props (as="label" + htmlFor). */
+export type BaseTextProps<TElement extends ElementType = 'span'> =
+  BaseTextOwnProps & { as?: TElement } & Omit<
+      ComponentPropsWithoutRef<TElement>,
+      keyof BaseTextOwnProps | 'as'
+    >;
 
-type BaseTextComponent = <TElement extends ElementType = "span">(
-  props: BaseTextProps<TElement> & {
-    ref?: ComponentPropsWithRef<TElement>["ref"];
-  },
+type PolymorphicTextComponent<TOwnProps> = <
+  TElement extends ElementType = 'span',
+>(
+  props: TOwnProps & { as?: TElement } & Omit<
+      ComponentPropsWithoutRef<TElement>,
+      keyof TOwnProps | 'as'
+    > & {
+      ref?: ComponentPropsWithRef<TElement>['ref'];
+    },
 ) => ReactElement | null;
 
 /**
- * BaseText — renders any inline or block element with a design-system text style.
+ * BaseText — every visible string in the system renders through this.
  *
- * All pre-composed text components (ButtonText, HeadingText, HeroText,
- * TitleText, BodyText, LabelText) are
- * BaseText instances with a fixed variant. Consuming projects can do the same:
+ * Three tiers decide the final typography, in this order:
  *
- *   export const CaptionText = (props: BaseTextProps) => (
- *     <BaseText as="span" variant="label" {...props} />
- *   );
+ *   1. props        — written as inline style, so they beat everything
+ *   2. className    — the consumer's own utilities (leading-*, text-2xl, …)
+ *   3. role class   — `.text-style-*`, in the `components` layer so utilities win
+ *
+ * That ordering is the whole point of the design: a prop is explicit and must
+ * never lose to cascade order, while a role default is ambient and must stay
+ * overridable. `style` still outranks props, as the last-resort escape hatch.
+ *
+ * Values come from the dot-accessible constants (`Fonts`, `FontSizes`,
+ * `FontWeights`, `Tracking`), which resolve to `var(--ui-*)` so a consuming
+ * project's token overrides apply, or from raw CSS values / numbers:
+ *
+ *   <BaseText font={Fonts.body} fontWeight={FontWeights.regular} />
+ *   <BodyText fontSize={16} fontWeight={450} lineHeight={1.6} />
+ *   <BodyText axes={{ [FontAxes.grade]: 40 }} />
  */
 const BaseTextBase = forwardRef<HTMLElement, BaseTextProps<ElementType>>(
   (
     {
       variant = TextVariant.body,
-      as: Tag = "span",
+      as: Tag = 'span',
+      unstyled = false,
       className,
-      fontFamily,
+      style,
+      font,
       fontSize,
       fontWeight,
+      lineHeight,
+      letterSpacing,
+      axes,
       ...props
     },
     ref,
-  ) => (
-    <Tag
-      ref={ref as ForwardedRef<HTMLElement>}
-      className={cn(
-        textVariantClassName[variant as TextVariant],
-        fontFamily && textFontFamilyClass[fontFamily as TextFontFamily],
-        fontSize && textFontSizeClass[fontSize as TextFontSize],
-        fontWeight && textFontWeightClass[fontWeight as TextFontWeight],
-        className,
-      )}
-      {...props}
-    />
-  ),
+  ) => {
+    const role = unstyled ? undefined : (variant as TextVariant);
+    const typography = buildTextStyle(
+      { font, fontSize, fontWeight, lineHeight, letterSpacing, axes },
+      role,
+    );
+
+    return (
+      <Tag
+        ref={ref as ForwardedRef<HTMLElement>}
+        className={cn(role && TEXT_VARIANT_CLASS[role], className)}
+        /* Spread `style` last: an explicit style prop is the final override,
+         * and merging (rather than replacing) means passing one does not wipe
+         * the typography the props asked for. */
+        style={
+          typography || style
+            ? ({ ...typography, ...style } as CSSProperties)
+            : undefined
+        }
+        {...props}
+      />
+    );
+  },
 );
-BaseTextBase.displayName = "BaseText";
+BaseTextBase.displayName = 'BaseText';
 
-export const BaseText = BaseTextBase as BaseTextComponent;
+export const BaseText = BaseTextBase as PolymorphicTextComponent<BaseTextOwnProps>;
 
-/* ── Pre-composed variants ──────────────────────────────────────────── */
+/* ── Pre-composed roles ─────────────────────────────────────────────────
+ * Each is BaseText with `variant` fixed. Built through a factory so the six
+ * stay identical by construction; the cast restores the polymorphic `as`
+ * typing that a plain forwardRef wrapper erases. */
 
-export type ButtonTextProps = Omit<BaseTextProps, "variant">;
-export const ButtonText = forwardRef<HTMLElement, ButtonTextProps>(
-  (props, ref) => (
-    <BaseText ref={ref} variant={TextVariant.button} {...props} />
-  ),
-);
-ButtonText.displayName = "ButtonText";
+export type RoleTextProps<TElement extends ElementType = 'span'> = Omit<
+  BaseTextProps<TElement>,
+  'variant'
+>;
 
-export type HeadingTextProps = Omit<BaseTextProps, "variant">;
-export const HeadingText = forwardRef<HTMLElement, HeadingTextProps>(
-  (props, ref) => (
-    <BaseText ref={ref} variant={TextVariant.heading} {...props} />
-  ),
-);
-HeadingText.displayName = "HeadingText";
+type RoleTextComponent = PolymorphicTextComponent<Omit<BaseTextOwnProps, 'variant'>>;
 
-export type HeroTextProps = Omit<BaseTextProps, "variant">;
-export const HeroText = forwardRef<HTMLElement, HeroTextProps>((props, ref) => (
-  <BaseText ref={ref} variant={TextVariant.hero} {...props} />
-));
-HeroText.displayName = "HeroText";
+const createRoleText = (
+  variant: TextVariant,
+  displayName: string,
+): RoleTextComponent => {
+  const Role = forwardRef<HTMLElement, RoleTextProps<ElementType>>(
+    (props, ref) => <BaseText ref={ref} variant={variant} {...props} />,
+  );
+  Role.displayName = displayName;
+  return Role as RoleTextComponent;
+};
 
-export type TitleTextProps = Omit<BaseTextProps, "variant">;
-export const TitleText = forwardRef<HTMLElement, TitleTextProps>(
-  (props, ref) => <BaseText ref={ref} variant={TextVariant.title} {...props} />,
-);
-TitleText.displayName = "TitleText";
+export const ButtonText = createRoleText(TextVariant.button, 'ButtonText');
+export const HeadingText = createRoleText(TextVariant.heading, 'HeadingText');
+export const HeroText = createRoleText(TextVariant.hero, 'HeroText');
+export const TitleText = createRoleText(TextVariant.title, 'TitleText');
+export const BodyText = createRoleText(TextVariant.body, 'BodyText');
+export const LabelText = createRoleText(TextVariant.label, 'LabelText');
 
-export type BodyTextProps = Omit<BaseTextProps, "variant">;
-export const BodyText = forwardRef<HTMLElement, BodyTextProps>((props, ref) => (
-  <BaseText ref={ref} variant={TextVariant.body} {...props} />
-));
-BodyText.displayName = "BodyText";
-
-export type LabelTextProps = Omit<BaseTextProps, "variant">;
-export const LabelText = forwardRef<HTMLElement, LabelTextProps>(
-  (props, ref) => <BaseText ref={ref} variant={TextVariant.label} {...props} />,
-);
-LabelText.displayName = "LabelText";
+export type ButtonTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
+export type HeadingTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
+export type HeroTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
+export type TitleTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
+export type BodyTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
+export type LabelTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;

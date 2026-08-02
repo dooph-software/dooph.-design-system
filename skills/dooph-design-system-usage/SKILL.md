@@ -26,7 +26,8 @@ import "@dooph-software/design-system/styles.css"; // required once, at the app 
 1. **Text → a Text component.** Every visible string renders through `BaseText`
    or a pre-composed variant (`BodyText`, `LabelText`, `HeadingText`, `TitleText`,
    `HeroText`, `ButtonText`). Never a bare `<p>`, `<span>`, `<h1>`, `<label>` for
-   styled copy, and never reach for `font-sans` / `text-sm` to style text by hand.
+   styled copy, and never reach for `font-sans` / `text-sm` to style text by hand
+   — adjust type with the Text props (`fontSize`, `fontWeight`, …) instead.
 2. **Controls → a package component.** Buttons, inputs, menus, tabs, toggles,
    modals, tooltips, search fields already exist with full states and a11y. Use
    them. Do not author a `<button>` with your own classes.
@@ -134,7 +135,9 @@ Reach for these before writing local UI:
 - **Links:** `TextLink` (body-text anchor; ghost foreground at rest, primary
   text on hover/active, no underline; `asChild` for `<Link>` composition).
 - **Text & icons:** `BaseText` (+ `ButtonText`, `BodyText`, `LabelText`,
-  `HeadingText`, `TitleText`, `HeroText`), `ShimmerText` (animated "working"
+  `HeadingText`, `TitleText`, `HeroText`; typography via the `font` / `fontSize`
+  / `fontWeight` / `lineHeight` / `letterSpacing` / `axes` props — see Text
+  props below), `ShimmerText` (animated "working"
   sheen masked to child glyphs — children must not set an explicit text color),
   `RollChangeText` (rolls old content out / new content in when `changeKey`
   or string/number children change), `BaseIcon`, `ChevronDownIcon`, `SearchIcon`.
@@ -159,10 +162,46 @@ Use the semantic, token-backed utilities. The common ones:
 - Radius: `rounded-tight` (controls), `rounded-standard` (triggers/inputs),
   `rounded-soft` (panels/modals).
 - Shadow: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`, `shadow-focus-error`.
-- Typography: prefer a Text component. If you must apply a type style to an
-  existing element, use `text-style-body` / `-label` / `-heading` / `-title` /
-  `-hero` / `-button` (these also set `font-variation-settings`, which no plain
-  Tailwind class can).
+- Typography: prefer a Text component and its props (below). If you must apply a
+  type style to an element you don't control, use `text-style-body` / `-label` /
+  `-heading` / `-title` / `-hero` / `-button` (these also set
+  `font-variation-settings`, which no plain Tailwind class can). These classes
+  live in the `components` layer, so your own utilities override them.
+
+### Text props
+
+Typography is set with props, not classes. Values come from dot-accessible
+constants that resolve to `var(--ui-*)` — so a consuming project's token
+overrides still apply — or from raw CSS values and numbers:
+
+```tsx
+import { BodyText, Fonts, FontSizes, FontWeights, Tracking, FontAxes } from "@dooph-software/design-system";
+
+<BodyText font={Fonts.title} fontSize={FontSizes.heading} fontWeight={FontWeights.bold} />
+<BodyText fontSize={16} fontWeight={450} lineHeight={1.6} letterSpacing={2} />
+```
+
+Numbers resolve per property: `fontSize`/`letterSpacing` → px, `lineHeight` →
+unitless ratio, `fontWeight` → the number itself. Strings pass through, so
+`fontSize="1.75rem"` works.
+
+Three tiers decide the result, in this order:
+
+1. **props** — written inline, so they always win
+2. **className** — your own utilities (`leading-[1.4]`, `text-2xl`, `tracking-*`)
+3. **role class** — the component's default, in a layer utilities can override
+
+`unstyled` drops the role entirely when you want to build type from scratch.
+
+**Variable font axes.** `axes` takes axis tags — `<BodyText axes={{ [FontAxes.grade]: 40 }} />`
+— and merges with the role's own axes, so naming one leaves the others intact.
+Only some faces implement a given axis (Google Sans Flex has grade, roundness,
+slant, width, optical size; most fonts have none of them); setting an axis a
+font lacks is a harmless no-op. Never pass `wght` through `axes` — 
+`font-variation-settings` outranks `font-weight` and would disable `fontWeight`.
+
+**Line height is not set by the design system.** Roles leave it inheriting, so
+set it in your app's base styles or per instance with `lineHeight`.
 
 ### `cn` and the `text-style-*` merge trap
 

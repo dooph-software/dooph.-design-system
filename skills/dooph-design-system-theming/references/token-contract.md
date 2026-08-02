@@ -64,10 +64,13 @@ Figma `brandColor`/`brandColorAlt` — the two-color brand identity pair, distin
 - `--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero` — one family stack per text role, each independently overridable (defaults: body/button/heading → Google Sans Flex, label → Host Grotesk, title/hero → Bricolage Grotesque)
 - `--ui-text-label`, `--ui-text-body`, `--ui-text-heading`, `--ui-text-title`, `--ui-text-hero`
 - `--ui-weight-body`, `--ui-weight-button`, `--ui-weight-label`, `--ui-weight-heading`, `--ui-weight-title`, `--ui-weight-hero`
+- `--ui-weight-regular`, `--ui-weight-medium`, `--ui-weight-semibold`, `--ui-weight-bold` — the standard scale behind `FontWeights.*`
 - `--ui-font-var-button`, `--ui-font-var-body`, `--ui-font-var-heading`
 - `--ui-tracking-body`, `--ui-tracking-label`, `--ui-tracking-hero`
 
-Only Google Sans Flex styles use `--ui-font-var-*`. Do not apply those axis tokens to Host Grotesk label text or Bricolage Grotesque title/hero text.
+Only Google Sans Flex styles use `--ui-font-var-*` — those three roles. The other roles (label/title/hero) ship no axis token because their faces implement no such axes. A Text component's `axes` prop appends to the role's token, so a named axis overrides while the rest survive.
+
+**There is no line-height token and no role sets one.** Leading inherits, so the consuming app owns it (a base rule) or a call site does (the `lineHeight` prop).
 
 ## Sizing And Shape
 

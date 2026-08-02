@@ -114,10 +114,18 @@
 /* __GENERATED_THEME_END__ */
 
 /*
- * Composite text-style utilities — apply full typographic intent in one class.
- * These encode font-variation-settings which has no Tailwind utility.
+ * Composite text-style classes — the full typographic intent of a role in one
+ * class, including font-variation-settings, which has no Tailwind utility.
+ *
+ * Deliberately in `components`, NOT `utilities`. BaseText applies these as role
+ * DEFAULTS, and a layer that loses to `utilities` is exactly what lets a
+ * consumer's own utility (leading-*, tracking-*, text-2xl) override a role.
+ * Explicit BaseText props outrank both, because they are written inline.
+ *
+ * Nothing here sets line-height: leading is left to inherit so it can be set by
+ * the consuming app or per instance via the lineHeight prop.
  */
-@layer utilities {
+@layer components {
   .text-style-button {
     font-family: var(--ui-font-button);
     font-optical-sizing: auto;
@@ -125,7 +133,6 @@
     font-style: normal;
     font-weight: var(--ui-weight-button);
     font-variation-settings: var(--ui-font-var-button);
-    line-height: 1;
   }
 
   .text-style-body {
@@ -136,7 +143,6 @@
     font-weight: var(--ui-weight-body);
     font-variation-settings: var(--ui-font-var-body);
     letter-spacing: var(--ui-tracking-body);
-    line-height: 1;
   }
 
   .text-style-label {
@@ -144,14 +150,12 @@
     font-size: var(--ui-text-label);
     font-weight: var(--ui-weight-label);
     letter-spacing: var(--ui-tracking-label);
-    line-height: 1;
   }
 
   .text-style-title {
     font-family: var(--ui-font-title);
     font-size: var(--ui-text-title);
     font-weight: var(--ui-weight-title);
-    line-height: 1;
   }
 
   .text-style-heading {
@@ -161,7 +165,6 @@
     font-style: normal;
     font-weight: var(--ui-weight-heading);
     font-variation-settings: var(--ui-font-var-heading);
-    line-height: 1;
   }
 
   .text-style-hero {
@@ -169,24 +172,11 @@
     font-size: var(--ui-text-hero);
     font-weight: var(--ui-weight-hero);
     letter-spacing: var(--ui-tracking-hero);
-    line-height: 1;
   }
 
-  /* Font-weight overrides for BaseText; declared after text-style-* so they win.
-   * Values come from tokens so consumers can retune them. */
-  .ds-font-weight-regular {
-    font-weight: var(--ui-weight-regular);
-  }
-  .ds-font-weight-medium {
-    font-weight: var(--ui-weight-medium);
-  }
-  .ds-font-weight-semibold {
-    font-weight: var(--ui-weight-semibold);
-  }
-  .ds-font-weight-bold {
-    font-weight: var(--ui-weight-bold);
-  }
+}
 
+@layer utilities {
   /* Sized to button height tokens */
   .h-button {
     height: var(--ui-height-button);

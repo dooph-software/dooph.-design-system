@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { RollChangeText } from "./RollChangeText";
-import { BodyText, LabelText, TextFontWeight } from "./BaseText";
+import { BodyText, LabelText } from "./BaseText";
+import { FontWeights } from "./constants";
 
 const meta = {
   title: "Primitives/RollChangeText",
@@ -51,9 +52,9 @@ export const AutoCyclingStatus: Story = {
 };
 
 const models = [
-  { id: "gpt-fast", name: "Fast", weight: TextFontWeight.regular },
-  { id: "gpt-balanced", name: "Balanced", weight: TextFontWeight.medium },
-  { id: "gpt-max", name: "Max Quality", weight: TextFontWeight.semibold },
+  { id: "gpt-fast", name: "Fast", weight: FontWeights.regular },
+  { id: "gpt-balanced", name: "Balanced", weight: FontWeights.medium },
+  { id: "gpt-max", name: "Max Quality", weight: FontWeights.semibold },
 ];
 
 export const ChangeKeyWithComplexChildren: Story = {

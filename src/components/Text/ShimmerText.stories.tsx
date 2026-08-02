@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ShimmerText } from "./ShimmerText";
-import { ButtonText, BodyText, TextFontWeight } from "./BaseText";
+import { ButtonText, BodyText } from "./BaseText";
+import { FontWeights } from "./constants";
 import { Button, ButtonVariant } from "../Button";
 
 const meta = {
@@ -47,7 +48,7 @@ export const WrappingWithFontWeightOverride: Story = {
   name: "Wrapping BodyText (fontWeight override)",
   render: () => (
     <ShimmerText>
-      <BodyText fontWeight={TextFontWeight.semibold}>Composing an answer…</BodyText>
+      <BodyText fontWeight={FontWeights.semibold}>Composing an answer…</BodyText>
     </ShimmerText>
   ),
 };
