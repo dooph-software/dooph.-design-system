@@ -111,6 +111,18 @@
   --ui-shimmer-base: var(--ui-color-text-tertiary);
   --ui-shimmer-highlight: color-mix(in srgb, var(--ui-color-text-tertiary) 35%, transparent);
 
+  /* Text roll on hover (RollHoverText). The duration:stagger ratio (~1:14) is
+   * what makes the letters read as one travelling wave instead of a metronome —
+   * raising the stagger toward the duration turns it into discrete flips. */
+  --ui-roll-hover-duration: 500ms;
+  --ui-roll-hover-stagger: 35ms;
+  --ui-roll-hover-blur: 3px;
+  --ui-roll-hover-depth: 0.5em;
+  /* Both in em so depth/perspective stays constant at every font size — the
+   * ratio is what governs how 3D the roll reads, and a px perspective would
+   * make the same component subtle in a button and overdone in a hero. */
+  --ui-roll-hover-perspective: 10em;
+
   /* ── Typography ──────────────────────────────────────────────────────── */
 
   /* Font family contract — one token per text role. Consumers load fonts and

@@ -24,3 +24,5 @@ export { ShimmerText } from './ShimmerText';
 export type { ShimmerTextProps } from './ShimmerText';
 export { RollChangeText } from './RollChangeText';
 export type { RollChangeTextProps } from './RollChangeText';
+export { RollHoverText } from './RollHoverText';
+export type { RollHoverTextProps } from './RollHoverText';

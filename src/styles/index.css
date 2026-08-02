@@ -236,6 +236,96 @@
       color: inherit;
     }
   }
+
+  /* RollHoverText — per-character 3D barrel roll on hover. Two identical faces
+   * per glyph; the offscreen face is hidden by opacity + blur rather than by
+   * overflow clipping, so descenders (g, y, p, j) are never cut and the
+   * component stays safe in inline body text.
+   *
+   * transition (not @keyframes) is load-bearing: interrupting a transition
+   * retargets from the current computed value, which is what lets an un-hover
+   * mid-roll reverse from wherever the letter currently sits. */
+  .ds-roll-hover {
+    display: inline;
+  }
+  .ds-roll-hover-word {
+    white-space: nowrap;
+  }
+  /* perspective belongs on the char cell, not the wrapper — per-character
+   * perspective keeps the depth uniform instead of fanning the outer letters. */
+  .ds-roll-hover-char {
+    position: relative;
+    display: inline-block;
+    perspective: var(--ui-roll-hover-perspective);
+  }
+  /* The barrel radius lives in the ROTATION AXIS (transform-origin's z), not in a
+   * translateZ on the faces. Pushing the faces forward with translateZ would put
+   * them closer to the viewer, and perspective would magnify them ~32% at rest —
+   * every glyph would overflow its own cell and collide with its neighbours.
+   * Recessing the axis instead leaves each face at z:0 when it is face-on, so it
+   * renders exactly at its layout size, while still sweeping a cylinder. */
+  .ds-roll-hover-out,
+  .ds-roll-hover-in {
+    display: inline-block;
+    transform-origin: 50% 50% calc(-1 * var(--ui-roll-hover-depth));
+    transition:
+      transform var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+      filter var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+      opacity var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1);
+    transition-delay: calc(var(--i) * var(--ui-roll-hover-stagger));
+  }
+  /* absolute so the incoming face contributes no width; the outgoing face in
+   * normal flow is what gives each cell its natural glyph width. */
+  .ds-roll-hover-in {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Rest. The constant translateZ puts both faces on the surface of a cylinder
+   * rather than hinging them flat — that is the whole source of the depth. */
+  .ds-roll-hover-out {
+    transform: rotateX(0deg);
+    filter: blur(0);
+    opacity: 1;
+  }
+  .ds-roll-hover-in {
+    transform: rotateX(90deg);
+    filter: blur(var(--ui-roll-hover-blur));
+    opacity: 0;
+  }
+
+  /* Rolled — self hover, ancestor .group hover, or the controlled `active` prop. */
+  .ds-roll-hover:hover .ds-roll-hover-out,
+  .group:hover .ds-roll-hover .ds-roll-hover-out,
+  .ds-roll-hover[data-active="true"] .ds-roll-hover-out {
+    transform: rotateX(-90deg);
+    filter: blur(var(--ui-roll-hover-blur));
+    opacity: 0;
+  }
+  .ds-roll-hover:hover .ds-roll-hover-in,
+  .group:hover .ds-roll-hover .ds-roll-hover-in,
+  .ds-roll-hover[data-active="true"] .ds-roll-hover-in {
+    transform: rotateX(0deg);
+    filter: blur(0);
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-roll-hover-out,
+    .ds-roll-hover-in {
+      transition: none;
+    }
+    .ds-roll-hover-in {
+      display: none;
+    }
+    .ds-roll-hover:hover .ds-roll-hover-out,
+    .group:hover .ds-roll-hover .ds-roll-hover-out,
+    .ds-roll-hover[data-active="true"] .ds-roll-hover-out {
+      transform: none;
+      filter: none;
+      opacity: 1;
+    }
+  }
 }
 
 /*
