@@ -1,6 +1,6 @@
 ---
 name: dooph-ds-architecture
-description: Load this skill whenever working inside the @dooph-software/design-system repository itself — maintaining, extending, or refactoring it. Enforces the four core architectural decisions that must never drift: (1) dot-accessible variant enums, (2) idiomatic Radix UI usage, (3) TSX composability, (4) framework-agnostic font system. Use this BEFORE writing any component code, making any API change, or reviewing a PR against this repo.
+description: Use when writing, changing, or reviewing any code inside the @dooph-software/design-system repository itself — adding a component, changing a prop or API, editing tokens or styles, or reviewing a PR against this repo. Read it before writing the code, not after. Not for consuming projects; those use the shipped skills/ folder.
 ---
 
 # dooph Design System — Architecture Rules
@@ -46,13 +46,42 @@ v3 renamed `ButtonVariant.destructive` → `ButtonVariant.danger` (matching the 
 | `ShapeButtons`     | `shape`   | `<ShapeButton shape={ShapeButtons.gem} />`                    |
 | `SheetSide`        | `side`    | `<SheetContent side={SheetSide.right} />`                     |
 | `TextVariant`      | `variant`    | `<BaseText variant={TextVariant.body} />`                          |
-| `TextFontFamily`   | `fontFamily` | `<BaseText fontFamily={TextFontFamily.heading} />`                 |
-| `TextFontSize`     | `fontSize`   | `<BaseText fontSize={TextFontSize.label} />`                       |
-| `TextFontWeight`   | `fontWeight` | `<BaseText fontWeight={TextFontWeight.semibold} />`                |
 | `CheckboxChecked`  | `checked`    | `<Checkbox checked={CheckboxChecked.indeterminate} />`             |
 | `CopyButtonVariant` | `variant` | `<CopyButton variant={CopyButtonVariant.secondary} value="npm install" />` |
-| `SliderVariant`    | `variant` | `<SliderContinuous variant={SliderVariant.primary} />`             |
-| `LinearProgressVariant` | `variant` | `<LinearProgressIndicator variant={LinearProgressVariant.primary} />` |
+| `DropdownMenuVariant` | `variant` | `<DropdownMenu variant={DropdownMenuVariant.complex} />` (width floor, inherited by content via context) |
+
+### The open-value exception
+
+A closed set of choices uses the enum above. A prop whose value is a **design
+value** — a colour, a size, a weight — must ALSO accept a raw value, because the
+set cannot be closed: a provider brand colour or a 450 weight will never be in
+our const. Those props take a const of `var(--ui-*)` **strings** instead of keys:
+
+```ts
+export const FontWeights = {
+  regular: 'var(--ui-weight-regular)',
+  medium: 'var(--ui-weight-medium)',
+} as const;
+export type FontWeightValue = FontWeight | (string & {}) | number;
+```
+
+- The value IS the var reference, so resolution is a no-op and a consumer's token
+  override still applies. No lookup table to silently mis-map.
+- `(string & {})` keeps dot-access in autocomplete while admitting any CSS value.
+- Numbers resolve per property (`fontSize` → px, `lineHeight` → unitless ratio).
+
+Used by `Fonts` / `FontSizes` / `FontWeights` / `Tracking` (`BaseText`) and
+`DS_COLOR_TOKENS` via the `color` prop (`Slider*`, `LinearProgressIndicator`).
+When a variant enum would only ever wrap design values, prefer this — it is why
+`SliderVariant` and `LinearProgressVariant` were deleted rather than extended.
+
+### Props that are design values are inline style, not classes
+
+A prop like `fontSize` or `color` MUST be emitted as inline style. Class-based
+props lose to whichever class the bundler emits later, which is not something the
+package controls — the old class-based `fontSize`/`fontFamily` silently did
+nothing for two releases for exactly this reason. Role/variant DEFAULTS stay
+classes (so consumers can override them); explicit props go inline.
 
 ### Invariants
 
@@ -96,7 +125,7 @@ Radix sets these automatically — style against them, never toggle classes in J
 ### DropdownMenu defaults
 
 - **`modal={false}`** on `DropdownMenu` root (package default; Radix default is `true`). Keeps the rest of the page interactable while a menu is open. Pass `modal={true}` when dialog-like focus trapping is required.
-- **`matchTriggerWidth`** defaults to `true` on `DropdownMenuContent` — sets width to the Radix trigger width with `--ui-min-w-menu` as floor (`ds-radix-dropdown-match-trigger-width`).
+- **`matchTriggerWidth`** defaults to `true` on `DropdownMenuContent` — sets width to the Radix trigger width, floored by `--ds-menu-min-w` (`ds-radix-dropdown-match-trigger-width`). `DropdownMenuVariant` on the root sets that floor via `ds-menu-w-standard`/`-action`/`-complex` and flows down through context; `DropdownMenuContent variant` overrides one panel.
 - **`DropdownMenuSection`** wraps item groups with horizontal inset (`ds-px-ui-xs`). `DropdownMenuContent` has no horizontal padding so `DropdownMenuSeparator` spans edge-to-edge.
 - **`TypeableDropdownTrigger`**: render as child of `DropdownMenuTrigger asChild`. The component root is a `<div>` (ref + Radix trigger props); the nested `<input>` receives typing. `onPointerDown` is state-aware and pre-focuses the input before calling Radix's handler: for input or chrome clicks that **open** the menu, `inputElRef.current.focus()` is called first (synchronously), then Radix's handler opens the menu. For input clicks when the menu is **already open**, the handler is suppressed entirely (preserves typing without toggling). Chrome clicks when the menu is open call Radix directly (closing). Pair with **`DropdownMenuContent focusOnOpen={false}`** so open does not steal focus to the panel. Pre-focusing before Radix is critical — Radix's non-modal `DismissableLayer` closes the menu when `focusin` fires outside the content after mount; focusing before the open means the `focusin` fires before the layer exists and is ignored. Optional `inputRef` for imperative input access. Open/focus styling uses `data-[state=open]` and `focus-within:` — no `open` prop.
 
@@ -187,8 +216,16 @@ The package defines font tokens but loads NO font files.
 ### What the package owns
 
 - Per-role font family tokens in `tokens.css` — `--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero` — stacks pointing to named families the consumer is responsible for loading. Each text role is independently overridable (defaults: body/button/heading → Google Sans Flex, label → Host Grotesk, title/hero → Bricolage Grotesque).
-- `--ui-font-var-button/body/heading` — `font-variation-settings` values for Google Sans Flex axes (`GRAD`, `ROND`, `slnt`, `wdth`).
-- `text-style-*` utility classes in `index.css` — composite font utilities that reference the tokens above.
+- `--ui-font-var-button/body/heading` — `font-variation-settings` values for Google Sans Flex axes (`GRAD`, `ROND`, `slnt`, `wdth`). Only those three roles ship one; the other faces implement no such axes. `BaseText`'s `axes` prop APPENDS to the role token (duplicate axes resolve last-wins) so naming one axis keeps the rest — which is also why a role with no token must emit axes standalone: `var(--undefined), "GRAD" 20` invalidates the whole declaration.
+- `text-style-*` role classes in `index.css`, in **`@layer components`** — composite font classes referencing the tokens above. The layer is deliberate: it loses to `utilities`, so consumer overrides work.
+
+### What the package deliberately does NOT own
+
+**Line height.** No leading token, no role sets `line-height`. A single hardcoded
+value cannot serve both display type and reading copy across every consumer, and
+when it was pinned at `1` it also silently beat every consumer override. Leading
+belongs to the consuming app; `BaseText`'s `lineHeight` prop covers the per-call
+case. Do not reintroduce it.
 
 ### What the package must never do
 

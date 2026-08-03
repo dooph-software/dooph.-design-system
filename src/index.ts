@@ -27,8 +27,11 @@ export * from './components/Tooltip';
 export * from './components/Slider';
 
 export * from './components/WavyDivider/WavyDivider';
+export * from './components/WavyDivider/constants';
 export * from './components/LoadingSpinner/LoadingSpinner';
+export * from './components/LoadingSpinner/constants';
 export * from './components/ProgressIndicator/ProgressIndicator';
+export * from './components/ProgressIndicator/constants';
 export * from './components/LinearProgressIndicator';
 
 // Utilities

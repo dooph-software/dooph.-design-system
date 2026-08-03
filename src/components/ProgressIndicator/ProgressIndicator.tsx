@@ -1,5 +1,6 @@
-"use client";
-
+// No "use client": the only hook here is useMemo, which React's server build
+// exports, so this module is neutral — it renders in either graph. Adding a
+// state/effect/ref hook would make it client-only again.
 import {
   forwardRef,
   useMemo,
@@ -18,25 +19,12 @@ import { generateWavyArcPath } from "../LoadingSpinner/waveUtils";
 import {
   LoadingSpinnerColor,
   LoadingSpinnerSize,
-} from "../LoadingSpinner/LoadingSpinner";
+} from "../LoadingSpinner/constants";
+import {
+  ProgressIndicatorVariants,
+  type ProgressIndicatorVariant,
+} from "./constants";
 
-// ── Enums ─────────────────────────────────────────────────────────────────────
-
-export const ProgressIndicatorVariants = {
-  /** Smooth circular arc — discrete arcs with M3 gap behaviour and CSS transitions. */
-  flat: "flat",
-  /**
-   * Polar sine-wave arc — indicator follows a wavy path generated from `progress`.
-   * CSS path transitions are not applied (point count changes); drive `progress`
-   * gradually from a spring/animation loop for smooth motion.
-   */
-  wavy: "wavy",
-} as const;
-export type ProgressIndicatorVariant =
-  (typeof ProgressIndicatorVariants)[keyof typeof ProgressIndicatorVariants];
-
-// Re-export shared enums so consumers can import everything from one place.
-export { LoadingSpinnerColor, LoadingSpinnerSize };
 
 // ── Color resolution ──────────────────────────────────────────────────────────
 

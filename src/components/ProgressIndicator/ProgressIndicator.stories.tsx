@@ -3,11 +3,9 @@ import { useState } from "react";
 import {
   LoadingSpinnerColor,
   LoadingSpinnerSize,
-} from "../LoadingSpinner/LoadingSpinner";
-import {
-  ProgressIndicator,
-  ProgressIndicatorVariants,
-} from "./ProgressIndicator";
+} from "../LoadingSpinner/constants";
+import { ProgressIndicator } from "./ProgressIndicator";
+import { ProgressIndicatorVariants } from "./constants";
 
 const meta = {
   title: "Bits & Pieces/ProgressIndicator",

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { WavyDivider, WavyDividerVariant } from "./WavyDivider";
+import { WavyDivider } from "./WavyDivider";
+import { WavyDividerVariant } from "./constants";
 
 const meta = {
   title: "Bits & Pieces/WavyDivider",

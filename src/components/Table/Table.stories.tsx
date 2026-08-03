@@ -8,8 +8,8 @@ import {
   TableHeaderCell,
   TablePlaceholder,
   TableRow,
-  TableSortDirection,
 } from "./Table";
+import { TableSortDirection } from "./constants";
 
 const meta = {
   title: "Components/Table",

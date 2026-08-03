@@ -85,6 +85,27 @@ request and keep the same token mapping.
 map families to `--ui-font-*`. The Google Fonts request must include the axes
 above, not just `wght`.
 
+### Line height is yours
+
+There is no leading token and no text role sets `line-height` — it inherits, so
+without a baseline every role lands on whatever your reset defines (1.5 under
+Tailwind's preflight), which is loose for display type. Set it once per role in
+your app CSS, in `@layer base` so `leading-*` utilities and the `lineHeight`
+prop still override it:
+
+```css
+@layer base {
+  .text-style-hero { line-height: 1.05; }
+  .text-style-title { line-height: 1.2; }
+  .text-style-heading { line-height: 1.25; }
+  .text-style-body { line-height: 1.5; }
+  .text-style-button, .text-style-label { line-height: 1; }
+}
+```
+
+Fixed-height controls (buttons, inputs) are unaffected by leading either way;
+these values matter for copy and display type.
+
 ## 4. Dark mode
 
 - **Light palette** lives on `:root` and `.light` (the package ships both with
@@ -137,8 +158,14 @@ Notes:
 - **`Tooltip`:** token-driven, not theme-detected. Defaults to `themeInverse`;
   override `--ui-color-tooltip-*` to restyle. Pass `themeInverse={false}` for a
   matching-theme tooltip.
-- **`Toast` widths:** `--ui-width-toast`, `--ui-width-toast-action`,
-  `--ui-width-toast-viewport` — override only if your product needs other widths.
+- **`Toast` / `Tooltip` widths:** pinned per variant —
+  `--ui-width-toast-simple` / `--ui-width-toast-complex` /
+  `--ui-width-toast-viewport`, and `--ui-width-tooltip-rich` /
+  `--ui-min-w-tooltip-complex` (the simple tooltip hugs its text by design).
+  Override only if your product needs other widths.
+- **`DropdownMenu` width:** `--ui-min-w-menu` (160) / `--ui-min-w-menu-action`
+  (144) / `--ui-min-w-menu-complex` (324) are the floors behind
+  `DropdownMenuVariant`.
 - **`Avatar`:** the package owns the surface/padding/radius via
   `--ui-color-surface-secondary`, `--ui-color-border-secondary`, and
   `--ui-brand-color` (icon/content tint) — there is no dedicated avatar-bg

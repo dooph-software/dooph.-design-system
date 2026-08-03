@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { LoadingSpinner } from "./LoadingSpinner";
 import {
-  LoadingSpinner,
   LoadingSpinnerColor,
   LoadingSpinnerSize,
   LoadingSpinnerVariant,
-} from "./LoadingSpinner";
+} from "./constants";
 
 const meta = {
   title: "Bits & Pieces/LoadingSpinner",

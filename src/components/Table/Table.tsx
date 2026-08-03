@@ -1,5 +1,6 @@
-"use client";
-
+// No "use client": no hooks, and onSort is a consumer-supplied passthrough.
+// Neutral module — it renders in either graph. It may import client components
+// (Button); that is normal composition, not a client boundary for this file.
 import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
 import { Button } from "../Button/Button";
@@ -8,14 +9,8 @@ import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
 import { ChevronsUpDownIcon } from "../Icons/ChevronsUpDownIcon";
 import { ChevronUpIcon } from "../Icons/ChevronUpIcon";
 import { ButtonText } from "../Text/BaseText";
+import { TableSortDirection } from "./constants";
 
-export const TableSortDirection = {
-  none: "none",
-  ascend: "ascend",
-  descend: "descend",
-} as const;
-export type TableSortDirection =
-  (typeof TableSortDirection)[keyof typeof TableSortDirection];
 
 /* ── Table ─────────────────────────────────────────────────────────────── */
 

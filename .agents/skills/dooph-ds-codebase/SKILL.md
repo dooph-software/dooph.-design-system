@@ -1,6 +1,6 @@
 ---
 name: dooph-ds-codebase
-description: Authoritative map of the @dooph-software/design-system source repository. Load when working inside this repo to understand file layout, component inventory, styling system, build pipeline, and current exports. Use alongside dooph-ds-architecture for all maintenance and extension work.
+description: Use when working inside the @dooph-software/design-system repo and you need to find something or confirm how it currently works — where a file lives, whether a component or token already exists, which CSS layer a class sits in, or how the build emits its assets. Pair with dooph-ds-architecture, which holds the rules that govern changes.
 ---
 
 # dooph Design System — Codebase Map
@@ -21,7 +21,7 @@ src/
   index.ts                    ← barrel: all public exports
   utils/cn.ts                 ← clsx + tailwind-merge helper
   styles/
-    index.css                 ← Tailwind build entry: @import chain, generated @theme inline block, text-style-*/h-button utilities
+    index.css                 ← Tailwind build entry: @import chain, generated @theme inline block, text-style-* role classes (@layer components), h-button/size-* utilities
     tokens.css                ← SOURCE OF TRUTH: all --ui-* CSS custom properties (light in :root/.light, dark in .dark)
     dooph-component-tokens.css ← @layer utilities: ds-* helpers (spacing, disabled states, radix origin)
     theme.css                 ← GENERATED preset (sync-theme.mjs): standalone @theme inline block shipped as ./theme.css for consumer Tailwind builds. Do not hand-edit.
@@ -34,7 +34,7 @@ src/
     HotkeyIndicator/
     Icons/
     Input/
-    LinearProgressIndicator/    ← v3: Radix Progress; LinearProgressVariant
+    LinearProgressIndicator/    ← v3: Radix Progress; `color` prop
     LoadingSpinner/
     Menu/
     Modal/
@@ -46,11 +46,11 @@ src/
     ShapeButton/
     Shapes/                     ← v3 adds StarShape (ShapeButtons.star)
     Sheet/
-    Slider/                     ← v3: Radix Slider; SliderContinuous/Stepped/Labeled, SliderVariant
+    Slider/                     ← v3: Radix Slider; SliderContinuous/Stepped/Labeled; `color` prop
     SplitButton/
     Table/
     Tabs/
-    Text/                       ← v3 adds ShimmerText, RollChangeText
+    Text/                       ← BaseText + roles, constants.ts (Fonts/FontSizes/FontWeights/Tracking/FontAxes), textStyle.ts; ShimmerText, RollChangeText, RollHoverText
     TextLink/                   ← v3: anchor-styled body text
     Toast/
     Toggle/
@@ -163,17 +163,38 @@ scripts/
 
 | Component          | File                | Radix                     | Notes |
 | ------------------ | ------------------- | ------------------------- | ----- |
-| `SliderContinuous` | `Slider/Slider.tsx` | `@radix-ui/react-slider`  | `SliderBase` with `showSteps={false}`; `variant` = `SliderVariant.brand\|primary` |
-| `SliderStepped`    | same                | same                      | `SliderBase` with `showSteps={true}`; renders step dots (`ds-slider-dot-active` when passed) |
-| `SliderLabeled`    | same                | same                      | wraps either variant in a column with `labels: { start, end }` rendered as `LabelText` below the track; optional `stepped` bool |
+| `SliderContinuous` | `Slider/Slider.tsx` | `@radix-ui/react-slider`  | `SliderBase` with `showSteps={false}` |
+| `SliderStepped`    | same                | same                      | `SliderBase` with `showSteps={true}`; step dots (`ds-slider-dot`, `[data-active]` for the filled side) |
+| `SliderLabeled`    | same                | same                      | wraps either in a column with `labels: { start, end }` rendered as `LabelText` below the track; optional `stepped` bool |
 
-Fill geometry uses literal `calc()` class strings (not concatenated) keyed to `--ui-slider-track-gap` / `--ui-width-slider-handle` / `--ui-height-slider-handle`; `variant={SliderVariant.primary}` uses `.ds-slider-fill-primary` (45%-alpha primary) instead of a solid `bg-brand` fill.
+`color` (token name or any CSS color, default `primary`) paints the handle solid
+and the active fill at 45% via `.ds-slider-fill` reading `--ds-slider-color`.
+There is no `SliderVariant` — it was removed in favour of `color`.
+
+Geometry uses literal `calc()` class strings (not concatenated) keyed to
+`--ui-slider-track-gap` / `--ui-width-slider-handle` / `--ui-height-slider-handle`,
+and is thumb-aligned: dots, both fills and the handle share one percent formula.
+The stepped variant carries two behaviours worth knowing before editing it:
+
+- **End inset.** An outer wrapper adds `px-xs`, shrinking the Radix root so the
+  handle's travel and the end dots sit `--ui-spacing-xs` off the ends; the fills
+  bleed back out over that padding via `--ds-slider-pad` (`0px` on continuous, so
+  its geometry is untouched). Radix maps both pointer and handle against the
+  root's own box, so shrinking the root is the only way to inset travel — padding
+  the root itself does nothing.
+- **Smooth drag, snapped value.** Radix is driven at `step / DRAG_SUBDIVISIONS`
+  while dragging so the handle tracks the pointer, and the public value is
+  snapped back to the real step on change and commit. Keyboard is handled
+  explicitly for that reason (a fine step would move a hundredth of a dot).
+  `.ds-slider-glide` applies the settle transition to the handle and both fills
+  from one declaration; it is off mid-drag and until first interaction, because
+  Radix re-positions the handle by half its width once it measures it.
 
 ### Progress indicators
 
 | Component                 | File                                             | Radix                       | Notes |
 | -------------------------- | ------------------------------------------------ | ---------------------------- | ----- |
-| `LinearProgressIndicator` | `LinearProgressIndicator/LinearProgressIndicator.tsx` | `@radix-ui/react-progress` (v3) | `variant` = `LinearProgressVariant.brand\|primary`; clamps `value` into `[0, max]` before computing `--progress-pct`; remainder track hides itself via `data-hidden` once `pct >= 100` so it never overlaps the 0% nub |
+| `LinearProgressIndicator` | `LinearProgressIndicator/LinearProgressIndicator.tsx` | `@radix-ui/react-progress` (v3) | `color` (same contract as `Slider*`, default `primary`) via `--ds-progress-color`; no `LinearProgressVariant`; clamps `value` into `[0, max]` before computing `--progress-pct`; remainder track hides itself via `data-hidden` once `pct >= 100` so it never overlaps the 0% nub |
 | `LoadingSpinner`           | `LoadingSpinner/LoadingSpinner.tsx`              | –                             | see `dooph-ds-loading-indicators` skill for the wave/geometry model |
 | `ProgressIndicator`        | `ProgressIndicator/ProgressIndicator.tsx`        | –                             | see `dooph-ds-loading-indicators` skill |
 
@@ -187,10 +208,17 @@ Fill geometry uses literal `calc()` class strings (not concatenated) keyed to `-
 
 | Export                                                                        | Description                                                                                                             |
 | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `BaseText`                                                                    | Generic text component; `variant` prop = `TextVariant` (composite style); optional `fontFamily`, `fontSize`, `fontWeight` overrides via `TextFontFamily`, `TextFontSize`, `TextFontWeight` — layered on top of the variant via tailwind-merge |
-| `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `TitleText`, `HeroText` | Pre-composed variants of `BaseText`                                                                                     |
+| `BaseText`                                                                    | `variant` = `TextVariant` picks the role class; typography props (`font`, `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`, `axes`) resolve to **inline style** in `textStyle.ts`; `unstyled` drops the role class; `as` is polymorphic and typed off the element |
+| `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `TitleText`, `HeroText` | Role components built by the `createRoleText` factory in `BaseText.tsx`                                                  |
+| `Fonts`, `FontSizes`, `FontWeights`, `Tracking`, `FontAxes`                   | `Text/constants.ts` (server-safe). Values are the `var(--ui-*)` string itself, not a lookup key — resolution is a no-op and consumer token overrides survive. `FontAxes` holds axis TAGS (`GRAD`, `ROND`, …) |
+| `serializeAxes`, `TextStyleProps`                                             | `Text/textStyle.ts` — axis-record → `font-variation-settings` string, and the shared prop shape |
 | `ShimmerText` (v3)                                                            | `<span>` wrapper applying `ds-shimmer-text` (animated gradient masked to glyphs via `background-clip: text`); children keep their own typography but must not set an explicit text color while shimmering; tune via `--ui-shimmer-base`/`--ui-shimmer-highlight`; respects `prefers-reduced-motion` |
 | `RollChangeText` (v3)                                                         | `<span>` wrapper that animates old content rolling down + blurring out while new content rolls in from above on `changeKey` (or string/number `children`) change; keyframes `ds-roll-out`/`ds-roll-in` |
+| `RollHoverText`                                                               | `<span>` wrapper rolling each character on hover (`ds-roll-hover*` classes) |
+
+`ShimmerText` / `RollChangeText` / `RollHoverText` stay wrappers rather than
+`BaseText` props on purpose: they must be able to wrap icons and arbitrary
+children, not just text.
 
 ### Icons
 
@@ -215,7 +243,8 @@ All values live in `--ui-*` CSS custom properties on `:root`/`.light` (light) an
 Notable component tokens:
 
 - Tooltip themes: `--ui-color-tooltip-inverse-*` and `--ui-color-tooltip-matching-*`. `TooltipContent themeInverse` switches between `ds-tooltip-inverse-theme` and `ds-tooltip-matching-theme`; there is no runtime theme detection.
-- Toast widths: `--ui-width-toast`, `--ui-width-toast-action`, `--ui-width-toast-viewport`, consumed by `ds-toast-width`, `ds-toast-action-width`, and `ds-toast-viewport`.
+- Toast widths: `--ui-width-toast-simple`, `--ui-width-toast-complex`, `--ui-width-toast-viewport`, consumed by `ds-toast-width-simple`, `ds-toast-width-complex`, and `ds-toast-viewport`. Widths are pinned per variant, matching `ToastTypes.simple`/`.complex`.
+- Tooltip/menu widths: `--ui-width-tooltip-rich` (pinned) and `--ui-min-w-tooltip-complex` back `ds-width-tooltip-rich`/`ds-min-w-tooltip-complex`; the simple tooltip intentionally hugs its text. `--ui-min-w-menu` (160) / `-action` (144) / `-complex` (324) back `ds-menu-w-standard`/`-action`/`-complex`, selected by `DropdownMenuVariant` on the menu root.
 - Avatar surface (v3): no dedicated `--ui-color-avatar-bg` token — `Avatar` composes `bg-surface-secondary` + `border-border-secondary` + `text-brand-color`; brand/logo content is supplied by consumers as children, not via a package provider.
 - **v3 token vocabulary** (see `tokens.css` and the theming skill's `token-contract.md` for the full list): `--ui-color-danger*` (replaces `destructive*`), `--ui-color-border-primary`/`-secondary` (replaces the single `--ui-color-border`), `--ui-color-surface-primary`/`--ui-color-page-background` (replaces `surface`/`surface-page`), `--ui-brand-color`/`--ui-brand-color-alt` (the brand-identity pair; `OutlineButton`'s `glowColor1`/`glowColor2` now default to `var(--ui-brand-color-alt)` — the old standalone `--ui-accent-color` token no longer exists in `tokens.css`), `--ui-color-focus-ring-brand`/`-primary`/`-error` (replaces the single `--ui-color-focus-ring`), `--ui-color-trigger-border-error-focus`, slider sizing tokens (`--ui-height-slider-track`, `--ui-radius-slider-inner`, `--ui-slider-track-gap`, `--ui-width-slider-handle`, `--ui-height-slider-handle`), `--ui-height-button-micro`, and shimmer tokens (`--ui-shimmer-base`, `--ui-shimmer-highlight`).
 
@@ -245,19 +274,24 @@ The `__GENERATED_*__` block is managed by `scripts/sync-theme.mjs` — do not ha
 - `ds-shape-button-focus-visible` — custom focus outline for ShapeButton
 - Focus ring helpers: `ds-focus-visible-ring`, `ds-focus-within-ring`, `ds-focus-ring-on-focus`, `ds-focus-ring-error-on-focus`, `ds-focus-ring` — token-backed outline rings for controls that need external focus affordances without `box-shadow` overflow clipping (the error variant is named `-error-`, not `-destructive-`, matching the v3 `--ui-color-focus-ring-error` token)
 - `ds-radix-dropdown-content-origin` — `transform-origin: var(--radix-dropdown-menu-content-transform-origin)`
-- `ds-radix-dropdown-match-trigger-width` — trigger width with `--ui-min-w-menu` floor
-- `ds-min-w-menu` — `min-width: var(--ui-min-w-menu)`
-- Toast helpers: `ds-toast-viewport`, `ds-toast-width`, `ds-toast-action-width`
-- Tooltip helpers: `ds-tooltip-inverse-theme`, `ds-tooltip-matching-theme`
+- `ds-radix-dropdown-match-trigger-width` — trigger width, floored by `--ds-menu-min-w`
+- `ds-min-w-menu` — `min-width: var(--ui-min-w-menu)` (fallback when `matchTriggerWidth` is off)
+- Menu width variants: `ds-menu-w-standard`, `ds-menu-w-action`, `ds-menu-w-complex` — each only sets `--ds-menu-min-w`; the width helper above consumes it, so the floor applies in both width modes
+- Toast helpers: `ds-toast-viewport`, `ds-toast-width-simple`, `ds-toast-width-complex`
+- Tooltip helpers: `ds-tooltip-inverse-theme`, `ds-tooltip-matching-theme`, `ds-width-tooltip-rich`, `ds-min-w-tooltip-complex`
 - Spacing helpers: `ds-gap-ui-xs`, `ds-p-ui-xs`, `ds-px-ui-xs`, `ds-px-ui-sm`, `ds-py-ui-xs`, `ds-py-ui-xxs`, `ds-py-ui-rg`, `ds-pl-ui-md`, `ds-pl-ui-rg`, `ds-pr-ui-rg`, `ds-pr-ui-sm`, `ds-my-ui-xs`
-- Slider fills (v3): `ds-slider-fill-primary` (`color-mix(in srgb, var(--ui-color-primary) 45%, transparent)`), `ds-slider-dot-active` (`color-mix(in srgb, var(--ui-color-text) 40%, transparent)`) — used because Figma applies alpha over the token color, which Tailwind's `bg-primary/45` opacity shorthand can't express against a custom property
+- Slider: `ds-slider-fill` (45% of `--ds-slider-color` — Figma applies alpha over the color, which Tailwind's `bg-primary/45` shorthand can't express against a custom property), `ds-slider-dot` + `ds-slider-dot[data-active]` (inactive `--ui-color-secondary-border`, active `--ui-color-text` at 40%), `ds-slider-glide` + `ds-slider-part` (shared settle transition). The dot split is a plain attribute selector, **not** a `data-[active]:` Tailwind variant — a variant only composes with generated utilities, so pairing one with a class defined here emits no rule at all (that bug shipped once already)
 - CopyButton icon-swap helpers (v3): `ds-copy-icon-clipboard`, `ds-copy-icon-check` — both icons share one grid cell; `[data-copied]` cross-fades/scales between them (skipped under `prefers-reduced-motion`)
 
 ### Composite text utilities (in `index.css`)
 
-`text-style-button`, `text-style-body`, `text-style-label`, `text-style-title`, `text-style-heading`, `text-style-hero` — apply full typographic intent (family, size, weight, optical sizing, variation settings) in a single class. Use these everywhere instead of composing individual font utilities.
+`text-style-button`, `text-style-body`, `text-style-label`, `text-style-title`, `text-style-heading`, `text-style-hero` — apply a role's full typographic intent (family, size, weight, optical sizing, variation settings, tracking) in a single class. Components apply these directly; `BaseText` applies one per `variant`.
 
-`BaseText fontWeight` overrides use `ds-font-weight-regular`, `ds-font-weight-medium`, `ds-font-weight-semibold`, and `ds-font-weight-bold`, declared after `text-style-*` so they override the composite style's token weight. Do not map `TextFontWeight` to Tailwind's default `font-normal/font-medium/font-semibold`; those can be emitted earlier than `text-style-*` and lose in compiled consumer CSS.
+They live in **`@layer components`, not `utilities`** — that is load-bearing, not incidental. It makes a consumer's own utility (`leading-*`, `text-2xl`) override a role, while `BaseText`'s props still win because they are inline. Moving them back into `utilities` silently re-breaks every consumer override.
+
+**No role sets `line-height`.** Leading is the consuming app's to own; do not reintroduce a hardcoded value here.
+
+`BaseText` typography props are emitted as inline style, never as classes. The previous class-based approach (`ds-font-weight-*` plus `font-*`/`text-*` utilities) is deleted: two of its three props silently did nothing, because the role class was emitted ~50kB later in the compiled sheet and won on source order, and `fontSize` was additionally dropped by tailwind-merge as a colour conflict. Do not reintroduce class-based text props.
 
 `ds-shimmer-text` (v3, also in `index.css`, not `dooph-component-tokens.css`) — animated gradient `background-clip: text` utility backing `ShimmerText`; `@keyframes ds-shimmer` plus the reduced-motion fallback live alongside it. `ds-roll-out`/`ds-roll-in` keyframes back `RollChangeText`.
 
@@ -287,17 +321,44 @@ CSS assets (`styles.css` + `theme.css`) are emitted together by tsup's `onSucces
 
 ## Public Exports (src/index.ts)
 
-All of the following must be exported. If adding a component, add it here.
+`src/index.ts` is the single public surface — every component, variant const, type
+and utility must be re-exported there, or consumers cannot reach it.
 
-Components: `Button`, `SplitButton`, `SplitButtonAction`, `SplitButtonTrigger`, `OutlineButton`, `ShapeButton`, `CopyButton`, `TextLink`, `Input`, `SearchBox`, `TwoWayToggle`, `TwoWayToggleItem`, `Checkbox`, `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`, `SegmentedTabSelect`, `SegmentedTabItem`, `DropdownMenu`, `DropdownMenuContent`, `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`, `DropdownMenuSeparator`, `DropdownMenuSection`, `DropdownMenuGroup`, `DropdownMenuSub`, `DropdownMenuRadioGroup`, `DropdownMenuTrigger`, `DropdownMenuPortal`, `DropdownTrigger`, `DropdownTriggerContent`, `TextDropdownTrigger`, `TypeableDropdownTrigger`, `Modal`, `ModalTrigger`, `ModalPortal`, `ModalOverlay`, `ModalContent`, `ModalClose`, `ModalTitle`, `ModalDescription`, `Sheet`, `SheetTrigger`, `SheetPortal`, `SheetOverlay`, `SheetContent`, `SheetClose`, `SheetTitle`, `SheetDescription`, `ToastProvider`, `ToastRoot`, `ToastViewport`, `ToastAction`, `ToastClose`, `TooltipProvider`, `Tooltip`, `TooltipTrigger`, `TooltipContent`, `TooltipTitle`, `TooltipBody`, `Avatar`, `HotkeyIndicator`, `OutlineSection`, `BaseText`, `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `TitleText`, `HeroText`, `ShimmerText`, `RollChangeText`, `SliderContinuous`, `SliderStepped`, `SliderLabeled`, `LinearProgressIndicator`, `ArrowShape`, `CloverShape`, `CookieShape`, `GemShape`, `PentagonShape`, `PuffShape`, `StarShape`, `BaseShape`, `WavyDivider`, `LoadingSpinner`, `ProgressIndicator`, all Icon components, `BaseIcon`
+Read the current surface from the source rather than from this file; a hand-kept
+list here goes stale on every release:
 
-Variant/size consts: `ButtonVariant` (v3: `danger` replaces `destructive`), `ButtonSize` (v3 adds `iconMicro`), `TabVariant`, `TabSize`, `ToggleVariant`, `ToggleSize`, `SegmentedVariant`, `TextDropdownSize`, `ShapeButtons` (v3 adds `star`), `Shapes`, `SheetSide`, `TextVariant`, `TextFontFamily`, `TextFontSize`, `TextFontWeight`, `CheckboxChecked`, `IconSize`, `ToastTypes`, `TooltipTypes`, `AvatarSize`, `CopyButtonVariant` (v3), `SliderVariant` (v3), `LinearProgressVariant` (v3)
+```bash
+grep -n "export" src/index.ts          # what the barrel intends
+grep -o "export {[^}]*}" dist/index.d.ts   # what actually shipped
+```
 
-Types: `ButtonProps`, `TabsTriggerProps`, `TwoWayToggleProps`, `TwoWayToggleItemProps`, `SegmentedTabSelectProps`, `SegmentedTabItemProps`, `ShapeButtonProps`, `ShapeButtonShape`, `DropdownTriggerProps`, `DropdownTriggerContentProps`, `TextDropdownTriggerProps`, `TypeableDropdownTriggerProps`, `InputProps`, `SearchBoxProps`, `ToastProviderProps`, `ToastRootProps`, `ToastTitleProps`, `ToastDescriptionProps`, `TooltipContentProps`, `TooltipTitleProps`, `TooltipBodyProps`, `AvatarProps`, `HotkeyIndicatorProps`, `OutlineSectionProps`, `OutlineButtonProps`, `BaseTextProps`, `ButtonTextProps`, `BodyTextProps`, `LabelTextProps`, `HeadingTextProps`, `TitleTextProps`, `HeroTextProps`, `TextLinkProps` (v3), `CopyButtonProps` (v3), `SliderProps` (v3), `SliderLabeledProps` (v3), `LinearProgressIndicatorProps` (v3), `RollChangeTextProps` (v3), `ShimmerTextProps` (v3)
+Conventions that hold across the surface:
 
-Utilities: `cn`, `buttonVariants`, `tabTriggerVariants`
+- Components and their `*Props` types come from the component's `index.ts`.
+### `"use client"` — only where a client-only hook forces it
 
-(`WavyDivider`, `LoadingSpinner`, `ProgressIndicator` are pre-existing exports, documented in detail in `dooph-ds-loading-indicators`; they were missing from this list before this pass and are included above for completeness — not a v3 change.)
+React 19's server build exports `forwardRef`, `memo`, `useId`, `useMemo` and
+`useCallback`, so a component using only those is **neutral**: no directive, and
+it renders in either graph. Only `useState` / `useEffect` / `useRef` (and browser
+APIs, timers, rAF) require the directive. A neutral module may freely import and
+render a client component — that is composition, not a boundary.
+
+Check with `head -1` before assuming; current split among the non-obvious ones:
+`LoadingSpinner` is client (`useRef` + `useEffect` + rAF); `ProgressIndicator`
+(`useMemo`), `WavyDivider` (`useId`) and `Table` (no hooks) are neutral.
+`add-use-client.mjs` stamps dist chunks purely from source directives, so
+deleting the line from a source file is the whole change.
+
+- Dot-accessible consts live in a sibling **`constants.ts` with no `"use client"`**
+  so RSC code can read their values; the component file imports them and stays
+  client. Every component with consts follows this, except `Avatar` and
+  `BaseIcon`, which declare theirs inline in server-safe modules — equivalent.
+  A const declared inside a `"use client"` file is a client reference, not a
+  value, so `LoadingSpinnerSize.md` in a Server Component would break.
+- Adding a component means: component + consts + types in the folder `index.ts`,
+  then re-export from `src/index.ts`. tsup globs `src/**/*.{ts,tsx}`, so no build
+  config change is needed.
+
 
 ---
 

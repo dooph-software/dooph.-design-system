@@ -149,11 +149,28 @@ Caution on two of them:
 
 ## 3. Rename the component API (your TSX)
 
-Two things changed — the button variant, and the sidebar icon set.
+Three things changed — the button variant, the text constants, and the sidebar
+icon set.
 
 **Button variant** (find/replace):
 
 - `ButtonVariant.destructive` → `ButtonVariant.danger`
+
+**Text constants and props** (find/replace):
+
+| v2 (deleted) | v3 |
+| --- | --- |
+| `TextFontFamily` | `Fonts` |
+| `TextFontSize` | `FontSizes` |
+| `TextFontWeight` | `FontWeights` |
+| `fontFamily` prop | `font` prop |
+
+The values changed shape too: they are now `var(--ui-*)` strings applied as
+inline style rather than class names, which is what makes them actually take
+effect — in v2 `fontSize` and `fontFamily` lost to the variant's own class and
+silently did nothing. `fontSize`/`fontWeight` also accept raw values now
+(`fontSize={16}`, `fontWeight={450}`), and `lineHeight`, `letterSpacing`, `axes`
+and `unstyled` are new. See the usage skill's **Text** section.
 
 **Sidebar icons.** v2's four open/closed glyphs were **removed** and replaced by
 a rest/hover pair per side:
@@ -176,6 +193,15 @@ all component names are unchanged.
 
 ## 4. Visual changes to expect (not bugs)
 
+- **Text has no line-height.** v2 pinned every text role to `line-height: 1`;
+  v3 sets none and leaves leading to inherit, so copy that was set solid now
+  renders at whatever your app's base line-height is (1.5 under Tailwind's
+  preflight). Set a baseline in your app CSS — fixed-height controls (buttons,
+  inputs) are unaffected either way.
+- **`leading-*` / `tracking-*` classNames on text components now apply.** In v2
+  the role class was emitted after your utilities and silently beat them; in v3
+  it moved to the `components` layer, so overrides that looked dead suddenly
+  take effect. Audit those call sites rather than assuming they were no-ops.
 - **Danger button text is now dark-on-red in light mode** (uses the primary text
   token; white in dark mode), matching Figma — v2 was white in both. If you want
   white, override `--ui-color-danger-foreground`.
@@ -187,8 +213,9 @@ all component names are unchanged.
 
 Available to import now: `TextLink`, `CopyButton`, the `Slider` suite
 (`SliderContinuous` / `SliderStepped` / `SliderLabeled`), `LinearProgressIndicator`,
-`StarShape`, `ShimmerText`, `RollChangeText`, plus `ButtonSize.iconMicro` and
-`ShapeButtons.star`. See the `dooph-design-system-usage` skill for how to use
+`StarShape`, `ShimmerText`, `RollChangeText`, `RollHoverText`, plus
+`ButtonSize.iconMicro`, `ShapeButtons.star`, and `DropdownMenuVariant` for menu
+width. See the `dooph-design-system-usage` skill for how to use
 them. The new Radix deps (`@radix-ui/react-slider`, `@radix-ui/react-progress`)
 ship inside the package — they install transitively, nothing to add.
 
