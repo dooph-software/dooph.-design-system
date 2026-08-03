@@ -60,6 +60,8 @@
   --color-page-background: var(--ui-color-page-background);
   --color-surface-primary: var(--ui-color-surface-primary);
   --color-surface-secondary: var(--ui-color-surface-secondary);
+  --color-selection: var(--ui-color-selection);
+  --color-selection-fg: var(--ui-color-selection-foreground);
   --color-modal-surface: var(--ui-color-modal-surface);
   --color-modal-backdrop: var(--ui-color-modal-backdrop);
   --color-tooltip-inverse-surface: var(--ui-color-tooltip-inverse-surface);

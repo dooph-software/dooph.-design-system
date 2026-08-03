@@ -48,6 +48,7 @@ const ALIASES = {
   "ui-color-danger-foreground": "color-danger-fg",
   "ui-color-ghost-foreground": "color-ghost-fg",
   "ui-color-ghost-foreground-active": "color-ghost-fg-active",
+  "ui-color-selection-foreground": "color-selection-fg",
   // Brand identity colors live under non-standard css var names
   "ui-brand-color": "color-brand-color",
   "ui-brand-color-alt": "color-brand-color-alt",

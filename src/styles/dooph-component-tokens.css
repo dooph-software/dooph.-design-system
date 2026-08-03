@@ -132,6 +132,17 @@
     }
   }
 
+  /* Opt-in global text selection colour. Apply to <body> (or any subtree root).
+   * Selection styles match the ORIGINATING element, so both forms are needed:
+   * the bare selector for descendants, and ::selection on the element itself.
+   * Shipped as a class, not a bare ::selection rule, because restyling the whole
+   * host app's selection is the app's call, not the package's. */
+  .ds-selection ::selection,
+  .ds-selection::selection {
+    background-color: var(--ui-color-selection);
+    color: var(--ui-color-selection-foreground);
+  }
+
   /* Radix DropdownMenu content — follows Radix transform-origin injection */
   .ds-radix-dropdown-content-origin {
     transform-origin: var(--radix-dropdown-menu-content-transform-origin);

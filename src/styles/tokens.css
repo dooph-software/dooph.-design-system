@@ -72,6 +72,18 @@
   --ui-color-surface-primary: #ffffff;
   --ui-color-surface-secondary: #fcfcfc;
 
+  /* Text selection (::selection). The package ships only the tokens — applying
+     them is a global, app-owned decision; use the .ds-selection opt-in class or
+     write your own ::selection rule.
+
+     Aliased to the primary button pair, so a selection reads as a primary
+     surface and follows a rebrand for free. Note this inverts with the palette
+     (dark-on-light in light mode, light-on-dark in dark) because primary does;
+     override both tokens if you need a fixed colour. No .dark block: the alias
+     already resolves per palette. */
+  --ui-color-selection: var(--ui-color-primary);
+  --ui-color-selection-foreground: var(--ui-color-primary-foreground);
+
   /* Modals */
   --ui-color-modal-surface: #fdfdfd;
   --ui-color-modal-backdrop: rgba(0, 0, 0, 0.35);
