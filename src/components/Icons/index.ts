@@ -36,6 +36,7 @@ export { ClearFilterFunnelIcon } from "./ClearFilterFunnelIcon";
 export { ClipboardIcon } from "./ClipboardIcon";
 export { CloseCancelIcon } from "./CloseCancelIcon";
 export { DarkModeIcon } from "./DarkModeIcon";
+export { DownloadIcon } from "./DownloadIcon";
 export { DropdownIcon } from "./DropdownIcon";
 export { ErrorAlternativeIcon } from "./ErrorAlternativeIcon";
 export { ErrorIcon } from "./ErrorIcon";
