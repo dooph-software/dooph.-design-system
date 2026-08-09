@@ -58,6 +58,8 @@ export { OverviewIcon } from "./OverviewIcon";
 export { PlaceholderIcon } from "./PlaceholderIcon";
 export { PlusIcon } from "./PlusIcon";
 export { RecentsIcon } from "./RecentsIcon";
+export { SaveAlternativeIcon } from "./SaveAlternativeIcon";
+export { SaveIcon } from "./SaveIcon";
 export { SearchIcon } from "./SearchIcon";
 export { SendIcon } from "./SendIcon";
 export { SettingsBoltIcon } from "./SettingsBoltIcon";
