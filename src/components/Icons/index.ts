@@ -77,4 +77,5 @@ export { StopFilledIcon } from "./StopFilledIcon";
 export { StopIcon } from "./StopIcon";
 export { SystemThemeIcon } from "./SystemThemeIcon";
 export { TableIcon } from "./TableIcon";
+export { TagIcon } from "./TagIcon";
 export { WarningIcon } from "./WarningIcon";
