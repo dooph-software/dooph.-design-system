@@ -46,3 +46,5 @@ export { RollChangeText } from './RollChangeText';
 export type { RollChangeTextProps } from './RollChangeText';
 export { RollHoverText } from './RollHoverText';
 export type { RollHoverTextProps } from './RollHoverText';
+export { UnderlineLinkText } from './UnderlineLinkText';
+export type { UnderlineLinkTextProps } from './UnderlineLinkText';

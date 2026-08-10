@@ -322,6 +322,33 @@
       opacity: 1;
     }
   }
+
+  /* UnderlineLinkText — a "sliding underline". The line is a currentColor
+   * gradient in background (not text-decoration or a pseudo-element) so it
+   * inherits the child's color, survives line wraps, and never clips descenders.
+   * At rest it is a full, left-anchored underline. On hover it runs a one-shot
+   * two-phase sweep — out to the right, then back in from the left — which needs
+   * @keyframes because a single transition cannot reverse the anchor mid-motion. */
+  .ds-underline-link {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0% 100%;
+    background-size: 100% var(--ui-underline-link-thickness);
+    padding-bottom: var(--ui-underline-link-offset);
+  }
+  .ds-underline-link:hover,
+  .group:hover .ds-underline-link,
+  .ds-underline-link[data-active="true"] {
+    animation: ds-underline-wipe var(--ui-underline-link-duration)
+      var(--ui-underline-link-ease) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-underline-link:hover,
+    .group:hover .ds-underline-link,
+    .ds-underline-link[data-active="true"] {
+      animation: none;
+    }
+  }
 }
 
 /*
@@ -349,4 +376,17 @@
   from { transform: translateY(-0.9em); filter: blur(4px); opacity: 0; }
   60%  { filter: blur(1.5px); }
   to   { transform: translateY(0); filter: blur(0); opacity: 1; }
+}
+
+/* UnderlineLinkText sweep. First half: hold the right edge and shrink to zero so
+ * the line exits to the right. At the midpoint the (now zero-width) line jumps
+ * its anchor to the left — imperceptible because there is nothing to see — then
+ * the second half grows it back from the left. The 0% frame anchors right while
+ * the resting style anchors left, but at full width both are identical, so the
+ * animation starts without a jump. */
+@keyframes ds-underline-wipe {
+  0%     { background-size: 100% var(--ui-underline-link-thickness); background-position-x: 100%; }
+  50%    { background-size: 0% var(--ui-underline-link-thickness);   background-position-x: 100%; }
+  50.01% { background-size: 0% var(--ui-underline-link-thickness);   background-position-x: 0%; }
+  100%   { background-size: 100% var(--ui-underline-link-thickness); background-position-x: 0%; }
 }

@@ -137,6 +137,14 @@
    * make the same component subtle in a button and overdone in a hero. */
   --ui-roll-hover-perspective: 10em;
 
+  /* Text underline link wipe (UnderlineLinkText). On hover the line sweeps out
+   * to the right then redraws in from the left. Thickness/offset are in em so the
+   * underline scales proportionally with the text it decorates. */
+  --ui-underline-link-thickness: 0.08em;
+  --ui-underline-link-offset: 0.12em;
+  --ui-underline-link-duration: 600ms;
+  --ui-underline-link-ease: cubic-bezier(0.32, 0.72, 0, 1);
+
   /* ── Typography ──────────────────────────────────────────────────────── */
 
   /* Font family contract — one token per text role. Consumers load fonts and
