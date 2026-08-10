@@ -7,17 +7,15 @@ import { CloseCancelIcon } from "./CloseCancelIcon";
 import { DarkModeIcon } from "./DarkModeIcon";
 import { DropdownIcon } from "./DropdownIcon";
 import { ExtensionsIcon } from "./ExtensionsIcon";
-import { LeftSidebarClosedIcon } from "./LeftSidebarClosedIcon";
-import { LeftSidebarOpenedIcon } from "./LeftSidebarOpenedIcon";
 import { LightModeIcon } from "./LightModeIcon";
 import { NewChatIcon } from "./NewChatIcon";
 import { RecentsIcon } from "./RecentsIcon";
-import { RightSidebarClosedIcon } from "./RightSidebarClosedIcon";
-import { RightSidebarOpenedIcon } from "./RightSidebarOpenedIcon";
 import { SearchIcon } from "./SearchIcon";
 import { SendIcon } from "./SendIcon";
 import { SettingsBoltIcon } from "./SettingsBoltIcon";
 import { SettingsGearIcon } from "./SettingsGearIcon";
+import { SidebarLeftIcon } from "./SidebarLeftIcon";
+import { SidebarRightIcon } from "./SidebarRightIcon";
 
 const meta = {
   component: BaseIcon,
@@ -54,7 +52,7 @@ const IconCell = ({
       style={{
         fontSize: 11,
         textAlign: "center",
-        color: "var(--color-fg-secondary)",
+        color: "var(--color-text-secondary)",
       }}
     >
       {label}
@@ -105,19 +103,19 @@ export const SidebarIcons: Story = {
       }}
     >
       <IconCell
-        icon={(props) => <LeftSidebarClosedIcon {...props} />}
+        icon={(props) => <SidebarLeftIcon {...props} />}
         label="LeftSidebar Closed"
       />
       <IconCell
-        icon={(props) => <LeftSidebarOpenedIcon {...props} />}
+        icon={(props) => <SidebarLeftIcon {...props} />}
         label="LeftSidebar Open"
       />
       <IconCell
-        icon={(props) => <RightSidebarClosedIcon {...props} />}
+        icon={(props) => <SidebarRightIcon {...props} />}
         label="RightSidebar Closed"
       />
       <IconCell
-        icon={(props) => <RightSidebarOpenedIcon {...props} />}
+        icon={(props) => <SidebarRightIcon {...props} />}
         label="RightSidebar Open"
       />
     </div>
@@ -168,22 +166,22 @@ export const Sizes: Story = {
   name: "Icon Sizes",
   render: () => (
     <div style={{ display: "flex", gap: "1.5rem", alignItems: "end" }}>
-      {(
-        Object.entries(IconSizes) as [keyof typeof IconSizes, IconSizes][]
-      ).map(([name, size]) => (
-        <div
-          key={name}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "0.5rem",
-          }}
-        >
-          <SettingsBoltIcon size={size} />
-          <span style={{ fontSize: 12 }}>{name}</span>
-        </div>
-      ))}
+      {(Object.entries(IconSizes) as [keyof typeof IconSizes, IconSizes][]).map(
+        ([name, size]) => (
+          <div
+            key={name}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <SettingsBoltIcon size={size} />
+            <span style={{ fontSize: 12 }}>{name}</span>
+          </div>
+        ),
+      )}
     </div>
   ),
 };
@@ -192,13 +190,16 @@ export const Colors: Story = {
   name: "Icon Colors",
   render: () => (
     <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
-      <LightModeIcon size={IconSizes.medium} color="var(--color-fg)" />
+      <LightModeIcon size={IconSizes.medium} color="var(--color-text)" />
       <LightModeIcon
         size={IconSizes.medium}
-        color="var(--color-fg-secondary)"
+        color="var(--color-text-secondary)"
       />
-      <LightModeIcon size={IconSizes.medium} color="var(--color-fg-tertiary)" />
-      <LightModeIcon size={IconSizes.medium} color="var(--color-aspect-logo)" />
+      <LightModeIcon
+        size={IconSizes.medium}
+        color="var(--color-text-tertiary)"
+      />
+      <LightModeIcon size={IconSizes.medium} color="var(--color-brand-color)" />
     </div>
   ),
 };

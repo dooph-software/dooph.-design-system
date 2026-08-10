@@ -5,6 +5,7 @@ export * from "./CookieShape";
 export * from "./GemShape";
 export * from "./PentagonShape";
 export * from "./PuffShape";
+export * from "./StarShape";
 
 export const Shapes = {
   arrow: "arrow",
@@ -13,5 +14,6 @@ export const Shapes = {
   gem: "gem",
   pentagon: "pentagon",
   cookie: "cookie",
+  star: "star",
 } as const;
 export type Shapes = (typeof Shapes)[keyof typeof Shapes];

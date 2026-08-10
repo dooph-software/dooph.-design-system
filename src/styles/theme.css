@@ -44,22 +44,24 @@
   --color-brand-border-active: var(--ui-color-brand-border-active);
   --color-brand-fg: var(--ui-color-brand-foreground);
   --color-brand-border-disabled: var(--ui-color-brand-border-disabled);
-  --color-destructive: var(--ui-color-destructive);
-  --color-destructive-border: var(--ui-color-destructive-border);
-  --color-destructive-hover: var(--ui-color-destructive-hover);
-  --color-destructive-border-hover: var(--ui-color-destructive-border-hover);
-  --color-destructive-active: var(--ui-color-destructive-active);
-  --color-destructive-border-active: var(--ui-color-destructive-border-active);
-  --color-destructive-fg: var(--ui-color-destructive-foreground);
-  --color-destructive-disabled: var(--ui-color-destructive-disabled);
-  --color-destructive-border-disabled: var(--ui-color-destructive-border-disabled);
+  --color-danger: var(--ui-color-danger);
+  --color-danger-border: var(--ui-color-danger-border);
+  --color-danger-hover: var(--ui-color-danger-hover);
+  --color-danger-border-hover: var(--ui-color-danger-border-hover);
+  --color-danger-active: var(--ui-color-danger-active);
+  --color-danger-border-active: var(--ui-color-danger-border-active);
+  --color-danger-fg: var(--ui-color-danger-foreground);
+  --color-danger-disabled: var(--ui-color-danger-disabled);
+  --color-danger-border-disabled: var(--ui-color-danger-border-disabled);
   --color-ghost-fg: var(--ui-color-ghost-foreground);
   --color-ghost-hover: var(--ui-color-ghost-hover);
   --color-ghost-active: var(--ui-color-ghost-active);
   --color-ghost-fg-active: var(--ui-color-ghost-foreground-active);
-  --color-surface: var(--ui-color-surface);
+  --color-page-background: var(--ui-color-page-background);
+  --color-surface-primary: var(--ui-color-surface-primary);
   --color-surface-secondary: var(--ui-color-surface-secondary);
-  --color-surface-page: var(--ui-color-surface-page);
+  --color-selection: var(--ui-color-selection);
+  --color-selection-fg: var(--ui-color-selection-foreground);
   --color-modal-surface: var(--ui-color-modal-surface);
   --color-modal-backdrop: var(--ui-color-modal-backdrop);
   --color-tooltip-inverse-surface: var(--ui-color-tooltip-inverse-surface);
@@ -68,17 +70,18 @@
   --color-tooltip-matching-surface: var(--ui-color-tooltip-matching-surface);
   --color-tooltip-matching-text: var(--ui-color-tooltip-matching-text);
   --color-tooltip-matching-border: var(--ui-color-tooltip-matching-border);
-  --color-accent: var(--ui-accent-color);
-  --color-border: var(--ui-color-border);
+  --color-border-primary: var(--ui-color-border-primary);
+  --color-border-secondary: var(--ui-color-border-secondary);
   --color-border-popovers: var(--ui-color-border-popovers);
   --color-border-focus: var(--ui-color-border-focus);
+  --color-border-cta: var(--ui-color-border-cta);
   --color-trigger-border-hover: var(--ui-color-trigger-border-hover);
+  --color-trigger-border-error-focus: var(--ui-color-trigger-border-error-focus);
   --color-text: var(--ui-color-text);
   --color-text-secondary: var(--ui-color-text-secondary);
   --color-text-tertiary: var(--ui-color-text-tertiary);
-  --color-logo: var(--ui-color-logo);
-  --color-logo-alt: var(--ui-color-logo-alt);
-  --color-avatar-bg: var(--ui-color-avatar-bg);
+  --color-brand-color: var(--ui-brand-color);
+  --color-brand-color-alt: var(--ui-brand-color-alt);
   --font-body: var(--ui-font-body);
   --font-button: var(--ui-font-button);
   --font-heading: var(--ui-font-heading);
@@ -90,6 +93,7 @@
   --text-heading: var(--ui-text-heading);
   --text-title: var(--ui-text-title);
   --text-hero: var(--ui-text-hero);
+  --radius-slider-inner: var(--ui-radius-slider-inner);
   --spacing-xxs: var(--ui-spacing-xxs);
   --spacing-xs: var(--ui-spacing-xs);
   --spacing-sm: var(--ui-spacing-sm);
@@ -109,10 +113,13 @@
   --shadow-button-hover: var(--ui-shadow-button-hover);
   --shadow-button-active: var(--ui-shadow-button-active);
   --shadow-menu: var(--ui-shadow-menu);
+  --shadow-cta: var(--ui-shadow-cta);
   --shadow-focus-brand: var(--ui-shadow-focus-brand);
   --shadow-focus-primary: var(--ui-shadow-focus-primary);
+  --text-cta-standard: var(--ui-text-cta-standard);
+  --text-cta-big: var(--ui-text-cta-big);
 
-  /* Focus ring with destructive  */
-  --shadow-focus-destructive: 0 0 0 4px var(--ui-color-destructive-focus-ring);
+  /* Focus ring with error */
+  --shadow-focus-error: 0 0 0 4px var(--ui-color-focus-ring-error);
 }
 /* __GENERATED_THEME_END__ */

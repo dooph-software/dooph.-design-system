@@ -13,6 +13,12 @@ tokens in CSS — never by editing package files, inline styles, or hardcoded
 colors/radii on components. Get the setup right once and every component adopts
 the brand automatically, in light and dark.
 
+> **Upgrading from v2?** The `--ui-*` names below are the v3 contract. If your
+> app still uses v2 token overrides (`--ui-color-destructive*`, bare
+> `--ui-color-border` / `--ui-color-surface`, `--ui-color-logo`,
+> `--ui-accent-color`), do the one-time rename sweep in the
+> **dooph-design-system-v3-migration** skill first, then follow this skill.
+
 ## 1. Imports (required, in this order)
 
 ```css
@@ -79,6 +85,27 @@ request and keep the same token mapping.
 map families to `--ui-font-*`. The Google Fonts request must include the axes
 above, not just `wght`.
 
+### Line height is yours
+
+There is no leading token and no text role sets `line-height` — it inherits, so
+without a baseline every role lands on whatever your reset defines (1.5 under
+Tailwind's preflight), which is loose for display type. Set it once per role in
+your app CSS, in `@layer base` so `leading-*` utilities and the `lineHeight`
+prop still override it:
+
+```css
+@layer base {
+  .text-style-hero { line-height: 1.05; }
+  .text-style-title { line-height: 1.2; }
+  .text-style-heading { line-height: 1.25; }
+  .text-style-body { line-height: 1.5; }
+  .text-style-button, .text-style-label { line-height: 1; }
+}
+```
+
+Fixed-height controls (buttons, inputs) are unaffected by leading either way;
+these values matter for copy and display type.
+
 ## 4. Dark mode
 
 - **Light palette** lives on `:root` and `.light` (the package ships both with
@@ -104,13 +131,13 @@ so branding applies in default light, forced `.light`, and `.dark`:
   --ui-color-primary: var(--brand-950);
   --ui-color-primary-foreground: white;
   --ui-color-brand: var(--accent-700);
-  --ui-color-surface-page: var(--app-bg);
+  --ui-color-page-background: var(--app-bg);
   --ui-color-border-focus: var(--accent-700);
-  --ui-color-focus-ring: color-mix(in srgb, var(--accent-700) 28%, transparent);
+  --ui-color-focus-ring-brand: color-mix(in srgb, var(--accent-700) 28%, transparent);
 }
 
 .dark {
-  --ui-color-surface-page: var(--app-bg-dark);
+  --ui-color-page-background: var(--app-bg-dark);
   --ui-color-primary: var(--brand-100);
   --ui-color-primary-foreground: var(--brand-950);
 }
@@ -126,16 +153,34 @@ Notes:
 
 ### Component branding hooks
 
-- **`OutlineButton` accent:** override `--ui-accent-color` (the hover glow), or
-  pass `glowColor1`/`glowColor2` per instance.
+- **`OutlineButton` accent:** override `--ui-brand-color-alt` (both glow orbs
+  default to it), or pass `glowColor1`/`glowColor2` per instance.
 - **`Tooltip`:** token-driven, not theme-detected. Defaults to `themeInverse`;
   override `--ui-color-tooltip-*` to restyle. Pass `themeInverse={false}` for a
   matching-theme tooltip.
-- **`Toast` widths:** `--ui-width-toast`, `--ui-width-toast-action`,
-  `--ui-width-toast-viewport` — override only if your product needs other widths.
-- **`Avatar`:** the package owns the surface/padding/radius and
-  `--ui-color-avatar-bg`; the app owns the logo/image content (and any
-  light/dark logo swap).
+- **`Toast` / `Tooltip` widths:** pinned per variant —
+  `--ui-width-toast-simple` / `--ui-width-toast-complex` /
+  `--ui-width-toast-viewport`, and `--ui-width-tooltip-rich` /
+  `--ui-min-w-tooltip-complex` (the simple tooltip hugs its text by design).
+  Override only if your product needs other widths.
+- **`DropdownMenu` width:** `--ui-min-w-menu` (160) / `--ui-min-w-menu-action`
+  (144) / `--ui-min-w-menu-complex` (324) are the floors behind
+  `DropdownMenuVariant`.
+- **`Avatar`:** the package owns the surface/padding/radius via
+  `--ui-color-surface-secondary`, `--ui-color-border-secondary`, and
+  `--ui-brand-color` (icon/content tint) — there is no dedicated avatar-bg
+  token; the app owns the logo/image content (and any light/dark logo swap)
+  as `children`.
+- **`Slider*` / `LinearProgressIndicator`:** fill color comes from the `color`
+  prop (token name or CSS color, default `primary`), not from tokens — the
+  slider paints the handle in it and the active track at 45% of it. Geometry
+  tokens `--ui-height-slider-track`, `--ui-radius-slider-inner`,
+  `--ui-slider-track-gap`, `--ui-width-slider-handle`,
+  `--ui-height-slider-handle` control track/handle sizing, not colors. The
+  stepped slider insets its handle travel and end dots by `--ui-spacing-xs`.
+- **`ShimmerText`:** override `--ui-shimmer-base`/`--ui-shimmer-highlight` to
+  retune the animated sheen; children must not set an explicit text color
+  while shimmering (the parent owns `color` via `background-clip: text`).
 
 ## Adding new values
 

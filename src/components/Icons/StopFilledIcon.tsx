@@ -1,11 +1,19 @@
-import { BaseIcon, IconProps } from "./BaseIcon";
+import { BaseIcon, type IconProps } from "./BaseIcon";
 
-export const StopFilledIcon = (props: IconProps) => {
-  return (
-    <BaseIcon {...props}>
-      <path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z"></path>
-    </BaseIcon>
-  );
-};
+export const StopFilledIcon = ({ color, ...props }: IconProps) => (
+  <BaseIcon {...props} color={color}>
+    {/* BaseIcon maps `color` to stroke only, so the fill is wired up here to
+        keep both in sync. Stroke is kept so the filled and outlined variants
+        share the same outer bounds. */}
+    <rect
+      x="3"
+      y="3"
+      width="18"
+      height="18"
+      rx="2"
+      fill={color ?? "currentColor"}
+    />
+  </BaseIcon>
+);
 
 export default StopFilledIcon;

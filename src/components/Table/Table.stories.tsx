@@ -8,8 +8,8 @@ import {
   TableHeaderCell,
   TablePlaceholder,
   TableRow,
-  TableSortDirection,
 } from "./Table";
+import { TableSortDirection } from "./constants";
 
 const meta = {
   title: "Components/Table",
@@ -37,7 +37,7 @@ const SortableHeader = () => {
   return (
     <Table
       columns={COLUMNS}
-      className="h-[420px] border border-border rounded-soft"
+      className="h-[420px] border border-border-primary rounded-soft"
     >
       <TableHeader>
         <TableHeaderCell

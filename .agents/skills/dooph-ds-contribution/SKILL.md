@@ -50,10 +50,11 @@ src/components/MyComponent/
 
 **Styling:**
 - [ ] Only Tailwind utilities or `ds-*` helpers in className — no `var(--ui-*)` direct references
-- [ ] No hardcoded hex colors, px values for shadows/radii, or `style={{}}` objects
+- [ ] No hardcoded hex colors or px values for shadows/radii
+- [ ] `style={{}}` only to carry a **caller-supplied or token-referencing** value that cannot be a class — a `color`/`fontSize` prop, or a `--ds-*` custom property the component's CSS reads (`BaseText`, `Slider*`). Never for a design value the component itself decided; that is a token. Merge a consumer's own `style` rather than replacing it
 - [ ] Theme-dependent behavior is expressed via `--ui-*` tokens and CSS classes/helpers, not runtime JS theme detection
 - [ ] Uses `rounded-tight`, `rounded-standard`, or `rounded-soft` for corner radius
-- [ ] Focus ring uses token-backed `ds-focus-*` outline helpers (`ds-focus-visible-ring`, `ds-focus-within-ring`, `ds-focus-ring-on-focus`) — not `shadow-focus-brand`/`shadow-focus-primary` in component class strings; use `border-border-focus`/`border-destructive` alongside the ring where the focused border should change
+- [ ] Focus ring uses token-backed `ds-focus-*` outline helpers (`ds-focus-visible-ring`, `ds-focus-within-ring`, `ds-focus-ring-on-focus`) — not `shadow-focus-brand`/`shadow-focus-primary` in component class strings; use `border-border-focus`/`border-danger` alongside the ring where the focused border should change
 - [ ] Radix ref types use `ComponentRef`, not deprecated `ElementRef`
 - [ ] Disabled state uses `ds-disabled-state` (for native + aria-disabled) or `ds-radix-data-disabled` (for Radix data-disabled)
 - [ ] Typography uses `text-style-*` composite utility classes
@@ -66,6 +67,8 @@ src/components/MyComponent/
 **Exports:**
 - [ ] Component, variant consts, types all exported from `index.ts`
 - [ ] All public exports added to `src/index.ts` barrel
+- [ ] Dot-accessible consts declared in a sibling `constants.ts` with **no** `"use client"` — a const declared in a client module is a reference, not a value, so RSC code cannot read `Thing.key`
+- [ ] `"use client"` added only if the module actually uses `useState`/`useEffect`/`useRef`, a browser API, or a timer. `forwardRef`, `memo`, `useId`, `useMemo` and `useCallback` all work in React's server build, and importing a client component from a neutral one is fine
 
 ### Step 5 — Stories
 Every variant and meaningful state needs a Storybook story:
@@ -125,16 +128,22 @@ When adding a new `--ui-*` token:
 | Nesting a `<div>` around `children` without layout necessity | Blocks free composition | Let children flow directly to the interactive element |
 | Forgetting `displayName` on `forwardRef` components | Poor DX in React DevTools | Set `ComponentName.displayName = "ComponentName"` |
 | Hard-coding `className` values in stories instead of using variant consts | Tests the wrong API surface | `variant={ButtonVariant.primary}` in stories |
+| A Tailwind variant on a package class — `data-[active]:ds-slider-dot-active`, `[&_h1]:text-style-title` | Variants only compose with GENERATED utilities, so this emits **no rule at all**, silently. Has shipped as a bug twice | Put the state in the CSS rule itself (`.ds-slider-dot[data-active]`), or spell the role out in real utilities (`font-title text-title`) |
+| Stories that only exercise prop combinations matching the variant's own defaults | Cannot catch a prop that does nothing — this is exactly how two dead text props shipped | Include at least one story where each override CONTRADICTS the role default |
 | Using raw `<button>` or `<div>` in stories when `Button`/`ButtonVariant` exists | Bypasses the design system inside its own stories; creates a visual inconsistency in Storybook | Import and use `Button` with the appropriate `ButtonVariant` and `ButtonSize` |
 
 ---
 
 ## Storybook Font Verification
 
-After any change to `text-style-*` utilities or `--ui-font-var-*` tokens, verify in Storybook that:
+After any change to `text-style-*` classes or `--ui-font-var-*` tokens, verify in Storybook that:
 1. Button labels render with correct glyph weight (Google Sans Flex, `wdth 100, GRAD 11`)
 2. Body text has slightly heavier optical weight than button text (`GRAD 19`)
 3. Label text (Host Grotesk) renders at 12px, correct weight
 4. Title/hero text (Bricolage Grotesque) renders at 23px/36px
+
+Verify by reading computed style, not by eye — `getComputedStyle(el).fontSize` /
+`.fontFamily` / `.fontVariationSettings` on a rendered story. A class that never
+generated and a token that resolves to the same value look identical on screen.
 
 The `preview-head.html` Google Fonts URL must include all axes: `GRAD,ROND,opsz,slnt,wdth,wght`. If any axis is missing from the URL, `font-variation-settings` will silently fail for that axis.

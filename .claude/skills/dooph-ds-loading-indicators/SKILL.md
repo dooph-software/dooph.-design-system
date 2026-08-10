@@ -251,7 +251,7 @@ LoadingSpinnerColor.brand    → var(--ui-color-brand)
 <LoadingSpinner color="#e05252" />  // arbitrary hex passes through
 ```
 
-Track always uses `var(--ui-color-border)` — never the indicator color.
+Track always uses `var(--ui-color-border-primary)` — never the indicator color.
 
 ---
 

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { WavyDivider, WavyDividerVariant } from "./WavyDivider";
+import { WavyDivider } from "./WavyDivider";
+import { WavyDividerVariant } from "./constants";
 
 const meta = {
   title: "Bits & Pieces/WavyDivider",
@@ -76,7 +77,7 @@ export const Variants: Story = {
 
 export const InContext: Story = {
   render: () => (
-    <div className="flex w-80 flex-col gap-4 rounded-standard border border-border bg-surface p-5">
+    <div className="flex w-80 flex-col gap-4 rounded-standard border border-border-primary bg-surface-primary p-5">
       <p className="text-style-body text-text">
         Above the divider — some content goes here.
       </p>

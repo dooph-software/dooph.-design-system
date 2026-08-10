@@ -18,8 +18,7 @@
 .light {
   /* ── Colors ─────────────────────────────────────────────────────────── */
 
-  /* Primary (dark neutral) — borders match bg per state (Figma); alias so a
-   * consumer bg override propagates, or override the border tokens directly */
+  /* Primary (dark neutral) — borders alias bg per state (Figma) */
   --ui-color-primary: #171717;
   --ui-color-primary-border: var(--ui-color-primary);
   --ui-color-primary-hover: #2c2c2c;
@@ -30,7 +29,7 @@
   --ui-color-primary-disabled: #5c5c5c;
   --ui-color-primary-border-disabled: var(--ui-color-primary-disabled);
 
-  /* Secondary (light surface) — borders are distinct from bg (Figma literals) */
+  /* Secondary (light surface) — borders are distinct Figma literals */
   --ui-color-secondary: #fdfdfd;
   --ui-color-secondary-border: #e2e3e4;
   --ui-color-secondary-hover: #efefef;
@@ -41,8 +40,7 @@
   --ui-color-secondary-disabled: #f5f5f5;
   --ui-color-secondary-border-disabled: #e9e9e9;
 
-  /* Brand (teal) — borders match bg per state (Figma); disabled border is
-   * transparent in Figma */
+  /* Brand (teal) — borders alias bg per state (Figma) */
   --ui-color-brand: #4f666d;
   --ui-color-brand-border: var(--ui-color-brand);
   --ui-color-brand-hover: #45555b;
@@ -52,30 +50,42 @@
   --ui-color-brand-foreground: #ffffff;
   --ui-color-brand-border-disabled: transparent;
 
-  /* Destructive (danger red) — borders are distinct from bg (Figma literals) */
-  --ui-color-destructive: #e93b3b;
-  --ui-color-destructive-border: #ea3f3f;
-  --ui-color-destructive-hover: #db3838;
-  --ui-color-destructive-border-hover: #dc3c3c;
-  --ui-color-destructive-active: #c92c2c;
-  --ui-color-destructive-border-active: #ca3030;
-  --ui-color-destructive-foreground: #ffffff;
-  --ui-color-destructive-disabled: #ef9b9b;
-  --ui-color-destructive-border-disabled: #ef9b9b;
+  /* Danger (Figma dangerButton — renamed from destructive in v3) */
+  --ui-color-danger: #ec5555;
+  --ui-color-danger-border: #ea3f3f;
+  --ui-color-danger-hover: #e05252;
+  --ui-color-danger-border-hover: #dc3c3c;
+  --ui-color-danger-active: #d04848;
+  --ui-color-danger-border-active: #ca3030;
+  --ui-color-danger-foreground: #161616; /* Figma: Text/primaryText */
+  --ui-color-danger-disabled: #ef9b9b;
+  --ui-color-danger-border-disabled: #ef9b9b;
 
-  /* Ghost (transparent) */
+  /* Ghost (no rest bg; hover/active are translucent overlays) */
   --ui-color-ghost-foreground: #4a4a4a;
   --ui-color-ghost-hover: rgba(0, 0, 0, 0.04);
   --ui-color-ghost-active: rgba(0, 0, 0, 0.08);
   --ui-color-ghost-foreground-active: #161616;
 
-  /* Surfaces */
-  --ui-color-surface: #ffffff;
-  --ui-color-surface-secondary: #f9fbfb;
-  --ui-color-surface-page: #fdfeff;
+  /* Surfaces (Figma: pageBackground / surfacePrimary / surfaceSecondary) */
+  --ui-color-page-background: #fdfeff;
+  --ui-color-surface-primary: #ffffff;
+  --ui-color-surface-secondary: #fcfcfc;
+
+  /* Text selection (::selection). The package ships only the tokens — applying
+     them is a global, app-owned decision; use the .ds-selection opt-in class or
+     write your own ::selection rule.
+
+     Aliased to the primary button pair, so a selection reads as a primary
+     surface and follows a rebrand for free. Note this inverts with the palette
+     (dark-on-light in light mode, light-on-dark in dark) because primary does;
+     override both tokens if you need a fixed colour. No .dark block: the alias
+     already resolves per palette. */
+  --ui-color-selection: var(--ui-color-primary);
+  --ui-color-selection-foreground: var(--ui-color-primary-foreground);
 
   /* Modals */
-  --ui-color-modal-surface: #fcfcfc;
+  --ui-color-modal-surface: #fdfdfd;
   --ui-color-modal-backdrop: rgba(0, 0, 0, 0.35);
 
   /* Tooltips */
@@ -84,36 +94,48 @@
   --ui-color-tooltip-inverse-border: var(--ui-color-primary);
   --ui-color-tooltip-matching-surface: var(--ui-color-secondary);
   --ui-color-tooltip-matching-text: var(--ui-color-secondary-foreground);
-  --ui-color-tooltip-matching-border: var(--ui-color-border);
+  --ui-color-tooltip-matching-border: var(--ui-color-border-primary);
 
-  /* Accent (brand color for interactive effects — override per project) */
-  --ui-accent-color: #44c0e5;
-
-  /* Borders
-   * border          — borderStandard (Figma): general control/container border
-   * border-popovers — borderPopovers (Figma borderModal): modal/menu/toast panels
-   * border-focus    — typeable trigger + control focus border; aliases the brand
-   *                   button border per Figma
-   * trigger-border-hover — typeable trigger / input hover border */
-  --ui-color-border: #dfe3e5;
+  /* Borders (Figma: borderPrimary / borderSecondary; popovers is the DS name
+   * for Figma borderModal, shared by modal/menu/toast panels) */
+  --ui-color-border-primary: #dddddd;
+  --ui-color-border-secondary: #dfdfdf;
   --ui-color-border-popovers: #ebebeb;
   --ui-color-border-focus: var(--ui-color-brand-border);
+  /* CTAButton padded outline ring (primary variant only) */
+  --ui-color-border-cta: rgba(56, 56, 56, 0.5);
   --ui-color-trigger-border-hover: #b4b4b4;
+  --ui-color-trigger-border-error-focus: var(--ui-color-danger-border);
 
   /* Text */
   --ui-color-text: #161616;
   --ui-color-text-secondary: #4a4a4a;
   --ui-color-text-tertiary: #606060;
 
-  /* Focus ring */
-  --ui-color-focus-ring: rgba(70, 86, 92, 0.35);
-  --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.17);
-  --ui-color-destructive-focus-ring: rgba(233, 59, 59, 0.3);
+  /* Focus rings (Figma: Dropdowns/focusRingBrand|Primary|Error) */
+  --ui-color-focus-ring-brand: rgba(70, 86, 92, 0.35);
+  --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.25);
+  --ui-color-focus-ring-error: rgba(236, 85, 85, 0.35);
 
-  /* Brand identity (logo) */
-  --ui-color-logo: #46565c;
-  --ui-color-logo-alt: #a1aaa5;
-  --ui-color-avatar-bg: #dee8ef;
+  /* Brand identity (Figma: brandColor / brandColorAlt — replaces logo/logo-alt/accent) */
+  --ui-brand-color: #46565c;
+  --ui-brand-color-alt: #44c0e5;
+
+  /* Text shimmer (ShimmerText) */
+  --ui-shimmer-base: var(--ui-color-text-tertiary);
+  --ui-shimmer-highlight: color-mix(in srgb, var(--ui-color-text-tertiary) 35%, transparent);
+
+  /* Text roll on hover (RollHoverText). The duration:stagger ratio (~1:14) is
+   * what makes the letters read as one travelling wave instead of a metronome —
+   * raising the stagger toward the duration turns it into discrete flips. */
+  --ui-roll-hover-duration: 500ms;
+  --ui-roll-hover-stagger: 35ms;
+  --ui-roll-hover-blur: 3px;
+  --ui-roll-hover-depth: 0.5em;
+  /* Both in em so depth/perspective stays constant at every font size — the
+   * ratio is what governs how 3D the roll reads, and a px perspective would
+   * make the same component subtle in a button and overdone in a hero. */
+  --ui-roll-hover-perspective: 10em;
 
   /* ── Typography ──────────────────────────────────────────────────────── */
 
@@ -168,9 +190,22 @@
   --ui-size-spinner-rg: 22px;
   --ui-size-spinner-md: 32px;
   --ui-size-spinner-xl: 40px;
-  --ui-width-toast: 230px;
-  --ui-width-toast-action: 360px;
-  --ui-width-toast-viewport: var(--ui-width-toast-action);
+  /* Toast widths — pinned per layout variant (capped to the container so a
+   * narrow viewport can't overflow). */
+  --ui-width-toast-simple: 230px;
+  --ui-width-toast-complex: 360px;
+  --ui-width-toast-viewport: var(--ui-width-toast-complex);
+
+  /* Tooltip widths — the simple variant is intentionally hug (no token):
+   * it sets whitespace-nowrap and sizes to its content. */
+  --ui-width-tooltip-rich: 175px;
+  --ui-min-w-tooltip-complex: 242px;
+  --ui-height-button-micro: 26px;
+  --ui-height-slider-track: 22px;
+  --ui-radius-slider-inner: 8px;
+  --ui-slider-track-gap: 6px;
+  --ui-width-slider-handle: 6px;
+  --ui-height-slider-handle: 42px;
 
   /* ── Spacing ─────────────────────────────────────────────────────────── */
 
@@ -210,7 +245,8 @@
   /* defaults to hover shadow — kept as a separate token for manual override */
   --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.2);
   --ui-shadow-menu: 0 1px 4px 0 rgba(56, 56, 56, 0.15);
-  --ui-shadow-focus-brand: 0 0 0 4px var(--ui-color-focus-ring);
+  --ui-shadow-cta: 0 1px 2px rgba(56, 56, 56, 0.15);
+  --ui-shadow-focus-brand: 0 0 0 4px var(--ui-color-focus-ring-brand);
   --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
 
   /* ── Menu min-widths ─────────────────────────────────────────────────── */
@@ -218,6 +254,18 @@
   --ui-min-w-menu: 160px;
   --ui-min-w-menu-action: 144px;
   --ui-min-w-menu-complex: 324px;
+
+  /* ── CTAButton ───────────────────────────────────────────────────────── */
+
+  --ui-text-cta-standard: 24px;
+  --ui-text-cta-big: 28px;
+  --ui-size-cta-chip-standard: 46px;
+  --ui-size-cta-chip-big: 60px;
+  --ui-size-cta-icon: 20px;
+  --ui-min-w-cta-content-standard: 330px;
+  --ui-min-w-cta-content-big: 350px;
+  --ui-min-w-cta-pill-big: 370px;
+  --ui-spacing-cta-content-big: 60px;
 
   /* ── Disabled ────────────────────────────────────────────────────────── */
 
@@ -233,7 +281,7 @@
   --ui-color-primary-active: #cdcdcd;
   --ui-color-primary-disabled: #d8d8d8;
 
-  --ui-color-secondary: #1c1c1e;
+  --ui-color-secondary: #1d1d1f;
   --ui-color-secondary-foreground: #ffffff;
   --ui-color-secondary-hover: #2b2b2d;
   --ui-color-secondary-active: #313235;
@@ -245,45 +293,48 @@
 
   --ui-color-brand: #5a6f75;
 
-  --ui-color-destructive: #e66f5f;
-  --ui-color-destructive-hover: #e5614f;
-  --ui-color-destructive-active: #e2432e;
-  --ui-color-destructive-disabled: #9c655f;
-  --ui-color-destructive-border: #d82a13;
-  --ui-color-destructive-border-hover: #dd2f18;
-  --ui-color-destructive-border-active: #b12814;
-  --ui-color-destructive-border-disabled: #bd5547;
+  --ui-color-danger: #e66f5f;
+  --ui-color-danger-hover: #e5614f;
+  --ui-color-danger-active: #e2432f;
+  --ui-color-danger-foreground: #ffffff;
+  --ui-color-danger-disabled: #9c655e;
+  --ui-color-danger-border: #d82a13;
+  --ui-color-danger-border-hover: #dd2f18;
+  --ui-color-danger-border-active: #b12814;
+  --ui-color-danger-border-disabled: #bd5547;
 
   --ui-color-ghost-hover: rgba(255, 255, 255, 0.04);
   --ui-color-ghost-active: rgba(255, 255, 255, 0.08);
   --ui-color-ghost-foreground: #afafaf;
   --ui-color-ghost-foreground-active: #ffffff;
 
-  --ui-color-surface: #26282b;
-  --ui-color-surface-secondary: #34373b;
-  --ui-color-surface-page: #161719;
+  --ui-color-page-background: #131c1d;
+  --ui-color-surface-primary: #000000;
+  --ui-color-surface-secondary: #242425;
 
   --ui-color-modal-surface: #212124;
   --ui-color-modal-backdrop: rgba(0, 0, 0, 0.7);
 
-  --ui-color-avatar-bg: #2f3a40;
-
-  --ui-color-border: #333437;
+  --ui-color-border-primary: #333437;
+  --ui-color-border-secondary: #3e3f42;
   --ui-color-border-popovers: #36363b;
+  --ui-color-border-cta: rgba(255, 255, 255, 0.35);
   --ui-color-trigger-border-hover: #3a3b3f;
 
   --ui-color-text: #ffffff;
   --ui-color-text-secondary: #afafaf;
   --ui-color-text-tertiary: #717171;
 
-  --ui-color-focus-ring: rgba(70, 86, 92, 0.15);
-  --ui-color-focus-ring-primary: rgba(249, 249, 249, 0.17);
+  --ui-color-focus-ring-brand: rgba(70, 86, 92, 0.15);
+  --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.15);
+  --ui-color-focus-ring-error: rgba(236, 85, 85, 0.15);
 
   --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.65);
   --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.65);
   --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.85);
   --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.85);
   --ui-shadow-menu: 0 2px 8px rgba(0, 0, 0, 0.7);
+  --ui-shadow-cta: 0 1px 2px rgba(0, 0, 0, 0.65);
 
   --ui-opacity-disabled: 0.5;
   --ui-size-checkbox: 18px;

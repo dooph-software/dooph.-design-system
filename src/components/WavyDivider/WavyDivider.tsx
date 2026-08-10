@@ -1,18 +1,9 @@
-"use client";
-
+// No "use client": useId is exported by React's server build, so this module is
+// neutral — it renders in either graph.
 import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
 import { cn } from "../../utils/cn";
+import { WavyDividerVariant } from "./constants";
 
-// ── Variant enum ─────────────────────────────────────────────────────────────
-
-export const WavyDividerVariant = {
-  /** Tight wave — 20px period (Figma "High Frequency"). */
-  high: "high",
-  /** Broad wave — 40px period (Figma "Low Frequency"). */
-  low: "low",
-} as const;
-export type WavyDividerVariant =
-  (typeof WavyDividerVariant)[keyof typeof WavyDividerVariant];
 
 // ── Wave geometry (px) ───────────────────────────────────────────────────────
 // Mirrors the Figma "Wavy Divider" node: one crest + one trough per period with

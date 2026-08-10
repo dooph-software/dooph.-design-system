@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { LeftSidebarClosedIcon } from "../Icons";
+import { IconSize, SidebarLeftIcon } from "../Icons";
 import { Button } from "./Button";
 import { ButtonSize, ButtonVariant } from "./constants";
 
@@ -33,8 +33,8 @@ export const Secondary: Story = {
 export const Brand: Story = {
   args: { children: "Button", variant: ButtonVariant.brand },
 };
-export const Destructive: Story = {
-  args: { children: "Button", variant: ButtonVariant.destructive },
+export const Danger: Story = {
+  args: { children: "Button", variant: ButtonVariant.danger },
 };
 export const Ghost: Story = {
   args: { children: "Button", variant: ButtonVariant.ghost },
@@ -75,7 +75,7 @@ export const AllSizes: Story = {
         Small
       </Button>
       <Button variant={ButtonVariant.primary} size={ButtonSize.icon}>
-        <LeftSidebarClosedIcon />
+        <SidebarLeftIcon />
       </Button>
     </div>
   ),
@@ -93,6 +93,42 @@ export const DisabledAll: Story = {
           {v}
         </Button>
       ))}
+    </div>
+  ),
+};
+
+export const IconSizeComparison: Story = {
+  render: () => (
+    <div className="flex flex-col gap-6 p-4">
+      {[ButtonVariant.ghost, ButtonVariant.secondary, ButtonVariant.brand].map(
+        (variant) => (
+          <div key={variant} className="flex items-center gap-4">
+            <div className="w-20 text-sm font-medium">{variant}</div>
+            <div className="flex items-center gap-3">
+              <Button variant={variant} size={ButtonSize.icon}>
+                <SidebarLeftIcon size={IconSize.standard} />
+              </Button>
+              <span className="text-xs text-text-secondary">icon (38px)</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant={variant} size={ButtonSize.iconSm}>
+                <SidebarLeftIcon size={IconSize.standard} />
+              </Button>
+              <span className="text-xs text-text-secondary">
+                icon-sm (34px)
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant={variant} size={ButtonSize.iconMicro}>
+                <SidebarLeftIcon size={IconSize.standard} />
+              </Button>
+              <span className="text-xs text-text-secondary">
+                icon-micro (26px)
+              </span>
+            </div>
+          </div>
+        ),
+      )}
     </div>
   ),
 };

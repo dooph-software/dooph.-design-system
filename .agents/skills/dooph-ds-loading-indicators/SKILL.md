@@ -14,19 +14,27 @@ Three components form the M3E-inspired indicator family. They share geometry hel
 | Component           | Variant          | Prop surface                                               |
 | ------------------- | ---------------- | ---------------------------------------------------------- |
 | `WavyDivider`       | `high` \| `low`  | `variant`, `strokeWeight`, `className` + SVG spread        |
-| `LoadingSpinner`    | `flat` \| `wavy` | `variant`, `color`, `size`, + SVG spread                   |
+| `LoadingSpinner`    | `flat` \| `spokes` | `variant`, `color`, `size`, + SVG spread                  |
 | `ProgressIndicator` | `flat` \| `wavy` | `progress` (0–1), `variant`, `color`, `size`, + SVG spread |
 
 All enums follow the dot-accessible pattern required by architecture Rule 1:
 
 ```ts
-LoadingSpinnerVariant.flat / .wavy
+LoadingSpinnerVariant.flat / .spokes    // spokes = the rotating LoadingSpinnerIcon
 LoadingSpinnerColor.primary / .brand   // or arbitrary hex via color prop
 LoadingSpinnerSize.sm / .rg / .md / .xl  // 16px / 22px / 32px / 40px diameter
 WavyDividerVariant.high / .low
 ```
 
-`ProgressIndicator` imports `LoadingSpinnerVariant`, `LoadingSpinnerColor`, and `LoadingSpinnerSize` directly — the same const objects, not copies.
+Every const lives in a sibling **`constants.ts`** with no `"use client"`, so a
+Server Component can read the values; the component file imports them.
+`LoadingSpinner` is the only one of the three that is a client module — it drives
+a rAF loop through `useRef`/`useEffect`. `ProgressIndicator` (`useMemo` only) and
+`WavyDivider` (`useId` only) carry no directive, because React's server build
+exports both hooks. Adding state or an effect to either makes it client-only. `ProgressIndicator`
+imports `LoadingSpinnerColor`/`LoadingSpinnerSize` from `LoadingSpinner/constants` —
+the same const objects, not copies. Note `ProgressIndicator`'s const is plural
+(`ProgressIndicatorVariants`) while its type is singular (`ProgressIndicatorVariant`).
 
 ---
 
@@ -251,7 +259,7 @@ LoadingSpinnerColor.brand    → var(--ui-color-brand)
 <LoadingSpinner color="#e05252" />  // arbitrary hex passes through
 ```
 
-Track always uses `var(--ui-color-border)` — never the indicator color.
+Track always uses `var(--ui-color-border-primary)` — never the indicator color.
 
 ---
 

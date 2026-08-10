@@ -1,5 +1,6 @@
-"use client";
-
+// No "use client": no hooks, and onSort is a consumer-supplied passthrough.
+// Neutral module — it renders in either graph. It may import client components
+// (Button); that is normal composition, not a client boundary for this file.
 import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
 import { Button } from "../Button/Button";
@@ -8,14 +9,8 @@ import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
 import { ChevronsUpDownIcon } from "../Icons/ChevronsUpDownIcon";
 import { ChevronUpIcon } from "../Icons/ChevronUpIcon";
 import { ButtonText } from "../Text/BaseText";
+import { TableSortDirection } from "./constants";
 
-export const TableSortDirection = {
-  none: "none",
-  ascend: "ascend",
-  descend: "descend",
-} as const;
-export type TableSortDirection =
-  (typeof TableSortDirection)[keyof typeof TableSortDirection];
 
 /* ── Table ─────────────────────────────────────────────────────────────── */
 
@@ -29,7 +24,7 @@ const Table = forwardRef<HTMLDivElement, TableProps>(
     <div
       ref={ref}
       className={cn(
-        "flex flex-col w-full border border-border rounded-standard",
+        "flex flex-col w-full border border-border-primary rounded-standard",
         className,
       )}
       style={
@@ -51,7 +46,7 @@ const TableHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("grid border-b border-border py-xs px-xxs", className)}
+      className={cn("grid border-b border-border-primary py-xs px-xxs", className)}
       style={{ gridTemplateColumns: "var(--table-cols)" }}
       {...props}
     />
@@ -114,7 +109,7 @@ const TableRow = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={cn(
-        "grid border-b border-border",
+        "grid border-b border-border-primary",
         "not-last:border-b",
         "hover:bg-ghost-hover transition-colors duration-100",
         className,

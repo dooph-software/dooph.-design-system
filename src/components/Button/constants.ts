@@ -9,7 +9,7 @@ export const ButtonVariant = {
   primary: "primary",
   secondary: "secondary",
   brand: "brand",
-  destructive: "destructive",
+  danger: "danger",
   ghost: "ghost",
   text: "text",
 } as const;
@@ -20,5 +20,6 @@ export const ButtonSize = {
   sm: "sm",
   icon: "icon",
   iconSm: "icon-sm",
+  iconMicro: "icon-micro",
 } as const;
 export type ButtonSize = (typeof ButtonSize)[keyof typeof ButtonSize];

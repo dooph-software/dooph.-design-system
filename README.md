@@ -1,6 +1,6 @@
 # dooph Design System
 
-React component primitives and tokenized CSS. The package is framework-agnostic at runtime: use it from Next.js, Vite, or any React shell that can import CSS.
+React component primitives and tokenized CSS in our bespoke design language. Opinionated design and tokens but framework-agnostic at runtime: use it from Next.js, Vite, or any React shell of your choice.
 
 Use defaults or override tokens on an individual basis in your consuming project for a custom look!
 
@@ -10,6 +10,12 @@ Use defaults or override tokens on an individual basis in your consuming project
 
 ```bash
 npm install @dooph-software/design-system
+```
+
+_(optional, for agents)_
+
+```bash
+npx @dooph-software/design-system init-skills
 ```
 
 ```tsx

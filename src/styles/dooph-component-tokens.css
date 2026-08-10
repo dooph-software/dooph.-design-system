@@ -33,7 +33,7 @@
   }
 
   .ds-shape-button-focus-visible:focus-visible {
-    outline: 2px solid var(--ui-color-focus-ring);
+    outline: 2px solid var(--ui-color-focus-ring-brand);
     outline-offset: 2px;
   }
 
@@ -62,7 +62,7 @@
   }
 
   .ds-focus-visible-ring:focus-visible {
-    outline-color: var(--ui-color-focus-ring);
+    outline-color: var(--ui-color-focus-ring-brand);
   }
 
   .ds-focus-within-ring {
@@ -71,7 +71,7 @@
   }
 
   .ds-focus-within-ring:focus-within {
-    outline-color: var(--ui-color-focus-ring);
+    outline-color: var(--ui-color-focus-ring-brand);
   }
 
   .ds-focus-ring-on-focus {
@@ -80,16 +80,67 @@
   }
 
   .ds-focus-ring-on-focus:focus {
-    outline-color: var(--ui-color-focus-ring);
+    outline-color: var(--ui-color-focus-ring-brand);
   }
 
-  .ds-focus-ring-destructive-on-focus:focus {
-    outline-color: var(--ui-color-destructive-focus-ring);
+  .ds-focus-ring-error-on-focus:focus {
+    outline-color: var(--ui-color-focus-ring-error);
   }
 
   .ds-focus-ring {
-    outline: 4px solid var(--ui-color-focus-ring);
+    outline: 4px solid var(--ui-color-focus-ring-brand);
     outline-offset: 0;
+  }
+
+  /* Active slider track — the handle color at 45% (Figma applies alpha on top).
+   * --ds-slider-color is set on the Slider root from its `color` prop. */
+  .ds-slider-fill {
+    background-color: color-mix(
+      in srgb,
+      var(--ds-slider-color, var(--ui-color-primary)) 45%,
+      transparent
+    );
+  }
+  /* Stepped slider dots. The active/inactive split is a plain attribute
+   * selector rather than a Tailwind `data-[active]:` variant — variants only
+   * compose with generated utilities, so pairing one with a class defined here
+   * silently produced no rule and every dot stayed the inactive tone. */
+  .ds-slider-dot {
+    background-color: var(--ui-color-secondary-border);
+  }
+
+  .ds-slider-dot[data-active] {
+    background-color: color-mix(in srgb, var(--ui-color-text) 40%, transparent);
+  }
+
+  /* Stepped slider settling onto a dot after the pointer is released. The handle
+   * and both fills share one duration and easing so they arrive together — the
+   * handle is moved by Radix, which writes `left` on an unstyleable wrapper span
+   * (the root's last child), hence the structural selector. The class is only on
+   * the root while NOT dragging, so a drag still tracks the pointer 1:1. */
+  .ds-slider-glide > span:last-child,
+  .ds-slider-glide .ds-slider-part {
+    transition-property: left, width;
+    transition-duration: 180ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-slider-glide > span:last-child,
+    .ds-slider-glide .ds-slider-part {
+      transition-property: none;
+    }
+  }
+
+  /* Opt-in global text selection colour. Apply to <body> (or any subtree root).
+   * Selection styles match the ORIGINATING element, so both forms are needed:
+   * the bare selector for descendants, and ::selection on the element itself.
+   * Shipped as a class, not a bare ::selection rule, because restyling the whole
+   * host app's selection is the app's call, not the package's. */
+  .ds-selection ::selection,
+  .ds-selection::selection {
+    background-color: var(--ui-color-selection);
+    color: var(--ui-color-selection-foreground);
   }
 
   /* Radix DropdownMenu content — follows Radix transform-origin injection */
@@ -97,12 +148,67 @@
     transform-origin: var(--radix-dropdown-menu-content-transform-origin);
   }
 
+  /* Menu width floor, selected by DropdownMenuVariant on the root and read here
+   * via --ds-menu-min-w. The floor applies in BOTH width modes: with
+   * matchTriggerWidth it is the lower bound of the max(), without it, it is the
+   * width. Falls back to the standard token when no variant class is present. */
+  .ds-menu-w-standard {
+    --ds-menu-min-w: var(--ui-min-w-menu);
+  }
+
+  .ds-menu-w-action {
+    --ds-menu-min-w: var(--ui-min-w-menu-action);
+  }
+
+  .ds-menu-w-complex {
+    --ds-menu-min-w: var(--ui-min-w-menu-complex);
+  }
+
   .ds-radix-dropdown-match-trigger-width {
-    min-width: max(var(--radix-dropdown-menu-trigger-width), var(--ui-min-w-menu));
+    min-width: max(
+      var(--radix-dropdown-menu-trigger-width),
+      var(--ds-menu-min-w, var(--ui-min-w-menu))
+    );
   }
 
   .ds-min-w-menu {
-    min-width: var(--ui-min-w-menu);
+    min-width: var(--ds-menu-min-w, var(--ui-min-w-menu));
+  }
+
+  /* CTAButton — geometry + pill drop-shadow (filter so the round pill edge softens). */
+  .ds-drop-shadow-cta {
+    filter: drop-shadow(var(--ui-shadow-cta));
+  }
+
+  .ds-size-cta-chip-standard {
+    width: var(--ui-size-cta-chip-standard);
+    height: var(--ui-size-cta-chip-standard);
+  }
+
+  .ds-size-cta-chip-big {
+    width: var(--ui-size-cta-chip-big);
+    height: var(--ui-size-cta-chip-big);
+  }
+
+  .ds-size-cta-icon {
+    width: var(--ui-size-cta-icon);
+    height: var(--ui-size-cta-icon);
+  }
+
+  .ds-min-w-cta-content-standard {
+    min-width: var(--ui-min-w-cta-content-standard);
+  }
+
+  .ds-min-w-cta-content-big {
+    min-width: var(--ui-min-w-cta-content-big);
+  }
+
+  .ds-min-w-cta-pill-big {
+    min-width: var(--ui-min-w-cta-pill-big);
+  }
+
+  .ds-gap-cta-content-big {
+    gap: var(--ui-spacing-cta-content-big);
   }
 
   .ds-px-ui-sm {
@@ -117,12 +223,22 @@
     );
   }
 
-  .ds-toast-width {
-    width: min(var(--ui-width-toast), 100%);
+  .ds-toast-width-simple {
+    width: min(var(--ui-width-toast-simple), 100%);
   }
 
-  .ds-toast-action-width {
-    width: min(var(--ui-width-toast-action), 100%);
+  .ds-toast-width-complex {
+    width: min(var(--ui-width-toast-complex), 100%);
+  }
+
+  /* Tooltip sizing — token-backed so consumers can retune per brand.
+   * The simple variant has no helper: it hugs its content by design. */
+  .ds-width-tooltip-rich {
+    width: var(--ui-width-tooltip-rich);
+  }
+
+  .ds-min-w-tooltip-complex {
+    min-width: var(--ui-min-w-tooltip-complex);
   }
 
   .ds-tooltip-inverse-theme {
@@ -170,5 +286,38 @@
   }
   .ds-my-ui-xs {
     margin-block: var(--ui-spacing-xs);
+  }
+
+  /*
+   * CopyButton — stacked clipboard/check icons swap via [data-copied].
+   * Both icons share the same grid cell (parent has `grid place-items-center`)
+   * so the swap is a cross-fade + scale instead of a layout shift.
+   */
+  .ds-copy-icon-clipboard,
+  .ds-copy-icon-check {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    transition:
+      opacity 120ms ease-out,
+      transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  [data-copied] .ds-copy-icon-clipboard {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  .ds-copy-icon-check {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  [data-copied] .ds-copy-icon-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-copy-icon-clipboard,
+    .ds-copy-icon-check {
+      transition: none;
+    }
   }
 }

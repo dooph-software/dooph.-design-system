@@ -7,6 +7,7 @@ import {
   GemShape,
   PentagonShape,
   PuffShape,
+  StarShape,
 } from "./index";
 
 type ShapeProps = {
@@ -28,6 +29,7 @@ const shapes: ShapeExample[] = [
   { label: "Gem", component: GemShape },
   { label: "Pentagon", component: PentagonShape },
   { label: "Puff", component: PuffShape },
+  { label: "Star", component: StarShape },
 ];
 
 const meta = {
@@ -62,7 +64,7 @@ const ShapeCell = ({
   size?: number;
   fillColor?: string;
 }) => (
-  <div className="flex flex-col items-center gap-3 rounded-standard border border-border bg-surface p-4">
+  <div className="flex flex-col items-center gap-3 rounded-standard border border-border-primary bg-surface-primary p-4">
     <Shape size={size} strokeColor="transparent" fillColor={fillColor} />
     <span className="text-style-label text-text-secondary">{label}</span>
   </div>
@@ -90,6 +92,10 @@ export const Pentagon: Story = {
 
 export const Puff: Story = {
   render: (args) => <PuffShape {...args} />,
+};
+
+export const Star: Story = {
+  render: (args) => <StarShape {...args} />,
 };
 
 export const AllShapes: Story = {

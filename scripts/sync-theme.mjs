@@ -45,11 +45,13 @@ const ALIASES = {
   "ui-color-primary-foreground": "color-primary-fg",
   "ui-color-secondary-foreground": "color-secondary-fg",
   "ui-color-brand-foreground": "color-brand-fg",
-  "ui-color-destructive-foreground": "color-destructive-fg",
+  "ui-color-danger-foreground": "color-danger-fg",
   "ui-color-ghost-foreground": "color-ghost-fg",
   "ui-color-ghost-foreground-active": "color-ghost-fg-active",
-  // Accent lives under a non-standard css var name
-  "ui-accent-color": "color-accent",
+  "ui-color-selection-foreground": "color-selection-fg",
+  // Brand identity colors live under non-standard css var names
+  "ui-brand-color": "color-brand-color",
+  "ui-brand-color-alt": "color-brand-color-alt",
 };
 
 // ── Tokens excluded from @theme (used only as raw var() refs or in @layer) ───
@@ -79,16 +81,32 @@ const EXCLUDED = new Set([
   // Button heights — exposed via custom @layer utilities (.h-button etc.)
   "ui-height-button",
   "ui-height-button-sm",
+  "ui-height-button-micro",
+  "ui-height-slider-track",
+  "ui-slider-track-gap",
+  "ui-width-slider-handle",
+  "ui-height-slider-handle",
+  // Tooltip widths — exposed via ds-* helpers
+  "ui-width-tooltip-rich",
+  "ui-min-w-tooltip-complex",
   // Menu widths — used as raw var() only
   "ui-min-w-menu",
   "ui-min-w-menu-action",
   "ui-min-w-menu-complex",
+  // CTAButton geometry — exposed via ds-* helpers
+  "ui-size-cta-chip-standard",
+  "ui-size-cta-chip-big",
+  "ui-size-cta-icon",
+  "ui-min-w-cta-content-standard",
+  "ui-min-w-cta-content-big",
+  "ui-min-w-cta-pill-big",
+  "ui-spacing-cta-content-big",
   // Opacity — used as var() in arbitrary Tailwind values
   "ui-opacity-disabled",
   // Focus ring colors — only used inside shadow values
-  "ui-color-focus-ring",
+  "ui-color-focus-ring-brand",
   "ui-color-focus-ring-primary",
-  "ui-color-destructive-focus-ring",
+  "ui-color-focus-ring-error",
 ]);
 
 // ── Derive the @theme key for a given --ui-* variable name ───────────────────
@@ -154,8 +172,8 @@ const entries = vars.map(toThemeEntry).filter(Boolean);
 
 // Computed entries that can't be derived from token names alone
 const COMPUTED = [
-  "/* Focus ring with destructive  */",
-  "--shadow-focus-destructive: 0 0 0 4px var(--ui-color-destructive-focus-ring);",
+  "/* Focus ring with error */",
+  "--shadow-focus-error: 0 0 0 4px var(--ui-color-focus-ring-error);",
 ];
 
 const generated = [

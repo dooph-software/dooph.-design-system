@@ -54,7 +54,7 @@ const DropdownTriggerBase = forwardRef<
       ref={ref as ForwardedRef<HTMLElement>}
       className={cn(
         "inline-flex h-button items-center justify-center ds-gap-ui-xs",
-        "min-w-40 rounded-tight border border-solid border-border",
+        "min-w-40 rounded-tight border border-solid border-border-primary",
         "bg-secondary text-secondary-fg",
         "ds-pl-ui-rg ds-pr-ui-sm",
         "text-style-button cursor-pointer select-none",
@@ -170,7 +170,7 @@ const TypeableDropdownTrigger = forwardRef<
         ref={ref}
         className={cn(
           "inline-flex h-button items-center ds-gap-ui-xs",
-          "min-w-40 rounded-tight border border-solid border-border",
+          "min-w-40 rounded-tight border border-solid border-border-primary",
           "bg-secondary ds-pl-ui-rg ds-pr-ui-sm",
           "transition-all duration-150 ease-out",
           "[&:hover:not(:focus-within)]:border-trigger-border-hover [&:hover:not(:focus-within)]:shadow-button-secondary",

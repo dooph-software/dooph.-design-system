@@ -19,6 +19,7 @@ import {
   PentagonShape,
   PuffShape,
   Shapes,
+  StarShape,
 } from "../Shapes";
 
 // ShapeButtons lives in ./constants — kept server-safe (no "use client") so RSC
@@ -43,6 +44,7 @@ const shapeComponents = {
   gem: GemShape,
   pentagon: PentagonShape,
   puff: PuffShape,
+  star: StarShape,
 } satisfies Record<Shapes, ComponentType<ShapeComponentProps>>;
 
 export type ShapeButtonProps<TElement extends ElementType = "button"> =

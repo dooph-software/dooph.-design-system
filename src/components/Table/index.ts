@@ -5,6 +5,6 @@ export {
   TableRow,
   TableCell,
   TablePlaceholder,
-  TableSortDirection,
 } from './Table';
+export { TableSortDirection } from './constants';
 export type { TableProps, TableHeaderCellProps } from './Table';

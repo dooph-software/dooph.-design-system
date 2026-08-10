@@ -13,7 +13,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <input
         ref={ref}
         className={cn(
-          "flex h-button w-full rounded-tight border border-solid border-border bg-secondary",
+          "flex h-button w-full rounded-tight border border-solid border-border-primary bg-secondary",
           "ds-pl-ui-rg ds-pr-ui-sm",
           "text-style-button text-text placeholder:text-text-tertiary",
           "transition-all duration-100 ds-focus-ring-on-focus",
@@ -21,7 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           "focus:border-border-focus",
           "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled ds-disabled-state",
           hasError &&
-            "border-destructive focus:border-destructive ds-focus-ring-destructive-on-focus",
+            "border-danger-border focus:border-trigger-border-error-focus ds-focus-ring-error-on-focus",
           className,
         )}
         {...props}

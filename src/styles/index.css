@@ -39,22 +39,24 @@
   --color-brand-border-active: var(--ui-color-brand-border-active);
   --color-brand-fg: var(--ui-color-brand-foreground);
   --color-brand-border-disabled: var(--ui-color-brand-border-disabled);
-  --color-destructive: var(--ui-color-destructive);
-  --color-destructive-border: var(--ui-color-destructive-border);
-  --color-destructive-hover: var(--ui-color-destructive-hover);
-  --color-destructive-border-hover: var(--ui-color-destructive-border-hover);
-  --color-destructive-active: var(--ui-color-destructive-active);
-  --color-destructive-border-active: var(--ui-color-destructive-border-active);
-  --color-destructive-fg: var(--ui-color-destructive-foreground);
-  --color-destructive-disabled: var(--ui-color-destructive-disabled);
-  --color-destructive-border-disabled: var(--ui-color-destructive-border-disabled);
+  --color-danger: var(--ui-color-danger);
+  --color-danger-border: var(--ui-color-danger-border);
+  --color-danger-hover: var(--ui-color-danger-hover);
+  --color-danger-border-hover: var(--ui-color-danger-border-hover);
+  --color-danger-active: var(--ui-color-danger-active);
+  --color-danger-border-active: var(--ui-color-danger-border-active);
+  --color-danger-fg: var(--ui-color-danger-foreground);
+  --color-danger-disabled: var(--ui-color-danger-disabled);
+  --color-danger-border-disabled: var(--ui-color-danger-border-disabled);
   --color-ghost-fg: var(--ui-color-ghost-foreground);
   --color-ghost-hover: var(--ui-color-ghost-hover);
   --color-ghost-active: var(--ui-color-ghost-active);
   --color-ghost-fg-active: var(--ui-color-ghost-foreground-active);
-  --color-surface: var(--ui-color-surface);
+  --color-page-background: var(--ui-color-page-background);
+  --color-surface-primary: var(--ui-color-surface-primary);
   --color-surface-secondary: var(--ui-color-surface-secondary);
-  --color-surface-page: var(--ui-color-surface-page);
+  --color-selection: var(--ui-color-selection);
+  --color-selection-fg: var(--ui-color-selection-foreground);
   --color-modal-surface: var(--ui-color-modal-surface);
   --color-modal-backdrop: var(--ui-color-modal-backdrop);
   --color-tooltip-inverse-surface: var(--ui-color-tooltip-inverse-surface);
@@ -63,17 +65,18 @@
   --color-tooltip-matching-surface: var(--ui-color-tooltip-matching-surface);
   --color-tooltip-matching-text: var(--ui-color-tooltip-matching-text);
   --color-tooltip-matching-border: var(--ui-color-tooltip-matching-border);
-  --color-accent: var(--ui-accent-color);
-  --color-border: var(--ui-color-border);
+  --color-border-primary: var(--ui-color-border-primary);
+  --color-border-secondary: var(--ui-color-border-secondary);
   --color-border-popovers: var(--ui-color-border-popovers);
   --color-border-focus: var(--ui-color-border-focus);
+  --color-border-cta: var(--ui-color-border-cta);
   --color-trigger-border-hover: var(--ui-color-trigger-border-hover);
+  --color-trigger-border-error-focus: var(--ui-color-trigger-border-error-focus);
   --color-text: var(--ui-color-text);
   --color-text-secondary: var(--ui-color-text-secondary);
   --color-text-tertiary: var(--ui-color-text-tertiary);
-  --color-logo: var(--ui-color-logo);
-  --color-logo-alt: var(--ui-color-logo-alt);
-  --color-avatar-bg: var(--ui-color-avatar-bg);
+  --color-brand-color: var(--ui-brand-color);
+  --color-brand-color-alt: var(--ui-brand-color-alt);
   --font-body: var(--ui-font-body);
   --font-button: var(--ui-font-button);
   --font-heading: var(--ui-font-heading);
@@ -85,6 +88,7 @@
   --text-heading: var(--ui-text-heading);
   --text-title: var(--ui-text-title);
   --text-hero: var(--ui-text-hero);
+  --radius-slider-inner: var(--ui-radius-slider-inner);
   --spacing-xxs: var(--ui-spacing-xxs);
   --spacing-xs: var(--ui-spacing-xs);
   --spacing-sm: var(--ui-spacing-sm);
@@ -104,19 +108,30 @@
   --shadow-button-hover: var(--ui-shadow-button-hover);
   --shadow-button-active: var(--ui-shadow-button-active);
   --shadow-menu: var(--ui-shadow-menu);
+  --shadow-cta: var(--ui-shadow-cta);
   --shadow-focus-brand: var(--ui-shadow-focus-brand);
   --shadow-focus-primary: var(--ui-shadow-focus-primary);
+  --text-cta-standard: var(--ui-text-cta-standard);
+  --text-cta-big: var(--ui-text-cta-big);
 
-  /* Focus ring with destructive  */
-  --shadow-focus-destructive: 0 0 0 4px var(--ui-color-destructive-focus-ring);
+  /* Focus ring with error */
+  --shadow-focus-error: 0 0 0 4px var(--ui-color-focus-ring-error);
 }
 /* __GENERATED_THEME_END__ */
 
 /*
- * Composite text-style utilities — apply full typographic intent in one class.
- * These encode font-variation-settings which has no Tailwind utility.
+ * Composite text-style classes — the full typographic intent of a role in one
+ * class, including font-variation-settings, which has no Tailwind utility.
+ *
+ * Deliberately in `components`, NOT `utilities`. BaseText applies these as role
+ * DEFAULTS, and a layer that loses to `utilities` is exactly what lets a
+ * consumer's own utility (leading-*, tracking-*, text-2xl) override a role.
+ * Explicit BaseText props outrank both, because they are written inline.
+ *
+ * Nothing here sets line-height: leading is left to inherit so it can be set by
+ * the consuming app or per instance via the lineHeight prop.
  */
-@layer utilities {
+@layer components {
   .text-style-button {
     font-family: var(--ui-font-button);
     font-optical-sizing: auto;
@@ -124,7 +139,6 @@
     font-style: normal;
     font-weight: var(--ui-weight-button);
     font-variation-settings: var(--ui-font-var-button);
-    line-height: 1;
   }
 
   .text-style-body {
@@ -135,7 +149,6 @@
     font-weight: var(--ui-weight-body);
     font-variation-settings: var(--ui-font-var-body);
     letter-spacing: var(--ui-tracking-body);
-    line-height: 1;
   }
 
   .text-style-label {
@@ -143,14 +156,12 @@
     font-size: var(--ui-text-label);
     font-weight: var(--ui-weight-label);
     letter-spacing: var(--ui-tracking-label);
-    line-height: 1;
   }
 
   .text-style-title {
     font-family: var(--ui-font-title);
     font-size: var(--ui-text-title);
     font-weight: var(--ui-weight-title);
-    line-height: 1;
   }
 
   .text-style-heading {
@@ -160,7 +171,6 @@
     font-style: normal;
     font-weight: var(--ui-weight-heading);
     font-variation-settings: var(--ui-font-var-heading);
-    line-height: 1;
   }
 
   .text-style-hero {
@@ -168,24 +178,11 @@
     font-size: var(--ui-text-hero);
     font-weight: var(--ui-weight-hero);
     letter-spacing: var(--ui-tracking-hero);
-    line-height: 1;
   }
 
-  /* Font-weight overrides for BaseText; declared after text-style-* so they win.
-   * Values come from tokens so consumers can retune them. */
-  .ds-font-weight-regular {
-    font-weight: var(--ui-weight-regular);
-  }
-  .ds-font-weight-medium {
-    font-weight: var(--ui-weight-medium);
-  }
-  .ds-font-weight-semibold {
-    font-weight: var(--ui-weight-semibold);
-  }
-  .ds-font-weight-bold {
-    font-weight: var(--ui-weight-bold);
-  }
+}
 
+@layer utilities {
   /* Sized to button height tokens */
   .h-button {
     height: var(--ui-height-button);
@@ -205,6 +202,126 @@
     width: var(--ui-size-checkbox);
     height: var(--ui-size-checkbox);
   }
+  .size-button-micro {
+    width: var(--ui-height-button-micro);
+    height: var(--ui-height-button-micro);
+  }
+  .h-slider-track {
+    height: var(--ui-height-slider-track);
+  }
+
+  /* ShimmerText — gradient masked to glyphs (incl. descendants); children must
+   * not set an explicit text color while shimmering. */
+  .ds-shimmer-text {
+    background: linear-gradient(
+      100deg,
+      var(--ui-shimmer-base) 40%,
+      var(--ui-shimmer-highlight) 50%,
+      var(--ui-shimmer-base) 60%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: ds-shimmer 2s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-shimmer-text {
+      animation: none;
+      background: none;
+      color: inherit;
+    }
+  }
+
+  /* RollHoverText — per-character 3D barrel roll on hover. Two identical faces
+   * per glyph; the offscreen face is hidden by opacity + blur rather than by
+   * overflow clipping, so descenders (g, y, p, j) are never cut and the
+   * component stays safe in inline body text.
+   *
+   * transition (not @keyframes) is load-bearing: interrupting a transition
+   * retargets from the current computed value, which is what lets an un-hover
+   * mid-roll reverse from wherever the letter currently sits. */
+  .ds-roll-hover {
+    display: inline;
+  }
+  .ds-roll-hover-word {
+    white-space: nowrap;
+  }
+  /* perspective belongs on the char cell, not the wrapper — per-character
+   * perspective keeps the depth uniform instead of fanning the outer letters. */
+  .ds-roll-hover-char {
+    position: relative;
+    display: inline-block;
+    perspective: var(--ui-roll-hover-perspective);
+  }
+  /* The barrel radius lives in the ROTATION AXIS (transform-origin's z), not in a
+   * translateZ on the faces. Pushing the faces forward with translateZ would put
+   * them closer to the viewer, and perspective would magnify them ~32% at rest —
+   * every glyph would overflow its own cell and collide with its neighbours.
+   * Recessing the axis instead leaves each face at z:0 when it is face-on, so it
+   * renders exactly at its layout size, while still sweeping a cylinder. */
+  .ds-roll-hover-out,
+  .ds-roll-hover-in {
+    display: inline-block;
+    transform-origin: 50% 50% calc(-1 * var(--ui-roll-hover-depth));
+    transition:
+      transform var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+      filter var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+      opacity var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1);
+    transition-delay: calc(var(--i) * var(--ui-roll-hover-stagger));
+  }
+  /* absolute so the incoming face contributes no width; the outgoing face in
+   * normal flow is what gives each cell its natural glyph width. */
+  .ds-roll-hover-in {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Rest. The constant translateZ puts both faces on the surface of a cylinder
+   * rather than hinging them flat — that is the whole source of the depth. */
+  .ds-roll-hover-out {
+    transform: rotateX(0deg);
+    filter: blur(0);
+    opacity: 1;
+  }
+  .ds-roll-hover-in {
+    transform: rotateX(90deg);
+    filter: blur(var(--ui-roll-hover-blur));
+    opacity: 0;
+  }
+
+  /* Rolled — self hover, ancestor .group hover, or the controlled `active` prop. */
+  .ds-roll-hover:hover .ds-roll-hover-out,
+  .group:hover .ds-roll-hover .ds-roll-hover-out,
+  .ds-roll-hover[data-active="true"] .ds-roll-hover-out {
+    transform: rotateX(-90deg);
+    filter: blur(var(--ui-roll-hover-blur));
+    opacity: 0;
+  }
+  .ds-roll-hover:hover .ds-roll-hover-in,
+  .group:hover .ds-roll-hover .ds-roll-hover-in,
+  .ds-roll-hover[data-active="true"] .ds-roll-hover-in {
+    transform: rotateX(0deg);
+    filter: blur(0);
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-roll-hover-out,
+    .ds-roll-hover-in {
+      transition: none;
+    }
+    .ds-roll-hover-in {
+      display: none;
+    }
+    .ds-roll-hover:hover .ds-roll-hover-out,
+    .group:hover .ds-roll-hover .ds-roll-hover-out,
+    .ds-roll-hover[data-active="true"] .ds-roll-hover-out {
+      transform: none;
+      filter: none;
+      opacity: 1;
+    }
+  }
 }
 
 /*
@@ -219,4 +336,17 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+@keyframes ds-shimmer {
+  from { background-position: 150% center; }
+  to   { background-position: -50% center; }
+}
+@keyframes ds-roll-out {
+  to { transform: translateY(0.9em); filter: blur(4px); opacity: 0; }
+}
+@keyframes ds-roll-in {
+  from { transform: translateY(-0.9em); filter: blur(4px); opacity: 0; }
+  60%  { filter: blur(1.5px); }
+  to   { transform: translateY(0); filter: blur(0); opacity: 1; }
 }

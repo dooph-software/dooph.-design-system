@@ -2,20 +2,48 @@
 
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import {
+  createContext,
   forwardRef,
+  useContext,
   type ComponentPropsWithoutRef,
   type ComponentRef,
   type HTMLAttributes,
 } from "react";
 import { cn } from "../../utils/cn";
 import CheckIcon from "../Icons/CheckIcon";
+// DropdownMenuVariant (+ its type) lives in ./constants — kept server-safe
+// (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
+import { DropdownMenuVariant } from "./constants";
+
+/**
+ * Width variant set on the root and consumed by DropdownMenuContent, mirroring
+ * the TwoWayToggle / SegmentedTabSelect context pattern: declare presentation
+ * once at the top of the composition instead of threading it through children.
+ */
+const DropdownMenuPresentationContext = createContext<{
+  variant: DropdownMenuVariant;
+}>({ variant: DropdownMenuVariant.standard });
+
+const menuWidthClass: Record<DropdownMenuVariant, string> = {
+  standard: "ds-menu-w-standard",
+  action: "ds-menu-w-action",
+  complex: "ds-menu-w-complex",
+};
 
 /** Non-modal by default so page UI stays interactable while a menu is open. Pass modal={true} for dialog-like focus trapping. */
 function DropdownMenuRoot({
   modal = false,
+  variant = DropdownMenuVariant.standard,
   ...props
-}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root>) {
-  return <DropdownMenuPrimitive.Root modal={modal} {...props} />;
+}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> & {
+  /** Width variant every DropdownMenuContent in this menu adopts. Default standard. */
+  variant?: DropdownMenuVariant;
+}) {
+  return (
+    <DropdownMenuPresentationContext.Provider value={{ variant }}>
+      <DropdownMenuPrimitive.Root modal={modal} {...props} />
+    </DropdownMenuPresentationContext.Provider>
+  );
 }
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
@@ -27,27 +55,38 @@ const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 const DropdownMenuContent = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Content>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & {
+    /** When true, the menu closes when focus leaves the browser window (devtools, screenshot tools, alt-tab). Default false. */
+    dismissOnFocusLoss?: boolean;
     /** When false, menu open does not move focus into the panel (required for TypeableDropdownTrigger). Default true. */
     focusOnOpen?: boolean;
     matchTriggerWidth?: boolean;
     onOpenAutoFocus?: (event: Event) => void;
     portal?: boolean;
     portalProps?: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>;
+    /** Overrides the root's width variant for this panel only. */
+    variant?: DropdownMenuVariant;
   }
 >(
   (
     {
       className,
+      dismissOnFocusLoss = false,
       focusOnOpen = true,
       matchTriggerWidth = true,
+      onFocusOutside,
+      onInteractOutside,
       onOpenAutoFocus,
       sideOffset = 6,
       portal = true,
       portalProps,
+      variant,
       ...props
     },
     ref,
   ) => {
+    const presentation = useContext(DropdownMenuPresentationContext);
+    const resolvedVariant = variant ?? presentation.variant;
+
     const handleOpenAutoFocus = focusOnOpen
       ? onOpenAutoFocus
       : (event: Event) => {
@@ -55,23 +94,47 @@ const DropdownMenuContent = forwardRef<
           onOpenAutoFocus?.(event);
         };
 
+    // Radix dismisses on any outside-interaction signal, including focus moving
+    // to devtools, a screenshot tool, or another OS window. Those are the only
+    // cases where the document itself has lost focus, so they are separable
+    // from a genuine click elsewhere on the page.
+    const handleFocusOutside: typeof onFocusOutside = (event) => {
+      onFocusOutside?.(event);
+      if (!dismissOnFocusLoss && !document.hasFocus()) {
+        event.preventDefault();
+      }
+    };
+
+    const handleInteractOutside: typeof onInteractOutside = (event) => {
+      onInteractOutside?.(event);
+      const target = event.target as Node | null;
+      if (!dismissOnFocusLoss && (!target || !document.contains(target))) {
+        event.preventDefault();
+      }
+    };
+
     const content = (
       <DropdownMenuPrimitive.Content
         ref={ref}
         sideOffset={sideOffset}
+        onFocusOutside={handleFocusOutside}
+        onInteractOutside={handleInteractOutside}
         {...(handleOpenAutoFocus
           ? ({
               onOpenAutoFocus: handleOpenAutoFocus,
             } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>)
           : {})}
         className={cn(
-          "z-50 overflow-hidden rounded-soft border border-solid border-border-popovers bg-surface",
+          "z-50 overflow-hidden rounded-soft border border-solid border-border-popovers bg-surface-primary",
           "ds-py-ui-xs",
           "shadow-menu",
           "ds-radix-dropdown-content-origin",
+          // The variant class only sets --ds-menu-min-w; the width helper below
+          // reads it, so the floor applies in both width modes.
+          menuWidthClass[resolvedVariant],
           // Both helpers set min-width; apply only one so neither clobbers the
           // other in the cascade. The match helper already bakes in the
-          // --ui-min-w-menu floor via max(), so it fully replaces ds-min-w-menu.
+          // floor via max(), so it fully replaces ds-min-w-menu.
           matchTriggerWidth
             ? "ds-radix-dropdown-match-trigger-width"
             : "ds-min-w-menu",
