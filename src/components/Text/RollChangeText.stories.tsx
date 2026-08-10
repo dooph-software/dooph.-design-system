@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { RollChangeText } from "./RollChangeText";
 import { BodyText, LabelText } from "./BaseText";
-import { FontWeights } from "./constants";
+import { FontWeights, RollDirection } from "./constants";
 
 const meta = {
   title: "Primitives/RollChangeText",
@@ -46,6 +46,45 @@ export const AutoCyclingStatus: Story = {
         <RollChangeText changeKey={statuses[index]}>
           <BodyText>{statuses[index]}</BodyText>
         </RollChangeText>
+      </div>
+    );
+  },
+};
+
+export const DirectionUpVsDown: Story = {
+  name: "Direction (up vs down)",
+  args: { children: null },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`direction` flips the travel. `down` (default) settles the new value in from above; `up` " +
+          "rises it in from below. Both counters below advance on the same interval.",
+      },
+    },
+  },
+  render: function DirectionStory() {
+    const [n, setN] = useState(0);
+
+    useEffect(() => {
+      const interval = setInterval(() => setN((v) => v + 1), 1500);
+      return () => clearInterval(interval);
+    }, []);
+
+    return (
+      <div className="flex gap-12">
+        <div className="flex flex-col items-start gap-1">
+          <LabelText className="uppercase tracking-wide opacity-40">Down (default)</LabelText>
+          <RollChangeText changeKey={n} direction={RollDirection.down}>
+            <BodyText>{n}</BodyText>
+          </RollChangeText>
+        </div>
+        <div className="flex flex-col items-start gap-1">
+          <LabelText className="uppercase tracking-wide opacity-40">Up</LabelText>
+          <RollChangeText changeKey={n} direction={RollDirection.up}>
+            <BodyText>{n}</BodyText>
+          </RollChangeText>
+        </div>
       </div>
     );
   },

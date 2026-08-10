@@ -19,6 +19,7 @@ export type {
 } from './BaseText';
 export {
   TextVariant,
+  RollDirection,
   Fonts,
   FontSizes,
   FontWeights,

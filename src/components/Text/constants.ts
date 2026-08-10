@@ -24,6 +24,20 @@ export const TextVariant = {
 } as const;
 export type TextVariant = (typeof TextVariant)[keyof typeof TextVariant];
 
+/**
+ * Roll direction for RollChangeText / RollHoverText.
+ *
+ * `down` reads as content travelling downward (new content settles in from
+ * above); `up` reads as content travelling upward (new content rises in from
+ * below). Both RollChangeText and RollHoverText default to `down`, preserving
+ * their original motion when the prop is omitted.
+ */
+export const RollDirection = {
+  up: 'up',
+  down: 'down',
+} as const;
+export type RollDirection = (typeof RollDirection)[keyof typeof RollDirection];
+
 /** Font family per role. Each --ui-font-* stack is independently overridable. */
 export const Fonts = {
   body: 'var(--ui-font-body)',

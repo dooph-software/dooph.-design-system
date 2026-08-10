@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { RollHoverText } from "./RollHoverText";
+import { RollDirection } from "./constants";
 import { ButtonText, BodyText, HeroText } from "./BaseText";
 import { Button, ButtonVariant } from "../Button";
 import { OutlineButton } from "../OutlineButton";
@@ -92,6 +93,29 @@ export const InBodyCopy: Story = {
         <RollHoverText>Deploy piggyback jerky</RollHoverText> and confirm the tails of the g, y, p
         and j stay intact while the letters roll.
       </BodyText>
+    </div>
+  ),
+};
+
+export const DirectionUpVsDown: Story = {
+  name: "Direction (up vs down)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`direction` flips the barrel roll. `up` (default) rolls each glyph upward; `down` rolls it " +
+          "downward. Hover each to compare.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex gap-12">
+      <HeroText>
+        <RollHoverText direction={RollDirection.up}>Upward</RollHoverText>
+      </HeroText>
+      <HeroText>
+        <RollHoverText direction={RollDirection.down}>Downward</RollHoverText>
+      </HeroText>
     </div>
   ),
 };

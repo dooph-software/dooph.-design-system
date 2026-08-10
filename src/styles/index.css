@@ -285,7 +285,7 @@
     opacity: 1;
   }
   .ds-roll-hover-in {
-    transform: rotateX(90deg);
+    transform: rotateX(calc(var(--ds-roll-dir, 1) * 90deg));
     filter: blur(var(--ui-roll-hover-blur));
     opacity: 0;
   }
@@ -294,7 +294,7 @@
   .ds-roll-hover:hover .ds-roll-hover-out,
   .group:hover .ds-roll-hover .ds-roll-hover-out,
   .ds-roll-hover[data-active="true"] .ds-roll-hover-out {
-    transform: rotateX(-90deg);
+    transform: rotateX(calc(var(--ds-roll-dir, 1) * -90deg));
     filter: blur(var(--ui-roll-hover-blur));
     opacity: 0;
   }
@@ -369,11 +369,14 @@
   from { background-position: 150% center; }
   to   { background-position: -50% center; }
 }
+/* --ds-roll-dir (default 1 = downward) flips the travel: RollChangeText sets -1
+ * for upward. The old face exits in the travel direction; the new face enters
+ * from the opposite side. */
 @keyframes ds-roll-out {
-  to { transform: translateY(0.9em); filter: blur(4px); opacity: 0; }
+  to { transform: translateY(calc(var(--ds-roll-dir, 1) * 0.9em)); filter: blur(4px); opacity: 0; }
 }
 @keyframes ds-roll-in {
-  from { transform: translateY(-0.9em); filter: blur(4px); opacity: 0; }
+  from { transform: translateY(calc(var(--ds-roll-dir, 1) * -0.9em)); filter: blur(4px); opacity: 0; }
   60%  { filter: blur(1.5px); }
   to   { transform: translateY(0); filter: blur(0); opacity: 1; }
 }

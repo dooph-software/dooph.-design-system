@@ -1,11 +1,14 @@
 import { forwardRef, type CSSProperties, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
+import { RollDirection } from "./constants";
 
 export interface RollHoverTextProps extends Omit<HTMLAttributes<HTMLSpanElement>, "children"> {
   /** Text to animate. Must be a string — the component splits it per character. */
   children: string;
   /** Force the rolled state regardless of hover (touch, focus-visible, programmatic). */
   active?: boolean;
+  /** Barrel roll direction. `down` (default) rolls each glyph downward; `up` rolls it upward. */
+  direction?: RollDirection;
 }
 
 /**
@@ -18,11 +21,12 @@ export interface RollHoverTextProps extends Omit<HTMLAttributes<HTMLSpanElement>
  * this needs no state, no hooks, and no "use client": hover is browser-owned.
  *
  * Responds to its own :hover, an ancestor .group:hover, or the `active` prop.
- * Inherits all typography; compose it inside ButtonText/BodyText or a Button.
+ * `direction` flips the barrel: `down` (default) rolls each glyph downward, `up`
+ * upward. Inherits all typography; compose it inside ButtonText/BodyText or a Button.
  * <Button className="group"><ButtonText><RollHoverText>Deploy now</RollHoverText></ButtonText></Button>
  */
 const RollHoverText = forwardRef<HTMLSpanElement, RollHoverTextProps>(
-  ({ children, active, className, ...props }, ref) => {
+  ({ children, active, className, direction = RollDirection.down, style, ...props }, ref) => {
     // Split words from whitespace runs so spaces render as plain text between
     // word wrappers — only glyphs get cells. The char index runs continuously
     // across the whole string so the wave sweeps the full phrase, not each word.
@@ -34,6 +38,7 @@ const RollHoverText = forwardRef<HTMLSpanElement, RollHoverTextProps>(
         aria-label={children}
         data-active={active ? "true" : undefined}
         className={cn("ds-roll-hover", className)}
+        style={{ "--ds-roll-dir": direction === RollDirection.up ? -1 : 1, ...style } as CSSProperties}
         {...props}
       >
         {children.split(/(\s+)/).map((segment, segmentIndex) => {
