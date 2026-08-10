@@ -39,9 +39,9 @@
   ],
   "scripts": {
     "generate-icon-exports": "node scripts/generate-icon-exports.mjs",
-    "prep-release:patch": "npm version patch && npm run build",
-    "prep-release:major": "npm version major && npm run build",
-    "prep-release:minor": "npm version minor && npm run build",
+    "prep-release:patch": "npm version patch && npm run build && git push --follow-tags",
+    "prep-release:major": "npm version major && npm run build && git push --follow-tags",
+    "prep-release:minor": "npm version minor && npm run build && git push --follow-tags",
     "sync-tokens": "node scripts/sync-theme.mjs",
     "build:js": "tsup",
     "build:css": "tailwindcss -i src/styles/index.css -o dist/styles.css && npm run copy-theme",
