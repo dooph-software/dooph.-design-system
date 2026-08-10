@@ -102,6 +102,8 @@
   --ui-color-border-secondary: #dfdfdf;
   --ui-color-border-popovers: #ebebeb;
   --ui-color-border-focus: var(--ui-color-brand-border);
+  /* CTAButton padded outline ring (primary variant only) */
+  --ui-color-border-cta: rgba(56, 56, 56, 0.5);
   --ui-color-trigger-border-hover: #b4b4b4;
   --ui-color-trigger-border-error-focus: var(--ui-color-danger-border);
 
@@ -243,6 +245,7 @@
   /* defaults to hover shadow — kept as a separate token for manual override */
   --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.2);
   --ui-shadow-menu: 0 1px 4px 0 rgba(56, 56, 56, 0.15);
+  --ui-shadow-cta: 0 1px 2px rgba(56, 56, 56, 0.15);
   --ui-shadow-focus-brand: 0 0 0 4px var(--ui-color-focus-ring-brand);
   --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
 
@@ -251,6 +254,18 @@
   --ui-min-w-menu: 160px;
   --ui-min-w-menu-action: 144px;
   --ui-min-w-menu-complex: 324px;
+
+  /* ── CTAButton ───────────────────────────────────────────────────────── */
+
+  --ui-text-cta-standard: 24px;
+  --ui-text-cta-big: 28px;
+  --ui-size-cta-chip-standard: 46px;
+  --ui-size-cta-chip-big: 60px;
+  --ui-size-cta-icon: 20px;
+  --ui-min-w-cta-content-standard: 330px;
+  --ui-min-w-cta-content-big: 350px;
+  --ui-min-w-cta-pill-big: 370px;
+  --ui-spacing-cta-content-big: 60px;
 
   /* ── Disabled ────────────────────────────────────────────────────────── */
 
@@ -303,6 +318,7 @@
   --ui-color-border-primary: #333437;
   --ui-color-border-secondary: #3e3f42;
   --ui-color-border-popovers: #36363b;
+  --ui-color-border-cta: rgba(255, 255, 255, 0.35);
   --ui-color-trigger-border-hover: #3a3b3f;
 
   --ui-color-text: #ffffff;
@@ -318,6 +334,7 @@
   --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.85);
   --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.85);
   --ui-shadow-menu: 0 2px 8px rgba(0, 0, 0, 0.7);
+  --ui-shadow-cta: 0 1px 2px rgba(0, 0, 0, 0.65);
 
   --ui-opacity-disabled: 0.5;
   --ui-size-checkbox: 18px;

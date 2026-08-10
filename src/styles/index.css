@@ -69,6 +69,7 @@
   --color-border-secondary: var(--ui-color-border-secondary);
   --color-border-popovers: var(--ui-color-border-popovers);
   --color-border-focus: var(--ui-color-border-focus);
+  --color-border-cta: var(--ui-color-border-cta);
   --color-trigger-border-hover: var(--ui-color-trigger-border-hover);
   --color-trigger-border-error-focus: var(--ui-color-trigger-border-error-focus);
   --color-text: var(--ui-color-text);
@@ -107,8 +108,11 @@
   --shadow-button-hover: var(--ui-shadow-button-hover);
   --shadow-button-active: var(--ui-shadow-button-active);
   --shadow-menu: var(--ui-shadow-menu);
+  --shadow-cta: var(--ui-shadow-cta);
   --shadow-focus-brand: var(--ui-shadow-focus-brand);
   --shadow-focus-primary: var(--ui-shadow-focus-primary);
+  --text-cta-standard: var(--ui-text-cta-standard);
+  --text-cta-big: var(--ui-text-cta-big);
 
   /* Focus ring with error */
   --shadow-focus-error: 0 0 0 4px var(--ui-color-focus-ring-error);

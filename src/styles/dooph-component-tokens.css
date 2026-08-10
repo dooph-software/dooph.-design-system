@@ -175,6 +175,42 @@
     min-width: var(--ds-menu-min-w, var(--ui-min-w-menu));
   }
 
+  /* CTAButton — geometry + pill drop-shadow (filter so the round pill edge softens). */
+  .ds-drop-shadow-cta {
+    filter: drop-shadow(var(--ui-shadow-cta));
+  }
+
+  .ds-size-cta-chip-standard {
+    width: var(--ui-size-cta-chip-standard);
+    height: var(--ui-size-cta-chip-standard);
+  }
+
+  .ds-size-cta-chip-big {
+    width: var(--ui-size-cta-chip-big);
+    height: var(--ui-size-cta-chip-big);
+  }
+
+  .ds-size-cta-icon {
+    width: var(--ui-size-cta-icon);
+    height: var(--ui-size-cta-icon);
+  }
+
+  .ds-min-w-cta-content-standard {
+    min-width: var(--ui-min-w-cta-content-standard);
+  }
+
+  .ds-min-w-cta-content-big {
+    min-width: var(--ui-min-w-cta-content-big);
+  }
+
+  .ds-min-w-cta-pill-big {
+    min-width: var(--ui-min-w-cta-pill-big);
+  }
+
+  .ds-gap-cta-content-big {
+    gap: var(--ui-spacing-cta-content-big);
+  }
+
   .ds-px-ui-sm {
     padding-inline: var(--ui-spacing-sm);
   }

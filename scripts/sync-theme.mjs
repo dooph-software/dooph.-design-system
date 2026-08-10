@@ -93,6 +93,14 @@ const EXCLUDED = new Set([
   "ui-min-w-menu",
   "ui-min-w-menu-action",
   "ui-min-w-menu-complex",
+  // CTAButton geometry — exposed via ds-* helpers
+  "ui-size-cta-chip-standard",
+  "ui-size-cta-chip-big",
+  "ui-size-cta-icon",
+  "ui-min-w-cta-content-standard",
+  "ui-min-w-cta-content-big",
+  "ui-min-w-cta-pill-big",
+  "ui-spacing-cta-content-big",
   // Opacity — used as var() in arbitrary Tailwind values
   "ui-opacity-disabled",
   // Focus ring colors — only used inside shadow values
