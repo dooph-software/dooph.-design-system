@@ -139,9 +139,13 @@
 
   /* Text underline link wipe (UnderlineLinkText). On hover the line sweeps out
    * to the right then redraws in from the left. Thickness/offset are in em so the
-   * underline scales proportionally with the text it decorates. */
+   * underline scales with the text. The line is positioned at
+   * `calc(1em + offset)` from the top of each line box — just under the em
+   * square, like a native text-decoration underline — rather than at the bottom
+   * of the line box (which drifts with leading). Positive offset pushes further
+   * down; 0 sits at the em-square bottom; negative pulls into the glyphs. */
   --ui-underline-link-thickness: 0.08em;
-  --ui-underline-link-offset: 0.12em;
+  --ui-underline-link-offset: 0.05em;
   --ui-underline-link-duration: 600ms;
   --ui-underline-link-ease: cubic-bezier(0.32, 0.72, 0, 1);
 

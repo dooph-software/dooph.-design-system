@@ -15,11 +15,11 @@ const meta = {
         component:
           "A sliding underline link decoration. The underline is present at rest; on hover it " +
           "wipes out to the right and immediately redraws in from the left. The line is a " +
-          "`currentColor` gradient painted into `background` (not `text-decoration` or a " +
-          "pseudo-element), so it inherits the child's color, survives across line wraps, and never " +
-          "clips descenders. Triggers on its own `:hover`, an ancestor `.group:hover`, or the " +
-          "`active` prop. Tune via `--ui-underline-link-thickness` / `--ui-underline-link-offset` / " +
-          "`--ui-underline-link-duration` / `--ui-underline-link-ease`.",
+          "`currentColor` gradient painted into `background`, so it tracks this element's own " +
+          "`color` — including hover changes on an ancestor like TextLink. Put color on " +
+          "UnderlineLinkText or above (not on a child). Positioned at `1em + offset` so it sits " +
+          "like a native text-decoration underline. Tune via `thickness` / `offset` or the " +
+          "`--ui-underline-link-*` tokens.",
       },
     },
   },
@@ -46,7 +46,7 @@ export const Thickness: Story = {
       description: {
         story:
           "`thickness` sets the underline stroke weight — a number is px, or pass any CSS length " +
-          "(e.g. `\"0.15em\"`). Hover to sweep; move away to watch it reverse back out.",
+          "(e.g. `\"0.15em\"`).",
       },
     },
   },
@@ -68,13 +68,49 @@ export const Thickness: Story = {
   ),
 };
 
-export const InTextLink: Story = {
-  name: "In TextLink",
+export const Offset: Story = {
+  name: "Gap under text (offset prop)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`offset` is the distance below the em-square bottom. `0` sits flush at the em bottom; " +
+          "negative pulls into the glyphs; larger positive values push further down.",
+      },
+    },
+  },
   render: () => (
-    <TextLink asChild>
-      <a href="#">
-        <UnderlineLinkText>View the changelog</UnderlineLinkText>
-      </a>
+    <div className="flex flex-col items-start gap-4">
+      <BodyText>
+        <UnderlineLinkText offset={0}>offset 0</UnderlineLinkText>
+      </BodyText>
+      <BodyText>
+        <UnderlineLinkText>Default token</UnderlineLinkText>
+      </BodyText>
+      <BodyText>
+        <UnderlineLinkText offset="0.2em">offset 0.2em</UnderlineLinkText>
+      </BodyText>
+      <BodyText>
+        <UnderlineLinkText offset="-0.05em">offset -0.05em (into glyphs)</UnderlineLinkText>
+      </BodyText>
+    </div>
+  ),
+};
+
+export const InTextLink: Story = {
+  name: "In TextLink (inherits hover color)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Color lives on TextLink (the ancestor). UnderlineLinkText uses `currentColor`, so the " +
+          "underline tracks TextLink's ghost → active color change on hover with no color prop.",
+      },
+    },
+  },
+  render: () => (
+    <TextLink href="#">
+      <UnderlineLinkText>View the changelog</UnderlineLinkText>
     </TextLink>
   ),
 };

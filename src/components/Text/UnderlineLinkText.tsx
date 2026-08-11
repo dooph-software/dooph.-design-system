@@ -9,6 +9,13 @@ export interface UnderlineLinkTextProps extends HTMLAttributes<HTMLSpanElement> 
    * `"0.1em"`, `"2px"`) passes through. Defaults to `--ui-underline-link-thickness`.
    */
   thickness?: string | number;
+  /**
+   * Distance of the underline below the em-square bottom. A number is px; any
+   * CSS length passes through. Positive pushes further down, `0` sits at the
+   * em-square bottom, negative pulls into the glyphs. Defaults to
+   * `--ui-underline-link-offset`.
+   */
+  offset?: string | number;
 }
 
 const toLength = (value: string | number) =>
@@ -19,20 +26,21 @@ const toLength = (value: string | number) =>
  * present at rest; on hover it wipes out to the right and immediately redraws in
  * from the left (a single-hover, two-phase sweep).
  *
- * The line is a `currentColor` gradient painted into `background`, not a
- * pseudo-element or `text-decoration`, so it inherits the child's text color,
- * survives across line wraps, and never clips descenders. The motion is a
- * `@keyframes` sweep (not a transition) because it is two-phase — out-right then
- * in-left — which a single transition cannot express.
+ * The line is a `currentColor` gradient painted into `background`, so it tracks
+ * this element's own `color` — including hover/active changes on this element or
+ * an ancestor (e.g. TextLink). Put the color on UnderlineLinkText or above; a
+ * child that sets its own text color will paint the glyphs but not the underline
+ * (CSS inheritance only flows downward). No color prop is needed.
  *
- * Wraps a text child the same way ShimmerText/RollHoverText do; it owns only the
- * underline, so the child keeps its own typography and color. Stroke weight is
- * tunable via the `thickness` prop.
+ * Positioned at `1em + offset` from the top of each line box so it sits snug
+ * under the text like a native `text-decoration` underline, independent of
+ * leading. Tune with `thickness` / `offset`.
+ *
  * Responds to its own :hover, an ancestor .group:hover, or the `active` prop.
- * <TextLink asChild><a href="…"><UnderlineLinkText><BodyText>Changelog</BodyText></UnderlineLinkText></a></TextLink>
+ * <TextLink><UnderlineLinkText>Changelog</UnderlineLinkText></TextLink>
  */
 const UnderlineLinkText = forwardRef<HTMLSpanElement, UnderlineLinkTextProps>(
-  ({ active, thickness, className, style, ...props }, ref) => (
+  ({ active, thickness, offset, className, style, ...props }, ref) => (
     <span
       ref={ref}
       data-active={active ? "true" : undefined}
@@ -41,6 +49,9 @@ const UnderlineLinkText = forwardRef<HTMLSpanElement, UnderlineLinkTextProps>(
         {
           ...(thickness != null
             ? { "--ds-underline-thickness": toLength(thickness) }
+            : {}),
+          ...(offset != null
+            ? { "--ds-underline-offset": toLength(offset) }
             : {}),
           ...style,
         } as CSSProperties

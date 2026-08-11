@@ -325,18 +325,26 @@
 
   /* UnderlineLinkText — a "sliding underline". The line is a currentColor
    * gradient in background (not text-decoration or a pseudo-element) so it
-   * inherits the child's color, survives line wraps, and never clips descenders.
-   * At rest it is a full, left-anchored underline. Stroke weight is the
-   * `--ds-underline-thickness` override (set by the `thickness` prop) falling
-   * back to the token. On hover it runs a one-shot two-phase sweep — out to the
-   * right, then back in from the left — which needs @keyframes because a single
-   * transition cannot reverse the anchor mid-motion. */
+   * tracks the element's own `color` — including hover/active changes on this
+   * element or an ancestor. Color must live on UnderlineLinkText or above; a
+   * child that sets its own text color will not recolor the underline.
+   *
+   * Position is `calc(1em + offset)` from the top of each line box (with
+   * box-decoration-break: clone so wrapped lines each get their own line), which
+   * sits just under the em square like a native text-decoration underline —
+   * independent of leading. Stroke weight is `--ds-underline-thickness` (from the
+   * `thickness` prop) falling back to the token; offset is likewise
+   * `--ds-underline-offset` → token. On hover it runs a one-shot two-phase sweep
+   * — out to the right, then back in from the left. */
   .ds-underline-link {
     background-image: linear-gradient(currentColor, currentColor);
     background-repeat: no-repeat;
-    background-position: 0% 100%;
+    /* Longhands so the wipe keyframes can retarget only x without resetting y. */
+    background-position-x: 0%;
+    background-position-y: calc(1em + var(--ds-underline-offset, var(--ui-underline-link-offset)));
     background-size: 100% var(--ds-underline-thickness, var(--ui-underline-link-thickness));
-    padding-bottom: var(--ui-underline-link-offset);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
   }
   .ds-underline-link:hover,
   .group:hover .ds-underline-link,
