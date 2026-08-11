@@ -326,14 +326,16 @@
   /* UnderlineLinkText — a "sliding underline". The line is a currentColor
    * gradient in background (not text-decoration or a pseudo-element) so it
    * inherits the child's color, survives line wraps, and never clips descenders.
-   * At rest it is a full, left-anchored underline. On hover it runs a one-shot
-   * two-phase sweep — out to the right, then back in from the left — which needs
-   * @keyframes because a single transition cannot reverse the anchor mid-motion. */
+   * At rest it is a full, left-anchored underline. Stroke weight is the
+   * `--ds-underline-thickness` override (set by the `thickness` prop) falling
+   * back to the token. On hover it runs a one-shot two-phase sweep — out to the
+   * right, then back in from the left — which needs @keyframes because a single
+   * transition cannot reverse the anchor mid-motion. */
   .ds-underline-link {
     background-image: linear-gradient(currentColor, currentColor);
     background-repeat: no-repeat;
     background-position: 0% 100%;
-    background-size: 100% var(--ui-underline-link-thickness);
+    background-size: 100% var(--ds-underline-thickness, var(--ui-underline-link-thickness));
     padding-bottom: var(--ui-underline-link-offset);
   }
   .ds-underline-link:hover,
@@ -388,8 +390,8 @@
  * the resting style anchors left, but at full width both are identical, so the
  * animation starts without a jump. */
 @keyframes ds-underline-wipe {
-  0%     { background-size: 100% var(--ui-underline-link-thickness); background-position-x: 100%; }
-  50%    { background-size: 0% var(--ui-underline-link-thickness);   background-position-x: 100%; }
-  50.01% { background-size: 0% var(--ui-underline-link-thickness);   background-position-x: 0%; }
-  100%   { background-size: 100% var(--ui-underline-link-thickness); background-position-x: 0%; }
+  0%     { background-size: 100% var(--ds-underline-thickness, var(--ui-underline-link-thickness)); background-position-x: 100%; }
+  50%    { background-size: 0% var(--ds-underline-thickness, var(--ui-underline-link-thickness));   background-position-x: 100%; }
+  50.01% { background-size: 0% var(--ds-underline-thickness, var(--ui-underline-link-thickness));   background-position-x: 0%; }
+  100%   { background-size: 100% var(--ds-underline-thickness, var(--ui-underline-link-thickness)); background-position-x: 0%; }
 }

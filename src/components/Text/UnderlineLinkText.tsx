@@ -1,10 +1,18 @@
-import { forwardRef, type HTMLAttributes } from "react";
+import { forwardRef, type CSSProperties, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
 
 export interface UnderlineLinkTextProps extends HTMLAttributes<HTMLSpanElement> {
   /** Force the wipe regardless of hover (touch, focus-visible, programmatic). */
   active?: boolean;
+  /**
+   * Underline stroke weight. A number is treated as px; any CSS length (e.g.
+   * `"0.1em"`, `"2px"`) passes through. Defaults to `--ui-underline-link-thickness`.
+   */
+  thickness?: string | number;
 }
+
+const toLength = (value: string | number) =>
+  typeof value === "number" ? `${value}px` : value;
 
 /**
  * UnderlineLinkText — a "sliding underline" link decoration. The underline is
@@ -18,16 +26,25 @@ export interface UnderlineLinkTextProps extends HTMLAttributes<HTMLSpanElement> 
  * in-left — which a single transition cannot express.
  *
  * Wraps a text child the same way ShimmerText/RollHoverText do; it owns only the
- * underline, so the child keeps its own typography and color.
+ * underline, so the child keeps its own typography and color. Stroke weight is
+ * tunable via the `thickness` prop.
  * Responds to its own :hover, an ancestor .group:hover, or the `active` prop.
  * <TextLink asChild><a href="…"><UnderlineLinkText><BodyText>Changelog</BodyText></UnderlineLinkText></a></TextLink>
  */
 const UnderlineLinkText = forwardRef<HTMLSpanElement, UnderlineLinkTextProps>(
-  ({ active, className, ...props }, ref) => (
+  ({ active, thickness, className, style, ...props }, ref) => (
     <span
       ref={ref}
       data-active={active ? "true" : undefined}
       className={cn("ds-underline-link", className)}
+      style={
+        {
+          ...(thickness != null
+            ? { "--ds-underline-thickness": toLength(thickness) }
+            : {}),
+          ...style,
+        } as CSSProperties
+      }
       {...props}
     />
   ),

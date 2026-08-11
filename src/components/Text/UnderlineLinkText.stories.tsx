@@ -39,6 +39,35 @@ export const Standalone: Story = {
   ),
 };
 
+export const Thickness: Story = {
+  name: "Stroke weight (thickness prop)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "`thickness` sets the underline stroke weight — a number is px, or pass any CSS length " +
+          "(e.g. `\"0.15em\"`). Hover to sweep; move away to watch it reverse back out.",
+      },
+    },
+  },
+  render: () => (
+    <div className="flex flex-col items-start gap-4">
+      <BodyText>
+        <UnderlineLinkText>Default</UnderlineLinkText>
+      </BodyText>
+      <BodyText>
+        <UnderlineLinkText thickness={2}>2px</UnderlineLinkText>
+      </BodyText>
+      <BodyText>
+        <UnderlineLinkText thickness={4}>4px</UnderlineLinkText>
+      </BodyText>
+      <BodyText>
+        <UnderlineLinkText thickness="0.2em">0.2em (scales with text)</UnderlineLinkText>
+      </BodyText>
+    </div>
+  ),
+};
+
 export const InTextLink: Story = {
   name: "In TextLink",
   render: () => (
