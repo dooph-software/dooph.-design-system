@@ -7,9 +7,10 @@
  *
  * ## behavior
  * - Root `variant` sets `--ds-menu-min-w` via context; content can override.
- * - Items use ghost hover surfaces; `DropdownMenuItemVariant.danger` keeps
- *   those surfaces but paints error-secondary on hover and error-primary on
- *   active/highlighted press.
+ * - Items use ghost button surfaces (`ghost-hover` / `ghost-active`). Content
+ *   is always `ghost-fg-active` (primary), never the faded `ghost-fg` rest
+ *   tone — except `DropdownMenuItemVariant.danger`, which paints
+ *   error-secondary on hover and error-primary on active.
  * - Default `modal={false}`; portals on by default with an escape hatch.
  *
  * ## constraints
@@ -181,7 +182,7 @@ const DropdownMenuContent = forwardRef<
 DropdownMenuContent.displayName = "DropdownMenuContent";
 
 const itemBase =
-  "relative flex h-button w-full cursor-pointer select-none items-center rounded-tight ds-pl-ui-rg ds-pr-ui-sm ds-radix-data-disabled gap-[10px] text-style-body outline-none transition-colors duration-100";
+  "relative flex h-button w-full cursor-pointer select-none items-center rounded-tight ds-pl-ui-rg ds-pr-ui-sm ds-radix-data-disabled gap-[10px] text-style-body text-ghost-fg-active outline-none transition-colors duration-100 hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active";
 
 const DropdownMenuItem = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Item>,
@@ -193,17 +194,10 @@ const DropdownMenuItem = forwardRef<
     ref={ref}
     className={cn(
       itemBase,
-      "hover:bg-ghost-hover data-highlighted:bg-ghost-hover",
-      variant === DropdownMenuItemVariant.danger
-        ? [
-            "text-ghost-fg",
-            "hover:text-error-secondary data-highlighted:text-error-secondary",
-            "active:text-error-primary data-highlighted:active:text-error-primary",
-          ]
-        : [
-            "text-ghost-fg-active",
-            "hover:text-ghost-fg-active data-highlighted:text-ghost-fg-active",
-          ],
+      variant === DropdownMenuItemVariant.danger && [
+        "hover:text-error-secondary data-highlighted:text-error-secondary",
+        "active:text-error-primary data-highlighted:active:text-error-primary",
+      ],
       className,
     )}
     {...props}
@@ -218,12 +212,7 @@ const DropdownMenuCheckboxItem = forwardRef<
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     checked={checked}
-    className={cn(
-      itemBase,
-      "hover:bg-ghost-hover hover:text-ghost-fg-active",
-      "data-highlighted:bg-ghost-hover data-highlighted:text-ghost-fg-active",
-      className,
-    )}
+    className={cn(itemBase, className)}
     {...props}
   >
     <span className="flex flex-1">{children}</span>
