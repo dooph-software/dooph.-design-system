@@ -53,10 +53,9 @@ Run `npm run sync-tokens` after token edits.
 - New `DropdownMenuSearch` (Figma 11:1296): slim row — search icon, input, optional Esc hotkey. Not baked into complex content; compose optionally. Stories for complex with/without search.
 
 ## RollingMoneyText
-- Children string (US money: `$1,234.56`).
-- Per-digit 2D vertical roll on change (snappy cash-register; no 3D; reduced-motion → instant).
-- `smallCents?: boolean` requires `smallCentsComponent`; split on last `.`; cents top-right via that component, also rolling.
-- Pattern siblings: `RollChangeText` / `ShimmerText`. Frontmatter comment. Stories.
+Superseded in full by `2026-08-26-rolling-money-text-design.md`. Summary: a
+transition-driven 0–9 digit wheel keyed by place value, `smallCents` +
+`smallCentsComponent` enforced by a discriminated union, stagger off by default.
 
 ## Verification code
 - `CodeDigitInput` — 46px, `rounded-tight`; states empty/filled/focused/error/disabled.

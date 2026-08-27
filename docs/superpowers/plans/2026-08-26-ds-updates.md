@@ -39,7 +39,7 @@
 - [ ] Slim search component + complex stories
 
 ### Task 5: RollingMoneyText
-- [ ] Component + CSS keyframes/tokens if needed + stories + export
+- [x] Component + CSS keyframes/tokens if needed + stories + export
 
 ### Task 6: Verification code family
 - [ ] CodeDigitInput + VerificationCodeInput + stories (incl. prerolled section) + export

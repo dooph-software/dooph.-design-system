@@ -138,9 +138,13 @@ each scope: `int:0`, `int:1`, `int:2`, `cents:0`, `cents:1`.
   frame (a `requestAnimationFrame` after commit, so the browser has painted the
   `0` and the transition has a from-state). `int:3` above rolls 0→1, like a
   register wheel turning off zero.
-- **A departing wheel rolls to `0`, then unmounts** on `transitionend`, with a
-  `--ui-rolling-money-duration`-length timeout as a fallback, since
-  `transitionend` does not fire when the wheel was already showing `0`.
+- **A departing wheel rolls to `0` and fades out simultaneously**, unmounting on
+  the *opacity* `transitionend`. Fading is what makes this safe: a wheel resting
+  at `0` would read as a leading zero if cleanup were ever late, and opacity
+  always transitions, so the event always fires — transform alone would not fire
+  for a wheel that was already showing `0`. A 600ms timeout backstops it, and
+  `reconcileWheels` drops any in-flight exit on the next value change, so a
+  stuck wheel self-heals.
 
 ## 3. US format only
 
