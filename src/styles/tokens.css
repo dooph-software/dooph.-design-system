@@ -139,18 +139,23 @@
   /* Rolling money digits (RollingMoneyText) — 2D cash-register snap, not 3D.
    *
    * `stagger` defaults to 0ms: every wheel starts and lands together, one snap
-   * for the whole figure. It stays a token so a consumer can dial in a
-   * right-to-left cascade (ones place leads) without patching the package.
+   * for the whole figure — true when no wheel is entering. An entering wheel
+   * is retargeted two nested rAFs after the surviving wheels' transition
+   * already started, so a value change that adds a digit lands that wheel
+   * ~2 frames behind the rest even at the 0ms default. It stays a token so a
+   * consumer can dial in a right-to-left cascade (ones place leads) without
+   * patching the package.
    *
    * `cents-rise` / `cents-gap` are in em of the PARENT — the dollars — not of
    * the cents. `smallCentsComponent` brings its own absolute size from its role
    * class, so the component cannot see how large the cents are; expressing the
    * offset against the dollars is the only stable reference. The default is
-   * tuned for TitleText + LabelText. */
+   * tuned for TitleText + LabelText, top-aligning the cents box near the
+   * dollars' cap height. */
   --ui-rolling-money-duration: 180ms;
   --ui-rolling-money-stagger: 0ms;
   --ui-rolling-money-ease: cubic-bezier(0.32, 0.72, 0, 1);
-  --ui-rolling-money-cents-rise: 0.42em;
+  --ui-rolling-money-cents-rise: 0.75em;
   --ui-rolling-money-cents-gap: 0.04em;
 
   /* Text underline link wipe (UnderlineLinkText). On hover the line sweeps out

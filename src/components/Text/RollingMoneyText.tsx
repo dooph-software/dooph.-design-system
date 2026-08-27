@@ -70,12 +70,19 @@ export type RollingMoneyTextProps =
 
 const DIGIT_COLUMN = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-/* Generous relative to the 180ms token default. Usually a backstop — an
- * exiting wheel is normally removed by its own `transitionend` — but under
- * `prefers-reduced-motion: reduce` index.css sets `transition: none` on
- * `[data-exiting]`, so no `transitionend` ever fires there and this timer is
- * the ONLY thing that removes the wheel on that path. Any survivor is also
- * dropped by the next reconcile regardless. */
+/* Generous relative to the 180ms token default, and a backstop only — an
+ * exiting wheel is normally removed by its own `transitionend` on both the
+ * normal-motion and reduced-motion paths (index.css keeps the opacity fade
+ * running under `prefers-reduced-motion: reduce` specifically so that fires).
+ * Any survivor is also dropped by the next reconcile regardless.
+ *
+ * This constant is a hardcoded motion timing whose sibling
+ * `--ui-rolling-money-duration` is a token. It is NOT derived from that
+ * token: a consumer who raises `--ui-rolling-money-duration` past 600ms will
+ * get exiting wheels culled mid-fade by this timer before their transition
+ * completes. That is a known limitation, not a bug to silently work around —
+ * fixing it means reading the token's computed value in JS, which is a
+ * bigger change than this constant is worth today. */
 const EXIT_FALLBACK_MS = 600;
 
 function Wheel({
@@ -154,6 +161,33 @@ function useWheels(digits: string[]) {
     prevRef.current = joined;
 
     const { next, pending } = reconcileWheels(wheels, joined.split(""));
+
+    /* Under `prefers-reduced-motion: reduce` there is no transition to give
+     * the "mount at 0, retarget next frame" odometer behavior any meaning —
+     * it would just be a literal 0 flashed in that place for a couple of
+     * frames (e.g. "$982.10" -> "$12,450.00" briefly reading "$00,450.00").
+     * Skip the rAF choreography entirely and commit the real digit
+     * synchronously. Guarded for environments without `matchMedia` (older
+     * browsers, non-browser SSR-adjacent contexts). */
+    const prefersReducedMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+      const settled = next.map((w) =>
+        pending.has(w.place) ? { ...w, digit: pending.get(w.place)! } : w,
+      );
+      setWheels(settled);
+
+      if (settled.every((w) => !w.exiting)) return;
+
+      const timer = window.setTimeout(
+        () => setWheels((cur) => (cur.some((w) => w.exiting) ? cur.filter((w) => !w.exiting) : cur)),
+        EXIT_FALLBACK_MS,
+      );
+      return () => window.clearTimeout(timer);
+    }
+
     setWheels(next);
 
     /* Retarget brand-new wheels on the NEXT frame. They mount showing 0; the
@@ -168,17 +202,29 @@ function useWheels(digits: string[]) {
     if (pending.size > 0) {
       raf = requestAnimationFrame(() => {
         raf = requestAnimationFrame(() => {
-          setWheels((cur) =>
-            cur.map((w) =>
+          setWheels((cur) => {
+            if (![...pending.keys()].some((place) => cur.some((w) => w.place === place))) {
+              return cur;
+            }
+            return cur.map((w) =>
               pending.has(w.place) ? { ...w, digit: pending.get(w.place)! } : w,
-            ),
-          );
+            );
+          });
         });
       });
     }
 
+    if (next.every((w) => !w.exiting)) {
+      return () => {
+        if (raf) cancelAnimationFrame(raf);
+      };
+    }
+
     const timer = window.setTimeout(
-      () => setWheels((cur) => cur.filter((w) => !w.exiting)),
+      () =>
+        setWheels((cur) =>
+          cur.some((w) => w.exiting) ? cur.filter((w) => !w.exiting) : cur,
+        ),
       EXIT_FALLBACK_MS,
     );
 

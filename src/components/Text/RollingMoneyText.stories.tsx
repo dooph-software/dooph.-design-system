@@ -166,7 +166,8 @@ export const RoleScaling: Story = {
         </RollingMoneyText>
       </HeroText>
       <BodyText className="text-text-secondary">
-        Same cents role at two dollar sizes. The rise token is tuned for Title.
+        Same cents role at two dollar sizes.{" "}
+        --ui-rolling-money-cents-rise is tuned for Title.
       </BodyText>
     </div>
   ),

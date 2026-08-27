@@ -133,6 +133,7 @@ export function reconcileWheels(
  * off the left edge does not shift the grouping of the live digits.
  */
 export function separatorBefore(wheels: WheelState[], index: number): boolean {
+  if (index < 0 || index >= wheels.length) return false;
   const live = wheels.reduce((acc, w) => acc + (w.exiting ? 0 : 1), 0);
   let seen = 0;
   for (let i = 0; i < index; i++) {

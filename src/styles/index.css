@@ -412,6 +412,10 @@
     position: absolute;
     inset: 0;
     overflow: hidden;
+    /* aria-hidden, not display:none — selecting the figure would otherwise
+     * pick up all ten glyphs per wheel ("0123456789...") alongside the real
+     * value from the sr-only span. */
+    user-select: none;
   }
   .ds-rolling-money-col {
     display: block;
@@ -447,8 +451,17 @@
     transform: translateY(calc(-1 * var(--ui-rolling-money-cents-rise)));
   }
   @media (prefers-reduced-motion: reduce) {
-    .ds-rolling-money-col,
-    .ds-rolling-money-wheel[data-exiting] {
+    /* Suppress only the roll itself (a transform). The exit fade on
+     * `[data-exiting]` is deliberately LEFT RUNNING here — do not add it to
+     * this selector. Its `transitionend` (on `opacity`) is what Wheel's
+     * onTransitionEnd handler listens for to unmount an exiting wheel;
+     * killing that transition too would starve the handler and leave
+     * cleanup to the 600ms EXIT_FALLBACK_MS backstop, which under reduced
+     * motion would sit as dead blank digit-width(s) for 600ms instead of
+     * the normal ~180ms. The opacity fade is also the standard
+     * reduced-motion substitute for the roll, so keeping it is correct on
+     * both counts. */
+    .ds-rolling-money-col {
       transition: none;
       transition-delay: 0ms;
     }

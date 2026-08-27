@@ -126,6 +126,19 @@ fix for defect 2, and the reason commas are not part of the cell model.
 Wheels are keyed by **place value, not string index**, counting rightward within
 each scope: `int:0`, `int:1`, `int:2`, `cents:0`, `cents:1`.
 
+> **Known spec defect (recorded, not fixed):** "counting rightward within each
+> scope" is correct for the integer scope but wrong for cents, which is
+> left-anchored (cents grow to the right, e.g. `.5` → `.50`). Counting
+> rightward from `cents:0` means the *rendered* rightmost cents digit is not
+> the ones-value of a two-decimal figure the way `int:0` is the ones digit —
+> on `.5` → `.50` the visible `5` (currently `cents:0`) rolls to `0` while a
+> new wheel mounts to its *left* and rolls `0→5`, which is backwards for a
+> left-anchored group. The resting output is still correct in the universal
+> 2-decimal case, so this is harmless in practice; only the transition
+> identity is nonsense for the general case. Fixing it means keying the cents
+> scope by left-anchored position instead of place value — a real API/model
+> change that deserves its own decision, not a drive-by patch here.
+
 `$982.10 → $1,240.00`:
 
 | | `int:3` | `int:2` | `int:1` | `int:0` | `cents:1` | `cents:0` |
