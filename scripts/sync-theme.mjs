@@ -90,9 +90,12 @@ const EXCLUDED = new Set([
   // Checkbox / code digit — exposed via custom @layer utilities
   "ui-size-checkbox",
   "ui-size-code-digit",
-  // Rolling money motion — CSS only
+  // Rolling money motion / cents offset — raw var() in @layer utilities only
   "ui-rolling-money-duration",
   "ui-rolling-money-stagger",
+  "ui-rolling-money-ease",
+  "ui-rolling-money-cents-rise",
+  "ui-rolling-money-cents-gap",
   // Tooltip widths — exposed via ds-* helpers
   "ui-width-tooltip-rich",
   "ui-min-w-tooltip-complex",
