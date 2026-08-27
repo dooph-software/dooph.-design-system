@@ -128,6 +128,7 @@ const createRoleText = (
 
 export const ButtonText = createRoleText(TextVariant.button, 'ButtonText');
 export const HeadingText = createRoleText(TextVariant.heading, 'HeadingText');
+export const SubheadingText = createRoleText(TextVariant.subheading, 'SubheadingText');
 export const HeroText = createRoleText(TextVariant.hero, 'HeroText');
 export const TitleText = createRoleText(TextVariant.title, 'TitleText');
 export const BodyText = createRoleText(TextVariant.body, 'BodyText');
@@ -135,6 +136,7 @@ export const LabelText = createRoleText(TextVariant.label, 'LabelText');
 
 export type ButtonTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
 export type HeadingTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
+export type SubheadingTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
 export type HeroTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
 export type TitleTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
 export type BodyTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;

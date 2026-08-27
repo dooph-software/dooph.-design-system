@@ -44,15 +44,8 @@
   --color-brand-border-active: var(--ui-color-brand-border-active);
   --color-brand-fg: var(--ui-color-brand-foreground);
   --color-brand-border-disabled: var(--ui-color-brand-border-disabled);
-  --color-danger: var(--ui-color-danger);
-  --color-danger-border: var(--ui-color-danger-border);
-  --color-danger-hover: var(--ui-color-danger-hover);
-  --color-danger-border-hover: var(--ui-color-danger-border-hover);
-  --color-danger-active: var(--ui-color-danger-active);
-  --color-danger-border-active: var(--ui-color-danger-border-active);
-  --color-danger-fg: var(--ui-color-danger-foreground);
-  --color-danger-disabled: var(--ui-color-danger-disabled);
-  --color-danger-border-disabled: var(--ui-color-danger-border-disabled);
+  --color-error-primary: var(--ui-color-error-primary);
+  --color-error-secondary: var(--ui-color-error-secondary);
   --color-ghost-fg: var(--ui-color-ghost-foreground);
   --color-ghost-hover: var(--ui-color-ghost-hover);
   --color-ghost-active: var(--ui-color-ghost-active);
@@ -90,6 +83,7 @@
   --font-hero: var(--ui-font-hero);
   --text-label: var(--ui-text-label);
   --text-body: var(--ui-text-body);
+  --text-subheading: var(--ui-text-subheading);
   --text-heading: var(--ui-text-heading);
   --text-title: var(--ui-text-title);
   --text-hero: var(--ui-text-hero);

@@ -57,6 +57,14 @@ export const Disabled: Story = {
   },
 };
 
+export const DisabledChecked: Story = {
+  args: {
+    checked: CheckboxChecked.checked,
+    disabled: true,
+    variant: CheckboxVariant.primary,
+  },
+};
+
 export const WithLabel: Story = {
   render: () => (
     <label className="flex items-center gap-2">

@@ -7,6 +7,7 @@ import {
   HeadingText,
   HeroText,
   LabelText,
+  SubheadingText,
   TitleText,
 } from './BaseText';
 import {
@@ -88,7 +89,7 @@ export const Roles: Story = {
   render: () => (
     <Section
       title="Roles"
-      note="The six pre-composed components. Each is BaseText with variant fixed; every default comes from --ui-* tokens."
+      note="The pre-composed role components. Each is BaseText with variant fixed; every default comes from --ui-* tokens."
     >
       <Row label="HeroText">
         <HeroText>{SAMPLE}</HeroText>
@@ -98,6 +99,9 @@ export const Roles: Story = {
       </Row>
       <Row label="HeadingText">
         <HeadingText>{SAMPLE}</HeadingText>
+      </Row>
+      <Row label="SubheadingText">
+        <SubheadingText>{SAMPLE}</SubheadingText>
       </Row>
       <Row label="BodyText">
         <BodyText>{SAMPLE}</BodyText>

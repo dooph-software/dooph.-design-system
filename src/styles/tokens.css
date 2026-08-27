@@ -26,8 +26,10 @@
   --ui-color-primary-active: #3d3d3d;
   --ui-color-primary-border-active: var(--ui-color-primary-active);
   --ui-color-primary-foreground: #ffffff;
-  --ui-color-primary-disabled: #5c5c5c;
-  --ui-color-primary-border-disabled: var(--ui-color-primary-disabled);
+  /* Disabled paints alias secondary so all solid buttons share one disabled look;
+   * token names stay so consumers can still override primary-disabled alone. */
+  --ui-color-primary-disabled: var(--ui-color-secondary-disabled);
+  --ui-color-primary-border-disabled: var(--ui-color-secondary-border-disabled);
 
   /* Secondary (light surface) — borders are distinct Figma literals */
   --ui-color-secondary: #fdfdfd;
@@ -50,16 +52,9 @@
   --ui-color-brand-foreground: #ffffff;
   --ui-color-brand-border-disabled: transparent;
 
-  /* Danger (Figma dangerButton — renamed from destructive in v3) */
-  --ui-color-danger: #ec5555;
-  --ui-color-danger-border: #ea3f3f;
-  --ui-color-danger-hover: #e05252;
-  --ui-color-danger-border-hover: #dc3c3c;
-  --ui-color-danger-active: #d04848;
-  --ui-color-danger-border-active: #ca3030;
-  --ui-color-danger-foreground: #161616; /* Figma: Text/primaryText */
-  --ui-color-danger-disabled: #ef9b9b;
-  --ui-color-danger-border-disabled: #ef9b9b;
+  /* Error (unified destructive palette — no .dark overrides yet) */
+  --ui-color-error-primary: #ea3f3f;
+  --ui-color-error-secondary: #ff5858;
 
   /* Ghost (no rest bg; hover/active are translucent overlays) */
   --ui-color-ghost-foreground: #4a4a4a;
@@ -105,7 +100,7 @@
   /* CTAButton padded outline ring (primary variant only) */
   --ui-color-border-cta: rgba(56, 56, 56, 0.5);
   --ui-color-trigger-border-hover: #b4b4b4;
-  --ui-color-trigger-border-error-focus: var(--ui-color-danger-border);
+  --ui-color-trigger-border-error-focus: var(--ui-color-error-primary);
 
   /* Text */
   --ui-color-text: #161616;
@@ -123,7 +118,11 @@
 
   /* Text shimmer (ShimmerText) */
   --ui-shimmer-base: var(--ui-color-text-tertiary);
-  --ui-shimmer-highlight: color-mix(in srgb, var(--ui-color-text-tertiary) 35%, transparent);
+  --ui-shimmer-highlight: color-mix(
+    in srgb,
+    var(--ui-color-text-tertiary) 35%,
+    transparent
+  );
 
   /* Text roll on hover (RollHoverText). The duration:stagger ratio (~1:14) is
    * what makes the letters read as one travelling wave instead of a metronome —
@@ -136,6 +135,10 @@
    * ratio is what governs how 3D the roll reads, and a px perspective would
    * make the same component subtle in a button and overdone in a hero. */
   --ui-roll-hover-perspective: 10em;
+
+  /* Rolling money digits (RollingMoneyText) — 2D cash-register snap, not 3D. */
+  --ui-rolling-money-duration: 180ms;
+  --ui-rolling-money-stagger: 28ms;
 
   /* Text underline link wipe (UnderlineLinkText). On hover the line sweeps out
    * to the right then redraws in from the left. Thickness/offset are in em so the
@@ -163,14 +166,16 @@
   /* Font sizes */
   --ui-text-label: 12px;
   --ui-text-body: 14px;
-  --ui-text-heading: 18px;
-  --ui-text-title: 23px;
-  --ui-text-hero: 36px;
+  --ui-text-subheading: 18px;
+  --ui-text-heading: 20px;
+  --ui-text-title: 40px;
+  --ui-text-hero: 55px;
 
   /* Font weights — by role */
   --ui-weight-body: 400;
   --ui-weight-button: 500;
   --ui-weight-label: 400;
+  --ui-weight-subheading: var(--ui-weight-heading);
   --ui-weight-heading: 600;
   --ui-weight-title: 700;
   --ui-weight-hero: 700;
@@ -196,6 +201,7 @@
   --ui-height-button: 38px;
   --ui-height-button-sm: 34px;
   --ui-size-checkbox: 18px;
+  --ui-size-code-digit: 46px;
 
   /* Loading spinner / progress indicator diameters */
   --ui-size-spinner-sm: 16px;
@@ -291,7 +297,8 @@
   --ui-color-primary-foreground: #000000;
   --ui-color-primary-hover: #f0f0f0;
   --ui-color-primary-active: #cdcdcd;
-  --ui-color-primary-disabled: #d8d8d8;
+  --ui-color-primary-disabled: var(--ui-color-secondary-disabled);
+  --ui-color-primary-border-disabled: var(--ui-color-secondary-border-disabled);
 
   --ui-color-secondary: #1d1d1f;
   --ui-color-secondary-foreground: #ffffff;
@@ -304,16 +311,6 @@
   --ui-color-secondary-border-disabled: #1f1f21;
 
   --ui-color-brand: #5a6f75;
-
-  --ui-color-danger: #e66f5f;
-  --ui-color-danger-hover: #e5614f;
-  --ui-color-danger-active: #e2432f;
-  --ui-color-danger-foreground: #ffffff;
-  --ui-color-danger-disabled: #9c655e;
-  --ui-color-danger-border: #d82a13;
-  --ui-color-danger-border-hover: #dd2f18;
-  --ui-color-danger-border-active: #b12814;
-  --ui-color-danger-border-disabled: #bd5547;
 
   --ui-color-ghost-hover: rgba(255, 255, 255, 0.04);
   --ui-color-ghost-active: rgba(255, 255, 255, 0.08);

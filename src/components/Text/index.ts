@@ -2,6 +2,7 @@ export {
   BaseText,
   ButtonText,
   HeadingText,
+  SubheadingText,
   HeroText,
   TitleText,
   BodyText,
@@ -12,6 +13,7 @@ export type {
   RoleTextProps,
   ButtonTextProps,
   HeadingTextProps,
+  SubheadingTextProps,
   HeroTextProps,
   TitleTextProps,
   BodyTextProps,
@@ -47,5 +49,7 @@ export { RollChangeText } from './RollChangeText';
 export type { RollChangeTextProps } from './RollChangeText';
 export { RollHoverText } from './RollHoverText';
 export type { RollHoverTextProps } from './RollHoverText';
+export { RollingMoneyText } from './RollingMoneyText';
+export type { RollingMoneyTextProps } from './RollingMoneyText';
 export { UnderlineLinkText } from './UnderlineLinkText';
 export type { UnderlineLinkTextProps } from './UnderlineLinkText';

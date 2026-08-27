@@ -17,6 +17,7 @@
 export const TextVariant = {
   button: 'button',
   heading: 'heading',
+  subheading: 'subheading',
   hero: 'hero',
   title: 'title',
   body: 'body',
@@ -53,6 +54,7 @@ export type Font = (typeof Fonts)[keyof typeof Fonts];
 export const FontSizes = {
   label: 'var(--ui-text-label)',
   body: 'var(--ui-text-body)',
+  subheading: 'var(--ui-text-subheading)',
   heading: 'var(--ui-text-heading)',
   title: 'var(--ui-text-title)',
   hero: 'var(--ui-text-hero)',
@@ -112,12 +114,14 @@ export const ROLE_AXIS_TOKEN: Partial<Record<TextVariant, string>> = {
   button: 'var(--ui-font-var-button)',
   body: 'var(--ui-font-var-body)',
   heading: 'var(--ui-font-var-heading)',
+  subheading: 'var(--ui-font-var-heading)',
 };
 
 /** Role → the class carrying its defaults (see index.css, `components` layer). */
 export const TEXT_VARIANT_CLASS: Record<TextVariant, string> = {
   button: 'text-style-button',
   heading: 'text-style-heading',
+  subheading: 'text-style-subheading',
   hero: 'text-style-hero',
   title: 'text-style-title',
   body: 'text-style-body',

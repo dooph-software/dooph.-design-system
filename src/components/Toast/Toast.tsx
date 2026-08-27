@@ -71,7 +71,7 @@ const toastRootVariants = cva(
         brand:
           "ds-toast-width-simple flex-row items-center gap-xxl border border-solid border-brand bg-brand py-2 pl-4 pr-2 text-brand-fg",
         error:
-          "ds-toast-width-simple flex-row items-center gap-xxl bg-danger py-2 pl-4 pr-2 text-text",
+          "ds-toast-width-simple flex-row items-center gap-xxl bg-error-secondary py-2 pl-4 pr-2 text-text",
         complex:
           "ds-toast-width-complex flex-col gap-md border border-solid border-border-popovers bg-modal-surface pb-3 pl-[14px] pr-3 pt-[14px] text-text",
       },

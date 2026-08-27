@@ -34,6 +34,7 @@ export * from './components/LoadingSpinner/constants';
 export * from './components/ProgressIndicator/ProgressIndicator';
 export * from './components/ProgressIndicator/constants';
 export * from './components/LinearProgressIndicator';
+export * from './components/VerificationCode';
 
 // Utilities
 export { cn } from './utils/cn';

@@ -16,17 +16,16 @@ import {
   CloverShape,
   CookieShape,
   GemShape,
-  PentagonShape,
   PuffShape,
-  Shapes,
   StarShape,
 } from "../Shapes";
+import { ShapeButtons } from "./constants";
 
 // ShapeButtons lives in ./constants — kept server-safe (no "use client") so RSC
 // code can read the enum values. Re-exported via index.ts.
 
 type ShapeButtonOwnProps = {
-  shape?: Shapes;
+  shape?: ShapeButtons;
   asChild?: boolean;
 };
 
@@ -42,10 +41,9 @@ const shapeComponents = {
   clover: CloverShape,
   cookie: CookieShape,
   gem: GemShape,
-  pentagon: PentagonShape,
   puff: PuffShape,
   star: StarShape,
-} satisfies Record<Shapes, ComponentType<ShapeComponentProps>>;
+} satisfies Record<ShapeButtons, ComponentType<ShapeComponentProps>>;
 
 export type ShapeButtonProps<TElement extends ElementType = "button"> =
   ShapeButtonOwnProps &
@@ -60,6 +58,7 @@ type ShapeButtonComponent = <TElement extends ElementType = "button">(
 /**
  * An icon button with an organic SVG shape background.
  * The shape fill and stroke follow secondary-button token states.
+ * Pentagon remains in `Shapes/` but is not offered on ShapeButton.
  *
  * @example
  * <ShapeButton shape={ShapeButtons.gem}>
@@ -68,11 +67,11 @@ type ShapeButtonComponent = <TElement extends ElementType = "button">(
  */
 const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
   (
-    { className, shape = "clover", asChild = false, children, ...props },
+    { className, shape = ShapeButtons.clover, asChild = false, children, ...props },
     ref,
   ) => {
     const Comp = (asChild ? Slot : "button") as ElementType;
-    const Shape = shapeComponents[shape as Shapes];
+    const Shape = shapeComponents[shape as ShapeButtons];
 
     return (
       <Comp

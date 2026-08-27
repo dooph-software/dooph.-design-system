@@ -1,5 +1,22 @@
 "use client";
 
+/*
+ * DropdownMenu — Radix menu primitives with width variants and composable
+ * sections. Complex menus stay free-form: search is an optional sibling
+ * (`DropdownMenuSearch`), never baked into content.
+ *
+ * ## behavior
+ * - Root `variant` sets `--ds-menu-min-w` via context; content can override.
+ * - Items use ghost hover surfaces; `DropdownMenuItemVariant.danger` keeps
+ *   those surfaces but paints error-secondary on hover and error-primary on
+ *   active/highlighted press.
+ * - Default `modal={false}`; portals on by default with an escape hatch.
+ *
+ * ## constraints
+ * - Do not hardcode a search field into `DropdownMenuContent`.
+ * - Style open/disabled/highlighted via Radix data attributes only.
+ */
+
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import {
   createContext,
@@ -11,9 +28,12 @@ import {
 } from "react";
 import { cn } from "../../utils/cn";
 import CheckIcon from "../Icons/CheckIcon";
-// DropdownMenuVariant (+ its type) lives in ./constants — kept server-safe
-// (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
-import { DropdownMenuVariant } from "./constants";
+// DropdownMenuVariant / DropdownMenuItemVariant live in ./constants — kept
+// server-safe (no "use client") so RSC code can read the enum values.
+import {
+  DropdownMenuItemVariant,
+  DropdownMenuVariant,
+} from "./constants";
 
 /**
  * Width variant set on the root and consumed by DropdownMenuContent, mirroring
@@ -161,18 +181,29 @@ const DropdownMenuContent = forwardRef<
 DropdownMenuContent.displayName = "DropdownMenuContent";
 
 const itemBase =
-  "relative flex h-button w-full cursor-pointer select-none items-center rounded-tight ds-pl-ui-rg ds-pr-ui-sm ds-radix-data-disabled gap-[10px] text-style-body text-ghost-fg-active outline-none transition-colors duration-100";
+  "relative flex h-button w-full cursor-pointer select-none items-center rounded-tight ds-pl-ui-rg ds-pr-ui-sm ds-radix-data-disabled gap-[10px] text-style-body outline-none transition-colors duration-100";
 
 const DropdownMenuItem = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Item>,
-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item>
->(({ className, ...props }, ref) => (
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+    variant?: DropdownMenuItemVariant;
+  }
+>(({ className, variant = DropdownMenuItemVariant.default, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
       itemBase,
-      "hover:bg-ghost-hover hover:text-ghost-fg-active",
-      "data-highlighted:bg-ghost-hover data-highlighted:text-ghost-fg-active",
+      "hover:bg-ghost-hover data-highlighted:bg-ghost-hover",
+      variant === DropdownMenuItemVariant.danger
+        ? [
+            "text-ghost-fg",
+            "hover:text-error-secondary data-highlighted:text-error-secondary",
+            "active:text-error-primary data-highlighted:active:text-error-primary",
+          ]
+        : [
+            "text-ghost-fg-active",
+            "hover:text-ghost-fg-active data-highlighted:text-ghost-fg-active",
+          ],
       className,
     )}
     {...props}

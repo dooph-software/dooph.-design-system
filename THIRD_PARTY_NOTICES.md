@@ -61,4 +61,3 @@ Each is used under its stated open-source license.
 | class-variance-authority | Apache-2.0 | https://github.com/joe-bell/cva |
 | clsx | MIT | https://github.com/lukeed/clsx |
 | tailwind-merge | MIT | https://github.com/dcastil/tailwind-merge |
-| @parcel/watcher-win32-arm64 (optional) | MIT | https://github.com/parcel-bundler/watcher |

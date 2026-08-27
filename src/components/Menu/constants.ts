@@ -20,3 +20,14 @@ export const DropdownMenuVariant = {
 } as const;
 export type DropdownMenuVariant =
   (typeof DropdownMenuVariant)[keyof typeof DropdownMenuVariant];
+
+/**
+ * Dot-accessible menu item tone.
+ * Usage: <DropdownMenuItem variant={DropdownMenuItemVariant.danger}>
+ */
+export const DropdownMenuItemVariant = {
+  default: "default",
+  danger: "danger",
+} as const;
+export type DropdownMenuItemVariant =
+  (typeof DropdownMenuItemVariant)[keyof typeof DropdownMenuItemVariant];

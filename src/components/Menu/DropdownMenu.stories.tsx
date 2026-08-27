@@ -9,13 +9,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuSection,
 } from './DropdownMenu';
-import { DropdownMenuVariant } from './constants';
+import { DropdownMenuSearch } from './DropdownMenuSearch';
+import { DropdownMenuItemVariant, DropdownMenuVariant } from './constants';
 import {
   DropdownTrigger,
   TypeableDropdownTrigger,
 } from '../DropdownTrigger/DropdownTrigger';
 import { Button } from '../Button/Button';
 import { ButtonVariant } from '../Button/constants';
+import { BodyText } from '../Text';
 
 const meta = {
   title: 'Menus/DropdownMenu',
@@ -210,6 +212,88 @@ export const WidthVariantPerPanelOverride: Story = {
       >
         <DropdownMenuSection>
           <DropdownMenuItem>This panel overrides to 324px</DropdownMenuItem>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+};
+
+export const DangerItem: Story = {
+  render: () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <DropdownTrigger>Account</DropdownTrigger>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuSection>
+          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem>Billing</DropdownMenuItem>
+          <DropdownMenuItem variant={DropdownMenuItemVariant.danger}>
+            Delete account
+          </DropdownMenuItem>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+};
+
+export const ComplexWithoutSearch: Story = {
+  render: () => (
+    <DropdownMenu variant={DropdownMenuVariant.complex}>
+      <DropdownMenuTrigger asChild>
+        <DropdownTrigger>Recent chats</DropdownTrigger>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent matchTriggerWidth={false}>
+        <DropdownMenuSection>
+          <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
+          <DropdownMenuItem>
+            <div className="flex flex-col gap-[2px]">
+              <BodyText>Mark up drawings with tolerances</BodyText>
+              <BodyText className="text-ghost-fg">sakai.dwg</BodyText>
+            </div>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <div className="flex flex-col gap-[2px]">
+              <BodyText>Architectural measurements</BodyText>
+              <BodyText className="text-ghost-fg">dreter-street-mock.dwg</BodyText>
+            </div>
+          </DropdownMenuItem>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+};
+
+export const ComplexWithSearch: Story = {
+  render: () => (
+    <DropdownMenu variant={DropdownMenuVariant.complex}>
+      <DropdownMenuTrigger asChild>
+        <DropdownTrigger>Search chats</DropdownTrigger>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent matchTriggerWidth={false} focusOnOpen={false}>
+        <DropdownMenuSearch />
+        <DropdownMenuSeparator />
+        <DropdownMenuSection>
+          <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
+          <DropdownMenuItem>
+            <div className="flex flex-col gap-[2px]">
+              <BodyText>Mark up drawings with tolerances</BodyText>
+              <BodyText className="text-ghost-fg">sakai.dwg</BodyText>
+            </div>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <div className="flex flex-col gap-[2px]">
+              <BodyText>Architectural measurements</BodyText>
+              <BodyText className="text-ghost-fg">dreter-street-mock.dwg</BodyText>
+            </div>
+          </DropdownMenuItem>
+          <DropdownMenuLabel>Yesterday</DropdownMenuLabel>
+          <DropdownMenuItem>
+            <div className="flex flex-col gap-[2px]">
+              <BodyText>Deburring requirement</BodyText>
+              <BodyText className="text-ghost-fg">bracket-left.dwg</BodyText>
+            </div>
+          </DropdownMenuItem>
         </DropdownMenuSection>
       </DropdownMenuContent>
     </DropdownMenu>

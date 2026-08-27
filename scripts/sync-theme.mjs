@@ -63,6 +63,7 @@ const EXCLUDED = new Set([
   "ui-weight-body",
   "ui-weight-button",
   "ui-weight-label",
+  "ui-weight-subheading",
   "ui-weight-heading",
   "ui-weight-title",
   "ui-weight-hero",
@@ -86,6 +87,12 @@ const EXCLUDED = new Set([
   "ui-slider-track-gap",
   "ui-width-slider-handle",
   "ui-height-slider-handle",
+  // Checkbox / code digit — exposed via custom @layer utilities
+  "ui-size-checkbox",
+  "ui-size-code-digit",
+  // Rolling money motion — CSS only
+  "ui-rolling-money-duration",
+  "ui-rolling-money-stagger",
   // Tooltip widths — exposed via ds-* helpers
   "ui-width-tooltip-rich",
   "ui-min-w-tooltip-complex",

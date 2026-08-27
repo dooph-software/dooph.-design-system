@@ -12,4 +12,6 @@ export {
   DropdownMenuSeparator,
   DropdownMenuSection,
 } from './DropdownMenu';
-export { DropdownMenuVariant } from './constants';
+export { DropdownMenuSearch } from './DropdownMenuSearch';
+export type { DropdownMenuSearchProps } from './DropdownMenuSearch';
+export { DropdownMenuVariant, DropdownMenuItemVariant } from './constants';

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { IconSize, SidebarLeftIcon } from "../Icons";
+import { LabelText } from "../Text";
 import { Button } from "./Button";
 import { ButtonSize, ButtonVariant } from "./constants";
 
@@ -100,31 +101,33 @@ export const DisabledAll: Story = {
 export const IconSizeComparison: Story = {
   render: () => (
     <div className="flex flex-col gap-6 p-4">
-      {[ButtonVariant.ghost, ButtonVariant.secondary, ButtonVariant.brand].map(
+      {[ButtonVariant.ghost, ButtonVariant.secondary, ButtonVariant.primary].map(
         (variant) => (
           <div key={variant} className="flex items-center gap-4">
-            <div className="w-20 text-sm font-medium">{variant}</div>
+            <div className="w-20">
+              <LabelText className="text-text-secondary">{variant}</LabelText>
+            </div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.icon}>
                 <SidebarLeftIcon size={IconSize.standard} />
               </Button>
-              <span className="text-xs text-text-secondary">icon (38px)</span>
+              <LabelText className="text-text-secondary">icon (38px)</LabelText>
             </div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.iconSm}>
                 <SidebarLeftIcon size={IconSize.standard} />
               </Button>
-              <span className="text-xs text-text-secondary">
+              <LabelText className="text-text-secondary">
                 icon-sm (34px)
-              </span>
+              </LabelText>
             </div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.iconMicro}>
                 <SidebarLeftIcon size={IconSize.standard} />
               </Button>
-              <span className="text-xs text-text-secondary">
+              <LabelText className="text-text-secondary">
                 icon-micro (26px)
-              </span>
+              </LabelText>
             </div>
           </div>
         ),

@@ -1,5 +1,19 @@
 'use client';
 
+/*
+ * LinearProgressIndicator — determinate bar backed by Radix Progress.
+ *
+ * ## behavior
+ * - `value` / `max` clamp into a percentage stored on `--progress-pct`.
+ * - Fill width animates when that percentage changes via registered
+ *   `@property --progress-pct` (custom properties do not interpolate otherwise).
+ * - `color` accepts a DS token name or any CSS color (same contract as Slider).
+ *
+ * ## constraints
+ * - Do not add a LinearProgressVariant enum — color is the open design value.
+ * - Remainder track hides at 100% via `data-hidden` so it never overlaps the nub.
+ */
+
 import * as ProgressPrimitive from '@radix-ui/react-progress';
 import {
   forwardRef,
@@ -43,7 +57,7 @@ const LinearProgressIndicator = forwardRef<
     >
       <ProgressPrimitive.Indicator
         className={cn(
-          'absolute inset-y-0 left-0 rounded-full transition-[width] duration-300 ease-out',
+          'absolute inset-y-0 left-0 rounded-full ds-progress-fill',
           'w-[max(4px,calc(var(--progress-pct)*1%-2px))]',
           'bg-[var(--ds-progress-color)]',
         )}
@@ -51,7 +65,7 @@ const LinearProgressIndicator = forwardRef<
       <div
         aria-hidden
         className={cn(
-          'absolute inset-y-0 right-0 rounded-full bg-border-primary',
+          'absolute inset-y-0 right-0 rounded-full bg-border-primary ds-progress-remainder',
           'left-[max(4px,min(100%,calc(var(--progress-pct)*1%+2px)))]',
           'data-[hidden]:hidden',
         )}

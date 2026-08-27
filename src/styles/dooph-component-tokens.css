@@ -61,7 +61,9 @@
     outline-offset: 0;
   }
 
-  .ds-focus-visible-ring:focus-visible {
+  .ds-focus-visible-ring:focus-visible:not(:disabled):not([data-disabled]):not(
+      [aria-disabled="true"]
+    ) {
     outline-color: var(--ui-color-focus-ring-brand);
   }
 
@@ -100,6 +102,21 @@
       var(--ds-slider-color, var(--ui-color-primary)) 45%,
       transparent
     );
+  }
+
+  /* Linear progress — width/left interpolate because --progress-pct is a
+   * registered @property in index.css. */
+  .ds-progress-fill {
+    transition: width 300ms ease-out;
+  }
+  .ds-progress-remainder {
+    transition: left 300ms ease-out;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-progress-fill,
+    .ds-progress-remainder {
+      transition: none;
+    }
   }
   /* Stepped slider dots. The active/inactive split is a plain attribute
    * selector rather than a Tailwind `data-[active]:` variant — variants only

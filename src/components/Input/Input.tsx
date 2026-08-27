@@ -21,7 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           "focus:border-border-focus",
           "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled ds-disabled-state",
           hasError &&
-            "border-danger-border focus:border-trigger-border-error-focus ds-focus-ring-error-on-focus",
+            "border-error-primary focus:border-trigger-border-error-focus ds-focus-ring-error-on-focus",
           className,
         )}
         {...props}

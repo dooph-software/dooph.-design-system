@@ -1,3 +1,19 @@
+/*
+ * Button — primary interactive leaf for labeled and icon-only actions.
+ *
+ * ## behavior
+ * - `variant` + `size` map through `buttonVariants` (cva) onto token-backed
+ *   Tailwind utilities; `asChild` swaps the root for Radix `Slot`.
+ * - Disabled styling paints explicit disabled bg/border tokens (primary and
+ *   danger alias secondary-disabled by default) plus `ds-disabled-state`
+ *   opacity — not opacity alone.
+ *
+ * ## constraints
+ * - Do NOT reintroduce `--ui-color-danger*` tokens; the danger variant paints
+ *   secondary + error-primary/secondary utilities directly so consumers can
+ *   still override those families independently.
+ * - Keep `ButtonVariant.brand` in the API even if icon stories omit it.
+ */
 "use client";
 
 import { Slot } from "@radix-ui/react-slot";
@@ -28,6 +44,7 @@ const buttonVariants = cva(
           "bg-primary text-primary-fg border-primary-border shadow-button",
           "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-primary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-primary-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
           "[&:not(:disabled):not([aria-disabled=true])]:active:bg-primary-active [&:not(:disabled):not([aria-disabled=true])]:active:border-primary-border-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
+          "disabled:bg-primary-disabled disabled:border-primary-border-disabled disabled:text-secondary-fg aria-disabled:bg-primary-disabled aria-disabled:border-primary-border-disabled aria-disabled:text-secondary-fg",
         ],
         secondary: [
           "bg-secondary text-secondary-fg border-secondary-border shadow-button-secondary",
@@ -39,12 +56,13 @@ const buttonVariants = cva(
           "bg-brand text-brand-fg border-brand-border shadow-button",
           "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-brand-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-brand-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
           "[&:not(:disabled):not([aria-disabled=true])]:active:bg-brand-active [&:not(:disabled):not([aria-disabled=true])]:active:border-brand-border-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
+          "disabled:bg-primary-disabled disabled:border-primary-border-disabled disabled:text-secondary-fg aria-disabled:bg-primary-disabled aria-disabled:border-primary-border-disabled aria-disabled:text-secondary-fg",
         ],
         danger: [
-          "bg-danger text-danger-fg border-danger-border",
-          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-danger-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-danger-border-hover",
-          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-danger-active [&:not(:disabled):not([aria-disabled=true])]:active:border-danger-border-active",
-          "disabled:bg-danger-disabled disabled:border-danger-border-disabled aria-disabled:bg-danger-disabled aria-disabled:border-danger-border-disabled",
+          "bg-secondary text-error-primary border-secondary-border shadow-button-secondary",
+          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-error-secondary [&:not(:disabled):not([aria-disabled=true])]:hover:border-error-secondary [&:not(:disabled):not([aria-disabled=true])]:hover:text-secondary-fg [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
+          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-error-primary [&:not(:disabled):not([aria-disabled=true])]:active:border-error-primary [&:not(:disabled):not([aria-disabled=true])]:active:text-secondary-fg [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
+          "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled disabled:text-secondary-fg aria-disabled:bg-secondary-disabled aria-disabled:border-secondary-border-disabled aria-disabled:text-secondary-fg",
         ],
         ghost: [
           "text-ghost-fg border-transparent",
@@ -69,6 +87,9 @@ const buttonVariants = cva(
       { variant: "secondary", size: "icon", className: "shadow-none" },
       { variant: "secondary", size: "icon-sm", className: "shadow-none" },
       { variant: "secondary", size: "icon-micro", className: "shadow-none" },
+      { variant: "danger", size: "icon", className: "shadow-none" },
+      { variant: "danger", size: "icon-sm", className: "shadow-none" },
+      { variant: "danger", size: "icon-micro", className: "shadow-none" },
     ],
     defaultVariants: {
       variant: "secondary",

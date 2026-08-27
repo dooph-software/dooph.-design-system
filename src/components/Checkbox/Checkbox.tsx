@@ -1,3 +1,20 @@
+/*
+ * Checkbox — Radix checkbox with brand/primary checked fills.
+ *
+ * ## behavior
+ * - Unchecked hover/active use secondary surface tokens.
+ * - Checked/indeterminate fill follows `CheckboxVariant` (brand | primary).
+ * - Disabled unchecked paints secondary-disabled; disabled checked/indeterminate
+ *   paints primary-disabled bg/border with secondary-fg checkmark (theme-
+ *   matching, not inverse white). Active/focus rings are gated off while
+ *   `data-disabled` so a click cannot flash the focus shadow.
+ *
+ * ## constraints
+ * - Style states via Radix `data-[state]` / `data-[disabled]` only — no JS
+ *   class toggling for checked/disabled.
+ * - Indicator SVGs stay decorative (`aria-hidden`); do not replace with
+ *   interactive children unless composing via the `children` escape hatch.
+ */
 "use client";
 
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
@@ -19,10 +36,14 @@ const checkboxVariants = cva(
     "rounded-checkbox border border-solid border-border-primary bg-transparent text-primary-fg",
     "cursor-pointer select-none transition-all duration-150 ease-out",
     "data-[state=unchecked]:hover:bg-secondary-hover data-[state=unchecked]:hover:border-border-primary data-[state=unchecked]:hover:shadow-button-secondary",
-    // active bg stays at hover color intentionally
-    "active:bg-secondary-hover",
+    // active bg stays at hover color intentionally — never while disabled
+    "[&:not([data-disabled])]:active:bg-secondary-hover",
     "focus-visible:border-border-focus ds-focus-visible-ring",
-    "data-[disabled]:bg-secondary-disabled data-[disabled]:border-secondary-border-disabled ds-radix-data-disabled",
+    "data-[disabled]:focus-visible:border-secondary-border-disabled",
+    "data-[disabled]:data-[state=unchecked]:bg-secondary-disabled data-[disabled]:data-[state=unchecked]:border-secondary-border-disabled",
+    "data-[disabled]:data-[state=checked]:bg-primary-disabled data-[disabled]:data-[state=checked]:border-primary-border-disabled data-[disabled]:data-[state=checked]:text-secondary-fg data-[disabled]:data-[state=checked]:focus-visible:border-primary-border-disabled",
+    "data-[disabled]:data-[state=indeterminate]:bg-primary-disabled data-[disabled]:data-[state=indeterminate]:border-primary-border-disabled data-[disabled]:data-[state=indeterminate]:text-secondary-fg data-[disabled]:data-[state=indeterminate]:focus-visible:border-primary-border-disabled",
+    "ds-radix-data-disabled",
   ],
   {
     variants: {
@@ -31,12 +52,12 @@ const checkboxVariants = cva(
           "data-[state=checked]:bg-brand data-[state=checked]:border-brand data-[state=checked]:text-brand-fg",
           "data-[state=indeterminate]:bg-brand data-[state=indeterminate]:border-brand data-[state=indeterminate]:text-brand-fg",
           // active border matches typeabletrigger hover, not brand
-          "active:border-trigger-border-hover active:shadow-focus-brand",
+          "[&:not([data-disabled])]:active:border-trigger-border-hover [&:not([data-disabled])]:active:shadow-focus-brand",
         ],
         primary: [
           "data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-fg",
           "data-[state=indeterminate]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:text-primary-fg",
-          "active:border-primary active:shadow-focus-primary",
+          "[&:not([data-disabled])]:active:border-primary [&:not([data-disabled])]:active:shadow-focus-primary",
         ],
       },
     },

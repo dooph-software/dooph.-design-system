@@ -50,7 +50,7 @@ export const Colors: Story = {
   },
   render: () => (
     <div className="flex w-96 flex-col gap-4">
-      {(['primary', 'brand', 'text', 'danger'] as const).map((c) => (
+      {(['primary', 'brand', 'text', 'error-primary'] as const).map((c) => (
         <div key={c} className="flex flex-col gap-1">
           <LabelText className="text-text-tertiary">{c}</LabelText>
           <LinearProgressIndicator color={c} value={60} max={100} />

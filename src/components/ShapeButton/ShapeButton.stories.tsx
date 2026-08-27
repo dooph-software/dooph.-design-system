@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { SendIcon } from "../Icons";
+import { LabelText } from "../Text";
 import { ShapeButton } from "./ShapeButton";
 import { ShapeButtons } from "./constants";
 
@@ -28,10 +29,6 @@ export const Cookie: Story = {
   args: { shape: ShapeButtons.cookie, children: <SendIcon /> },
 };
 
-export const Pentagon: Story = {
-  args: { shape: ShapeButtons.pentagon, children: <SendIcon /> },
-};
-
 export const Gem: Story = {
   args: { shape: ShapeButtons.gem, children: <SendIcon /> },
 };
@@ -48,7 +45,7 @@ export const AllShapes: Story = {
           <ShapeButton shape={shape}>
             <SendIcon />
           </ShapeButton>
-          <span className="text-style-label text-text-secondary">{label}</span>
+          <LabelText className="text-text-secondary">{label}</LabelText>
         </div>
       ))}
     </div>

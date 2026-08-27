@@ -12,7 +12,7 @@ export const ShapeButtons = {
   clover: "clover",
   cookie: "cookie",
   gem: "gem",
-  pentagon: "pentagon",
   puff: "puff",
   star: "star",
 } as const satisfies Record<string, Shapes>;
+export type ShapeButtons = (typeof ShapeButtons)[keyof typeof ShapeButtons];

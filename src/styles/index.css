@@ -5,6 +5,13 @@
 @import "./dooph-component-tokens.css";
 @plugin "tailwindcss-animate";
 
+/* Register so --progress-pct interpolates when LinearProgressIndicator value changes. */
+@property --progress-pct {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 /*
  * @theme inline — maps --ui-* tokens into Tailwind utility namespaces.
  * "inline" means Tailwind emits var(--ui-*) references instead of the
@@ -39,15 +46,8 @@
   --color-brand-border-active: var(--ui-color-brand-border-active);
   --color-brand-fg: var(--ui-color-brand-foreground);
   --color-brand-border-disabled: var(--ui-color-brand-border-disabled);
-  --color-danger: var(--ui-color-danger);
-  --color-danger-border: var(--ui-color-danger-border);
-  --color-danger-hover: var(--ui-color-danger-hover);
-  --color-danger-border-hover: var(--ui-color-danger-border-hover);
-  --color-danger-active: var(--ui-color-danger-active);
-  --color-danger-border-active: var(--ui-color-danger-border-active);
-  --color-danger-fg: var(--ui-color-danger-foreground);
-  --color-danger-disabled: var(--ui-color-danger-disabled);
-  --color-danger-border-disabled: var(--ui-color-danger-border-disabled);
+  --color-error-primary: var(--ui-color-error-primary);
+  --color-error-secondary: var(--ui-color-error-secondary);
   --color-ghost-fg: var(--ui-color-ghost-foreground);
   --color-ghost-hover: var(--ui-color-ghost-hover);
   --color-ghost-active: var(--ui-color-ghost-active);
@@ -85,6 +85,7 @@
   --font-hero: var(--ui-font-hero);
   --text-label: var(--ui-text-label);
   --text-body: var(--ui-text-body);
+  --text-subheading: var(--ui-text-subheading);
   --text-heading: var(--ui-text-heading);
   --text-title: var(--ui-text-title);
   --text-hero: var(--ui-text-hero);
@@ -173,6 +174,15 @@
     font-variation-settings: var(--ui-font-var-heading);
   }
 
+  .text-style-subheading {
+    font-family: var(--ui-font-heading);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-subheading);
+    font-style: normal;
+    font-weight: var(--ui-weight-subheading);
+    font-variation-settings: var(--ui-font-var-heading);
+  }
+
   .text-style-hero {
     font-family: var(--ui-font-hero);
     font-size: var(--ui-text-hero);
@@ -201,6 +211,10 @@
   .size-checkbox {
     width: var(--ui-size-checkbox);
     height: var(--ui-size-checkbox);
+  }
+  .size-code-digit {
+    width: var(--ui-size-code-digit);
+    height: var(--ui-size-code-digit);
   }
   .size-button-micro {
     width: var(--ui-height-button-micro);
@@ -389,6 +403,49 @@
   from { transform: translateY(calc(var(--ds-roll-dir, 1) * -0.9em)); filter: blur(4px); opacity: 0; }
   60%  { filter: blur(1.5px); }
   to   { transform: translateY(0); filter: blur(0); opacity: 1; }
+}
+
+/* RollingMoneyText — 2D cash-register digit roll (no blur / no 3D). */
+.ds-rolling-money-digit {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  font-variant-numeric: tabular-nums;
+  vertical-align: baseline;
+  height: 1em;
+  line-height: 1em;
+}
+.ds-rolling-money-out {
+  animation: ds-rolling-money-out var(--ui-rolling-money-duration)
+    cubic-bezier(0.4, 0, 1, 1) forwards;
+  animation-delay: var(--ds-rolling-money-delay, 0ms);
+}
+.ds-rolling-money-in {
+  animation: ds-rolling-money-in var(--ui-rolling-money-duration)
+    cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation-delay: var(--ds-rolling-money-delay, 0ms);
+}
+@keyframes ds-rolling-money-out {
+  to {
+    transform: translateY(calc(var(--ds-roll-dir, 1) * 100%));
+    opacity: 0;
+  }
+}
+@keyframes ds-rolling-money-in {
+  from {
+    transform: translateY(calc(var(--ds-roll-dir, 1) * -100%));
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-rolling-money-out,
+  .ds-rolling-money-in {
+    animation: none !important;
+  }
 }
 
 /* UnderlineLinkText sweep. First half: hold the right edge and shrink to zero so

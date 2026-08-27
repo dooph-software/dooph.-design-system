@@ -62,7 +62,7 @@ export const Colors: Story = {
   },
   render: () => (
     <div className="flex w-64 flex-col gap-4">
-      {(['primary', 'brand', 'text', 'danger'] as const).map((c) => (
+      {(['primary', 'brand', 'text', 'error-primary'] as const).map((c) => (
         <div key={c} className="flex items-center gap-3">
           <LabelText className="w-16 text-text-tertiary">{c}</LabelText>
           <SliderContinuous color={c} defaultValue={[60]} />
