@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { BodyText, LabelText } from "./BaseText";
+import { useState } from "react";
+import { Button } from "../Button/Button";
+import { ButtonVariant } from "../Button/constants";
+import { BodyText, HeroText, LabelText, TitleText } from "./BaseText";
 import { parseMoney } from "./rollingMoneyModel";
+import { RollingMoneyText } from "./RollingMoneyText";
 
 const meta = {
   title: "Primitives/RollingMoneyText",
@@ -60,4 +64,153 @@ export const ParseCases: Story = {
       })}
     </div>
   ),
+};
+
+export const Default: Story = {
+  render: () => {
+    const [value, setValue] = useState("$1,240.00");
+    return (
+      <div className="flex flex-col items-start gap-md p-4">
+        <TitleText>
+          <RollingMoneyText>{value}</RollingMoneyText>
+        </TitleText>
+        <div className="flex gap-2">
+          {["$1,240.00", "$3,891.45", "$2,507.62"].map((v) => (
+            <Button
+              key={v}
+              variant={ButtonVariant.secondary}
+              onClick={() => setValue(v)}
+            >
+              {v}
+            </Button>
+          ))}
+        </div>
+        <BodyText className="text-text-secondary">
+          Same digit count. Press the same button twice, then alternate — every
+          change must roll.
+        </BodyText>
+      </div>
+    );
+  },
+};
+
+export const MagnitudeChange: Story = {
+  render: () => {
+    const [value, setValue] = useState("$982.10");
+    return (
+      <div className="flex flex-col items-start gap-md p-4">
+        <TitleText>
+          <RollingMoneyText>{value}</RollingMoneyText>
+        </TitleText>
+        <div className="flex gap-2">
+          {["$982.10", "$1,240.00", "$12,450.00"].map((v) => (
+            <Button
+              key={v}
+              variant={ButtonVariant.secondary}
+              onClick={() => setValue(v)}
+            >
+              {v}
+            </Button>
+          ))}
+        </div>
+        <BodyText className="text-text-secondary">
+          Exercises wheels turning off zero and rolling out. Cycle up and down
+          repeatedly — no phantom leading zero may remain.
+        </BodyText>
+      </div>
+    );
+  },
+};
+
+export const SmallCents: Story = {
+  render: () => {
+    const [value, setValue] = useState("$5,746.31");
+    return (
+      <div className="flex flex-col items-start gap-md p-4">
+        <TitleText>
+          <RollingMoneyText smallCents smallCentsComponent={LabelText}>
+            {value}
+          </RollingMoneyText>
+        </TitleText>
+        <div className="flex gap-2">
+          {["$5,746.31", "$8,102.37", "$912.04"].map((v) => (
+            <Button
+              key={v}
+              variant={ButtonVariant.secondary}
+              onClick={() => setValue(v)}
+            >
+              {v}
+            </Button>
+          ))}
+        </div>
+      </div>
+    );
+  },
+};
+
+/* The cents/dollars ratio is set by whichever role is passed as
+ * smallCentsComponent, NOT by the wrapping role — so --ui-rolling-money-cents-rise
+ * can only be correct for one pairing at a time. This story exists to make that
+ * drift visible; it is a known limitation, not a bug to silently patch. */
+export const RoleScaling: Story = {
+  render: () => (
+    <div className="flex flex-col items-start gap-md p-4">
+      <TitleText>
+        <RollingMoneyText smallCents smallCentsComponent={LabelText}>
+          {"$5,746.31"}
+        </RollingMoneyText>
+      </TitleText>
+      <HeroText>
+        <RollingMoneyText smallCents smallCentsComponent={LabelText}>
+          {"$5,746.31"}
+        </RollingMoneyText>
+      </HeroText>
+      <BodyText className="text-text-secondary">
+        Same cents role at two dollar sizes. The rise token is tuned for Title.
+      </BodyText>
+    </div>
+  ),
+};
+
+const ROWS = [
+  { label: "Acquisition", amount: "$3,891.45" },
+  { label: "Retention", amount: "$982.10" },
+  { label: "Expansion", amount: "$12,450.00" },
+  { label: "Services", amount: "$5,746.31" },
+];
+const TOTAL = "$23,069.86";
+
+/* The motivating use case, and the one that catches "fires only every other
+ * change": hovering back and forth between two rows. */
+export const TableScrub: Story = {
+  render: () => {
+    const [amount, setAmount] = useState(TOTAL);
+    return (
+      <div className="flex flex-col items-start gap-md p-4">
+        <TitleText>
+          <RollingMoneyText smallCents smallCentsComponent={LabelText}>
+            {amount}
+          </RollingMoneyText>
+        </TitleText>
+        <div
+          className="flex flex-col items-start"
+          onMouseLeave={() => setAmount(TOTAL)}
+        >
+          {ROWS.map((r) => (
+            <BodyText
+              key={r.label}
+              className="cursor-default px-2 py-1"
+              onMouseEnter={() => setAmount(r.amount)}
+            >
+              {r.label}
+            </BodyText>
+          ))}
+        </div>
+        <BodyText className="text-text-secondary">
+          Hover rows. Alternate between two rows repeatedly — every crossing
+          must animate.
+        </BodyText>
+      </div>
+    );
+  },
 };
