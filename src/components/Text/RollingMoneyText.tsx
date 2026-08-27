@@ -70,8 +70,11 @@ export type RollingMoneyTextProps =
 
 const DIGIT_COLUMN = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-/* Generous relative to the 180ms token default. Only a backstop: an exiting
- * wheel is already invisible via the opacity transition, and any survivor is
+/* Generous relative to the 180ms token default. Usually a backstop — an
+ * exiting wheel is normally removed by its own `transitionend` — but under
+ * `prefers-reduced-motion: reduce` index.css sets `transition: none` on
+ * `[data-exiting]`, so no `transitionend` ever fires there and this timer is
+ * the ONLY thing that removes the wheel on that path. Any survivor is also
  * dropped by the next reconcile regardless. */
 const EXIT_FALLBACK_MS = 600;
 
@@ -155,15 +158,22 @@ function useWheels(digits: string[]) {
 
     /* Retarget brand-new wheels on the NEXT frame. They mount showing 0; the
      * browser has to paint that from-state before a transition to the real
-     * digit can run, otherwise the wheel simply appears at its final value. */
+     * digit can run, otherwise the wheel simply appears at its final value.
+     * A single rAF is not enough here: the from-state is a React render
+     * (this `setWheels(next)`, committed from inside a passive effect), not a
+     * direct DOM write, and there's no guarantee that commit paints before
+     * the very next frame's rAF callbacks run. Nesting one more rAF waits for
+     * a frame that is guaranteed to start after that paint. */
     let raf = 0;
     if (pending.size > 0) {
       raf = requestAnimationFrame(() => {
-        setWheels((cur) =>
-          cur.map((w) =>
-            pending.has(w.place) ? { ...w, digit: pending.get(w.place)! } : w,
-          ),
-        );
+        raf = requestAnimationFrame(() => {
+          setWheels((cur) =>
+            cur.map((w) =>
+              pending.has(w.place) ? { ...w, digit: pending.get(w.place)! } : w,
+            ),
+          );
+        });
       });
     }
 
@@ -177,7 +187,15 @@ function useWheels(digits: string[]) {
       window.clearTimeout(timer);
     };
     /* `wheels` is read but deliberately not a dependency: this effect must run
-     * once per VALUE change, and depending on the state it sets would loop. */
+     * once per VALUE change, and depending on the state it sets would loop.
+     * Reading the possibly-stale closed-over `wheels` here is safe only
+     * because `setWheels(next)` is a plain value, which discards any `wheels`
+     * update enqueued between the render commit and this passive-effect
+     * flush — and every such lost update is harmless under the model's
+     * current behavior: `reconcileWheels` drops already-exiting wheels up
+     * front, so a lost update is either re-derived from `prev` or a removal
+     * that happens anyway. If `reconcileWheels` ever stops dropping exiting
+     * wheels up front, this becomes a real lost-update bug. */
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [joined]);
 
@@ -208,7 +226,14 @@ const RollingMoneyTextBase = forwardRef<
   const intStrip = useWheels(parsed.integerDigits);
   const centsStrip = useWheels(parsed.centsDigits);
 
-  const hasCents = parsed.centsDigits.length > 0;
+  /* Gated on the union of the incoming value and outstanding wheel state, not
+   * `parsed.centsDigits` alone: `centsStrip.wheels` lags one render behind
+   * `parsed` (it only catches up once the reconcile effect flushes), so on a
+   * change like "$5.25" -> "$5" the incoming value alone would unmount this
+   * whole group — separator included — before the cents wheels it owns ever
+   * get to roll to zero and fade. Staying mounted as long as either side has
+   * something to show keeps that exit visible. */
+  const hasCents = parsed.centsDigits.length > 0 || centsStrip.wheels.length > 0;
   const centsBody = (
     <>
       <span className="ds-rolling-money-sep">.</span>
