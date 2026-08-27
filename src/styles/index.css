@@ -373,6 +373,86 @@
       animation: none;
     }
   }
+
+  /* RollingMoneyText — 2D cash-register digit roll (no blur, no 3D).
+   *
+   * Each digit is a wheel: a static 0-9 column clipped to one line box and
+   * positioned by --ds-money-digit. Using a TRANSITION rather than @keyframes
+   * is load-bearing for the same reason it is in .ds-roll-hover above —
+   * re-applying a class that is already present does not restart an animation,
+   * which is why the previous keyframe-based version fired on roughly every
+   * other change. A transition on a changed value always runs, and an
+   * interrupted one retargets from wherever the wheel currently sits.
+   *
+   * The hidden "0" spacer is what makes alignment work without magic numbers:
+   * it is an ordinary in-flow glyph, so it supplies both the wheel's width and
+   * its baseline. The clip is inset:0 against that spacer's line box — exactly
+   * 1lh — and each of the ten column children is also 1lh, so -10% per digit
+   * lands precisely. A clipped inline-block takes its baseline from its bottom
+   * margin edge, which is why the previous `height:1em;overflow:hidden` wheel
+   * could not be aligned at any value of 1em. */
+  .ds-rolling-money {
+    display: inline-block;
+  }
+  .ds-rolling-money-figure {
+    display: inline-flex;
+    align-items: baseline;
+    font-variant-numeric: tabular-nums;
+  }
+  .ds-rolling-money-wheel {
+    position: relative;
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+  }
+  /* Sets the wheel's width AND its baseline. Never visible. */
+  .ds-rolling-money-space {
+    visibility: hidden;
+  }
+  .ds-rolling-money-clip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .ds-rolling-money-col {
+    display: block;
+    transform: translateY(calc(var(--ds-money-digit, 0) * -10%));
+    transition: transform var(--ui-rolling-money-duration)
+      var(--ui-rolling-money-ease);
+    /* At the 0ms default every delay computes to zero and the figure moves as
+     * one. Raising the token cascades right-to-left, ones place leading. */
+    transition-delay: calc(
+      var(--ds-money-place, 0) * var(--ui-rolling-money-stagger)
+    );
+  }
+  .ds-rolling-money-col > span {
+    display: block;
+  }
+  /* A departing wheel rolls to 0 and fades at the same time, so it is invisible
+   * well before it unmounts. Fading rather than only rolling is deliberate: a
+   * wheel resting at 0 would read as a leading zero if cleanup were ever late,
+   * and opacity always transitions, which gives a transitionend that firing on
+   * transform alone would not (a wheel already showing 0 does not move). */
+  .ds-rolling-money-wheel[data-exiting] {
+    opacity: 0;
+    transition: opacity var(--ui-rolling-money-duration)
+      var(--ui-rolling-money-ease);
+  }
+  .ds-rolling-money-sep {
+    display: inline-block;
+  }
+  /* Stays at the PARENT font size; smallCentsComponent sets its own size
+   * inside. See the tokens.css note on why the offset is parent-em. */
+  .ds-rolling-money-cents {
+    margin-left: var(--ui-rolling-money-cents-gap);
+    transform: translateY(calc(-1 * var(--ui-rolling-money-cents-rise)));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-rolling-money-col,
+    .ds-rolling-money-wheel[data-exiting] {
+      transition: none;
+      transition-delay: 0ms;
+    }
+  }
 }
 
 /*
@@ -403,49 +483,6 @@
   from { transform: translateY(calc(var(--ds-roll-dir, 1) * -0.9em)); filter: blur(4px); opacity: 0; }
   60%  { filter: blur(1.5px); }
   to   { transform: translateY(0); filter: blur(0); opacity: 1; }
-}
-
-/* RollingMoneyText — 2D cash-register digit roll (no blur / no 3D). */
-.ds-rolling-money-digit {
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-  font-variant-numeric: tabular-nums;
-  vertical-align: baseline;
-  height: 1em;
-  line-height: 1em;
-}
-.ds-rolling-money-out {
-  animation: ds-rolling-money-out var(--ui-rolling-money-duration)
-    cubic-bezier(0.4, 0, 1, 1) forwards;
-  animation-delay: var(--ds-rolling-money-delay, 0ms);
-}
-.ds-rolling-money-in {
-  animation: ds-rolling-money-in var(--ui-rolling-money-duration)
-    cubic-bezier(0.32, 0.72, 0, 1) both;
-  animation-delay: var(--ds-rolling-money-delay, 0ms);
-}
-@keyframes ds-rolling-money-out {
-  to {
-    transform: translateY(calc(var(--ds-roll-dir, 1) * 100%));
-    opacity: 0;
-  }
-}
-@keyframes ds-rolling-money-in {
-  from {
-    transform: translateY(calc(var(--ds-roll-dir, 1) * -100%));
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ds-rolling-money-out,
-  .ds-rolling-money-in {
-    animation: none !important;
-  }
 }
 
 /* UnderlineLinkText sweep. First half: hold the right edge and shrink to zero so
