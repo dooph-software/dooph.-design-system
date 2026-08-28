@@ -86,3 +86,42 @@ export function buildMonthGrid(year: number, month: number): Date[] {
 export function isOutsideMonth(date: Date, month: number): boolean {
   return date.getMonth() !== month;
 }
+
+/**
+ * A day-matching rule. The predicate form is the escape hatch, so this union
+ * never needs to grow: weekends, holidays and sparse-data days all fit there.
+ */
+export type DateMatcher =
+  | Date
+  | { from: Date; to: Date }
+  | { before: Date }
+  | { after: Date }
+  | ((date: Date) => boolean);
+
+function matchesOne(day: Date, matcher: DateMatcher): boolean {
+  if (typeof matcher === "function") return matcher(day);
+  if (matcher instanceof Date) return isSameDay(day, matcher);
+
+  const time = startOfDay(day).getTime();
+  if ("from" in matcher) {
+    return (
+      time >= startOfDay(matcher.from).getTime() &&
+      time <= startOfDay(matcher.to).getTime()
+    );
+  }
+  if ("before" in matcher) return time < startOfDay(matcher.before).getTime();
+  return time > startOfDay(matcher.after).getTime();
+}
+
+/**
+ * Must be consulted by BOTH click handling and keyboard navigation. Enforcing
+ * it only on click is the standard bug in hand-rolled calendars.
+ */
+export function isDateDisabled(
+  date: Date,
+  disabled?: DateMatcher | DateMatcher[],
+): boolean {
+  if (!disabled) return false;
+  const matchers = Array.isArray(disabled) ? disabled : [disabled];
+  return matchers.some((matcher) => matchesOne(date, matcher));
+}
