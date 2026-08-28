@@ -165,6 +165,11 @@
     transform-origin: var(--radix-dropdown-menu-content-transform-origin);
   }
 
+  /* Radix Popover content — follows Radix transform-origin injection */
+  .ds-radix-popover-content-origin {
+    transform-origin: var(--radix-popover-content-transform-origin);
+  }
+
   /* Menu width floor, selected by DropdownMenuVariant on the root and read here
    * via --ds-menu-min-w. The floor applies in BOTH width modes: with
    * matchTriggerWidth it is the lower bound of the max(), without it, it is the

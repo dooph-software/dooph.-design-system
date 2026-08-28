@@ -21,6 +21,7 @@ export * from './components/Shapes';
 export * from './components/ShapeButton';
 export * from './components/Modal';
 export * from './components/Sheet';
+export * from './components/Popover';
 export * from './components/SearchBox';
 export * from './components/Table';
 export * from './components/Toast';
