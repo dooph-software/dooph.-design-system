@@ -270,6 +270,16 @@
     color: var(--ui-color-tooltip-matching-text);
   }
 
+  /* Calendar sizing — presets rail width and panel min-width. */
+  .ds-calendar-presets-w {
+    width: var(--ui-width-calendar-presets);
+    flex: none;
+  }
+
+  .ds-calendar-panel-w {
+    min-width: var(--ui-min-w-calendar-panel);
+  }
+
   /* spacing — semantic names mirror token stems */
   .ds-gap-ui-xs {
     gap: var(--ui-spacing-xs);

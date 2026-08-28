@@ -236,6 +236,10 @@
    * it sets whitespace-nowrap and sizes to its content. */
   --ui-width-tooltip-rich: 175px;
   --ui-min-w-tooltip-complex: 242px;
+
+  /* Calendar — day-cell corner radius, presets rail width, panel min-width. */
+  --ui-width-calendar-presets: 144px;
+  --ui-min-w-calendar-panel: 240px;
   --ui-height-button-micro: 26px;
   --ui-height-slider-track: 22px;
   --ui-radius-slider-inner: 8px;
@@ -272,6 +276,7 @@
   --ui-radius-checkbox: 6px;
   --ui-radius-avatar: 8px;
   --ui-radius-avatar-sm: 6px;
+  --ui-radius-calendar-day: 8px;
 
   /* ── Shadows ─────────────────────────────────────────────────────────── */
 
