@@ -181,8 +181,16 @@ const DropdownMenuContent = forwardRef<
 );
 DropdownMenuContent.displayName = "DropdownMenuContent";
 
-const itemBase =
+/**
+ * Shared menu-item styling. Exported so surfaces that cannot host a Radix
+ * `DropdownMenu.Item` — such as the calendar presets rail inside a Popover —
+ * render visually identical items without duplicating the string.
+ * Internal: not re-exported from src/index.ts.
+ */
+export const menuItemClassName =
   "relative flex h-button w-full cursor-pointer select-none items-center rounded-tight ds-pl-ui-rg ds-pr-ui-sm ds-radix-data-disabled gap-[10px] text-style-body text-ghost-fg-active outline-none transition-colors duration-100 hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active";
+
+const itemBase = menuItemClassName;
 
 const DropdownMenuItem = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Item>,
