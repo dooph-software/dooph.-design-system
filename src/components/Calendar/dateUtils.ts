@@ -125,3 +125,26 @@ export function isDateDisabled(
   const matchers = Array.isArray(disabled) ? disabled : [disabled];
   return matchers.some((matcher) => matchesOne(date, matcher));
 }
+
+/**
+ * The first selectable day of a month, or `undefined` when every day in it is
+ * disabled.
+ *
+ * Used to place the roving tabIndex. A disabled button cannot take focus, so
+ * falling back to day 1 unconditionally can still leave the grid with no tab
+ * stop — e.g. a forward month under `disabled={{ after: today }}`.
+ */
+export function firstEnabledDayOfMonth(
+  month: Date,
+  disabled?: DateMatcher | DateMatcher[],
+): Date | undefined {
+  const year = month.getFullYear();
+  const monthIndex = month.getMonth();
+  const total = daysInMonth(year, monthIndex);
+
+  for (let day = 1; day <= total; day += 1) {
+    const candidate = new Date(year, monthIndex, day);
+    if (!isDateDisabled(candidate, disabled)) return candidate;
+  }
+  return undefined;
+}

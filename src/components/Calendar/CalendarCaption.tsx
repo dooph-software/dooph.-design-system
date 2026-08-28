@@ -13,7 +13,7 @@ import {
 import { TextDropdownSize, TextDropdownTrigger } from "../DropdownTrigger";
 import { BodyText } from "../Text";
 import { addMonths } from "./dateUtils";
-import { buildYearOptions, formatMonthName } from "./dateFormat";
+import { buildYearOptions, formatMonthName, isYearOutOfBounds } from "./dateFormat";
 
 export type CalendarCaptionProps = {
   /** First day of the displayed month. */
@@ -36,6 +36,11 @@ function CalendarCaption({
 }: CalendarCaptionProps) {
   const years = buildYearOptions(viewMonth, value, today, yearBounds);
   const months = Array.from({ length: 12 }, (_, index) => index);
+
+  // Clamping already prevents navigating out of bounds — disabling the button
+  // means the user gets told that, instead of clicking into a no-op.
+  const atFloor = isYearOutOfBounds(addMonths(viewMonth, -1), yearBounds);
+  const atCeiling = isYearOutOfBounds(addMonths(viewMonth, 1), yearBounds);
 
   return (
     <div className="flex items-center justify-between gap-xs">
@@ -92,6 +97,7 @@ function CalendarCaption({
           variant={ButtonVariant.ghost}
           size={ButtonSize.iconMicro}
           aria-label="Previous month"
+          disabled={atFloor}
           onClick={() => onMonthChange(addMonths(viewMonth, -1))}
         >
           <ChevronLeftIcon size={IconSize.standard} />
@@ -100,6 +106,7 @@ function CalendarCaption({
           variant={ButtonVariant.ghost}
           size={ButtonSize.iconMicro}
           aria-label="Next month"
+          disabled={atCeiling}
           onClick={() => onMonthChange(addMonths(viewMonth, 1))}
         >
           <ChevronRightIcon size={IconSize.standard} />

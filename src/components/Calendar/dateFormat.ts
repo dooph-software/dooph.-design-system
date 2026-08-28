@@ -115,3 +115,19 @@ export function clampMonthToYearBounds(
   }
   return month;
 }
+
+/**
+ * Whether a date's YEAR falls outside explicit bounds. `yearBounds` is
+ * year-granular, so this is the single test behind the out-of-bounds warnings
+ * and the nav-button disabling.
+ */
+export function isYearOutOfBounds(
+  date: Date,
+  bounds?: { from?: Date; to?: Date },
+): boolean {
+  if (!bounds) return false;
+  const year = date.getFullYear();
+  if (bounds.from && year < bounds.from.getFullYear()) return true;
+  if (bounds.to && year > bounds.to.getFullYear()) return true;
+  return false;
+}

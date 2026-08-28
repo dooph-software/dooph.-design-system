@@ -12,9 +12,10 @@ import { cn } from "../../utils/cn";
 import { CalendarCaption } from "./CalendarCaption";
 import { CalendarGrid, type CalendarDayRenderProps } from "./CalendarGrid";
 import { DatePickerMode, type DateRange } from "./constants";
-import { clampMonthToYearBounds } from "./dateFormat";
+import { clampMonthToYearBounds, isYearOutOfBounds } from "./dateFormat";
 import {
   DAYS_IN_WEEK,
+  firstEnabledDayOfMonth,
   isDateDisabled,
   startOfDay,
   startOfMonth,
@@ -83,26 +84,40 @@ function warnOnBadValue(props: CalendarProps): void {
 }
 
 /**
- * Explicit `yearBounds` are a hard limit, but the value belongs to the
- * consumer — so a value outside them is reported, never rewritten. Navigation
- * is clamped instead (see `clampMonthToYearBounds`).
+ * Explicit `yearBounds` are a hard limit on the calendar's OWN navigation, but
+ * the value belongs to the consumer — so a value outside them is reported,
+ * never rewritten.
  */
 function warnOnOutOfBoundsValue(
   anchorDate: Date,
   yearBounds: { from?: Date; to?: Date } | undefined,
 ): void {
-  if (process.env.NODE_ENV === "production" || !yearBounds) return;
+  if (process.env.NODE_ENV === "production") return;
+  if (!isYearOutOfBounds(anchorDate, yearBounds)) return;
 
-  const year = anchorDate.getFullYear();
-  const below = yearBounds.from && year < yearBounds.from.getFullYear();
-  const above = yearBounds.to && year > yearBounds.to.getFullYear();
-  if (below || above) {
-    console.warn(
-      `[dooph] Calendar: \`selected\` is in ${year}, outside \`yearBounds\`. ` +
-        "The value is left as-is — navigation is clamped to the bounds. " +
-        "Widen yearBounds or pass a value inside them.",
-    );
-  }
+  console.warn(
+    `[dooph] Calendar: \`selected\` is in ${anchorDate.getFullYear()}, outside ` +
+      "`yearBounds`. The value is left as-is — bounds constrain the calendar's " +
+      "own navigation, not values you supply.",
+  );
+}
+
+/**
+ * Same rule for a controlled `month`. Clamping a consumer-supplied prop would
+ * make their state and the rendered month diverge silently and permanently.
+ */
+function warnOnOutOfBoundsMonth(
+  month: Date | undefined,
+  yearBounds: { from?: Date; to?: Date } | undefined,
+): void {
+  if (process.env.NODE_ENV === "production" || !month) return;
+  if (!isYearOutOfBounds(month, yearBounds)) return;
+
+  console.warn(
+    `[dooph] Calendar: controlled \`month\` is in ${month.getFullYear()}, outside ` +
+      "`yearBounds`. The prop is respected as passed — bounds constrain the " +
+      "calendar's own navigation, not values you supply.",
+  );
 }
 
 function Calendar(props: CalendarProps) {
@@ -126,6 +141,7 @@ function Calendar(props: CalendarProps) {
     mode === DatePickerMode.singleDay ? props.selected : props.selected.from;
 
   warnOnOutOfBoundsValue(anchorDate, yearBounds);
+  warnOnOutOfBoundsMonth(month, yearBounds);
 
   // Explicit yearBounds are hard limits on NAVIGATION. The view month is
   // component-owned state, so clamping it is legitimate — the consumer's
@@ -133,10 +149,10 @@ function Calendar(props: CalendarProps) {
   const [uncontrolledMonth, setUncontrolledMonth] = useState(() =>
     clampMonthToYearBounds(startOfMonth(anchorDate), yearBounds),
   );
-  const viewMonth = clampMonthToYearBounds(
-    month ? startOfMonth(month) : uncontrolledMonth,
-    yearBounds,
-  );
+  // Bounds clamp what the component decides, never what the consumer passes.
+  const viewMonth = month
+    ? startOfMonth(month)
+    : clampMonthToYearBounds(uncontrolledMonth, yearBounds);
 
   const changeMonth = useCallback(
     (next: Date) => {
@@ -150,6 +166,18 @@ function Calendar(props: CalendarProps) {
   const [pendingAnchor, setPendingAnchor] = useState<Date | null>(null);
   const [hoveredDay, setHoveredDay] = useState<Date | null>(null);
   const [focusedDay, setFocusedDay] = useState<Date>(anchorDate);
+
+  // `focusedDay` is a preference; the rendered month decides what can actually
+  // hold the roving tabIndex. When the preference scrolls out of view, fall back
+  // to a day that is on screen — and to an ENABLED one, because a disabled
+  // button cannot take focus and would leave the grid with no tab stop at all.
+  const focusedDayInView =
+    focusedDay.getFullYear() === viewMonth.getFullYear() &&
+    focusedDay.getMonth() === viewMonth.getMonth();
+
+  const effectiveFocusedDay = focusedDayInView
+    ? focusedDay
+    : (firstEnabledDayOfMonth(viewMonth, disabled) ?? startOfMonth(viewMonth));
   const shouldRestoreFocus = useRef(false);
   const focusedButtonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -232,9 +260,9 @@ function Calendar(props: CalendarProps) {
       const delta = deltas[event.key];
       if (delta === undefined) return;
       event.preventDefault();
-      moveFocus(focusedDay, delta);
+      moveFocus(effectiveFocusedDay, delta);
     },
-    [focusedDay, moveFocus],
+    [effectiveFocusedDay, moveFocus],
   );
 
   return (
@@ -264,7 +292,7 @@ function Calendar(props: CalendarProps) {
           selectedRange={selectedRange}
           previewedRange={pendingAnchor ? displayRange : null}
           today={today}
-          focusedDay={focusedDay}
+          focusedDay={effectiveFocusedDay}
           disabled={disabled}
           onDayClick={handleDayClick}
           onDayHover={setHoveredDay}

@@ -142,3 +142,18 @@ export const EdgeMonths: Story = {
     );
   },
 };
+
+export const YearBounds: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<Date>(TODAY);
+    return (
+      <Calendar
+        mode={DatePickerMode.singleDay}
+        selected={selected}
+        onSelect={setSelected}
+        today={TODAY}
+        yearBounds={{ from: new Date(2026, 0, 1), to: new Date(2026, 11, 31) }}
+      />
+    );
+  },
+};
