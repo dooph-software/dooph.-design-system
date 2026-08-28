@@ -36,6 +36,7 @@ export * from './components/ProgressIndicator/ProgressIndicator';
 export * from './components/ProgressIndicator/constants';
 export * from './components/LinearProgressIndicator';
 export * from './components/VerificationCode';
+export * from './components/Calendar';
 
 // Utilities
 export { cn } from './utils/cn';
