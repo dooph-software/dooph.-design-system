@@ -56,10 +56,18 @@ export function formatDayAriaLabel(date: Date, locale?: string): string {
 }
 
 /**
- * Year dropdown options. Derived from explicit bounds when given, otherwise a
- * past-weighted window around today — this is a dashboard component, people
- * look backwards. Always widened to include the current value and view month,
- * or the caption would show a year the dropdown cannot select.
+ * Year dropdown options.
+ *
+ * An explicit bound is a HARD limit — a consumer who passes `{ from, to }` is
+ * stating which years their data covers, and the dropdown must not offer more.
+ * A bound the caller omitted defaults to a past-weighted window around today
+ * (this is a dashboard component; people look backwards) and DOES widen to
+ * include the current value or view month, so a value far outside the default
+ * window stays reachable.
+ *
+ * The caption can still name a year outside explicit bounds if the consumer's
+ * value sits there. That is their data to fix — `Calendar` warns about it and
+ * clamps navigation rather than silently rewriting the value.
  */
 export function buildYearOptions(
   viewMonth: Date,
@@ -68,15 +76,42 @@ export function buildYearOptions(
   bounds?: { from?: Date; to?: Date },
 ): number[] {
   const nowYear = now.getFullYear();
-  let first = bounds?.from ? bounds.from.getFullYear() : nowYear - YEARS_BACK;
-  let last = bounds?.to ? bounds.to.getFullYear() : nowYear + YEARS_FORWARD;
+  const hasFrom = bounds?.from !== undefined;
+  const hasTo = bounds?.to !== undefined;
+  let first = hasFrom ? bounds!.from!.getFullYear() : nowYear - YEARS_BACK;
+  let last = hasTo ? bounds!.to!.getFullYear() : nowYear + YEARS_FORWARD;
 
   for (const year of [viewMonth.getFullYear(), value.getFullYear()]) {
-    if (year < first) first = year;
-    if (year > last) last = year;
+    if (!hasFrom && year < first) first = year;
+    if (!hasTo && year > last) last = year;
   }
+
+  // A caller can pass crossed bounds; degrade to a single year rather than [].
+  if (last < first) last = first;
 
   const years: number[] = [];
   for (let year = first; year <= last; year += 1) years.push(year);
   return years;
+}
+
+/**
+ * Clamp a month into explicit year bounds. The VIEW month is component-owned
+ * state, so clamping it is legitimate; the consumer's committed value is never
+ * rewritten. Used to pick the opening month and to bound navigation.
+ */
+export function clampMonthToYearBounds(
+  month: Date,
+  bounds?: { from?: Date; to?: Date },
+): Date {
+  if (!bounds) return month;
+
+  if (bounds.from) {
+    const floor = new Date(bounds.from.getFullYear(), 0, 1);
+    if (month.getTime() < floor.getTime()) return floor;
+  }
+  if (bounds.to) {
+    const ceiling = new Date(bounds.to.getFullYear(), 11, 1);
+    if (month.getTime() > ceiling.getTime()) return ceiling;
+  }
+  return month;
 }
