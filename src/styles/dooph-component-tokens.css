@@ -297,8 +297,13 @@
     min-width: var(--ui-min-w-calendar-panel);
   }
 
-  .ds-date-range-trigger-w {
-    min-width: var(--ui-min-w-date-range-trigger);
+  /* Concentric inner radius for a control nested inside `tight` corners with an
+   * xxs inset. Lives here rather than as a `rounded-[calc(…)]` utility because
+   * tailwind-merge does not recognise `tight` as a radius value, so it cannot
+   * dedupe the two — and Tailwind emits arbitrary radii BEFORE the named ones,
+   * so `rounded-tight` would win on source order. */
+  .ds-radius-tight-inset-xxs {
+    border-radius: calc(var(--ui-radius-tight) - var(--ui-spacing-xxs));
   }
 
   /* spacing — semantic names mirror token stems */

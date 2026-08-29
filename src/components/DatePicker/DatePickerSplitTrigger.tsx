@@ -9,6 +9,7 @@ import {
   SegmentedTabSelect,
   SegmentedVariant,
 } from "../SegmentedTabSelect";
+import { TabSize } from "../Tabs";
 import { ButtonText } from "../Text";
 import {
   DEFAULT_SPLIT_TRIGGER_PRESETS,
@@ -114,10 +115,11 @@ const DatePickerSplitTrigger = forwardRef<
         */}
         <div
           className={cn(
-            // 6px horizontal inset, height pinned to the trigger so the two
-            // halves of the split control stay flush. 6px has no t-shirt token;
-            // `px-1.5` matches SegmentedTabSelect's own shell inset.
-            "inline-flex h-button items-center px-1.5",
+            // xxs inset all round, height pinned to the trigger so the two
+            // halves of the split control stay flush. `items-stretch` is what
+            // lets the tabs take the remaining height rather than centring at
+            // their own.
+            "inline-flex h-button items-stretch p-xxs",
             "rounded-l-none rounded-r-tight",
             "border border-solid border-border-primary bg-secondary",
             disabled &&
@@ -128,12 +130,17 @@ const DatePickerSplitTrigger = forwardRef<
             variant={SegmentedVariant.micro}
             value={activePresetId}
             onValueChange={handlePresetChange}
+            className="h-full items-stretch"
           >
             {presets.map((preset) => (
               <SegmentedTabItem
                 key={preset.id}
                 value={preset.id}
                 disabled={disabled}
+                size={TabSize.fill}
+                // Nested-radius formula: the shell's `tight` radius less the
+                // xxs inset, so the tab's curve stays concentric with it.
+                className="ds-radius-tight-inset-xxs"
               >
                 <ButtonText>{preset.label}</ButtonText>
               </SegmentedTabItem>

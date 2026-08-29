@@ -65,6 +65,8 @@ const tabTriggerVariants = cva(
          * Figma's Micro segmented variant uses `sm` (10px) horizontal padding.
          */
         micro: "h-tab-micro ds-px-ui-sm",
+        /** Fills the parent's height; same padding as micro. */
+        fill: "h-full ds-px-ui-sm",
         /** Standard icon-only tab (38Ã—38) */
         icon: "size-button p-0",
         /** Small icon-only tab (34Ã—34) */

@@ -27,7 +27,7 @@ export type WheelState = {
   digit: number;
   /** Rolling to 0 and fading out; unmounts when the fade ends. */
   exiting: boolean;
-  /** Newly created for this change: rendered at 0 and faded in before rolling. */
+  /** Newly created for this change: mounted invisible and faded in. */
   entering: boolean;
 };
 
@@ -88,9 +88,12 @@ export function restingWheels(digits: string[]): WheelState[] {
  *
  * - A place that already exists keeps its React identity and simply receives
  *   its new digit — the transition does the rest.
- * - A place that is newly needed is created at 0, marked `entering: true`, and
- *   reported in `pending`. The caller fades it up from 0 BEFORE retargeting,
- *   so a widening figure does not read as a digit flashing into existence.
+ * - A place that is newly needed is created at its FINAL digit and marked
+ *   `entering: true`. The caller mounts it invisible and fades it in, so a
+ *   widening figure does not read as a digit flashing into existence. It is
+ *   created at the real digit rather than at 0 because a wheel that fades in
+ *   AND rolls at the same time reads as a smear; the roll belongs to wheels
+ *   that were already on screen.
  * - A place that is no longer needed is kept with `exiting: true` and its
  *   CURRENT digit — not 0. It fades out where it stands; rolling a departing
  *   wheel to zero on the way out was the goofy part.
@@ -103,8 +106,7 @@ export function restingWheels(digits: string[]): WheelState[] {
 export function reconcileWheels(
   prev: WheelState[],
   digits: string[],
-): { next: WheelState[]; pending: Map<number, number> } {
-  const pending = new Map<number, number>();
+): WheelState[] {
   const byPlace = new Map<number, WheelState>();
   for (const w of prev) {
     if (!w.exiting) byPlace.set(w.place, w);
@@ -115,12 +117,12 @@ export function reconcileWheels(
   for (let i = 0; i < n; i++) {
     const place = n - 1 - i;
     const digit = Number(digits[i]);
-    if (byPlace.has(place)) {
-      next.push({ place, digit, exiting: false, entering: false });
-    } else {
-      next.push({ place, digit: 0, exiting: false, entering: true });
-      pending.set(place, digit);
-    }
+    next.push({
+      place,
+      digit,
+      exiting: false,
+      entering: !byPlace.has(place),
+    });
     byPlace.delete(place);
   }
   for (const w of byPlace.values()) {
@@ -128,7 +130,7 @@ export function reconcileWheels(
   }
 
   next.sort((a, b) => b.place - a.place);
-  return { next, pending };
+  return next;
 }
 
 /**

@@ -452,11 +452,10 @@
   .ds-rolling-money-col > span {
     display: block;
   }
-  /* A departing wheel rolls to 0 and fades at the same time, so it is invisible
-   * well before it unmounts. Fading rather than only rolling is deliberate: a
-   * wheel resting at 0 would read as a leading zero if cleanup were ever late,
-   * and opacity always transitions, which gives a transitionend that firing on
-   * transform alone would not (a wheel already showing 0 does not move). */
+  /* A departing wheel fades out where it stands, holding its last digit — it
+   * does not roll to 0 on the way out, which read as goofy. Opacity always
+   * transitions, which also gives the `transitionend` that unmounts the wheel;
+   * a transform-only exit would not fire one for a wheel that never moves. */
   .ds-rolling-money-wheel[data-exiting] {
     opacity: 0;
   }

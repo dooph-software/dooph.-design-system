@@ -142,12 +142,13 @@
    * for the whole figure. It stays a token so a consumer can dial in a
    * right-to-left cascade (ones place leads) without patching the package.
    *
-   * Note that a change which ADDS or REMOVES a digit is deliberately staged
-   * rather than simultaneous, and `stagger` does not govern that: growth
-   * widens the figure and fades the new wheel in at 0 before anything rolls;
-   * shrink rolls first and only then fades the departing wheel out. See
-   * ENTER_STAGE_MS / ROLL_STAGE_MS in RollingMoneyText.tsx, which mirror
-   * `fade-duration` and `duration` respectively.
+   * A change which ADDS or REMOVES a digit runs CONCURRENTLY with the roll:
+   * `duration` governs the roll of the wheels already on screen, and
+   * `fade-duration` governs an added wheel fading in (already showing its
+   * digit) or a departing one fading out (holding its last). The two are
+   * independent, so they can be retimed independently. An earlier version
+   * staged them against each other from JS constants that mirrored these
+   * tokens; the mirror desynced and the roll overran the fade.
    *
    * `cents-size` / `cents-rise` / `cents-gap` are all in em of the PARENT —
    * the dollars — not of the cents. That is what keeps the cents a fixed
@@ -255,9 +256,6 @@
   /* Panel width sets the day-cell size: cells are aspect-square across seven
    * equal columns, so widening the panel makes each day physically bigger. */
   --ui-min-w-calendar-panel: 300px;
-  /* Floor for the range trigger so its width does not jump as the formatted
-   * label changes length between selections. */
-  --ui-min-w-date-range-trigger: 240px;
   --ui-height-button-micro: 26px;
   /* Micro segmented-tab item — the compact inline preset row (Figma "Micro"). */
   --ui-height-tab-micro: 30px;

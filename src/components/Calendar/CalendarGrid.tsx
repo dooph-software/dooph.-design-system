@@ -177,9 +177,6 @@ const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
                     position === "none" &&
                       !dayDisabled &&
                       "hover:bg-ghost-hover",
-                    renderProps.isToday &&
-                      !isEndpoint &&
-                      "border border-solid border-border-primary",
                     // Terminate the band cleanly at each week boundary.
                     !isEndpoint && isFirstColumn && "rounded-l-calendar-day",
                     !isEndpoint && isLastColumn && "rounded-r-calendar-day",
@@ -206,6 +203,20 @@ const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
                         )}
                       />
                     </>
+                  )}
+
+                  {/*
+                    Today's outline is its own layer for the same reason the
+                    endpoint fill is: inside a range the cell's own corners go
+                    square so the band stays continuous, but the marker has to
+                    stay a rounded tile to remain readable. Primary border per
+                    the Figma spec — a subtle border disappears against the band.
+                  */}
+                  {renderProps.isToday && !isEndpoint && (
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-0 rounded-calendar-day border border-solid border-primary-border"
+                    />
                   )}
                   <button
                     type="button"

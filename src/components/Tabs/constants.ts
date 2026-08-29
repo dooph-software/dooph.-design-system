@@ -12,6 +12,11 @@ export const TabSize = {
   sm: "sm",
   /** 30px compact item — backs SegmentedVariant.micro (Figma "Micro"). */
   micro: "micro",
+  /**
+   * Height follows the parent instead of a fixed value — for a segmented row
+   * nested in a control whose own height is authoritative.
+   */
+  fill: "fill",
   /** 38×38 icon-only tab. */
   icon: "icon",
   /** 34×34 icon-only tab, pairing with the small variants. */

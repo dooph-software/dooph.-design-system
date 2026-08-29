@@ -6,12 +6,22 @@ import type { DateRange } from "./constants";
 const YEARS_BACK = 10;
 const YEARS_FORWARD = 1;
 
-// `month: "long"` matches the Figma trigger exactly ("May 14 - June 14").
-// "short" would render "Jun 14"; if a more compact label is ever wanted, this
-// is the single line to change.
+/*
+ * Trigger labels use the ABBREVIATED month ("May 14 - Jun 14").
+ *
+ * This is a width decision as much as a typographic one. Full month names run
+ * from 3 to 9 characters, so a range label's width swung wildly as the
+ * selection changed and the trigger visibly resized on every preset click.
+ * Normalising to three letters makes every label near enough the same width
+ * that the trigger can simply hug its content — no min-width token needed.
+ *
+ * The month-jump dropdown inside the popover keeps full names, via
+ * `formatMonthName` below; it is a list with room for them, and "September"
+ * reads better there than "Sep".
+ */
 function format(date: Date, locale: string | undefined, withYear: boolean): string {
   return new Intl.DateTimeFormat(locale, {
-    month: "long",
+    month: "short",
     day: "numeric",
     ...(withYear ? { year: "numeric" } : {}),
   }).format(date);

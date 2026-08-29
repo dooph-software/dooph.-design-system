@@ -66,9 +66,6 @@ const DatePickerTrigger = forwardRef<HTMLButtonElement, DatePickerTriggerProps>(
           // own selector — a `data-[state=open]:ds-focus-ring` variant would
           // silently emit no rule at all.
           "data-[state=open]:border-border-focus ds-focus-ring-on-open",
-          // A range label changes length between selections; without a floor
-          // the trigger visibly resizes every time the range changes.
-          mode === DatePickerMode.dateRange && "ds-date-range-trigger-w",
           className,
         )}
         {...buttonProps}
