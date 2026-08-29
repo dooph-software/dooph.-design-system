@@ -175,7 +175,10 @@ const TypeableDropdownTrigger = forwardRef<
           "transition-all duration-150 ease-out",
           "[&:hover:not(:focus-within)]:border-trigger-border-hover [&:hover:not(:focus-within)]:shadow-button-secondary",
           "focus-within:border-border-focus ds-focus-within-ring",
-          "data-[state=open]:border-border-focus data-[state=open]:ds-focus-ring",
+          // The ring carries its state in its own selector — a
+          // `data-[state=open]:ds-focus-ring` variant composes a Tailwind
+          // variant with a package class and emits no rule at all.
+          "data-[state=open]:border-border-focus ds-focus-ring-on-open",
           disabled ? "cursor-not-allowed" : "cursor-text",
           className,
         )}

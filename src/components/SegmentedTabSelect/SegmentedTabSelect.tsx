@@ -27,11 +27,12 @@ const SegmentedTabContext = createContext<{
  * | variant            | shell | active-tab style | item size |
  * |--------------------|-------|------------------|-----------|
  * | ghost              | –     | ghost            | default   |
- * | ghost-small        | –     | ghost            | default   |
+ * | ghost-small        | –     | ghost            | sm        |
+ * | micro              | –     | ghost            | micro     |
  * | secondary          | ✓     | ghost            | default   |
- * | secondary-small    | ✓     | ghost            | default   |
+ * | secondary-small    | ✓     | ghost            | sm        |
  * | primary            | ✓     | primary          | default   |
- * | primary-small      | ✓     | primary          | default   |
+ * | primary-small      | ✓     | primary          | sm        |
  */
 // SegmentedVariant (+ its type) lives in ./constants (server-safe), re-exported
 // via index.ts; imported here for internal variant resolution.
@@ -72,14 +73,20 @@ const SegmentedTabSelect = forwardRef<
     <SegmentedTabContext.Provider
       value={{
         tabVariant: isPrimary ? TabVariant.primary : TabVariant.ghost,
-        itemSize: TabSize.default,
+        itemSize:
+          variant === SegmentedVariant.micro
+            ? TabSize.micro
+            : isSmall
+              ? TabSize.sm
+              : TabSize.default,
       }}
     >
       <TabsPrimitive.Root ref={ref} {...props}>
         <TabsList
           className={cn(
             hasShell &&
-              'rounded-soft border border-solid border-border-primary bg-secondary p-1.5',
+              // `standard` (18px) per Figma's shell radius variable.
+              'rounded-standard border border-solid border-border-primary bg-secondary p-1.5',
             isSmall && hasShell && 'gap-1',
             className
           )}

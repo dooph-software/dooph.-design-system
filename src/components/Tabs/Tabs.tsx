@@ -58,8 +58,17 @@ const tabTriggerVariants = cva(
       },
       size: {
         default: "h-button px-4",
+        /** Small (34px) with `rg` (12px) padding — Figma's *Small variants. */
+        sm: "h-button-sm px-rg",
+        /**
+         * Micro (30px) — same typography and colours as default, tighter box.
+         * Figma's Micro segmented variant uses `sm` (10px) horizontal padding.
+         */
+        micro: "h-tab-micro ds-px-ui-sm",
         /** Standard icon-only tab (38Ã—38) */
         icon: "size-button p-0",
+        /** Small icon-only tab (34Ã—34) */
+        "icon-sm": "size-button-sm p-0",
       },
     },
     defaultVariants: {

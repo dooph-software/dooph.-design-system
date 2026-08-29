@@ -1,6 +1,7 @@
 "use client";
 
 import { forwardRef, type ComponentPropsWithoutRef } from "react";
+import { cn } from "../../utils/cn";
 import { DropdownTrigger, DropdownTriggerContent } from "../DropdownTrigger";
 import { CalendarIcon, IconSize } from "../Icons";
 import { ButtonText } from "../Text";
@@ -58,7 +59,18 @@ const DatePickerTrigger = forwardRef<HTMLButtonElement, DatePickerTriggerProps>(
       <DropdownTrigger
         ref={ref}
         data-mode={mode}
-        className={className}
+        className={cn(
+          // Radix's Popover.Trigger stamps data-state on this button, so the
+          // trigger carries the focused border + ring while the panel is open.
+          // The ring uses ds-focus-ring-on-open, which carries the state in its
+          // own selector — a `data-[state=open]:ds-focus-ring` variant would
+          // silently emit no rule at all.
+          "data-[state=open]:border-border-focus ds-focus-ring-on-open",
+          // A range label changes length between selections; without a floor
+          // the trigger visibly resizes every time the range changes.
+          mode === DatePickerMode.dateRange && "ds-date-range-trigger-w",
+          className,
+        )}
         {...buttonProps}
       >
         <DropdownTriggerContent className="items-center">

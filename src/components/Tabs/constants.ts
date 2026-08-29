@@ -6,8 +6,16 @@
  * Usage: <TabsTrigger size={TabSize.icon} />
  */
 export const TabSize = {
+  /** 38px — Figma `buttonSizes/buttonHeight`, `md` (16px) horizontal padding. */
   default: "default",
+  /** 34px — Figma `buttonSizes/smallButtonHeight`, `rg` (12px) padding. */
+  sm: "sm",
+  /** 30px compact item — backs SegmentedVariant.micro (Figma "Micro"). */
+  micro: "micro",
+  /** 38×38 icon-only tab. */
   icon: "icon",
+  /** 34×34 icon-only tab, pairing with the small variants. */
+  iconSm: "icon-sm",
 } as const;
 export type TabSize = (typeof TabSize)[keyof typeof TabSize];
 

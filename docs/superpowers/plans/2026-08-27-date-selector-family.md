@@ -2739,6 +2739,343 @@ git commit -m "feat(datepicker): add stories and verify build"
 
 ---
 
+## Task 17: Focus reachability and bounds symmetry
+
+**Files:**
+- Modify: `src/components/Calendar/dateUtils.ts` (append one function)
+- Modify: `src/components/Calendar/dateFormat.ts` (append one function)
+- Modify: `src/components/Calendar/Calendar.tsx`
+- Modify: `src/components/Calendar/CalendarCaption.tsx`
+
+**Interfaces:**
+- Consumes: `daysInMonth`, `isDateDisabled`, `DateMatcher`, `startOfMonth`, `addMonths` (Tasks 2–3); `clampMonthToYearBounds` (Task 6).
+- Produces:
+  - `firstEnabledDayOfMonth(month: Date, disabled?: DateMatcher | DateMatcher[]): Date | undefined`
+  - `isYearOutOfBounds(date: Date, bounds?: { from?: Date; to?: Date }): boolean`
+
+This task fixes two defects found in review of Task 11. Neither is cosmetic.
+
+**Defect 1 — the grid can lose its only tab stop.** `focusedDay` is seeded once and
+moves only on a day click or an arrow key. The caption's nav buttons and dropdowns
+change `viewMonth` without touching it. `CalendarGrid` gives `tabIndex={0}` to
+whichever cell satisfies `isSameDay(date, focusedDay)` — so once `focusedDay` is not
+among the 42 rendered cells, **every** cell is `tabIndex={-1}` and the grid drops out
+of the tab order. With the default May 2026, June's grid runs May 31 → July 11, so a
+single click of "next month" is enough to trigger it.
+
+The fix is not to re-sync `focusedDay` to `selected`. It is to stop treating it as
+authoritative: it is a *preference*, and the rendered month decides what can actually
+hold the roving tabIndex.
+
+**Defect 2 — bounds are applied asymmetrically.** A controlled `month` prop outside
+`yearBounds` is silently clamped, so the consumer's state and the displayed month
+diverge permanently with nothing in the console — while `selected` in the same
+situation is respected and warned about. The rule that resolves it:
+
+> **Bounds clamp what the component decides. They never override what the consumer passes.**
+
+| State | Owner | Bounds behaviour |
+| --- | --- | --- |
+| `uncontrolledMonth` initial value | component | clamp |
+| `changeMonth` from nav / dropdown | component | clamp |
+| `month` prop | consumer | respect, warn in dev |
+| `selected` | consumer | respect, warn in dev (already correct) |
+
+Clamping also makes "previous month" at the floor a click that does nothing with no
+feedback, so this task disables the nav buttons at the bounds.
+
+> **Note on granularity:** `yearBounds` is year-level — `clampMonthToYearBounds` floors
+> to January and ceilings to December of the bound years. Every month of a boundary
+> year is therefore in bounds, so the month dropdown needs no filtering. Only the
+> nav buttons and the year dropdown are affected.
+
+- [ ] **Step 1: Add the enabled-day scan to `dateUtils.ts`**
+
+Append to `src/components/Calendar/dateUtils.ts`:
+
+```ts
+/**
+ * The first selectable day of a month, or `undefined` when every day in it is
+ * disabled.
+ *
+ * Used to place the roving tabIndex. A disabled button cannot take focus, so
+ * falling back to day 1 unconditionally can still leave the grid with no tab
+ * stop — e.g. a forward month under `disabled={{ after: today }}`.
+ */
+export function firstEnabledDayOfMonth(
+  month: Date,
+  disabled?: DateMatcher | DateMatcher[],
+): Date | undefined {
+  const year = month.getFullYear();
+  const monthIndex = month.getMonth();
+  const total = daysInMonth(year, monthIndex);
+
+  for (let day = 1; day <= total; day += 1) {
+    const candidate = new Date(year, monthIndex, day);
+    if (!isDateDisabled(candidate, disabled)) return candidate;
+  }
+  return undefined;
+}
+```
+
+- [ ] **Step 2: Add the bounds predicate to `dateFormat.ts`**
+
+Append to `src/components/Calendar/dateFormat.ts`:
+
+```ts
+/**
+ * Whether a date's YEAR falls outside explicit bounds. `yearBounds` is
+ * year-granular, so this is the single test behind the out-of-bounds warnings
+ * and the nav-button disabling.
+ */
+export function isYearOutOfBounds(
+  date: Date,
+  bounds?: { from?: Date; to?: Date },
+): boolean {
+  if (!bounds) return false;
+  const year = date.getFullYear();
+  if (bounds.from && year < bounds.from.getFullYear()) return true;
+  if (bounds.to && year > bounds.to.getFullYear()) return true;
+  return false;
+}
+```
+
+- [ ] **Step 3: Update the imports in `Calendar.tsx`**
+
+Replace the two import lines:
+
+```ts
+import { clampMonthToYearBounds } from "./dateFormat";
+```
+
+with:
+
+```ts
+import { clampMonthToYearBounds, isYearOutOfBounds } from "./dateFormat";
+```
+
+and add `firstEnabledDayOfMonth` to the existing `./dateUtils` import so it reads:
+
+```ts
+import {
+  DAYS_IN_WEEK,
+  firstEnabledDayOfMonth,
+  isDateDisabled,
+  startOfDay,
+  startOfMonth,
+  type DateMatcher,
+} from "./dateUtils";
+```
+
+- [ ] **Step 4: Simplify the value warning and add the month warning**
+
+In `Calendar.tsx`, replace the body of `warnOnOutOfBoundsValue` and add a sibling.
+The existing function's inline year comparison becomes a call to the shared
+predicate; the new one covers the controlled `month` prop.
+
+```ts
+/**
+ * Explicit `yearBounds` are a hard limit on the calendar's OWN navigation, but
+ * the value belongs to the consumer — so a value outside them is reported,
+ * never rewritten.
+ */
+function warnOnOutOfBoundsValue(
+  anchorDate: Date,
+  yearBounds: { from?: Date; to?: Date } | undefined,
+): void {
+  if (process.env.NODE_ENV === "production") return;
+  if (!isYearOutOfBounds(anchorDate, yearBounds)) return;
+
+  console.warn(
+    `[dooph] Calendar: \`selected\` is in ${anchorDate.getFullYear()}, outside ` +
+      "`yearBounds`. The value is left as-is — bounds constrain the calendar's " +
+      "own navigation, not values you supply.",
+  );
+}
+
+/**
+ * Same rule for a controlled `month`. Clamping a consumer-supplied prop would
+ * make their state and the rendered month diverge silently and permanently.
+ */
+function warnOnOutOfBoundsMonth(
+  month: Date | undefined,
+  yearBounds: { from?: Date; to?: Date } | undefined,
+): void {
+  if (process.env.NODE_ENV === "production" || !month) return;
+  if (!isYearOutOfBounds(month, yearBounds)) return;
+
+  console.warn(
+    `[dooph] Calendar: controlled \`month\` is in ${month.getFullYear()}, outside ` +
+      "`yearBounds`. The prop is respected as passed — bounds constrain the " +
+      "calendar's own navigation, not values you supply.",
+  );
+}
+```
+
+- [ ] **Step 5: Respect a controlled month, clamp only our own**
+
+In `Calendar.tsx`, replace the `viewMonth` derivation:
+
+```ts
+  const viewMonth = clampMonthToYearBounds(
+    month ? startOfMonth(month) : uncontrolledMonth,
+    yearBounds,
+  );
+```
+
+with:
+
+```ts
+  // Bounds clamp what the component decides, never what the consumer passes.
+  const viewMonth = month
+    ? startOfMonth(month)
+    : clampMonthToYearBounds(uncontrolledMonth, yearBounds);
+```
+
+The lazy `useState` initialiser and `changeMonth` keep their `clampMonthToYearBounds`
+calls unchanged — both are component-owned.
+
+Then add the new warning call immediately after the existing one:
+
+```ts
+  warnOnOutOfBoundsValue(anchorDate, yearBounds);
+  warnOnOutOfBoundsMonth(month, yearBounds);
+```
+
+- [ ] **Step 6: Derive the effective focused day**
+
+In `Calendar.tsx`, immediately after the `focusedDay` state declaration, add:
+
+```ts
+  // `focusedDay` is a preference; the rendered month decides what can actually
+  // hold the roving tabIndex. When the preference scrolls out of view, fall back
+  // to a day that is on screen — and to an ENABLED one, because a disabled
+  // button cannot take focus and would leave the grid with no tab stop at all.
+  const focusedDayInView =
+    focusedDay.getFullYear() === viewMonth.getFullYear() &&
+    focusedDay.getMonth() === viewMonth.getMonth();
+
+  const effectiveFocusedDay = focusedDayInView
+    ? focusedDay
+    : (firstEnabledDayOfMonth(viewMonth, disabled) ?? startOfMonth(viewMonth));
+```
+
+Month equality is a sufficient in-view test: `moveFocus` already calls `changeMonth`
+whenever it crosses a month boundary, so `focusedDay` and `viewMonth` stay in lockstep
+on the arrow-key path.
+
+- [ ] **Step 7: Read through the effective value everywhere**
+
+Three read sites change; the two `setFocusedDay` write sites do not.
+
+In `handleDayKeyDown`, the `moveFocus` call and its dependency array:
+
+```ts
+      moveFocus(effectiveFocusedDay, delta);
+    },
+    [effectiveFocusedDay, moveFocus],
+  );
+```
+
+And the prop passed to `CalendarGrid`:
+
+```ts
+          focusedDay={effectiveFocusedDay}
+```
+
+- [ ] **Step 8: Disable the nav buttons at the bounds**
+
+In `CalendarCaption.tsx`, add to the imports:
+
+```ts
+import { buildYearOptions, formatMonthName, isYearOutOfBounds } from "./dateFormat";
+```
+
+Inside the component, after the `months` array, add:
+
+```ts
+  // Clamping already prevents navigating out of bounds — disabling the button
+  // tells the user that, instead of letting them click into a no-op.
+  //
+  // Guarded on the CURRENT view being in bounds. Step 5 makes an out-of-bounds
+  // `viewMonth` reachable for the first time (a controlled `month` prop is now
+  // respected rather than clamped), and in that state BOTH neighbours are also
+  // out of bounds — so an unguarded test would disable both arrows, including
+  // the one pointing back toward the bounds, stranding the user exactly where
+  // they most need to navigate.
+  const viewInBounds = !isYearOutOfBounds(viewMonth, yearBounds);
+  const atFloor =
+    viewInBounds && isYearOutOfBounds(addMonths(viewMonth, -1), yearBounds);
+  const atCeiling =
+    viewInBounds && isYearOutOfBounds(addMonths(viewMonth, 1), yearBounds);
+```
+
+Then add `disabled` to each nav `Button`:
+
+```tsx
+        <Button
+          variant={ButtonVariant.ghost}
+          size={ButtonSize.iconMicro}
+          aria-label="Previous month"
+          disabled={atFloor}
+          onClick={() => onMonthChange(addMonths(viewMonth, -1))}
+        >
+          <ChevronLeftIcon size={IconSize.standard} />
+        </Button>
+        <Button
+          variant={ButtonVariant.ghost}
+          size={ButtonSize.iconMicro}
+          aria-label="Next month"
+          disabled={atCeiling}
+          onClick={() => onMonthChange(addMonths(viewMonth, 1))}
+        >
+          <ChevronRightIcon size={IconSize.standard} />
+        </Button>
+```
+
+- [ ] **Step 9: Add a story that exercises the bounds**
+
+In `src/components/Calendar/Calendar.stories.tsx`, add:
+
+```tsx
+export const YearBounds: Story = {
+  render: () => {
+    const [selected, setSelected] = useState<Date>(TODAY);
+    return (
+      <Calendar
+        mode={DatePickerMode.singleDay}
+        selected={selected}
+        onSelect={setSelected}
+        today={TODAY}
+        yearBounds={{ from: new Date(2026, 0, 1), to: new Date(2026, 11, 31) }}
+      />
+    );
+  },
+};
+```
+
+- [ ] **Step 10: Verify**
+
+Run: `npm run lint`
+Expected: no output.
+
+Run: `npm run build`
+Expected: completes.
+
+- [ ] **Step 11: Commit**
+
+```bash
+git add src/components/Calendar/dateUtils.ts src/components/Calendar/dateFormat.ts src/components/Calendar/Calendar.tsx src/components/Calendar/CalendarCaption.tsx src/components/Calendar/Calendar.stories.tsx
+git commit -m "fix(calendar): keep a tab stop in view and respect controlled month"
+```
+
+**Maintainer's visual check for this task** (deferred, as with all story work):
+1. Open `Inputs/Calendar` → `SingleDay`, click "next month" once, then press Tab from the page — a day cell in the displayed month should receive focus. Before this fix, focus skipped the grid entirely.
+2. `DisabledFutureDates` → navigate forward a month; the tab stop should land on nothing focusable (whole month disabled) but the caption nav must still be reachable.
+3. `YearBounds` → navigate to January 2026; "previous month" should be visibly disabled. Same for December 2026 and "next month".
+
+---
+
 ## Plan Self-Review
 
 **Spec coverage** — every decision in the research doc maps to a task:
@@ -2762,6 +3099,8 @@ git commit -m "feat(datepicker): add stories and verify build"
 | §10.2 | Required value, non-nullable `to`, warn not throw | 4, 11 |
 | §10.3 | Restart on click, abandon on dismiss, committed label while pending | 5, 11 |
 | §10.4 | Panel stays open; Escape and outside click close | 15 |
+
+**Task 17** was added after Task 11's review surfaced two defects: the roving tabIndex could leave the grid with no tab stop after a single month navigation, and `yearBounds` was applied asymmetrically (clamping a consumer-controlled `month` while merely warning about `selected`). It also disables the nav buttons at the bounds so clamping is never a silent no-op.
 
 **Known gaps, deliberately deferred** (§11 of the research doc): whether the caption dropdowns should hide months/years containing no selectable day once `disabled` is in play; and whether the split trigger's preset highlight should sync with a panel rail rendered at the same time. Both are additive and neither blocks v1.
 

@@ -4,6 +4,8 @@
 export const SegmentedVariant = {
   ghost: 'ghost',
   ghostSmall: 'ghost-small',
+  /** 30px shell-less row — Figma "Micro". Used by the date range split trigger. */
+  micro: 'micro',
   secondary: 'secondary',
   secondarySmall: 'secondary-small',
   primary: 'primary',

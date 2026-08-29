@@ -137,6 +137,15 @@ const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
                 position === "end" ||
                 position === "single";
 
+              // An endpoint tile is fully rounded, but the band beside it is
+              // square — leaving two slivers of neither colour in the corners
+              // where they meet. A track-coloured underlay fills exactly those
+              // slivers: square on the side the band continues, rounded on the
+              // outer side so nothing bleeds past the tile. At a row edge the
+              // band terminates anyway, so no underlay is needed.
+              const connectsRight = position === "start" && !isLastColumn;
+              const connectsLeft = position === "end" && !isFirstColumn;
+
               const renderProps: CalendarDayRenderProps = {
                 date,
                 isSelected: position !== "none",
@@ -156,18 +165,48 @@ const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
                   aria-selected={position !== "none"}
                   data-range={position}
                   className={cn(
-                    // Layer 1: the band. Zero gap between cells is what makes
-                    // it continuous; the visual gutter is the padding below.
-                    "aspect-square p-xxs",
-                    position !== "none" && "bg-ghost-active",
-                    position === "start" && "rounded-l-calendar-day",
-                    position === "end" && "rounded-r-calendar-day",
-                    position === "single" && "rounded-calendar-day",
+                    // Layer 1: the fill. Zero gap between cells is what makes
+                    // the band continuous; the visual gutter is the padding
+                    // below. Hover, today's outline and the endpoint fill all
+                    // sit on the WHOLE tile rather than on the inset button.
+                    "group/day relative aspect-square p-xxs",
+                    !isEndpoint && position !== "none" && "bg-ghost-active",
+                    // Unselected tiles round themselves so the hover and the
+                    // today outline read as a tile, not a square.
+                    position === "none" && "rounded-calendar-day",
+                    position === "none" &&
+                      !dayDisabled &&
+                      "hover:bg-ghost-hover",
+                    renderProps.isToday &&
+                      !isEndpoint &&
+                      "border border-solid border-border-primary",
                     // Terminate the band cleanly at each week boundary.
-                    isFirstColumn && "rounded-l-calendar-day",
-                    isLastColumn && "rounded-r-calendar-day",
+                    !isEndpoint && isFirstColumn && "rounded-l-calendar-day",
+                    !isEndpoint && isLastColumn && "rounded-r-calendar-day",
                   )}
                 >
+                  {isEndpoint && (
+                    <>
+                      {(connectsRight || connectsLeft) && (
+                        <span
+                          aria-hidden
+                          className={cn(
+                            "pointer-events-none absolute inset-0 bg-ghost-active",
+                            connectsRight && "rounded-l-calendar-day",
+                            connectsLeft && "rounded-r-calendar-day",
+                          )}
+                        />
+                      )}
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "pointer-events-none absolute inset-0",
+                          "rounded-calendar-day bg-primary",
+                          !dayDisabled && "group-hover/day:bg-primary-hover",
+                        )}
+                      />
+                    </>
+                  )}
                   <button
                     type="button"
                     ref={isFocused ? dayRef : undefined}
@@ -182,18 +221,19 @@ const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
                     onPointerLeave={onDayHoverEnd}
                     onKeyDown={onDayKeyDown}
                     className={cn(
-                      "flex size-full items-center justify-center",
-                      "rounded-calendar-day cursor-pointer",
-                      "transition-colors duration-100",
+                      // `relative` keeps the label above the absolutely
+                      // positioned fill layers behind it.
+                      "relative flex size-full items-center justify-center",
+                      "rounded-calendar-day cursor-pointer bg-transparent",
+                      // No transition: day and track state changes read as
+                      // instant, which suits a grid where the pointer crosses
+                      // many cells quickly.
                       "ds-focus-visible-ring ds-disabled-state",
-                      // Layer 2: resting + hover.
+                      // Layer 2 is now the label only — every fill lives on the
+                      // tile, so hovering anywhere in the cell reads as one day.
                       "text-ghost-fg-active",
-                      "[&:not(:disabled)]:hover:bg-ghost-hover",
                       isOutside && "text-ghost-fg",
-                      // Layer 3: endpoints sit above the band.
-                      isEndpoint && "bg-primary text-primary-fg",
-                      isEndpoint && "[&:not(:disabled)]:hover:bg-primary-hover",
-                      renderProps.isToday && !isEndpoint && "border border-solid border-border-primary",
+                      isEndpoint && "text-primary-fg",
                     )}
                   >
                     {renderDay ? (

@@ -4,6 +4,11 @@ import { forwardRef, type ComponentPropsWithoutRef, type ReactNode } from "react
 import { cn } from "../../utils/cn";
 import { DropdownTrigger, DropdownTriggerContent } from "../DropdownTrigger";
 import { CalendarIcon, IconSize } from "../Icons";
+import {
+  SegmentedTabItem,
+  SegmentedTabSelect,
+  SegmentedVariant,
+} from "../SegmentedTabSelect";
 import { ButtonText } from "../Text";
 import {
   DEFAULT_SPLIT_TRIGGER_PRESETS,
@@ -56,6 +61,24 @@ const DatePickerSplitTrigger = forwardRef<
   ) => {
     const now = startOfDay(today ?? new Date());
 
+    // Active state stays derived from the live range rather than stored, so the
+    // calendar remains the single source of truth. Radix Tabs treats "" as
+    // "nothing selected", which is exactly the case where the range matches no
+    // preset.
+    const activePresetId =
+      presets.find((preset) => {
+        const presetRange = preset.getRange(now);
+        return (
+          isSameDay(value.from, presetRange.from) &&
+          isSameDay(value.to, presetRange.to)
+        );
+      })?.id ?? "";
+
+    const handlePresetChange = (id: string) => {
+      const preset = presets.find((candidate) => candidate.id === id);
+      if (preset) onSelect(preset.getRange(now));
+    };
+
     return (
       <div
         ref={ref}
@@ -83,38 +106,39 @@ const DatePickerSplitTrigger = forwardRef<
           </DropdownTrigger>
         )}
 
-        <div className="inline-flex">
-          {presets.map((preset, index) => {
-            const presetRange = preset.getRange(now);
-            const isActive =
-              isSameDay(value.from, presetRange.from) &&
-              isSameDay(value.to, presetRange.to);
-            const isLast = index === presets.length - 1;
-
-            return (
-              <button
+        {/*
+          The inline shortcuts are a Micro segmented select (Figma "Micro"),
+          not bespoke buttons — so they inherit the segmented family's active
+          treatment and keyboard behaviour. The Micro variant is shell-less, so
+          the joined shell and its seam live on this wrapper.
+        */}
+        <div
+          className={cn(
+            // 6px horizontal inset, height pinned to the trigger so the two
+            // halves of the split control stay flush. 6px has no t-shirt token;
+            // `px-1.5` matches SegmentedTabSelect's own shell inset.
+            "inline-flex h-button items-center px-1.5",
+            "rounded-l-none rounded-r-tight",
+            "border border-solid border-border-primary bg-secondary",
+            disabled &&
+              "bg-secondary-disabled border-secondary-border-disabled",
+          )}
+        >
+          <SegmentedTabSelect
+            variant={SegmentedVariant.micro}
+            value={activePresetId}
+            onValueChange={handlePresetChange}
+          >
+            {presets.map((preset) => (
+              <SegmentedTabItem
                 key={preset.id}
-                type="button"
+                value={preset.id}
                 disabled={disabled}
-                data-active={isActive ? "" : undefined}
-                onClick={() => onSelect(preset.getRange(now))}
-                className={cn(
-                  "inline-flex h-button items-center justify-center",
-                  "ds-px-ui-sm border border-solid border-border-primary",
-                  "bg-secondary text-style-button text-secondary-fg",
-                  "cursor-pointer select-none transition-all duration-100",
-                  "ds-focus-visible-ring ds-disabled-state",
-                  "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled",
-                  !isLast && "border-r-0",
-                  isLast ? "rounded-l-none rounded-r-tight" : "rounded-none",
-                  "[&:not(:disabled)]:hover:bg-secondary-hover",
-                  isActive && "bg-ghost-active",
-                )}
               >
                 <ButtonText>{preset.label}</ButtonText>
-              </button>
-            );
-          })}
+              </SegmentedTabItem>
+            ))}
+          </SegmentedTabSelect>
         </div>
       </div>
     );

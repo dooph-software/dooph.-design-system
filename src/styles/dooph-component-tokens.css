@@ -94,6 +94,18 @@
     outline-offset: 0;
   }
 
+  /* Open-state ring for popover/menu triggers. The state lives in the SELECTOR,
+   * not in a Tailwind variant: `data-[state=open]:ds-focus-ring` composes a
+   * variant with a package class, which emits no rule at all. */
+  .ds-focus-ring-on-open {
+    outline: 4px solid transparent;
+    outline-offset: 0;
+  }
+
+  .ds-focus-ring-on-open[data-state="open"] {
+    outline-color: var(--ui-color-focus-ring-brand);
+  }
+
   /* Active slider track — the handle color at 45% (Figma applies alpha on top).
    * --ds-slider-color is set on the Slider root from its `color` prop. */
   .ds-slider-fill {
@@ -283,6 +295,10 @@
 
   .ds-calendar-panel-w {
     min-width: var(--ui-min-w-calendar-panel);
+  }
+
+  .ds-date-range-trigger-w {
+    min-width: var(--ui-min-w-date-range-trigger);
   }
 
   /* spacing — semantic names mirror token stems */

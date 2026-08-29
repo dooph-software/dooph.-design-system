@@ -239,8 +239,15 @@
 
   /* Calendar — day-cell corner radius, presets rail width, panel min-width. */
   --ui-width-calendar-presets: 144px;
-  --ui-min-w-calendar-panel: 240px;
+  /* Panel width sets the day-cell size: cells are aspect-square across seven
+   * equal columns, so widening the panel makes each day physically bigger. */
+  --ui-min-w-calendar-panel: 300px;
+  /* Floor for the range trigger so its width does not jump as the formatted
+   * label changes length between selections. */
+  --ui-min-w-date-range-trigger: 240px;
   --ui-height-button-micro: 26px;
+  /* Micro segmented-tab item — the compact inline preset row (Figma "Micro"). */
+  --ui-height-tab-micro: 30px;
   --ui-height-slider-track: 22px;
   --ui-radius-slider-inner: 8px;
   --ui-slider-track-gap: 6px;

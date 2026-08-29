@@ -65,7 +65,7 @@ export const WithPresetsPanel: Story = {
         today={TODAY}
       >
         <CalendarPresetsPanel>
-          {DEFAULT_CALENDAR_PRESETS.map((preset) => (
+          {[CalendarPresets.today, ...DEFAULT_CALENDAR_PRESETS].map((preset) => (
             <CalendarPresetItem
               key={preset.id}
               preset={preset}

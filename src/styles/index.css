@@ -221,6 +221,9 @@
     width: var(--ui-height-button-micro);
     height: var(--ui-height-button-micro);
   }
+  .h-tab-micro {
+    height: var(--ui-height-tab-micro);
+  }
   .h-slider-track {
     height: var(--ui-height-slider-track);
   }

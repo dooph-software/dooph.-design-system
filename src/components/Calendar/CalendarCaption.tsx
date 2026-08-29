@@ -12,7 +12,7 @@ import {
   DropdownMenuVariant,
 } from "../Menu";
 import { TextDropdownSize, TextDropdownTrigger } from "../DropdownTrigger";
-import { BodyText } from "../Text";
+import { BodyText, ButtonText } from "../Text";
 import { addMonths } from "./dateUtils";
 import { buildYearOptions, formatMonthName, isYearOutOfBounds } from "./dateFormat";
 
@@ -60,8 +60,11 @@ function CalendarCaption({
       <div className="flex items-center gap-xs">
         <DropdownMenu variant={DropdownMenuVariant.action}>
           <DropdownMenuTrigger asChild>
-            <TextDropdownTrigger size={TextDropdownSize.sm}>
-              {formatMonthName(viewMonth, locale)}
+            <TextDropdownTrigger
+              size={TextDropdownSize.sm}
+              className="text-ghost-fg-active"
+            >
+              <ButtonText>{formatMonthName(viewMonth, locale)}</ButtonText>
             </TextDropdownTrigger>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -84,8 +87,11 @@ function CalendarCaption({
 
         <DropdownMenu variant={DropdownMenuVariant.action}>
           <DropdownMenuTrigger asChild>
-            <TextDropdownTrigger size={TextDropdownSize.sm}>
-              {viewMonth.getFullYear()}
+            <TextDropdownTrigger
+              size={TextDropdownSize.sm}
+              className="text-ghost-fg-active"
+            >
+              <ButtonText>{viewMonth.getFullYear()}</ButtonText>
             </TextDropdownTrigger>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -108,18 +114,20 @@ function CalendarCaption({
       <div className="flex items-center">
         <Button
           variant={ButtonVariant.ghost}
-          size={ButtonSize.iconMicro}
+          size={ButtonSize.iconSm}
           aria-label="Previous month"
           disabled={atFloor}
+          className="text-ghost-fg-active"
           onClick={() => onMonthChange(addMonths(viewMonth, -1))}
         >
           <ChevronLeftIcon size={IconSize.standard} />
         </Button>
         <Button
           variant={ButtonVariant.ghost}
-          size={ButtonSize.iconMicro}
+          size={ButtonSize.iconSm}
           aria-label="Next month"
           disabled={atCeiling}
+          className="text-ghost-fg-active"
           onClick={() => onMonthChange(addMonths(viewMonth, 1))}
         >
           <ChevronRightIcon size={IconSize.standard} />
