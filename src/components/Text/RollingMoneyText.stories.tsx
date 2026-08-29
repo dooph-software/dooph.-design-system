@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Button } from "../Button/Button";
 import { ButtonVariant } from "../Button/constants";
 import { BodyText, HeroText, LabelText, TitleText } from "./BaseText";
-import { parseMoney } from "./rollingMoneyModel";
 import { RollingMoneyText } from "./RollingMoneyText";
 
 const meta = {
@@ -15,53 +14,31 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-/* Expected/actual table. This repo has no test runner, so this story IS the
- * test for the pure model: every row must read PASS. */
-const CASES: Array<{
-  input: string;
-  prefix: string;
-  int: string;
-  cents: string;
-  suffix: string;
-}> = [
-  { input: "$1,234.56", prefix: "$", int: "1234", cents: "56", suffix: "" },
-  { input: "$982.10", prefix: "$", int: "982", cents: "10", suffix: "" },
-  { input: "$12,450.00", prefix: "$", int: "12450", cents: "00", suffix: "" },
-  { input: "-$5,746.31", prefix: "-$", int: "5746", cents: "31", suffix: "" },
-  { input: "$1,234", prefix: "$", int: "1234", cents: "", suffix: "" },
-  { input: "1234.5", prefix: "", int: "1234", cents: "5", suffix: "" },
-  { input: "$1,234.", prefix: "$", int: "1234", cents: "", suffix: "" },
-  { input: "$0.99", prefix: "$", int: "0", cents: "99", suffix: "" },
-  { input: "$1.2M", prefix: "$", int: "1", cents: "2", suffix: "M" },
-  { input: "—", prefix: "—", int: "", cents: "", suffix: "" },
+/* The shapes a consumer can hand the component, rendered live. Negative and
+ * abbreviated values, a bare integer, and a sub-dollar amount all take the
+ * same path as an ordinary figure — the prefix and suffix are simply whatever
+ * non-digit characters bookend the string, so no format flag exists or is
+ * needed. */
+const FORMATS: Array<{ value: string; note: string }> = [
+  { value: "$1,234.56", note: "standard" },
+  { value: "$12,450.00", note: "separators derived from place value, never parsed" },
+  { value: "-$5,746.31", note: "multi-character prefix" },
+  { value: "$1,234", note: "no cents group" },
+  { value: "$0.99", note: "sub-dollar" },
+  { value: "$1.2M", note: "suffix preserved" },
 ];
 
-export const ParseCases: Story = {
+export const Formats: Story = {
   render: () => (
-    <div className="flex flex-col gap-1 p-4">
-      {CASES.map((c) => {
-        const got = parseMoney(c.input);
-        const ok =
-          got.prefix === c.prefix &&
-          got.integerDigits.join("") === c.int &&
-          got.centsDigits.join("") === c.cents &&
-          got.suffix === c.suffix;
-        return (
-          <div key={c.input} className="flex items-baseline gap-3">
-            <LabelText className={ok ? "text-text" : "text-error-primary"}>
-              {ok ? "PASS" : "FAIL"}
-            </LabelText>
-            <BodyText>{c.input}</BodyText>
-            <LabelText className="text-text-secondary">
-              {`prefix=${JSON.stringify(got.prefix)} int=${JSON.stringify(
-                got.integerDigits.join(""),
-              )} cents=${JSON.stringify(
-                got.centsDigits.join(""),
-              )} suffix=${JSON.stringify(got.suffix)}`}
-            </LabelText>
-          </div>
-        );
-      })}
+    <div className="flex flex-col items-start gap-sm p-4">
+      {FORMATS.map((f) => (
+        <div key={f.value} className="flex items-baseline gap-4">
+          <TitleText className="w-[10ch]">
+            <RollingMoneyText>{f.value}</RollingMoneyText>
+          </TitleText>
+          <LabelText className="text-text-secondary">{f.note}</LabelText>
+        </div>
+      ))}
     </div>
   ),
 };

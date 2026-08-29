@@ -85,6 +85,16 @@ const DIGIT_COLUMN = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
  * bigger change than this constant is worth today. */
 const EXIT_FALLBACK_MS = 600;
 
+/* Stage-one durations, mirroring the CSS. A growth waits out the new wheel's
+ * fade (`--ui-rolling-money-fade-duration`) before rolling; a shrink waits out
+ * the roll (`--ui-rolling-money-duration`) before fading the departing wheel.
+ * Same caveat as EXIT_FALLBACK_MS above: these mirror the tokens rather than
+ * deriving from them, so a consumer who retimes those tokens should retime
+ * these too. Keeping them slightly SHORT of the CSS would overlap the stages;
+ * keeping them long would leave a visible pause. */
+const ENTER_STAGE_MS = 160;
+const ROLL_STAGE_MS = 240;
+
 function Wheel({
   state,
   onExited,
@@ -96,6 +106,7 @@ function Wheel({
     <span
       className="ds-rolling-money-wheel"
       data-exiting={state.exiting ? "" : undefined}
+      data-entering={state.entering ? "" : undefined}
       style={{ "--ds-money-place": state.place } as CSSProperties}
       onTransitionEnd={(e) => {
         if (state.exiting && e.propertyName === "opacity") {
@@ -174,9 +185,14 @@ function useWheels(digits: string[]) {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (prefersReducedMotion) {
-      const settled = next.map((w) =>
-        pending.has(w.place) ? { ...w, digit: pending.get(w.place)! } : w,
-      );
+      /* `entering` must be cleared here too, not just retargeted: it drives an
+       * opacity-0 rule, and with no transition to lift it the wheel would
+       * simply stay invisible forever. */
+      const settled = next.map((w) => ({
+        ...w,
+        entering: false,
+        digit: pending.has(w.place) ? pending.get(w.place)! : w.digit,
+      }));
       setWheels(settled);
 
       if (settled.every((w) => !w.exiting)) return;
@@ -188,49 +204,93 @@ function useWheels(digits: string[]) {
       return () => window.clearTimeout(timer);
     }
 
-    setWheels(next);
+    /* The change is choreographed in stages rather than all at once, because
+     * doing it all at once reads as a flash: the figure's width jumps, a digit
+     * appears from nowhere, and everything rolls, in the same frame.
+     *
+     * GROWTH ($982 -> $1,240): hold every surviving wheel at its OLD digit, so
+     * the only motion in stage one is the figure widening and the new wheel
+     * fading up from 0. Once it has landed, everything rolls together.
+     *
+     * SHRINK ($1,240 -> $982): the mirror. Survivors roll first while the
+     * departing wheel stays put at its old digit and full opacity, so the
+     * figure does not collapse underneath a roll in progress; only afterwards
+     * does it fade out and unmount. */
+    const prevDigits = new Map(
+      wheels.filter((w) => !w.exiting).map((w) => [w.place, w.digit] as const),
+    );
+    const hasEnter = next.some((w) => w.entering);
+    const exitPlaces = next.filter((w) => w.exiting).map((w) => w.place);
 
-    /* Retarget brand-new wheels on the NEXT frame. They mount showing 0; the
-     * browser has to paint that from-state before a transition to the real
-     * digit can run, otherwise the wheel simply appears at its final value.
-     * A single rAF is not enough here: the from-state is a React render
-     * (this `setWheels(next)`, committed from inside a passive effect), not a
-     * direct DOM write, and there's no guarantee that commit paints before
-     * the very next frame's rAF callbacks run. Nesting one more rAF waits for
-     * a frame that is guaranteed to start after that paint. */
+    const staged = next.map((w) => {
+      if (w.entering) return w;
+      if (w.exiting) return { ...w, exiting: false };
+      return hasEnter ? { ...w, digit: prevDigits.get(w.place) ?? w.digit } : w;
+    });
+    setWheels(staged);
+
+    const finalDigits = new Map(next.map((w) => [w.place, w.digit] as const));
+    pending.forEach((digit, place) => finalDigits.set(place, digit));
+
     let raf = 0;
-    if (pending.size > 0) {
+    let stageTimer = 0;
+    let exitTimer = 0;
+
+    /* Stage two of a growth: drop `entering`, which is what starts the
+     * opacity fade. A single rAF is not enough — the from-state is a React
+     * render committed from inside this passive effect, not a direct DOM
+     * write, and nothing guarantees that commit paints before the very next
+     * frame's callbacks. The second frame is guaranteed to follow the paint. */
+    if (hasEnter) {
       raf = requestAnimationFrame(() => {
         raf = requestAnimationFrame(() => {
-          setWheels((cur) => {
-            if (![...pending.keys()].some((place) => cur.some((w) => w.place === place))) {
-              return cur;
-            }
-            return cur.map((w) =>
-              pending.has(w.place) ? { ...w, digit: pending.get(w.place)! } : w,
-            );
-          });
+          setWheels((cur) =>
+            cur.some((w) => w.entering)
+              ? cur.map((w) => (w.entering ? { ...w, entering: false } : w))
+              : cur,
+          );
         });
       });
     }
 
-    if (next.every((w) => !w.exiting)) {
-      return () => {
-        if (raf) cancelAnimationFrame(raf);
-      };
-    }
+    if (hasEnter || exitPlaces.length > 0) {
+      /* Wait for whichever stage-one motion is actually running: a growth
+       * waits out the fade, a shrink waits out the roll. */
+      const stageMs = hasEnter ? ENTER_STAGE_MS : ROLL_STAGE_MS;
 
-    const timer = window.setTimeout(
-      () =>
+      stageTimer = window.setTimeout(() => {
         setWheels((cur) =>
-          cur.some((w) => w.exiting) ? cur.filter((w) => !w.exiting) : cur,
-        ),
-      EXIT_FALLBACK_MS,
-    );
+          cur.map((w) => ({
+            ...w,
+            /* Also clears `entering`, which stage two normally does. That is
+             * deliberate belt-and-braces: stage two runs from a rAF, and rAF
+             * does not fire in a backgrounded tab, whereas this timer does.
+             * Without it a wheel added while the tab was hidden could sit at
+             * opacity 0 indefinitely. */
+            entering: false,
+            digit: finalDigits.get(w.place) ?? w.digit,
+            exiting: exitPlaces.includes(w.place),
+          })),
+        );
+      }, stageMs);
+
+      if (exitPlaces.length > 0) {
+        /* Backstop only — `onTransitionEnd` normally unmounts the wheel. The
+         * clock starts at stage two, since that is when the fade begins. */
+        exitTimer = window.setTimeout(
+          () =>
+            setWheels((cur) =>
+              cur.some((w) => w.exiting) ? cur.filter((w) => !w.exiting) : cur,
+            ),
+          stageMs + EXIT_FALLBACK_MS,
+        );
+      }
+    }
 
     return () => {
       if (raf) cancelAnimationFrame(raf);
-      window.clearTimeout(timer);
+      if (stageTimer) window.clearTimeout(stageTimer);
+      if (exitTimer) window.clearTimeout(exitTimer);
     };
     /* `wheels` is read but deliberately not a dependency: this effect must run
      * once per VALUE change, and depending on the state it sets would loop.

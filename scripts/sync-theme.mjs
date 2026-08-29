@@ -96,6 +96,8 @@ const EXCLUDED = new Set([
   "ui-rolling-money-ease",
   "ui-rolling-money-cents-rise",
   "ui-rolling-money-cents-gap",
+  "ui-rolling-money-cents-size",
+  "ui-rolling-money-fade-duration",
   // Tooltip widths — exposed via ds-* helpers
   "ui-width-tooltip-rich",
   "ui-min-w-tooltip-complex",

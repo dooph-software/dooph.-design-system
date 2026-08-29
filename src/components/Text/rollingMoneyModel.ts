@@ -27,6 +27,8 @@ export type WheelState = {
   digit: number;
   /** Rolling to 0 and fading out; unmounts when the fade ends. */
   exiting: boolean;
+  /** Newly created for this change: rendered at 0 and faded in before rolling. */
+  entering: boolean;
 };
 
 const isDigit = (c: string) => c >= "0" && c <= "9";
@@ -77,6 +79,7 @@ export function restingWheels(digits: string[]): WheelState[] {
     place: digits.length - 1 - i,
     digit: Number(d),
     exiting: false,
+    entering: false,
   }));
 }
 
@@ -85,14 +88,15 @@ export function restingWheels(digits: string[]): WheelState[] {
  *
  * - A place that already exists keeps its React identity and simply receives
  *   its new digit — the transition does the rest.
- * - A place that is newly needed is created at 0 and reported in `pending`, so
- *   the caller can retarget it on the next frame once the browser has painted
- *   a from-state. That is the "wheel turns off zero" behavior.
- * - A place that is no longer needed is kept one more render at 0 with
- *   `exiting: true` so it can roll out and fade.
+ * - A place that is newly needed is created at 0, marked `entering: true`, and
+ *   reported in `pending`. The caller fades it up from 0 BEFORE retargeting,
+ *   so a widening figure does not read as a digit flashing into existence.
+ * - A place that is no longer needed is kept with `exiting: true` and its
+ *   CURRENT digit — not 0. It fades out where it stands; rolling a departing
+ *   wheel to zero on the way out was the goofy part.
  * - Wheels already exiting are dropped up front: a new value supersedes an
  *   in-flight exit, which also means a stuck wheel self-heals on the next
- *   change rather than persisting as a phantom leading zero.
+ *   change rather than persisting as a phantom digit.
  *
  * Returned array is sorted by descending place — left-to-right visual order.
  */
@@ -112,15 +116,15 @@ export function reconcileWheels(
     const place = n - 1 - i;
     const digit = Number(digits[i]);
     if (byPlace.has(place)) {
-      next.push({ place, digit, exiting: false });
+      next.push({ place, digit, exiting: false, entering: false });
     } else {
-      next.push({ place, digit: 0, exiting: false });
+      next.push({ place, digit: 0, exiting: false, entering: true });
       pending.set(place, digit);
     }
     byPlace.delete(place);
   }
   for (const w of byPlace.values()) {
-    next.push({ place: w.place, digit: 0, exiting: true });
+    next.push({ place: w.place, digit: w.digit, exiting: true, entering: false });
   }
 
   next.sort((a, b) => b.place - a.place);

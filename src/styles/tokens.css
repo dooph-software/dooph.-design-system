@@ -139,24 +139,37 @@
   /* Rolling money digits (RollingMoneyText) — 2D cash-register snap, not 3D.
    *
    * `stagger` defaults to 0ms: every wheel starts and lands together, one snap
-   * for the whole figure — true when no wheel is entering. An entering wheel
-   * is retargeted two nested rAFs after the surviving wheels' transition
-   * already started, so a value change that adds a digit lands that wheel
-   * ~2 frames behind the rest even at the 0ms default. It stays a token so a
-   * consumer can dial in a right-to-left cascade (ones place leads) without
-   * patching the package.
+   * for the whole figure. It stays a token so a consumer can dial in a
+   * right-to-left cascade (ones place leads) without patching the package.
    *
-   * `cents-rise` / `cents-gap` are in em of the PARENT — the dollars — not of
-   * the cents. `smallCentsComponent` brings its own absolute size from its role
-   * class, so the component cannot see how large the cents are; expressing the
-   * offset against the dollars is the only stable reference. The default is
-   * tuned for TitleText + LabelText, top-aligning the cents box near the
-   * dollars' cap height. */
-  --ui-rolling-money-duration: 180ms;
+   * Note that a change which ADDS or REMOVES a digit is deliberately staged
+   * rather than simultaneous, and `stagger` does not govern that: growth
+   * widens the figure and fades the new wheel in at 0 before anything rolls;
+   * shrink rolls first and only then fades the departing wheel out. See
+   * ENTER_STAGE_MS / ROLL_STAGE_MS in RollingMoneyText.tsx, which mirror
+   * `fade-duration` and `duration` respectively.
+   *
+   * `cents-size` / `cents-rise` / `cents-gap` are all in em of the PARENT —
+   * the dollars — not of the cents. That is what keeps the cents a fixed
+   * PROPORTION of the figure at every size: a role passed as
+   * `smallCentsComponent` carries its own absolute font size (LabelText is a
+   * flat 12px), which would read correctly beside 23px dollars and far too
+   * small beside 40px ones. So these tokens own the size and the passed role
+   * owns family, weight and tracking — applied by the
+   * `.ds-rolling-money-cents > *` rule in index.css, which sizes the CHILD
+   * precisely so the wrapper keeps inheriting the dollars' em and `rise`/`gap`
+   * stay measured against the dollars. Override `cents-size` to change the
+   * proportion; `cents-rise` needs re-tuning alongside it, since top-aligning
+   * a taller cents box takes less rise. */
+  --ui-rolling-money-duration: 240ms;
+  /* Stage-one fade for a wheel entering or leaving. Shorter than the roll so
+   * the two stages read as sequence rather than overlap. */
+  --ui-rolling-money-fade-duration: 160ms;
   --ui-rolling-money-stagger: 0ms;
   --ui-rolling-money-ease: cubic-bezier(0.32, 0.72, 0, 1);
-  --ui-rolling-money-cents-rise: 0.75em;
-  --ui-rolling-money-cents-gap: 0.04em;
+  --ui-rolling-money-cents-size: 0.5em;
+  --ui-rolling-money-cents-rise: 0.525em;
+  --ui-rolling-money-cents-gap: 0.06em;
 
   /* Text underline link wipe (UnderlineLinkText). On hover the line sweeps out
    * to the right then redraws in from the left. Thickness/offset are in em so the
