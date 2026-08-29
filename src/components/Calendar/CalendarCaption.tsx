@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "../../utils/cn";
 import { Button, ButtonSize, ButtonVariant } from "../Button";
 import { ChevronLeftIcon, ChevronRightIcon, IconSize } from "../Icons";
 import {
@@ -24,6 +25,7 @@ export type CalendarCaptionProps = {
   yearBounds?: { from?: Date; to?: Date };
   onMonthChange: (month: Date) => void;
   locale?: string;
+  className?: string;
 };
 
 function CalendarCaption({
@@ -33,6 +35,7 @@ function CalendarCaption({
   yearBounds,
   onMonthChange,
   locale,
+  className,
 }: CalendarCaptionProps) {
   const years = buildYearOptions(viewMonth, value, today, yearBounds);
   const months = Array.from({ length: 12 }, (_, index) => index);
@@ -53,7 +56,7 @@ function CalendarCaption({
     viewInBounds && isYearOutOfBounds(addMonths(viewMonth, 1), yearBounds);
 
   return (
-    <div className="flex items-center justify-between gap-xs">
+    <div className={cn("flex items-center justify-between gap-xs", className)}>
       <div className="flex items-center gap-xs">
         <DropdownMenu variant={DropdownMenuVariant.action}>
           <DropdownMenuTrigger asChild>
@@ -125,5 +128,7 @@ function CalendarCaption({
     </div>
   );
 }
+
+CalendarCaption.displayName = "CalendarCaption";
 
 export { CalendarCaption };

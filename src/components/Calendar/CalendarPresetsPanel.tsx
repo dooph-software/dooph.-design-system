@@ -45,7 +45,7 @@ export type CalendarPresetItemProps = Omit<
  * `getRange`, so the calendar stays the single source of truth.
  */
 const CalendarPresetItem = forwardRef<HTMLButtonElement, CalendarPresetItemProps>(
-  ({ className, preset, selected, today, onSelect, ...props }, ref) => {
+  ({ className, preset, selected, today, onSelect, onClick, ...props }, ref) => {
     const now = startOfDay(today ?? new Date());
     const presetRange = preset.getRange(now);
     const isActive =
@@ -58,7 +58,12 @@ const CalendarPresetItem = forwardRef<HTMLButtonElement, CalendarPresetItemProps
         ref={ref}
         type="button"
         data-active={isActive ? "" : undefined}
-        onClick={() => onSelect(preset.getRange(now))}
+        onClick={(event) => {
+          // Compose rather than let a consumer `onClick` silently replace
+          // preset selection: theirs runs first, selection always follows.
+          onClick?.(event);
+          onSelect(preset.getRange(now));
+        }}
         className={cn(
           menuItemClassName,
           "ds-focus-visible-ring",

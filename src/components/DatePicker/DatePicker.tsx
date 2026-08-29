@@ -2,7 +2,13 @@
 
 import { useState, type ReactNode } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
-import { Calendar, DatePickerMode, type DateMatcher, type DateRange } from "../Calendar";
+import {
+  Calendar,
+  DatePickerMode,
+  type CalendarDayRenderProps,
+  type DateMatcher,
+  type DateRange,
+} from "../Calendar";
 import { DatePickerSplitTrigger } from "./DatePickerSplitTrigger";
 import { DatePickerTrigger } from "./DatePickerTrigger";
 
@@ -14,6 +20,13 @@ type DatePickerSharedProps = {
   triggerDisabled?: boolean;
   today?: Date;
   locale?: string;
+  /** Bounds for the calendar's own navigation and its year dropdown. */
+  yearBounds?: { from?: Date; to?: Date };
+  /** Slot the day's CONTENT. The button, handlers and ARIA stay with Calendar. */
+  renderDay?: (day: CalendarDayRenderProps) => ReactNode;
+  /** Controlled displayed month; omit for uncontrolled navigation. */
+  month?: Date;
+  onMonthChange?: (month: Date) => void;
   /** Panel content composed alongside the calendar — e.g. CalendarPresetsPanel. */
   children?: ReactNode;
   className?: string;
@@ -45,6 +58,10 @@ function DatePicker(props: DatePickerProps) {
     triggerDisabled,
     today,
     locale,
+    yearBounds,
+    renderDay,
+    month,
+    onMonthChange,
     children,
     className,
     mode,
@@ -71,11 +88,20 @@ function DatePicker(props: DatePickerProps) {
           locale={locale}
           disabled={triggerDisabled}
           className={className}
-          triggerProps={{
-            onClick: () => setOpen(!isOpen),
-            "aria-expanded": isOpen,
-            "aria-haspopup": "dialog",
-          }}
+          // Radix positions PopoverContent off its Trigger (or Anchor). Only
+          // the left control is the trigger — wrapping the presets too would
+          // make every preset click toggle the panel.
+          trigger={
+            <PopoverTrigger asChild>
+              <DatePickerTrigger
+                mode={DatePickerMode.dateRange}
+                value={props.value}
+                disabled={triggerDisabled}
+                today={today}
+                locale={locale}
+              />
+            </PopoverTrigger>
+          }
         />
       ) : (
         <PopoverTrigger asChild>
@@ -110,6 +136,10 @@ function DatePicker(props: DatePickerProps) {
             disabled={disabled}
             today={today}
             locale={locale}
+            yearBounds={yearBounds}
+            renderDay={renderDay}
+            month={month}
+            onMonthChange={onMonthChange}
           >
             {children}
           </Calendar>
@@ -121,6 +151,10 @@ function DatePicker(props: DatePickerProps) {
             disabled={disabled}
             today={today}
             locale={locale}
+            yearBounds={yearBounds}
+            renderDay={renderDay}
+            month={month}
+            onMonthChange={onMonthChange}
           >
             {children}
           </Calendar>
@@ -129,5 +163,7 @@ function DatePicker(props: DatePickerProps) {
     </Popover>
   );
 }
+
+DatePicker.displayName = "DatePicker";
 
 export { DatePicker };

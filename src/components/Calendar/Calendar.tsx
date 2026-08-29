@@ -19,6 +19,7 @@ import {
   isDateDisabled,
   startOfDay,
   startOfMonth,
+  toDayKey,
   type DateMatcher,
 } from "./dateUtils";
 import { previewRange, resolveRangeClick } from "./rangeSelection";
@@ -167,6 +168,52 @@ function Calendar(props: CalendarProps) {
   const [hoveredDay, setHoveredDay] = useState<Date | null>(null);
   const [focusedDay, setFocusedDay] = useState<Date>(anchorDate);
 
+  // The presets rail is composed as `children` and calls the consumer's setter
+  // directly, so the value can change without this component hearing about it.
+  // Reconcile during RENDER rather than in an effect — an effect would paint
+  // one frame of the stale month and the stale pending anchor first.
+  //
+  // The key covers BOTH endpoints so a change to either end is detected. It is
+  // also what distinguishes our own commit from an external one: `handleDayClick`
+  // records the key it is about to emit, and a matching key here means the
+  // change is ours — an internal commit must not move the view or the focus.
+  const selectionKey =
+    mode === DatePickerMode.singleDay
+      ? toDayKey(props.selected)
+      : `${toDayKey(props.selected.from)}|${toDayKey(props.selected.to)}`;
+  const committedKey = useRef<string | null>(null);
+  const [syncedSelectionKey, setSyncedSelectionKey] = useState(selectionKey);
+
+  if (selectionKey !== syncedSelectionKey) {
+    setSyncedSelectionKey(selectionKey);
+
+    if (committedKey.current === selectionKey) {
+      committedKey.current = null;
+    } else {
+      // External change: a half-drawn range must not survive it, or the next
+      // click would commit a range built from an abandoned anchor.
+      setPendingAnchor(null);
+      setHoveredDay(null);
+      setFocusedDay(anchorDate);
+
+      // Only follow the selection when the view shows NEITHER endpoint. For a
+      // preset like "6 Months" ending today, today's month is still on screen
+      // and jumping to the start would hide the end the user cares about.
+      const rangeEnd =
+        mode === DatePickerMode.singleDay ? props.selected : props.selected.to;
+      const showsEndpoint = [anchorDate, rangeEnd].some(
+        (endpoint) =>
+          endpoint.getFullYear() === viewMonth.getFullYear() &&
+          endpoint.getMonth() === viewMonth.getMonth(),
+      );
+      if (!showsEndpoint && !month) {
+        setUncontrolledMonth(
+          clampMonthToYearBounds(startOfMonth(rangeEnd), yearBounds),
+        );
+      }
+    }
+  }
+
   // `focusedDay` is a preference; the rendered month decides what can actually
   // hold the roving tabIndex. When the preference scrolls out of view, fall back
   // to a day that is on screen — and to an ENABLED one, because a disabled
@@ -206,7 +253,9 @@ function Calendar(props: CalendarProps) {
       setFocusedDay(date);
 
       if (mode === DatePickerMode.singleDay) {
-        props.onSelect(startOfDay(date));
+        const committed = startOfDay(date);
+        committedKey.current = toDayKey(committed);
+        props.onSelect(committed);
         return;
       }
 
@@ -217,6 +266,7 @@ function Calendar(props: CalendarProps) {
       }
       setPendingAnchor(null);
       setHoveredDay(null);
+      committedKey.current = `${toDayKey(result.range.from)}|${toDayKey(result.range.to)}`;
       props.onSelect(result.range);
     },
     [disabled, mode, pendingAnchor, props],
@@ -308,5 +358,7 @@ function Calendar(props: CalendarProps) {
     </div>
   );
 }
+
+Calendar.displayName = "Calendar";
 
 export { Calendar };

@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, type ComponentPropsWithoutRef } from "react";
+import { forwardRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { cn } from "../../utils/cn";
 import { DropdownTrigger, DropdownTriggerContent } from "../DropdownTrigger";
 import { CalendarIcon, IconSize } from "../Icons";
@@ -25,8 +25,14 @@ export type DatePickerSplitTriggerProps = Omit<
   today?: Date;
   locale?: string;
   disabled?: boolean;
-  /** Props forwarded to the left trigger — e.g. Radix PopoverTrigger props. */
+  /** Props forwarded to the INTERNAL left trigger. Ignored when `trigger` is set. */
   triggerProps?: ComponentPropsWithoutRef<"button">;
+  /**
+   * Replaces the internal left trigger — e.g. a `PopoverTrigger asChild`
+   * element, so Radix owns the anchoring and the open/close toggle. The seam
+   * classes are applied by the slot wrapper, so callers pass a plain trigger.
+   */
+  trigger?: ReactNode;
 };
 
 const DatePickerSplitTrigger = forwardRef<
@@ -43,6 +49,7 @@ const DatePickerSplitTrigger = forwardRef<
       locale,
       disabled,
       triggerProps,
+      trigger,
       ...props
     },
     ref,
@@ -55,16 +62,26 @@ const DatePickerSplitTrigger = forwardRef<
         className={cn("inline-flex rounded-tight shadow-button", className)}
         {...props}
       >
-        <DropdownTrigger
-          disabled={disabled}
-          className="rounded-r-none border-r-0"
-          {...triggerProps}
-        >
-          <DropdownTriggerContent className="items-center">
-            <CalendarIcon size={IconSize.standard} />
-            <ButtonText>{formatRangeLabel(value, now, locale)}</ButtonText>
-          </DropdownTriggerContent>
-        </DropdownTrigger>
+        {trigger ? (
+          // Same layout slot as the internal trigger. The seam classes go on
+          // the wrapper's child so the slotted element still loses its right
+          // radius and right border, and the joined border is not doubled
+          // where it meets the first preset button.
+          <div className="inline-flex [&>*]:rounded-r-none [&>*]:border-r-0">
+            {trigger}
+          </div>
+        ) : (
+          <DropdownTrigger
+            disabled={disabled}
+            className="rounded-r-none border-r-0"
+            {...triggerProps}
+          >
+            <DropdownTriggerContent className="items-center">
+              <CalendarIcon size={IconSize.standard} />
+              <ButtonText>{formatRangeLabel(value, now, locale)}</ButtonText>
+            </DropdownTriggerContent>
+          </DropdownTrigger>
+        )}
 
         <div className="inline-flex">
           {presets.map((preset, index) => {
