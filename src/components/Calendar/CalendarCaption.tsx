@@ -38,9 +38,19 @@ function CalendarCaption({
   const months = Array.from({ length: 12 }, (_, index) => index);
 
   // Clamping already prevents navigating out of bounds — disabling the button
-  // means the user gets told that, instead of clicking into a no-op.
-  const atFloor = isYearOutOfBounds(addMonths(viewMonth, -1), yearBounds);
-  const atCeiling = isYearOutOfBounds(addMonths(viewMonth, 1), yearBounds);
+  // tells the user that, instead of letting them click into a no-op.
+  //
+  // Guarded on the CURRENT view being in bounds. Step 5 makes an out-of-bounds
+  // `viewMonth` reachable for the first time (a controlled `month` prop is now
+  // respected rather than clamped), and in that state BOTH neighbours are also
+  // out of bounds — so an unguarded test would disable both arrows, including
+  // the one pointing back toward the bounds, stranding the user exactly where
+  // they most need to navigate.
+  const viewInBounds = !isYearOutOfBounds(viewMonth, yearBounds);
+  const atFloor =
+    viewInBounds && isYearOutOfBounds(addMonths(viewMonth, -1), yearBounds);
+  const atCeiling =
+    viewInBounds && isYearOutOfBounds(addMonths(viewMonth, 1), yearBounds);
 
   return (
     <div className="flex items-center justify-between gap-xs">
