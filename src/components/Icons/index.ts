@@ -20,7 +20,7 @@ export { ArrowUpIcon } from "./ArrowUpIcon";
 export { ArrowUpLeftIcon } from "./ArrowUpLeftIcon";
 export { ArrowUpRightIcon } from "./ArrowUpRightIcon";
 export { AttachFileIcon } from "./AttachFileIcon";
-export { BarChartAxesIcon as BarChartIcon } from "./BarChartIcon";
+export { BarChartAxesIcon as BarChartIcon } from "./BarChartAxesIcon";
 export { BugReportIcon } from "./BugReportIcon";
 export { CalendarIcon } from "./CalendarIcon";
 export { ChangelogIcon } from "./ChangelogIcon";
