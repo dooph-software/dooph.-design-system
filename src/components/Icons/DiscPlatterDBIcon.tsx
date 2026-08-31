@@ -1,6 +1,6 @@
 import { BaseIcon, IconProps } from "./BaseIcon";
 
-export const SiloIcon = (props: IconProps) => {
+export const DiscPlatterDBIcon = (props: IconProps) => {
   return (
     <BaseIcon {...props}>
       <path d="M5 12V18C5 18 5 21 12 21C19 21 19 18 19 18V12" />
@@ -10,4 +10,4 @@ export const SiloIcon = (props: IconProps) => {
   );
 };
 
-export default SiloIcon;
+export default DiscPlatterDBIcon;
