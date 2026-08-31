@@ -24,8 +24,9 @@ import "@dooph-software/design-system/styles.css"; // required once, at the app 
 ## Golden Rules
 
 1. **Text → a Text component.** Every visible string renders through `BaseText`
-   or a pre-composed variant (`BodyText`, `LabelText`, `HeadingText`, `TitleText`,
-   `HeroText`, `ButtonText`). Never a bare `<p>`, `<span>`, `<h1>`, `<label>` for
+   or a pre-composed variant (`BodyText`, `LabelText`, `HeadingText`,
+   `SubheadingText`, `TitleText`, `HeroText`, `ButtonText`, `MonoText`). Never a
+   bare `<p>`, `<span>`, `<h1>`, `<label>` for
    styled copy, and never reach for `font-sans` / `text-sm` to style text by hand
    — adjust type with the Text props (`fontSize`, `fontWeight`, …) instead.
 2. **Controls → a package component.** Buttons, inputs, menus, tabs, toggles,
@@ -112,11 +113,16 @@ Reach for these before writing local UI:
   `OutlineButton` (`inverseTheme`, `glowing`, `glowColor1`/`glowColor2`),
   `ShapeButton` (`ShapeButtons`: `arrow` | `clover` | `cookie` | `gem` |
   `pentagon` | `puff` | `star`), `CopyButton` (writes `value` to the clipboard,
-  swaps its icon to a checkmark for 2s; `CopyButtonVariant`: `ghost` | `secondary`).
+  swaps its icon to a checkmark for 2s; `CopyButtonVariant`: `ghost` | `secondary`),
+  `CTAButton` (marketing CTA — fully round, padded outline ring on `primary`,
+  label-only hover roll; `CTAButtonVariant`: `primary` | `secondary`,
+  `CTAButtonSize`: `standard` | `big`).
 - **Inputs:** `Input`, `SearchBox`, `Checkbox`, `TwoWayToggle` (+ `TwoWayToggleItem`),
   `SliderContinuous` / `SliderStepped` / `SliderLabeled` (Radix Slider; `color`
   takes a token name or any CSS color, default `primary`; `SliderLabeled` adds
-  `labels: { start, end }`).
+  `labels: { start, end }`), `VerificationCodeInput` (OTP group — `length`
+  default 6, digits only, auto-advance/backspace/arrows/paste; `CodeDigitInput`
+  is the single cell).
 - **Menus:** `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`,
   `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`,
   `DropdownMenuSeparator`, `DropdownMenuSection`.
@@ -127,7 +133,9 @@ Reach for these before writing local UI:
   `ModalClose`, `ModalTitle`, `ModalDescription`; `Sheet` family — edge-anchored
   panel counterpart to Modal (`SheetContent side={SheetSide.left/right/top/bottom}`,
   plus `SheetTrigger`/`SheetClose`/`SheetTitle`/`SheetDescription`; always include
-  a `SheetTitle`, `sr-only` when the design shows none); `Tooltip` family.
+  a `SheetTitle`, `sr-only` when the design shows none); `Popover` family
+  (`Popover`, `PopoverTrigger`, `PopoverAnchor`, `PopoverContent`,
+  `PopoverPortal`, `PopoverClose`); `Tooltip` family.
   For rendering the same content as a Modal on desktop and a Sheet under a
   breakpoint, see `references/responsive-sheet-modal.md` (app-side wrapper —
   intentionally not a packaged component).
@@ -135,13 +143,42 @@ Reach for these before writing local UI:
 - **Data:** `Table` (+ `TableHeader`, `TableHeaderCell`, `TableRow`, `TableCell`,
   `TablePlaceholder`; sortable headers via `TableSortDirection`) — use this
   before hand-rolling a grid of divs for tabular data.
+- **Dates:** `DatePicker` (+ `DatePickerTrigger`, `DatePickerSplitTrigger`) for
+  the full popover-anchored picker; `Calendar` (+ `CalendarGrid`,
+  `CalendarCaption`, `CalendarPresetsPanel`, `CalendarPresetItem`) to embed one
+  inline. `DatePickerMode`: `singleDay` | `dateRange`. `CalendarPresets` supplies
+  the rail's ranges (`today`, `days.three/seven/fourteen/thirty`,
+  `months.three/six`, plus `custom({ id, label, days })`), with
+  `DEFAULT_CALENDAR_PRESETS` and `DEFAULT_SPLIT_TRIGGER_PRESETS` as the shipped
+  sets. A `DateRange` is `{ from: Date; to: Date }` — structural, so nothing
+  needs importing to satisfy it, and `to` is never null because an incomplete
+  range is not a public state.
 - **Links:** `TextLink` (body-text anchor; ghost foreground at rest, primary
   text on hover/active, no underline; `asChild` for `<Link>` composition).
-- **Text & icons:** `BaseText` + the six role components — see **Text** below.
+- **Text & icons:** `BaseText` + the eight role components — see **Text** below.
   `ShimmerText` (animated "working" sheen masked to child glyphs — children must
   not set an explicit text color), `RollChangeText` (rolls old content out / new
   content in when `changeKey` or string/number children change), `RollHoverText`
-  (per-character roll on hover), `BaseIcon`, `ChevronDownIcon`, `SearchIcon`.
+  (per-character roll on hover), `UnderlineLinkText` (underline wipes out right
+  and redraws from the left on hover — set the colour on it or above it, since
+  the line is a `currentColor` gradient), `RollingDigitsText` (per-digit roll for
+  a pre-formatted number — see below), `BaseIcon`, `ChevronDownIcon`,
+  `SearchIcon`, `SidebarWithHoverIcon`.
+
+  `RollingDigitsText` takes a **pre-formatted string** and does not format —
+  `<RollingDigitsText>{"$1,234.56"}</RollingDigitsText>`. Prefix and suffix are
+  whatever non-digit characters bookend it, so `-$5,746.31`, `1.2M` and `98.6%`
+  all work with no flag. Digits roll on change, and gaining or losing a digit
+  opens or collapses its slot rather than snapping the width. `smallDecimals`
+  raises and shrinks the decimals — it requires `smallDecimalsComponent` (e.g.
+  `LabelText`), which the types enforce. US format only (`.` decimal, `,`
+  thousands); localize upstream.
+
+  `SidebarWithHoverIcon` takes `side` (`SidebarIconSide.left`/`.right`) and a
+  **controlled** `hovered` — wire `onPointerEnter`/`onPointerLeave` on your own
+  button, since the icon has no interactive surface of its own. The rail
+  traverses the frame when `side` flips and bows into a chevron while hovered;
+  clicking mid-hover crosses and reverses in one motion.
 - **Feedback / motion:** `Toast` family, `LoadingSpinner`, `ProgressIndicator`,
   `LinearProgressIndicator` (Radix Progress; `color` as above), `WavyDivider`.
 - **Utility:** `cn`.
@@ -167,9 +204,14 @@ Use the semantic, token-backed utilities. The common ones:
 
 ## Text
 
-Six roles, each a `BaseText` with its `variant` fixed: `HeroText`, `TitleText`,
-`HeadingText`, `BodyText`, `ButtonText`, `LabelText`. Reach for `BaseText`
-directly only to set `variant` dynamically.
+Eight roles, each a `BaseText` with its `variant` fixed: `HeroText`, `TitleText`,
+`HeadingText`, `SubheadingText`, `BodyText`, `ButtonText`, `LabelText`,
+`MonoText`. Reach for `BaseText` directly only to set `variant` dynamically.
+
+`MonoText` is the mono face (Google Sans Code by default) at the button role's
+size and weight — use it when a run should read as code, a key, an id, or a
+hash. When you only want figures to line up in the *current* face, use the
+`tabular` prop instead.
 
 Typography is set with **props, never classes**:
 
@@ -189,8 +231,22 @@ import { BodyText, Fonts, FontSizes, FontWeights, Tracking, FontAxes } from "@do
 | `lineHeight` | any CSS line-height | unitless ratio |
 | `letterSpacing` | `Tracking.*`, any CSS length | px |
 | `axes` | `{ [FontAxes.grade]: 40 }` | — |
+| `tabular` | boolean — fixed-advance figures (`tabular-nums`) | — |
 | `unstyled` | boolean — drop the role's typography entirely | — |
 | `as` | any element; keeps that element's prop typing | — |
+
+**`tabular` — use it for anything that changes.** `tabular-nums` gives every digit
+one advance width, so a number does not reflow as its digits change. Turn it on
+for counters, timers, live totals, and any column of figures that must align:
+
+```tsx
+<BodyText tabular>{elapsed}</BodyText>
+<TitleText tabular>{balance}</TitleText>
+```
+
+Passing `false` is not the same as omitting it — `false` writes
+`proportional-nums`, which overrides an inherited tabular run; omitting inherits.
+`RollingDigitsText` is always tabular and has no opt-out.
 
 The constants resolve to `var(--ui-*)`, so a consuming project's token overrides
 still apply. Strings pass through untouched (`fontSize="clamp(2rem,6vw,3rem)"`),

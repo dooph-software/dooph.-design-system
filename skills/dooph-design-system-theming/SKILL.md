@@ -52,9 +52,9 @@ Apps that don't use Tailwind skip the preset entirely.
 ## 3. Fonts (always the app's job)
 
 The package defines font-family *tokens* but ships **no font files**. There is
-one token per text role — `body`, `button`, `heading`, `label`, `title`, `hero`
-— so each role can be overridden independently. Load fonts yourself, then map
-the loaded families/variables to the role tokens:
+one token per text role — `body`, `button`, `heading`, `label`, `title`, `hero`,
+`mono` — so each role can be overridden independently. Load fonts yourself, then
+map the loaded families/variables to the role tokens:
 
 ```css
 :root, .light {
@@ -64,26 +64,53 @@ the loaded families/variables to the role tokens:
   --ui-font-label: var(--font-host-grotesk), system-ui, sans-serif;
   --ui-font-title: var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui, sans-serif;
   --ui-font-hero: var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui, sans-serif;
+  --ui-font-mono: var(--font-google-sans-code), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 ```
+
+Miss `--ui-font-mono` and `<MonoText>` falls back to the platform monospace with
+no error — it looks *almost* right, which is why it goes unnoticed. Keep a
+`ui-monospace` fallback ahead of bare `monospace`: the browser default for the
+latter is smaller than surrounding text, and on Windows it is Courier New.
 
 Only override the roles you want to change — e.g. to render button labels in a
 different face while leaving body text alone, set just `--ui-font-button`.
 
-Load **Google Sans Flex with its axes available** (`GRAD`, `ROND`, `opsz`,
-`slnt`, `wdth`, `wght`) — the design system applies axis settings only to Google
-Sans Flex text styles, and loading `wght` only will flatten them. `--ui-font-var-*`
-axis tokens apply to Google Sans Flex text, not to Host Grotesk labels or
-Bricolage Grotesque titles/hero.
+### Axes: load them as ranges or they silently do nothing
+
+Two faces carry axes the design system names through `--ui-font-var-*` tokens:
+
+- **Google Sans Flex** — `GRAD`, `ROND`, `opsz`, `slnt`, `wdth`, `wght`. Loading
+  `wght` only flattens the body/button/heading roles.
+- **Google Sans Code** — `MONO`. The family has a *proportional* cut at MONO 0,
+  so without this axis the mono role renders in a non-monospaced face. That is
+  the failure mode to watch for: mono type whose columns do not line up.
+
+Request each axis as a **range** (`MONO@0..1`, not `MONO@1`). A pinned or omitted
+axis makes the provider serve a file that does not carry it at all, and
+`font-variation-settings` then fails silently. The axis tokens apply only to
+these two faces — not to Host Grotesk labels or Bricolage Grotesque titles/hero,
+which implement no such axes.
+
+```
+https://fonts.googleapis.com/css2?family=Google+Sans+Code:MONO,ital,wght@0..1,0,300..800&display=swap
+```
 
 **Next.js:** assign each `next/font` loader a `variable`, put the variables on
 `<html className>`, and map them in `theme.css`. If the Next version can't load
-Google Sans Flex axes, use `next/font/local` or provider CSS with the full axis
-request and keep the same token mapping.
+Google Sans Flex or Google Sans Code axes, use `next/font/local` or provider CSS
+with the full axis request and keep the same token mapping.
 
 **Vite / other:** load via `@font-face`, a hosted `<link>`, or provider CSS, then
 map families to `--ui-font-*`. The Google Fonts request must include the axes
 above, not just `wght`.
+
+### Verifying mono actually loaded
+
+Computed style is not proof: `font-variation-settings: "MONO" 1` reports as set
+even when the served file has no MONO axis to apply it to. Render `iiiiiiiiii`,
+`WWWWWWWWWW` and `0000000000` in `<MonoText>` and check all three measure the
+same width.
 
 ### Line height is yours
 

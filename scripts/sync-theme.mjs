@@ -60,6 +60,7 @@ const EXCLUDED = new Set([
   "ui-font-var-button",
   "ui-font-var-body",
   "ui-font-var-heading",
+  "ui-font-var-mono",
   "ui-weight-body",
   "ui-weight-button",
   "ui-weight-label",
@@ -67,6 +68,7 @@ const EXCLUDED = new Set([
   "ui-weight-heading",
   "ui-weight-title",
   "ui-weight-hero",
+  "ui-weight-mono",
   "ui-weight-regular",
   "ui-weight-medium",
   "ui-weight-semibold",
@@ -90,14 +92,22 @@ const EXCLUDED = new Set([
   // Checkbox / code digit — exposed via custom @layer utilities
   "ui-size-checkbox",
   "ui-size-code-digit",
-  // Rolling money motion / cents offset — raw var() in @layer utilities only
-  "ui-rolling-money-duration",
-  "ui-rolling-money-stagger",
-  "ui-rolling-money-ease",
-  "ui-rolling-money-cents-rise",
-  "ui-rolling-money-cents-gap",
-  "ui-rolling-money-cents-size",
-  "ui-rolling-money-fade-duration",
+  // Rolling digits motion / decimals offset — raw var() in @layer utilities only
+  "ui-rolling-digits-duration",
+  "ui-rolling-digits-stagger",
+  "ui-rolling-digits-enter-duration",
+  "ui-rolling-digits-exit-duration",
+  "ui-rolling-digits-opacity-ratio",
+  "ui-rolling-digits-ease",
+  "ui-rolling-digits-digit-width",
+  "ui-rolling-digits-separator-width",
+  "ui-rolling-digits-decimals-rise",
+  "ui-rolling-digits-decimals-gap",
+  "ui-rolling-digits-decimals-size",
+  // Sidebar rail icon motion — raw var() in @layer utilities only
+  "ui-sidebar-icon-duration",
+  "ui-sidebar-icon-hover-duration",
+  "ui-sidebar-icon-ease",
   // Tooltip widths — exposed via ds-* helpers
   "ui-width-tooltip-rich",
   "ui-min-w-tooltip-complex",
@@ -142,7 +152,9 @@ function toThemeEntry(fullName) {
   if (radiusM) return `--radius-${radiusM[1]}: var(${fullName});`;
 
   // --ui-font-<role>  →  --font-<role>  (family stacks only; excludes --ui-font-var-*)
-  const fontM = key.match(/^ui-font-(body|button|heading|label|title|hero)$/);
+  const fontM = key.match(
+    /^ui-font-(body|button|heading|label|title|hero|mono)$/,
+  );
   if (fontM) return `--font-${fontM[1]}: var(${fullName});`;
 
   // --ui-text-X  →  --text-X  (font sizes)

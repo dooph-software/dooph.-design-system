@@ -13,6 +13,31 @@
 }
 
 /*
+ * SidebarWithHoverIcon rail — the two scalars the icon's path is a function of.
+ * Registered so they INTERPOLATE: an unregistered custom property is a token
+ * string and jumps between values, which is the whole reason these exist.
+ *
+ *   --ds-sidebar-rail-s  side.  0 = left, 1 = right.
+ *   --ds-sidebar-rail-h  hover. 0 = straight rail, 1 = chevron.
+ *
+ * CSS owns the motion and the component owns only the geometry: it sets the two
+ * targets as inline style and samples the interpolated values each frame to
+ * write `d` (SVG path data is not itself animatable in every engine). So
+ * duration, easing and reduced-motion are all tokens here, retunable by a
+ * consumer, with no numbers mirrored into JavaScript to drift out of step.
+ */
+@property --ds-sidebar-rail-s {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --ds-sidebar-rail-h {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/*
  * @theme inline — maps --ui-* tokens into Tailwind utility namespaces.
  * "inline" means Tailwind emits var(--ui-*) references instead of the
  * resolved values, so overriding --ui-* at :root automatically updates
@@ -83,8 +108,10 @@
   --font-label: var(--ui-font-label);
   --font-title: var(--ui-font-title);
   --font-hero: var(--ui-font-hero);
+  --font-mono: var(--ui-font-mono);
   --text-label: var(--ui-text-label);
   --text-body: var(--ui-text-body);
+  --text-mono: var(--ui-text-mono);
   --text-subheading: var(--ui-text-subheading);
   --text-heading: var(--ui-text-heading);
   --text-title: var(--ui-text-title);
@@ -151,6 +178,19 @@
     font-weight: var(--ui-weight-body);
     font-variation-settings: var(--ui-font-var-body);
     letter-spacing: var(--ui-tracking-body);
+  }
+
+  /* Mono deliberately mirrors button's size and weight (both tokens alias it)
+   * so a mono run set beside a button label sits at the same optical scale.
+   * The MONO axis is named explicitly — see the token's note on why trusting
+   * the family default is not enough. */
+  .text-style-mono {
+    font-family: var(--ui-font-mono);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-mono);
+    font-style: normal;
+    font-weight: var(--ui-weight-mono);
+    font-variation-settings: var(--ui-font-var-mono);
   }
 
   .text-style-label {
@@ -378,127 +418,211 @@
     }
   }
 
-  /* RollingMoneyText — 2D cash-register digit roll (no blur, no 3D).
+  /* RollingDigitsText — 2D cash-register digit roll (no blur, no 3D).
    *
-   * Each digit is a wheel: a static 0-9 column clipped to one line box and
-   * positioned by --ds-money-digit. Using a TRANSITION rather than @keyframes
-   * is load-bearing for the same reason it is in .ds-roll-hover above —
-   * re-applying a class that is already present does not restart an animation,
-   * which is why the previous keyframe-based version fired on roughly every
-   * other change. A transition on a changed value always runs, and an
-   * interrupted one retargets from wherever the wheel currently sits.
+   * ## structure
+   * Each digit is a WHEEL: a static 0-9 column clipped to one line box and
+   * positioned by --ds-digit. Around it, every animated unit — wheel or
+   * grouping separator — is a slot that owns an EXPLICIT width, because that is
+   * the only thing `width` can animate from and to.
    *
+   * ## why a transition for the roll and an animation for enter/exit
+   * The roll is a TRANSITION on transform. Re-applying a class that is already
+   * present does not restart an animation, which is why the original
+   * keyframe-based roll fired on roughly every other change; a transition on a
+   * changed value always runs, and an interrupted one retargets from wherever
+   * the wheel currently sits.
+   *
+   * Enter and exit are ANIMATIONS for the mirror-image reason: each runs
+   * exactly once in an element's life, on mount and on unmount. A mount
+   * animation needs no JavaScript at all to start — which is what let the
+   * previous version's double-requestAnimationFrame reveal be deleted outright.
+   *
+   * ## why one keyframe pair covers both wheels and separators
+   * A one-sided keyframe takes its missing half from the element's own computed
+   * style, so `from { width: 0 }` resolves its `to` as
+   * --ui-rolling-digits-digit-width on a wheel and as
+   * --ui-rolling-digits-separator-width on a separator. Do not add explicit
+   * `to` widths here; that genericity is the whole trick.
+   *
+   * ## the baseline invariant
    * The hidden "0" spacer is what makes alignment work without magic numbers:
-   * it is an ordinary in-flow glyph, so it supplies both the wheel's width and
-   * its baseline. The clip is inset:0 against that spacer's line box — exactly
-   * 1lh — and each of the ten column children is also 1lh, so -10% per digit
-   * lands precisely. A clipped inline-block takes its baseline from its bottom
-   * margin edge, which is why the previous `height:1em;overflow:hidden` wheel
-   * could not be aligned at any value of 1em. */
-  .ds-rolling-money {
+   * it is an ordinary in-flow glyph, so it supplies the wheel's baseline. The
+   * clip is absolutely positioned against it — exactly 1lh tall — and each of
+   * the ten column children is also 1lh, so -10% per digit lands precisely. A
+   * clipped inline-block takes its baseline from its bottom margin edge, which
+   * is why an `overflow: hidden` wheel could not be aligned at any value of
+   * 1em. The spacer must stay in flow and stay `visibility: hidden` (never
+   * `display: none`) for that reason, even though the width is now explicit. */
+  .ds-rolling-digits {
     display: inline-block;
   }
-  .ds-rolling-money-figure {
+  .ds-rolling-digits-figure {
     display: inline-flex;
     align-items: baseline;
+    /* Load-bearing, not cosmetic: the fixed slot width below is only correct
+     * while every figure shares one advance. */
     font-variant-numeric: tabular-nums;
-    /* A money figure must never wrap. The cents wrapper is a flex item whose
-     * child is an INLINE role span, so once the cents are large enough to be
-     * squeezed the inline content breaks across line boxes and the cents land
-     * on their own line — which is exactly what happened at hero size before
-     * this rule existed. */
+    /* A figure must never wrap. The decimals wrapper is a flex item whose child
+     * is an INLINE role span, so once the decimals are large enough to be
+     * squeezed the inline content breaks across line boxes and they land on
+     * their own line — which is exactly what happened at hero size before this
+     * rule existed. */
     white-space: nowrap;
   }
-  .ds-rolling-money-wheel {
-    position: relative;
+
+  /* The animated unit. Wheels and separators differ only in resting width.
+   * Width and opacity are separate animations on purpose: opacity is scaled to
+   * a FRACTION of the duration so an arriving glyph — drawn at its full width,
+   * and so overflowing its still-narrow slot — is opaque before it stops
+   * overlapping its neighbour. */
+  .ds-rolling-digits-wheel,
+  .ds-rolling-digits-sep {
     display: inline-block;
+    flex: 0 0 auto;
     font-variant-numeric: tabular-nums;
-    /* Carries BOTH the enter fade and the exit fade. Declared on the base
-     * class rather than on `[data-entering]` because an entering wheel fades
-     * when the attribute is REMOVED — a transition declared only on the
-     * attribute rule would no longer exist at the moment it needs to run. */
-    transition: opacity var(--ui-rolling-money-fade-duration)
-      var(--ui-rolling-money-ease);
   }
-  /* A newly added place mounts invisible at 0 and fades up before anything
-   * rolls, so a widening figure does not read as a digit flashing into being. */
-  .ds-rolling-money-wheel[data-entering] {
-    opacity: 0;
+  .ds-rolling-digits-wheel {
+    position: relative;
+    width: var(--ui-rolling-digits-digit-width);
   }
-  /* Sets the wheel's width AND its baseline. Never visible. */
-  .ds-rolling-money-space {
+  .ds-rolling-digits-sep {
+    /* Fixed rather than natural because `width` cannot animate from `auto`.
+     * Overflow stays visible and the glyph is centred, so a token narrower than
+     * the face's comma reads tight, never clipped. */
+    width: var(--ui-rolling-digits-separator-width);
+    text-align: center;
+  }
+  .ds-rolling-digits-wheel[data-entering],
+  .ds-rolling-digits-sep[data-entering] {
+    animation:
+      ds-rolling-digits-in var(--ui-rolling-digits-enter-duration)
+        var(--ui-rolling-digits-ease),
+      ds-rolling-digits-fade-in
+        calc(
+          var(--ui-rolling-digits-enter-duration) *
+            var(--ui-rolling-digits-opacity-ratio)
+        )
+        var(--ui-rolling-digits-ease);
+  }
+  /* Declared after the entering rule so it wins on source order when a wheel
+   * that entered earlier is now leaving — both are single-class selectors.
+   * `forwards` holds the collapsed state for the frame between animationend and
+   * React dropping the node. */
+  .ds-rolling-digits-wheel[data-exiting],
+  .ds-rolling-digits-sep[data-exiting] {
+    animation:
+      ds-rolling-digits-out var(--ui-rolling-digits-exit-duration)
+        var(--ui-rolling-digits-ease) forwards,
+      ds-rolling-digits-fade-out
+        calc(
+          var(--ui-rolling-digits-exit-duration) *
+            var(--ui-rolling-digits-opacity-ratio)
+        )
+        var(--ui-rolling-digits-ease) forwards;
+  }
+
+  /* Sets the wheel's baseline. Never visible; never removed from flow. */
+  .ds-rolling-digits-space {
     visibility: hidden;
   }
-  .ds-rolling-money-clip {
+  /* Pinned to the slot width rather than stretched to `inset: 0`, so a glyph is
+   * never sliced horizontally while its slot is mid-animation: it sits at its
+   * final position and overflows a narrower slot, with the fade covering the
+   * overlap.
+   *
+   * Then widened 20% and re-centred on the slot. This clip exists to bound the
+   * roll VERTICALLY; its horizontal edges are incidental, and 1ch is a hair
+   * under the true tabular advance (see the token's note), so a flush box would
+   * shave a fraction of a pixel off both side bearings for no benefit. */
+  .ds-rolling-digits-clip {
     position: absolute;
-    inset: 0;
+    left: calc(var(--ui-rolling-digits-digit-width) * -0.1);
+    top: 0;
+    bottom: 0;
+    width: calc(var(--ui-rolling-digits-digit-width) * 1.2);
     overflow: hidden;
-    /* aria-hidden, not display:none — selecting the figure would otherwise
-     * pick up all ten glyphs per wheel ("0123456789...") alongside the real
-     * value from the sr-only span. */
+    /* aria-hidden, not display:none — selecting the figure would otherwise pick
+     * up all ten glyphs per wheel ("0123456789...") alongside the real value
+     * from the sr-only span. */
     user-select: none;
   }
-  .ds-rolling-money-col {
+  .ds-rolling-digits-col {
     display: block;
-    transform: translateY(calc(var(--ds-money-digit, 0) * -10%));
-    transition: transform var(--ui-rolling-money-duration)
-      var(--ui-rolling-money-ease);
+    /* Centred so any drift between 1ch and the face's true tabular advance is
+     * symmetric per wheel instead of accumulating across the figure. */
+    text-align: center;
+    transform: translateY(calc(var(--ds-digit, 0) * -10%));
+    transition: transform var(--ui-rolling-digits-duration)
+      var(--ui-rolling-digits-ease);
     /* At the 0ms default every delay computes to zero and the figure moves as
      * one. Raising the token cascades right-to-left, ones place leading. */
-    transition-delay: calc(
-      var(--ds-money-place, 0) * var(--ui-rolling-money-stagger)
-    );
+    transition-delay: calc(var(--ds-place, 0) * var(--ui-rolling-digits-stagger));
   }
-  .ds-rolling-money-col > span {
+  .ds-rolling-digits-col > span {
     display: block;
   }
-  /* A departing wheel fades out where it stands, holding its last digit — it
-   * does not roll to 0 on the way out, which read as goofy. Opacity always
-   * transitions, which also gives the `transitionend` that unmounts the wheel;
-   * a transform-only exit would not fire one for a wheel that never moves. */
-  .ds-rolling-money-wheel[data-exiting] {
-    opacity: 0;
-  }
-  .ds-rolling-money-sep {
-    display: inline-block;
-  }
-  /* Stays at the PARENT font size; smallCentsComponent sets its own size
-   * inside. See the tokens.css note on why the offset is parent-em. */
-  /* Sized here, in em of the dollars, rather than by whatever role is passed
-   * as `smallCentsComponent` — a role brings a fixed px size, which cannot
-   * stay proportional across TitleText and HeroText. The wrapper therefore
-   * owns the SIZE and the passed role owns family/weight/tracking. */
-  .ds-rolling-money-cents {
+
+  /* Sized here, in em of the integer part, rather than by whatever role is
+   * passed as `smallDecimalsComponent` — a role brings a fixed px size, which
+   * cannot stay proportional across TitleText and HeroText. The wrapper
+   * therefore owns the SIZE and the passed role owns family/weight/tracking. */
+  .ds-rolling-digits-decimals {
     /* Never let the flex layout shrink this below its content; shrinking is
-     * what triggered the wrap described on .ds-rolling-money-figure. */
+     * what triggered the wrap described on .ds-rolling-digits-figure. */
     flex: 0 0 auto;
-    margin-left: var(--ui-rolling-money-cents-gap);
-    transform: translateY(calc(-1 * var(--ui-rolling-money-cents-rise)));
+    margin-left: var(--ui-rolling-digits-decimals-gap);
+    transform: translateY(calc(-1 * var(--ui-rolling-digits-decimals-rise)));
   }
   /* The SIZE goes on the child, never on the wrapper above. `em` resolves
    * against the element's OWN font-size, so sizing the wrapper would make
-   * `cents-gap` and `cents-rise` resolve against the cents instead of the
-   * dollars — silently destroying the parent-em invariant those two tokens
-   * depend on. Sizing the child leaves the wrapper inheriting the dollars.
-   * This also overrides the `text-style-*` font-size the passed role brings,
-   * which is the point: the wrapper owns size, the role owns everything else. */
-  .ds-rolling-money-cents > * {
-    font-size: var(--ui-rolling-money-cents-size);
+   * `decimals-gap` and `decimals-rise` resolve against the decimals instead of
+   * the integer part — silently destroying the parent-em invariant those two
+   * tokens depend on. Sizing the child leaves the wrapper inheriting the
+   * parent. This also overrides the `text-style-*` font-size the passed role
+   * brings, which is the point. 1ch and the separator width then resolve
+   * against the smaller size, so the decimals' slots scale with it for free. */
+  .ds-rolling-digits-decimals > * {
+    font-size: var(--ui-rolling-digits-decimals-size);
   }
+
   @media (prefers-reduced-motion: reduce) {
-    /* Suppress only the roll itself (a transform). The exit fade on
-     * `[data-exiting]` is deliberately LEFT RUNNING here — do not add it to
-     * this selector. Its `transitionend` (on `opacity`) is what Wheel's
-     * onTransitionEnd handler listens for to unmount an exiting wheel;
-     * killing that transition too would starve the handler and leave
-     * cleanup to the 600ms EXIT_FALLBACK_MS backstop, which under reduced
-     * motion would sit as dead blank digit-width(s) for 600ms instead of
-     * the normal ~180ms. The opacity fade is also the standard
-     * reduced-motion substitute for the roll, so keeping it is correct on
-     * both counts. */
-    .ds-rolling-money-col {
+    /* The roll is suppressed outright — it is pure decoration. Enter and exit
+     * are NOT: they are layout, and the exit animation's `animationend` is what
+     * unmounts a departing wheel. Collapsing them to 1ms keeps that event
+     * firing (`animation: none` would starve it and strand blank slots) while
+     * making the change read as instant. */
+    .ds-rolling-digits-col {
       transition: none;
       transition-delay: 0ms;
+    }
+    .ds-rolling-digits-wheel[data-entering],
+    .ds-rolling-digits-sep[data-entering],
+    .ds-rolling-digits-wheel[data-exiting],
+    .ds-rolling-digits-sep[data-exiting] {
+      animation-duration: 1ms;
+    }
+  }
+
+  /* SidebarWithHoverIcon rail. This rule is the icon's entire motion system —
+   * the component sets the two targets and reads back what CSS interpolated.
+   * Hover is the faster of the two because it answers a pointer; the traverse
+   * is a state change and carries more weight.
+   *
+   * Under reduced motion the durations go to zero rather than the transitions
+   * being removed: the component's sampling loop terminates when the values
+   * reach their targets, so a zero duration means it writes the final path once
+   * and stops on the very first frame. */
+  .ds-sidebar-rail {
+    transition:
+      --ds-sidebar-rail-s var(--ui-sidebar-icon-duration)
+        var(--ui-sidebar-icon-ease),
+      --ds-sidebar-rail-h var(--ui-sidebar-icon-hover-duration)
+        var(--ui-sidebar-icon-ease);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-sidebar-rail {
+      transition-duration: 0ms;
     }
   }
 }
@@ -531,6 +655,24 @@
   from { transform: translateY(calc(var(--ds-roll-dir, 1) * -0.9em)); filter: blur(4px); opacity: 0; }
   60%  { filter: blur(1.5px); }
   to   { transform: translateY(0); filter: blur(0); opacity: 1; }
+}
+
+/* RollingDigitsText slot enter/exit. Deliberately ONE-SIDED: the missing half of
+ * each pair is taken from the element's own computed style, so the same four
+ * keyframes drive a digit wheel and a grouping comma — two different resting
+ * widths — without either width appearing here. Adding the other half would pin
+ * them to one element type and quietly break the other. */
+@keyframes ds-rolling-digits-in {
+  from { width: 0; }
+}
+@keyframes ds-rolling-digits-out {
+  to { width: 0; }
+}
+@keyframes ds-rolling-digits-fade-in {
+  from { opacity: 0; }
+}
+@keyframes ds-rolling-digits-fade-out {
+  to { opacity: 0; }
 }
 
 /* UnderlineLinkText sweep. First half: hold the right edge and shrink to zero so

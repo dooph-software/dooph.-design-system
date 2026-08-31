@@ -128,6 +128,12 @@ When adding a new `--ui-*` token:
 | Nesting a `<div>` around `children` without layout necessity | Blocks free composition | Let children flow directly to the interactive element |
 | Forgetting `displayName` on `forwardRef` components | Poor DX in React DevTools | Set `ComponentName.displayName = "ComponentName"` |
 | Hard-coding `className` values in stories instead of using variant consts | Tests the wrong API surface | `variant={ButtonVariant.primary}` in stories |
+| `const DURATION_MS = 220` or a hand-rolled easing function in a component | Motion timing is a design value; a consumer cannot retune it, and it silently disagrees with the CSS it is staged against | Add a `--ui-<component>-duration`/`-ease` token pair and let CSS drive (architecture Rule 6) |
+| A JS constant that mirrors a CSS duration so two motions can be sequenced | The mirror desyncs — this shipped once, and the roll overran the fade | Express the relationship in CSS, e.g. a `calc()` on a ratio token |
+| `matchMedia("(prefers-reduced-motion: reduce)")` in a component | Same class of mistake as runtime theme detection | `@media (prefers-reduced-motion: reduce)` in the stylesheet |
+| `el.closest("button, ...")` to find an ancestor to bind listeners to | The component reaches outside its own subtree, leaks listeners onto a node it does not own, and is silently inert in other markup | Take the state as a controlled prop (architecture Rule 7) |
+| Hand-editing `src/components/Icons/index.ts` (e.g. adding an `X as Y` alias) | The file is generated, and `npm run build` regenerates it first — the edit is deleted on the next build | Rename the file, or teach `generate-icon-exports.mjs` an alias map |
+| A `*Icon.tsx` whose exported const does not match its filename | `generate-icon-exports.mjs` hard-fails, taking down step one of the build | Keep filename and const in sync |
 | A Tailwind variant on a package class — `data-[active]:ds-slider-dot-active`, `[&_h1]:text-style-title` | Variants only compose with GENERATED utilities, so this emits **no rule at all**, silently. Has shipped as a bug twice | Put the state in the CSS rule itself (`.ds-slider-dot[data-active]`), or spell the role out in real utilities (`font-title text-title`) |
 | Stories that only exercise prop combinations matching the variant's own defaults | Cannot catch a prop that does nothing — this is exactly how two dead text props shipped | Include at least one story where each override CONTRADICTS the role default |
 | Using raw `<button>` or `<div>` in stories when `Button`/`ButtonVariant` exists | Bypasses the design system inside its own stories; creates a visual inconsistency in Storybook | Import and use `Button` with the appropriate `ButtonVariant` and `ButtonSize` |
@@ -141,9 +147,19 @@ After any change to `text-style-*` classes or `--ui-font-var-*` tokens, verify i
 2. Body text has slightly heavier optical weight than button text (`GRAD 19`)
 3. Label text (Host Grotesk) renders at 12px, correct weight
 4. Title/hero text (Bricolage Grotesque) renders at 23px/36px
+5. Mono text (Google Sans Code) renders at the button role's size and weight with `font-variation-settings: "MONO" 1` — and is actually fixed pitch
 
 Verify by reading computed style, not by eye — `getComputedStyle(el).fontSize` /
 `.fontFamily` / `.fontVariationSettings` on a rendered story. A class that never
 generated and a token that resolves to the same value look identical on screen.
 
-The `preview-head.html` Google Fonts URL must include all axes: `GRAD,ROND,opsz,slnt,wdth,wght`. If any axis is missing from the URL, `font-variation-settings` will silently fail for that axis.
+For mono, computed style is not sufficient on its own: `"MONO" 1` reports as set
+even when the served font file has no MONO axis to apply it to. Measure instead —
+render `iiiiiiiiii`, `WWWWWWWWWW` and `0000000000` in the role and confirm all
+three advance identically.
+
+The `preview-head.html` Google Fonts URLs must carry every axis a
+`--ui-font-var-*` token names, **as a range**: `GRAD,ROND,opsz,slnt,wdth,wght`
+for Google Sans Flex and `MONO@0..1` for Google Sans Code. An omitted axis — or
+one pinned to a single value — makes Google Fonts serve a file without that axis,
+and `font-variation-settings` then fails silently.

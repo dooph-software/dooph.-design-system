@@ -81,8 +81,10 @@
   --font-label: var(--ui-font-label);
   --font-title: var(--ui-font-title);
   --font-hero: var(--ui-font-hero);
+  --font-mono: var(--ui-font-mono);
   --text-label: var(--ui-text-label);
   --text-body: var(--ui-text-body);
+  --text-mono: var(--ui-text-mono);
   --text-subheading: var(--ui-text-subheading);
   --text-heading: var(--ui-text-heading);
   --text-title: var(--ui-text-title);

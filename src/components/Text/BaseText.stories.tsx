@@ -7,6 +7,7 @@ import {
   HeadingText,
   HeroText,
   LabelText,
+  MonoText,
   SubheadingText,
   TitleText,
 } from './BaseText';
@@ -77,6 +78,11 @@ const Section = ({
 );
 
 const SAMPLE = 'Handgloves 0123';
+const MONO_SAMPLE = 'const total = 1_048_576;';
+/* Same character count per line on purpose: only fixed advances make the
+ * columns line up, so the difference is unmistakable rather than a matter of
+ * taste. */
+const FIGURES = '11,111.11\n90,909.90\n47,382.65';
 
 /* ── stories ─────────────────────────────────────────────────────────── */
 
@@ -111,6 +117,80 @@ export const Roles: Story = {
       </Row>
       <Row label="LabelText">
         <LabelText>{SAMPLE}</LabelText>
+      </Row>
+      <Row label="MonoText">
+        <MonoText>{SAMPLE}</MonoText>
+      </Row>
+    </Section>
+  ),
+};
+
+/* Mono sits at ButtonText's size and weight by design — its size and weight
+ * tokens alias button's — so the pair should read at one optical scale. The
+ * difference is the family and the fixed advance. */
+export const Mono: Story = {
+  name: 'Mono role',
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <Section
+      title="Mono"
+      note="Google Sans Code by default, with the MONO axis named explicitly via --ui-font-var-mono so the fixed-pitch cut is guaranteed rather than assumed. Size and weight alias the button role, so a mono run sits level beside a button label."
+    >
+      <Row label="ButtonText">
+        <ButtonText>{MONO_SAMPLE}</ButtonText>
+      </Row>
+      <Row label="MonoText">
+        <MonoText>{MONO_SAMPLE}</MonoText>
+      </Row>
+      <Row label="MonoText — alignment">
+        <MonoText as="pre" className="whitespace-pre">
+          {'sk_live_4Kd91\nsk_test_0Wq83\nrk_live_1Ba77'}
+        </MonoText>
+      </Row>
+      <Row label="font={Fonts.mono} on BodyText">
+        <BodyText font={Fonts.mono}>{MONO_SAMPLE}</BodyText>
+      </Row>
+      <Row label="MonoText fontSize={20} fontWeight={700}">
+        <MonoText fontSize={20} fontWeight={FontWeights.bold}>
+          {MONO_SAMPLE}
+        </MonoText>
+      </Row>
+    </Section>
+  ),
+};
+
+/* The prop has to be visible in a case where it CONTRADICTS the face's default,
+ * so each pair below stacks two numbers of the same length: proportional
+ * figures make the columns wander, tabular ones line them up exactly. */
+export const Tabular: Story = {
+  name: 'Props — tabular',
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <Section
+      title="tabular"
+      note="font-variant-numeric: tabular-nums — every digit takes one advance, so a number does not reflow as its digits change. Turn it on for anything that ticks, counts down, or sits in a column that must align. Passing false writes proportional-nums, which overrides an inherited tabular run; omitting it inherits."
+    >
+      <Row label="default (proportional)">
+        <BodyText fontSize={20} className="whitespace-pre">
+          {FIGURES}
+        </BodyText>
+      </Row>
+      <Row label="tabular">
+        <BodyText tabular fontSize={20} className="whitespace-pre">
+          {FIGURES}
+        </BodyText>
+      </Row>
+      <Row label="tabular inside · false out">
+        <BodyText tabular fontSize={20} className="whitespace-pre">
+          <BodyText tabular={false} className="whitespace-pre">
+            {FIGURES}
+          </BodyText>
+        </BodyText>
+      </Row>
+      <Row label="MonoText (already fixed pitch)">
+        <MonoText fontSize={20} className="whitespace-pre">
+          {FIGURES}
+        </MonoText>
       </Row>
     </Section>
   ),

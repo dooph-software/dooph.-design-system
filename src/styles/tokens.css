@@ -136,41 +136,74 @@
    * make the same component subtle in a button and overdone in a hero. */
   --ui-roll-hover-perspective: 10em;
 
-  /* Rolling money digits (RollingMoneyText) — 2D cash-register snap, not 3D.
+  /* Rolling digits (RollingDigitsText) — 2D cash-register snap, not 3D.
    *
-   * `stagger` defaults to 0ms: every wheel starts and lands together, one snap
-   * for the whole figure. It stays a token so a consumer can dial in a
-   * right-to-left cascade (ones place leads) without patching the package.
+   * `duration` governs the ROLL: a wheel already on screen translating to its
+   * new digit. `stagger` defaults to 0ms so every wheel starts and lands
+   * together, one snap for the whole figure; it stays a token so a consumer can
+   * dial in a right-to-left cascade (ones place leads) without patching the
+   * package.
    *
-   * A change which ADDS or REMOVES a digit runs CONCURRENTLY with the roll:
-   * `duration` governs the roll of the wheels already on screen, and
-   * `fade-duration` governs an added wheel fading in (already showing its
-   * digit) or a departing one fading out (holding its last). The two are
-   * independent, so they can be retimed independently. An earlier version
-   * staged them against each other from JS constants that mirrored these
-   * tokens; the mirror desynced and the roll overran the fade.
+   * `enter-duration` / `exit-duration` govern a whole SLOT — a wheel or a
+   * grouping separator — opening from or collapsing to zero width while it
+   * fades. Width and opacity are the same animation, and it runs CONCURRENTLY
+   * with the roll of the wheels already on screen. `opacity-ratio` is the
+   * FRACTION of that duration the fade occupies: opacity finishes early so an
+   * arriving glyph (which is drawn at full 1ch and overflows its narrower slot)
+   * is already opaque by the time it stops overlapping its neighbour.
    *
-   * `cents-size` / `cents-rise` / `cents-gap` are all in em of the PARENT —
-   * the dollars — not of the cents. That is what keeps the cents a fixed
-   * PROPORTION of the figure at every size: a role passed as
-   * `smallCentsComponent` carries its own absolute font size (LabelText is a
-   * flat 12px), which would read correctly beside 23px dollars and far too
+   * `digit-width` and `separator-width` are the two slot widths. Both have to
+   * be fixed lengths because `width` cannot animate from `auto`, and both are
+   * relative units so the figure scales with its type.
+   *
+   * `digit-width` defaults to 1ch, which is the advance of "0" — very close to,
+   * but not exactly, the TABULAR advance the figure actually renders at (Google
+   * Sans Flex: 1ch is about 2% under). Every wheel is centred in its own slot,
+   * so the error is symmetric per digit rather than cumulative, and the only
+   * visible effect is a figure fractionally tighter than the same string set as
+   * plain text. Retune this if a consumer's face drifts further.
+   *
+   * `separator-width` is measured to the default face's comma. Too narrow only
+   * means the glyph is optically tight — the separator does not clip, because
+   * its overflow is visible and its glyph is centred.
+   *
+   * `decimals-size` / `decimals-rise` / `decimals-gap` are all in em of the
+   * PARENT — the integer part — not of the decimals. That is what keeps the
+   * decimals a fixed PROPORTION of the figure at every size: a role passed as
+   * `smallDecimalsComponent` carries its own absolute font size (LabelText is a
+   * flat 12px), which would read correctly beside 23px integers and far too
    * small beside 40px ones. So these tokens own the size and the passed role
    * owns family, weight and tracking — applied by the
-   * `.ds-rolling-money-cents > *` rule in index.css, which sizes the CHILD
-   * precisely so the wrapper keeps inheriting the dollars' em and `rise`/`gap`
-   * stay measured against the dollars. Override `cents-size` to change the
-   * proportion; `cents-rise` needs re-tuning alongside it, since top-aligning
-   * a taller cents box takes less rise. */
-  --ui-rolling-money-duration: 240ms;
-  /* Stage-one fade for a wheel entering or leaving. Shorter than the roll so
-   * the two stages read as sequence rather than overlap. */
-  --ui-rolling-money-fade-duration: 160ms;
-  --ui-rolling-money-stagger: 0ms;
-  --ui-rolling-money-ease: cubic-bezier(0.32, 0.72, 0, 1);
-  --ui-rolling-money-cents-size: 0.5em;
-  --ui-rolling-money-cents-rise: 0.525em;
-  --ui-rolling-money-cents-gap: 0.06em;
+   * `.ds-rolling-digits-decimals > *` rule in index.css, which sizes the CHILD
+   * precisely so the wrapper keeps inheriting the parent's em and `rise`/`gap`
+   * stay measured against it. Override `decimals-size` to change the
+   * proportion; `decimals-rise` needs re-tuning alongside it, since top-aligning
+   * a taller decimals box takes less rise. */
+  --ui-rolling-digits-duration: 240ms;
+  --ui-rolling-digits-stagger: 0ms;
+  --ui-rolling-digits-enter-duration: 260ms;
+  --ui-rolling-digits-exit-duration: 200ms;
+  --ui-rolling-digits-opacity-ratio: 0.55;
+  --ui-rolling-digits-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ui-rolling-digits-digit-width: 1ch;
+  --ui-rolling-digits-separator-width: 0.34em;
+  --ui-rolling-digits-decimals-size: 0.5em;
+  --ui-rolling-digits-decimals-rise: 0.525em;
+  --ui-rolling-digits-decimals-gap: 0.06em;
+
+  /* Sidebar rail icon (SidebarWithHoverIcon). Two independent motions: the rail
+   * TRAVERSING the frame when `side` flips, and the rail pulling out into a
+   * chevron on hover. Hover is the faster of the two — it answers a pointer, so
+   * it has to feel immediate, while the traverse is a state change and reads
+   * better with some weight.
+   *
+   * These are real CSS transition durations on two registered custom
+   * properties, not numbers mirrored into JS: the component only samples the
+   * interpolated values and writes the path. Retuning them here retunes the
+   * icon, including under `prefers-reduced-motion`, with no JS involved. */
+  --ui-sidebar-icon-duration: 260ms;
+  --ui-sidebar-icon-hover-duration: 180ms;
+  --ui-sidebar-icon-ease: cubic-bezier(0.32, 0.72, 0, 1);
 
   /* Text underline link wipe (UnderlineLinkText). On hover the line sweeps out
    * to the right then redraws in from the left. Thickness/offset are in em so the
@@ -194,10 +227,20 @@
   --ui-font-label: "Host Grotesk", system-ui, sans-serif;
   --ui-font-title: "Bricolage Grotesque", system-ui, sans-serif;
   --ui-font-hero: "Bricolage Grotesque", system-ui, sans-serif;
+  /* The mono role deliberately falls back to the platform's UI monospace face
+   * rather than to `monospace`, whose browser default is both smaller than the
+   * surrounding text and, on Windows, Courier New. */
+  --ui-font-mono:
+    "Google Sans Code", ui-monospace, "SF Mono", SFMono-Regular, Menlo,
+    Consolas, monospace;
 
   /* Font sizes */
   --ui-text-label: 12px;
   --ui-text-body: 14px;
+  /* Mono matches the button role's size and weight by aliasing them, so a
+   * consumer who retunes button type keeps mono in step; override either token
+   * directly to break that link. */
+  --ui-text-mono: var(--ui-text-body);
   --ui-text-subheading: 18px;
   --ui-text-heading: 20px;
   --ui-text-title: 40px;
@@ -211,6 +254,7 @@
   --ui-weight-heading: 600;
   --ui-weight-title: 700;
   --ui-weight-hero: 700;
+  --ui-weight-mono: var(--ui-weight-button);
 
   /* Font weights — by name (BaseText `fontWeight` prop; consumer-overridable) */
   --ui-weight-regular: 400;
@@ -222,6 +266,11 @@
   --ui-font-var-button: "wdth" 100, "GRAD" 11, "ROND" 100, "slnt" 0;
   --ui-font-var-body: "wdth" 100, "GRAD" 19, "ROND" 100, "slnt" 0;
   --ui-font-var-heading: "wdth" 100, "GRAD" 11, "ROND" 100, "slnt" 0;
+  /* Google Sans Code ships a MONO axis: 0 is its proportional cut, 1 the fixed
+   * pitch one. Naming it here rather than trusting the family default is what
+   * guarantees fixed advances, which is the entire point of the role. A face
+   * without the axis ignores it silently. */
+  --ui-font-var-mono: "MONO" 1;
 
   /* Letter spacing */
   --ui-tracking-body: 0.01em;

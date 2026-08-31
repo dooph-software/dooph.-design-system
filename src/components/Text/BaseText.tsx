@@ -72,13 +72,14 @@ const BaseTextBase = forwardRef<HTMLElement, BaseTextProps<ElementType>>(
       lineHeight,
       letterSpacing,
       axes,
+      tabular,
       ...props
     },
     ref,
   ) => {
     const role = unstyled ? undefined : (variant as TextVariant);
     const typography = buildTextStyle(
-      { font, fontSize, fontWeight, lineHeight, letterSpacing, axes },
+      { font, fontSize, fontWeight, lineHeight, letterSpacing, axes, tabular },
       role,
     );
 
@@ -133,6 +134,11 @@ export const HeroText = createRoleText(TextVariant.hero, 'HeroText');
 export const TitleText = createRoleText(TextVariant.title, 'TitleText');
 export const BodyText = createRoleText(TextVariant.body, 'BodyText');
 export const LabelText = createRoleText(TextVariant.label, 'LabelText');
+/* Button's size and weight in the mono family — the two roles' size and weight
+ * tokens alias each other, so mono sits at the same optical scale beside a
+ * button label. Reach for `tabular` on the others when you only want aligned
+ * figures; use this when the run should read as code, a key, or an id. */
+export const MonoText = createRoleText(TextVariant.mono, 'MonoText');
 
 export type ButtonTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
 export type HeadingTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
@@ -141,3 +147,4 @@ export type HeroTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
 export type TitleTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
 export type BodyTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
 export type LabelTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
+export type MonoTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;

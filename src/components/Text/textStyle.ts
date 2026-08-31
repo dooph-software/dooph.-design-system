@@ -47,6 +47,22 @@ export interface TextStyleProps {
   lineHeight?: LineHeightValue;
   letterSpacing?: LetterSpacingValue;
   axes?: FontAxesValue;
+  /**
+   * Fixed-advance figures (`font-variant-numeric: tabular-nums`).
+   *
+   * Every digit takes the same width, so a number does not reflow as its digits
+   * change — the reason to turn it on for anything that ticks, counts down, or
+   * sits in a column that must align. It costs the proportional spacing the
+   * face was drawn with, so it is opt-in rather than a default on body copy.
+   *
+   * `false` is not the same as omitting it: `false` writes
+   * `proportional-nums`, forcing figures back to proportional even where an
+   * ancestor turned tabular on. Omit to inherit.
+   *
+   * The face has to ship the `tnum` feature. Effectively all modern text faces
+   * do; one that does not simply renders proportional figures, with no error.
+   */
+  tabular?: boolean;
 }
 
 /**
@@ -60,7 +76,15 @@ export interface TextStyleProps {
  *                 undefined when the role class is not applied (`unstyled`).
  */
 export const buildTextStyle = (
-  { font, fontSize, fontWeight, lineHeight, letterSpacing, axes }: TextStyleProps,
+  {
+    font,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    letterSpacing,
+    axes,
+    tabular,
+  }: TextStyleProps,
   variant: TextVariant | undefined,
 ): CSSProperties | undefined => {
   const style: CSSProperties = {};
@@ -70,6 +94,12 @@ export const buildTextStyle = (
   if (fontWeight !== undefined) style.fontWeight = toUnitless(fontWeight);
   if (lineHeight !== undefined) style.lineHeight = toUnitless(lineHeight);
   if (letterSpacing !== undefined) style.letterSpacing = toLength(letterSpacing);
+  /* Explicit both ways. `proportional-nums` rather than `normal` so passing
+   * false overrides an inherited tabular run instead of merely declining to
+   * set one. */
+  if (tabular !== undefined) {
+    style.fontVariantNumeric = tabular ? 'tabular-nums' : 'proportional-nums';
+  }
 
   if (axes !== undefined) {
     const own = serializeAxes(axes);

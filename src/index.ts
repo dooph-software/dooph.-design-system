@@ -6,6 +6,7 @@ export * from './components/Avatar';
 export * from './components/Checkbox';
 export * from './components/HotkeyIndicator';
 export * from './components/Icons';
+export * from './components/SidebarWithHoverIcon';
 export * from './components/Input';
 export * from './components/Tabs';
 export * from './components/SegmentedTabSelect';

@@ -6,7 +6,7 @@ Define light values on `:root` and optionally mirror them under `.light` (same s
 
 If you remap tokens (radii, colors, typography), duplicate light overrides across `:root`/`.light` whenever your app paints an explicit `class="light"`, so branded values apply in forced-light mode too.
 
-The package defines font-family tokens but does not load font files. Consumers must load Google Sans Flex, Host Grotesk, and Bricolage Grotesque, or approved substitutes, then map the loaded families/variables to `--ui-font-*`. Google Sans Flex should be loaded with `GRAD`, `ROND`, `opsz`, `slnt`, `wdth`, and `wght` available so the design-system axis tokens can render.
+The package defines font-family tokens but does not load font files. Consumers must load Google Sans Flex, Host Grotesk, Bricolage Grotesque, and Google Sans Code, or approved substitutes, then map the loaded families/variables to `--ui-font-*`. Google Sans Flex should be loaded with `GRAD`, `ROND`, `opsz`, `slnt`, `wdth`, and `wght` available, and Google Sans Code with `MONO`, so the design-system axis tokens can render. Request every axis as a RANGE — pinned or omitted, the provider serves a file without the axis and the token silently does nothing.
 
 **Subtree islands.** Any ancestor with **`class="light"`** or **`class="dark"`** re-establishes the corresponding **`--ui-*`** palette for itself and descendants (inheritance). Use that to force a light region under **`<html class="dark">`** (or the reverse). **Portals** rendered outside that subtree won’t inherit — add **`light`** / **`dark`** on the surfaced content or portal container.
 
@@ -61,14 +61,20 @@ Figma `brandColor`/`brandColorAlt` — the two-color brand identity pair, distin
 
 ## Typography
 
-- `--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero` — one family stack per text role, each independently overridable (defaults: body/button/heading → Google Sans Flex, label → Host Grotesk, title/hero → Bricolage Grotesque)
-- `--ui-text-label`, `--ui-text-body`, `--ui-text-heading`, `--ui-text-title`, `--ui-text-hero`
-- `--ui-weight-body`, `--ui-weight-button`, `--ui-weight-label`, `--ui-weight-heading`, `--ui-weight-title`, `--ui-weight-hero`
+There are **eight** text roles: `body`, `button`, `heading`, `subheading`, `label`, `title`, `hero`, `mono`.
+
+- `--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero`, `--ui-font-mono` — one family stack per text role, each independently overridable (defaults: body/button/heading → Google Sans Flex, label → Host Grotesk, title/hero → Bricolage Grotesque, mono → Google Sans Code). `subheading` shares the heading family.
+- `--ui-text-label`, `--ui-text-body`, `--ui-text-mono`, `--ui-text-subheading`, `--ui-text-heading`, `--ui-text-title`, `--ui-text-hero`
+- `--ui-weight-body`, `--ui-weight-button`, `--ui-weight-label`, `--ui-weight-subheading`, `--ui-weight-heading`, `--ui-weight-title`, `--ui-weight-hero`, `--ui-weight-mono`
 - `--ui-weight-regular`, `--ui-weight-medium`, `--ui-weight-semibold`, `--ui-weight-bold` — the standard scale behind `FontWeights.*`
-- `--ui-font-var-button`, `--ui-font-var-body`, `--ui-font-var-heading`
+- `--ui-font-var-button`, `--ui-font-var-body`, `--ui-font-var-heading`, `--ui-font-var-mono`
 - `--ui-tracking-body`, `--ui-tracking-label`, `--ui-tracking-hero`
 
-Only Google Sans Flex styles use `--ui-font-var-*` — those three roles. The other roles (label/title/hero) ship no axis token because their faces implement no such axes. A Text component's `axes` prop appends to the role's token, so a named axis overrides while the rest survive.
+`--ui-text-mono` and `--ui-weight-mono` alias `--ui-text-body` and `--ui-weight-button` by default, so mono sits at the same optical scale as a button label; override either directly to break that link.
+
+`--ui-font-var-*` tokens apply to the two faces that carry axes: Google Sans Flex (button/body/heading/subheading) and Google Sans Code (`--ui-font-var-mono: "MONO" 1`). Label, title and hero ship no axis token because their faces implement none. A Text component's `axes` prop appends to the role's token, so a named axis overrides while the rest survive.
+
+**`MONO` is not optional decoration.** Google Sans Code has a proportional cut at MONO 0, so the token is what actually makes the mono role monospaced.
 
 **There is no line-height token and no role sets one.** Leading inherits, so the consuming app owns it (a base rule) or a call site does (the `lineHeight` prop).
 
@@ -98,16 +104,54 @@ Used by `ShimmerText`'s `ds-shimmer-text` utility (animated gradient masked to g
 - `--ui-shimmer-base` — the gradient's resting color (default: `var(--ui-color-text-tertiary)`)
 - `--ui-shimmer-highlight` — the sweeping highlight color (default: `color-mix(in srgb, var(--ui-color-text-tertiary) 35%, transparent)`)
 
+## Motion
+
+Every animated component owns a `--ui-<component>-*` family, and the component
+reads them only through CSS — nothing is mirrored in JavaScript. Retuning a value
+here retunes the component, including under `prefers-reduced-motion`.
+
+Families: `--ui-roll-hover-*` (`RollHoverText`), `--ui-underline-link-*`
+(`UnderlineLinkText`), `--ui-rolling-digits-*` (`RollingDigitsText`),
+`--ui-sidebar-icon-*` (`SidebarWithHoverIcon`).
+
+### Rolling Digits
+
+**Renamed in 5.x.** These were `--ui-rolling-money-*` in 5.0.0, alongside the
+`RollingMoneyText` → `RollingDigitsText` component rename, and the `cents`
+segment became `decimals`. If you overrode any of them, rename accordingly:
+`--ui-rolling-money-cents-size` → `--ui-rolling-digits-decimals-size`, and so on.
+`--ui-rolling-money-fade-duration` has no direct equivalent — it split into
+`enter-duration` and `exit-duration`.
+
+- `--ui-rolling-digits-duration` — the roll: a wheel already on screen turning to its new digit
+- `--ui-rolling-digits-stagger` — `0ms` by default, so the whole figure lands as one snap; raise it for a right-to-left cascade with the ones place leading
+- `--ui-rolling-digits-enter-duration` / `--ui-rolling-digits-exit-duration` — a slot opening from, or collapsing to, zero width as the figure gains or loses a digit
+- `--ui-rolling-digits-opacity-ratio` — the fraction of that duration the fade occupies (default `0.55`), so an arriving glyph is opaque before it stops overlapping its neighbour
+- `--ui-rolling-digits-ease`
+- `--ui-rolling-digits-digit-width` — the width of one digit slot, default `1ch`. Retune only if your face's tabular advance drifts noticeably from its `0` advance
+- `--ui-rolling-digits-separator-width` — the advance reserved for `,` and `.`, default `0.34em`. Fixed because `width` cannot animate from `auto`; too narrow reads tight but never clips
+- `--ui-rolling-digits-decimals-size` / `-rise` / `-gap` — the raised small-decimals treatment, all in em of the INTEGER part, which is what keeps the proportion constant at every figure size. Changing `-size` needs `-rise` re-tuned alongside it
+
+The component forces `font-variant-numeric: tabular-nums` on itself and offers no
+way off: the fixed slot width is only correct while every digit shares one
+advance.
+
+### Sidebar Icon
+
+- `--ui-sidebar-icon-duration` — the rail traversing the frame when `side` flips
+- `--ui-sidebar-icon-hover-duration` — the rail bowing into a chevron; faster, because it answers a pointer
+- `--ui-sidebar-icon-ease`
+
 ## Tailwind Mappings
 
 The package maps `--ui-*` tokens into Tailwind v4 with `@theme inline`, including:
 
 - Colors: `bg-primary`, `text-primary-fg`, `bg-secondary`, `text-text`, `bg-surface-primary`, `bg-surface-secondary`, `bg-page-background`, `bg-danger`, `text-danger-fg`, `border-border-primary`, `border-border-secondary`, `border-border-popovers`, `border-border-focus`, `text-brand-color`, `bg-brand-color-alt`
-- Fonts: `font-body`, `font-button`, `font-heading`, `font-label`, `font-title`, `font-hero`
+- Fonts: `font-body`, `font-button`, `font-heading`, `font-label`, `font-title`, `font-hero`, `font-mono`
 - Shadows: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`, `shadow-focus-error` (v3)
 - Radii: `rounded-tight`, `rounded-standard`, `rounded-soft`, `rounded-slider-inner` (v3, and directional variants such as `rounded-l-standard`)
 - Spacing utilities where mapped (see `@theme`)
-- Composite utilities: `text-style-button`, `text-style-body`, `text-style-label`, `text-style-title`, `text-style-heading`, `text-style-hero`, `h-button`, `h-button-sm`, `size-button`, `size-button-sm`, `size-button-micro` (v3), `h-slider-track` (v3)
+- Composite utilities: `text-style-button`, `text-style-body`, `text-style-label`, `text-style-title`, `text-style-heading`, `text-style-subheading`, `text-style-hero`, `text-style-mono`, `h-button`, `h-button-sm`, `size-button`, `size-button-sm`, `size-button-micro`, `h-slider-track`
 
 Prefer mapped utilities over arbitrary values when composing local UI.
 

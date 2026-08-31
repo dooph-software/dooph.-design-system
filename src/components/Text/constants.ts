@@ -22,6 +22,7 @@ export const TextVariant = {
   title: 'title',
   body: 'body',
   label: 'label',
+  mono: 'mono',
 } as const;
 export type TextVariant = (typeof TextVariant)[keyof typeof TextVariant];
 
@@ -47,6 +48,7 @@ export const Fonts = {
   label: 'var(--ui-font-label)',
   title: 'var(--ui-font-title)',
   hero: 'var(--ui-font-hero)',
+  mono: 'var(--ui-font-mono)',
 } as const;
 export type Font = (typeof Fonts)[keyof typeof Fonts];
 
@@ -54,6 +56,7 @@ export type Font = (typeof Fonts)[keyof typeof Fonts];
 export const FontSizes = {
   label: 'var(--ui-text-label)',
   body: 'var(--ui-text-body)',
+  mono: 'var(--ui-text-mono)',
   subheading: 'var(--ui-text-subheading)',
   heading: 'var(--ui-text-heading)',
   title: 'var(--ui-text-title)',
@@ -99,6 +102,8 @@ export const FontAxes = {
   opticalSize: 'opsz',
   grade: 'GRAD',
   roundness: 'ROND',
+  /** Google Sans Code: 0 = proportional cut, 1 = fixed pitch. */
+  mono: 'MONO',
 } as const;
 export type FontAxis = (typeof FontAxes)[keyof typeof FontAxes];
 
@@ -115,6 +120,7 @@ export const ROLE_AXIS_TOKEN: Partial<Record<TextVariant, string>> = {
   body: 'var(--ui-font-var-body)',
   heading: 'var(--ui-font-var-heading)',
   subheading: 'var(--ui-font-var-heading)',
+  mono: 'var(--ui-font-var-mono)',
 };
 
 /** Role → the class carrying its defaults (see index.css, `components` layer). */
@@ -126,6 +132,7 @@ export const TEXT_VARIANT_CLASS: Record<TextVariant, string> = {
   title: 'text-style-title',
   body: 'text-style-body',
   label: 'text-style-label',
+  mono: 'text-style-mono',
 };
 
 /* Prop value types. The `(string & {})` arm keeps the token values in

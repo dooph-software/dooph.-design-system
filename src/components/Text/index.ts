@@ -1,55 +1,57 @@
 export {
   BaseText,
+  BodyText,
   ButtonText,
   HeadingText,
-  SubheadingText,
   HeroText,
-  TitleText,
-  BodyText,
   LabelText,
-} from './BaseText';
+  MonoText,
+  SubheadingText,
+  TitleText,
+} from "./BaseText";
 export type {
   BaseTextProps,
-  RoleTextProps,
+  BodyTextProps,
   ButtonTextProps,
   HeadingTextProps,
-  SubheadingTextProps,
   HeroTextProps,
-  TitleTextProps,
-  BodyTextProps,
   LabelTextProps,
-} from './BaseText';
+  MonoTextProps,
+  RoleTextProps,
+  SubheadingTextProps,
+  TitleTextProps,
+} from "./BaseText";
 export {
-  TextVariant,
-  RollDirection,
+  FontAxes,
   Fonts,
   FontSizes,
   FontWeights,
+  RollDirection,
+  TextVariant,
   Tracking,
-  FontAxes,
-} from './constants';
+} from "./constants";
 export type {
   Font,
-  FontSize,
-  FontWeight,
-  FontAxis,
-  TrackingValue,
-  FontValue,
-  FontSizeValue,
-  FontWeightValue,
-  LineHeightValue,
-  LetterSpacingValue,
   FontAxesValue,
-} from './constants';
-export { serializeAxes } from './textStyle';
-export type { TextStyleProps } from './textStyle';
-export { ShimmerText } from './ShimmerText';
-export type { ShimmerTextProps } from './ShimmerText';
-export { RollChangeText } from './RollChangeText';
-export type { RollChangeTextProps } from './RollChangeText';
-export { RollHoverText } from './RollHoverText';
-export type { RollHoverTextProps } from './RollHoverText';
-export { RollingMoneyText } from './RollingMoneyText';
-export type { RollingMoneyTextProps } from './RollingMoneyText';
-export { UnderlineLinkText } from './UnderlineLinkText';
-export type { UnderlineLinkTextProps } from './UnderlineLinkText';
+  FontAxis,
+  FontSize,
+  FontSizeValue,
+  FontValue,
+  FontWeight,
+  FontWeightValue,
+  LetterSpacingValue,
+  LineHeightValue,
+  TrackingValue,
+} from "./constants";
+export { RollChangeText } from "./RollChangeText";
+export type { RollChangeTextProps } from "./RollChangeText";
+export { RollHoverText } from "./RollHoverText";
+export type { RollHoverTextProps } from "./RollHoverText";
+export { RollingDigitsText } from "./RollingDigitsText";
+export type { RollingDigitsTextProps } from "./RollingDigitsText";
+export { ShimmerText } from "./ShimmerText";
+export type { ShimmerTextProps } from "./ShimmerText";
+export { serializeAxes } from "./textStyle";
+export type { TextStyleProps } from "./textStyle";
+export { UnderlineLinkText } from "./UnderlineLinkText";
+export type { UnderlineLinkTextProps } from "./UnderlineLinkText";

@@ -215,8 +215,9 @@ The package defines font tokens but loads NO font files.
 
 ### What the package owns
 
-- Per-role font family tokens in `tokens.css` — `--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero` — stacks pointing to named families the consumer is responsible for loading. Each text role is independently overridable (defaults: body/button/heading → Google Sans Flex, label → Host Grotesk, title/hero → Bricolage Grotesque).
-- `--ui-font-var-button/body/heading` — `font-variation-settings` values for Google Sans Flex axes (`GRAD`, `ROND`, `slnt`, `wdth`). Only those three roles ship one; the other faces implement no such axes. `BaseText`'s `axes` prop APPENDS to the role token (duplicate axes resolve last-wins) so naming one axis keeps the rest — which is also why a role with no token must emit axes standalone: `var(--undefined), "GRAD" 20` invalidates the whole declaration.
+- Per-role font family tokens in `tokens.css` — `--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero`, `--ui-font-mono` — stacks pointing to named families the consumer is responsible for loading. Each text role is independently overridable (defaults: body/button/heading → Google Sans Flex, label → Host Grotesk, title/hero → Bricolage Grotesque, mono → Google Sans Code). The mono stack falls back to `ui-monospace` and friends rather than bare `monospace`, whose browser default is both smaller than surrounding text and, on Windows, Courier New.
+- Per-role size and weight tokens. `--ui-text-mono` and `--ui-weight-mono` ALIAS `--ui-text-body` and `--ui-weight-button`, so a consumer who retunes button type keeps mono at the same optical scale; overriding either token directly breaks the link on purpose.
+- `--ui-font-var-button/body/heading` — `font-variation-settings` values for Google Sans Flex axes (`GRAD`, `ROND`, `slnt`, `wdth`) — and `--ui-font-var-mono`, which names Google Sans Code's `MONO` axis at 1. Naming MONO is load-bearing rather than decorative: the family has a proportional cut at MONO 0, so trusting the family default does not get you fixed advances. Roles whose faces implement no axes (label/title/hero) ship no token. `BaseText`'s `axes` prop APPENDS to the role token (duplicate axes resolve last-wins) so naming one axis keeps the rest — which is also why a role with no token must emit axes standalone: `var(--undefined), "GRAD" 20` invalidates the whole declaration.
 - `text-style-*` role classes in `index.css`, in **`@layer components`** — composite font classes referencing the tokens above. The layer is deliberate: it loses to `utilities`, so consumer overrides work.
 
 ### What the package deliberately does NOT own
@@ -235,18 +236,19 @@ case. Do not reintroduce it.
 
 ### Storybook font loading (`preview-head.html`)
 
-Storybook loads fonts via Google Fonts CDN for internal review. This file is NOT shipped. The Google Sans Flex URL MUST include all custom axes used by the design system:
+Storybook loads fonts via Google Fonts CDN for internal review. This file is NOT shipped. Every axis a `--ui-font-var-*` token names MUST appear in the URL, **as a range**:
 
 ```
-GRAD,ROND,opsz,slnt,wdth,wght@0..100,0..100,6..144,-10..0,25..151,1..1000
+Google+Sans+Flex:GRAD,ROND,opsz,slnt,wdth,wght@0..100,0..100,6..144,-10..0,25..151,1..1000
+Google+Sans+Code:MONO,ital,wght@0..1,0,300..800
 ```
 
-Omitting any of these axes causes `font-variation-settings` to silently fail in Storybook.
+Omit an axis, or pin it to a single value (`MONO@1` rather than `MONO@0..1`), and Google Fonts serves a file that does not carry the axis at all — `font-variation-settings` then fails silently and the face renders in its default cut. Axes are ordered uppercase-first, then lowercase, each alphabetically; get the order wrong and the request 404s, which at least fails loudly.
 
 ### Consuming project responsibilities
 
-- Load Google Sans Flex (all axes), Host Grotesk, and Bricolage Grotesque by any means appropriate to their framework.
-- Map the loaded font family names into the per-role tokens (`--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero`) in their root CSS. Overriding a single role (e.g. only `--ui-font-button`) is supported and leaves the others at their defaults.
+- Load Google Sans Flex (all axes), Host Grotesk, Bricolage Grotesque, and Google Sans Code (with its `MONO` axis) by any means appropriate to their framework.
+- Map the loaded font family names into the per-role tokens (`--ui-font-body`, `--ui-font-button`, `--ui-font-heading`, `--ui-font-label`, `--ui-font-title`, `--ui-font-hero`, `--ui-font-mono`) in their root CSS. Overriding a single role (e.g. only `--ui-font-button`) is supported and leaves the others at their defaults.
 - In Next.js: use `next/font/google` with `variable` option + `axes` array, then map the CSS variable to the dooph token.
 
 ---
@@ -268,3 +270,87 @@ The package ships CSS tokens and semantic component helpers. It must not detect 
 - Use `MutationObserver` to watch app theme classes.
 - Add React context providers for app-owned branding assets such as logos.
 - Import or assume framework-specific asset systems (`next/image`, Vite public URLs, env vars) in package components.
+
+---
+
+## Rule 6: Motion Belongs In Tokens And CSS, Not In JavaScript
+
+Same shape as Rule 5. A duration, an easing curve, or a reduced-motion decision
+is a design value, so it lives in `tokens.css` and is consumed by CSS. A
+component may own the *geometry* of a motion; it must not own its *timing*.
+
+### Required
+
+- Every animated component gets a `--ui-<component>-*` family: at minimum a
+  duration and an ease. Existing families: `--ui-roll-hover-*`,
+  `--ui-underline-link-*`, `--ui-rolling-digits-*`, `--ui-sidebar-icon-*`.
+- Reduced motion is a `@media (prefers-reduced-motion: reduce)` block in CSS,
+  never a `matchMedia` call in a component. (Rule 5 already forbids `matchMedia`
+  for theme; this is the same prohibition for motion.)
+- Prefer a **transition** for a value that changes repeatedly, and an
+  **animation** for something that happens once in an element's life.
+  Re-applying a class that is already present does not restart an animation, so
+  a keyframe used for a repeating change fires on roughly every other change. A
+  transition on a changed value always runs, and an interrupted one retargets
+  from wherever it currently sits. Conversely, a mount animation needs no
+  JavaScript at all to start — reach for it before reaching for a frame
+  callback.
+
+### The escape hatch, for properties CSS cannot interpolate
+
+Some things genuinely cannot be transitioned everywhere — SVG path `d` is the
+live example. The pattern is to keep CSS in charge of the timing anyway:
+
+1. Register the animation's inputs as numbers: `@property --ds-thing-t { syntax: "<number>"; inherits: false; initial-value: 0; }`. Unregistered custom properties are token strings and jump rather than interpolate.
+2. Transition them in a `ds-*` class using the component's tokens.
+3. Set the TARGET values as inline style from props.
+4. Sample the interpolated values in a self-terminating `requestAnimationFrame` loop and write the un-interpolatable attribute.
+
+The component then holds no duration, no easing and no reduced-motion branch;
+interruption is handled natively by the transition; and where `@property` is
+unsupported the value jumps to target, the loop writes once and stops, degrading
+cleanly to instant.
+
+### Never
+
+- Hardcode a duration or easing curve in a component (`const DURATION_MS = 220`,
+  a hand-rolled `easeOutCubic`). Both have shipped here and both had to be
+  removed.
+- Mirror a CSS duration in a JS constant in order to stage two motions against
+  each other. The mirror desyncs — `RollingDigitsText` staged a fade against a
+  roll this way and the roll overran the fade. Motion that must agree with a CSS
+  duration is expressed in CSS.
+- Reach for a timer, a frame callback or a `transitionend` before checking
+  whether a mount animation or a plain transition already does the job.
+
+---
+
+## Rule 7: A Component Owns Only Its Own Subtree
+
+A component may attach listeners to elements it renders. It must not go looking
+up the tree for one it does not own.
+
+### Never
+
+- `el.closest("button, a, [role=button]")` (or any ancestor query) to find
+  something to bind to. `SidebarWithHoverIcon` did exactly this to detect hover
+  on whatever button happened to contain it: implicit, silently inert when the
+  icon sat in a plain `<div>`, and it leaked six listeners onto a node whose
+  lifetime it did not control.
+- `addEventListener` on `document` or `window` for anything other than a genuine
+  global concern (an open overlay's dismissal, which Radix already owns).
+
+### Instead
+
+State that belongs to an interactive ancestor is a **controlled prop**. If the
+icon needs to know the button is hovered, the button tells it:
+
+```tsx
+<Button onPointerEnter={() => setHovered(true)} onPointerLeave={() => setHovered(false)}>
+  <SidebarWithHoverIcon side={side} hovered={hovered} />
+</Button>
+```
+
+Three lines at the call site, versus a component that reaches outside itself.
+Where the state is purely visual and CSS can see it, prefer `.group` +
+`group-hover:` and no JavaScript at all.
