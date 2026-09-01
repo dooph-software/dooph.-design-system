@@ -272,7 +272,7 @@
   /* Font weights — by role */
   --ui-weight-body: 400;
   --ui-weight-button: 500;
-  --ui-weight-label: 400;
+  --ui-weight-label: var(--ui-weight-regular);
   --ui-weight-subheading: var(--ui-weight-heading);
   --ui-weight-heading: 600;
   --ui-weight-title: 700;
@@ -339,6 +339,7 @@
 
   /* ── Spacing ─────────────────────────────────────────────────────────── */
 
+  --ui-spacing-xxs: 2px;
   --ui-spacing-xxs: 4px;
   --ui-spacing-xs: 8px;
   --ui-spacing-sm: 10px;
@@ -353,6 +354,7 @@
   --ui-icon-tiny: 12px;
   --ui-icon-standard: 14px;
   --ui-icon-medium: 16px;
+  --ui-icon-large: 20px;
   --ui-icon-stroke: 2;
 
   /* ── Radius (semantic corners) ────────────────────────────────────────────
