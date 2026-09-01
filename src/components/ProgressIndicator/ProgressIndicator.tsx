@@ -90,6 +90,7 @@ function FlatProgressIndicator({
 }) {
   const {
     diameter,
+    cssSize,
     strokeWidth,
     cx,
     cy,
@@ -123,11 +124,15 @@ function FlatProgressIndicator({
   return (
     <svg
       {...rest}
+      /* Numeric width/height stay as ATTRIBUTES so the drawing has an
+       * intrinsic size before CSS lands; the token then overrides them via
+       * style, because an SVG attribute cannot resolve var(). The viewBox
+       * keeps the user-unit space, so the whole drawing scales to the token. */
       width={diameter}
       height={diameter}
       viewBox={`0 0 ${diameter} ${diameter}`}
       className={className}
-      style={style}
+      style={{ width: cssSize, height: cssSize, ...style }}
     >
       {/* Track arc — full circle at 0, discrete complement of indicator for progress > 0 */}
       <circle
@@ -188,6 +193,7 @@ function WavyProgressIndicator({
 }) {
   const {
     diameter,
+    cssSize,
     strokeWidth,
     cx,
     cy,
@@ -236,11 +242,15 @@ function WavyProgressIndicator({
   return (
     <svg
       {...rest}
+      /* Numeric width/height stay as ATTRIBUTES so the drawing has an
+       * intrinsic size before CSS lands; the token then overrides them via
+       * style, because an SVG attribute cannot resolve var(). The viewBox
+       * keeps the user-unit space, so the whole drawing scales to the token. */
       width={diameter}
       height={diameter}
       viewBox={`0 0 ${diameter} ${diameter}`}
       className={className}
-      style={style}
+      style={{ width: cssSize, height: cssSize, ...style }}
     >
       {/* Track arc — full circle at 0, discrete complement of wavy arc for progress > 0 */}
       <circle

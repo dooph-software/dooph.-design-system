@@ -3,7 +3,7 @@ import { TwoWayToggle, TwoWayToggleItem } from './Toggle';
 import { ToggleSize, ToggleVariant } from './constants';
 
 const meta = {
-  title: 'Buttons & inputs/TwoWayToggle',
+  title: 'Inputs/TwoWayToggle',
   component: TwoWayToggle,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],

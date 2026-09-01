@@ -5,7 +5,7 @@ import { BodyText, LabelText } from "./BaseText";
 import { FontWeights, RollDirection } from "./constants";
 
 const meta = {
-  title: "Primitives/RollChangeText",
+  title: "Text/RollChangeText",
   component: RollChangeText,
   parameters: {
     layout: "centered",

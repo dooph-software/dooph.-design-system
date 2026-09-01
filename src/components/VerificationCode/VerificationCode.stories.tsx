@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../Button/Button";
 import { ButtonVariant } from "../Button/constants";
@@ -7,7 +7,7 @@ import { CodeDigitInput } from "./CodeDigitInput";
 import { VerificationCodeInput } from "./VerificationCodeInput";
 
 const meta = {
-  title: "Buttons & inputs/VerificationCode",
+  title: "Inputs/VerificationCode",
   component: VerificationCodeInput,
   parameters: { layout: "centered" },
   tags: ["autodocs"],
@@ -50,22 +50,38 @@ export const Controlled: Story = {
   },
 };
 
+/* A static showcase of one cell in each state, so every cell is deliberately
+ * `readOnly`: passing `value` with no `onChange` is a controlled field with no
+ * way to change, which React warns about. `readOnly` states that intent
+ * instead. Interactive entry is covered by the group stories above. */
 export const SingleDigitStates: Story = {
   render: () => (
     <div className="flex items-center gap-md p-4">
-      <CodeDigitInput value="" aria-label="Empty" />
-      <CodeDigitInput value="1" aria-label="Filled" />
-      <CodeDigitInput value="1" hasError aria-label="Error" />
-      <CodeDigitInput value="1" disabled aria-label="Disabled" />
+      <CodeDigitInput value="" readOnly aria-label="Empty" />
+      <CodeDigitInput value="1" readOnly aria-label="Filled" />
+      <CodeDigitInput value="1" readOnly hasError aria-label="Error" />
+      <CodeDigitInput value="1" readOnly disabled aria-label="Disabled" />
     </div>
   ),
 };
 
 /** Story-only composition — not a package component. */
 export const PreRolledSection: Story = {
-  render: () => {
+  render: function PreRolled() {
     const [value, setValue] = useState("");
     const [hasError, setHasError] = useState(false);
+    const groupRef = useRef<HTMLDivElement>(null);
+    /* Focused after commit rather than via the component's `autoFocus` prop:
+     * Storybook renders inside an `act` scope, and focusing during that commit
+     * trips React's "a component suspended inside an act scope" warning. The
+     * prop itself is fine in an app — this is a Storybook-only accommodation. */
+    useEffect(() => {
+      const id = window.setTimeout(
+        () => groupRef.current?.querySelector("input")?.focus(),
+        0,
+      );
+      return () => window.clearTimeout(id);
+    }, []);
     return (
       <div className="flex w-[360px] flex-col items-start gap-md p-6">
         <HeadingText>Enter verification code</HeadingText>
@@ -79,7 +95,7 @@ export const PreRolledSection: Story = {
             setValue(next);
           }}
           hasError={hasError}
-          autoFocus
+          ref={groupRef}
         />
         {hasError ? (
           <LabelText className="text-error-primary">

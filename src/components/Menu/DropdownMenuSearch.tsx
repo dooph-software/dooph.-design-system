@@ -51,7 +51,7 @@ const DropdownMenuSearch = forwardRef<HTMLInputElement, DropdownMenuSearchProps>
     return (
       <div
         className={cn(
-          "flex min-w-[324px] items-center gap-xs",
+          "flex ds-min-w-menu-complex items-center gap-xs",
           "ds-px-ui-sm ds-py-ui-xxs",
           className,
         )}

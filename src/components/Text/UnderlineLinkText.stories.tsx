@@ -6,7 +6,7 @@ import { TextLink } from "../TextLink";
 import { Button, ButtonVariant } from "../Button";
 
 const meta = {
-  title: "Primitives/UnderlineLinkText",
+  title: "Text/UnderlineLinkText",
   component: UnderlineLinkText,
   parameters: {
     layout: "centered",

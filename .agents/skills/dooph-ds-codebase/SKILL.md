@@ -67,7 +67,7 @@ src/
     SplitButton/
     Table/
     Tabs/
-    Text/                       ← BaseText + 7 roles, constants.ts (Fonts/FontSizes/
+    Text/                       ← BaseText + 8 roles, constants.ts (Fonts/FontSizes/
                                   FontWeights/Tracking/FontAxes), textStyle.ts;
                                   ShimmerText, RollChangeText, RollHoverText,
                                   UnderlineLinkText, RollingDigitsText +
@@ -395,8 +395,25 @@ Notable component tokens:
 - Avatar surface (v3): no dedicated `--ui-color-avatar-bg` token — `Avatar` composes `bg-surface-secondary` + `border-border-secondary` + `text-brand-color`; brand/logo content is supplied by consumers as children, not via a package provider.
 - **Motion tokens.** Every animated component owns a `--ui-<component>-*` family
   and the component reads them only through CSS — see the architecture skill's
-  Rule 6. Current families: `--ui-roll-hover-*`, `--ui-underline-link-*`,
-  `--ui-rolling-digits-*` and `--ui-sidebar-icon-*`.
+  Rule 6. Current families: `--ui-roll-hover-*`, `--ui-roll-change-*`,
+  `--ui-underline-link-*`, `--ui-rolling-digits-*` and `--ui-sidebar-icon-*`.
+  - `--ui-roll-change-*`: `out-duration`/`in-duration` and `out-ease`/`in-ease`
+    (two curves on purpose — the old content leaves on an accelerating ease-in,
+    the new arrives on the house decelerating one), plus `depth` (em, so travel
+    scales with the type) and `blur` (px, because it is a lens effect rather
+    than a typographic measure; the in-animation's mid-point blur is derived
+    from it). `RollChangeText` unmounts its exiting node from that node's own
+    `animationend` and keys it by a change counter so the animation restarts —
+    it previously ran a `setTimeout(300)` mirroring the CSS, which is the mirror
+    Rule 6 exists to prevent.
+  - **Spinner sizing is a live token too.** `getSpinnerGeometry` returns
+    `cssSize` (`var(--ui-size-spinner-*)`) alongside the numeric `diameter`; the
+    SVGs apply `cssSize` as a CSS width/height while `diameter` stays in the
+    viewBox, so the whole drawing scales to the token. Applying it as an
+    ATTRIBUTE would silently do nothing — attributes cannot resolve `var()`.
+    Before 5.x the four tokens existed, were documented as the contract, and
+    overriding one did nothing, because the SVGs rendered `SPINNER_DIAMETERS`
+    directly.
   - `--ui-rolling-digits-*`: `duration` (the roll) · `stagger` (0ms default; raise
     for a right-to-left cascade) · `enter-duration` / `exit-duration` (a slot
     opening or collapsing) · `opacity-ratio` (the FRACTION of that duration the
@@ -412,7 +429,7 @@ Notable component tokens:
   (`"MONO" 1`). The last three are in `EXCLUDED` in `sync-theme.mjs` alongside
   their peers; `--ui-font-mono` and `--ui-text-mono` do map, to `--font-mono` and
   `--text-mono`.
-- **v3 token vocabulary** (see `tokens.css` and the theming skill's `token-contract.md` for the full list): `--ui-color-danger*` (replaces `destructive*`), `--ui-color-border-primary`/`-secondary` (replaces the single `--ui-color-border`), `--ui-color-surface-primary`/`--ui-color-page-background` (replaces `surface`/`surface-page`), `--ui-brand-color`/`--ui-brand-color-alt` (the brand-identity pair; `OutlineButton`'s `glowColor1`/`glowColor2` now default to `var(--ui-brand-color-alt)` — the old standalone `--ui-accent-color` token no longer exists in `tokens.css`), `--ui-color-focus-ring-brand`/`-primary`/`-error` (replaces the single `--ui-color-focus-ring`), `--ui-color-trigger-border-error-focus`, slider sizing tokens (`--ui-height-slider-track`, `--ui-radius-slider-inner`, `--ui-slider-track-gap`, `--ui-width-slider-handle`, `--ui-height-slider-handle`), `--ui-height-button-micro`, and shimmer tokens (`--ui-shimmer-base`, `--ui-shimmer-highlight`).
+- **v3 token vocabulary** (see `tokens.css` and the theming skill's `token-contract.md` for the full list): the destructive palette is `--ui-color-error-primary`/`-secondary` — **not** `--ui-color-danger*`, which does not exist in any form: `ButtonVariant.danger` paints secondary + error utilities directly and deliberately owns no colour family (see the note at the top of `Button.tsx`), `--ui-color-border-primary`/`-secondary` (replaces the single `--ui-color-border`), `--ui-color-surface-primary`/`--ui-color-page-background` (replaces `surface`/`surface-page`), `--ui-brand-color`/`--ui-brand-color-alt` (the brand-identity pair; `OutlineButton`'s `glowColor1`/`glowColor2` now default to `var(--ui-brand-color-alt)` — the old standalone `--ui-accent-color` token no longer exists in `tokens.css`), `--ui-color-focus-ring-brand`/`-primary`/`-error` (replaces the single `--ui-color-focus-ring`), `--ui-color-trigger-border-error-focus`, slider sizing tokens (`--ui-height-slider-track`, `--ui-radius-slider-inner`, `--ui-slider-track-gap`, `--ui-width-slider-handle`, `--ui-height-slider-handle`), `--ui-height-button-micro`, and shimmer tokens (`--ui-shimmer-base`, `--ui-shimmer-highlight`).
 
 ### Tailwind theme (`@theme inline` in `index.css`)
 

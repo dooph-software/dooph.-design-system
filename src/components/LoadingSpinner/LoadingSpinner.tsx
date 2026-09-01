@@ -119,7 +119,7 @@ function FlatSpinner({
   strokeColor: string;
   svgProps: InnerSvgProps;
 }) {
-  const { diameter, strokeWidth, cx, cy, trackRadius, gapLength } = geo;
+  const { diameter, cssSize, strokeWidth, cx, cy, trackRadius, gapLength } = geo;
   const { className, style, ...rest } = svgProps;
 
   const activeRef = useRef<SVGPathElement>(null);
@@ -183,11 +183,15 @@ function FlatSpinner({
   return (
     <svg
       {...rest}
+      /* Numeric width/height stay as ATTRIBUTES so the drawing has an
+       * intrinsic size before CSS lands; the token then overrides them via
+       * style, because an SVG attribute cannot resolve var(). The viewBox
+       * keeps the user-unit space, so the whole drawing scales to the token. */
       width={diameter}
       height={diameter}
       viewBox={`0 0 ${diameter} ${diameter}`}
       className={className}
-      style={style}
+      style={{ width: cssSize, height: cssSize, ...style }}
     >
       {/* Track arc — discrete complement of active arc, driven by rAF */}
       <path
@@ -229,13 +233,17 @@ function SpokesSpinner({
   strokeColor: string;
   svgProps: InnerSvgProps;
 }) {
-  const { diameter, spokesDuration } = geo;
+  const { diameter, cssSize, spokesDuration } = geo;
   const { className, style, ...rest } = svgProps;
 
   return (
     <svg
       {...rest}
       xmlns="http://www.w3.org/2000/svg"
+      /* Attribute = intrinsic size before CSS lands; the token below overrides
+       * it, since an SVG attribute cannot resolve var(). This variant is drawn
+       * in a fixed 24-unit space, so it already scaled — only the rendered size
+       * was pinned to the JS table. */
       width={diameter}
       height={diameter}
       viewBox="0 0 24 24"
@@ -245,6 +253,8 @@ function SpokesSpinner({
       className={cn(className)}
       style={
         {
+          width: cssSize,
+          height: cssSize,
           stroke: strokeColor,
           strokeWidth: "var(--ui-icon-stroke)",
           animation: `ds-spinner-rotate ${spokesDuration}ms linear infinite`,

@@ -5,7 +5,7 @@ import { DS_COLOR_TOKENS } from '../../utils/color';
 import { LabelText } from '../Text';
 
 const meta = {
-  title: 'Buttons & inputs/Slider',
+  title: 'Inputs/Slider',
   component: SliderContinuous,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],

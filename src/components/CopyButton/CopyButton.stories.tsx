@@ -4,7 +4,7 @@ import { CopyButton } from "./CopyButton";
 import { CopyButtonVariant } from "./constants";
 
 const meta = {
-  title: "Buttons & inputs/CopyButton",
+  title: "Buttons/CopyButton",
   component: CopyButton,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

@@ -8,7 +8,7 @@ import { ProgressIndicator } from "./ProgressIndicator";
 import { ProgressIndicatorVariants } from "./constants";
 
 const meta = {
-  title: "Bits & Pieces/ProgressIndicator",
+  title: "Progress/ProgressIndicator",
   component: ProgressIndicator,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

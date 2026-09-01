@@ -45,7 +45,6 @@ const ALIASES = {
   "ui-color-primary-foreground": "color-primary-fg",
   "ui-color-secondary-foreground": "color-secondary-fg",
   "ui-color-brand-foreground": "color-brand-fg",
-  "ui-color-danger-foreground": "color-danger-fg",
   "ui-color-ghost-foreground": "color-ghost-fg",
   "ui-color-ghost-foreground-active": "color-ghost-fg-active",
   "ui-color-selection-foreground": "color-selection-fg",
@@ -92,6 +91,13 @@ const EXCLUDED = new Set([
   // Checkbox / code digit — exposed via custom @layer utilities
   "ui-size-checkbox",
   "ui-size-code-digit",
+  // Roll-on-change motion — raw var() in keyframes / @layer utilities only
+  "ui-roll-change-out-duration",
+  "ui-roll-change-in-duration",
+  "ui-roll-change-out-ease",
+  "ui-roll-change-in-ease",
+  "ui-roll-change-depth",
+  "ui-roll-change-blur",
   // Rolling digits motion / decimals offset — raw var() in @layer utilities only
   "ui-rolling-digits-duration",
   "ui-rolling-digits-stagger",
@@ -115,6 +121,7 @@ const EXCLUDED = new Set([
   "ui-min-w-menu",
   "ui-min-w-menu-action",
   "ui-min-w-menu-complex",
+  "ui-min-w-search-box",
   // CTAButton geometry — exposed via ds-* helpers
   "ui-size-cta-chip-standard",
   "ui-size-cta-chip-big",

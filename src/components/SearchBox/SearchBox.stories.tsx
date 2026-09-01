@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { SearchBox } from './SearchBox';
 
 const meta = {
-  title: 'Buttons & inputs/SearchBox',
+  title: 'Inputs/SearchBox',
   component: SearchBox,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],

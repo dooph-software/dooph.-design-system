@@ -5,7 +5,7 @@ import { DS_COLOR_TOKENS } from '../../utils/color';
 import { LabelText } from '../Text';
 
 const meta = {
-  title: 'Buttons & inputs/LinearProgressIndicator',
+  title: 'Progress/LinearProgressIndicator',
   component: LinearProgressIndicator,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],

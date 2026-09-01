@@ -12,7 +12,7 @@ import {
 import { TableSortDirection } from "./constants";
 
 const meta = {
-  title: "Components/Table",
+  title: "Bits & Pieces/Table",
   component: Table,
   parameters: { layout: "padded" },
   tags: ["autodocs"],

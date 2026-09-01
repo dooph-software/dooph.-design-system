@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useEffect, useRef } from 'react';
 import {
   DropdownTrigger,
   DropdownTriggerContent,
   TypeableDropdownTrigger,
   TextDropdownTrigger,
 } from './DropdownTrigger';
+import { TextDropdownSize } from './constants';
 
 const meta = {
   title: 'Menus/DropdownTriggers',
@@ -45,10 +47,29 @@ export const TypeableOpen: Story = {
   ),
 };
 
+/* Focused via the component's own `inputRef` rather than React's `autoFocus`.
+ * Storybook renders stories inside an `act` scope, and React's autoFocus commit
+ * path trips "a component suspended inside an act scope" there — noise that has
+ * nothing to do with this component. Focusing in an effect shows the same
+ * chrome without it. */
+function FocusedTypeableTrigger() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    /* Deferred by a task, not called inline: Storybook commits stories inside an
+     * `act` scope, and focusing during that commit trips React's "a component
+     * suspended inside an act scope" warning — noise unrelated to this
+     * component. A timer (not requestAnimationFrame, which is paused in a
+     * background tab) lands the focus just after the commit. */
+    const id = window.setTimeout(() => inputRef.current?.focus(), 0);
+    return () => window.clearTimeout(id);
+  }, []);
+  return (
+    <TypeableDropdownTrigger placeholder="Typing focus…" inputRef={inputRef} />
+  );
+}
+
 export const TypeableFocused: Story = {
-  render: () => (
-    <TypeableDropdownTrigger placeholder="Typing focus…" autoFocus />
-  ),
+  render: () => <FocusedTypeableTrigger />,
 };
 
 export const Text: Story = {
@@ -56,7 +77,7 @@ export const Text: Story = {
 };
 
 export const TextSmall: Story = {
-  render: () => <TextDropdownTrigger size="sm">Filter</TextDropdownTrigger>,
+  render: () => <TextDropdownTrigger size={TextDropdownSize.sm}>Filter</TextDropdownTrigger>,
 };
 
 export const AllTriggers: Story = {
@@ -65,7 +86,7 @@ export const AllTriggers: Story = {
       <DropdownTrigger>Secondary trigger</DropdownTrigger>
       <TypeableDropdownTrigger placeholder="Typeable trigger" />
       <TextDropdownTrigger>Text trigger</TextDropdownTrigger>
-      <TextDropdownTrigger size="sm">Text small</TextDropdownTrigger>
+      <TextDropdownTrigger size={TextDropdownSize.sm}>Text small</TextDropdownTrigger>
     </div>
   ),
 };

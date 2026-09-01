@@ -15,7 +15,7 @@ The package defines font-family tokens but does not load font files. Consumers m
 - `--ui-color-primary`, `--ui-color-primary-foreground`, `--ui-color-primary-hover`, `--ui-color-primary-active`, `--ui-color-primary-disabled`
 - `--ui-color-secondary`, `--ui-color-secondary-foreground`, `--ui-color-secondary-hover`, `--ui-color-secondary-active`, `--ui-color-secondary-disabled`
 - `--ui-color-brand`, `--ui-color-brand-foreground`, `--ui-color-brand-hover`, `--ui-color-brand-active`
-- `--ui-color-danger`, `--ui-color-danger-foreground`, `--ui-color-danger-hover`, `--ui-color-danger-active`, `--ui-color-danger-disabled` (v3 — Figma `dangerButton`; replaces the removed `destructive*` tokens)
+- `--ui-color-error-primary`, `--ui-color-error-secondary` — the whole destructive palette. There are **no `--ui-color-danger*` tokens**: `ButtonVariant.danger` paints `bg-secondary` + `text-error-primary` + `border-secondary-border` rather than owning a colour family, so retuning these two (or the secondary family) is what restyles it. A `--ui-color-danger*` override does nothing. These two currently have no `.dark` overrides.
 - `--ui-color-ghost-foreground`, `--ui-color-ghost-hover`, `--ui-color-ghost-active`, `--ui-color-ghost-foreground-active` (ghost/text buttons have no rest bg — hover/active are translucent overlays)
 - `--ui-color-surface-primary`, `--ui-color-surface-secondary`, `--ui-color-page-background` (v3 — Figma `pageBackground`/`surfacePrimary`/`surfaceSecondary`; replaces `surface`/`surface-page`)
 - `--ui-color-text`, `--ui-color-text-secondary`, `--ui-color-text-tertiary`
@@ -28,7 +28,7 @@ Every button variant carries its own border tokens for default/hover/active (plu
 - Primary (defaults alias the matching bg tokens): `--ui-color-primary-border`, `--ui-color-primary-border-hover`, `--ui-color-primary-border-active`, `--ui-color-primary-border-disabled`
 - Secondary (distinct literals — the visible outline on light buttons): `--ui-color-secondary-border`, `--ui-color-secondary-border-hover`, `--ui-color-secondary-border-active`, `--ui-color-secondary-border-disabled`
 - Brand (defaults alias the matching bg tokens; disabled is `transparent`): `--ui-color-brand-border`, `--ui-color-brand-border-hover`, `--ui-color-brand-border-active`, `--ui-color-brand-border-disabled`
-- Danger (distinct literals; v3 name — was `destructive-border*`): `--ui-color-danger-border`, `--ui-color-danger-border-hover`, `--ui-color-danger-border-active`, `--ui-color-danger-border-disabled`
+- Danger has no border tokens of its own — the danger button borrows `--ui-color-secondary-border*`. See the note under Core Colors.
 
 Ghost and text buttons have no border tokens (transparent borders).
 
@@ -39,7 +39,7 @@ Ghost and text buttons have no border tokens (transparent borders).
 - `--ui-color-border-popovers` — floating panel border shared by menus, modals, and toasts. The DS name is kept even though the Figma source calls the equivalent `borderModal` (deliberate naming choice — this token is shared across more than modals).
 - `--ui-color-border-focus` — focus border for typeable triggers/inputs/controls; defaults to `var(--ui-color-brand-border)` so it follows brand
 - `--ui-color-trigger-border-hover` — hover border for typeable triggers, inputs, and search boxes
-- `--ui-color-trigger-border-error-focus` (v3) — focus border for typeable triggers/inputs in an error state; defaults to `var(--ui-color-danger-border)`
+- `--ui-color-trigger-border-error-focus` — focus border for typeable triggers/inputs in an error state; defaults to `var(--ui-color-error-primary)`
 
 ## Modals
 
@@ -97,6 +97,21 @@ Geometry-only tokens for `SliderContinuous`/`SliderStepped`/`SliderLabeled` — 
 - `--ui-width-slider-handle`, `--ui-height-slider-handle` — thumb dimensions
 - `--ui-spacing-xs` — doubles as the stepped slider's end inset: how far the first/last dot (and the handle's travel) sit from the ends of the track
 
+## Panel And Field Widths
+
+- `--ui-min-w-menu` (160px) · `--ui-min-w-menu-action` (144px) ·
+  `--ui-min-w-menu-complex` (324px) — the three `DropdownMenuVariant` floors
+- `--ui-min-w-search-box` — the standalone `SearchBox` shell. It ALIASES
+  `--ui-min-w-menu-complex`, since they are the same width by design, but keeps
+  its own name so the search field can be widened without touching menus
+- `--ui-width-tooltip-rich` (pinned) · `--ui-min-w-tooltip-complex` — the simple
+  tooltip intentionally hugs its text and has no token
+- `--ui-width-toast-simple` · `--ui-width-toast-complex` ·
+  `--ui-width-toast-viewport`
+- `--ui-width-calendar-presets` · `--ui-min-w-calendar-panel` — the panel width
+  sets the day-cell size, since cells are aspect-square across seven equal
+  columns
+
 ## Text Shimmer (v3)
 
 Used by `ShimmerText`'s `ds-shimmer-text` utility (animated gradient masked to glyphs via `background-clip: text`):
@@ -136,6 +151,31 @@ The component forces `font-variant-numeric: tabular-nums` on itself and offers n
 way off: the fixed slot width is only correct while every digit shares one
 advance.
 
+### Roll On Change
+
+Used by `RollChangeText`. The two halves carry deliberately different curves: the
+old content leaves on an accelerating ease-in (it is being discarded, so it
+should not linger) while the new content arrives on the house decelerating curve.
+
+- `--ui-roll-change-out-duration` / `--ui-roll-change-in-duration`
+- `--ui-roll-change-out-ease` / `--ui-roll-change-in-ease`
+- `--ui-roll-change-depth` — travel distance, in em so it scales with the type
+- `--ui-roll-change-blur` — in px on purpose: a lens effect, not a typographic
+  measure. Scaling it with font size makes large text read as smeared rather
+  than fast. The in-animation's mid-point blur is derived from this token, so
+  the two cannot drift apart.
+
+### Spinner Sizing
+
+`LoadingSpinner` and `ProgressIndicator` render at these, and the whole drawing —
+stroke weight, wave amplitude, arc gaps — scales with them, because the SVG keeps
+its own user-unit viewBox and only the rendered size comes from the token:
+
+- `--ui-size-spinner-sm` (16px) · `-rg` (22px) · `-md` (32px) · `-xl` (40px)
+
+Before 5.x these tokens existed but were inert — the components rendered from a
+JS table instead, so overriding one did nothing. They are live now.
+
 ### Sidebar Icon
 
 - `--ui-sidebar-icon-duration` — the rail traversing the frame when `side` flips
@@ -146,7 +186,7 @@ advance.
 
 The package maps `--ui-*` tokens into Tailwind v4 with `@theme inline`, including:
 
-- Colors: `bg-primary`, `text-primary-fg`, `bg-secondary`, `text-text`, `bg-surface-primary`, `bg-surface-secondary`, `bg-page-background`, `bg-danger`, `text-danger-fg`, `border-border-primary`, `border-border-secondary`, `border-border-popovers`, `border-border-focus`, `text-brand-color`, `bg-brand-color-alt`
+- Colors: `bg-primary`, `text-primary-fg`, `bg-secondary`, `text-text`, `bg-surface-primary`, `bg-surface-secondary`, `bg-page-background`, `bg-error-primary`, `text-error-primary`, `border-border-primary`, `border-border-secondary`, `border-border-popovers`, `border-border-focus`, `text-brand-color`, `bg-brand-color-alt`
 - Fonts: `font-body`, `font-button`, `font-heading`, `font-label`, `font-title`, `font-hero`, `font-mono`
 - Shadows: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`, `shadow-focus-error` (v3)
 - Radii: `rounded-tight`, `rounded-standard`, `rounded-soft`, `rounded-slider-inner` (v3, and directional variants such as `rounded-l-standard`)

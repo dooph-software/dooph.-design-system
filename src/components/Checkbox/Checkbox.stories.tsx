@@ -9,7 +9,7 @@ import {
 import { LabelText } from '../Text';
 
 const meta = {
-  title: 'Buttons & inputs/Checkbox',
+  title: 'Inputs/Checkbox',
   component: Checkbox,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],

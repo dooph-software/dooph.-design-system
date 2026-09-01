@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { OutlineSection } from './OutlineSection';
 import { Button } from '../Button/Button';
+import { ButtonSize, ButtonVariant } from '../Button/constants';
+import { CheckIcon, PlusIcon } from '../Icons';
 
 const meta = {
-  title: 'Primitives/OutlineSection',
+  title: 'Bits & Pieces/OutlineSection',
   component: OutlineSection,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
@@ -15,7 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <OutlineSection>
-      <Button variant="secondary">Action</Button>
+      <Button variant={ButtonVariant.secondary}>Action</Button>
     </OutlineSection>
   ),
 };
@@ -24,16 +26,20 @@ export const WithMultipleChildren: Story = {
   render: () => (
     <OutlineSection>
       <div className="flex items-center gap-2">
-        <Button variant="secondary" size="icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-            <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
+        <Button
+          variant={ButtonVariant.secondary}
+          size={ButtonSize.icon}
+          aria-label="Add"
+        >
+          <PlusIcon />
         </Button>
-        <Button variant="secondary">Label</Button>
-        <Button variant="secondary" size="icon">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-            <circle cx="8" cy="8" r="5" stroke="currentColor" strokeWidth="1.5" />
-          </svg>
+        <Button variant={ButtonVariant.secondary}>Label</Button>
+        <Button
+          variant={ButtonVariant.secondary}
+          size={ButtonSize.icon}
+          aria-label="Confirm"
+        >
+          <CheckIcon />
         </Button>
       </div>
     </OutlineSection>

@@ -5,7 +5,7 @@ import { ShapeButton } from "./ShapeButton";
 import { ShapeButtons } from "./constants";
 
 const meta = {
-  title: "Buttons & inputs/ShapeButton",
+  title: "Buttons/ShapeButton",
   component: ShapeButton,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

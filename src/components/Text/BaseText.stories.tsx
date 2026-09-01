@@ -21,7 +21,7 @@ import {
 } from './constants';
 
 const meta = {
-  title: 'Primitives/BaseText',
+  title: 'Text/BaseText',
   component: BaseText,
   parameters: {
     layout: 'padded',

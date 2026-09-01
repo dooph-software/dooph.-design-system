@@ -136,6 +136,29 @@
    * make the same component subtle in a button and overdone in a hero. */
   --ui-roll-hover-perspective: 10em;
 
+  /* Text roll on change (RollChangeText). Two halves with deliberately
+   * different curves: the old content leaves on an accelerating ease-in (it is
+   * being thrown away, so it should not linger) while the new content arrives
+   * on the house decelerating curve and settles. Giving them one shared ease
+   * flattens that read.
+   *
+   * `depth` is in em so the travel scales with the type, like the hover roll's.
+   * `blur` is in px on purpose: it is a lens effect, not a typographic measure,
+   * and scaling it with font size makes large text look smeared rather than
+   * fast. The in-animation's mid-point blur is derived from this token, not a
+   * second one, so the two stay in proportion.
+   *
+   * The exiting node is unmounted by its own `animationend`, so nothing in the
+   * component mirrors `out-duration`. It used to be duplicated as a JS
+   * setTimeout, which is precisely the mirror that desyncs the moment either
+   * side is retuned. */
+  --ui-roll-change-out-duration: 200ms;
+  --ui-roll-change-in-duration: 300ms;
+  --ui-roll-change-out-ease: cubic-bezier(0.4, 0, 1, 1);
+  --ui-roll-change-in-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ui-roll-change-depth: 0.9em;
+  --ui-roll-change-blur: 4px;
+
   /* Rolling digits (RollingDigitsText) — 2D cash-register snap, not 3D.
    *
    * `duration` governs the ROLL: a wheel already on screen translating to its
@@ -362,6 +385,11 @@
   --ui-min-w-menu: 160px;
   --ui-min-w-menu-action: 144px;
   --ui-min-w-menu-complex: 324px;
+  /* The standalone search field is the same width as a complex menu by
+   * design, so it ALIASES that token rather than repeating the number —
+   * but it keeps its own name, so a consumer can widen the search field
+   * without touching menus. Same arrangement as primary-disabled. */
+  --ui-min-w-search-box: var(--ui-min-w-menu-complex);
 
   /* ── CTAButton ───────────────────────────────────────────────────────── */
 

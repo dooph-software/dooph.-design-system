@@ -7,7 +7,7 @@ import {
 } from "./constants";
 
 const meta = {
-  title: "Bits & Pieces/LoadingSpinner",
+  title: "Progress/LoadingSpinner",
   component: LoadingSpinner,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

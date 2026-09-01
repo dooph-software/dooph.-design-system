@@ -3,7 +3,7 @@ import { TextLink } from "./TextLink";
 import { BodyText } from "../Text";
 
 const meta = {
-  title: "Components/TextLink",
+  title: "Text/TextLink",
   component: TextLink,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

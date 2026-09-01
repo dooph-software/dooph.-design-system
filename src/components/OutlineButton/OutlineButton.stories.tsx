@@ -21,7 +21,7 @@ const SearchIcon = () => (
 );
 
 const meta = {
-  title: "Buttons & inputs/OutlineButton",
+  title: "Buttons/OutlineButton",
   component: OutlineButton,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

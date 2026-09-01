@@ -262,7 +262,13 @@ const SliderBase = forwardRef<
           className={cn(
             'relative flex w-full touch-none select-none items-center',
             'h-[var(--ui-height-slider-handle)]',
-            'data-[disabled]:ds-disabled-state data-[dragging]:cursor-ew-resize',
+            /* ds-radix-data-disabled, NOT `data-[disabled]:ds-disabled-state`.
+             * That form was broken twice over: a Tailwind variant only composes
+             * with a GENERATED utility, so pairing one with a package class
+             * emits no rule at all — and `.ds-disabled-state` keys off
+             * `:disabled`/`[aria-disabled]`, which a Radix Root <span> carrying
+             * `data-disabled` never has. */
+            'ds-radix-data-disabled data-[dragging]:cursor-ew-resize',
             /* One transition definition for the handle and both fills, so they
              * settle onto the dot together. Off mid-drag: the handle has to
              * track the pointer 1:1 there, exactly like the continuous slider. */

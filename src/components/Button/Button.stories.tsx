@@ -5,7 +5,7 @@ import { Button } from "./Button";
 import { ButtonSize, ButtonVariant } from "./constants";
 
 const meta = {
-  title: "Buttons & inputs/Button",
+  title: "Buttons/Button",
   component: Button,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

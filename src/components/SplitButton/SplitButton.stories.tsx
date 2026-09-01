@@ -13,7 +13,7 @@ import {
 } from "../Menu/DropdownMenu";
 
 const meta = {
-  title: "Buttons & inputs/SplitButton",
+  title: "Buttons/SplitButton",
   parameters: { layout: "centered" },
   tags: ["autodocs"],
 } satisfies Meta;

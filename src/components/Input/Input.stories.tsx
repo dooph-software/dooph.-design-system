@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { useEffect, useRef } from 'react';
 import { Input } from './Input';
 
 const meta = {
-  title: 'Buttons & inputs/Input',
+  title: 'Inputs/Input',
   component: Input,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
@@ -20,7 +21,20 @@ export const Default: Story = { args: { placeholder: 'Placeholder text' } };
 export const WithValue: Story = { args: { defaultValue: 'Input value', placeholder: 'Placeholder' } };
 export const Disabled: Story = { args: { placeholder: 'Disabled', disabled: true } };
 export const Error: Story = { args: { placeholder: 'Error state', hasError: true } };
-export const ErrorFocused: Story = { args: { placeholder: 'Error with focus ring', hasError: true, autoFocus: true } };
+/* Focused via a ref after commit rather than React's `autoFocus`. Storybook
+ * renders inside an `act` scope, and focusing during that commit trips React's
+ * "a component suspended inside an act scope" warning — noise unrelated to
+ * Input. See the same treatment in DropdownTrigger.stories. */
+function FocusedErrorInput() {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    const id = window.setTimeout(() => ref.current?.focus(), 0);
+    return () => window.clearTimeout(id);
+  }, []);
+  return <Input ref={ref} placeholder="Error with focus" hasError />;
+}
+
+export const ErrorFocused: Story = { render: () => <FocusedErrorInput /> };
 
 export const AllStates: Story = {
   render: () => (
@@ -29,7 +43,7 @@ export const AllStates: Story = {
       <Input defaultValue="With value" />
       <Input placeholder="Disabled" disabled />
       <Input placeholder="Error" hasError />
-      <Input placeholder="Error with focus" hasError autoFocus />
+      <FocusedErrorInput />
     </div>
   ),
 };

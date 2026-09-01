@@ -209,6 +209,17 @@
     min-width: var(--ds-menu-min-w, var(--ui-min-w-menu));
   }
 
+  /* Applies the complex-menu width directly. Distinct from
+   * .ds-menu-w-complex, which only sets --ds-menu-min-w for the
+   * trigger-matching helper above and never sets a width itself. */
+  .ds-min-w-menu-complex {
+    min-width: var(--ui-min-w-menu-complex);
+  }
+
+  .ds-min-w-search-box {
+    min-width: var(--ui-min-w-search-box);
+  }
+
   /* CTAButton — geometry + pill drop-shadow (filter so the round pill edge softens). */
   .ds-drop-shadow-cta {
     filter: drop-shadow(var(--ui-shadow-cta));

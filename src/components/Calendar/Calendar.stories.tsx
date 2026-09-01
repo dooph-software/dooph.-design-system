@@ -14,7 +14,7 @@ import { BodyText } from "../Text";
 const TODAY = new Date(2026, 4, 15);
 
 const meta: Meta<typeof Calendar> = {
-  title: "Inputs/Calendar",
+  title: "Dates/Calendar",
   component: Calendar,
 };
 export default meta;

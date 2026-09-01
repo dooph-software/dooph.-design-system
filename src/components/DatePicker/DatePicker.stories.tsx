@@ -14,7 +14,7 @@ import { DatePicker } from "./DatePicker";
 const TODAY = new Date(2026, 4, 15);
 
 const meta: Meta<typeof DatePicker> = {
-  title: "Inputs/DatePicker",
+  title: "Dates/DatePicker",
   component: DatePicker,
 };
 export default meta;

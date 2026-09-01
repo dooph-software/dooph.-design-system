@@ -4,7 +4,7 @@ import { CTAButton } from "./CTAButton";
 import { CTAButtonSize, CTAButtonVariant } from "./constants";
 
 const meta = {
-  title: "Components/CTAButton",
+  title: "Buttons/CTAButton",
   component: CTAButton,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

@@ -19,7 +19,7 @@ import { SidebarRightIcon } from "./SidebarRightIcon";
 
 const meta = {
   component: BaseIcon,
-  title: "Primitives/Icons",
+  title: "Icons/BaseIcon",
   tags: ["autodocs"],
   argTypes: {
     size: { control: "text" },

@@ -7,7 +7,7 @@ import { FontWeights } from "./constants";
 import { RollingDigitsText } from "./RollingDigitsText";
 
 const meta = {
-  title: "Primitives/RollingDigitsText",
+  title: "Text/RollingDigitsText",
   parameters: { layout: "centered" },
   tags: ["autodocs"],
 } satisfies Meta;

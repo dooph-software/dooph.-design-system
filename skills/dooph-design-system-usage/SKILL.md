@@ -194,7 +194,9 @@ Use the semantic, token-backed utilities. The common ones:
   `bg-surface-secondary`, `bg-page-background`, `text-text` / `text-text-secondary` /
   `text-text-tertiary`, `border-border-primary` / `border-border-secondary` /
   `border-border-popovers` / `border-border-focus`, `bg-brand`, `text-brand-color`,
-  `bg-danger`.
+  `bg-error-primary` / `text-error-primary` (there is no `bg-danger` — the
+  danger BUTTON variant exists, but it paints secondary + error utilities and
+  owns no colour token family).
 - Spacing (named, not numeric): `p-md`, `px-rg`, `gap-xs`, `m-lg` … stems are
   `xxs xs sm rg md lg xl xxl`.
 - Radius: `rounded-tight` (controls), `rounded-standard` (triggers/inputs),

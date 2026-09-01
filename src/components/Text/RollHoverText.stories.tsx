@@ -7,7 +7,7 @@ import { Button, ButtonVariant } from "../Button";
 import { OutlineButton } from "../OutlineButton";
 
 const meta = {
-  title: "Primitives/RollHoverText",
+  title: "Text/RollHoverText",
   component: RollHoverText,
   parameters: {
     layout: "centered",

@@ -604,6 +604,27 @@
     }
   }
 
+  /* RollChangeText. Real classes rather than arbitrary `animate-[…]` values so
+   * the timing lives in tokens — and so the reduced-motion case can collapse the
+   * duration instead of removing the animation. That distinction is
+   * load-bearing: the exiting node is unmounted by its own `animationend`, and
+   * `animation: none` would starve that event and strand the old content on
+   * screen forever. */
+  .ds-roll-change-out {
+    animation: ds-roll-out var(--ui-roll-change-out-duration)
+      var(--ui-roll-change-out-ease) forwards;
+  }
+  .ds-roll-change-in {
+    animation: ds-roll-in var(--ui-roll-change-in-duration)
+      var(--ui-roll-change-in-ease) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-roll-change-out,
+    .ds-roll-change-in {
+      animation-duration: 1ms;
+    }
+  }
+
   /* SidebarWithHoverIcon rail. This rule is the icon's entire motion system —
    * the component sets the two targets and reads back what CSS interpolated.
    * Hover is the faster of the two because it answers a pointer; the traverse
@@ -647,13 +668,22 @@
 }
 /* --ds-roll-dir (default 1 = downward) flips the travel: RollChangeText sets -1
  * for upward. The old face exits in the travel direction; the new face enters
- * from the opposite side. */
+ * from the opposite side. Depth and blur come from --ui-roll-change-*; the
+ * mid-point blur is derived from the same token so the two cannot drift. */
 @keyframes ds-roll-out {
-  to { transform: translateY(calc(var(--ds-roll-dir, 1) * 0.9em)); filter: blur(4px); opacity: 0; }
+  to {
+    transform: translateY(calc(var(--ds-roll-dir, 1) * var(--ui-roll-change-depth)));
+    filter: blur(var(--ui-roll-change-blur));
+    opacity: 0;
+  }
 }
 @keyframes ds-roll-in {
-  from { transform: translateY(calc(var(--ds-roll-dir, 1) * -0.9em)); filter: blur(4px); opacity: 0; }
-  60%  { filter: blur(1.5px); }
+  from {
+    transform: translateY(calc(var(--ds-roll-dir, 1) * -1 * var(--ui-roll-change-depth)));
+    filter: blur(var(--ui-roll-change-blur));
+    opacity: 0;
+  }
+  60%  { filter: blur(calc(var(--ui-roll-change-blur) * 0.375)); }
   to   { transform: translateY(0); filter: blur(0); opacity: 1; }
 }
 

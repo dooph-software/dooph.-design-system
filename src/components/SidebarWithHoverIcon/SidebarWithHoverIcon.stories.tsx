@@ -12,7 +12,7 @@ import { SidebarIconSide } from "./constants";
 import { SidebarWithHoverIcon } from "./SidebarWithHoverIcon";
 
 const meta = {
-  title: "Primitives/SidebarWithHoverIcon",
+  title: "Icons/SidebarWithHoverIcon",
   component: SidebarWithHoverIcon,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

@@ -6,7 +6,7 @@ import { FontWeights } from "./constants";
 import { Button, ButtonVariant } from "../Button";
 
 const meta = {
-  title: "Primitives/ShimmerText",
+  title: "Text/ShimmerText",
   component: ShimmerText,
   parameters: {
     layout: "centered",
