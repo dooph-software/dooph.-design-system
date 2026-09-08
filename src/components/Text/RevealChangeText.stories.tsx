@@ -8,7 +8,7 @@ import { Button } from "../Button";
 import { ButtonSize, ButtonVariant } from "../Button/constants";
 
 const meta = {
-  title: "Primitives/RevealChangeText",
+  title: "Text/RevealChangeText",
   component: RevealChangeText,
   parameters: {
     layout: "centered",
