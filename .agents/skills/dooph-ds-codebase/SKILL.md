@@ -70,8 +70,8 @@ src/
     Text/                       ← BaseText + 8 roles, constants.ts (Fonts/FontSizes/
                                   FontWeights/Tracking/FontAxes), textStyle.ts;
                                   ShimmerText, RollChangeText, RollHoverText,
-                                  UnderlineLinkText, RollingDigitsText +
-                                  rollingDigitsModel.ts
+                                  RevealChangeText, UnderlineLinkText,
+                                  RollingDigitsText + rollingDigitsModel.ts
     TextLink/                   ← anchor-styled body text
     Toast/
     Toggle/
@@ -277,10 +277,11 @@ The stepped variant carries two behaviours worth knowing before editing it:
 | `RollHoverText`                                                               | `<span>` wrapper rolling each character on hover (`ds-roll-hover*` classes) |
 | `UnderlineLinkText`                                                           | `<span>` wrapper whose underline wipes out right and redraws from the left on hover. The line is a `currentColor` gradient in `background`, so it tracks this element's own colour — put the colour here or ABOVE; a child setting its own colour paints glyphs but not the line. Responds to its own `:hover`, an ancestor `.group:hover`, or the `active` prop |
 | `RollingDigitsText`                                                           | Per-digit 2D roll for a pre-formatted numeric string. See below |
+| `RevealChangeText`                                                            | `<span>` slot whose WIDTH animates between its content's measured natural width and 0 (`ds-reveal-change*` classes, `--ui-reveal-change-*` tokens). A `changeKey` change ⇒ collapse → swap the content while it is 0 wide → reveal; `changeKey={null}` ⇒ collapse and stay collapsed. `RevealDirection` picks the pinned edge; `onSettled` fires on each return to rest, which is how a following `RollChangeText` is sequenced behind the reveal instead of racing it. Slot state is reconciled during RENDER (guarded by a `source` key, so the update cannot loop) and the content swap hangs off `transitionend` — which is why reduced motion drops the durations to 1ms rather than removing the transition |
 
-`ShimmerText` / `RollChangeText` / `RollHoverText` / `UnderlineLinkText` stay
-wrappers rather than `BaseText` props on purpose: they must be able to wrap icons
-and arbitrary children, not just text.
+`ShimmerText` / `RollChangeText` / `RollHoverText` / `RevealChangeText` /
+`UnderlineLinkText` stay wrappers rather than `BaseText` props on purpose: they
+must be able to wrap icons and arbitrary children, not just text.
 
 **The mono role.** `MonoText` is `BaseText` with `variant` fixed like every other
 role — `--ui-font-mono` (Google Sans Code), `--ui-text-mono` and
@@ -479,6 +480,16 @@ They live in **`@layer components`, not `utilities`** — that is load-bearing, 
 `BaseText` typography props are emitted as inline style, never as classes. The previous class-based approach (`ds-font-weight-*` plus `font-*`/`text-*` utilities) is deleted: two of its three props silently did nothing, because the role class was emitted ~50kB later in the compiled sheet and won on source order, and `fontSize` was additionally dropped by tailwind-merge as a colour conflict. Do not reintroduce class-based text props.
 
 `ds-shimmer-text` (also in `index.css`, not `dooph-component-tokens.css`) — animated gradient `background-clip: text` utility backing `ShimmerText`; `@keyframes ds-shimmer` plus the reduced-motion fallback live alongside it. `ds-roll-out`/`ds-roll-in` back `RollChangeText`, `ds-underline-wipe` backs `UnderlineLinkText`, `ds-rolling-digits-{in,out,fade-in,fade-out}` back `RollingDigitsText`, and `ds-spinner-rotate` backs `WavySpinner`.
+
+`.ds-reveal-change` / `.ds-reveal-change-content` (in `index.css`) back
+`RevealChangeText` — a `justify-content`-pinned `overflow: hidden` flex slot
+transitioning `width` between `--ds-reveal-change-width` (the measured content
+width, set by the component) and 0, timed by `--ui-reveal-change-in-duration` /
+`-out-duration` / `-ease`. It is transitions, not keyframes, for the same reason
+the rolling digits are: the slot is interrupted mid-flight by rapid changes and
+has to retarget from wherever it currently sits. Under reduced motion the
+durations drop to 1ms rather than to `none` — the content swap and `onSettled`
+both hang off `transitionend`, which `transition: none` would never fire.
 
 **Keyframes live OUTSIDE `@layer`** in `index.css`, deliberately — an `@keyframes`
 inside a layer is not reachable from an animation applied via inline style, which

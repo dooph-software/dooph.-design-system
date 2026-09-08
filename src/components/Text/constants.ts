@@ -40,6 +40,22 @@ export const RollDirection = {
 } as const;
 export type RollDirection = (typeof RollDirection)[keyof typeof RollDirection];
 
+/**
+ * Reveal direction for RevealChangeText — the edge the content travels toward
+ * as the slot opens.
+ *
+ * `left` (the default) pins the content's RIGHT edge, so it reveals out to the
+ * left and collapses by tucking back under whatever sits to its right — the
+ * breadcrumb-stem case, where the stem hides under the separator. `right` pins
+ * the LEFT edge, so the content grows rightward into the space after it.
+ */
+export const RevealDirection = {
+  left: 'left',
+  right: 'right',
+} as const;
+export type RevealDirection =
+  (typeof RevealDirection)[keyof typeof RevealDirection];
+
 /** Font family per role. Each --ui-font-* stack is independently overridable. */
 export const Fonts = {
   body: 'var(--ui-font-body)',

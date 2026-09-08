@@ -159,11 +159,14 @@ Reach for these before writing local UI:
   `ShimmerText` (animated "working" sheen masked to child glyphs — children must
   not set an explicit text color), `RollChangeText` (rolls old content out / new
   content in when `changeKey` or string/number children change), `RollHoverText`
-  (per-character roll on hover), `UnderlineLinkText` (underline wipes out right
-  and redraws from the left on hover — set the colour on it or above it, since
-  the line is a `currentColor` gradient), `RollingDigitsText` (per-digit roll for
-  a pre-formatted number — see below), `BaseIcon`, `ChevronDownIcon`,
-  `SearchIcon`, `SidebarWithHoverIcon`.
+  (per-character roll on hover), `RevealChangeText` (width-animated slot that
+  slides content out from one edge and tucks it back under what follows when
+  `changeKey` changes or goes `null` — `onSettled` sequences whatever should
+  follow the reveal, e.g. a `RollChangeText` beside it), `UnderlineLinkText`
+  (underline wipes out right and redraws from the left on hover — set the colour
+  on it or above it, since the line is a `currentColor` gradient),
+  `RollingDigitsText` (per-digit roll for a pre-formatted number — see below),
+  `BaseIcon`, `ChevronDownIcon`, `SearchIcon`, `SidebarWithHoverIcon`.
 
   `RollingDigitsText` takes a **pre-formatted string** and does not format —
   `<RollingDigitsText>{"$1,234.56"}</RollingDigitsText>`. Prefix and suffix are

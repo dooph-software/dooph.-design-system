@@ -646,6 +646,59 @@
       transition-duration: 0ms;
     }
   }
+
+  /* RevealChangeText — a slot that slides its content out from one edge and
+   * tucks it back under whatever follows. WIDTH is the animated property, not a
+   * transform: the point is that the row around it re-centres and re-flows as
+   * the slot opens and closes, which a transform (no layout effect) cannot do.
+   *
+   * `justify-content` is what picks the edge. Pinning the content's RIGHT edge
+   * (the default) means narrowing the box eats the content from the LEFT — it
+   * tucks under the next element and reveals back out from that same seam.
+   *
+   * The content keeps its natural width while the slot around it is 0 wide
+   * because it is `flex-shrink: 0` and `nowrap`. This is deliberately NOT a
+   * `grid-template-columns: 1fr -> 0fr` slot: that sizes rows fine, but for a
+   * COLUMN in a shrink-to-fit container the `overflow: hidden` item has an
+   * automatic minimum of 0, so `1fr` has no free space to claim and collapses
+   * the content to nothing. */
+  .ds-reveal-change {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    overflow: hidden;
+    width: 0;
+    transition: width var(--ui-reveal-change-out-duration)
+      var(--ui-reveal-change-ease);
+  }
+  .ds-reveal-change[data-direction="right"] {
+    justify-content: flex-start;
+  }
+  /* --ds-reveal-change-width is the measured natural width of the content, set
+   * by the component. `auto` is the pre-measurement fallback (first paint, SSR)
+   * so the slot is never briefly empty; nothing animates on that first render. */
+  .ds-reveal-change[data-open="true"] {
+    width: var(--ds-reveal-change-width, auto);
+    transition-duration: var(--ui-reveal-change-in-duration);
+  }
+  .ds-reveal-change-content {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  /* Reduced motion still needs the transition to RUN, just instantly: the
+   * content swap at the end of a collapse and the `onSettled` callback both
+   * hang off transitionend, and `transition: none` would starve them —
+   * stranding the outgoing content on screen forever. 1ms reads as instant and
+   * still fires. Same trade the rolling text makes. */
+  @media (prefers-reduced-motion: reduce) {
+    .ds-reveal-change,
+    .ds-reveal-change[data-open="true"] {
+      transition-duration: 1ms;
+    }
+  }
 }
 
 /*

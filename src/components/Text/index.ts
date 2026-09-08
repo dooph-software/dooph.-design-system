@@ -26,6 +26,7 @@ export {
   Fonts,
   FontSizes,
   FontWeights,
+  RevealDirection,
   RollDirection,
   TextVariant,
   Tracking,
@@ -43,6 +44,8 @@ export type {
   LineHeightValue,
   TrackingValue,
 } from "./constants";
+export { RevealChangeText } from "./RevealChangeText";
+export type { RevealChangeTextProps } from "./RevealChangeText";
 export { RollChangeText } from "./RollChangeText";
 export type { RollChangeTextProps } from "./RollChangeText";
 export { RollHoverText } from "./RollHoverText";

@@ -240,6 +240,20 @@
   --ui-underline-link-duration: 600ms;
   --ui-underline-link-ease: cubic-bezier(0.32, 0.72, 0, 1);
 
+  /* Text reveal on change (RevealChangeText). The slot's width is what animates,
+   * so these are deliberately slower than the roll tokens: a reveal is motion
+   * the eye is meant to follow, where a roll is a quick swap. The collapse is
+   * shorter than the reveal because tucking away is the half nobody needs to
+   * read — and because a value CHANGE runs both back to back, so the pair is
+   * what has to stay under the limit of feeling sluggish.
+   *
+   * One shared ease, unlike --ui-roll-change-*'s split pair: both halves here
+   * are the SAME slot moving, and giving the collapse its own accelerating
+   * curve reads as the content being yanked rather than tucked. */
+  --ui-reveal-change-in-duration: 420ms;
+  --ui-reveal-change-out-duration: 320ms;
+  --ui-reveal-change-ease: cubic-bezier(0.32, 0.72, 0, 1);
+
   /* ── Typography ──────────────────────────────────────────────────────── */
 
   /* Font family contract — one token per text role. Consumers load fonts and
