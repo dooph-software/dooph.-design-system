@@ -93,14 +93,16 @@ shape model used by Material's `CircularWavyProgressIndicator`: a rounded star
 with alternating outer and inner radii, not a sampled polar sine.
 
 - Wavelength is 15 user units; wave count is `max(5, round(2πr / 15))`.
-- The inner radius is `0.75 × outerRadius`.
+- The inner radius is `0.66 × outerRadius`; after corner rounding this keeps the
+  wave readable at component scale without sharpening the vertices.
 - Each alternating vertex is cut back along its adjoining edges and replaced
   with a tangent cubic curve. Outer corners use Material's `0.35` radius /
   `0.4` smoothing values; inner corners use the `0.5` radius.
 - The full closed path is stable across progress values. `<path pathLength={1}>`
   plus a normalized dash reveals progress, avoiding changing point counts and
   asymmetric partial polylines.
-- The wave starts at an outer peak at 12 o'clock and proceeds clockwise.
+- The first outer-corner cubic is split at its midpoint so the wave starts
+  exactly at its rounded peak at 12 o'clock and proceeds clockwise.
 - The empty/remainder track is always a separate smooth `<circle>` with round
   linecaps; it is never a gray copy of the wave.
 
@@ -185,9 +187,10 @@ At `progress = 1`: dashoffset = 0 → full-circle indicator. trackLength clamps 
 
 `createMaterialWaveGeometry(diameter, strokeWidth)` is memoized by those two
 values. Its stable full path uses `pathLength={1}` and
-`strokeDasharray="${progress} 1"` to reveal the active section. Track length and
-offset remain computed from circular circumference so the remainder is a smooth
-round-capped circle.
+`strokeDasharray="${progress} 1"` to reveal the active section.
+`getWavyTrackGeometry` computes the circular remainder and returns `null` at
+completion: a zero-length SVG dash with round linecaps still paints a dot, so
+the 100% state must omit the track element.
 
 ---
 

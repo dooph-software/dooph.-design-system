@@ -23,7 +23,6 @@ import {
   type SpinnerSizeKey,
 } from "./spinnerGeometry";
 
-
 // ── Color resolution ──────────────────────────────────────────────────────────
 
 const COLOR_TOKENS: Record<LoadingSpinnerColor, string> = {
@@ -119,7 +118,8 @@ function FlatSpinner({
   strokeColor: string;
   svgProps: InnerSvgProps;
 }) {
-  const { diameter, cssSize, strokeWidth, cx, cy, trackRadius, gapLength } = geo;
+  const { diameter, cssSize, strokeWidth, cx, cy, trackRadius, gapLength } =
+    geo;
   const { className, style, ...rest } = svgProps;
 
   const activeRef = useRef<SVGPathElement>(null);
@@ -310,7 +310,11 @@ export const LoadingSpinner = forwardRef<SVGSVGElement, LoadingSpinnerProps>(
 
     if (variant === LoadingSpinnerVariant.spokes) {
       return (
-        <SpokesSpinner geo={geo} strokeColor={strokeColor} svgProps={svgProps} />
+        <SpokesSpinner
+          geo={geo}
+          strokeColor={strokeColor}
+          svgProps={svgProps}
+        />
       );
     }
 
