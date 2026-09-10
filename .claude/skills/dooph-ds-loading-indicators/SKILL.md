@@ -1,11 +1,11 @@
 ---
 name: dooph-ds-loading-indicators
-description: Use when building, modifying, or debugging WavyDivider, LoadingSpinner, or ProgressIndicator. Covers the two-component model, animation architecture, polar wave path generation, shared geometry, and key constraints that prevent common mistakes.
+description: Use when building, modifying, or debugging WavyDivider, LoadingSpinner, or ProgressIndicator. Covers spinner animation, Material-style rounded-wave geometry, shared sizing, and key constraints that prevent common mistakes.
 ---
 
 # dooph Design System — Loading Indicators & WavyDivider
 
-Three components form the M3E-inspired indicator family. They share geometry helpers and wave-path logic but are deliberately separate: `LoadingSpinner` is indeterminate (no `progress` prop), `ProgressIndicator` is determinate.
+Three components form the M3E-inspired indicator family. `LoadingSpinner` is indeterminate (no `progress` prop), while `ProgressIndicator` is determinate and exclusively owns the circular rounded-wave geometry.
 
 ---
 
@@ -14,13 +14,13 @@ Three components form the M3E-inspired indicator family. They share geometry hel
 | Component           | Variant          | Prop surface                                               |
 | ------------------- | ---------------- | ---------------------------------------------------------- |
 | `WavyDivider`       | `high` \| `low`  | `variant`, `strokeWeight`, `className` + SVG spread        |
-| `LoadingSpinner`    | `flat` \| `wavy` | `variant`, `color`, `size`, + SVG spread                   |
+| `LoadingSpinner`    | `flat` \| `spokes` | `variant`, `color`, `size`, + SVG spread                  |
 | `ProgressIndicator` | `flat` \| `wavy` | `progress` (0–1), `variant`, `color`, `size`, + SVG spread |
 
 All enums follow the dot-accessible pattern required by architecture Rule 1:
 
 ```ts
-LoadingSpinnerVariant.flat / .wavy
+LoadingSpinnerVariant.flat / .spokes
 LoadingSpinnerColor.primary / .brand   // or arbitrary hex via color prop
 LoadingSpinnerSize.sm / .rg / .md / .xl  // 16px / 22px / 32px / 40px diameter
 WavyDividerVariant.high / .low
@@ -50,16 +50,13 @@ Key derived values:
 - `trackRadius = (diameter − strokeWidth) / 2`
 - `indicatorRadius = trackRadius` (same — visual separation comes from round linecaps)
 - `circumference = 2π × indicatorRadius`
-- `waveAmplitude = strokeWidth × 0.4` — M3 ref: 1.6 px / 4 px stroke
-- `waveBaseRadius = trackRadius − waveAmplitude` — outer peaks reach trackRadius exactly
 - `gapLength = strokeWidth × 2` — mathematical gap so visual gap ≈ strokeWidth with round linecaps
-- `waveFrequency`, `waveSteps` — per-size (see Wave Geometry below)
 
 ---
 
 ## M3 Discrete Arc Pattern
 
-**Both LoadingSpinner and ProgressIndicator, flat and wavy alike, render two discrete arcs — never a full-circle background ring.**
+At non-zero progress, LoadingSpinner and both ProgressIndicator variants render two discrete arcs. ProgressIndicator deliberately renders a complete smooth circular track at 0%, then uses round-capped complementary track arcs above 0%.
 
 The M3 gap spec: visual space between indicator arc endpoints and track arc endpoints = one stroke width. Because `strokeLinecap="round"` extends each arc end by `strokeWidth/2`, the mathematical gap must be `2 × strokeWidth` to achieve the correct visual gap. This value is pre-computed as `gapLength` in `getSpinnerGeometry`.
 
@@ -84,34 +81,28 @@ trackStart   = activeLength + gapLength
 trackOffset  = trackLength + circumference − trackStart
 ```
 
-At 0% progress: track covers almost the full circle (minus two small gaps at 12 o'clock).
+At 0% progress: ProgressIndicator special-cases the track to a complete smooth circle.
 At 100% progress: trackLength clamps to 0, track disappears.
 
 ---
 
-## Wave Geometry
+## ProgressIndicator Wave Geometry
 
-### Amplitude — subtle texture, not a dominant shape
+`src/components/ProgressIndicator/waveGeometry.ts` owns the wave. It ports the
+shape model used by Material's `CircularWavyProgressIndicator`: a rounded star
+with alternating outer and inner radii, not a sampled polar sine.
 
-```
-waveAmplitude  = strokeWidth × WAVE_AMP_SCALE    // WAVE_AMP_SCALE = 0.4
-waveBaseRadius = trackRadius − waveAmplitude      // outer peaks reach trackRadius
-```
-
-M3 reference at 48 px: 1.6 px amplitude / 4 px stroke = 0.4 ratio. This keeps the wave as a subtle texture. **Do not use the old formula `waveAmplitude = trackRadius × ratio` — it produces an overly aggressive wave at all sizes.**
-
-### Per-size wave parameters
-
-| Size | Frequency | Steps | Notes         |
-| ---- | --------- | ----- | ------------- |
-| `sm` | 3         | 30    | 10 steps/bump |
-| `rg` | 5         | 50    | 10 steps/bump |
-| `md` | 6         | 60    | 10 steps/bump |
-| `xl` | 9         | 90    | 10 steps/bump |
-
-Lower frequency = longer wavelength = more stretched, less frenetic wave appearance.
-
-`WAVE_PARAMS` in `spinnerGeometry.ts`; exposed via `geo.waveFrequency` and `geo.waveSteps`. **There is no global `SPINNER_WAVE_FREQ` constant** — do not add one.
+- Wavelength is 15 user units; wave count is `max(5, round(2πr / 15))`.
+- The inner radius is `0.75 × outerRadius`.
+- Each alternating vertex is cut back along its adjoining edges and replaced
+  with a tangent cubic curve. Outer corners use Material's `0.35` radius /
+  `0.4` smoothing values; inner corners use the `0.5` radius.
+- The full closed path is stable across progress values. `<path pathLength={1}>`
+  plus a normalized dash reveals progress, avoiding changing point counts and
+  asymmetric partial polylines.
+- The wave starts at an outer peak at 12 o'clock and proceeds clockwise.
+- The empty/remainder track is always a separate smooth `<circle>` with round
+  linecaps; it is never a gray copy of the wave.
 
 ---
 
@@ -171,33 +162,6 @@ if (trackSweep > 0) {
 
 useEffect deps: `[cx, cy, trackRadius, gapLength]`
 
-### Wavy variant (rAF + CSS rotation)
-
-The SVG element rotates via `ds-spinner-rotate` (still needed — only keyframe that remains). The rAF loop updates **both** the wave `<path>` (`d` attribute) and the track `<circle>` (`stroke-dasharray` / `stroke-dashoffset`).
-
-**Fixed-leading-edge animation:** the arc's leading edge is pinned at `SPINNER_START_ANGLE` (12 o'clock) in the SVG local frame. The arc sweeps *backward* from it by `sweepFraction × 2π`, so the trailing edge oscillates while the front stays put. CSS rotation then carries the leading edge forward continuously. This gives the same back-compact behaviour as the flat variant. Uses `SPINNER_WAVY_MAX_SWEEP` (0.50) — lower than the flat variant's 0.72 so the wave texture reads clearly at peak length.
-
-```ts
-// Fixed leading edge — arc ends at SPINNER_START_ANGLE, starts behind it:
-const arcStart = SPINNER_START_ANGLE - sweepFraction * 2 * Math.PI;
-pathRef.setAttribute('d',
-  generateWavyArcPath(cx, cy, waveBaseRadius, sweepFraction, arcStart, ...));
-
-// Track: leading edge is at position 0; track starts gapLength after it.
-// Correct dashoffset: L + G − D where D = gapLength:
-const sweepLength = sweepFraction * circumference;
-const trackLength = Math.max(0, circumference - sweepLength - 2 * gapLength);
-const trackOffset = trackLength + circumference - gapLength;
-trackRef.setAttribute('stroke-dasharray', `${trackLength} ${circumference}`);
-trackRef.setAttribute('stroke-dashoffset', String(trackOffset));
-```
-
-The track `<circle>` uses `transform={rotate(-90 cx cy)}` so position 0 = 12 o'clock = `SPINNER_START_ANGLE`.
-
-useEffect deps: `[cx, cy, waveBaseRadius, waveAmplitude, waveFrequency, waveSteps, circumference, gapLength]`
-
-**Why direct DOM mutation?** Path recomputation / dashoffset updates at 60 fps with React state would cause 60 React renders per second per component. `ref.setAttribute` skips the virtual DOM entirely. **Do not use `setState` inside a rAF loop.**
-
 **Cleanup:** Always return `() => cancelAnimationFrame(frameId)` from `useEffect`. The rAF loop is infinite and leaks on unmount if not cancelled.
 
 ---
@@ -219,27 +183,11 @@ At `progress = 1`: dashoffset = 0 → full-circle indicator. trackLength clamps 
 
 ### Wavy variant
 
-`generateWavyArcPath(cx, cy, waveBaseRadius, progress, SPINNER_START_ANGLE, waveAmplitude, waveFrequency, waveSteps)` in `useMemo`. Track arc computed in render alongside the path.
-
-No CSS transition on the path (point count changes with progress; CSS cannot interpolate). Consumers that need smooth animation should drive `progress` gradually from a spring/animation loop.
-
-useMemo deps: `[cx, cy, waveBaseRadius, progress, waveAmplitude, waveFrequency, waveSteps]`
-
----
-
-## Wave Path Generation — `generateWavyArcPath`
-
-In `src/components/LoadingSpinner/waveUtils.ts`. Polar sine wave polyline:
-
-```
-r(θ) = waveBaseRadius + waveAmplitude × sin(waveFrequency × θ)
-x(θ) = cx + r(θ) × cos(θ)
-y(θ) = cy + r(θ) × sin(θ)
-```
-
-Always pass `waveBaseRadius` as `baseRadius` (not `indicatorRadius` or `trackRadius`). Pass `SPINNER_START_ANGLE` as `startAngle`. `waveSteps` is full-circle sample count; the function scales it to the actual sweep fraction internally (min 8 samples).
-
-Returns an empty string for `sweepFraction ≤ 0`. Guard before using as `<path d>`.
+`createMaterialWaveGeometry(diameter, strokeWidth)` is memoized by those two
+values. Its stable full path uses `pathLength={1}` and
+`strokeDasharray="${progress} 1"` to reveal the active section. Track length and
+offset remain computed from circular circumference so the remainder is a smooth
+round-capped circle.
 
 ---
 
@@ -257,7 +205,7 @@ Track always uses `var(--ui-color-border-primary)` — never the indicator color
 
 ## CSS Notes
 
-`ds-spinner-rotate` in `src/styles/index.css` is the **only** loading-indicator keyframe. It is used exclusively by `WavySpinner` for SVG rotation. `ds-spinner-arc` was removed when `FlatSpinner` was converted to rAF. Do not re-add it.
+`ds-spinner-rotate` in `src/styles/index.css` is the **only** loading-indicator keyframe. It is used by the spokes spinner. `ds-spinner-arc` was removed when `FlatSpinner` was converted to rAF. Do not re-add it.
 
 Four size tokens in `tokens.css` (not `@theme inline`):
 ```css
@@ -271,10 +219,9 @@ Four size tokens in `tokens.css` (not `@theme inline`):
 
 ## Anti-Patterns
 
-- **Do not render a full-circle track.** Both track and indicator must be discrete arcs with `gapLength` gaps. The full-circle track was replaced by the M3 discrete-arc pattern.
-- **Do not use `trackRadius` or `indicatorRadius` as wave base radius.** Use `waveBaseRadius`. The old `amplitude = radius × ratio` formula clips the SVG viewBox.
-- **Do not use `amplitude = indicatorRadius × 0.3` or any trackRadius-derived amplitude.** Amplitude must be `strokeWidth × 0.4`.
-- **Do not use a global wave frequency constant.** `SPINNER_WAVE_FREQ` was removed. Use `geo.waveFrequency` and `geo.waveSteps`.
+- **Do not render the wavy track as a gray wave.** The track is always an independent smooth circle with round linecaps.
+- **Do not rebuild a partial wave path from sampled points.** Keep one closed rounded-star path and reveal it with the normalized dash.
+- **Do not move wave fields back into LoadingSpinner geometry.** LoadingSpinner has only flat and spokes variants; wave geometry belongs to ProgressIndicator.
 - **Do not use `<circle>` + `strokeDashoffset` for the flat spinner arcs.** SVG clips dashed strokes at the `<circle>` path endpoint (12 o'clock after rotate(-90)). When the rotating arc crosses this seam, the round-linecap ends produce a flash/contraction artefact. Use `<path>` elements with `flatArcPath()` instead.
 - **Do not add `animation` CSS to the flat spinner or its paths.** The flat spinner is fully rAF-driven; CSS animation on those elements will fight the rAF loop.
 - **Do not call `getSpinnerGeometry` multiple times per render.** Call once, destructure, pass as props.

@@ -88,12 +88,12 @@ export const WavyProgressSteps: Story = {
   args: { progress: 0 },
   render: () => (
     <div className="flex items-center gap-4">
-      {[0, 0.25, 0.5, 0.75, 1].map((p) => (
+      {[0, 0.1, 0.3, 0.5, 0.8, 1].map((p) => (
         <ProgressIndicator
           key={p}
           progress={p}
           variant={ProgressIndicatorVariants.wavy}
-          size={LoadingSpinnerSize.md}
+          size={LoadingSpinnerSize.xl}
         />
       ))}
     </div>

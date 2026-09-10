@@ -6,6 +6,13 @@ const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(ts|tsx)'],
   addons: ['@storybook/addon-docs'],
   viteFinal: async (config) => {
+    // GitHub Pages project sites live at /<repo>/, not /. Local `storybook
+    // build` stays at `/`; CI sets STORYBOOK_BASE_PATH to the repo subpath.
+    const storybookBasePath = process.env.STORYBOOK_BASE_PATH;
+    if (storybookBasePath) {
+      config.base = storybookBasePath;
+    }
+
     config.plugins = [...(config.plugins ?? []), tailwindcss()];
     config.build = {
       ...config.build,

@@ -220,7 +220,7 @@ function FlatSpinner({
  * inside an SVG sized to match the spinner's diameter, rotating at a constant
  * linear rate via `ds-spinner-rotate`.
  *
- * Unlike the flat/wavy variants there is no arc animation — the entire SVG
+ * Unlike the flat arc variant there is no arc animation — the entire SVG
  * simply spins. This is the lightest-weight variant: no rAF loop, no path
  * recomputation, pure CSS animation.
  */

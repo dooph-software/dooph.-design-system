@@ -70,31 +70,6 @@ export const SPINNER_MAX_SWEEP = 0.72;
  */
 export const SPINNER_SPOKES_DURATION = 1280;
 
-/**
- * Wave amplitude as a fraction of stroke width.
- * M3 reference (48 px spinner): 1.6 px amplitude / 4 px stroke = 0.4.
- * Tying amplitude to stroke width (not to trackRadius) keeps the wave subtle
- * and consistent — a small texture, not a dominant shape feature.
- */
-const WAVE_AMP_SCALE = 0.4;
-
-/**
- * Per-size wave parameters.
- *
- * `frequency`: number of sine bumps per full circle (2π). Scales with diameter
- * so each bump stays roughly the same angular width regardless of size —
- * producing consistent visual density across sm→xl.
- *
- * `steps`: polyline sample count for a full circle. Each bump needs ≥ 8 samples
- * to look smooth; steps = frequency × 10 gives comfortable headroom.
- */
-const WAVE_PARAMS = {
-  sm: { frequency: 3, steps: 30 },
-  rg: { frequency: 5, steps: 50 },
-  md: { frequency: 6, steps: 60 },
-  xl: { frequency: 9, steps: 90 },
-} as const;
-
 export type SpinnerSizeKey = keyof typeof SPINNER_DIAMETERS;
 
 export interface SpinnerGeometry {
@@ -116,23 +91,6 @@ export interface SpinnerGeometry {
   indicatorRadius: number;
   /** Full circumference (2π × indicatorRadius). */
   circumference: number;
-  /**
-   * Wavy arc base radius — inset from trackRadius so the wave's outer peaks
-   * reach exactly trackRadius without clipping the viewBox.
-   * waveBaseRadius = trackRadius − waveAmplitude
-   */
-  waveBaseRadius: number;
-  /**
-   * Wave amplitude in px.
-   * = strokeWidth × WAVE_AMP_SCALE (M3 ref: 1.6 px / 4 px stroke = 0.4).
-   * Much smaller than the old trackRadius-derived value — the wave is a subtle
-   * texture, not a dominant shape.
-   */
-  waveAmplitude: number;
-  /** Sine bumps per full circle (2π). Size-dependent. */
-  waveFrequency: number;
-  /** Polyline sample count for a full circle. Proportional to waveFrequency. */
-  waveSteps: number;
   /**
    * Mathematical gap in path-length units between the indicator arc's endpoints
    * and the track arc's endpoints.
@@ -163,13 +121,6 @@ export function getSpinnerGeometry(size: SpinnerSizeKey): SpinnerGeometry {
   const indicatorRadius = trackRadius;
   const circumference = 2 * Math.PI * indicatorRadius;
 
-  // Wave geometry: amplitude is a fraction of strokeWidth (M3-derived).
-  // Outer wave peaks reach trackRadius exactly → no viewBox clipping.
-  const waveAmplitude = strokeWidth * WAVE_AMP_SCALE;
-  const waveBaseRadius = trackRadius - waveAmplitude;
-
-  const { frequency: waveFrequency, steps: waveSteps } = WAVE_PARAMS[size];
-
   // Mathematical gap = 2 × strokeWidth → visual gap ≈ strokeWidth with round caps.
   const gapLength = strokeWidth * 2;
 
@@ -189,10 +140,6 @@ export function getSpinnerGeometry(size: SpinnerSizeKey): SpinnerGeometry {
     trackRadius,
     indicatorRadius,
     circumference,
-    waveBaseRadius,
-    waveAmplitude,
-    waveFrequency,
-    waveSteps,
     gapLength,
     spokesDuration,
   };

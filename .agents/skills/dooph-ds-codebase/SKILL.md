@@ -479,7 +479,7 @@ They live in **`@layer components`, not `utilities`** — that is load-bearing, 
 
 `BaseText` typography props are emitted as inline style, never as classes. The previous class-based approach (`ds-font-weight-*` plus `font-*`/`text-*` utilities) is deleted: two of its three props silently did nothing, because the role class was emitted ~50kB later in the compiled sheet and won on source order, and `fontSize` was additionally dropped by tailwind-merge as a colour conflict. Do not reintroduce class-based text props.
 
-`ds-shimmer-text` (also in `index.css`, not `dooph-component-tokens.css`) — animated gradient `background-clip: text` utility backing `ShimmerText`; `@keyframes ds-shimmer` plus the reduced-motion fallback live alongside it. `ds-roll-out`/`ds-roll-in` back `RollChangeText`, `ds-underline-wipe` backs `UnderlineLinkText`, `ds-rolling-digits-{in,out,fade-in,fade-out}` back `RollingDigitsText`, and `ds-spinner-rotate` backs `WavySpinner`.
+`ds-shimmer-text` (also in `index.css`, not `dooph-component-tokens.css`) — animated gradient `background-clip: text` utility backing `ShimmerText`; `@keyframes ds-shimmer` plus the reduced-motion fallback live alongside it. `ds-roll-out`/`ds-roll-in` back `RollChangeText`, `ds-underline-wipe` backs `UnderlineLinkText`, `ds-rolling-digits-{in,out,fade-in,fade-out}` back `RollingDigitsText`, and `ds-spinner-rotate` backs the spokes `LoadingSpinner`.
 
 `.ds-reveal-change` / `.ds-reveal-change-content` (in `index.css`) back
 `RevealChangeText` — a `justify-content`-pinned `overflow: hidden` flex slot
