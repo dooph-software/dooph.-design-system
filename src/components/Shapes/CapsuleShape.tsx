@@ -1,0 +1,19 @@
+import BaseShape, { ShapeProps } from "./BaseShape";
+
+export const CapsuleShape = ({
+  size,
+  strokeColor,
+  fillColor = "currentColor",
+  strokeWeight,
+}: ShapeProps) => {
+  return (
+    <BaseShape
+      size={size}
+      strokeColor={strokeColor}
+      fillColor={fillColor}
+      strokeWeight={strokeWeight}
+    >
+      <path d="M6.38853 3.02165C10.4174 -1.00722 16.9495 -1.00722 20.9784 3.02165C25.0072 7.05052 25.0072 13.5826 20.9784 17.6114L17.6114 20.9784C13.5826 25.0072 7.05052 25.0072 3.02165 20.9784C-1.00722 16.9495 -1.00722 10.4174 3.02165 6.38853L6.38853 3.02165Z" />
+    </BaseShape>
+  );
+};

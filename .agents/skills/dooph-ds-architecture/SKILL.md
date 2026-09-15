@@ -29,7 +29,7 @@ export type ButtonVariant = (typeof ButtonVariant)[keyof typeof ButtonVariant];
 
 The type is always derived from the const — never a hand-written union type that duplicates the keys.
 
-v3 renamed `ButtonVariant.destructive` → `ButtonVariant.danger` (matching the Figma `dangerButton` token group and `--ui-color-danger*`). `destructive` no longer exists — do not reintroduce it.
+v3 renamed `ButtonVariant.destructive` → `ButtonVariant.danger`. `destructive` no longer exists — do not reintroduce it. The variant key is `danger`; the token family it paints is spelled `--ui-color-error-*` (5.4). There is no `--ui-color-danger*`.
 
 ### Naming conventions
 
@@ -43,7 +43,8 @@ v3 renamed `ButtonVariant.destructive` → `ButtonVariant.danger` (matching the 
 | `ToggleSize`       | `size`    | `<TwoWayToggle size={ToggleSize.sm} />`                       |
 | `SegmentedVariant` | `variant` | `<SegmentedTabSelect variant={SegmentedVariant.secondary} />` |
 | `TextDropdownSize` | `size`    | `<TextDropdownTrigger size={TextDropdownSize.sm} />`          |
-| `ShapeButtons`     | `shape`   | `<ShapeButton shape={ShapeButtons.gem} />`                    |
+| `ShapeButtons`     | `shape`   | `<ShapeButton shape={ShapeButtons.squircle} />`                |
+| `ShapeButtonVariant` | `variant` | `<ShapeButton variant={ShapeButtonVariant.primary} />`      |
 | `SheetSide`        | `side`    | `<SheetContent side={SheetSide.right} />`                     |
 | `TextVariant`      | `variant`    | `<BaseText variant={TextVariant.body} />`                          |
 | `CheckboxChecked`  | `checked`    | `<Checkbox checked={CheckboxChecked.indeterminate} />`             |

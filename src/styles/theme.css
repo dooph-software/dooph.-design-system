@@ -46,6 +46,16 @@
   --color-brand-border-disabled: var(--ui-color-brand-border-disabled);
   --color-error-primary: var(--ui-color-error-primary);
   --color-error-secondary: var(--ui-color-error-secondary);
+  --color-error: var(--ui-color-error);
+  --color-error-border: var(--ui-color-error-border);
+  --color-error-hover: var(--ui-color-error-hover);
+  --color-error-border-hover: var(--ui-color-error-border-hover);
+  --color-error-active: var(--ui-color-error-active);
+  --color-error-border-active: var(--ui-color-error-border-active);
+  --color-error-fg: var(--ui-color-error-foreground);
+  --color-error-fg-active: var(--ui-color-error-foreground-active);
+  --color-error-disabled: var(--ui-color-error-disabled);
+  --color-error-border-disabled: var(--ui-color-error-border-disabled);
   --color-ghost-fg: var(--ui-color-ghost-foreground);
   --color-ghost-hover: var(--ui-color-ghost-hover);
   --color-ghost-active: var(--ui-color-ghost-active);
@@ -90,6 +100,7 @@
   --text-title: var(--ui-text-title);
   --text-hero: var(--ui-text-hero);
   --radius-slider-inner: var(--ui-radius-slider-inner);
+  --spacing-xxxs: var(--ui-spacing-xxxs);
   --spacing-xxs: var(--ui-spacing-xxs);
   --spacing-xs: var(--ui-spacing-xs);
   --spacing-sm: var(--ui-spacing-sm);

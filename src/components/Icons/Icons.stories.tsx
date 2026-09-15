@@ -47,7 +47,7 @@ const IconCell = ({
       width: 80,
     }}
   >
-    <Icon size={IconSizes.standard} />
+    <Icon size={IconSizes.rg} />
     <span
       style={{
         fontSize: 11,
@@ -190,16 +190,16 @@ export const Colors: Story = {
   name: "Icon Colors",
   render: () => (
     <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
-      <LightModeIcon size={IconSizes.medium} color="var(--color-text)" />
+      <LightModeIcon size={IconSizes.md} color="var(--color-text)" />
       <LightModeIcon
-        size={IconSizes.medium}
+        size={IconSizes.md}
         color="var(--color-text-secondary)"
       />
       <LightModeIcon
-        size={IconSizes.medium}
+        size={IconSizes.md}
         color="var(--color-text-tertiary)"
       />
-      <LightModeIcon size={IconSizes.medium} color="var(--color-brand-color)" />
+      <LightModeIcon size={IconSizes.md} color="var(--color-brand-color)" />
     </div>
   ),
 };

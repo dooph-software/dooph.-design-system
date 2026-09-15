@@ -2,12 +2,17 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ComponentType } from "react";
 import {
   ArrowShape,
+  CapsuleShape,
   CloverShape,
   CookieShape,
-  GemShape,
+  DiamondShape,
+  DoubleShape,
   PentagonShape,
+  PixircleShape,
   PuffShape,
+  SquircleShape,
   StarShape,
+  TripleShape,
 } from "./index";
 
 type ShapeProps = {
@@ -24,12 +29,17 @@ type ShapeExample = {
 
 const shapes: ShapeExample[] = [
   { label: "Arrow", component: ArrowShape },
+  { label: "Capsule", component: CapsuleShape },
   { label: "Clover", component: CloverShape },
   { label: "Cookie", component: CookieShape },
-  { label: "Gem", component: GemShape },
+  { label: "Diamond", component: DiamondShape },
+  { label: "Double", component: DoubleShape },
   { label: "Pentagon", component: PentagonShape },
+  { label: "Pixircle", component: PixircleShape },
   { label: "Puff", component: PuffShape },
+  { label: "Squircle", component: SquircleShape },
   { label: "Star", component: StarShape },
+  { label: "Triple", component: TripleShape },
 ];
 
 const meta = {
@@ -82,8 +92,16 @@ export const Cookie: Story = {
   render: (args) => <CookieShape {...args} />,
 };
 
-export const Gem: Story = {
-  render: (args) => <GemShape {...args} />,
+export const Capsule: Story = {
+  render: (args) => <CapsuleShape {...args} />,
+};
+
+export const Diamond: Story = {
+  render: (args) => <DiamondShape {...args} />,
+};
+
+export const Double: Story = {
+  render: (args) => <DoubleShape {...args} />,
 };
 
 export const Pentagon: Story = {
@@ -94,8 +112,20 @@ export const Puff: Story = {
   render: (args) => <PuffShape {...args} />,
 };
 
+export const Pixircle: Story = {
+  render: (args) => <PixircleShape {...args} />,
+};
+
+export const Squircle: Story = {
+  render: (args) => <SquircleShape {...args} />,
+};
+
 export const Star: Story = {
   render: (args) => <StarShape {...args} />,
+};
+
+export const Triple: Story = {
+  render: (args) => <TripleShape {...args} />,
 };
 
 export const AllShapes: Story = {
@@ -113,7 +143,7 @@ export const Sizes: Story = {
     <div className="flex items-end gap-6 p-4">
       {[96, 144, 192].map((size) => (
         <div key={size} className="flex flex-col items-center gap-3">
-          <GemShape
+          <SquircleShape
             size={size}
             strokeColor="transparent"
             fillColor="var(--color-primary)"
@@ -134,7 +164,7 @@ export const Colors: Story = {
           label={label}
           Shape={Shape}
           fillColor={
-            index % 2 === 0 ? "var(--color-primary)" : "var(--color-accent)"
+            index % 2 === 0 ? "var(--color-primary)" : "var(--color-brand-color-alt)"
           }
         />
       ))}
@@ -145,9 +175,9 @@ export const Colors: Story = {
 export const DefinedFillAndStroke: Story = {
   args: {
     size: 160,
-    strokeColor: "var(--color-accent)",
+    strokeColor: "var(--color-brand-color-alt)",
     fillColor: "var(--color-primary)",
     strokeWeight: 2,
   },
-  render: (args) => <GemShape {...args} />,
+  render: (args) => <SquircleShape {...args} />,
 };

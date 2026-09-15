@@ -57,7 +57,7 @@ const DropdownMenuSearch = forwardRef<HTMLInputElement, DropdownMenuSearchProps>
         )}
       >
         <SearchIcon
-          size={IconSize.medium}
+          size={IconSize.md}
           className="shrink-0 text-text-tertiary"
           aria-hidden
         />

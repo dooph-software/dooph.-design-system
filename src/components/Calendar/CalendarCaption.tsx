@@ -120,7 +120,7 @@ function CalendarCaption({
           className="text-ghost-fg-active"
           onClick={() => onMonthChange(addMonths(viewMonth, -1))}
         >
-          <ChevronLeftIcon size={IconSize.standard} />
+          <ChevronLeftIcon size={IconSize.rg} />
         </Button>
         <Button
           variant={ButtonVariant.ghost}
@@ -130,7 +130,7 @@ function CalendarCaption({
           className="text-ghost-fg-active"
           onClick={() => onMonthChange(addMonths(viewMonth, 1))}
         >
-          <ChevronRightIcon size={IconSize.standard} />
+          <ChevronRightIcon size={IconSize.rg} />
         </Button>
       </div>
     </div>

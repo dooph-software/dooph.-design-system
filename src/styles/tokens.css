@@ -42,19 +42,39 @@
   --ui-color-secondary-disabled: #f5f5f5;
   --ui-color-secondary-border-disabled: #e9e9e9;
 
-  /* Brand (teal) — borders alias bg per state (Figma) */
-  --ui-color-brand: #4f666d;
+  /* Brand (teal) — borders alias bg per state (Figma). Mode-invariant: the
+   * Figma brandButton group carries the same values in light and dark, so there
+   * is deliberately no .dark override for this family. The foreground is the
+   * one exception — teal is light enough that content stays dark in both. */
+  --ui-color-brand: #13c29f;
   --ui-color-brand-border: var(--ui-color-brand);
-  --ui-color-brand-hover: #45555b;
+  --ui-color-brand-hover: #0faa8b;
   --ui-color-brand-border-hover: var(--ui-color-brand-hover);
-  --ui-color-brand-active: #323d41;
+  --ui-color-brand-active: #108b72;
   --ui-color-brand-border-active: var(--ui-color-brand-active);
-  --ui-color-brand-foreground: #ffffff;
+  --ui-color-brand-foreground: #161616;
   --ui-color-brand-border-disabled: transparent;
 
-  /* Error (unified destructive palette — no .dark overrides yet) */
+  /* Error — the raw destructive palette (Figma errorPrimary / errorSecondary).
+   * Mode-invariant, so no .dark override. */
   --ui-color-error-primary: #ea3f3f;
   --ui-color-error-secondary: #ff5858;
+
+  /* Error button (Figma errorButton/*) — a full state family so consumers can
+   * retune the danger button without touching the secondary family it defaults
+   * to. Every value is an ALIAS, which is also what makes a .dark block
+   * unnecessary: the aliased tokens are themselves redefined per mode, so these
+   * follow along for free. Override any one of them to break that link. */
+  --ui-color-error: var(--ui-color-secondary);
+  --ui-color-error-border: var(--ui-color-secondary-border);
+  --ui-color-error-hover: var(--ui-color-error-secondary);
+  --ui-color-error-border-hover: var(--ui-color-error-secondary);
+  --ui-color-error-active: var(--ui-color-error-primary);
+  --ui-color-error-border-active: var(--ui-color-error-primary);
+  --ui-color-error-foreground: var(--ui-color-error-primary);
+  --ui-color-error-foreground-active: var(--ui-color-secondary-foreground);
+  --ui-color-error-disabled: var(--ui-color-secondary-disabled);
+  --ui-color-error-border-disabled: var(--ui-color-secondary-border-disabled);
 
   /* Ghost (no rest bg; hover/active are translucent overlays) */
   --ui-color-ghost-foreground: #4a4a4a;
@@ -96,7 +116,7 @@
   --ui-color-border-primary: #dddddd;
   --ui-color-border-secondary: #dfdfdf;
   --ui-color-border-popovers: #ebebeb;
-  --ui-color-border-focus: var(--ui-color-brand-border);
+  --ui-color-border-focus: var(--ui-color-brand-border-hover);
   /* CTAButton padded outline ring (primary variant only) */
   --ui-color-border-cta: rgba(56, 56, 56, 0.5);
   --ui-color-trigger-border-hover: #b4b4b4;
@@ -107,13 +127,17 @@
   --ui-color-text-secondary: #4a4a4a;
   --ui-color-text-tertiary: #606060;
 
-  /* Focus rings (Figma: Dropdowns/focusRingBrand|Primary|Error) */
-  --ui-color-focus-ring-brand: rgba(70, 86, 92, 0.35);
+  /* Focus rings (Figma: Inputs/focusRingBrand|Primary|Error). Each is its
+   * source paint at a fixed alpha: brand = bg-brandButton:hover, primary =
+   * bg-primaryButton, error = errorPrimary. They are literal rgba() rather than
+   * color-mix() over the source token because a consumer overriding, say,
+   * --ui-color-brand should be able to retune the ring independently. */
+  --ui-color-focus-ring-brand: rgba(15, 170, 139, 0.35);
   --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.25);
-  --ui-color-focus-ring-error: rgba(236, 85, 85, 0.35);
+  --ui-color-focus-ring-error: rgba(234, 63, 63, 0.35);
 
   /* Brand identity (Figma: brandColor / brandColorAlt — replaces logo/logo-alt/accent) */
-  --ui-brand-color: #46565c;
+  --ui-brand-color: #390ef8;
   --ui-brand-color-alt: #44c0e5;
 
   /* Text shimmer (ShimmerText) */
@@ -353,7 +377,7 @@
 
   /* ── Spacing ─────────────────────────────────────────────────────────── */
 
-  --ui-spacing-xxs: 2px;
+  --ui-spacing-xxxs: 2px;
   --ui-spacing-xxs: 4px;
   --ui-spacing-xs: 8px;
   --ui-spacing-sm: 10px;
@@ -365,11 +389,11 @@
 
   /* ── Icons ───────────────────────────────────────────────────────────── */
 
-  --ui-icon-tiny: 12px;
-  --ui-icon-standard: 14px;
-  --ui-icon-medium: 16px;
-  --ui-icon-large: 20px;
-  --ui-icon-stroke: 2;
+  --ui-icon-sm: 12px;
+  --ui-icon-rg: 14px;
+  --ui-icon-md: 16px;
+  --ui-icon-lg: 18px;
+  --ui-icon-stroke-width: 1.5;
 
   /* ── Radius (semantic corners) ────────────────────────────────────────────
    * tight     — compact chrome: buttons, tabs, dense controls (kbd, etc.).
@@ -444,8 +468,6 @@
   --ui-color-secondary-border-active: #3a3b3f;
   --ui-color-secondary-border-disabled: #1f1f21;
 
-  --ui-color-brand: #5a6f75;
-
   --ui-color-ghost-hover: rgba(255, 255, 255, 0.04);
   --ui-color-ghost-active: rgba(255, 255, 255, 0.08);
   --ui-color-ghost-foreground: #afafaf;
@@ -464,13 +486,17 @@
   --ui-color-border-cta: rgba(255, 255, 255, 0.35);
   --ui-color-trigger-border-hover: #3a3b3f;
 
+  --ui-color-brand-foreground: #000000;
+
   --ui-color-text: #ffffff;
   --ui-color-text-secondary: #afafaf;
   --ui-color-text-tertiary: #717171;
 
-  --ui-color-focus-ring-brand: rgba(70, 86, 92, 0.15);
-  --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.15);
-  --ui-color-focus-ring-error: rgba(236, 85, 85, 0.15);
+  /* Brand ring darkens to the rest paint (not :hover) in dark mode, per Figma. */
+  --ui-color-focus-ring-brand: rgba(19, 194, 159, 0.15);
+  --ui-color-focus-ring-primary: rgba(249, 249, 249, 0.15);
+  --ui-color-focus-ring-error: rgba(234, 63, 63, 0.15);
+  --ui-color-border-focus: var(--ui-color-brand-border-active);
 
   --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.65);
   --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.65);

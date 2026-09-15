@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { SendIcon } from "../Icons";
 import { LabelText } from "../Text";
 import { ShapeButton } from "./ShapeButton";
-import { ShapeButtons } from "./constants";
+import { ShapeButtons, ShapeButtonVariant } from "./constants";
 
 const meta = {
   title: "Buttons/ShapeButton",
@@ -14,6 +14,10 @@ const meta = {
       control: "select",
       options: Object.values(ShapeButtons),
     },
+    variant: {
+      control: "inline-radio",
+      options: Object.values(ShapeButtonVariant),
+    },
     disabled: { control: "boolean" },
   },
 } satisfies Meta<typeof ShapeButton>;
@@ -21,31 +25,43 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Clover: Story = {
-  args: { shape: ShapeButtons.clover, children: <SendIcon /> },
+export const Brand: Story = {
+  args: {
+    shape: ShapeButtons.clover,
+    variant: ShapeButtonVariant.brand,
+    children: <SendIcon />,
+  },
 };
 
-export const Cookie: Story = {
-  args: { shape: ShapeButtons.cookie, children: <SendIcon /> },
-};
-
-export const Gem: Story = {
-  args: { shape: ShapeButtons.gem, children: <SendIcon /> },
+export const Primary: Story = {
+  args: {
+    shape: ShapeButtons.squircle,
+    variant: ShapeButtonVariant.primary,
+    children: <SendIcon />,
+  },
 };
 
 export const Disabled: Story = {
-  args: { shape: ShapeButtons.clover, children: <SendIcon />, disabled: true },
+  args: {
+    shape: ShapeButtons.clover,
+    children: <SendIcon />,
+    disabled: true,
+  },
 };
 
 export const AllShapes: Story = {
   render: () => (
-    <div className="flex items-center gap-4 p-4">
-      {Object.entries(ShapeButtons).map(([label, shape]) => (
-        <div key={shape} className="flex flex-col items-center gap-2">
-          <ShapeButton shape={shape}>
-            <SendIcon />
-          </ShapeButton>
-          <LabelText className="text-text-secondary">{label}</LabelText>
+    <div className="flex flex-col gap-6 p-4">
+      {Object.values(ShapeButtonVariant).map((variant) => (
+        <div key={variant} className="flex items-center gap-4">
+          {Object.entries(ShapeButtons).map(([label, shape]) => (
+            <div key={shape} className="flex flex-col items-center gap-2">
+              <ShapeButton shape={shape} variant={variant}>
+                <SendIcon />
+              </ShapeButton>
+              <LabelText className="text-text-secondary">{label}</LabelText>
+            </div>
+          ))}
         </div>
       ))}
     </div>
@@ -54,19 +70,27 @@ export const AllShapes: Story = {
 
 export const AllStates: Story = {
   render: () => (
-    <div className="flex items-center gap-4 p-4">
-      <div className="flex flex-col items-center gap-2">
-        <ShapeButton shape={ShapeButtons.gem}>
-          <SendIcon />
-        </ShapeButton>
-        <span className="text-style-label text-text-secondary">Default</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <ShapeButton shape={ShapeButtons.gem} disabled>
-          <SendIcon />
-        </ShapeButton>
-        <span className="text-style-label text-text-secondary">Disabled</span>
-      </div>
+    <div className="flex flex-col gap-6 p-4">
+      {Object.values(ShapeButtonVariant).map((variant) => (
+        <div key={variant} className="flex items-center gap-4">
+          <div className="flex flex-col items-center gap-2">
+            <ShapeButton shape={ShapeButtons.diamond} variant={variant}>
+              <SendIcon />
+            </ShapeButton>
+            <LabelText className="text-text-secondary">
+              {variant} · default
+            </LabelText>
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <ShapeButton shape={ShapeButtons.diamond} variant={variant} disabled>
+              <SendIcon />
+            </ShapeButton>
+            <LabelText className="text-text-secondary">
+              {variant} · disabled
+            </LabelText>
+          </div>
+        </div>
+      ))}
     </div>
   ),
 };

@@ -109,13 +109,13 @@ export const IconSizeComparison: Story = {
             </div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.icon}>
-                <SidebarLeftIcon size={IconSize.standard} />
+                <SidebarLeftIcon size={IconSize.rg} />
               </Button>
               <LabelText className="text-text-secondary">icon (38px)</LabelText>
             </div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.iconSm}>
-                <SidebarLeftIcon size={IconSize.standard} />
+                <SidebarLeftIcon size={IconSize.rg} />
               </Button>
               <LabelText className="text-text-secondary">
                 icon-sm (34px)
@@ -123,7 +123,7 @@ export const IconSizeComparison: Story = {
             </div>
             <div className="flex items-center gap-3">
               <Button variant={variant} size={ButtonSize.iconMicro}>
-                <SidebarLeftIcon size={IconSize.standard} />
+                <SidebarLeftIcon size={IconSize.rg} />
               </Button>
               <LabelText className="text-text-secondary">
                 icon-micro (26px)

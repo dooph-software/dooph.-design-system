@@ -31,7 +31,7 @@ type Story = StoryObj<typeof meta>;
  * hover state too. Clicking flips `side`, which is what makes the rail traverse.
  */
 function SidebarToggle({
-  size = IconSize.medium,
+  size = IconSize.md,
   initialSide = SidebarIconSide.left,
 }: {
   size?: string | number;
@@ -85,7 +85,7 @@ export const Right: Story = { args: { side: SidebarIconSide.right } };
 /* Contradicts the default on purpose: `hovered` must hold the chevron with no
  * pointer anywhere near it, or the prop is doing nothing. */
 export const HeldHovered: Story = {
-  args: { side: SidebarIconSide.left, hovered: true, size: IconSize.medium },
+  args: { side: SidebarIconSide.left, hovered: true, size: IconSize.md },
 };
 
 /* At hovered = 1 the animated icon must be indistinguishable from the static
@@ -106,8 +106,8 @@ export const MatchesStaticPoses: Story = {
           </LabelText>
           {(
             [
-              ["rest", <Rest key="r" size={IconSize.medium} />, false],
-              ["hover", <Hover key="h" size={IconSize.medium} />, true],
+              ["rest", <Rest key="r" size={IconSize.md} />, false],
+              ["hover", <Hover key="h" size={IconSize.md} />, true],
             ] as const
           ).map(([label, staticIcon, hovered]) => (
             <div key={label} className="flex items-center gap-2">
@@ -115,7 +115,7 @@ export const MatchesStaticPoses: Story = {
               <SidebarWithHoverIcon
                 side={side}
                 hovered={hovered}
-                size={IconSize.medium}
+                size={IconSize.md}
               />
               <LabelText className="text-text-secondary">{label}</LabelText>
             </div>
@@ -133,9 +133,10 @@ export const Sizes: Story = {
     <div className="flex items-end gap-6 p-4">
       {(
         [
-          [IconSize.tiny, "tiny · 12"],
-          [IconSize.standard, "standard · 14"],
-          [IconSize.medium, "medium · 16"],
+          [IconSize.sm, "sm · 12"],
+          [IconSize.rg, "rg · 14"],
+          [IconSize.md, "md · 16"],
+          [IconSize.lg, "lg · 18"],
           [24, "24"],
           [40, "40"],
         ] as const

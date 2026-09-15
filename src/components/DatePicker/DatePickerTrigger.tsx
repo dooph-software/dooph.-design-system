@@ -71,7 +71,7 @@ const DatePickerTrigger = forwardRef<HTMLButtonElement, DatePickerTriggerProps>(
         {...buttonProps}
       >
         <DropdownTriggerContent className="items-center">
-          <CalendarIcon size={IconSize.standard} />
+          <CalendarIcon size={IconSize.rg} />
           <ButtonText>{label}</ButtonText>
         </DropdownTriggerContent>
       </DropdownTrigger>

@@ -5,14 +5,28 @@ import type { Shapes } from "../Shapes";
 
 /**
  * Dot-accessible shape constants.
- * Usage: <ShapeButton shape={ShapeButtons.gem} />
+ * Usage: <ShapeButton shape={ShapeButtons.squircle} />
+ *
+ * This is deliberately a SUBSET of `Shapes`: the Figma ShapeButton component
+ * offers these five, while `Shapes/` carries the full set for arbitrary use.
+ * `satisfies Record<string, Shapes>` is what keeps the subset honest.
  */
 export const ShapeButtons = {
-  arrow: "arrow",
   clover: "clover",
   cookie: "cookie",
-  gem: "gem",
+  diamond: "diamond",
   puff: "puff",
-  star: "star",
+  squircle: "squircle",
 } as const satisfies Record<string, Shapes>;
 export type ShapeButtons = (typeof ShapeButtons)[keyof typeof ShapeButtons];
+
+/**
+ * Dot-accessible color variants.
+ * Usage: <ShapeButton variant={ShapeButtonVariant.primary} />
+ */
+export const ShapeButtonVariant = {
+  brand: "brand",
+  primary: "primary",
+} as const;
+export type ShapeButtonVariant =
+  (typeof ShapeButtonVariant)[keyof typeof ShapeButtonVariant];

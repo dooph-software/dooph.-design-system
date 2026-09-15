@@ -1,0 +1,19 @@
+import BaseShape, { ShapeProps } from "./BaseShape";
+
+export const DoubleShape = ({
+  size,
+  strokeColor,
+  fillColor = "currentColor",
+  strokeWeight,
+}: ShapeProps) => {
+  return (
+    <BaseShape
+      size={size}
+      strokeColor={strokeColor}
+      fillColor={fillColor}
+      strokeWeight={strokeWeight}
+    >
+      <path d="M0 6.1017C0 2.73182 2.81995 0 6.29853 0H17.7015C21.18 0 24 2.73182 24 6.1017C24 8.88077 22.0821 11.2259 19.4586 11.9628C19.4415 11.9676 19.4296 11.9828 19.4296 12C19.4296 12.0172 19.4415 12.0324 19.4586 12.0372C22.0821 12.7741 24 15.1192 24 17.8983C24 21.2682 21.18 24 17.7015 24H6.29853C2.81995 24 0 21.2682 0 17.8983C0 15.1373 1.89291 12.8047 4.49008 12.0518C4.51375 12.045 4.53014 12.0239 4.53014 12C4.53014 11.9761 4.51375 11.955 4.49008 11.9482C1.89291 11.1953 0 8.86262 0 6.1017Z" />
+    </BaseShape>
+  );
+};

@@ -66,7 +66,7 @@ const CopyButton = forwardRef<HTMLElement, CopyButtonProps>(
     );
 
     const iconSize =
-      variant === CopyButtonVariant.ghost ? IconSize.standard : IconSize.medium;
+      variant === CopyButtonVariant.ghost ? IconSize.rg : IconSize.md;
     return (
       <Button
         ref={ref as React.Ref<HTMLButtonElement>}

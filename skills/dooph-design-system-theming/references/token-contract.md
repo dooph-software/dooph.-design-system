@@ -15,7 +15,8 @@ The package defines font-family tokens but does not load font files. Consumers m
 - `--ui-color-primary`, `--ui-color-primary-foreground`, `--ui-color-primary-hover`, `--ui-color-primary-active`, `--ui-color-primary-disabled`
 - `--ui-color-secondary`, `--ui-color-secondary-foreground`, `--ui-color-secondary-hover`, `--ui-color-secondary-active`, `--ui-color-secondary-disabled`
 - `--ui-color-brand`, `--ui-color-brand-foreground`, `--ui-color-brand-hover`, `--ui-color-brand-active`
-- `--ui-color-error-primary`, `--ui-color-error-secondary` — the whole destructive palette. There are **no `--ui-color-danger*` tokens**: `ButtonVariant.danger` paints `bg-secondary` + `text-error-primary` + `border-secondary-border` rather than owning a colour family, so retuning these two (or the secondary family) is what restyles it. A `--ui-color-danger*` override does nothing. These two currently have no `.dark` overrides.
+- `--ui-color-error-primary`, `--ui-color-error-secondary` — the two RAW destructive paints (Figma `errorPrimary`/`errorSecondary`). Mode-invariant: no `.dark` overrides.
+- `--ui-color-error`, `--ui-color-error-foreground`, `--ui-color-error-foreground-active`, `--ui-color-error-hover`, `--ui-color-error-active`, `--ui-color-error-disabled` — the error BUTTON state family (Figma `errorButton/*`), backing `ButtonVariant.danger`. Every one defaults to an alias (bg/disabled → the secondary family, hover → `error-secondary`, active/foreground → `error-primary`), which is also why they need no `.dark` block — the tokens they alias are already per-mode. Override one to retune the danger button alone; override `--ui-color-error-primary`/`-secondary` to move every error-tinted surface at once. There are still **no `--ui-color-danger*` tokens** — `danger` is the variant key, `error` is the token family.
 - `--ui-color-ghost-foreground`, `--ui-color-ghost-hover`, `--ui-color-ghost-active`, `--ui-color-ghost-foreground-active` (ghost/text buttons have no rest bg — hover/active are translucent overlays)
 - `--ui-color-surface-primary`, `--ui-color-surface-secondary`, `--ui-color-page-background` (v3 — Figma `pageBackground`/`surfacePrimary`/`surfaceSecondary`; replaces `surface`/`surface-page`)
 - `--ui-color-text`, `--ui-color-text-secondary`, `--ui-color-text-tertiary`
@@ -28,7 +29,7 @@ Every button variant carries its own border tokens for default/hover/active (plu
 - Primary (defaults alias the matching bg tokens): `--ui-color-primary-border`, `--ui-color-primary-border-hover`, `--ui-color-primary-border-active`, `--ui-color-primary-border-disabled`
 - Secondary (distinct literals — the visible outline on light buttons): `--ui-color-secondary-border`, `--ui-color-secondary-border-hover`, `--ui-color-secondary-border-active`, `--ui-color-secondary-border-disabled`
 - Brand (defaults alias the matching bg tokens; disabled is `transparent`): `--ui-color-brand-border`, `--ui-color-brand-border-hover`, `--ui-color-brand-border-active`, `--ui-color-brand-border-disabled`
-- Danger has no border tokens of its own — the danger button borrows `--ui-color-secondary-border*`. See the note under Core Colors.
+- Error/danger (defaults alias secondary for rest/disabled and the raw error paints for hover/active): `--ui-color-error-border`, `--ui-color-error-border-hover`, `--ui-color-error-border-active`, `--ui-color-error-border-disabled`
 
 Ghost and text buttons have no border tokens (transparent borders).
 
@@ -37,7 +38,7 @@ Ghost and text buttons have no border tokens (transparent borders).
 - `--ui-color-border-primary` — Figma `borderPrimary`: general control/container border (inputs, triggers, tables, cards). v3 splits the old single `--ui-color-border` into `-primary`/`-secondary`.
 - `--ui-color-border-secondary` — Figma `borderSecondary`: a second general-purpose border tone (e.g. `Avatar`'s shell border) distinct from `-primary`.
 - `--ui-color-border-popovers` — floating panel border shared by menus, modals, and toasts. The DS name is kept even though the Figma source calls the equivalent `borderModal` (deliberate naming choice — this token is shared across more than modals).
-- `--ui-color-border-focus` — focus border for typeable triggers/inputs/controls; defaults to `var(--ui-color-brand-border)` so it follows brand
+- `--ui-color-border-focus` — focus border for typeable triggers/inputs/controls; defaults to `var(--ui-color-brand-border-hover)` in light and `var(--ui-color-brand-border-active)` in dark, so it follows brand
 - `--ui-color-trigger-border-hover` — hover border for typeable triggers, inputs, and search boxes
 - `--ui-color-trigger-border-error-focus` — focus border for typeable triggers/inputs in an error state; defaults to `var(--ui-color-error-primary)`
 
@@ -81,8 +82,8 @@ There are **eight** text roles: `body`, `button`, `heading`, `subheading`, `labe
 ## Sizing And Shape
 
 - `--ui-height-button`, `--ui-height-button-sm`, `--ui-height-button-micro` (v3 — backs `ButtonSize.iconMicro` / `size-button-micro`)
-- `--ui-spacing-xxs`, `--ui-spacing-xs`, `--ui-spacing-sm`, `--ui-spacing-rg`, `--ui-spacing-md`, `--ui-spacing-lg`, `--ui-spacing-xl`, `--ui-spacing-xxl`
-- `--ui-icon-tiny`, `--ui-icon-standard`, `--ui-icon-medium`, `--ui-icon-stroke`
+- `--ui-spacing-xxxs`, `--ui-spacing-xxs`, `--ui-spacing-xs`, `--ui-spacing-sm`, `--ui-spacing-rg`, `--ui-spacing-md`, `--ui-spacing-lg`, `--ui-spacing-xl`, `--ui-spacing-xxl`
+- `--ui-icon-sm` (12), `--ui-icon-rg` (14), `--ui-icon-md` (16), `--ui-icon-lg` (18), `--ui-icon-stroke-width` (1.5) — back `IconSize.sm/rg/md/lg`. Renamed in 5.4 from `--ui-icon-tiny`/`-standard`/`-medium`/`-stroke`; `--ui-icon-large` (20) is gone, replaced by the 18px `-lg`.
 - `--ui-radius-tight`, `--ui-radius-standard`, `--ui-radius-soft`, `--ui-radius-slider-inner` (v3 — inner corner radius on the `Slider*` track pills and thumb)
 - `--ui-shadow-button`, `--ui-shadow-button-secondary`, `--ui-shadow-button-hover`, `--ui-shadow-button-active`, `--ui-shadow-menu`, `--ui-shadow-focus-brand`, `--ui-shadow-focus-primary`
 - `--ui-opacity-disabled`

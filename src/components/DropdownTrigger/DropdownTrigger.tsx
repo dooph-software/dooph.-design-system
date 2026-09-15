@@ -297,7 +297,7 @@ const TextDropdownTriggerBase = forwardRef<
         <span>{children}</span>
         <ChevronDownIcon
           size={
-            size === TextDropdownSize.sm ? IconSize.tiny : IconSize.standard
+            size === TextDropdownSize.sm ? IconSize.sm : IconSize.rg
           }
         />
       </Comp>

@@ -111,8 +111,8 @@ Reach for these before writing local UI:
   `danger` | `ghost` | `text`; `ButtonSize`: `default` | `sm` | `icon` |
   `iconSm` | `iconMicro`), `SplitButton` (+ `SplitButtonAction`, `SplitButtonTrigger`),
   `OutlineButton` (`inverseTheme`, `glowing`, `glowColor1`/`glowColor2`),
-  `ShapeButton` (`ShapeButtons`: `arrow` | `clover` | `cookie` | `gem` |
-  `pentagon` | `puff` | `star`), `CopyButton` (writes `value` to the clipboard,
+  `ShapeButton` (`ShapeButtons`: `clover` | `cookie` | `diamond` | `puff` |
+  `squircle`; `ShapeButtonVariant`: `brand` | `primary`), `CopyButton` (writes `value` to the clipboard,
   swaps its icon to a checkmark for 2s; `CopyButtonVariant`: `ghost` | `secondary`),
   `CTAButton` (marketing CTA — fully round, padded outline ring on `primary`,
   label-only hover roll; `CTAButtonVariant`: `primary` | `secondary`,

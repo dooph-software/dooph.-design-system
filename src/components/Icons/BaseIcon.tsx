@@ -4,12 +4,13 @@ import { cn } from "../../utils/cn";
  * Dot-accessible icon size constants.
  * Values resolve via CSS tokens so consuming projects can override.
  *
- * Usage: <ChevronDownIcon size={IconSizes.medium} />
+ * Usage: <ChevronDownIcon size={IconSizes.md} />
  */
 export const IconSizes = {
-  tiny: "var(--ui-icon-tiny)", // 12px
-  standard: "var(--ui-icon-standard)", // 14px
-  medium: "var(--ui-icon-medium)", // 16px
+  sm: "var(--ui-icon-sm)", // 12px
+  rg: "var(--ui-icon-rg)", // 14px
+  md: "var(--ui-icon-md)", // 16px
+  lg: "var(--ui-icon-lg)", // 18px
 } as const;
 export type IconSizes = (typeof IconSizes)[keyof typeof IconSizes] | string;
 
@@ -35,7 +36,7 @@ export interface IconProps {
  *   );
  */
 export const BaseIcon = ({
-  size = IconSizes.standard,
+  size = IconSizes.rg,
   color,
   strokeWidth,
   strokeColor,
@@ -57,7 +58,7 @@ export const BaseIcon = ({
       height: size,
       fill: fillColor ?? undefined,
       stroke: strokeColor ?? color ?? "currentColor",
-      strokeWidth: strokeWidth ?? "var(--ui-icon-stroke)",
+      strokeWidth: strokeWidth ?? "var(--ui-icon-stroke-width)",
     }}
   >
     {children}

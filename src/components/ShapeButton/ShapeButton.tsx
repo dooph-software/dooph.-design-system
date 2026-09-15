@@ -1,3 +1,20 @@
+/*
+ * ShapeButton — icon button whose background is an organic SVG shape.
+ *
+ * ## behavior
+ * - `shape` picks a primitive from `Shapes/`; `variant` picks a color family.
+ * - The shape SVG is painted by `currentColor` on its own wrapper span, so the
+ *   bg/hover/active states are plain `text-*` utilities on that span rather
+ *   than fills threaded through the SVG as props.
+ * - The icon slot carries the CONTENT color separately, because the shape span
+ *   has already spent `currentColor` on the fill.
+ *
+ * ## constraints
+ * - `shapeComponents` must stay keyed by `ShapeButtons`, which `satisfies
+ *   Record<string, Shapes>` — the shape rendered here is the same primitive
+ *   `Shapes/` exports, never a re-drawn copy of it. Figma's ShapeButton
+ *   variants embed their own flattened SVGs; those are not the source of truth.
+ */
 "use client";
 
 import { Slot } from "@radix-ui/react-slot";
@@ -12,20 +29,20 @@ import {
 } from "react";
 import { cn } from "../../utils/cn";
 import {
-  ArrowShape,
   CloverShape,
   CookieShape,
-  GemShape,
+  DiamondShape,
   PuffShape,
-  StarShape,
+  SquircleShape,
 } from "../Shapes";
-import { ShapeButtons } from "./constants";
+import { ShapeButtons, ShapeButtonVariant } from "./constants";
 
-// ShapeButtons lives in ./constants — kept server-safe (no "use client") so RSC
-// code can read the enum values. Re-exported via index.ts.
+// ShapeButtons / ShapeButtonVariant live in ./constants — kept server-safe (no
+// "use client") so RSC code can read the enum values. Re-exported via index.ts.
 
 type ShapeButtonOwnProps = {
   shape?: ShapeButtons;
+  variant?: ShapeButtonVariant;
   asChild?: boolean;
 };
 
@@ -37,13 +54,34 @@ type ShapeComponentProps = {
 };
 
 const shapeComponents = {
-  arrow: ArrowShape,
   clover: CloverShape,
   cookie: CookieShape,
-  gem: GemShape,
+  diamond: DiamondShape,
   puff: PuffShape,
-  star: StarShape,
+  squircle: SquircleShape,
 } satisfies Record<ShapeButtons, ComponentType<ShapeComponentProps>>;
+
+const SHAPE_SIZE = 46;
+
+/** Fill colors for the shape span — `currentColor` is the shape's paint. */
+const shapeFillClasses = {
+  brand: [
+    "text-brand",
+    "group-hover:text-brand-hover",
+    "group-active:text-brand-active",
+  ],
+  primary: [
+    "text-primary",
+    "group-hover:text-primary-hover",
+    "group-active:text-primary-active",
+  ],
+} satisfies Record<ShapeButtonVariant, string[]>;
+
+/** Content color for the icon slot, applied to the root so children inherit. */
+const contentClasses = {
+  brand: "text-brand-fg",
+  primary: "text-primary-fg",
+} satisfies Record<ShapeButtonVariant, string>;
 
 export type ShapeButtonProps<TElement extends ElementType = "button"> =
   ShapeButtonOwnProps &
@@ -57,21 +95,27 @@ type ShapeButtonComponent = <TElement extends ElementType = "button">(
 
 /**
  * An icon button with an organic SVG shape background.
- * The shape fill and stroke follow secondary-button token states.
- * Pentagon remains in `Shapes/` but is not offered on ShapeButton.
  *
  * @example
- * <ShapeButton shape={ShapeButtons.gem}>
- *   <StarIcon className="size-4" />
+ * <ShapeButton shape={ShapeButtons.squircle} variant={ShapeButtonVariant.brand}>
+ *   <SendIcon />
  * </ShapeButton>
  */
 const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
   (
-    { className, shape = ShapeButtons.clover, asChild = false, children, ...props },
+    {
+      className,
+      shape = ShapeButtons.clover,
+      variant = ShapeButtonVariant.brand,
+      asChild = false,
+      children,
+      ...props
+    },
     ref,
   ) => {
     const Comp = (asChild ? Slot : "button") as ElementType;
     const Shape = shapeComponents[shape as ShapeButtons];
+    const resolvedVariant = variant as ShapeButtonVariant;
 
     return (
       <Comp
@@ -81,22 +125,22 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
           "size-[46px] cursor-pointer select-none",
           "outline-none ds-shape-button-focus-visible",
           "ds-disabled-state",
+          contentClasses[resolvedVariant],
           className,
         )}
         {...props}
       >
-        {/* Shape background SVG — styled with secondary button tokens */}
+        {/* Shape background SVG — painted by currentColor on this span */}
         <span
           className={cn(
-            "ds-shape-button-shadow absolute inset-0 flex items-center justify-center text-secondary",
-            "group-hover:text-secondary-hover",
-            "group-active:text-secondary-active",
+            "ds-shape-button-shadow absolute inset-0 flex items-center justify-center",
+            shapeFillClasses[resolvedVariant],
             "group-disabled:text-secondary-disabled",
           )}
           aria-hidden
         >
           <Shape
-            size={46}
+            size={SHAPE_SIZE}
             strokeColor="transparent"
             fillColor="currentColor"
           />

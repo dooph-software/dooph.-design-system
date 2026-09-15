@@ -256,7 +256,7 @@ function SpokesSpinner({
           width: cssSize,
           height: cssSize,
           stroke: strokeColor,
-          strokeWidth: "var(--ui-icon-stroke)",
+          strokeWidth: "var(--ui-icon-stroke-width)",
           animation: `ds-spinner-rotate ${spokesDuration}ms linear infinite`,
           transformOrigin: "center",
           ...style,

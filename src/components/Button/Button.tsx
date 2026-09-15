@@ -9,9 +9,14 @@
  *   opacity — not opacity alone.
  *
  * ## constraints
- * - Do NOT reintroduce `--ui-color-danger*` tokens; the danger variant paints
- *   secondary + error-primary/secondary utilities directly so consumers can
- *   still override those families independently.
+ * - The `danger` variant paints the `--ui-color-error-*` STATE family
+ *   (bg-error / border-error-border / text-error-fg / ...), not the raw
+ *   `--ui-color-error-primary`/`-secondary` palette it used to reach for
+ *   directly. Those two are still the raw paints, and the state family aliases
+ *   them — the indirection is the point: a consumer can retune the danger
+ *   button without dragging every other error-tinted surface along. Do not
+ *   collapse it back to the raw tokens, and do not add `--ui-color-danger*` as
+ *   a third spelling of the same thing.
  * - Keep `ButtonVariant.brand` in the API even if icon stories omit it.
  */
 "use client";
@@ -59,10 +64,10 @@ const buttonVariants = cva(
           "disabled:bg-primary-disabled disabled:border-primary-border-disabled disabled:text-secondary-fg aria-disabled:bg-primary-disabled aria-disabled:border-primary-border-disabled aria-disabled:text-secondary-fg",
         ],
         danger: [
-          "bg-secondary text-error-primary border-secondary-border shadow-button-secondary",
-          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-error-secondary [&:not(:disabled):not([aria-disabled=true])]:hover:border-error-secondary [&:not(:disabled):not([aria-disabled=true])]:hover:text-secondary-fg [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
-          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-error-primary [&:not(:disabled):not([aria-disabled=true])]:active:border-error-primary [&:not(:disabled):not([aria-disabled=true])]:active:text-secondary-fg [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
-          "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled disabled:text-secondary-fg aria-disabled:bg-secondary-disabled aria-disabled:border-secondary-border-disabled aria-disabled:text-secondary-fg",
+          "bg-error text-error-fg border-error-border shadow-button-secondary",
+          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-error-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-error-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:text-error-fg-active [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
+          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-error-active [&:not(:disabled):not([aria-disabled=true])]:active:border-error-border-active [&:not(:disabled):not([aria-disabled=true])]:active:text-error-fg-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
+          "disabled:bg-error-disabled disabled:border-error-border-disabled disabled:text-secondary-fg aria-disabled:bg-error-disabled aria-disabled:border-error-border-disabled aria-disabled:text-secondary-fg",
         ],
         ghost: [
           "text-ghost-fg border-transparent",
