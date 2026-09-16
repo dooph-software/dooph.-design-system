@@ -63,31 +63,32 @@
   --color-secondary-fg: var(--ui-color-secondary-foreground);
   --color-secondary-disabled: var(--ui-color-secondary-disabled);
   --color-secondary-border-disabled: var(--ui-color-secondary-border-disabled);
-  --color-brand: var(--ui-color-brand);
-  --color-brand-border: var(--ui-color-brand-border);
-  --color-brand-hover: var(--ui-color-brand-hover);
-  --color-brand-border-hover: var(--ui-color-brand-border-hover);
-  --color-brand-active: var(--ui-color-brand-active);
-  --color-brand-border-active: var(--ui-color-brand-border-active);
-  --color-brand-fg: var(--ui-color-brand-foreground);
-  --color-brand-border-disabled: var(--ui-color-brand-border-disabled);
-  --color-error-primary: var(--ui-color-error-primary);
-  --color-error-secondary: var(--ui-color-error-secondary);
-  --color-error: var(--ui-color-error);
-  --color-error-border: var(--ui-color-error-border);
-  --color-error-hover: var(--ui-color-error-hover);
-  --color-error-border-hover: var(--ui-color-error-border-hover);
-  --color-error-active: var(--ui-color-error-active);
-  --color-error-border-active: var(--ui-color-error-border-active);
-  --color-error-fg: var(--ui-color-error-foreground);
-  --color-error-fg-active: var(--ui-color-error-foreground-active);
-  --color-error-disabled: var(--ui-color-error-disabled);
-  --color-error-border-disabled: var(--ui-color-error-border-disabled);
+  --color-prominent: var(--ui-color-prominent);
+  --color-prominent-border: var(--ui-color-prominent-border);
+  --color-prominent-hover: var(--ui-color-prominent-hover);
+  --color-prominent-border-hover: var(--ui-color-prominent-border-hover);
+  --color-prominent-active: var(--ui-color-prominent-active);
+  --color-prominent-border-active: var(--ui-color-prominent-border-active);
+  --color-prominent-fg: var(--ui-color-prominent-foreground);
+  --color-prominent-disabled: var(--ui-color-prominent-disabled);
+  --color-prominent-border-disabled: var(--ui-color-prominent-border-disabled);
+  --color-danger-primary: var(--ui-color-danger-primary);
+  --color-danger-secondary: var(--ui-color-danger-secondary);
+  --color-danger: var(--ui-color-danger);
+  --color-danger-border: var(--ui-color-danger-border);
+  --color-danger-hover: var(--ui-color-danger-hover);
+  --color-danger-border-hover: var(--ui-color-danger-border-hover);
+  --color-danger-active: var(--ui-color-danger-active);
+  --color-danger-border-active: var(--ui-color-danger-border-active);
+  --color-danger-fg: var(--ui-color-danger-foreground);
+  --color-danger-fg-active: var(--ui-color-danger-foreground-active);
+  --color-danger-disabled: var(--ui-color-danger-disabled);
+  --color-danger-border-disabled: var(--ui-color-danger-border-disabled);
   --color-ghost-fg: var(--ui-color-ghost-foreground);
   --color-ghost-hover: var(--ui-color-ghost-hover);
   --color-ghost-active: var(--ui-color-ghost-active);
   --color-ghost-fg-active: var(--ui-color-ghost-foreground-active);
-  --color-page-background: var(--ui-color-page-background);
+  --color-surface-page: var(--ui-color-surface-page);
   --color-surface-primary: var(--ui-color-surface-primary);
   --color-surface-secondary: var(--ui-color-surface-secondary);
   --color-selection: var(--ui-color-selection);
@@ -103,15 +104,20 @@
   --color-border-primary: var(--ui-color-border-primary);
   --color-border-secondary: var(--ui-color-border-secondary);
   --color-border-popovers: var(--ui-color-border-popovers);
-  --color-border-focus: var(--ui-color-border-focus);
+  --color-input-border-focus: var(--ui-color-input-border-focus);
   --color-border-cta: var(--ui-color-border-cta);
-  --color-trigger-border-hover: var(--ui-color-trigger-border-hover);
-  --color-trigger-border-error-focus: var(--ui-color-trigger-border-error-focus);
+  --color-input-border-hover: var(--ui-color-input-border-hover);
+  --color-input-border-danger-focus: var(--ui-color-input-border-danger-focus);
   --color-text: var(--ui-color-text);
   --color-text-secondary: var(--ui-color-text-secondary);
   --color-text-tertiary: var(--ui-color-text-tertiary);
-  --color-brand-color: var(--ui-brand-color);
-  --color-brand-color-alt: var(--ui-brand-color-alt);
+  --color-prominent-color: var(--ui-prominent-color);
+  --color-prominent-color-alt: var(--ui-prominent-color-alt);
+  --color-prominent-color-ter: var(--ui-prominent-color-ter);
+  --color-ai-anthropic: var(--ui-color-ai-anthropic);
+  --color-ai-gemini: var(--ui-color-ai-gemini);
+  --color-ai-openai: var(--ui-color-ai-openai);
+  --color-ai-spacexai: var(--ui-color-ai-spacexai);
   --font-body: var(--ui-font-body);
   --font-button: var(--ui-font-button);
   --font-heading: var(--ui-font-heading);
@@ -121,6 +127,8 @@
   --font-mono: var(--ui-font-mono);
   --text-label: var(--ui-text-label);
   --text-body: var(--ui-text-body);
+  --text-hero-body: var(--ui-text-hero-body);
+  --text-hero-button: var(--ui-text-hero-button);
   --text-mono: var(--ui-text-mono);
   --text-subheading: var(--ui-text-subheading);
   --text-heading: var(--ui-text-heading);
@@ -137,7 +145,7 @@
   --spacing-xl: var(--ui-spacing-xl);
   --spacing-xxl: var(--ui-spacing-xxl);
   --radius-tight: var(--ui-radius-tight);
-  --radius-standard: var(--ui-radius-standard);
+  --radius-normal: var(--ui-radius-normal);
   --radius-soft: var(--ui-radius-soft);
   --radius-checkbox: var(--ui-radius-checkbox);
   --radius-avatar: var(--ui-radius-avatar);
@@ -149,13 +157,13 @@
   --shadow-button-active: var(--ui-shadow-button-active);
   --shadow-menu: var(--ui-shadow-menu);
   --shadow-cta: var(--ui-shadow-cta);
-  --shadow-focus-brand: var(--ui-shadow-focus-brand);
+  --shadow-focus-prominent: var(--ui-shadow-focus-prominent);
   --shadow-focus-primary: var(--ui-shadow-focus-primary);
   --text-cta-standard: var(--ui-text-cta-standard);
   --text-cta-big: var(--ui-text-cta-big);
 
-  /* Focus ring with error */
-  --shadow-focus-error: 0 0 0 4px var(--ui-color-focus-ring-error);
+  /* Focus ring with danger */
+  --shadow-focus-danger: 0 0 0 4px var(--ui-color-focus-ring-danger);
 }
 /* __GENERATED_THEME_END__ */
 
@@ -189,6 +197,31 @@
     font-weight: var(--ui-weight-body);
     font-variation-settings: var(--ui-font-var-body);
     letter-spacing: var(--ui-tracking-body);
+  }
+
+  /* The hero-scale pair. Each is byte-identical to its base role apart from the
+   * size token — same family, weight, axes and tracking — so they read as the
+   * same voice set larger, not as a second one. Keep them in sync by hand if a
+   * base role gains a property; they are spelled out rather than composed
+   * because a role class has to stand alone for `unstyled` and for consumers
+   * applying `.text-style-*` directly. */
+  .text-style-hero-body {
+    font-family: var(--ui-font-body);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-hero-body);
+    font-style: normal;
+    font-weight: var(--ui-weight-body);
+    font-variation-settings: var(--ui-font-var-body);
+    letter-spacing: var(--ui-tracking-body);
+  }
+
+  .text-style-hero-button {
+    font-family: var(--ui-font-button);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-hero-button);
+    font-style: normal;
+    font-weight: var(--ui-weight-button);
+    font-variation-settings: var(--ui-font-var-button);
   }
 
   /* Mono deliberately mirrors button's size and weight (both tokens alias it)
@@ -618,16 +651,26 @@
   /* RollChangeText. Real classes rather than arbitrary `animate-[…]` values so
    * the timing lives in tokens — and so the reduced-motion case can collapse the
    * duration instead of removing the animation. That distinction is
-   * load-bearing: the exiting node is unmounted by its own `animationend`, and
+   * load-bearing: each node is retired by its own `animationend`, and
    * `animation: none` would starve that event and strand the old content on
-   * screen forever. */
+   * screen forever.
+   *
+   * `will-change` is here because the roll animates `filter: blur()` over text,
+   * which is re-rasterized every frame. Without the hint the compositor promotes
+   * the node only once the animation is already running, and the cost of that
+   * first raster lands inside the first frame or two — which is precisely where
+   * the roll used to hitch. Both classes are removed the moment their animation
+   * ends (the out node unmounts, the in node drops the class), so neither
+   * strands a layer on settled content. */
   .ds-roll-change-out {
     animation: ds-roll-out var(--ui-roll-change-out-duration)
       var(--ui-roll-change-out-ease) forwards;
+    will-change: transform, filter, opacity;
   }
   .ds-roll-change-in {
     animation: ds-roll-in var(--ui-roll-change-in-duration)
       var(--ui-roll-change-in-ease) both;
+    will-change: transform, filter, opacity;
   }
   @media (prefers-reduced-motion: reduce) {
     .ds-roll-change-out,

@@ -6,10 +6,10 @@ import {
   type ElementType,
   type ForwardedRef,
   type ReactElement,
-} from 'react';
-import { cn } from '../../utils/cn';
-import { TEXT_VARIANT_CLASS, TextVariant } from './constants';
-import { buildTextStyle, type TextStyleProps } from './textStyle';
+} from "react";
+import { cn } from "../../utils/cn";
+import { TEXT_VARIANT_CLASS, TextVariant } from "./constants";
+import { buildTextStyle, type TextStyleProps } from "./textStyle";
 
 type BaseTextOwnProps = TextStyleProps & {
   /** Role providing the defaults. Ignored when `unstyled`. */
@@ -20,20 +20,20 @@ type BaseTextOwnProps = TextStyleProps & {
 
 /* `as` is typed as the generic itself, not ElementType — that is what lets TS
  * infer the element from the value and admit its props (as="label" + htmlFor). */
-export type BaseTextProps<TElement extends ElementType = 'span'> =
+export type BaseTextProps<TElement extends ElementType = "span"> =
   BaseTextOwnProps & { as?: TElement } & Omit<
       ComponentPropsWithoutRef<TElement>,
-      keyof BaseTextOwnProps | 'as'
+      keyof BaseTextOwnProps | "as"
     >;
 
 type PolymorphicTextComponent<TOwnProps> = <
-  TElement extends ElementType = 'span',
+  TElement extends ElementType = "span",
 >(
   props: TOwnProps & { as?: TElement } & Omit<
       ComponentPropsWithoutRef<TElement>,
-      keyof TOwnProps | 'as'
+      keyof TOwnProps | "as"
     > & {
-      ref?: ComponentPropsWithRef<TElement>['ref'];
+      ref?: ComponentPropsWithRef<TElement>["ref"];
     },
 ) => ReactElement | null;
 
@@ -62,7 +62,7 @@ const BaseTextBase = forwardRef<HTMLElement, BaseTextProps<ElementType>>(
   (
     {
       variant = TextVariant.body,
-      as: Tag = 'span',
+      as: Tag = "span",
       unstyled = false,
       className,
       style,
@@ -100,21 +100,24 @@ const BaseTextBase = forwardRef<HTMLElement, BaseTextProps<ElementType>>(
     );
   },
 );
-BaseTextBase.displayName = 'BaseText';
+BaseTextBase.displayName = "BaseText";
 
-export const BaseText = BaseTextBase as PolymorphicTextComponent<BaseTextOwnProps>;
+export const BaseText =
+  BaseTextBase as PolymorphicTextComponent<BaseTextOwnProps>;
 
 /* ── Pre-composed roles ─────────────────────────────────────────────────
- * Each is BaseText with `variant` fixed. Built through a factory so the six
- * stay identical by construction; the cast restores the polymorphic `as`
- * typing that a plain forwardRef wrapper erases. */
+ * Each is BaseText with `variant` fixed. Built through a factory so they stay
+ * identical by construction; the cast restores the polymorphic `as` typing
+ * that a plain forwardRef wrapper erases. */
 
-export type RoleTextProps<TElement extends ElementType = 'span'> = Omit<
+export type RoleTextProps<TElement extends ElementType = "span"> = Omit<
   BaseTextProps<TElement>,
-  'variant'
+  "variant"
 >;
 
-type RoleTextComponent = PolymorphicTextComponent<Omit<BaseTextOwnProps, 'variant'>>;
+type RoleTextComponent = PolymorphicTextComponent<
+  Omit<BaseTextOwnProps, "variant">
+>;
 
 const createRoleText = (
   variant: TextVariant,
@@ -127,24 +130,43 @@ const createRoleText = (
   return Role as RoleTextComponent;
 };
 
-export const ButtonText = createRoleText(TextVariant.button, 'ButtonText');
-export const HeadingText = createRoleText(TextVariant.heading, 'HeadingText');
-export const SubheadingText = createRoleText(TextVariant.subheading, 'SubheadingText');
-export const HeroText = createRoleText(TextVariant.hero, 'HeroText');
-export const TitleText = createRoleText(TextVariant.title, 'TitleText');
-export const BodyText = createRoleText(TextVariant.body, 'BodyText');
-export const LabelText = createRoleText(TextVariant.label, 'LabelText');
+export const ButtonText = createRoleText(TextVariant.button, "ButtonText");
+export const HeadingText = createRoleText(TextVariant.heading, "HeadingText");
+export const SubheadingText = createRoleText(
+  TextVariant.subheading,
+  "SubheadingText",
+);
+export const HeroText = createRoleText(TextVariant.hero, "HeroText");
+export const TitleText = createRoleText(TextVariant.title, "TitleText");
+export const BodyText = createRoleText(TextVariant.body, "BodyText");
+/* Hero-scale body and button: their base role at a larger size, and identical
+ * in every other respect. Not related to `HeroText`, which is the 55px display
+ * role in the title family — these two stay in the body/button faces. */
+export const HeroBodyText = createRoleText(
+  TextVariant.heroBody,
+  "HeroBodyText",
+);
+export const HeroButtonText = createRoleText(
+  TextVariant.heroButton,
+  "HeroButtonText",
+);
+export const LabelText = createRoleText(TextVariant.label, "LabelText");
 /* Button's size and weight in the mono family — the two roles' size and weight
  * tokens alias each other, so mono sits at the same optical scale beside a
  * button label. Reach for `tabular` on the others when you only want aligned
  * figures; use this when the run should read as code, a key, or an id. */
-export const MonoText = createRoleText(TextVariant.mono, 'MonoText');
+export const MonoText = createRoleText(TextVariant.mono, "MonoText");
 
-export type ButtonTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
-export type HeadingTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
-export type SubheadingTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
-export type HeroTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
-export type TitleTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
-export type BodyTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
-export type LabelTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
-export type MonoTextProps<T extends ElementType = 'span'> = RoleTextProps<T>;
+export type ButtonTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type HeadingTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type SubheadingTextProps<T extends ElementType = "span"> =
+  RoleTextProps<T>;
+export type HeroTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type TitleTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type BodyTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type HeroBodyTextProps<T extends ElementType = "span"> =
+  RoleTextProps<T>;
+export type HeroButtonTextProps<T extends ElementType = "span"> =
+  RoleTextProps<T>;
+export type LabelTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type MonoTextProps<T extends ElementType = "span"> = RoleTextProps<T>;

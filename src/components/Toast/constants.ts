@@ -3,8 +3,8 @@
 
 export const ToastTypes = {
   simple: "simple",
-  brand: "brand",
-  error: "error",
+  prominent: "prominent",
+  danger: "danger",
   complex: "complex",
 } as const;
 export type ToastTypes = (typeof ToastTypes)[keyof typeof ToastTypes];

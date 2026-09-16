@@ -8,7 +8,8 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "../../utils/cn";
-import { ButtonText, FontWeights, RollHoverText } from "../Text";
+import { RollHoverText } from "../AnimatedText";
+import { ButtonText, FontWeights } from "../Text";
 import { CTAButtonSize, CTAButtonVariant } from "./constants";
 
 const SIZES = {

@@ -24,7 +24,7 @@ const Table = forwardRef<HTMLDivElement, TableProps>(
     <div
       ref={ref}
       className={cn(
-        "flex flex-col w-full border border-border-primary rounded-standard",
+        "flex flex-col w-full border border-border-primary rounded-normal",
         className,
       )}
       style={

@@ -21,7 +21,7 @@ All enums follow the dot-accessible pattern required by architecture Rule 1:
 
 ```ts
 LoadingSpinnerVariant.flat / .spokes    // spokes = the rotating LoadingSpinnerIcon
-LoadingSpinnerColor.primary / .brand   // or arbitrary hex via color prop
+LoadingSpinnerColor.primary / .prominent  // or arbitrary hex via color prop
 LoadingSpinnerSize.sm / .rg / .md / .xl  // 16px / 22px / 32px / 40px diameter
 WavyDividerVariant.high / .low
 ```
@@ -206,7 +206,7 @@ the 100% state must omit the track element.
 
 ```ts
 LoadingSpinnerColor.primary  → var(--ui-color-primary)
-LoadingSpinnerColor.brand    → var(--ui-color-brand)
+LoadingSpinnerColor.prominent    → var(--ui-color-prominent)
 <LoadingSpinner color="#e05252" />  // arbitrary hex passes through
 ```
 

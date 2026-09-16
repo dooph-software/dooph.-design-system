@@ -10,7 +10,7 @@ export type CheckboxChecked =
   (typeof CheckboxChecked)[keyof typeof CheckboxChecked];
 
 export const CheckboxVariant = {
-  brand: "brand",
+  prominent: "prominent",
   primary: "primary",
 } as const;
 export type CheckboxVariant =

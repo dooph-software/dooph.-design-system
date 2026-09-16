@@ -53,8 +53,8 @@ src/components/MyComponent/
 - [ ] No hardcoded hex colors or px values for shadows/radii
 - [ ] `style={{}}` only to carry a **caller-supplied or token-referencing** value that cannot be a class — a `color`/`fontSize` prop, or a `--ds-*` custom property the component's CSS reads (`BaseText`, `Slider*`). Never for a design value the component itself decided; that is a token. Merge a consumer's own `style` rather than replacing it
 - [ ] Theme-dependent behavior is expressed via `--ui-*` tokens and CSS classes/helpers, not runtime JS theme detection
-- [ ] Uses `rounded-tight`, `rounded-standard`, or `rounded-soft` for corner radius
-- [ ] Focus ring uses token-backed `ds-focus-*` outline helpers (`ds-focus-visible-ring`, `ds-focus-within-ring`, `ds-focus-ring-on-focus`) — not `shadow-focus-brand`/`shadow-focus-primary` in component class strings; use `border-border-focus`/`border-danger` alongside the ring where the focused border should change
+- [ ] Uses `rounded-tight`, `rounded-normal`, or `rounded-soft` for corner radius
+- [ ] Focus ring uses token-backed `ds-focus-*` outline helpers (`ds-focus-visible-ring`, `ds-focus-within-ring`, `ds-focus-ring-on-focus`) — not `shadow-focus-prominent`/`shadow-focus-primary` in component class strings; use `border-input-border-focus`/`border-danger` alongside the ring where the focused border should change
 - [ ] Radix ref types use `ComponentRef`, not deprecated `ElementRef`
 - [ ] Disabled state uses `ds-disabled-state` (for native + aria-disabled) or `ds-radix-data-disabled` (for Radix data-disabled)
 - [ ] Typography uses `text-style-*` composite utility classes

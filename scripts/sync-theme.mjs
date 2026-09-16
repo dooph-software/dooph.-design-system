@@ -44,15 +44,16 @@ const ALIASES = {
   // Foreground → fg shorthand
   "ui-color-primary-foreground": "color-primary-fg",
   "ui-color-secondary-foreground": "color-secondary-fg",
-  "ui-color-brand-foreground": "color-brand-fg",
-  "ui-color-error-foreground": "color-error-fg",
-  "ui-color-error-foreground-active": "color-error-fg-active",
+  "ui-color-prominent-foreground": "color-prominent-fg",
+  "ui-color-danger-foreground": "color-danger-fg",
+  "ui-color-danger-foreground-active": "color-danger-fg-active",
   "ui-color-ghost-foreground": "color-ghost-fg",
   "ui-color-ghost-foreground-active": "color-ghost-fg-active",
   "ui-color-selection-foreground": "color-selection-fg",
   // Brand identity colors live under non-standard css var names
-  "ui-brand-color": "color-brand-color",
-  "ui-brand-color-alt": "color-brand-color-alt",
+  "ui-prominent-color": "color-prominent-color",
+  "ui-prominent-color-alt": "color-prominent-color-alt",
+  "ui-prominent-color-ter": "color-prominent-color-ter",
 };
 
 // ── Tokens excluded from @theme (used only as raw var() refs or in @layer) ───
@@ -91,6 +92,12 @@ const EXCLUDED = new Set([
   "ui-slider-track-gap",
   "ui-width-slider-handle",
   "ui-height-slider-handle",
+  // Slider paints — raw var() inside .ds-slider-* helpers, never a utility
+  "ui-slider-track-primary-active-opacity",
+  "ui-slider-track-prominent-active-opacity",
+  "ui-color-slider-step-primary-active",
+  "ui-color-slider-step-prominent-active",
+  "ui-color-slider-step-inactive",
   // Checkbox / code digit — exposed via custom @layer utilities
   "ui-size-checkbox",
   "ui-size-code-digit",
@@ -136,9 +143,9 @@ const EXCLUDED = new Set([
   // Opacity — used as var() in arbitrary Tailwind values
   "ui-opacity-disabled",
   // Focus ring colors — only used inside shadow values
-  "ui-color-focus-ring-brand",
+  "ui-color-focus-ring-prominent",
   "ui-color-focus-ring-primary",
-  "ui-color-focus-ring-error",
+  "ui-color-focus-ring-danger",
 ]);
 
 // ── Derive the @theme key for a given --ui-* variable name ───────────────────
@@ -206,8 +213,8 @@ const entries = vars.map(toThemeEntry).filter(Boolean);
 
 // Computed entries that can't be derived from token names alone
 const COMPUTED = [
-  "/* Focus ring with error */",
-  "--shadow-focus-error: 0 0 0 4px var(--ui-color-focus-ring-error);",
+  "/* Focus ring with danger */",
+  "--shadow-focus-danger: 0 0 0 4px var(--ui-color-focus-ring-danger);",
 ];
 
 const generated = [
@@ -249,7 +256,7 @@ writeFileSync(INDEX_PATH, indexCss, "utf8");
 // ── Emit the standalone consumer preset: src/styles/theme.css ─────────────────
 // Apps that run their OWN Tailwind v4 build import this file so that THEIR
 // Tailwind learns the dooph token namespace. Without it, classes the app writes
-// itself (p-md, gap-sm, rounded-standard, font-label, …) are never generated —
+// itself (p-md, gap-sm, rounded-normal, font-label, …) are never generated —
 // they only exist in dist/styles.css for the exact classes dooph components use —
 // and same-named Tailwind defaults (font-sans, etc.) silently win. Importing this
 // makes every dooph utility resolvable in the app build and overrides colliding
@@ -268,7 +275,7 @@ const themePreset = [
   ' *   @import "@dooph-software/design-system/theme.css";',
   " *",
   " * This registers every --ui-* token in your Tailwind build so utilities like",
-  " * p-md, gap-sm, rounded-standard, font-label and bg-primary all generate and",
+  " * p-md, gap-sm, rounded-normal, font-label and bg-primary all generate and",
   " * resolve to design-system tokens. Token VALUES still come from styles.css at",
   " * runtime (these are `inline` var() references), so overriding --ui-* in your",
   " * own CSS keeps working. Apps that do not use Tailwind can ignore this file.",

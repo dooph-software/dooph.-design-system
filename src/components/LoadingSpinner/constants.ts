@@ -15,7 +15,7 @@ export type LoadingSpinnerVariant =
 
 export const LoadingSpinnerColor = {
   primary: "primary",
-  brand: "brand",
+  prominent: "prominent",
 } as const;
 export type LoadingSpinnerColor =
   (typeof LoadingSpinnerColor)[keyof typeof LoadingSpinnerColor];

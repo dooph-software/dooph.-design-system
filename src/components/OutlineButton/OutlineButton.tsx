@@ -31,9 +31,9 @@ type OutlineButtonOwnProps = {
    * the cursor around the interior of the button.
    */
   glowing?: boolean;
-  /** Background color for the left / larger orb. Defaults to `var(--ui-brand-color-alt)`. */
+  /** Background color for the left / larger orb. Defaults to `var(--ui-prominent-color-alt)`. */
   glowColor1?: string;
-  /** Background color for the right / smaller orb. Defaults to `var(--ui-brand-color-alt)`. */
+  /** Background color for the right / smaller orb. Defaults to `var(--ui-prominent-color-alt)`. */
   glowColor2?: string;
 };
 
@@ -130,8 +130,8 @@ const OutlineButtonBase = forwardRef<
       el.style.setProperty("--gy", "0.5");
     }, [glowing]);
 
-    const color1 = glowColor1 ?? "var(--ui-brand-color-alt)";
-    const color2 = glowColor2 ?? "var(--ui-brand-color-alt)";
+    const color1 = glowColor1 ?? "var(--ui-prominent-color-alt)";
+    const color2 = glowColor2 ?? "var(--ui-prominent-color-alt)";
 
     // Shared classes that disable the glow when the button itself is disabled
     const disabledGlowClass = cn(

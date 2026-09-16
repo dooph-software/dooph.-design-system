@@ -27,7 +27,7 @@ import {
 
 const COLOR_TOKENS: Record<LoadingSpinnerColor, string> = {
   primary: "var(--ui-color-primary)",
-  brand: "var(--ui-color-brand)",
+  prominent: "var(--ui-color-prominent)",
 };
 
 /** Preset color aliases resolve to design tokens; arbitrary strings pass through. */
@@ -282,7 +282,7 @@ function SpokesSpinner({
  *
  * ```tsx
  * <LoadingSpinner />
- * <LoadingSpinner variant={LoadingSpinnerVariant.spokes} color={LoadingSpinnerColor.brand} />
+ * <LoadingSpinner variant={LoadingSpinnerVariant.spokes} color={LoadingSpinnerColor.prominent} />
  * <LoadingSpinner size={LoadingSpinnerSize.md} color="#a3c2d1" />
  * ```
  */

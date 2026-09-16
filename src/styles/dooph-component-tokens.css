@@ -33,7 +33,7 @@
   }
 
   .ds-shape-button-focus-visible:focus-visible {
-    outline: 2px solid var(--ui-color-focus-ring-brand);
+    outline: 2px solid var(--ui-color-focus-ring-prominent);
     outline-offset: 2px;
   }
 
@@ -64,7 +64,7 @@
   .ds-focus-visible-ring:focus-visible:not(:disabled):not([data-disabled]):not(
       [aria-disabled="true"]
     ) {
-    outline-color: var(--ui-color-focus-ring-brand);
+    outline-color: var(--ui-color-focus-ring-prominent);
   }
 
   .ds-focus-within-ring {
@@ -73,7 +73,7 @@
   }
 
   .ds-focus-within-ring:focus-within {
-    outline-color: var(--ui-color-focus-ring-brand);
+    outline-color: var(--ui-color-focus-ring-prominent);
   }
 
   .ds-focus-ring-on-focus {
@@ -82,15 +82,15 @@
   }
 
   .ds-focus-ring-on-focus:focus {
-    outline-color: var(--ui-color-focus-ring-brand);
+    outline-color: var(--ui-color-focus-ring-prominent);
   }
 
-  .ds-focus-ring-error-on-focus:focus {
-    outline-color: var(--ui-color-focus-ring-error);
+  .ds-focus-ring-danger-on-focus:focus {
+    outline-color: var(--ui-color-focus-ring-danger);
   }
 
   .ds-focus-ring {
-    outline: 4px solid var(--ui-color-focus-ring-brand);
+    outline: 4px solid var(--ui-color-focus-ring-prominent);
     outline-offset: 0;
   }
 
@@ -103,7 +103,7 @@
   }
 
   .ds-focus-ring-on-open[data-state="open"] {
-    outline-color: var(--ui-color-focus-ring-brand);
+    outline-color: var(--ui-color-focus-ring-prominent);
   }
 
   /* Active slider track — the handle color at 45% (Figma applies alpha on top).
@@ -111,7 +111,8 @@
   .ds-slider-fill {
     background-color: color-mix(
       in srgb,
-      var(--ds-slider-color, var(--ui-color-primary)) 45%,
+      var(--ds-slider-color, var(--ui-color-primary))
+        var(--ds-slider-track-opacity, var(--ui-slider-track-primary-active-opacity)),
       transparent
     );
   }
@@ -135,11 +136,20 @@
    * compose with generated utilities, so pairing one with a class defined here
    * silently produced no rule and every dot stayed the inactive tone. */
   .ds-slider-dot {
-    background-color: var(--ui-color-secondary-border);
+    background-color: var(--ui-color-slider-step-inactive);
   }
 
+  /* The active dot is a flat token, not a mix of --ds-slider-color: Figma
+   * composes it from the CONTENT paint, because it is the mark read ON the
+   * filled track rather than part of the fill. A plain attribute selector, NOT
+   * a `data-[active]:` Tailwind variant — a variant only composes with
+   * generated utilities, and pairing one with a class defined here emits no
+   * rule at all. That bug shipped once already. */
   .ds-slider-dot[data-active] {
-    background-color: color-mix(in srgb, var(--ui-color-text) 40%, transparent);
+    background-color: var(
+      --ds-slider-step-active,
+      var(--ui-color-slider-step-primary-active)
+    );
   }
 
   /* Stepped slider settling onto a dot after the pointer is released. The handle

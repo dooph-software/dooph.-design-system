@@ -98,7 +98,7 @@ export const PreRolledSection: Story = {
           ref={groupRef}
         />
         {hasError ? (
-          <LabelText className="text-error-primary">
+          <LabelText className="text-danger-primary">
             That code is incorrect. Try again.
           </LabelText>
         ) : null}

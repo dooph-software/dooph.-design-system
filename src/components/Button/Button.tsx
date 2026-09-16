@@ -4,20 +4,21 @@
  * ## behavior
  * - `variant` + `size` map through `buttonVariants` (cva) onto token-backed
  *   Tailwind utilities; `asChild` swaps the root for Radix `Slot`.
- * - Disabled styling paints explicit disabled bg/border tokens (primary and
- *   danger alias secondary-disabled by default) plus `ds-disabled-state`
- *   opacity — not opacity alone.
+ * - Disabled styling paints each variant's own explicit disabled bg/border
+ *   tokens (primary, prominent and danger all alias secondary-disabled by
+ *   default) plus `ds-disabled-state` opacity — not opacity alone.
  *
  * ## constraints
- * - The `danger` variant paints the `--ui-color-error-*` STATE family
- *   (bg-error / border-error-border / text-error-fg / ...), not the raw
- *   `--ui-color-error-primary`/`-secondary` palette it used to reach for
- *   directly. Those two are still the raw paints, and the state family aliases
- *   them — the indirection is the point: a consumer can retune the danger
- *   button without dragging every other error-tinted surface along. Do not
- *   collapse it back to the raw tokens, and do not add `--ui-color-danger*` as
- *   a third spelling of the same thing.
- * - Keep `ButtonVariant.brand` in the API even if icon stories omit it.
+ * - The `danger` variant paints the `--ui-color-danger-*` STATE family
+ *   (bg-danger / border-danger-border / text-danger-fg / ...), not the raw
+ *   `--ui-color-danger-primary`/`-secondary` palette. Those two are still the
+ *   raw paints and the state family aliases them — the indirection is the
+ *   point: a consumer can retune the danger button without dragging every
+ *   other danger-tinted surface along. Do not collapse it back to the raw
+ *   tokens.
+ * - `prominent` was called `brand` before 5.4, in both the variant key and the
+ *   token family (`--ui-color-brand-*`). Neither spelling survives.
+ * - Keep `ButtonVariant.prominent` in the API even if icon stories omit it.
  */
 "use client";
 
@@ -57,17 +58,17 @@ const buttonVariants = cva(
           "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active [&:not(:disabled):not([aria-disabled=true])]:active:border-secondary-border-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
           "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled aria-disabled:bg-secondary-disabled aria-disabled:border-secondary-border-disabled",
         ],
-        brand: [
-          "bg-brand text-brand-fg border-brand-border shadow-button",
-          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-brand-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-brand-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
-          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-brand-active [&:not(:disabled):not([aria-disabled=true])]:active:border-brand-border-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
-          "disabled:bg-primary-disabled disabled:border-primary-border-disabled disabled:text-secondary-fg aria-disabled:bg-primary-disabled aria-disabled:border-primary-border-disabled aria-disabled:text-secondary-fg",
+        prominent: [
+          "bg-prominent text-prominent-fg border-prominent-border shadow-button",
+          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-prominent-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-prominent-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
+          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-prominent-active [&:not(:disabled):not([aria-disabled=true])]:active:border-prominent-border-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
+          "disabled:bg-prominent-disabled disabled:border-prominent-border-disabled disabled:text-secondary-fg aria-disabled:bg-prominent-disabled aria-disabled:border-prominent-border-disabled aria-disabled:text-secondary-fg",
         ],
         danger: [
-          "bg-error text-error-fg border-error-border shadow-button-secondary",
-          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-error-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-error-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:text-error-fg-active [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
-          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-error-active [&:not(:disabled):not([aria-disabled=true])]:active:border-error-border-active [&:not(:disabled):not([aria-disabled=true])]:active:text-error-fg-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
-          "disabled:bg-error-disabled disabled:border-error-border-disabled disabled:text-secondary-fg aria-disabled:bg-error-disabled aria-disabled:border-error-border-disabled aria-disabled:text-secondary-fg",
+          "bg-danger text-danger-fg border-danger-border shadow-button-secondary",
+          "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-danger-hover [&:not(:disabled):not([aria-disabled=true])]:hover:border-danger-border-hover [&:not(:disabled):not([aria-disabled=true])]:hover:text-danger-fg-active [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-hover",
+          "[&:not(:disabled):not([aria-disabled=true])]:active:bg-danger-active [&:not(:disabled):not([aria-disabled=true])]:active:border-danger-border-active [&:not(:disabled):not([aria-disabled=true])]:active:text-danger-fg-active [&:not(:disabled):not([aria-disabled=true])]:active:shadow-button-active",
+          "disabled:bg-danger-disabled disabled:border-danger-border-disabled disabled:text-secondary-fg aria-disabled:bg-danger-disabled aria-disabled:border-danger-border-disabled aria-disabled:text-secondary-fg",
         ],
         ghost: [
           "text-ghost-fg border-transparent",

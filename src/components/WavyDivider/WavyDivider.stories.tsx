@@ -65,7 +65,7 @@ export const Variants: Story = {
   render: () => (
     <div className="flex w-80 flex-col gap-4">
       <WavyDivider variant={WavyDividerVariant.high} className="text-primary" />
-      <WavyDivider variant={WavyDividerVariant.high} className="text-brand" />
+      <WavyDivider variant={WavyDividerVariant.high} className="text-prominent" />
       <WavyDivider variant={WavyDividerVariant.high} className="text-border" />
       <WavyDivider
         variant={WavyDividerVariant.low}
@@ -77,7 +77,7 @@ export const Variants: Story = {
 
 export const InContext: Story = {
   render: () => (
-    <div className="flex w-80 flex-col gap-4 rounded-standard border border-border-primary bg-surface-primary p-5">
+    <div className="flex w-80 flex-col gap-4 rounded-normal border border-border-primary bg-surface-primary p-5">
       <p className="text-style-body text-text">
         Above the divider — some content goes here.
       </p>

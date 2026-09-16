@@ -12,6 +12,7 @@ import {
 import { cn } from '../../utils/cn';
 import { resolveDsColor, type DsColor } from '../../utils/color';
 import { LabelText } from '../Text';
+import { SliderVariant } from './constants';
 
 type RootProps = ComponentPropsWithoutRef<typeof SliderPrimitive.Root>;
 
@@ -20,13 +21,63 @@ type RootProps = ComponentPropsWithoutRef<typeof SliderPrimitive.Root>;
 type RootKeyboardEvent = Parameters<NonNullable<RootProps['onKeyDown']>>[0];
 type RootPointerEvent = Parameters<NonNullable<RootProps['onPointerDown']>>[0];
 
-export interface SliderProps extends RootProps {
-  /** Handle color, and the active track at 45% of it. Accepts a DS token name
-   * ('primary', 'brand', 'text') or any CSS color. Defaults to the primary token. */
-  color?: DsColor;
-}
+/* Paints, split so `custom` can REQUIRE `color` at the type level. Same shape
+ * as CalendarProps: a discriminated union on the variant, so the compiler
+ * rejects the invalid combination before it can ever reach the runtime guard. */
+type SliderPaintProps =
+  | {
+      /** Paint bundle: default hue, active track opacity, active step colour. */
+      variant?: typeof SliderVariant.primary | typeof SliderVariant.prominent;
+      /** Overrides the bundle's HUE — the handle, and the active track tinted
+       * from it at the bundle's opacity. A DS token name or any CSS color. */
+      color?: DsColor;
+      /** Overrides the bundle's active STEP DOT. A DS token name or any CSS
+       * color. Only visible on a stepped slider. */
+      stepColor?: DsColor;
+    }
+  | {
+      variant: typeof SliderVariant.custom;
+      /** REQUIRED for `custom`, which has no hue of its own. */
+      color: DsColor;
+      stepColor?: DsColor;
+    };
 
-const DEFAULT_COLOR = 'var(--ui-color-primary)';
+export type SliderProps = RootProps & SliderPaintProps;
+
+/* Figma tunes three paints together per variant, and they are not derivable
+ * from one another: the track is the variant's own hue at a variant-specific
+ * alpha, while the step dot is composed from the CONTENT paint so it stays
+ * legible ON the filled track. Hence a bundle rather than one colour.
+ *
+ * `--ds-slider-track-opacity` and `--ds-slider-step-active` are read by
+ * `.ds-slider-fill` and `.ds-slider-dot[data-active]`; both fall back to the
+ * primary tokens, so the helper classes still render correctly if they are ever
+ * applied outside this component. */
+const VARIANT_PAINTS = {
+  primary: {
+    color: 'var(--ui-color-primary)',
+    trackOpacity: 'var(--ui-slider-track-primary-active-opacity)',
+    stepActive: 'var(--ui-color-slider-step-primary-active)',
+  },
+  prominent: {
+    color: 'var(--ui-color-prominent)',
+    trackOpacity: 'var(--ui-slider-track-prominent-active-opacity)',
+    stepActive: 'var(--ui-color-slider-step-prominent-active)',
+  },
+  /* `custom` owns no hue — `color` is required and supplies it. The opacity and
+   * step colour fall back to primary's so a slider given only `color` still has
+   * sane geometry; pass `stepColor` to complete the palette. `color` here is
+   * unreachable in practice (the guard below rejects the omission) and exists
+   * only so the fallback argument to resolveDsColor is never undefined. */
+  custom: {
+    color: 'var(--ui-color-primary)',
+    trackOpacity: 'var(--ui-slider-track-primary-active-opacity)',
+    stepActive: 'var(--ui-color-slider-step-primary-active)',
+  },
+} satisfies Record<
+  SliderVariant,
+  { color: string; trackOpacity: string; stepActive: string }
+>;
 
 /* Radix quantizes the value to `step`, so a stepped slider dragged at its real
  * step lurches from dot to dot. We hand Radix a much finer step during drag so
@@ -48,7 +99,13 @@ const pctOf = (v: number, min: number, max: number) =>
 const thumbAlignedLeft = (percent: number) =>
   `calc(${percent} / 100 * (100% - var(--ui-width-slider-handle)) + var(--ui-width-slider-handle) / 2)`;
 
-interface SliderBaseProps extends SliderProps {
+/* SliderBase takes the WIDENED shape: the union is the public contract, but
+ * narrowing it inside the implementation would mean branching on the variant
+ * just to read props every branch shares. */
+interface SliderBaseProps extends RootProps {
+  variant?: SliderVariant;
+  color?: DsColor;
+  stepColor?: DsColor;
   showSteps?: boolean;
 }
 
@@ -61,6 +118,8 @@ const SliderBase = forwardRef<
       className,
       style,
       color,
+      stepColor,
+      variant = SliderVariant.primary,
       showSteps = false,
       min = 0,
       max = 100,
@@ -220,6 +279,22 @@ const SliderBase = forwardRef<
           )
         : [];
 
+    /* Unconditional, matching ProgressIndicator's guard on an out-of-range
+     * `progress`: `custom` with no hue cannot render anything meaningful, and
+     * silently falling back to primary would make an explicit choice look like
+     * it had been honoured. TypeScript already rejects this combination — the
+     * throw is for JavaScript consumers and for a `variant` computed at run
+     * time, where the union cannot help. */
+    if (variant === SliderVariant.custom && !color) {
+      throw new Error(
+        '[Slider] variant="custom" has no palette of its own and requires a ' +
+          '`color` prop (and optionally `stepColor`). Use ' +
+          'variant="primary" or variant="prominent" for the built-in palettes.',
+      );
+    }
+
+    const paints = VARIANT_PAINTS[variant as SliderVariant];
+
     return (
       /* The outer box owns the width; on the stepped slider its horizontal
        * padding is what pulls the end dots off the ends of the track. Radix maps
@@ -255,7 +330,12 @@ const SliderBase = forwardRef<
             {
               ...style,
               '--slider-pct': pct,
-              '--ds-slider-color': resolveDsColor(color, DEFAULT_COLOR),
+              '--ds-slider-color': resolveDsColor(color, paints.color),
+              '--ds-slider-track-opacity': paints.trackOpacity,
+              '--ds-slider-step-active': resolveDsColor(
+                stepColor,
+                paints.stepActive,
+              ),
               '--ds-slider-pad': showSteps ? 'var(--ui-spacing-xs)' : '0px',
             } as CSSProperties
           }
@@ -344,10 +424,13 @@ const SliderStepped = forwardRef<
 >((props, ref) => <SliderBase ref={ref} showSteps {...props} />);
 SliderStepped.displayName = 'SliderStepped';
 
-export interface SliderLabeledProps extends SliderProps {
+/* A type alias, not an interface: an interface cannot extend a union, and
+ * SliderProps is one. The intersection distributes over both arms, so `custom`
+ * still requires `color` here too. */
+export type SliderLabeledProps = SliderProps & {
   stepped?: boolean;
   labels: { start: string; end: string };
-}
+};
 
 const SliderLabeled = forwardRef<
   ComponentRef<typeof SliderPrimitive.Root>,

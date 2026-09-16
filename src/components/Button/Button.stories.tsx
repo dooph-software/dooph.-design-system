@@ -32,7 +32,7 @@ export const Secondary: Story = {
   args: { children: "Button", variant: ButtonVariant.secondary },
 };
 export const Brand: Story = {
-  args: { children: "Button", variant: ButtonVariant.brand },
+  args: { children: "Button", variant: ButtonVariant.prominent },
 };
 export const Danger: Story = {
   args: { children: "Button", variant: ButtonVariant.danger },

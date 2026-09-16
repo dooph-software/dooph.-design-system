@@ -90,7 +90,7 @@ export const AnimatedDemo: Story = {
             <LabelText>Brand - Animated</LabelText>
             <LabelText className="text-text-tertiary">{value}%</LabelText>
           </div>
-          <LinearProgressIndicator color="brand" value={value} max={100} />
+          <LinearProgressIndicator color="prominent" value={value} max={100} />
         </div>
       </div>
     );
@@ -106,7 +106,7 @@ export const CustomWidth: Story = {
       </div>
       <div className="flex w-96 flex-col gap-2">
         <LabelText>Medium (384px)</LabelText>
-        <LinearProgressIndicator color="brand" value={60} max={100} />
+        <LinearProgressIndicator color="prominent" value={60} max={100} />
       </div>
       <div className="flex w-full flex-col gap-2">
         <LabelText>Full width</LabelText>

@@ -14,14 +14,21 @@ it deliberately refuses to guess at.
 wrong colour or the wrong glyph on screen. Run the codemod even if the app
 compiles.
 
+> Coming from v4 and landing on **5.4 or later**? Do this migration first, then
+> the 5.4 token renames — `--ui-color-brand*` → `--ui-color-prominent*`,
+> `--ui-color-error*` → `--ui-color-danger*`, `--ui-color-page-background` →
+> `--ui-color-surface-page`, `--ui-radius-standard` → `--ui-radius-normal`, and
+> `--ui-color-border-focus` / `--ui-color-trigger-border-*` →
+> `--ui-color-input-border-*` — plus `ButtonVariant.brand` → `.prominent`.
+
 ## Run the codemod first
 
 ```bash
 node node_modules/@dooph-software/design-system/skills/dooph-design-system-v5-migration/codemod.mjs ./src
 ```
 
-Dry run by default; add `--write` to apply the renames. It exits `1` while any
-danger-palette usage remains, so it works as a CI gate.
+Dry run by default; add `--write` to apply the renames. It works as a CI gate;
+the danger-palette list it prints is advisory (see §2).
 
 ## 1. Icon renames — auto-applied
 
@@ -37,33 +44,37 @@ you. The codemod points it at `BarChartAxesIcon`, which is the v4 glyph.
 If you actually want v5's new axis-less chart somewhere, put `BarChartIcon`
 back at that call site afterwards.
 
-## 2. The danger palette — needs a decision, not a rename
+## 2. The danger palette — a redesign, not a rename
 
-All nine `--ui-color-danger*` tokens are gone, along with the Tailwind classes
-they generated (`bg-danger`, `text-danger-fg`, `border-danger-border`, and the
-`-hover` / `-active` / `-disabled` variants).
+> **Landing on 5.4 or later? Read this as a design note, not a rename task.**
+> v5 deleted all nine `--ui-color-danger*` tokens; **5.4 brought the entire
+> family back under the same v4 names**, so your overrides once again land in
+> real slots. The codemod still lists every occurrence, but only so you can
+> eyeball them — it no longer fails the run.
 
-Both failure modes are silent: overriding a token that no longer exists does
-nothing, and a class with no rule behind it produces no styling.
+`ButtonVariant.danger` was **redesigned** between v4 and v5 and has stayed that
+way. v4 was a solid red button. Today it is a secondary surface carrying
+danger-coloured text, which fills with danger colour on hover and active.
 
-`ButtonVariant.danger` still exists and still works — it was **redesigned**.
-v4 was a solid red button. v5 is a secondary surface carrying error-coloured
-text, which fills with error colour on hover and active. So the old tokens have
-no one-to-one replacement, and the codemod reports every occurrence with
-`file:line` rather than mapping them.
+The tokens survived that change in name only — what moved is what they default
+to:
 
-Retune the button through these instead:
+| Token | Default in 5.4 | Role in the danger button |
+|---|---|---|
+| `--ui-color-danger` / `-border` / `-disabled` / `-border-disabled` | alias the **secondary** family | the surface and border it rests on |
+| `--ui-color-danger-hover` / `-border-hover` | alias `--ui-color-danger-secondary` | the hover fill |
+| `--ui-color-danger-active` / `-border-active` / `-foreground` | alias `--ui-color-danger-primary` | the active fill, and the resting text colour |
+| `--ui-color-danger-foreground-active` | aliases `--ui-color-secondary-foreground` | the label once the button is filled |
 
-| Token | Role in v5's danger button |
-|---|---|
-| `--ui-color-error-primary` | resting text colour, and the active fill |
-| `--ui-color-error-secondary` | the hover fill |
-| `--ui-color-secondary*` | the surface and border it sits on |
+So a v4 override still applies — but it is pinning one step of a design that no
+longer looks the way it did. Go through each one, decide whether you still want
+it, then look at the result.
 
-For your own markup, the nearest utilities are `bg-error-primary`,
-`text-error-primary`, `border-error-primary`. There is no equivalent for
-`*-danger-fg`, `*-danger-disabled` or the `*-danger-border-*` trio — decide
-those against the two-colour model rather than mapping them across.
+To move every danger-tinted surface at once, override the two raw paints
+(`--ui-color-danger-primary`, `--ui-color-danger-secondary`) instead; the state
+family follows. For your own markup the full utility set is back: `bg-danger`,
+`text-danger-fg`, `border-danger-border` and the `-hover` / `-active` /
+`-disabled` variants, alongside `bg-danger-primary` / `text-danger-primary`.
 
 ## 3. Verify
 
@@ -71,6 +82,9 @@ those against the two-colour model rather than mapping them across.
 node .../codemod.mjs ./src          # must exit 0
 npx tsc --noEmit                    # must pass
 ```
+
+On 5.4+ the codemod exits 0 once the icon renames are applied; the danger list
+it prints is advisory.
 
 Then look at one danger button and one bar-chart icon in a browser. Both
 failures in this migration are visual, so the build passing proves nothing about

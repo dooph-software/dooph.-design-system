@@ -4,15 +4,19 @@
  *
  * Two jobs, deliberately separated:
  *   AUTO   — pure renames, identical rendering. Applied with --write.
- *   REPORT — the danger palette, which was redesigned rather than renamed.
- *            There is no correct mechanical mapping, so this script refuses to
- *            guess and prints file:line for a human instead.
+ *   REPORT — the danger palette, whose DEFAULTS were redesigned. It is not a
+ *            rename, so this script refuses to guess and prints file:line for a
+ *            human to eyeball instead.
  *
  * Usage:
  *   node codemod.mjs [dir]            # dry run, prints everything
  *   node codemod.mjs [dir] --write    # apply the AUTO renames
  *
- * Exit 1 while any REPORT item remains, so CI can gate on it.
+ * The danger report is ADVISORY and does not fail the run: 5.4 reinstated every
+ * --ui-color-danger* token under its v4 name, so a v4 override once again lands
+ * in a real slot, and gating CI on its mere presence would fail correct code.
+ * What changed is what those slots DEFAULT to — a visual check, which no exit
+ * code can stand in for.
  */
 import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
@@ -37,9 +41,9 @@ const RENAMES = {
   BarChartIcon: "BarChartAxesIcon",
 };
 
-/* Removed in v5. `ButtonVariant.danger` is now a secondary-surface button with
- * error-coloured text that fills on hover, not a solid red one — so these have
- * no one-to-one replacement. */
+/* Removed in v5, reinstated in 5.4 under the SAME names. `ButtonVariant.danger`
+ * is a secondary-surface button with danger-coloured text that fills on hover,
+ * not v4's solid red one — so the slots line up but their defaults do not. */
 const DANGER_TOKEN = /--ui-color-danger(?:-[a-z-]+)?/g;
 const DANGER_CLASS =
   /(?<![\w-])(?:[a-z-]+:)*(?:bg|text|border|ring|outline|fill|stroke|from|via|to)-danger(?:-[a-z]+)*(?![\w-])/g;
@@ -109,7 +113,7 @@ for (const r of renamed) {
   console.log(`  ${r.file}  ${r.from} -> ${r.to}  (${plural(r.count, "use")})`);
 }
 
-console.log("\n== NEEDS A HUMAN: the danger palette was redesigned ==");
+console.log("\n== WORTH A LOOK: the danger palette was redesigned ==");
 if (!manual.length) {
   console.log("  none found");
 } else {
@@ -117,23 +121,24 @@ if (!manual.length) {
     console.log(`  ${m.file}:${m.line}  [${m.kind}]  ${m.text}`);
   }
   console.log(`
-  The nine --ui-color-danger* tokens are gone, and so are the Tailwind classes
-  they generated. Overriding a token that no longer exists fails SILENTLY, and a
-  removed utility class produces no rule at all.
+  These tokens and classes EXIST again as of 5.4, under their v4 names — v5
+  removed them and 5.4 brought the whole family back. So nothing here is
+  broken, and this list is advisory rather than a failure.
 
-  v5's danger button is a secondary surface with error-coloured text that fills
-  on hover/active. Retune it through:
-    --ui-color-error-primary     the resting text colour and the active fill
-    --ui-color-error-secondary   the hover fill
-    --ui-color-secondary*        the surface and border it sits on
+  What changed is the DEFAULTS. v4's danger button was solid red; today's is a
+  secondary surface carrying danger-coloured text that fills on hover/active,
+  and every --ui-color-danger* token now defaults to an alias expressing that:
+    --ui-color-danger / -border / -disabled   alias the SECONDARY family
+    --ui-color-danger-hover                   aliases --ui-color-danger-secondary
+    --ui-color-danger-active / -foreground    alias --ui-color-danger-primary
 
-  For your own markup, the nearest equivalents are bg-error-primary /
-  text-error-primary / border-error-primary. There is no replacement for
-  *-danger-fg, *-danger-disabled, or the *-danger-border-* trio; decide those
-  against the new two-colour model rather than mapping them one to one.`);
+  A v4 override therefore still lands in a real slot, but it is pinning one
+  step of a design that no longer looks the way it did. Open each occurrence
+  above, decide whether the override is still what you want, and check the
+  result in a browser.`);
 }
 
 if (!WRITE && renamed.length) {
   console.log("\nRe-run with --write to apply the renames.");
 }
-process.exit(manual.length ? 1 : 0);
+process.exit(0);

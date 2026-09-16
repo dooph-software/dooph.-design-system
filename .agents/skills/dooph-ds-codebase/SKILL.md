@@ -36,6 +36,12 @@ src/
     dooph-component-tokens.css ← @layer utilities: ds-* helpers (spacing, disabled states, radix origin)
     theme.css                 ← GENERATED preset (sync-theme.mjs): standalone @theme inline block shipped as ./theme.css for consumer Tailwind builds. Do not hand-edit.
   components/
+    AnimatedText/               ← the six animating text WRAPPERS: ShimmerText,
+                                  RollHoverText, RollChangeText, RevealChangeText,
+                                  RollingDigitsText (+ rollingDigitsModel.ts),
+                                  UnderlineLinkText; constants.ts holds
+                                  RollDirection/RevealDirection. One merged
+                                  AnimatedText.stories.tsx covers all six.
     Avatar/
     Button/
     CTAButton/                  ← padded-outline marketing CTA; CTAButtonVariant/Size
@@ -68,10 +74,7 @@ src/
     Table/
     Tabs/
     Text/                       ← BaseText + 8 roles, constants.ts (Fonts/FontSizes/
-                                  FontWeights/Tracking/FontAxes), textStyle.ts;
-                                  ShimmerText, RollChangeText, RollHoverText,
-                                  RevealChangeText, UnderlineLinkText,
-                                  RollingDigitsText + rollingDigitsModel.ts
+                                  FontWeights/Tracking/FontAxes), textStyle.ts
     TextLink/                   ← anchor-styled body text
     Toast/
     Toggle/
@@ -85,12 +88,14 @@ src/
 skills/                       ← distributed skills for consuming projects (NOT this repo's maintenance); shipped via npm + init-skills
   dooph-design-system-usage/  ← consumer skill: build UI with components/tokens (replaces old orientation + composition)
   dooph-design-system-theming/← consumer skill: install, fonts, dark mode, theme.css preset, rebranding
-  dooph-design-system-v3-migration/← consumer skill: one-time v2→v3 breaking-rename sweep (destructive→danger, border/surface split, brand-color)
+  dooph-design-system-v3-migration/← consumer skill: one-time v2→v3 breaking-rename sweep (destructive→danger, border/surface split, logo→identity pair)
+  dooph-design-system-v5-migration/← consumer skill: one-time v4→v5 upgrade (icon renames + the danger-button redesign) with a codemod
 .agents/skills/               ← authoring-side skills for this repo (canonical source)
   dooph-ds-architecture/      ← architecture rules skill
   dooph-ds-codebase/          ← this file
   dooph-ds-contribution/      ← contribution guide skill
   dooph-ds-loading-indicators/← loading indicator component skill
+  dooph-ds-writing-version-migrations/← how to author/update the shipped vN-migration skills (majors only)
   radix-ui-design-system/     ← Radix UI patterns skill
 .claude/skills/               ← Claude-specific skill directory
   dooph-ds-architecture  →    symlink → ../../.agents/skills/dooph-ds-architecture
@@ -127,11 +132,11 @@ and a label-only hover response driven by `RollHoverText` under an ancestor
 `.group`. Its geometry lives in the `--ui-*-cta-*` tokens. Module is **neutral**
 (no `"use client"`) — it holds no state.
 
-`ButtonVariant` (v3): `primary`\|`secondary`\|`brand`\|`danger`\|`ghost`\|`text` — `danger` replaces the removed `destructive` key. `ButtonSize` (v3): `default`\|`sm`\|`icon`\|`icon-sm`\|`icon-micro` (`ButtonSize.iconMicro`, backs `--ui-height-button-micro` via `size-button-micro`).
+`ButtonVariant`: `primary`\|`secondary`\|`prominent`\|`danger`\|`ghost`\|`text` — `danger` replaced `destructive` in v3, and `prominent` replaced `brand` in 5.4. `ButtonSize` (v3): `default`\|`sm`\|`icon`\|`icon-sm`\|`icon-micro` (`ButtonSize.iconMicro`, backs `--ui-height-button-micro` via `size-button-micro`).
 
 `Shapes/` (`src/components/Shapes/`): `ArrowShape`, `CapsuleShape`, `CloverShape`, `CookieShape`, `DiamondShape`, `DoubleShape`, `PentagonShape`, `PixircleShape`, `PuffShape`, `SquircleShape`, `StarShape`, `TripleShape` — plain SVG shape primitives (`size`, `strokeColor`, `fillColor`, `strokeWeight` props), each one `<path d>` lifted verbatim from the Figma export kept alongside in `Shapes/svgs/`. `GemShape` was REMOVED in 5.4; do not reintroduce it. `Shapes` const (from `Shapes/index.ts`) enumerates the same twelve keys and types the shared `Shapes` type.
 
-`ShapeButtons` (from `ShapeButton/constants.ts`) is the dot-accessible const consumers pass to `ShapeButton shape=`. It is a deliberate **subset** — `clover`\|`cookie`\|`diamond`\|`puff`\|`squircle`, the five the Figma ShapeButton component offers — held honest by `satisfies Record<string, Shapes>`. `ShapeButtonVariant` (`brand`\|`primary`, default `brand`) picks the colour family; the shape span spends `currentColor` on the fill, so the icon slot's colour is set on the button ROOT instead. Figma's per-variant button SVGs are flattened shape+icon exports and are not the source of truth — the button always renders the real `Shapes/` primitive.
+`ShapeButtons` (from `ShapeButton/constants.ts`) is the dot-accessible const consumers pass to `ShapeButton shape=`. It is a deliberate **subset** — `clover`\|`cookie`\|`diamond`\|`puff`\|`squircle`, the five the Figma ShapeButton component offers — held honest by `satisfies Record<string, Shapes>`. `ShapeButtonVariant` (`prominent`\|`primary`, default `prominent`) picks the colour family; the shape span spends `currentColor` on the fill, so the icon slot's colour is set on the button ROOT instead. Figma's per-variant button SVGs are flattened shape+icon exports and are not the source of truth — the button always renders the real `Shapes/` primitive.
 
 ### Input / control family
 
@@ -229,9 +234,36 @@ never deep-imports a sibling.
 | `SliderStepped`    | same                | same                      | `SliderBase` with `showSteps={true}`; step dots (`ds-slider-dot`, `[data-active]` for the filled side) |
 | `SliderLabeled`    | same                | same                      | wraps either in a column with `labels: { start, end }` rendered as `LabelText` below the track; optional `stepped` bool |
 
-`color` (token name or any CSS color, default `primary`) paints the handle solid
-and the active fill at 45% via `.ds-slider-fill` reading `--ds-slider-color`.
-There is no `SliderVariant` — it was removed in favour of `color`.
+`SliderVariant` (`primary`\|`prominent`\|`custom`, default `primary`, from
+`Slider/constants.ts`) selects a BUNDLE of three paints via `VARIANT_PAINTS`:
+the default hue, the active track's OPACITY, and the active step dot's colour.
+`color` and `stepColor` (each a token name or any CSS color) then override the
+hue and the dot independently, so a provider palette drops into any variant's
+geometry.
+
+`custom` has no palette of its own and REQUIRES `color`, enforced twice:
+`SliderProps` is a **discriminated union** (same shape as `CalendarProps`), so
+omitting it is a compile error — and `SliderBase` **throws** if the value
+arrives anyway, which is the JavaScript-consumer and runtime-computed-`variant`
+case the union cannot reach. The throw is unconditional, matching
+`ProgressIndicator`'s guard on an out-of-range `progress`. Consequence worth
+knowing: `Object.values(SliderVariant)` can no longer be mapped over in JSX
+without supplying a colour — that is the union working, not a bug.
+`SliderLabeledProps` is a **type alias**, not an interface, because an interface
+cannot extend a union.
+
+The bundle exists because the three are not derivable from one another — Figma
+composes the step dot from the CONTENT paint, not the track's hue, so it stays
+legible ON the filled track. The component writes `--ds-slider-color`,
+`--ds-slider-track-opacity` and `--ds-slider-step-active`; `.ds-slider-fill` and
+`.ds-slider-dot[data-active]` read them and fall back to the `primary` tokens,
+so both helpers still render correctly applied outside the component.
+
+`SliderVariant` was deleted in v3 in favour of `color` and **restored in 5.4** —
+see the architecture skill's note on when a closed enum earns its place
+alongside an open design value. The active fill's opacity is no longer the
+hardcoded 45%: it is `--ui-slider-track-primary-active-opacity` (50% light /
+60% dark) or `--ui-slider-track-prominent-active-opacity` (70% / 60%).
 
 Geometry uses literal `calc()` class strings (not concatenated) keyed to
 `--ui-slider-track-gap` / `--ui-width-slider-handle` / `--ui-height-slider-handle`,
@@ -271,19 +303,28 @@ The stepped variant carries two behaviours worth knowing before editing it:
 | Export                                                                        | Description                                                                                                             |
 | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `BaseText`                                                                    | `variant` = `TextVariant` picks the role class; typography props (`font`, `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`, `axes`, `tabular`) resolve to **inline style** in `textStyle.ts`; `unstyled` drops the role class; `as` is polymorphic and typed off the element |
-| `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `SubheadingText`, `TitleText`, `HeroText`, `MonoText` | The **eight** role components, built by the `createRoleText` factory in `BaseText.tsx` |
-| `Fonts`, `FontSizes`, `FontWeights`, `Tracking`, `FontAxes`                   | `Text/constants.ts` (server-safe). Values are the `var(--ui-*)` string itself, not a lookup key — resolution is a no-op and consumer token overrides survive. `FontAxes` holds axis TAGS (`GRAD`, `ROND`, `MONO`, …) |
+| `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `SubheadingText`, `TitleText`, `HeroText`, `MonoText`, `HeroBodyText`, `HeroButtonText` | The **ten** role components, built by the `createRoleText` factory in `BaseText.tsx`. `HeroBodyText` / `HeroButtonText` are the body and button roles at 16px and nothing else — same family, weight, tracking and axes — so retuning a base role carries its hero-scale twin. Despite the name they are unrelated to `HeroText`, the 55px display role in the title family |
+| `Fonts`, `FontSizes`, `FontWeights`, `Tracking`, `FontAxes`                   | `Text/constants.ts` (server-safe). `FontSizes` carries `heroBody`/`heroButton` alongside the base roles. Values are the `var(--ui-*)` string itself, not a lookup key — resolution is a no-op and consumer token overrides survive. `FontAxes` holds axis TAGS (`GRAD`, `ROND`, `MONO`, …) |
 | `serializeAxes`, `TextStyleProps`                                             | `Text/textStyle.ts` — axis-record → `font-variation-settings` string, and the shared prop shape |
+### AnimatedText
+
+Six wrappers, in their own folder since they animate text rather than define it.
+They stay wrappers rather than `BaseText` props on purpose: each must be able to
+wrap icons and arbitrary children, not just text. `AnimatedText/constants.ts`
+(server-safe) holds `RollDirection` and `RevealDirection`; `AnimatedText/index.ts`
+is the barrel, and `src/index.ts` re-exports it alongside `./components/Text`.
+
+`rollingDigitsModel.ts` is NOT re-exported — `parseDigitsString`,
+`reconcileWheels`, `restingWheels` and `hasTrailingSeparator` are internal.
+
+| Export | Description |
+| --- | --- |
 | `ShimmerText`                                                                 | `<span>` wrapper applying `ds-shimmer-text` (animated gradient masked to glyphs via `background-clip: text`); children keep their own typography but must not set an explicit text color while shimmering; tune via `--ui-shimmer-base`/`--ui-shimmer-highlight`; respects `prefers-reduced-motion` |
 | `RollChangeText`                                                              | `<span>` wrapper that animates old content rolling out + blurring while new content rolls in on `changeKey` (or string/number `children`) change; `RollDirection.up`/`.down`; keyframes `ds-roll-out`/`ds-roll-in` |
 | `RollHoverText`                                                               | `<span>` wrapper rolling each character on hover (`ds-roll-hover*` classes) |
 | `UnderlineLinkText`                                                           | `<span>` wrapper whose underline wipes out right and redraws from the left on hover. The line is a `currentColor` gradient in `background`, so it tracks this element's own colour — put the colour here or ABOVE; a child setting its own colour paints glyphs but not the line. Responds to its own `:hover`, an ancestor `.group:hover`, or the `active` prop |
 | `RollingDigitsText`                                                           | Per-digit 2D roll for a pre-formatted numeric string. See below |
 | `RevealChangeText`                                                            | `<span>` slot whose WIDTH animates between its content's measured natural width and 0 (`ds-reveal-change*` classes, `--ui-reveal-change-*` tokens). A `changeKey` change ⇒ collapse → swap the content while it is 0 wide → reveal; `changeKey={null}` ⇒ collapse and stay collapsed. `RevealDirection` picks the pinned edge; `onSettled` fires on each return to rest, which is how a following `RollChangeText` is sequenced behind the reveal instead of racing it. Slot state is reconciled during RENDER (guarded by a `source` key, so the update cannot loop) and the content swap hangs off `transitionend` — which is why reduced motion drops the durations to 1ms rather than removing the transition |
-
-`ShimmerText` / `RollChangeText` / `RollHoverText` / `RevealChangeText` /
-`UnderlineLinkText` stay wrappers rather than `BaseText` props on purpose: they
-must be able to wrap icons and arbitrary children, not just text.
 
 **The mono role.** `MonoText` is `BaseText` with `variant` fixed like every other
 role — `--ui-font-mono` (Google Sans Code), `--ui-text-mono` and
@@ -299,7 +340,7 @@ tabular run, where omitting inherits. Reach for `tabular` when you want aligned
 figures in the *current* face; reach for `MonoText` when the run should read as
 code, a key or an id.
 
-**`RollingDigitsText`** (`RollingDigitsText.tsx` + the React-free
+**`RollingDigitsText`** (`AnimatedText/RollingDigitsText.tsx` + the React-free
 `rollingDigitsModel.ts`). Each digit is a wheel — a static 0-9 column clipped to
 one line box. Four things about it are load-bearing and easy to undo:
 
@@ -330,8 +371,7 @@ stay in flow and stay `visibility: hidden` — it is what supplies the wheel's
 baseline, and a clipped inline-block otherwise takes its baseline from its bottom
 margin edge.
 
-`Text/index.ts` does not re-export the model; `parseDigitsString`,
-`reconcileWheels`, `restingWheels` and `hasTrailingSeparator` are internal.
+`AnimatedText/index.ts` does not re-export the model.
 
 ### Icons
 
@@ -395,7 +435,7 @@ Notable component tokens:
 - Tooltip themes: `--ui-color-tooltip-inverse-*` and `--ui-color-tooltip-matching-*`. `TooltipContent themeInverse` switches between `ds-tooltip-inverse-theme` and `ds-tooltip-matching-theme`; there is no runtime theme detection.
 - Toast widths: `--ui-width-toast-simple`, `--ui-width-toast-complex`, `--ui-width-toast-viewport`, consumed by `ds-toast-width-simple`, `ds-toast-width-complex`, and `ds-toast-viewport`. Widths are pinned per variant, matching `ToastTypes.simple`/`.complex`.
 - Tooltip/menu widths: `--ui-width-tooltip-rich` (pinned) and `--ui-min-w-tooltip-complex` back `ds-width-tooltip-rich`/`ds-min-w-tooltip-complex`; the simple tooltip intentionally hugs its text. `--ui-min-w-menu` (160) / `-action` (144) / `-complex` (324) back `ds-menu-w-standard`/`-action`/`-complex`, selected by `DropdownMenuVariant` on the menu root.
-- Avatar surface (v3): no dedicated `--ui-color-avatar-bg` token — `Avatar` composes `bg-surface-secondary` + `border-border-secondary` + `text-brand-color`; brand/logo content is supplied by consumers as children, not via a package provider.
+- Avatar surface (v3): no dedicated `--ui-color-avatar-bg` token — `Avatar` composes `bg-surface-secondary` + `border-border-secondary` + `text-prominent-color`; brand/logo content is supplied by consumers as children, not via a package provider.
 - **Motion tokens.** Every animated component owns a `--ui-<component>-*` family
   and the component reads them only through CSS — see the architecture skill's
   Rule 6. Current families: `--ui-roll-hover-*`, `--ui-roll-change-*`,
@@ -432,7 +472,14 @@ Notable component tokens:
   (`"MONO" 1`). The last three are in `EXCLUDED` in `sync-theme.mjs` alongside
   their peers; `--ui-font-mono` and `--ui-text-mono` do map, to `--font-mono` and
   `--text-mono`.
-- **v3 token vocabulary** (see `tokens.css` and the theming skill's `token-contract.md` for the full list): the destructive palette is the two raw paints `--ui-color-error-primary`/`-secondary` plus, since 5.4, the error BUTTON state family `--ui-color-error`/`-border`/`-hover`/`-border-hover`/`-active`/`-border-active`/`-foreground`/`-foreground-active`/`-disabled`/`-border-disabled` that `ButtonVariant.danger` paints (Figma `errorButton/*`). Every one of those defaults to an alias of the secondary family or a raw error paint, which is why they need no `.dark` block. `--ui-color-danger*` still does not exist in any form — `danger` is the variant key, `error` is the token family (see the note at the top of `Button.tsx`), `--ui-color-border-primary`/`-secondary` (replaces the single `--ui-color-border`), `--ui-color-surface-primary`/`--ui-color-page-background` (replaces `surface`/`surface-page`), `--ui-brand-color`/`--ui-brand-color-alt` (the brand-identity pair; `OutlineButton`'s `glowColor1`/`glowColor2` now default to `var(--ui-brand-color-alt)` — the old standalone `--ui-accent-color` token no longer exists in `tokens.css`), `--ui-color-focus-ring-brand`/`-primary`/`-error` (replaces the single `--ui-color-focus-ring`), `--ui-color-trigger-border-error-focus`, slider sizing tokens (`--ui-height-slider-track`, `--ui-radius-slider-inner`, `--ui-slider-track-gap`, `--ui-width-slider-handle`, `--ui-height-slider-handle`), `--ui-height-button-micro`, and shimmer tokens (`--ui-shimmer-base`, `--ui-shimmer-highlight`).
+- **Token vocabulary** (see `tokens.css` and the theming skill's `token-contract.md` for the full list). The 5.4 pass realigned nearly every name with Figma, so anything you remember from before it is suspect — read `tokens.css`, do not recall.
+  - **Destructive**: two raw paints `--ui-color-danger-primary`/`-secondary`, plus the danger BUTTON state family `--ui-color-danger`/`-border`/`-hover`/`-border-hover`/`-active`/`-border-active`/`-foreground`/`-foreground-active`/`-disabled`/`-border-disabled` that `ButtonVariant.danger` paints (Figma `ButtonDanger/*`). Every one defaults to an alias of the secondary family or a raw danger paint, which is why they need no `.dark` block. Spelled `--ui-color-error*` before 5.4.
+  - **Prominent** (was `brand`): `--ui-color-prominent`/`-border`/`-hover`/`-border-hover`/`-active`/`-border-active`/`-foreground`/`-disabled`/`-border-disabled` — deep violet, and **fully mode-invariant**, so the family has no `.dark` override at all. Distinct from the IDENTITY pair `--ui-prominent-color`/`--ui-prominent-color-alt` (was `--ui-brand-color*`), where the alt *does* differ per mode; `OutlineButton`'s `glowColor1`/`glowColor2` default to `var(--ui-prominent-color-alt)`.
+  - **Borders/surfaces**: `--ui-color-border-primary`/`-secondary` (replaced the single `--ui-color-border`), `--ui-color-surface-primary`/`-secondary`/`--ui-color-surface-page` (the last was `--ui-color-page-background` before 5.4).
+  - **Inputs** (all renamed in 5.4 from `border-focus` / `trigger-border-*`): `--ui-color-input-border-focus`, `--ui-color-input-border-hover`, `--ui-color-input-border-danger-focus`.
+  - **Focus rings**: `--ui-color-focus-ring-prominent`/`-primary`/`-danger` (replaced the single `--ui-color-focus-ring`).
+  - **Radius**: `--ui-radius-tight`/`-normal`/`-soft` — `-normal` was `-standard` before 5.4, so the utility is `rounded-normal`.
+  - Plus slider sizing (`--ui-height-slider-track`, `--ui-radius-slider-inner`, `--ui-slider-track-gap`, `--ui-width-slider-handle`, `--ui-height-slider-handle`), `--ui-height-button-micro`, and shimmer tokens (`--ui-shimmer-base`, `--ui-shimmer-highlight`).
 
 ### Tailwind theme (`@theme inline` in `index.css`)
 
@@ -448,7 +495,7 @@ The `__GENERATED_*__` block is managed by `scripts/sync-theme.mjs` — do not ha
 
 ### Consumer Tailwind preset (`theme.css`)
 
-`styles.css` is compiled Tailwind: it ships tokens + the exact utility classes dooph components use, but a consuming app's own Tailwind build has no knowledge of the dooph token namespace. So app-authored classes (`p-md`, `gap-sm`, `rounded-standard`, `font-label`) never generate, and colliding Tailwind defaults (`font-sans`, numeric spacing) win. `theme.css` is the standalone `@theme inline` block, shipped as `./theme.css`, that consumers import into their own Tailwind so every dooph utility resolves. It is **generated by `sync-theme.mjs` from the same entries as the index.css block** — never hand-edit it, and never let it drift from index.css (running `sync-tokens` keeps both in step).
+`styles.css` is compiled Tailwind: it ships tokens + the exact utility classes dooph components use, but a consuming app's own Tailwind build has no knowledge of the dooph token namespace. So app-authored classes (`p-md`, `gap-sm`, `rounded-normal`, `font-label`) never generate, and colliding Tailwind defaults (`font-sans`, numeric spacing) win. `theme.css` is the standalone `@theme inline` block, shipped as `./theme.css`, that consumers import into their own Tailwind so every dooph utility resolves. It is **generated by `sync-theme.mjs` from the same entries as the index.css block** — never hand-edit it, and never let it drift from index.css (running `sync-tokens` keeps both in step).
 
 ### Component token helpers (`dooph-component-tokens.css`)
 
@@ -458,7 +505,7 @@ The `__GENERATED_*__` block is managed by `scripts/sync-theme.mjs` — do not ha
 - `ds-radix-data-disabled` — same but for `[data-disabled]` (Radix menu items)
 - `ds-disabled-control` — native `:disabled` only
 - `ds-shape-button-focus-visible` — custom focus outline for ShapeButton
-- Focus ring helpers: `ds-focus-visible-ring`, `ds-focus-within-ring`, `ds-focus-ring-on-focus`, `ds-focus-ring-error-on-focus`, `ds-focus-ring` — token-backed outline rings for controls that need external focus affordances without `box-shadow` overflow clipping (the error variant is named `-error-`, not `-destructive-`, matching the v3 `--ui-color-focus-ring-error` token)
+- Focus ring helpers: `ds-focus-visible-ring`, `ds-focus-within-ring`, `ds-focus-ring-on-focus`, `ds-focus-ring-danger-on-focus`, `ds-focus-ring` — token-backed outline rings for controls that need external focus affordances without `box-shadow` overflow clipping (the destructive variant is named `-danger-`, matching the `--ui-color-focus-ring-danger` token; it was `-error-` before 5.4 and `-destructive-` before v3)
 - `ds-radix-dropdown-content-origin` — `transform-origin: var(--radix-dropdown-menu-content-transform-origin)`
 - `ds-radix-dropdown-match-trigger-width` — trigger width, floored by `--ds-menu-min-w`
 - `ds-min-w-menu` — `min-width: var(--ui-min-w-menu)` (fallback when `matchTriggerWidth` is off)
@@ -556,10 +603,10 @@ Check before assuming (`grep -l '"use client"' src/components/**/*.tsx`, not
 which is still a valid directive prologue because comments are not statements).
 Current split among the non-obvious ones: `LoadingSpinner` (`useRef` +
 `useEffect` + rAF), `Calendar`, `DatePicker`, `Popover`, `VerificationCodeInput`,
-`CodeDigitInput`, `RollingDigitsText`, `RollChangeText`, `RollHoverText` and
+`CodeDigitInput`, `RollingDigitsText`, `RollChangeText`, `RevealChangeText` and
 `SidebarWithHoverIcon` are client; `ProgressIndicator` (`useMemo`), `WavyDivider`
-(`useId`), `Table` (no hooks), `CTAButton`, `ShimmerText` and `UnderlineLinkText`
-are neutral. `add-use-client.mjs` stamps dist chunks purely from source
+(`useId`), `Table` (no hooks), `CTAButton`, `ShimmerText`, `RollHoverText` and
+`UnderlineLinkText` are neutral (all three of those last use only `forwardRef`). `add-use-client.mjs` stamps dist chunks purely from source
 directives, so deleting the line from a source file is the whole change.
 
 - Dot-accessible consts live in a sibling **`constants.ts` with no `"use client"`**

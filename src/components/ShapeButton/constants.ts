@@ -25,7 +25,7 @@ export type ShapeButtons = (typeof ShapeButtons)[keyof typeof ShapeButtons];
  * Usage: <ShapeButton variant={ShapeButtonVariant.primary} />
  */
 export const ShapeButtonVariant = {
-  brand: "brand",
+  prominent: "prominent",
   primary: "primary",
 } as const;
 export type ShapeButtonVariant =

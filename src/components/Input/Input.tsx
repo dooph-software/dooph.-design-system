@@ -17,11 +17,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           "ds-pl-ui-rg ds-pr-ui-sm",
           "text-style-button text-text placeholder:text-text-tertiary",
           "transition-all duration-100 ds-focus-ring-on-focus",
-          "hover:border-trigger-border-hover hover:shadow-button-secondary",
-          "focus:border-border-focus",
+          "hover:border-input-border-hover hover:shadow-button-secondary",
+          "focus:border-input-border-focus",
           "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled ds-disabled-state",
           hasError &&
-            "border-error-primary focus:border-trigger-border-error-focus ds-focus-ring-error-on-focus",
+            "border-danger-primary focus:border-input-border-danger-focus ds-focus-ring-danger-on-focus",
           className,
         )}
         {...props}

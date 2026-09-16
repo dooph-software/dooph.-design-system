@@ -42,39 +42,45 @@
   --ui-color-secondary-disabled: #f5f5f5;
   --ui-color-secondary-border-disabled: #e9e9e9;
 
-  /* Brand (teal) — borders alias bg per state (Figma). Mode-invariant: the
-   * Figma brandButton group carries the same values in light and dark, so there
-   * is deliberately no .dark override for this family. The foreground is the
-   * one exception — teal is light enough that content stays dark in both. */
-  --ui-color-brand: #13c29f;
-  --ui-color-brand-border: var(--ui-color-brand);
-  --ui-color-brand-hover: #0faa8b;
-  --ui-color-brand-border-hover: var(--ui-color-brand-hover);
-  --ui-color-brand-active: #108b72;
-  --ui-color-brand-border-active: var(--ui-color-brand-active);
-  --ui-color-brand-foreground: #161616;
-  --ui-color-brand-border-disabled: transparent;
+  /* Prominent (deep violet) — Figma ButtonProminent/*. Borders alias bg per
+   * state. Fully mode-invariant, so this family has no .dark override at all:
+   * the Figma group carries identical values in both modes, INCLUDING the
+   * content colour. That last part is worth stating because the Figma export
+   * aliases the content to Text/text-inverted, which flips to black in dark —
+   * black on #340fd9 is 2.2:1 and unreadable, and the export's own resolved
+   * values report white for both modes. White is the intended paint; do not
+   * "fix" this into an inverted alias. */
+  --ui-color-prominent: #340fd9;
+  --ui-color-prominent-border: var(--ui-color-prominent);
+  --ui-color-prominent-hover: #2406ac;
+  --ui-color-prominent-border-hover: var(--ui-color-prominent-hover);
+  --ui-color-prominent-active: #1a0189;
+  --ui-color-prominent-border-active: var(--ui-color-prominent-active);
+  --ui-color-prominent-foreground: #ffffff;
+  /* Disabled aliases secondary, matching every other solid button (Figma). */
+  --ui-color-prominent-disabled: var(--ui-color-secondary-disabled);
+  --ui-color-prominent-border-disabled: var(--ui-color-secondary-border-disabled);
 
-  /* Error — the raw destructive palette (Figma errorPrimary / errorSecondary).
+  /* Danger — the raw destructive palette (Figma danger-primary / -secondary).
    * Mode-invariant, so no .dark override. */
-  --ui-color-error-primary: #ea3f3f;
-  --ui-color-error-secondary: #ff5858;
+  --ui-color-danger-primary: #ea3f3f;
+  --ui-color-danger-secondary: #ff5858;
 
-  /* Error button (Figma errorButton/*) — a full state family so consumers can
+  /* Danger button (Figma ButtonDanger/*) — a full state family so consumers can
    * retune the danger button without touching the secondary family it defaults
    * to. Every value is an ALIAS, which is also what makes a .dark block
    * unnecessary: the aliased tokens are themselves redefined per mode, so these
    * follow along for free. Override any one of them to break that link. */
-  --ui-color-error: var(--ui-color-secondary);
-  --ui-color-error-border: var(--ui-color-secondary-border);
-  --ui-color-error-hover: var(--ui-color-error-secondary);
-  --ui-color-error-border-hover: var(--ui-color-error-secondary);
-  --ui-color-error-active: var(--ui-color-error-primary);
-  --ui-color-error-border-active: var(--ui-color-error-primary);
-  --ui-color-error-foreground: var(--ui-color-error-primary);
-  --ui-color-error-foreground-active: var(--ui-color-secondary-foreground);
-  --ui-color-error-disabled: var(--ui-color-secondary-disabled);
-  --ui-color-error-border-disabled: var(--ui-color-secondary-border-disabled);
+  --ui-color-danger: var(--ui-color-secondary);
+  --ui-color-danger-border: var(--ui-color-secondary-border);
+  --ui-color-danger-hover: var(--ui-color-danger-secondary);
+  --ui-color-danger-border-hover: var(--ui-color-danger-secondary);
+  --ui-color-danger-active: var(--ui-color-danger-primary);
+  --ui-color-danger-border-active: var(--ui-color-danger-primary);
+  --ui-color-danger-foreground: var(--ui-color-danger-primary);
+  --ui-color-danger-foreground-active: var(--ui-color-secondary-foreground);
+  --ui-color-danger-disabled: var(--ui-color-secondary-disabled);
+  --ui-color-danger-border-disabled: var(--ui-color-secondary-border-disabled);
 
   /* Ghost (no rest bg; hover/active are translucent overlays) */
   --ui-color-ghost-foreground: #4a4a4a;
@@ -82,8 +88,8 @@
   --ui-color-ghost-active: rgba(0, 0, 0, 0.08);
   --ui-color-ghost-foreground-active: #161616;
 
-  /* Surfaces (Figma: pageBackground / surfacePrimary / surfaceSecondary) */
-  --ui-color-page-background: #fdfeff;
+  /* Surfaces (Figma: surface-page / surface-primary / surface-secondary) */
+  --ui-color-surface-page: #fdfeff;
   --ui-color-surface-primary: #ffffff;
   --ui-color-surface-secondary: #fcfcfc;
 
@@ -111,34 +117,48 @@
   --ui-color-tooltip-matching-text: var(--ui-color-secondary-foreground);
   --ui-color-tooltip-matching-border: var(--ui-color-border-primary);
 
-  /* Borders (Figma: borderPrimary / borderSecondary; popovers is the DS name
-   * for Figma borderModal, shared by modal/menu/toast panels) */
+  /* Borders (Figma: border-primary / border-secondary; popovers is the DS name
+   * for Figma modal-border, shared by modal/menu/toast panels) */
   --ui-color-border-primary: #dddddd;
   --ui-color-border-secondary: #dfdfdf;
   --ui-color-border-popovers: #ebebeb;
-  --ui-color-border-focus: var(--ui-color-brand-border-hover);
+  --ui-color-input-border-focus: var(--ui-color-prominent-border-hover);
   /* CTAButton padded outline ring (primary variant only) */
   --ui-color-border-cta: rgba(56, 56, 56, 0.5);
-  --ui-color-trigger-border-hover: #b4b4b4;
-  --ui-color-trigger-border-error-focus: var(--ui-color-error-primary);
+  --ui-color-input-border-hover: #b4b4b4;
+  --ui-color-input-border-danger-focus: var(--ui-color-danger-primary);
 
   /* Text */
   --ui-color-text: #161616;
   --ui-color-text-secondary: #4a4a4a;
   --ui-color-text-tertiary: #606060;
 
-  /* Focus rings (Figma: Inputs/focusRingBrand|Primary|Error). Each is its
-   * source paint at a fixed alpha: brand = bg-brandButton:hover, primary =
-   * bg-primaryButton, error = errorPrimary. They are literal rgba() rather than
-   * color-mix() over the source token because a consumer overriding, say,
-   * --ui-color-brand should be able to retune the ring independently. */
-  --ui-color-focus-ring-brand: rgba(15, 170, 139, 0.35);
+  /* Focus rings (Figma: Inputs/focus-ring-prominent|-primary|-danger). Each is
+   * its source paint at a fixed alpha: prominent = button-prominent-hover in
+   * light and button-prominent (rest) in dark, primary = button-primary,
+   * danger = danger-primary. They are literal rgba() rather than color-mix()
+   * over the source token because a consumer overriding, say,
+   * --ui-color-prominent should be able to retune the ring independently. */
+  --ui-color-focus-ring-prominent: rgba(36, 6, 172, 0.35);
   --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.25);
-  --ui-color-focus-ring-error: rgba(234, 63, 63, 0.35);
+  --ui-color-focus-ring-danger: rgba(234, 63, 63, 0.35);
 
-  /* Brand identity (Figma: brandColor / brandColorAlt — replaces logo/logo-alt/accent) */
-  --ui-brand-color: #390ef8;
-  --ui-brand-color-alt: #44c0e5;
+  /* Prominent identity (Figma: color-prominent / -alt / -ter) — the
+   * brand-identity trio, distinct from the --ui-color-prominent BUTTON family
+   * above. All three are mode-invariant: `-alt` used to carry #44c0e5 in dark,
+   * and that value is now `-ter` in its own right rather than a dark override. */
+  --ui-prominent-color: #390ef8;
+  --ui-prominent-color-alt: #13c29f;
+  --ui-prominent-color-ter: #44c0e5;
+
+  /* AI model marks (Figma ai-models/*). Brand colours for third-party model
+   * providers — identity paints for a badge or icon, not a UI role, so no
+   * component reads them by default. openai and spacexai are the two that
+   * inverse per mode. */
+  --ui-color-ai-anthropic: #e48844;
+  --ui-color-ai-gemini: #154bff;
+  --ui-color-ai-openai: #000000;
+  --ui-color-ai-spacexai: #000000;
 
   /* Text shimmer (ShimmerText) */
   --ui-shimmer-base: var(--ui-color-text-tertiary);
@@ -298,6 +318,14 @@
   /* Font sizes */
   --ui-text-label: 12px;
   --ui-text-body: 14px;
+  /* The hero-scale pair. `heroBody` and `heroButton` are the body and button
+   * roles at a larger size and NOTHING else: family, weight, tracking and
+   * variable axes all still come from --ui-font-body / --ui-font-button, so
+   * retuning a base role carries its hero-scale twin with it. Only the size is
+   * its own, which is the entire reason these roles exist. Independent
+   * literals rather than one shared token, so either can be retuned alone. */
+  --ui-text-hero-body: 16px;
+  --ui-text-hero-button: 16px;
   /* Mono matches the button role's size and weight by aliasing them, so a
    * consumer who retunes button type keeps mono in step; override either token
    * directly to break that link. */
@@ -375,6 +403,33 @@
   --ui-width-slider-handle: 6px;
   --ui-height-slider-handle: 42px;
 
+  /* Slider paints (Figma SliderPrimary/* and SliderProminent/*).
+   *
+   * The ACTIVE TRACK is an OPACITY, not a colour, and that is deliberate: the
+   * track is tinted from the component's `color` prop, which accepts any CSS
+   * colour, so baking Figma's resolved rgba() here would stop a provider brand
+   * colour from tinting the fill at all. Figma composes each variant's track
+   * from its own button paint at a fixed alpha; we keep the alpha and let
+   * `color` supply the hue, which reproduces both variants exactly when `color`
+   * is the matching token and still works for an arbitrary colour.
+   *
+   * The ACTIVE STEP dot is a real colour, because Figma composes it from the
+   * TEXT/content paint rather than from the slider's own hue — it is the mark
+   * read ON the filled track, so it does not follow `color`.
+   *
+   * Each pair is selected by `SliderVariant`; `color` still overrides the hue
+   * on top of whichever pair is in play.
+   *
+   * The prominent dark step is white, departing from the Figma export, which
+   * resolves it to text-inverted = black. Black at 40% on a #340fd9 track is
+   * invisible; see the note on the prominent family above for why that content
+   * alias is white in both modes. */
+  --ui-slider-track-primary-active-opacity: 50%;
+  --ui-slider-track-prominent-active-opacity: 70%;
+  --ui-color-slider-step-primary-active: rgba(22, 22, 22, 0.5);
+  --ui-color-slider-step-prominent-active: rgba(22, 22, 22, 0.6);
+  --ui-color-slider-step-inactive: var(--ui-color-secondary-border);
+
   /* ── Spacing ─────────────────────────────────────────────────────────── */
 
   --ui-spacing-xxxs: 2px;
@@ -401,7 +456,7 @@
    * soft     — panels: modals, menu surfaces, search field shell, Outline inner.
    */
   --ui-radius-tight: 12px;
-  --ui-radius-standard: 18px;
+  --ui-radius-normal: 18px;
   --ui-radius-soft: 20px;
   --ui-radius-checkbox: 6px;
   --ui-radius-avatar: 8px;
@@ -417,7 +472,7 @@
   --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.2);
   --ui-shadow-menu: 0 1px 4px 0 rgba(56, 56, 56, 0.15);
   --ui-shadow-cta: 0 1px 2px rgba(56, 56, 56, 0.15);
-  --ui-shadow-focus-brand: 0 0 0 4px var(--ui-color-focus-ring-brand);
+  --ui-shadow-focus-prominent: 0 0 0 4px var(--ui-color-focus-ring-prominent);
   --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
 
   /* ── Menu min-widths ─────────────────────────────────────────────────── */
@@ -473,7 +528,7 @@
   --ui-color-ghost-foreground: #afafaf;
   --ui-color-ghost-foreground-active: #ffffff;
 
-  --ui-color-page-background: #131c1d;
+  --ui-color-surface-page: #131c1d;
   --ui-color-surface-primary: #000000;
   --ui-color-surface-secondary: #242425;
 
@@ -484,19 +539,21 @@
   --ui-color-border-secondary: #3e3f42;
   --ui-color-border-popovers: #36363b;
   --ui-color-border-cta: rgba(255, 255, 255, 0.35);
-  --ui-color-trigger-border-hover: #3a3b3f;
+  --ui-color-input-border-hover: #3a3b3f;
 
-  --ui-color-brand-foreground: #000000;
+  --ui-color-ai-openai: #ffffff;
+  --ui-color-ai-spacexai: #ffffff;
 
   --ui-color-text: #ffffff;
   --ui-color-text-secondary: #afafaf;
   --ui-color-text-tertiary: #717171;
 
-  /* Brand ring darkens to the rest paint (not :hover) in dark mode, per Figma. */
-  --ui-color-focus-ring-brand: rgba(19, 194, 159, 0.15);
+  /* The prominent ring keys to the rest paint (not :hover) in dark, per Figma. */
+  --ui-color-focus-ring-prominent: rgba(52, 15, 217, 0.15);
   --ui-color-focus-ring-primary: rgba(249, 249, 249, 0.15);
-  --ui-color-focus-ring-error: rgba(234, 63, 63, 0.15);
-  --ui-color-border-focus: var(--ui-color-brand-border-active);
+  --ui-color-focus-ring-danger: rgba(234, 63, 63, 0.15);
+  --ui-color-input-border-focus: var(--ui-color-prominent-border-active);
+
 
   --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.65);
   --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.65);
@@ -504,6 +561,12 @@
   --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.85);
   --ui-shadow-menu: 0 2px 8px rgba(0, 0, 0, 0.7);
   --ui-shadow-cta: 0 1px 2px rgba(0, 0, 0, 0.65);
+
+  /* Both variants converge at 60% in dark, per Figma. */
+  --ui-slider-track-primary-active-opacity: 60%;
+  --ui-slider-track-prominent-active-opacity: 60%;
+  --ui-color-slider-step-primary-active: rgba(0, 0, 0, 0.4);
+  --ui-color-slider-step-prominent-active: rgba(255, 255, 255, 0.4);
 
   --ui-opacity-disabled: 0.5;
   --ui-size-checkbox: 18px;

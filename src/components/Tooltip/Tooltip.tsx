@@ -69,7 +69,7 @@ const TooltipContent = forwardRef<
           variant === TooltipTypes.rich &&
             "flex ds-width-tooltip-rich flex-col gap-xs rounded-tight border border-solid px-3 py-sm wrap-break-word",
           variant === TooltipTypes.complex &&
-            "ds-min-w-tooltip-complex rounded-standard border border-solid",
+            "ds-min-w-tooltip-complex rounded-normal border border-solid",
           className,
         )}
         {...props}

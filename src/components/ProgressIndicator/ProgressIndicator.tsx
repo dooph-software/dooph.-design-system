@@ -32,7 +32,7 @@ import {
 
 const COLOR_TOKENS: Record<string, string> = {
   primary: "var(--ui-color-primary)",
-  brand: "var(--ui-color-brand)",
+  prominent: "var(--ui-color-prominent)",
 };
 
 function resolveColor(color: string): string {
@@ -271,7 +271,7 @@ function WavyProgressIndicator({
  * ```tsx
  * <ProgressIndicator progress={0.6} />
  * <ProgressIndicator progress={progress} variant={ProgressIndicatorVariants.wavy} />
- * <ProgressIndicator progress={1} color={LoadingSpinnerColor.brand} size={LoadingSpinnerSize.md} />
+ * <ProgressIndicator progress={1} color={LoadingSpinnerColor.prominent} size={LoadingSpinnerSize.md} />
  * ```
  */
 export const ProgressIndicator = forwardRef<

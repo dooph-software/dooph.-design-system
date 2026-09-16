@@ -21,7 +21,7 @@ function HotkeyIndicator({ keys, pressed = false, className, ...props }: HotkeyI
             keys.length === 1 && 'min-w-[23px] min-h-[23px]',
             pressed
               ? 'bg-ghost-active border-border-primary'
-              : 'bg-page-background border-border-primary'
+              : 'bg-surface-page border-border-primary'
           )}
         >
           {key}

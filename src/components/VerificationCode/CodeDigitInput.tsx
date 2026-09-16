@@ -47,13 +47,13 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
           "rounded-tight border border-solid",
           "transition-all duration-100",
           hasError
-            ? "border-error-primary bg-secondary text-error-primary"
+            ? "border-danger-primary bg-secondary text-danger-primary"
             : "border-secondary-border bg-secondary text-text",
           disabled &&
             "border-secondary-border-disabled bg-secondary-disabled ds-disabled-state",
           !disabled &&
             !hasError &&
-            "focus-within:border-border-focus focus-within:shadow-focus-brand",
+            "focus-within:border-input-border-focus focus-within:shadow-focus-prominent",
           className,
         )}
         data-filled={filled || undefined}
@@ -66,7 +66,7 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
           className={cn(
             "pointer-events-none absolute inset-0 flex items-center justify-center",
             !filled && "opacity-0",
-            hasError && "text-error-primary",
+            hasError && "text-danger-primary",
           )}
         >
           {filled ? value : "0"}

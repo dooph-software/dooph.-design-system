@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { SliderContinuous, SliderStepped, SliderLabeled } from './Slider';
+import { SliderVariant } from './constants';
 import { DS_COLOR_TOKENS } from '../../utils/color';
 import { LabelText } from '../Text';
 
@@ -10,7 +11,15 @@ const meta = {
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
   argTypes: {
+    variant: {
+      control: 'inline-radio',
+      options: Object.values(SliderVariant),
+    },
     color: {
+      control: 'select',
+      options: Object.keys(DS_COLOR_TOKENS),
+    },
+    stepColor: {
       control: 'select',
       options: Object.keys(DS_COLOR_TOKENS),
     },
@@ -46,6 +55,144 @@ export const Stepped: Story = {
           <SliderStepped min={0} max={4} step={1} defaultValue={[v]} />
         </div>
       ))}
+    </div>
+  ),
+};
+
+export const Variants: Story = {
+  name: 'Variants (paint bundles)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`variant` selects three paints at once — the default hue, the active ' +
+          "track's opacity, and the active step dot's colour. They are not " +
+          'derivable from one another: the track is the hue at a ' +
+          'variant-specific alpha, while the dot is composed from the CONTENT ' +
+          'paint so it stays legible ON the filled track. Compare the dots on ' +
+          'the two stepped rows.',
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-64 flex-col gap-6">
+      {/* The two BUILT-IN palettes. `custom` is deliberately absent: it has no
+          palette of its own, so it cannot be mapped over without a colour —
+          `Object.values(SliderVariant)` here is a compile error, which is the
+          discriminated union doing its job. */}
+      {([SliderVariant.primary, SliderVariant.prominent] as const).map((v) => (
+        <div key={v} className="flex flex-col gap-2">
+          <LabelText className="text-text-tertiary">{v}</LabelText>
+          <SliderContinuous variant={v} defaultValue={[60]} />
+          <SliderStepped
+            variant={v}
+            min={0}
+            max={4}
+            step={1}
+            defaultValue={[2]}
+          />
+        </div>
+      ))}
+    </div>
+  ),
+};
+
+export const CustomVariant: Story = {
+  name: 'Custom variant (color + stepColor)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`variant="custom"` has no palette of its own and REQUIRES `color`. ' +
+          'Omitting it is a compile error — `SliderProps` is a discriminated ' +
+          'union — and `SliderBase` throws if the value arrives anyway, which ' +
+          'is the case a JavaScript consumer or a runtime-computed `variant` ' +
+          'lands in. `stepColor` completes the palette; left off, the step dot ' +
+          'falls back to primary’s so the slider still reads correctly. ' +
+          '**Watch the dots on the filled side of the handle** — the first two ' +
+          'rows are the same orange track and differ only in `stepColor`. The ' +
+          'magenta is deliberately garish: the point is to make the knob ' +
+          'obvious, not to suggest a palette.',
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-64 flex-col gap-6">
+      <div className="flex flex-col gap-2">
+        <LabelText className="text-text-tertiary">
+          color only — dots fall back to primary
+        </LabelText>
+        <SliderStepped
+          variant={SliderVariant.custom}
+          color="#e48844"
+          min={0}
+          max={6}
+          step={1}
+          defaultValue={[5]}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <LabelText className="text-text-tertiary">
+          same track, stepColor=&quot;#ff00b8&quot;
+        </LabelText>
+        <SliderStepped
+          variant={SliderVariant.custom}
+          color="#e48844"
+          stepColor="#ff00b8"
+          min={0}
+          max={6}
+          step={1}
+          defaultValue={[5]}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <LabelText className="text-text-tertiary">
+          stepColor takes token names too
+        </LabelText>
+        <SliderStepped
+          variant={SliderVariant.custom}
+          color="prominent-color-ter"
+          stepColor="text"
+          min={0}
+          max={4}
+          step={1}
+          defaultValue={[2]}
+        />
+      </div>
+    </div>
+  ),
+};
+
+export const VariantWithColorOverride: Story = {
+  name: 'Variant + color override',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`color` overrides the variant’s HUE and `stepColor` its step dot, ' +
+          'each independently. The track opacity still comes from the variant, ' +
+          'so an arbitrary provider colour drops into either variant’s ' +
+          'geometry without restating it.',
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-64 flex-col gap-6">
+      <SliderStepped
+        variant={SliderVariant.prominent}
+        min={0}
+        max={4}
+        step={1}
+        defaultValue={[2]}
+      />
+      <SliderStepped
+        variant={SliderVariant.prominent}
+        color="#e48844"
+        min={0}
+        max={4}
+        step={1}
+        defaultValue={[2]}
+      />
     </div>
   ),
 };
@@ -88,7 +235,7 @@ export const Labeled: Story = {
         labels={{ start: 'Faster', end: 'Smarter' }}
       />
       <SliderLabeled
-        color="brand"
+        color="prominent"
         stepped
         min={0}
         max={4}

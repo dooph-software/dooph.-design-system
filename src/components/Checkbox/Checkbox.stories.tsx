@@ -26,21 +26,21 @@ type Story = StoryObj<typeof meta>;
 
 export const Unchecked: Story = {
   args: {
-    variant: CheckboxVariant.brand,
+    variant: CheckboxVariant.prominent,
   },
 };
 
 export const Checked: Story = {
   args: {
     checked: CheckboxChecked.checked,
-    variant: CheckboxVariant.brand,
+    variant: CheckboxVariant.prominent,
   },
 };
 
 export const Indeterminate: Story = {
   args: {
     checked: CheckboxChecked.indeterminate,
-    variant: CheckboxVariant.brand,
+    variant: CheckboxVariant.prominent,
   },
 };
 

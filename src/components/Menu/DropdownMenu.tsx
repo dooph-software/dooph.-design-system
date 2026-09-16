@@ -203,8 +203,8 @@ const DropdownMenuItem = forwardRef<
     className={cn(
       itemBase,
       variant === DropdownMenuItemVariant.danger && [
-        "hover:text-error-secondary data-highlighted:text-error-secondary",
-        "active:text-error-primary data-highlighted:active:text-error-primary",
+        "hover:text-danger-secondary data-highlighted:text-danger-secondary",
+        "active:text-danger-primary data-highlighted:active:text-danger-primary",
       ],
       className,
     )}

@@ -86,7 +86,7 @@ const SegmentedTabSelect = forwardRef<
           className={cn(
             hasShell &&
               // `standard` (18px) per Figma's shell radius variable.
-              'rounded-standard border border-solid border-border-primary bg-secondary p-1.5',
+              'rounded-normal border border-solid border-border-primary bg-secondary p-1.5',
             isSmall && hasShell && 'gap-1',
             className
           )}

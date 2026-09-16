@@ -30,8 +30,8 @@ const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
           'ds-pl-ui-md ds-pr-ui-rg ds-py-ui-rg',
           'ds-min-w-search-box',
           'transition-all duration-100',
-          'hover:border-trigger-border-hover',
-          'focus-within:border-border-focus ds-focus-within-ring',
+          'hover:border-input-border-hover',
+          'focus-within:border-input-border-focus ds-focus-within-ring',
           className
         )}
       >

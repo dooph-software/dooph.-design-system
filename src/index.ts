@@ -10,6 +10,7 @@ export * from './components/SidebarWithHoverIcon';
 export * from './components/Input';
 export * from './components/Tabs';
 export * from './components/SegmentedTabSelect';
+export * from './components/AnimatedText';
 export * from './components/Text';
 export * from './components/TextLink';
 export * from './components/Toggle';

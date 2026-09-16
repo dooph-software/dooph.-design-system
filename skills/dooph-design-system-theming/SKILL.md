@@ -38,7 +38,7 @@ for apps that run their own Tailwind build. Your app's `theme.css` holds the
 `styles.css` is *compiled* Tailwind: it ships the tokens plus the exact utility
 classes dooph components use internally. But your own Tailwind build doesn't know
 the dooph token namespace. So when **you** write `p-md`, `gap-sm`,
-`rounded-standard`, or `font-label`, your Tailwind never generates them, and
+`rounded-normal`, or `font-label`, your Tailwind never generates them, and
 same-named Tailwind defaults (`font-sans`, the numeric spacing scale) silently
 win. That mismatch is why apps used to need a manual `@theme inline` remap.
 
@@ -157,14 +157,14 @@ so branding applies in default light, forced `.light`, and `.dark`:
 :root, .light {
   --ui-color-primary: var(--brand-950);
   --ui-color-primary-foreground: white;
-  --ui-color-brand: var(--accent-700);
-  --ui-color-page-background: var(--app-bg);
-  --ui-color-border-focus: var(--accent-700);
-  --ui-color-focus-ring-brand: color-mix(in srgb, var(--accent-700) 28%, transparent);
+  --ui-color-prominent: var(--accent-700);
+  --ui-color-surface-page: var(--app-bg);
+  --ui-color-input-border-focus: var(--accent-700);
+  --ui-color-focus-ring-prominent: color-mix(in srgb, var(--accent-700) 28%, transparent);
 }
 
 .dark {
-  --ui-color-page-background: var(--app-bg-dark);
+  --ui-color-surface-page: var(--app-bg-dark);
   --ui-color-primary: var(--brand-100);
   --ui-color-primary-foreground: var(--brand-950);
 }
@@ -180,7 +180,7 @@ Notes:
 
 ### Component branding hooks
 
-- **`OutlineButton` accent:** override `--ui-brand-color-alt` (both glow orbs
+- **`OutlineButton` accent:** override `--ui-prominent-color-alt` (both glow orbs
   default to it), or pass `glowColor1`/`glowColor2` per instance.
 - **`Tooltip`:** token-driven, not theme-detected. Defaults to `themeInverse`;
   override `--ui-color-tooltip-*` to restyle. Pass `themeInverse={false}` for a
@@ -195,7 +195,7 @@ Notes:
   `DropdownMenuVariant`.
 - **`Avatar`:** the package owns the surface/padding/radius via
   `--ui-color-surface-secondary`, `--ui-color-border-secondary`, and
-  `--ui-brand-color` (icon/content tint) — there is no dedicated avatar-bg
+  `--ui-prominent-color` (icon/content tint) — there is no dedicated avatar-bg
   token; the app owns the logo/image content (and any light/dark logo swap)
   as `children`.
 - **`Slider*` / `LinearProgressIndicator`:** fill color comes from the `color`

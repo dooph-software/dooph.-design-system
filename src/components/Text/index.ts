@@ -3,6 +3,8 @@ export {
   BodyText,
   ButtonText,
   HeadingText,
+  HeroBodyText,
+  HeroButtonText,
   HeroText,
   LabelText,
   MonoText,
@@ -14,6 +16,8 @@ export type {
   BodyTextProps,
   ButtonTextProps,
   HeadingTextProps,
+  HeroBodyTextProps,
+  HeroButtonTextProps,
   HeroTextProps,
   LabelTextProps,
   MonoTextProps,
@@ -26,8 +30,6 @@ export {
   Fonts,
   FontSizes,
   FontWeights,
-  RevealDirection,
-  RollDirection,
   TextVariant,
   Tracking,
 } from "./constants";
@@ -44,17 +46,5 @@ export type {
   LineHeightValue,
   TrackingValue,
 } from "./constants";
-export { RevealChangeText } from "./RevealChangeText";
-export type { RevealChangeTextProps } from "./RevealChangeText";
-export { RollChangeText } from "./RollChangeText";
-export type { RollChangeTextProps } from "./RollChangeText";
-export { RollHoverText } from "./RollHoverText";
-export type { RollHoverTextProps } from "./RollHoverText";
-export { RollingDigitsText } from "./RollingDigitsText";
-export type { RollingDigitsTextProps } from "./RollingDigitsText";
-export { ShimmerText } from "./ShimmerText";
-export type { ShimmerTextProps } from "./ShimmerText";
 export { serializeAxes } from "./textStyle";
 export type { TextStyleProps } from "./textStyle";
-export { UnderlineLinkText } from "./UnderlineLinkText";
-export type { UnderlineLinkTextProps } from "./UnderlineLinkText";

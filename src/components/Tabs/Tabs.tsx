@@ -29,7 +29,7 @@ const tabTriggerVariants = cva(
     "rounded-tight border border-transparent",
     "text-style-button cursor-pointer select-none",
     "transition-all duration-150 ease-out",
-    "ds-focus-visible-ring focus-visible:border-border-focus",
+    "ds-focus-visible-ring focus-visible:border-input-border-focus",
     "ds-disabled-control",
   ],
   {

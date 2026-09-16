@@ -5,6 +5,8 @@ import {
   BodyText,
   ButtonText,
   HeadingText,
+  HeroBodyText,
+  HeroButtonText,
   HeroText,
   LabelText,
   MonoText,
@@ -112,8 +114,14 @@ export const Roles: Story = {
       <Row label="BodyText">
         <BodyText>{SAMPLE}</BodyText>
       </Row>
+      <Row label="HeroBodyText">
+        <HeroBodyText>{SAMPLE}</HeroBodyText>
+      </Row>
       <Row label="ButtonText">
         <ButtonText>{SAMPLE}</ButtonText>
+      </Row>
+      <Row label="HeroButtonText">
+        <HeroButtonText>{SAMPLE}</HeroButtonText>
       </Row>
       <Row label="LabelText">
         <LabelText>{SAMPLE}</LabelText>

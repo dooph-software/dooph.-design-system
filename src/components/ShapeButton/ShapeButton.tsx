@@ -65,10 +65,10 @@ const SHAPE_SIZE = 46;
 
 /** Fill colors for the shape span — `currentColor` is the shape's paint. */
 const shapeFillClasses = {
-  brand: [
-    "text-brand",
-    "group-hover:text-brand-hover",
-    "group-active:text-brand-active",
+  prominent: [
+    "text-prominent",
+    "group-hover:text-prominent-hover",
+    "group-active:text-prominent-active",
   ],
   primary: [
     "text-primary",
@@ -79,7 +79,7 @@ const shapeFillClasses = {
 
 /** Content color for the icon slot, applied to the root so children inherit. */
 const contentClasses = {
-  brand: "text-brand-fg",
+  prominent: "text-prominent-fg",
   primary: "text-primary-fg",
 } satisfies Record<ShapeButtonVariant, string>;
 
@@ -97,7 +97,7 @@ type ShapeButtonComponent = <TElement extends ElementType = "button">(
  * An icon button with an organic SVG shape background.
  *
  * @example
- * <ShapeButton shape={ShapeButtons.squircle} variant={ShapeButtonVariant.brand}>
+ * <ShapeButton shape={ShapeButtons.squircle} variant={ShapeButtonVariant.prominent}>
  *   <SendIcon />
  * </ShapeButton>
  */
@@ -106,7 +106,7 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
     {
       className,
       shape = ShapeButtons.clover,
-      variant = ShapeButtonVariant.brand,
+      variant = ShapeButtonVariant.prominent,
       asChild = false,
       children,
       ...props

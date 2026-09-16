@@ -74,7 +74,7 @@ const ShapeCell = ({
   size?: number;
   fillColor?: string;
 }) => (
-  <div className="flex flex-col items-center gap-3 rounded-standard border border-border-primary bg-surface-primary p-4">
+  <div className="flex flex-col items-center gap-3 rounded-normal border border-border-primary bg-surface-primary p-4">
     <Shape size={size} strokeColor="transparent" fillColor={fillColor} />
     <span className="text-style-label text-text-secondary">{label}</span>
   </div>
@@ -164,7 +164,7 @@ export const Colors: Story = {
           label={label}
           Shape={Shape}
           fillColor={
-            index % 2 === 0 ? "var(--color-primary)" : "var(--color-brand-color-alt)"
+            index % 2 === 0 ? "var(--color-primary)" : "var(--color-prominent-color-alt)"
           }
         />
       ))}
@@ -175,7 +175,7 @@ export const Colors: Story = {
 export const DefinedFillAndStroke: Story = {
   args: {
     size: 160,
-    strokeColor: "var(--color-brand-color-alt)",
+    strokeColor: "var(--color-prominent-color-alt)",
     fillColor: "var(--color-primary)",
     strokeWeight: 2,
   },

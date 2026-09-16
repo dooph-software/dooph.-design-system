@@ -88,7 +88,7 @@ export const Colors: Story = {
         size={LoadingSpinnerSize.md}
       />
       <LoadingSpinner
-        color={LoadingSpinnerColor.brand}
+        color={LoadingSpinnerColor.prominent}
         size={LoadingSpinnerSize.md}
       />
       <LoadingSpinner color="#e05252" size={LoadingSpinnerSize.md} />
@@ -108,7 +108,7 @@ export const AllVariantsAndColors: Story = {
         />
         <LoadingSpinner
           variant={LoadingSpinnerVariant.flat}
-          color={LoadingSpinnerColor.brand}
+          color={LoadingSpinnerColor.prominent}
           size={LoadingSpinnerSize.md}
         />
       </div>
@@ -121,7 +121,7 @@ export const AllVariantsAndColors: Story = {
         />
         <LoadingSpinner
           variant={LoadingSpinnerVariant.spokes}
-          color={LoadingSpinnerColor.brand}
+          color={LoadingSpinnerColor.prominent}
           size={LoadingSpinnerSize.md}
         />
       </div>

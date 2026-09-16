@@ -18,10 +18,10 @@
 export const DS_COLOR_TOKENS = {
   primary: 'var(--ui-color-primary)',
   secondary: 'var(--ui-color-secondary)',
-  brand: 'var(--ui-color-brand)',
-  danger: 'var(--ui-color-error-primary)',
-  'error-primary': 'var(--ui-color-error-primary)',
-  'error-secondary': 'var(--ui-color-error-secondary)',
+  prominent: 'var(--ui-color-prominent)',
+  danger: 'var(--ui-color-danger-primary)',
+  'danger-primary': 'var(--ui-color-danger-primary)',
+  'danger-secondary': 'var(--ui-color-danger-secondary)',
   text: 'var(--ui-color-text)',
   'text-secondary': 'var(--ui-color-text-secondary)',
   'text-tertiary': 'var(--ui-color-text-tertiary)',
@@ -29,11 +29,12 @@ export const DS_COLOR_TOKENS = {
   'border-secondary': 'var(--ui-color-border-secondary)',
   'surface-primary': 'var(--ui-color-surface-primary)',
   'surface-secondary': 'var(--ui-color-surface-secondary)',
-  'page-background': 'var(--ui-color-page-background)',
-  /* The brand identity color (logo tint), distinct from `brand` above, which is
-   * the brand *button* fill. */
-  'brand-color': 'var(--ui-brand-color)',
-  'brand-color-alt': 'var(--ui-brand-color-alt)',
+  'surface-page': 'var(--ui-color-surface-page)',
+  /* The prominent IDENTITY colour (logo tint), distinct from `prominent`
+   * above, which is the prominent *button* fill. */
+  'prominent-color': 'var(--ui-prominent-color)',
+  'prominent-color-alt': 'var(--ui-prominent-color-alt)',
+  'prominent-color-ter': 'var(--ui-prominent-color-ter)',
 } as const;
 
 export type DsColorToken = keyof typeof DS_COLOR_TOKENS;

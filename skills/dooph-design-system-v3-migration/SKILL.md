@@ -28,7 +28,7 @@ Tailwind (then you rely solely on the precompiled `styles.css` and this whole
 utility topic doesn't apply).
 
 Your app's Tailwind build doesn't know dooph's token scale on its own. Without
-the preset, authoring classes like `p-md`, `gap-rg`, `rounded-standard`,
+the preset, authoring classes like `p-md`, `gap-rg`, `rounded-normal`,
 `bg-primary`, or `font-label` **never generate** — you're forced into ugly
 arbitrary values (`gap-[var(--ui-spacing-rg)]`) or, worse, a same-named Tailwind
 default silently wins (`font-sans`, the numeric spacing scale). The package ships
@@ -55,7 +55,7 @@ Once imported, use the ergonomic utilities instead of arbitrary values:
 | Token family | Utilities you can now write |
 | --- | --- |
 | spacing (`xxs xs sm rg md lg xl xxl`) | `p-md`, `px-rg`, `gap-rg`, `m-xs`, `space-y-sm` |
-| radius (`tight standard soft`) | `rounded-tight`, `rounded-standard`, `rounded-soft` |
+| radius (`tight normal soft`) | `rounded-tight`, `rounded-normal`, `rounded-soft` |
 | color | `bg-primary`, `text-danger-fg`, `border-border-primary`, `bg-surface-primary` |
 | font role | `font-body`, `font-button`, `font-label`, `font-heading` |
 | font size | `text-body`, `text-label`, `text-heading`, `text-title`, `text-hero` |
@@ -92,37 +92,44 @@ Apply these renames to every `--ui-*` you override. A blanket
 | `--ui-color-destructive-border-hover` | `--ui-color-danger-border-hover` |
 | `--ui-color-destructive-border-active` | `--ui-color-danger-border-active` |
 | `--ui-color-destructive-border-disabled` | `--ui-color-danger-border-disabled` |
-| `--ui-color-destructive-focus-ring` | `--ui-color-focus-ring-error` |
+| `--ui-color-destructive-focus-ring` | `--ui-color-focus-ring-danger` |
 | `--ui-color-border` | `--ui-color-border-primary` |
 | `--ui-color-surface` | `--ui-color-surface-primary` |
-| `--ui-color-surface-page` | `--ui-color-page-background` |
-| `--ui-color-focus-ring` | `--ui-color-focus-ring-brand` |
-| `--ui-color-logo` | `--ui-brand-color` |
-| `--ui-accent-color` | `--ui-brand-color-alt` |
+| `--ui-color-focus-ring` | `--ui-color-focus-ring-prominent` |
+| `--ui-color-logo` | `--ui-prominent-color` |
+| `--ui-accent-color` | `--ui-prominent-color-alt` |
 
 **Removed with no direct replacement — delete these lines:**
 
 - `--ui-color-logo-alt` — gone. The alternate brand slot is now
-  `--ui-brand-color-alt` (repurposed from the old accent). If you had distinct
+  `--ui-prominent-color-alt` (repurposed from the old accent). If you had distinct
   logo-alt and accent values, you can only keep one; pick the one you need.
 - `--ui-color-avatar-bg` — gone. `Avatar` now derives its look from
   `--ui-color-surface-secondary` (background), `--ui-color-border-secondary`
-  (1px shell border), and `--ui-brand-color` (icon/content tint). If you had a
+  (1px shell border), and `--ui-prominent-color` (icon/content tint). If you had a
   custom avatar background, set `--ui-color-surface-secondary` to it (note that
   token is shared with other secondary surfaces) or accept the new derivation.
 
 **Unchanged — do NOT rename (these already had v3 names in v2):** all
-`--ui-color-primary*` / `--ui-color-secondary*` / `--ui-color-brand*` bg + border
-tokens, `--ui-color-border-focus`, `--ui-color-trigger-border-hover`,
-`--ui-color-border-popovers`, `--ui-color-modal-surface` / `-backdrop`,
-`--ui-color-focus-ring-primary` (name unchanged; only its default value moved),
-`--ui-color-ghost-*`, `--ui-color-text*`, and all font / spacing / radius /
-sizing tokens.
+`--ui-color-primary*` / `--ui-color-secondary*` bg + border tokens,
+`--ui-color-surface-page`, `--ui-color-border-popovers`,
+`--ui-color-modal-surface` / `-backdrop`, `--ui-color-focus-ring-primary` (name
+unchanged; only its default value moved), `--ui-color-ghost-*`,
+`--ui-color-text*`, and all font / spacing / sizing tokens.
 
 **New tokens you MAY set (optional — sensible defaults ship):**
-`--ui-color-border-secondary`, `--ui-color-trigger-border-error-focus` (defaults
+`--ui-color-border-secondary`, `--ui-color-input-border-danger-focus` (defaults
 to the danger border), the slider geometry tokens, and
 `--ui-shimmer-base` / `--ui-shimmer-highlight`.
+
+> **The target names above are the CURRENT (5.4) ones, not the literal v3
+> spellings.** Several were renamed again after v3 — `--ui-color-brand*` →
+> `--ui-color-prominent*`, `--ui-color-error*` → `--ui-color-danger*`,
+> `--ui-color-page-background` → `--ui-color-surface-page`,
+> `--ui-radius-standard` → `--ui-radius-normal`, and `--ui-color-border-focus` /
+> `--ui-color-trigger-border-*` → `--ui-color-input-border-*` — so this table
+> lands you on what the package reads today rather than on a name that has since
+> moved. `ButtonVariant.brand` is likewise `ButtonVariant.prominent` now.
 
 ## 2. Rename dooph utility classes in your JSX
 
@@ -136,9 +143,8 @@ Sweep your own components (not `node_modules`) for these class renames:
 | any other `*-destructive-*` | `*-danger-*` |
 | `border-border` (bare) | `border-border-primary` |
 | `bg-surface` (bare) | `bg-surface-primary` |
-| `bg-surface-page` | `bg-page-background` |
-| `text-logo` | `text-brand-color` |
-| `shadow-focus-destructive` | `shadow-focus-error` |
+| `text-logo` | `text-prominent-color` |
+| `shadow-focus-destructive` | `shadow-focus-danger` |
 
 Caution on two of them:
 - `border-border` — rename only the **bare** class. Do **not** touch

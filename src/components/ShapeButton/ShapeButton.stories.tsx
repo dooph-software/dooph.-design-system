@@ -28,7 +28,7 @@ type Story = StoryObj<typeof meta>;
 export const Brand: Story = {
   args: {
     shape: ShapeButtons.clover,
-    variant: ShapeButtonVariant.brand,
+    variant: ShapeButtonVariant.prominent,
     children: <SendIcon />,
   },
 };

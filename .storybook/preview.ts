@@ -22,7 +22,7 @@ const preview: Preview = {
       const isDark = context.globals.theme === 'dark';
       document.documentElement.classList.toggle('dark', isDark);
       document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
-      document.body.style.background = 'var(--ui-color-page-background)';
+      document.body.style.background = 'var(--ui-color-surface-page)';
 
       return Story();
     },
@@ -42,7 +42,7 @@ const preview: Preview = {
     backgrounds: {
       default: 'page',
       values: [
-        { name: 'page', value: 'var(--ui-color-page-background)' },
+        { name: 'page', value: 'var(--ui-color-surface-page)' },
         { name: 'white', value: '#ffffff' },
         { name: 'dark', value: '#161616' },
       ],

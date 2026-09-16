@@ -19,7 +19,7 @@ Every component with discrete options MUST export a `const` object that callers 
 export const ButtonVariant = {
   primary: "primary",
   secondary: "secondary",
-  brand: "brand",
+  prominent: "prominent",
   danger: "danger",
   ghost: "ghost",
   text: "text",
@@ -29,7 +29,7 @@ export type ButtonVariant = (typeof ButtonVariant)[keyof typeof ButtonVariant];
 
 The type is always derived from the const — never a hand-written union type that duplicates the keys.
 
-v3 renamed `ButtonVariant.destructive` → `ButtonVariant.danger`. `destructive` no longer exists — do not reintroduce it. The variant key is `danger`; the token family it paints is spelled `--ui-color-error-*` (5.4). There is no `--ui-color-danger*`.
+Two historical renames, neither reversible: v3 renamed `ButtonVariant.destructive` → `.danger`, and 5.4 renamed `ButtonVariant.brand` → `.prominent`. `destructive` and `brand` no longer exist as keys anywhere — the same 5.4 pass renamed the whole `--ui-color-brand*` family to `--ui-color-prominent*` and `--ui-color-error*` to `--ui-color-danger*`, so variant key and token family finally agree in both cases. Do not reintroduce either old spelling.
 
 ### Naming conventions
 
@@ -44,7 +44,7 @@ v3 renamed `ButtonVariant.destructive` → `ButtonVariant.danger`. `destructive`
 | `SegmentedVariant` | `variant` | `<SegmentedTabSelect variant={SegmentedVariant.secondary} />` |
 | `TextDropdownSize` | `size`    | `<TextDropdownTrigger size={TextDropdownSize.sm} />`          |
 | `ShapeButtons`     | `shape`   | `<ShapeButton shape={ShapeButtons.squircle} />`                |
-| `ShapeButtonVariant` | `variant` | `<ShapeButton variant={ShapeButtonVariant.primary} />`      |
+| `ShapeButtonVariant` | `variant` | `<ShapeButton variant={ShapeButtonVariant.prominent} />`    |
 | `SheetSide`        | `side`    | `<SheetContent side={SheetSide.right} />`                     |
 | `TextVariant`      | `variant`    | `<BaseText variant={TextVariant.body} />`                          |
 | `CheckboxChecked`  | `checked`    | `<Checkbox checked={CheckboxChecked.indeterminate} />`             |
@@ -73,8 +73,35 @@ export type FontWeightValue = FontWeight | (string & {}) | number;
 
 Used by `Fonts` / `FontSizes` / `FontWeights` / `Tracking` (`BaseText`) and
 `DS_COLOR_TOKENS` via the `color` prop (`Slider*`, `LinearProgressIndicator`).
-When a variant enum would only ever wrap design values, prefer this — it is why
-`SliderVariant` and `LinearProgressVariant` were deleted rather than extended.
+When a variant enum would only ever wrap ONE design value, prefer this — it is
+why `LinearProgressVariant` was deleted rather than extended.
+
+#### When a closed enum earns its place ALONGSIDE the open value
+
+`SliderVariant` was deleted for the rule above and **restored in 5.4**, so the
+line between the two is worth stating rather than re-litigating.
+
+A closed enum is right when it selects a BUNDLE of values that are tuned
+together and are not derivable from one another. `SliderVariant` picks three
+paints at once: the default hue, the active track's opacity, and the active step
+dot's colour. The third is the reason — Figma composes the dot from the CONTENT
+paint, not from the track's hue, because it has to stay legible ON the filled
+track. No amount of `color` can express that, so `color` alone genuinely could
+not carry the design.
+
+The two then compose rather than compete: **the variant selects the bundle, and
+`color` / `stepColor` override individual paints within it.** An arbitrary
+provider palette still drops into any variant's geometry. Reach for this shape
+only when you can name the value the open prop cannot reach; if the enum would
+just be sugar over one colour, it is the deleted kind.
+
+A bundle enum may also carry a member with NO defaults of its own —
+`SliderVariant.custom` — whose required props are enforced by making the props a
+**discriminated union** (`CalendarProps` is the other example). Pair it with an
+unconditional `throw` in the component, as `ProgressIndicator` does for an
+out-of-range `progress`: the union is the real guard, and the throw covers the
+JavaScript consumer and the runtime-computed value it cannot see. Silently
+falling back would make an explicit choice look like it had been honoured.
 
 ### Props that are design values are inline style, not classes
 

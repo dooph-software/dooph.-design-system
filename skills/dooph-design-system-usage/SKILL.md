@@ -34,7 +34,7 @@ import "@dooph-software/design-system/styles.css"; // required once, at the app 
    them. Do not author a `<button>` with your own classes.
 3. **Visual values → tokens via Tailwind utilities.** Color, spacing, radius,
    shadow, and type come from the token-backed utilities (`bg-primary`, `text-text`,
-   `p-md`, `gap-sm`, `rounded-standard`, `shadow-menu`, `text-style-body`). Never
+   `p-md`, `gap-sm`, `rounded-normal`, `shadow-menu`, `text-style-body`). Never
    hardcode `#hex`, `px`, `style={{…}}`, or arbitrary `bg-[#…]` for things a token
    covers.
 4. **Style in JSX with utilities, not in a stylesheet.** Layout and composition
@@ -82,7 +82,7 @@ Hardcoded values:
 <div className="p-[16px] rounded-[18px] bg-[#ffffff] shadow-[0_1px_4px_rgba(0,0,0,.15)]">
 
 // ✓ token-backed utilities — these re-theme and support dark mode for free
-<div className="p-md rounded-standard bg-surface-primary shadow-menu">
+<div className="p-md rounded-normal bg-surface-primary shadow-menu">
 ```
 
 Bespoke stylesheet:
@@ -95,7 +95,7 @@ Bespoke stylesheet:
 
 ```tsx
 // ✓ express it in JSX with utilities + Text components; no app-authored CSS rules
-<div className="flex flex-col gap-xs p-md rounded-standard bg-surface-primary">
+<div className="flex flex-col gap-xs p-md rounded-normal bg-surface-primary">
   <TitleText>Card title</TitleText>
 </div>
 ```
@@ -107,20 +107,24 @@ overrides) covered by the theming skill — not per-component style rules.
 
 Reach for these before writing local UI:
 
-- **Actions:** `Button` (`ButtonVariant`: `primary` | `secondary` | `brand` |
+- **Actions:** `Button` (`ButtonVariant`: `primary` | `secondary` | `prominent` |
   `danger` | `ghost` | `text`; `ButtonSize`: `default` | `sm` | `icon` |
   `iconSm` | `iconMicro`), `SplitButton` (+ `SplitButtonAction`, `SplitButtonTrigger`),
   `OutlineButton` (`inverseTheme`, `glowing`, `glowColor1`/`glowColor2`),
   `ShapeButton` (`ShapeButtons`: `clover` | `cookie` | `diamond` | `puff` |
-  `squircle`; `ShapeButtonVariant`: `brand` | `primary`), `CopyButton` (writes `value` to the clipboard,
+  `squircle`; `ShapeButtonVariant`: `prominent` | `primary`), `CopyButton` (writes `value` to the clipboard,
   swaps its icon to a checkmark for 2s; `CopyButtonVariant`: `ghost` | `secondary`),
   `CTAButton` (marketing CTA — fully round, padded outline ring on `primary`,
   label-only hover roll; `CTAButtonVariant`: `primary` | `secondary`,
   `CTAButtonSize`: `standard` | `big`).
 - **Inputs:** `Input`, `SearchBox`, `Checkbox`, `TwoWayToggle` (+ `TwoWayToggleItem`),
-  `SliderContinuous` / `SliderStepped` / `SliderLabeled` (Radix Slider; `color`
-  takes a token name or any CSS color, default `primary`; `SliderLabeled` adds
-  `labels: { start, end }`), `VerificationCodeInput` (OTP group — `length`
+  `SliderContinuous` / `SliderStepped` / `SliderLabeled` (Radix Slider;
+  `SliderVariant`: `primary` | `prominent` | `custom` picks the paint bundle —
+  hue, track opacity and step-dot colour — while `color` and `stepColor`
+  override the hue and the dot independently, each taking a token name or any
+  CSS color. `custom` has no palette of its own and REQUIRES `color`: omitting
+  it is a compile error, and the component throws at runtime. `SliderLabeled`
+  adds `labels: { start, end }`), `VerificationCodeInput` (OTP group — `length`
   default 6, digits only, auto-advance/backspace/arrows/paste; `CodeDigitInput`
   is the single cell).
 - **Menus:** `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`,
@@ -155,7 +159,9 @@ Reach for these before writing local UI:
   range is not a public state.
 - **Links:** `TextLink` (body-text anchor; ghost foreground at rest, primary
   text on hover/active, no underline; `asChild` for `<Link>` composition).
-- **Text & icons:** `BaseText` + the eight role components — see **Text** below.
+- **Text & icons:** `BaseText` + the ten role components — see **Text** below.
+  The six animating wrappers below all import from the same package root, but
+  live under `AnimatedText` rather than `Text` in the source.
   `ShimmerText` (animated "working" sheen masked to child glyphs — children must
   not set an explicit text color), `RollChangeText` (rolls old content out / new
   content in when `changeKey` or string/number children change), `RollHoverText`
@@ -194,24 +200,30 @@ tokens — don't rebuild a styled lookalike.
 Use the semantic, token-backed utilities. The common ones:
 
 - Color: `bg-primary` / `text-primary-fg`, `bg-secondary`, `bg-surface-primary`,
-  `bg-surface-secondary`, `bg-page-background`, `text-text` / `text-text-secondary` /
+  `bg-surface-secondary`, `bg-surface-page`, `text-text` / `text-text-secondary` /
   `text-text-tertiary`, `border-border-primary` / `border-border-secondary` /
-  `border-border-popovers` / `border-border-focus`, `bg-brand`, `text-brand-color`,
-  `bg-error-primary` / `text-error-primary` (there is no `bg-danger` — the
-  danger BUTTON variant exists, but it paints secondary + error utilities and
-  owns no colour token family).
+  `border-border-popovers` / `border-input-border-focus`, `bg-prominent`, `text-prominent-color`,
+  `bg-danger` / `text-danger-fg` (the danger BUTTON state family) and
+  `bg-danger-primary` / `text-danger-primary` (the two raw destructive paints
+  the family aliases).
 - Spacing (named, not numeric): `p-md`, `px-rg`, `gap-xs`, `m-lg` … stems are
-  `xxs xs sm rg md lg xl xxl`.
-- Radius: `rounded-tight` (controls), `rounded-standard` (triggers/inputs),
+  `xxxs xxs xs sm rg md lg xl xxl`.
+- Radius: `rounded-tight` (controls), `rounded-normal` (triggers/inputs),
   `rounded-soft` (panels/modals).
-- Shadow: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-brand`, `shadow-focus-primary`, `shadow-focus-error`.
+- Shadow: `shadow-button`, `shadow-button-secondary`, `shadow-menu`, `shadow-focus-prominent`, `shadow-focus-primary`, `shadow-focus-danger`.
 - Typography: never a Tailwind type utility by hand — see **Text** below.
 
 ## Text
 
-Eight roles, each a `BaseText` with its `variant` fixed: `HeroText`, `TitleText`,
-`HeadingText`, `SubheadingText`, `BodyText`, `ButtonText`, `LabelText`,
-`MonoText`. Reach for `BaseText` directly only to set `variant` dynamically.
+Ten roles, each a `BaseText` with its `variant` fixed: `HeroText`, `TitleText`,
+`HeadingText`, `SubheadingText`, `BodyText`, `HeroBodyText`, `ButtonText`,
+`HeroButtonText`, `LabelText`, `MonoText`. Reach for `BaseText` directly only to
+set `variant` dynamically.
+
+`HeroBodyText` and `HeroButtonText` are `BodyText` and `ButtonText` at 16px and
+nothing else — same family, weight, tracking and variable axes — for running
+text and labels that need to sit a step up without changing voice. They are NOT
+related to `HeroText`, which is the 55px display role in the title family.
 
 `MonoText` is the mono face (Google Sans Code by default) at the button role's
 size and weight — use it when a run should read as code, a key, an id, or a
@@ -346,7 +358,7 @@ export function SaveButton({ busy, disabled, children = "Save", ...props }: Butt
   triggers do not add it automatically.
 - **Radix-backed components** (menu, tabs, toggle, tooltip, modal) own
   accessibility. Don't replace them with div/button click handlers.
-- **`OutlineButton`:** override `--ui-brand-color-alt` for the brand glow (both
+- **`OutlineButton`:** override `--ui-prominent-color-alt` for the brand glow (both
   `glowColor1`/`glowColor2` default to it), or pass `glowColor1`/`glowColor2`
   per instance.
 

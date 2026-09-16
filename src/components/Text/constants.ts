@@ -16,45 +16,17 @@
 /** Text role. Selects the default family/size/weight/tracking/axis bundle. */
 export const TextVariant = {
   button: 'button',
+  heroButton: 'heroButton',
   heading: 'heading',
   subheading: 'subheading',
   hero: 'hero',
   title: 'title',
   body: 'body',
+  heroBody: 'heroBody',
   label: 'label',
   mono: 'mono',
 } as const;
 export type TextVariant = (typeof TextVariant)[keyof typeof TextVariant];
-
-/**
- * Roll direction for RollChangeText / RollHoverText.
- *
- * `down` reads as content travelling downward (new content settles in from
- * above); `up` reads as content travelling upward (new content rises in from
- * below). Both RollChangeText and RollHoverText default to `down`, preserving
- * their original motion when the prop is omitted.
- */
-export const RollDirection = {
-  up: 'up',
-  down: 'down',
-} as const;
-export type RollDirection = (typeof RollDirection)[keyof typeof RollDirection];
-
-/**
- * Reveal direction for RevealChangeText — the edge the content travels toward
- * as the slot opens.
- *
- * `left` (the default) pins the content's RIGHT edge, so it reveals out to the
- * left and collapses by tucking back under whatever sits to its right — the
- * breadcrumb-stem case, where the stem hides under the separator. `right` pins
- * the LEFT edge, so the content grows rightward into the space after it.
- */
-export const RevealDirection = {
-  left: 'left',
-  right: 'right',
-} as const;
-export type RevealDirection =
-  (typeof RevealDirection)[keyof typeof RevealDirection];
 
 /** Font family per role. Each --ui-font-* stack is independently overridable. */
 export const Fonts = {
@@ -72,6 +44,8 @@ export type Font = (typeof Fonts)[keyof typeof Fonts];
 export const FontSizes = {
   label: 'var(--ui-text-label)',
   body: 'var(--ui-text-body)',
+  heroBody: 'var(--ui-text-hero-body)',
+  heroButton: 'var(--ui-text-hero-button)',
   mono: 'var(--ui-text-mono)',
   subheading: 'var(--ui-text-subheading)',
   heading: 'var(--ui-text-heading)',
@@ -133,7 +107,11 @@ export type FontAxis = (typeof FontAxes)[keyof typeof FontAxes];
  */
 export const ROLE_AXIS_TOKEN: Partial<Record<TextVariant, string>> = {
   button: 'var(--ui-font-var-button)',
+  /* The hero-scale roles share their base role's axes verbatim — that is what
+   * makes them the same face at a different size rather than a new voice. */
+  heroButton: 'var(--ui-font-var-button)',
   body: 'var(--ui-font-var-body)',
+  heroBody: 'var(--ui-font-var-body)',
   heading: 'var(--ui-font-var-heading)',
   subheading: 'var(--ui-font-var-heading)',
   mono: 'var(--ui-font-var-mono)',
@@ -142,11 +120,13 @@ export const ROLE_AXIS_TOKEN: Partial<Record<TextVariant, string>> = {
 /** Role → the class carrying its defaults (see index.css, `components` layer). */
 export const TEXT_VARIANT_CLASS: Record<TextVariant, string> = {
   button: 'text-style-button',
+  heroButton: 'text-style-hero-button',
   heading: 'text-style-heading',
   subheading: 'text-style-subheading',
   hero: 'text-style-hero',
   title: 'text-style-title',
   body: 'text-style-body',
+  heroBody: 'text-style-hero-body',
   label: 'text-style-label',
   mono: 'text-style-mono',
 };

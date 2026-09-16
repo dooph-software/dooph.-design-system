@@ -50,7 +50,7 @@ export const Standard: Story = {
 export const Brand: Story = {
   render: () => (
     <ToastProvider>
-      <ToastDemo label="Published" variant={ToastTypes.brand} />
+      <ToastDemo label="Published" variant={ToastTypes.prominent} />
     </ToastProvider>
   ),
 };
@@ -58,7 +58,7 @@ export const Brand: Story = {
 export const Error: Story = {
   render: () => (
     <ToastProvider>
-      <ToastDemo label="Upload failed" variant={ToastTypes.error} />
+      <ToastDemo label="Upload failed" variant={ToastTypes.danger} />
     </ToastProvider>
   ),
 };
@@ -141,8 +141,8 @@ export const AllVariants: Story = {
     <ToastProvider>
       <div className="flex flex-wrap gap-3">
         <ToastDemo label="Saved successfully" variant={ToastTypes.simple} />
-        <ToastDemo label="Published" variant={ToastTypes.brand} />
-        <ToastDemo label="Upload failed" variant={ToastTypes.error} />
+        <ToastDemo label="Published" variant={ToastTypes.prominent} />
+        <ToastDemo label="Upload failed" variant={ToastTypes.danger} />
         <ActionButton />
       </div>
     </ToastProvider>

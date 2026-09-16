@@ -2,7 +2,10 @@ import { forwardRef, type CSSProperties, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
 import { RollDirection } from "./constants";
 
-export interface RollHoverTextProps extends Omit<HTMLAttributes<HTMLSpanElement>, "children"> {
+export interface RollHoverTextProps extends Omit<
+  HTMLAttributes<HTMLSpanElement>,
+  "children"
+> {
   /** Text to animate. Must be a string — the component splits it per character. */
   children: string;
   /** Force the rolled state regardless of hover (touch, focus-visible, programmatic). */
@@ -26,7 +29,17 @@ export interface RollHoverTextProps extends Omit<HTMLAttributes<HTMLSpanElement>
  * <Button className="group"><ButtonText><RollHoverText>Deploy now</RollHoverText></ButtonText></Button>
  */
 const RollHoverText = forwardRef<HTMLSpanElement, RollHoverTextProps>(
-  ({ children, active, className, direction = RollDirection.down, style, ...props }, ref) => {
+  (
+    {
+      children,
+      active,
+      className,
+      direction = RollDirection.down,
+      style,
+      ...props
+    },
+    ref,
+  ) => {
     // Split words from whitespace runs so spaces render as plain text between
     // word wrappers — only glyphs get cells. The char index runs continuously
     // across the whole string so the wave sweeps the full phrase, not each word.
@@ -38,7 +51,12 @@ const RollHoverText = forwardRef<HTMLSpanElement, RollHoverTextProps>(
         aria-label={children}
         data-active={active ? "true" : undefined}
         className={cn("ds-roll-hover", className)}
-        style={{ "--ds-roll-dir": direction === RollDirection.up ? -1 : 1, ...style } as CSSProperties}
+        style={
+          {
+            "--ds-roll-dir": direction === RollDirection.up ? -1 : 1,
+            ...style,
+          } as CSSProperties
+        }
         {...props}
       >
         {children.split(/(\s+)/).map((segment, segmentIndex) => {
@@ -51,7 +69,11 @@ const RollHoverText = forwardRef<HTMLSpanElement, RollHoverTextProps>(
             );
           }
           return (
-            <span key={segmentIndex} aria-hidden="true" className="ds-roll-hover-word">
+            <span
+              key={segmentIndex}
+              aria-hidden="true"
+              className="ds-roll-hover-word"
+            >
               {Array.from(segment).map((char, charIndex) => (
                 <span
                   key={charIndex}

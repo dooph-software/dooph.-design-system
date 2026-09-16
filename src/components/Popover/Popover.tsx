@@ -45,7 +45,7 @@ const PopoverContent = forwardRef<
         sideOffset={sideOffset}
         collisionPadding={collisionPadding}
         className={cn(
-          "z-50 overflow-hidden rounded-standard",
+          "z-50 overflow-hidden rounded-normal",
           "border border-solid border-border-primary bg-surface-primary shadow-button",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",

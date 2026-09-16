@@ -38,7 +38,7 @@ const checkboxVariants = cva(
     "data-[state=unchecked]:hover:bg-secondary-hover data-[state=unchecked]:hover:border-border-primary data-[state=unchecked]:hover:shadow-button-secondary",
     // active bg stays at hover color intentionally — never while disabled
     "[&:not([data-disabled])]:active:bg-secondary-hover",
-    "focus-visible:border-border-focus ds-focus-visible-ring",
+    "focus-visible:border-input-border-focus ds-focus-visible-ring",
     "data-[disabled]:focus-visible:border-secondary-border-disabled",
     "data-[disabled]:data-[state=unchecked]:bg-secondary-disabled data-[disabled]:data-[state=unchecked]:border-secondary-border-disabled",
     "data-[disabled]:data-[state=checked]:bg-primary-disabled data-[disabled]:data-[state=checked]:border-primary-border-disabled data-[disabled]:data-[state=checked]:text-secondary-fg data-[disabled]:data-[state=checked]:focus-visible:border-primary-border-disabled",
@@ -48,11 +48,11 @@ const checkboxVariants = cva(
   {
     variants: {
       variant: {
-        brand: [
-          "data-[state=checked]:bg-brand data-[state=checked]:border-brand data-[state=checked]:text-brand-fg",
-          "data-[state=indeterminate]:bg-brand data-[state=indeterminate]:border-brand data-[state=indeterminate]:text-brand-fg",
+        prominent: [
+          "data-[state=checked]:bg-prominent data-[state=checked]:border-prominent data-[state=checked]:text-prominent-fg",
+          "data-[state=indeterminate]:bg-prominent data-[state=indeterminate]:border-prominent data-[state=indeterminate]:text-prominent-fg",
           // active border matches typeabletrigger hover, not brand
-          "[&:not([data-disabled])]:active:border-trigger-border-hover [&:not([data-disabled])]:active:shadow-focus-brand",
+          "[&:not([data-disabled])]:active:border-input-border-hover [&:not([data-disabled])]:active:shadow-focus-prominent",
         ],
         primary: [
           "data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-fg",
@@ -62,7 +62,7 @@ const checkboxVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "brand",
+      variant: "prominent",
     },
   },
 );

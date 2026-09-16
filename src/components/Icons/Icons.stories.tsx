@@ -199,7 +199,7 @@ export const Colors: Story = {
         size={IconSizes.md}
         color="var(--color-text-tertiary)"
       />
-      <LightModeIcon size={IconSizes.md} color="var(--color-brand-color)" />
+      <LightModeIcon size={IconSizes.md} color="var(--color-prominent-color)" />
     </div>
   ),
 };

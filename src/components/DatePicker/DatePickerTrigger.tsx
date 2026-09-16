@@ -65,7 +65,7 @@ const DatePickerTrigger = forwardRef<HTMLButtonElement, DatePickerTriggerProps>(
           // The ring uses ds-focus-ring-on-open, which carries the state in its
           // own selector — a `data-[state=open]:ds-focus-ring` variant would
           // silently emit no rule at all.
-          "data-[state=open]:border-border-focus ds-focus-ring-on-open",
+          "data-[state=open]:border-input-border-focus ds-focus-ring-on-open",
           className,
         )}
         {...buttonProps}

@@ -55,7 +55,7 @@ const createToastId = () => `toast-${Date.now()}-${toastId++}`;
 
 const toastRootVariants = cva(
   [
-    "group pointer-events-auto relative flex w-full overflow-hidden rounded-standard shadow-menu",
+    "group pointer-events-auto relative flex w-full overflow-hidden rounded-normal shadow-menu",
     "data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)]",
     "data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-transform",
     "data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)]",
@@ -68,10 +68,10 @@ const toastRootVariants = cva(
       variant: {
         simple:
           "ds-toast-width-simple flex-row items-center gap-xxl border border-solid border-border-popovers bg-modal-surface py-2 pl-4 pr-2 text-text",
-        brand:
-          "ds-toast-width-simple flex-row items-center gap-xxl border border-solid border-brand bg-brand py-2 pl-4 pr-2 text-brand-fg",
-        error:
-          "ds-toast-width-simple flex-row items-center gap-xxl bg-error-secondary py-2 pl-4 pr-2 text-text",
+        prominent:
+          "ds-toast-width-simple flex-row items-center gap-xxl border border-solid border-prominent bg-prominent py-2 pl-4 pr-2 text-prominent-fg",
+        danger:
+          "ds-toast-width-simple flex-row items-center gap-xxl bg-danger-secondary py-2 pl-4 pr-2 text-text",
         complex:
           "ds-toast-width-complex flex-col gap-md border border-solid border-border-popovers bg-modal-surface pb-3 pl-[14px] pr-3 pt-[14px] text-text",
       },
@@ -283,8 +283,8 @@ function ToastProvider({
                   <ToastTitle
                     className={cn(
                       "block wrap-break-word",
-                      item.variant === ToastTypes.brand
-                        ? "text-brand-fg"
+                      item.variant === ToastTypes.prominent
+                        ? "text-prominent-fg"
                         : "text-text",
                     )}
                   >
@@ -295,8 +295,8 @@ function ToastProvider({
                   <ToastDescription
                     className={cn(
                       "block wrap-break-word",
-                      item.variant === ToastTypes.brand
-                        ? "text-brand-fg"
+                      item.variant === ToastTypes.prominent
+                        ? "text-prominent-fg"
                         : "text-text-secondary",
                     )}
                   >
