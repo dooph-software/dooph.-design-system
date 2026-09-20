@@ -381,7 +381,14 @@ const SliderBase = forwardRef<
                 'bg-secondary border border-solid border-secondary-border',
               )}
             />
-            {/* step dots — centers aligned to the thumb's stop positions */}
+            {/* step dots — centers aligned to the thumb's stop positions.
+             *
+             * No colour transition, deliberately. Crossing a step is a discrete
+             * event: by the time the dot's state flips the handle has already
+             * passed it, so fading the colour over 150ms only makes the dot lag
+             * behind the thing that changed it. The handle and fills DO glide
+             * (`.ds-slider-glide`), because they settle onto a position; a dot
+             * does not move, it just switches sides. */}
             {stepValues.map((v) => (
               <span
                 key={v}
@@ -389,7 +396,6 @@ const SliderBase = forwardRef<
                 data-active={v <= (display[0] ?? min) || undefined}
                 className={cn(
                   'absolute top-1/2 size-[6px] -translate-x-1/2 -translate-y-1/2 rounded-full',
-                  'transition-colors duration-150 motion-reduce:transition-none',
                   'ds-slider-dot',
                 )}
                 style={{ left: thumbAlignedLeft(pctOf(v, min, max)) }}
