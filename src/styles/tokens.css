@@ -59,7 +59,9 @@
   --ui-color-prominent-foreground: #ffffff;
   /* Disabled aliases secondary, matching every other solid button (Figma). */
   --ui-color-prominent-disabled: var(--ui-color-secondary-disabled);
-  --ui-color-prominent-border-disabled: var(--ui-color-secondary-border-disabled);
+  --ui-color-prominent-border-disabled: var(
+    --ui-color-secondary-border-disabled
+  );
 
   /* Danger — the raw destructive palette (Figma danger-primary / -secondary).
    * Mode-invariant, so no .dark override. */
@@ -448,7 +450,7 @@
   --ui-icon-rg: 14px;
   --ui-icon-md: 16px;
   --ui-icon-lg: 18px;
-  --ui-icon-stroke-width: 1.5;
+  --ui-icon-stroke-width: 2;
 
   /* ── Radius (semantic corners) ────────────────────────────────────────────
    * tight     — compact chrome: buttons, tabs, dense controls (kbd, etc.).
@@ -497,6 +499,59 @@
   --ui-min-w-cta-content-big: 350px;
   --ui-min-w-cta-pill-big: 370px;
   --ui-spacing-cta-content-big: 60px;
+
+  /* ── Stickers ──────────────────────────────────────────────────────────
+   * Figma collection Colors - Statics, group `stickers/`.
+   *
+   * Content colours alias the paint Figma aliases, so retuning that paint
+   * retunes the sticker. Backgrounds are a SEPARATE hue at an opacity: most
+   * variants share the content hue, but secondary's wash is the secondary
+   * button's active border and danger's wash is danger-secondary (the content
+   * is danger-primary). The opacity stays its own token so `StickerVariant.custom`
+   * can tint an arbitrary colour with it — baking the alpha into the hex would
+   * freeze that.
+   *
+   * Figma spells the shared opacity `sticker-bg-opactity` (missing i). The
+   * token uses the corrected spelling. */
+
+  --ui-color-sticker-prominent: var(--ui-color-prominent);
+  --ui-color-sticker-secondary: var(--ui-color-text-tertiary);
+  --ui-color-sticker-alternate: var(--ui-prominent-color-alt);
+  --ui-color-sticker-tertiary: var(--ui-prominent-color-ter);
+  --ui-color-sticker-danger: var(--ui-color-danger-primary);
+
+  --ui-sticker-bg-opacity: 20%;
+  --ui-sticker-bg-opacity-secondary: 80%;
+
+  --ui-color-sticker-bg-prominent: color-mix(
+    in srgb,
+    var(--ui-color-prominent) var(--ui-sticker-bg-opacity),
+    transparent
+  );
+  --ui-color-sticker-bg-secondary: color-mix(
+    in srgb,
+    var(--ui-color-secondary-border-active)
+      var(--ui-sticker-bg-opacity-secondary),
+    transparent
+  );
+  --ui-color-sticker-bg-alternate: color-mix(
+    in srgb,
+    var(--ui-prominent-color-alt) var(--ui-sticker-bg-opacity),
+    transparent
+  );
+  --ui-color-sticker-bg-tertiary: color-mix(
+    in srgb,
+    var(--ui-prominent-color-ter) var(--ui-sticker-bg-opacity),
+    transparent
+  );
+  --ui-color-sticker-bg-danger: color-mix(
+    in srgb,
+    var(--ui-color-danger-secondary) var(--ui-sticker-bg-opacity),
+    transparent
+  );
+
+  /* Figma's sticker vertical padding is a raw 6px, off the spacing scale. */
+  --ui-spacing-sticker-y: 6px;
 
   /* ── Disabled ────────────────────────────────────────────────────────── */
 
@@ -554,7 +609,6 @@
   --ui-color-focus-ring-danger: rgba(234, 63, 63, 0.15);
   --ui-color-input-border-focus: var(--ui-color-prominent-border-active);
 
-
   --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.65);
   --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.65);
   --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.85);
@@ -569,6 +623,20 @@
   --ui-color-slider-step-prominent-active: rgba(255, 255, 255, 0.4);
 
   --ui-opacity-disabled: 0.5;
+
+  /* Secondary's own opacity variable drops to 60%, but the dark sticker WASH
+   * does not use it — Figma binds `color-sticker-bg-secondary` to the shared
+   * 20% opacity in dark. Danger stops being a composite at all: both the
+   * content and the wash are a literal white, not danger-primary/secondary. */
+  --ui-sticker-bg-opacity-secondary: 60%;
+  --ui-color-sticker-bg-secondary: color-mix(
+    in srgb,
+    var(--ui-color-secondary-border-active) var(--ui-sticker-bg-opacity),
+    transparent
+  );
+  --ui-color-sticker-danger: #ffffff;
+  --ui-color-sticker-bg-danger: #ffffff;
+
   --ui-size-checkbox: 18px;
   --ui-radius-checkbox: 6px;
   --ui-radius-avatar: 8px;

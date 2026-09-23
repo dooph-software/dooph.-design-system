@@ -142,6 +142,10 @@ const EXCLUDED = new Set([
   "ui-spacing-cta-content-big",
   // Opacity — used as var() in arbitrary Tailwind values
   "ui-opacity-disabled",
+  // Sticker washes — raw var() inside the sticker bg color-mix and the
+  // custom variant's inline background. Not a utility.
+  "ui-sticker-bg-opacity",
+  "ui-sticker-bg-opacity-secondary",
   // Focus ring colors — only used inside shadow values
   "ui-color-focus-ring-prominent",
   "ui-color-focus-ring-primary",

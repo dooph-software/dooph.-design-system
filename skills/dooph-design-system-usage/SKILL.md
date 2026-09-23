@@ -143,7 +143,12 @@ Reach for these before writing local UI:
   For rendering the same content as a Modal on desktop and a Sheet under a
   breakpoint, see `references/responsive-sheet-modal.md` (app-side wrapper —
   intentionally not a packaged component).
-- **Layout / surfaces:** `OutlineSection`, `Avatar`, `HotkeyIndicator`.
+- **Layout / surfaces:** `OutlineSection`, `Avatar`, `HotkeyIndicator`, `Sticker`
+  (`StickerVariant`: `prominent` | `alternate` | `secondary` | `tertiary` |
+  `danger` | `custom`). Children are the label — an icon and text, laid out in a
+  row. `custom` has no palette and REQUIRES `color` (a token name or any CSS
+  color); the wash is that colour at `--ui-sticker-bg-opacity`. Omitting `color`
+  is a compile error, and the component throws at runtime.
 - **Data:** `Table` (+ `TableHeader`, `TableHeaderCell`, `TableRow`, `TableCell`,
   `TablePlaceholder`; sortable headers via `TableSortDirection`) — use this
   before hand-rolling a grid of divs for tabular data.

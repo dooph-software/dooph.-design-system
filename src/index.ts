@@ -3,6 +3,7 @@ export * from './components/Button';
 export * from './components/CTAButton';
 export * from './components/CopyButton';
 export * from './components/Avatar';
+export * from './components/Sticker';
 export * from './components/Checkbox';
 export * from './components/HotkeyIndicator';
 export * from './components/Icons';

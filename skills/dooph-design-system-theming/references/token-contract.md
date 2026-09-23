@@ -102,6 +102,16 @@ Geometry-only tokens for `SliderContinuous`/`SliderStepped`/`SliderLabeled` — 
 - `--ui-width-slider-handle`, `--ui-height-slider-handle` — thumb dimensions
 - `--ui-spacing-xs` — doubles as the stepped slider's end inset: how far the first/last dot (and the handle's travel) sit from the ends of the track
 
+## Stickers
+
+Used by `Sticker`. Content and wash are separate paints: most variants wash their own content hue, but secondary washes `--ui-color-secondary-border-active` and danger washes `--ui-color-danger-secondary` (its content is `--ui-color-danger-primary`). Figma spells the shared opacity `sticker-bg-opactity`; the token corrects that.
+
+- `--ui-color-sticker-prominent` / `-secondary` / `-alternate` / `-tertiary` / `-danger` — the glyph and label colour. Each aliases the paint Figma aliases (`--ui-color-prominent`, `--ui-color-text-tertiary`, `--ui-prominent-color-alt`, `--ui-prominent-color-ter`, `--ui-color-danger-primary`), except danger in dark, which is a literal `#ffffff`
+- `--ui-color-sticker-bg-prominent` / `-secondary` / `-alternate` / `-tertiary` / `-danger` — the wash, a `color-mix` of the hue at the opacity below. Dark secondary mixes at the shared 20% rather than the secondary opacity; dark danger is a solid `#ffffff`, not a mix
+- `--ui-sticker-bg-opacity` — 20% in both modes. `StickerVariant.custom` applies this to its `color` prop
+- `--ui-sticker-bg-opacity-secondary` — 80% light / 60% dark. The light secondary wash reads it; the dark wash does not (see above)
+- `--ui-spacing-sticker-y` — vertical padding, 6px (Figma's raw value, off the spacing scale). Tailwind: `py-sticker-y`
+
 ## Panel And Field Widths
 
 - `--ui-min-w-menu` (160px) · `--ui-min-w-menu-action` (144px) ·

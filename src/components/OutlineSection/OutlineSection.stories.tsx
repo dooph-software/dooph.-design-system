@@ -1,8 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { OutlineSection } from './OutlineSection';
+import { Avatar, AvatarSize } from '../Avatar/Avatar';
 import { Button } from '../Button/Button';
 import { ButtonSize, ButtonVariant } from '../Button/constants';
-import { CheckIcon, PlusIcon } from '../Icons';
+import { CheckIcon, OrganizationIcon, PlusIcon } from '../Icons';
+import { LinearProgressIndicator } from '../LinearProgressIndicator/LinearProgressIndicator';
+import { SegmentedTabItem, SegmentedTabSelect } from '../SegmentedTabSelect';
+import { SegmentedVariant } from '../SegmentedTabSelect/constants';
+import { Sticker } from '../Sticker/Sticker';
+import { StickerVariant } from '../Sticker/constants';
+import { BodyText, ButtonText, HeadingText, LabelText } from '../Text';
+import { OutlineSection } from './OutlineSection';
 
 const meta = {
   title: 'Bits & Pieces/OutlineSection',
@@ -22,25 +29,56 @@ export const Default: Story = {
   ),
 };
 
-export const WithMultipleChildren: Story = {
+export const Card: Story = {
   render: () => (
     <OutlineSection>
-      <div className="flex items-center gap-2">
-        <Button
-          variant={ButtonVariant.secondary}
-          size={ButtonSize.icon}
-          aria-label="Add"
+      <div className="flex w-80 flex-col gap-md">
+        <div className="flex items-start justify-between gap-sm">
+          <div className="flex items-center gap-sm">
+            <Avatar size={AvatarSize.small}>
+              <OrganizationIcon />
+            </Avatar>
+            <div className="flex flex-col">
+              <HeadingText>Northwind</HeadingText>
+              <LabelText>Workspace</LabelText>
+            </div>
+          </div>
+          <Sticker variant={StickerVariant.prominent}>
+            <CheckIcon />
+            <ButtonText>Active</ButtonText>
+          </Sticker>
+        </div>
+
+        <BodyText>
+          Billing is on track for this cycle. Two seats are still unassigned.
+        </BodyText>
+
+        <div className="flex flex-col gap-xs">
+          <div className="flex items-center justify-between gap-sm">
+            <LabelText>Seats used</LabelText>
+            <LabelText>18 / 24</LabelText>
+          </div>
+          <LinearProgressIndicator value={75} />
+        </div>
+
+        <SegmentedTabSelect
+          defaultValue="overview"
+          variant={SegmentedVariant.secondary}
         >
-          <PlusIcon />
-        </Button>
-        <Button variant={ButtonVariant.secondary}>Label</Button>
-        <Button
-          variant={ButtonVariant.secondary}
-          size={ButtonSize.icon}
-          aria-label="Confirm"
-        >
-          <CheckIcon />
-        </Button>
+          <SegmentedTabItem value="overview">Overview</SegmentedTabItem>
+          <SegmentedTabItem value="members">Members</SegmentedTabItem>
+          <SegmentedTabItem value="billing">Billing</SegmentedTabItem>
+        </SegmentedTabSelect>
+
+        <div className="flex items-center justify-end gap-sm">
+          <Button variant={ButtonVariant.secondary} size={ButtonSize.sm}>
+            <PlusIcon />
+            Invite
+          </Button>
+          <Button variant={ButtonVariant.primary} size={ButtonSize.sm}>
+            Manage
+          </Button>
+        </div>
       </div>
     </OutlineSection>
   ),
