@@ -129,7 +129,6 @@ const EXCLUDED = new Set([
   "ui-min-w-tooltip-complex",
   // Menu widths — used as raw var() only
   "ui-min-w-menu",
-  "ui-min-w-menu-action",
   "ui-min-w-menu-complex",
   "ui-min-w-search-box",
   // CTAButton geometry — exposed via ds-* helpers

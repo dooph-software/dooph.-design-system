@@ -1,3 +1,10 @@
+import {
+  Description,
+  DocsStory,
+  Heading,
+  Markdown,
+  Title,
+} from "@storybook/addon-docs/blocks";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useCallback, useEffect, useState } from "react";
 import { Button, ButtonSize, ButtonVariant } from "../Button";
@@ -30,27 +37,22 @@ import { RevealDirection, RollDirection } from "./constants";
  * the old per-file `args: { children: ... }` placeholders (which existed only
  * to satisfy `StoryObj<typeof meta>`) are gone.
  *
- * Export names are prefixed with their component so the six groups stay
- * legible in one sidebar list and so colliding names (Standalone,
- * LargeDisplayType, InBodyCopy, ControlledActive, DirectionUpVsDown) survive
- * the merge.
+ * Export names stay prefixed so colliding story ids survive the merge.
+ * The docs page (`AnimatedTextDocs`) is what labels each group — story
+ * `name`s stay the example, under a heading for the wrapper they belong to.
  */
 const meta = {
   title: "Text/AnimatedText",
   parameters: {
     layout: "centered",
     docs: {
+      page: AnimatedTextDocs,
       description: {
         component:
-          "Six wrappers that animate text without owning its typography: " +
-          "**ShimmerText** (a sheen masked to the glyphs), **RollHoverText** " +
-          "(per-character barrel roll on hover), **RollChangeText** (old " +
-          "content rolls out as new content rolls in), **RevealChangeText** (a " +
-          "width-animated slot that tucks and reveals), **RollingDigitsText** " +
-          "(per-place-value digit wheels for a numeric string) and " +
-          "**UnderlineLinkText** (an underline that wipes and redraws). All of " +
-          "them respect `prefers-reduced-motion`, and none defines a color of " +
-          "its own, so dark mode needs nothing from them.",
+          "Six wrappers that animate text without owning its typography. " +
+          "Each section below is one wrapper. All of them respect " +
+          "`prefers-reduced-motion`, and none defines a color of its own, so " +
+          "dark mode needs nothing from them.",
       },
     },
   },
@@ -657,6 +659,7 @@ function Demo({
 }
 
 export const RollingDigitsDefault: Story = {
+  name: "Same digit count",
   render: () => (
     <Demo
       values={["$1,240.00", "$3,891.45", "$2,507.62"]}
@@ -671,6 +674,7 @@ export const RollingDigitsDefault: Story = {
  * width rather than appearing at full width, so the figure grows continuously
  * instead of snapping. */
 export const RollingDigitsDigitCountChange: Story = {
+  name: "Digit count change",
   render: () => (
     <Demo
       values={["$9.99", "$99.99", "$999.99", "$1,240.00", "$12,450.00"]}
@@ -685,6 +689,7 @@ export const RollingDigitsDigitCountChange: Story = {
  * one side must leave the other alone. Losing them entirely is the case that
  * used to unmount the group before it could animate. */
 export const RollingDigitsDecimalsAppearAndLeave: Story = {
+  name: "Decimals appear and leave",
   render: () => (
     <Demo
       values={["$5", "$5.2", "$5.25", "$5.250"]}
@@ -695,6 +700,7 @@ export const RollingDigitsDecimalsAppearAndLeave: Story = {
 };
 
 export const RollingDigitsSuffixes: Story = {
+  name: "Prefixes and suffixes",
   render: () => (
     <Demo
       values={["1.2M", "16.3M", "43.2M", "62.3k"]}
@@ -706,6 +712,7 @@ export const RollingDigitsSuffixes: Story = {
 };
 
 export const RollingDigitsSmallDecimals: Story = {
+  name: "Small decimals",
   render: () => (
     <Demo
       smallDecimals
@@ -730,6 +737,7 @@ const FORMATS: Array<{ value: string; note: string }> = [
 ];
 
 export const RollingDigitsFormats: Story = {
+  name: "Formats",
   render: () => (
     <div className="flex flex-col items-start gap-sm p-4">
       {FORMATS.map((f) => (
@@ -752,6 +760,7 @@ export const RollingDigitsFormats: Story = {
  * resolve against that size — so the same component is correct from label to
  * hero with no size prop. */
 export const RollingDigitsScales: Story = {
+  name: "Scales with the type",
   render: () => {
     const [value, setValue] = useState("$982.10");
     return (
@@ -787,6 +796,7 @@ const TOTAL = "$23,069.86";
  * digit count on purpose, so scrubbing exercises enters and exits back to back
  * and interrupts them mid-flight. */
 export const RollingDigitsTableScrub: Story = {
+  name: "Table scrub",
   render: () => {
     const [amount, setAmount] = useState(TOTAL);
     return (
@@ -822,6 +832,7 @@ export const RollingDigitsTableScrub: Story = {
  * changes land while the previous animation is still running — the state the
  * component has to survive without stranding a wheel. */
 export const RollingDigitsLiveTicker: Story = {
+  name: "Live ticker",
   render: () => {
     const [cents, setCents] = useState(87_432);
     useEffect(() => {
@@ -1002,3 +1013,102 @@ export const UnderlineLinkControlledActive: Story = {
     );
   },
 };
+
+function StorySection({
+  title,
+  summary,
+  stories,
+}: {
+  title: string;
+  summary: string;
+  stories: Story[];
+}) {
+  return (
+    <>
+      <Heading>{title}</Heading>
+      <Markdown>{summary}</Markdown>
+      {stories.map((story) => (
+        <DocsStory key={story.name} of={story} />
+      ))}
+    </>
+  );
+}
+
+function AnimatedTextDocs() {
+  return (
+    <>
+      <Title />
+      <Description />
+      <StorySection
+        title="ShimmerText"
+        summary="A sheen masked to the glyphs. Children keep their own type, and must not set a text color while the shimmer is on."
+        stories={[
+          ShimmerWrappingButtonText,
+          ShimmerWrappingBodyText,
+          ShimmerWrappingWithFontWeightOverride,
+          ShimmerToggleOnOff,
+        ]}
+      />
+      <StorySection
+        title="RollHoverText"
+        summary="Each character rolls on hover — from this element's own hover, an ancestor `.group`, or the `active` prop. The text itself never changes."
+        stories={[
+          RollHoverInButton,
+          RollHoverInOutlineButton,
+          RollHoverStandalone,
+          RollHoverLargeDisplayType,
+          RollHoverInBodyCopy,
+          RollHoverDirectionUpVsDown,
+          RollHoverControlledActive,
+        ]}
+      />
+      <StorySection
+        title="RollChangeText"
+        summary="When the content changes, the old value rolls out and blurs while the new one rolls in. Key the change with `changeKey`, or let string and number children key it themselves."
+        stories={[
+          RollChangeAutoCyclingStatus,
+          RollChangeDirectionUpVsDown,
+          RollChangeChangeKeyWithComplexChildren,
+        ]}
+      />
+      <StorySection
+        title="RevealChangeText"
+        summary="A slot whose width animates, so the row around it reflows. A new key collapses, swaps, then reveals. `changeKey={null}` collapses and stays collapsed. Pair it with RollChangeText and start that roll from `onSettled`."
+        stories={[
+          RevealChangeRevealAndCollapse,
+          RevealChangeChangeCollapsesThenReveals,
+          RevealChangeDirectionLeftVsRight,
+          RevealChangeBreadcrumbWithRollChangeText,
+        ]}
+      />
+      <StorySection
+        title="RollingDigitsText"
+        summary="Per-place-value digit wheels for a pre-formatted numeric string. The figure aligns from the right, and a grouping comma leaves with the digit it trails."
+        stories={[
+          RollingDigitsDefault,
+          RollingDigitsDigitCountChange,
+          RollingDigitsDecimalsAppearAndLeave,
+          RollingDigitsSuffixes,
+          RollingDigitsSmallDecimals,
+          RollingDigitsFormats,
+          RollingDigitsScales,
+          RollingDigitsTableScrub,
+          RollingDigitsLiveTicker,
+        ]}
+      />
+      <StorySection
+        title="UnderlineLinkText"
+        summary="An underline that wipes out to the right and redraws from the left. The line uses `currentColor`, so set the color on this element or above it — a child that sets its own color paints the glyphs and not the line."
+        stories={[
+          UnderlineLinkStandalone,
+          UnderlineLinkThickness,
+          UnderlineLinkOffset,
+          UnderlineLinkInTextLink,
+          UnderlineLinkLargeDisplayType,
+          UnderlineLinkInBodyCopy,
+          UnderlineLinkControlledActive,
+        ]}
+      />
+    </>
+  );
+}

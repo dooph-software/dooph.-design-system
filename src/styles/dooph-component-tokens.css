@@ -192,36 +192,16 @@
     transform-origin: var(--radix-popover-content-transform-origin);
   }
 
-  /* Menu width floor, selected by DropdownMenuVariant on the root and read here
-   * via --ds-menu-min-w. The floor applies in BOTH width modes: with
-   * matchTriggerWidth it is the lower bound of the max(), without it, it is the
-   * width. Falls back to the standard token when no variant class is present. */
-  .ds-menu-w-standard {
-    --ds-menu-min-w: var(--ui-min-w-menu);
-  }
-
-  .ds-menu-w-action {
-    --ds-menu-min-w: var(--ui-min-w-menu-action);
-  }
-
-  .ds-menu-w-complex {
-    --ds-menu-min-w: var(--ui-min-w-menu-complex);
-  }
-
   .ds-radix-dropdown-match-trigger-width {
-    min-width: max(
-      var(--radix-dropdown-menu-trigger-width),
-      var(--ds-menu-min-w, var(--ui-min-w-menu))
-    );
+    min-width: var(--radix-dropdown-menu-trigger-width);
   }
 
+  /* The 160px menu floor — carried by menu ITEMS; sections and the panel hug. */
   .ds-min-w-menu {
-    min-width: var(--ds-menu-min-w, var(--ui-min-w-menu));
+    min-width: var(--ui-min-w-menu);
   }
 
-  /* Applies the complex-menu width directly. Distinct from
-   * .ds-menu-w-complex, which only sets --ds-menu-min-w for the
-   * trigger-matching helper above and never sets a width itself. */
+  /* Applies the complex-menu width directly. */
   .ds-min-w-menu-complex {
     min-width: var(--ui-min-w-menu-complex);
   }
@@ -325,6 +305,18 @@
    * so `rounded-tight` would win on source order. */
   .ds-radius-tight-inset-xxs {
     border-radius: calc(var(--ui-radius-tight) - var(--ui-spacing-xxs));
+  }
+
+  /* Concentric outer radius for a shell wrapping micro options with an xxs
+   * inset: mini (10) + xxs (4) = 14px — Figma Tab Select container. */
+  .ds-radius-mini-outset-xxs {
+    border-radius: calc(var(--ui-radius-mini) + var(--ui-spacing-xxs));
+  }
+
+  /* Dims a decorative part (e.g. a trigger's icons) without fading the
+   * surface behind it — Figma applies opacity-disabled to content only. */
+  .ds-opacity-disabled {
+    opacity: var(--ui-opacity-disabled);
   }
 
   /* spacing — semantic names mirror token stems */

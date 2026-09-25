@@ -1,3 +1,3 @@
-export { TwoWayToggle, TwoWayToggleItem } from './Toggle';
+export { ToggleSwitch, ToggleSwitchItem } from './Toggle';
 export { ToggleSize, ToggleVariant } from './constants';
-export type { TwoWayToggleProps, TwoWayToggleItemProps } from './Toggle';
+export type { ToggleSwitchProps, ToggleSwitchItemProps } from './Toggle';

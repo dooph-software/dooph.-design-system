@@ -1,16 +1,18 @@
 "use client";
 
 /*
- * DropdownMenu — Radix menu primitives with width variants and composable
- * sections. Complex menus stay free-form: search is an optional sibling
+ * DropdownMenu — Radix menu primitives with a selectType mode (single | multi)
+ * and composable sections. Complex menus stay free-form: search is an optional sibling
  * (`DropdownMenuSearch`), never baked into content.
  *
  * ## behavior
- * - Root `variant` sets `--ds-menu-min-w` via context; content can override.
+ * - Root selectType (single|multi) flows to items via context and to triggers
+ *   as a Slot-merged data-select-type prop.
+ * - Items hold the 160px width floor; sections and the panel hug.
  * - Items use ghost button surfaces (`ghost-hover` / `ghost-active`). Content
  *   is always `ghost-fg-active` (primary), never the faded `ghost-fg` rest
  *   tone — except `DropdownMenuItemVariant.danger`, which paints
- *   error-secondary on hover and error-primary on active.
+ *   danger-primary on hover and active.
  * - Default `modal={false}`; portals on by default with an escape hatch.
  *
  * ## constraints
@@ -28,46 +30,62 @@ import {
   type HTMLAttributes,
 } from "react";
 import { cn } from "../../utils/cn";
+import { Checkbox } from "../Checkbox/Checkbox";
+import { CheckboxVariant } from "../Checkbox/constants";
 import CheckIcon from "../Icons/CheckIcon";
-// DropdownMenuVariant / DropdownMenuItemVariant live in ./constants — kept
+// DropdownMenuSelectType / DropdownMenuItemVariant live in ./constants — kept
 // server-safe (no "use client") so RSC code can read the enum values.
 import {
   DropdownMenuItemVariant,
-  DropdownMenuVariant,
+  DropdownMenuSegmentVariant,
+  DropdownMenuSelectType,
 } from "./constants";
 
 /**
- * Width variant set on the root and consumed by DropdownMenuContent, mirroring
- * the TwoWayToggle / SegmentedTabSelect context pattern: declare presentation
- * once at the top of the composition instead of threading it through children.
+ * Root presentation, read by items (MultiSelectItem keep-open) and by
+ * DropdownMenuTrigger (forwards data-select-type). Mirrors the ToggleSwitch /
+ * SegmentedTabSelect context pattern.
  */
 const DropdownMenuPresentationContext = createContext<{
-  variant: DropdownMenuVariant;
-}>({ variant: DropdownMenuVariant.standard });
-
-const menuWidthClass: Record<DropdownMenuVariant, string> = {
-  standard: "ds-menu-w-standard",
-  action: "ds-menu-w-action",
-  complex: "ds-menu-w-complex",
-};
+  selectType: DropdownMenuSelectType;
+}>({ selectType: DropdownMenuSelectType.single });
 
 /** Non-modal by default so page UI stays interactable while a menu is open. Pass modal={true} for dialog-like focus trapping. */
 function DropdownMenuRoot({
   modal = false,
-  variant = DropdownMenuVariant.standard,
+  selectType = DropdownMenuSelectType.single,
   ...props
 }: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> & {
-  /** Width variant every DropdownMenuContent in this menu adopts. Default standard. */
-  variant?: DropdownMenuVariant;
+  /** Selection mode for the whole menu. Default single. */
+  selectType?: DropdownMenuSelectType;
 }) {
   return (
-    <DropdownMenuPresentationContext.Provider value={{ variant }}>
+    <DropdownMenuPresentationContext.Provider value={{ selectType }}>
       <DropdownMenuPrimitive.Root modal={modal} {...props} />
     </DropdownMenuPresentationContext.Provider>
   );
 }
 
-const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+/**
+ * Forwards the root's selectType as data-select-type. With asChild, Radix's
+ * Slot merges it onto the consumer's trigger exactly as it merges data-state,
+ * so trigger components read it as a plain prop — no context of their own.
+ */
+const DropdownMenuTrigger = forwardRef<
+  ComponentRef<typeof DropdownMenuPrimitive.Trigger>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>
+>((props, ref) => {
+  const { selectType } = useContext(DropdownMenuPresentationContext);
+  return (
+    <DropdownMenuPrimitive.Trigger
+      ref={ref}
+      data-select-type={selectType}
+      {...props}
+    />
+  );
+});
+DropdownMenuTrigger.displayName = "DropdownMenuTrigger";
+
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 const DropdownMenuSub = DropdownMenuPrimitive.Sub;
@@ -84,8 +102,6 @@ const DropdownMenuContent = forwardRef<
     onOpenAutoFocus?: (event: Event) => void;
     portal?: boolean;
     portalProps?: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>;
-    /** Overrides the root's width variant for this panel only. */
-    variant?: DropdownMenuVariant;
   }
 >(
   (
@@ -100,14 +116,10 @@ const DropdownMenuContent = forwardRef<
       sideOffset = 6,
       portal = true,
       portalProps,
-      variant,
       ...props
     },
     ref,
   ) => {
-    const presentation = useContext(DropdownMenuPresentationContext);
-    const resolvedVariant = variant ?? presentation.variant;
-
     const handleOpenAutoFocus = focusOnOpen
       ? onOpenAutoFocus
       : (event: Event) => {
@@ -146,19 +158,13 @@ const DropdownMenuContent = forwardRef<
             } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>)
           : {})}
         className={cn(
-          "z-50 overflow-hidden rounded-soft border border-solid border-border-popovers bg-surface-primary",
+          "z-50 flex flex-col gap-xs overflow-hidden rounded-normal border border-solid border-border-popovers bg-modal-surface",
           "ds-py-ui-xs",
           "shadow-menu",
           "ds-radix-dropdown-content-origin",
-          // The variant class only sets --ds-menu-min-w; the width helper below
-          // reads it, so the floor applies in both width modes.
-          menuWidthClass[resolvedVariant],
-          // Both helpers set min-width; apply only one so neither clobbers the
-          // other in the cascade. The match helper already bakes in the
-          // floor via max(), so it fully replaces ds-min-w-menu.
-          matchTriggerWidth
-            ? "ds-radix-dropdown-match-trigger-width"
-            : "ds-min-w-menu",
+          // Items carry the 160px floor and the panel hugs them; matching the
+          // trigger only ever widens it.
+          matchTriggerWidth && "ds-radix-dropdown-match-trigger-width",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-100",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-1.5 data-[state=closed]:duration-150",
           "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
@@ -182,15 +188,16 @@ const DropdownMenuContent = forwardRef<
 DropdownMenuContent.displayName = "DropdownMenuContent";
 
 /**
- * Shared menu-item styling. Exported so surfaces that cannot host a Radix
- * `DropdownMenu.Item` — such as the calendar presets rail inside a Popover —
- * render visually identical items without duplicating the string.
- * Internal: not re-exported from src/index.ts.
+ * Shared menu-item styling (Figma Menu Item). Exported so surfaces that cannot
+ * host a Radix `DropdownMenu.Item` — such as the calendar presets rail inside a
+ * Popover — render visually identical items. Carries NO width floor: the
+ * presets rail is 144px wide. Internal: not re-exported from src/index.ts.
  */
 export const menuItemClassName =
-  "relative flex h-button w-full cursor-pointer select-none items-center rounded-tight ds-pl-ui-rg ds-pr-ui-sm ds-radix-data-disabled gap-[10px] text-style-body text-ghost-fg-active outline-none transition-colors duration-100 hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active";
+  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-sm rounded-tight px-xs ds-radix-data-disabled text-style-body text-ghost-fg-active outline-none transition-colors duration-100 hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
 
-const itemBase = menuItemClassName;
+/** Dropdown items also hold the menu's 160px floor; sections and the panel hug them. */
+const itemBase = cn(menuItemClassName, "ds-min-w-menu");
 
 const DropdownMenuItem = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Item>,
@@ -203,8 +210,8 @@ const DropdownMenuItem = forwardRef<
     className={cn(
       itemBase,
       variant === DropdownMenuItemVariant.danger && [
-        "hover:text-danger-secondary data-highlighted:text-danger-secondary",
-        "active:text-danger-primary data-highlighted:active:text-danger-primary",
+        "hover:text-danger-primary data-highlighted:text-danger-primary",
+        "active:text-danger-primary",
       ],
       className,
     )}
@@ -213,23 +220,114 @@ const DropdownMenuItem = forwardRef<
 ));
 DropdownMenuItem.displayName = "DropdownMenuItem";
 
-const DropdownMenuCheckboxItem = forwardRef<
-  ComponentRef<typeof DropdownMenuPrimitive.CheckboxItem>,
-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
->(({ className, children, checked, ...props }, ref) => (
-  <DropdownMenuPrimitive.CheckboxItem
+/**
+ * Figma "Custom Content Plain" — item geometry with NO interactive states.
+ * Not a Radix Item, so it avoids nesting interactives inside a menuitem —
+ * but interactive children (e.g. a ToggleSwitch) are pointer-only inside a
+ * Radix menu: Radix's roving focus skips this plain div, Tab is prevented by
+ * the menu content, arrow keys are only handled when the content itself is
+ * the target, and letter keys start typeahead instead of reaching the child.
+ * Consumers must provide a keyboard-reachable equivalent (e.g. radio-select
+ * items, or a control outside the menu).
+ */
+const DropdownMenuPlainItem = forwardRef<
+  HTMLDivElement,
+  HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
     ref={ref}
-    checked={checked}
-    className={cn(itemBase, className)}
+    className={cn(
+      "flex min-h-button w-full items-center gap-sm rounded-tight pl-xs ds-min-w-menu",
+      "text-style-body text-ghost-fg-active",
+      className,
+    )}
+    {...props}
+  />
+));
+DropdownMenuPlainItem.displayName = "DropdownMenuPlainItem";
+
+/** Figma Single Select Menu Item — use inside DropdownMenuRadioGroup. Selected: ghost-active + trailing check. */
+const DropdownMenuRadioSelectItem = forwardRef<
+  ComponentRef<typeof DropdownMenuPrimitive.RadioItem>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      itemBase,
+      "data-[state=checked]:bg-ghost-active data-[state=checked]:hover:bg-ghost-active data-[state=checked]:data-highlighted:bg-ghost-active",
+      // A disabled item that is also the checked value keeps its selected
+      // fill in every pointer state — it still communicates the current
+      // value. These out-specificity the data-disabled:hover/active
+      // transparent rules from menuItemClassName (0,4,0 > 0,3,0).
+      "data-[state=checked]:data-disabled:hover:bg-ghost-active data-[state=checked]:data-disabled:active:bg-ghost-active",
+      className,
+    )}
     {...props}
   >
-    <span className="flex flex-1">{children}</span>
-    <DropdownMenuPrimitive.ItemIndicator>
+    <span className="flex flex-1 items-center gap-sm">{children}</span>
+    <DropdownMenuPrimitive.ItemIndicator className="flex shrink-0">
       <CheckIcon />
     </DropdownMenuPrimitive.ItemIndicator>
-  </DropdownMenuPrimitive.CheckboxItem>
+  </DropdownMenuPrimitive.RadioItem>
 ));
-DropdownMenuCheckboxItem.displayName = "DropdownMenuCheckboxItem";
+DropdownMenuRadioSelectItem.displayName = "DropdownMenuRadioSelectItem";
+
+/**
+ * Figma Checkbox Menu Item. Renamed from DropdownMenuCheckboxItem
+ * (BREAKING, major).
+ *
+ * The leading checkbox is the package's own Checkbox rendered INERT: it
+ * mirrors the item's checked/disabled, is unfocusable and aria-hidden (the
+ * item already announces as menuitemcheckbox), and pointer-events-none — an
+ * element that never receives the pointer never gets :hover/:active, so the
+ * item alone owns those states.
+ *
+ * Under selectType=multi the menu stays open: the consumer's onSelect runs
+ * first, then preventDefault (Radix's public keep-open API) unless they
+ * already prevented it.
+ *
+ * The inert Checkbox needs `data-disabled:opacity-100!` (Tailwind v4
+ * important suffix): plain `opacity-100` loses the cascade to the Checkbox's
+ * OWN `ds-radix-data-disabled` rule (Checkbox.tsx:46), which would multiply
+ * with the item's opacity and double-fade the box under the already-faded
+ * disabled item.
+ */
+const DropdownMenuMultiSelectItem = forwardRef<
+  ComponentRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, disabled, onSelect, ...props }, ref) => {
+  const { selectType } = useContext(DropdownMenuPresentationContext);
+
+  const handleSelect = (event: Event) => {
+    onSelect?.(event);
+    if (selectType === DropdownMenuSelectType.multi && !event.defaultPrevented) {
+      event.preventDefault();
+    }
+  };
+
+  return (
+    <DropdownMenuPrimitive.CheckboxItem
+      ref={ref}
+      checked={checked}
+      disabled={disabled}
+      onSelect={handleSelect}
+      className={cn(itemBase, className)}
+      {...props}
+    >
+      <Checkbox
+        checked={checked}
+        disabled={disabled}
+        variant={CheckboxVariant.primary}
+        tabIndex={-1}
+        aria-hidden
+        className="pointer-events-none ml-xxxs data-disabled:opacity-100!"
+      />
+      <span className="flex flex-1 items-center gap-sm">{children}</span>
+    </DropdownMenuPrimitive.CheckboxItem>
+  );
+});
+DropdownMenuMultiSelectItem.displayName = "DropdownMenuMultiSelectItem";
 
 const DropdownMenuLabel = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Label>,
@@ -238,8 +336,8 @@ const DropdownMenuLabel = forwardRef<
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn(
-      "flex h-[30px] items-center px-sm",
-      "text-style-label text-ghost-fg",
+      "flex h-[30px] items-center px-xs",
+      "text-style-label text-text-secondary",
       className,
     )}
     {...props}
@@ -253,32 +351,67 @@ const DropdownMenuSeparator = forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("ds-my-ui-xs h-px bg-border-popovers", className)}
+    className={cn("h-px bg-border-popovers", className)}
     {...props}
   />
 ));
 DropdownMenuSeparator.displayName = "DropdownMenuSeparator";
 
-/** Padded group for menu items and labels. Content has no horizontal padding so separators span full width. */
-function DropdownMenuSection({
-  className,
-  ...props
-}: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn("flex flex-col ds-px-ui-xs", className)} {...props} />
-  );
+export interface DropdownMenuSegmentProps extends HTMLAttributes<HTMLDivElement> {
+  /** divider (default) or labeled — a labeled segment shows `children` as its label. */
+  variant?: DropdownMenuSegmentVariant;
 }
+
+/** Figma Menu Segment — place directly in DropdownMenuContent, between sections. */
+const DropdownMenuSegment = forwardRef<HTMLDivElement, DropdownMenuSegmentProps>(
+  ({ className, variant = DropdownMenuSegmentVariant.divider, children, ...props }, ref) => (
+    <div ref={ref} className={cn("flex w-full flex-col gap-xs", className)} {...props}>
+      <DropdownMenuSeparator />
+      {variant === DropdownMenuSegmentVariant.labeled ? (
+        <div className="flex ds-px-ui-xs">
+          <DropdownMenuLabel>{children}</DropdownMenuLabel>
+        </div>
+      ) : null}
+    </div>
+  ),
+);
+DropdownMenuSegment.displayName = "DropdownMenuSegment";
+
+export interface DropdownMenuSectionProps extends HTMLAttributes<HTMLDivElement> {
+  /**
+   * Explicit width (a design value → inline style; numbers are px). Omit to
+   * hug the widest item. Items stretch to fill it and never drop below their
+   * own 160px floor.
+   */
+  width?: string | number;
+}
+
+/** Inset group for items and labels (Figma Menu Items Section). Content has no horizontal padding so separators and segments span full width. */
+const DropdownMenuSection = forwardRef<HTMLDivElement, DropdownMenuSectionProps>(
+  ({ className, width, style, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("flex flex-col ds-px-ui-xs", className)}
+      style={width === undefined ? style : { ...style, width }}
+      {...props}
+    />
+  ),
+);
+DropdownMenuSection.displayName = "DropdownMenuSection";
 
 export {
   DropdownMenuRoot as DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuMultiSelectItem,
+  DropdownMenuPlainItem,
   DropdownMenuPortal,
   DropdownMenuRadioGroup,
+  DropdownMenuRadioSelectItem,
   DropdownMenuSection,
+  DropdownMenuSegment,
   DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuTrigger,

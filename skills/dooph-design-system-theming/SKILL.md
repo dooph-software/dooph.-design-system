@@ -190,9 +190,11 @@ Notes:
   `--ui-width-toast-viewport`, and `--ui-width-tooltip-rich` /
   `--ui-min-w-tooltip-complex` (the simple tooltip hugs its text by design).
   Override only if your product needs other widths.
-- **`DropdownMenu` width:** `--ui-min-w-menu` (160) / `--ui-min-w-menu-action`
-  (144) / `--ui-min-w-menu-complex` (324) are the floors behind
-  `DropdownMenuVariant`.
+- **`DropdownMenu` width:** `--ui-min-w-menu` (160) is the floor held by menu
+  ITEMS, not the panel — `DropdownMenuSection` and the panel hug their content.
+  `--ui-min-w-menu-complex` (324) is a standalone width for a wide
+  `DropdownMenuSection`, shared with `DropdownMenuSearch` /
+  `--ui-min-w-search-box`. `--ui-min-w-menu-action` is removed.
 - **`Avatar`:** the package owns the surface/padding/radius via
   `--ui-color-surface-secondary`, `--ui-color-border-secondary`, and
   `--ui-prominent-color` (icon/content tint) — there is no dedicated avatar-bg

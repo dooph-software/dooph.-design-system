@@ -85,7 +85,7 @@ There are **eight** text roles: `body`, `button`, `heading`, `subheading`, `labe
 - `--ui-height-button`, `--ui-height-button-sm`, `--ui-height-button-micro` (v3 — backs `ButtonSize.iconMicro` / `size-button-micro`)
 - `--ui-spacing-xxxs`, `--ui-spacing-xxs`, `--ui-spacing-xs`, `--ui-spacing-sm`, `--ui-spacing-rg`, `--ui-spacing-md`, `--ui-spacing-lg`, `--ui-spacing-xl`, `--ui-spacing-xxl`
 - `--ui-icon-sm` (12), `--ui-icon-rg` (14), `--ui-icon-md` (16), `--ui-icon-lg` (18), `--ui-icon-stroke-width` (1.5) — back `IconSize.sm/rg/md/lg`. Renamed in 5.4 from `--ui-icon-tiny`/`-standard`/`-medium`/`-stroke`; `--ui-icon-large` (20) is gone, replaced by the 18px `-lg`.
-- `--ui-radius-tight`, `--ui-radius-normal` (renamed from `--ui-radius-standard` in 5.4; utility `rounded-standard` → `rounded-normal`), `--ui-radius-soft`, `--ui-radius-slider-inner` (v3 — inner corner radius on the `Slider*` track pills and thumb)
+- `--ui-radius-tight`, `--ui-radius-normal` (renamed from `--ui-radius-standard` in 5.4; utility `rounded-standard` → `rounded-normal`), `--ui-radius-soft`, `--ui-radius-mini` (10px — the 28px micro toggle option/tab radius; utility `rounded-mini`), `--ui-radius-slider-inner` (v3 — inner corner radius on the `Slider*` track pills and thumb)
 - `--ui-shadow-button`, `--ui-shadow-button-secondary`, `--ui-shadow-button-hover`, `--ui-shadow-button-active`, `--ui-shadow-menu`, `--ui-shadow-focus-prominent`, `--ui-shadow-focus-primary`
 - `--ui-opacity-disabled`
 
@@ -114,8 +114,11 @@ Used by `Sticker`. Content and wash are separate paints: most variants wash thei
 
 ## Panel And Field Widths
 
-- `--ui-min-w-menu` (160px) · `--ui-min-w-menu-action` (144px) ·
-  `--ui-min-w-menu-complex` (324px) — the three `DropdownMenuVariant` floors
+- `--ui-min-w-menu` (160px) — the floor held by menu ITEMS, not the panel;
+  `DropdownMenuSection` and the panel hug their content and stretch to the
+  widest item · `--ui-min-w-menu-complex` (324px) — a standalone width for a
+  wide `DropdownMenuSection`. `--ui-min-w-menu-action` (144px) is removed —
+  width is no longer a menu-level variant
 - `--ui-min-w-search-box` — the standalone `SearchBox` shell. It ALIASES
   `--ui-min-w-menu-complex`, since they are the same width by design, but keeps
   its own name so the search field can be widened without touching menus

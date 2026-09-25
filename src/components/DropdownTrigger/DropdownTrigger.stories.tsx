@@ -72,6 +72,18 @@ export const TypeableFocused: Story = {
   render: () => <FocusedTypeableTrigger />,
 };
 
+/** Figma Typeable Dropdown Trigger (38:410) — Placeholder / Single / Multi / Disabled. */
+export const TypeableStates: Story = {
+  render: () => (
+    <div className="flex flex-col gap-sm">
+      <TypeableDropdownTrigger placeholder="Users..." data-testid="tt-placeholder" />
+      <TypeableDropdownTrigger placeholder="Users..." displayValue="jacesimons14" data-testid="tt-single" />
+      <TypeableDropdownTrigger placeholder="Users..." displayValue="2 Selected" data-testid="tt-multi" />
+      <TypeableDropdownTrigger placeholder="Users..." disabled data-testid="tt-disabled" />
+    </div>
+  ),
+};
+
 export const Text: Story = {
   render: () => <TextDropdownTrigger>Options</TextDropdownTrigger>,
 };

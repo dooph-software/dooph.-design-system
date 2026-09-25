@@ -5,6 +5,7 @@ import { cn } from "../../utils/cn";
 import { DropdownTrigger, DropdownTriggerContent } from "../DropdownTrigger";
 import { CalendarIcon, IconSize } from "../Icons";
 import {
+  SegmentedSize,
   SegmentedTabItem,
   SegmentedTabSelect,
   SegmentedVariant,
@@ -108,10 +109,9 @@ const DatePickerSplitTrigger = forwardRef<
         )}
 
         {/*
-          The inline shortcuts are a Micro segmented select (Figma "Micro"),
-          not bespoke buttons — so they inherit the segmented family's active
-          treatment and keyboard behaviour. The Micro variant is shell-less, so
-          the joined shell and its seam live on this wrapper.
+          The inline shortcuts are a shell-less ghost segmented select — so
+          they inherit the segmented family's active treatment and keyboard
+          behaviour. The shell and its seam live on this wrapper.
         */}
         <div
           className={cn(
@@ -127,7 +127,8 @@ const DatePickerSplitTrigger = forwardRef<
           )}
         >
           <SegmentedTabSelect
-            variant={SegmentedVariant.micro}
+            variant={SegmentedVariant.ghost}
+            size={SegmentedSize.standard}
             value={activePresetId}
             onValueChange={handlePresetChange}
             className="h-full items-stretch"

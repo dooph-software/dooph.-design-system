@@ -2,24 +2,22 @@
 // so these dot-accessible enums can be read from React Server Components.
 
 /**
- * Dot-accessible dropdown menu width variants (Figma `dropdownWidths`).
+ * Dot-accessible menu selection mode, set once on the DropdownMenu root.
+ * Usage: <DropdownMenu selectType={DropdownMenuSelectType.multi}>
  *
- * Set once on the `DropdownMenu` root; `DropdownMenuContent` reads it from
- * context and applies the matching min-width floor, so items inherit the width
- * without per-item props.
+ * single — every item closes the menu on select (also covers action menus).
+ * multi  — DropdownMenuMultiSelectItem keeps the menu open; plain items still
+ *          close. Triggers receive it as data-select-type.
  *
- * Usage: <DropdownMenu variant={DropdownMenuVariant.complex}>
+ * BREAKING (major): DropdownMenuVariant (standard/action/complex) was removed.
+ * Items hold the 160px floor; set DropdownMenuSection `width` for wider menus.
  */
-export const DropdownMenuVariant = {
-  /** 160px floor — the default menu. */
-  standard: "standard",
-  /** 144px floor — compact action/context menus. */
-  action: "action",
-  /** 324px floor — wide popovers with rich content. */
-  complex: "complex",
+export const DropdownMenuSelectType = {
+  single: "single",
+  multi: "multi",
 } as const;
-export type DropdownMenuVariant =
-  (typeof DropdownMenuVariant)[keyof typeof DropdownMenuVariant];
+export type DropdownMenuSelectType =
+  (typeof DropdownMenuSelectType)[keyof typeof DropdownMenuSelectType];
 
 /**
  * Dot-accessible menu item tone.
@@ -31,3 +29,14 @@ export const DropdownMenuItemVariant = {
 } as const;
 export type DropdownMenuItemVariant =
   (typeof DropdownMenuItemVariant)[keyof typeof DropdownMenuItemVariant];
+
+/**
+ * Figma Menu Segment — full-width break between sections.
+ * Usage: <DropdownMenuSegment variant={DropdownMenuSegmentVariant.labeled}>Filter by</DropdownMenuSegment>
+ */
+export const DropdownMenuSegmentVariant = {
+  divider: "divider",
+  labeled: "labeled",
+} as const;
+export type DropdownMenuSegmentVariant =
+  (typeof DropdownMenuSegmentVariant)[keyof typeof DropdownMenuSegmentVariant];

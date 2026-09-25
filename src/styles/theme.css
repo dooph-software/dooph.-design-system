@@ -118,6 +118,7 @@
   --spacing-xl: var(--ui-spacing-xl);
   --spacing-xxl: var(--ui-spacing-xxl);
   --radius-tight: var(--ui-radius-tight);
+  --radius-mini: var(--ui-radius-mini);
   --radius-normal: var(--ui-radius-normal);
   --radius-soft: var(--ui-radius-soft);
   --radius-checkbox: var(--ui-radius-checkbox);

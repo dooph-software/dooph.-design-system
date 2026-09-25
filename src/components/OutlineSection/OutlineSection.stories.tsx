@@ -63,7 +63,7 @@ export const Card: Story = {
 
         <SegmentedTabSelect
           defaultValue="overview"
-          variant={SegmentedVariant.secondary}
+          variant={SegmentedVariant.ghost}
         >
           <SegmentedTabItem value="overview">Overview</SegmentedTabItem>
           <SegmentedTabItem value="members">Members</SegmentedTabItem>

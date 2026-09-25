@@ -7,11 +7,22 @@ export {
   DropdownMenuSub,
   DropdownMenuRadioGroup,
   DropdownMenuItem,
-  DropdownMenuCheckboxItem,
+  DropdownMenuMultiSelectItem,
   DropdownMenuLabel,
+  DropdownMenuPlainItem,
+  DropdownMenuRadioSelectItem,
   DropdownMenuSeparator,
   DropdownMenuSection,
+  DropdownMenuSegment,
 } from './DropdownMenu';
 export { DropdownMenuSearch } from './DropdownMenuSearch';
 export type { DropdownMenuSearchProps } from './DropdownMenuSearch';
-export { DropdownMenuVariant, DropdownMenuItemVariant } from './constants';
+export {
+  DropdownMenuSelectType,
+  DropdownMenuItemVariant,
+  DropdownMenuSegmentVariant,
+} from './constants';
+export type {
+  DropdownMenuSectionProps,
+  DropdownMenuSegmentProps,
+} from './DropdownMenu';

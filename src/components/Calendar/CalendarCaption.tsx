@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuSection,
   DropdownMenuTrigger,
-  DropdownMenuVariant,
 } from "../Menu";
 import { TextDropdownSize, TextDropdownTrigger } from "../DropdownTrigger";
 import { BodyText, ButtonText } from "../Text";
@@ -58,7 +57,7 @@ function CalendarCaption({
   return (
     <div className={cn("flex items-center justify-between gap-xs", className)}>
       <div className="flex items-center gap-xs">
-        <DropdownMenu variant={DropdownMenuVariant.action}>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <TextDropdownTrigger
               size={TextDropdownSize.sm}
@@ -85,7 +84,7 @@ function CalendarCaption({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <DropdownMenu variant={DropdownMenuVariant.action}>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <TextDropdownTrigger
               size={TextDropdownSize.sm}

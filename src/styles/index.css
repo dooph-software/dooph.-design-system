@@ -3,6 +3,14 @@
 @source "../**/*.{js,ts,jsx,tsx}";
 @import "./tokens.css";
 @import "./dooph-component-tokens.css";
+
+/*
+ * Toggle Option selection state. Tabs (Radix Tabs) mark the chosen option
+ * data-state=active; toggle groups (Radix ToggleGroup) mark it data-state=on.
+ * One variant pair lets the shared toggleOptionVariants recipe serve both.
+ */
+@custom-variant selected (&:is([data-state="active"], [data-state="on"]));
+@custom-variant unselected (&:not([data-state="active"], [data-state="on"]));
 @plugin "tailwindcss-animate";
 
 /* Register so --progress-pct interpolates when LinearProgressIndicator value changes. */
@@ -145,6 +153,7 @@
   --spacing-xl: var(--ui-spacing-xl);
   --spacing-xxl: var(--ui-spacing-xxl);
   --radius-tight: var(--ui-radius-tight);
+  --radius-mini: var(--ui-radius-mini);
   --radius-normal: var(--ui-radius-normal);
   --radius-soft: var(--ui-radius-soft);
   --radius-checkbox: var(--ui-radius-checkbox);
@@ -318,6 +327,13 @@
   }
   .h-tab-micro {
     height: var(--ui-height-tab-micro);
+  }
+  .size-tab-micro {
+    width: var(--ui-height-tab-micro);
+    height: var(--ui-height-tab-micro);
+  }
+  .min-h-button {
+    min-height: var(--ui-height-button);
   }
   .h-slider-track {
     height: var(--ui-height-slider-track);

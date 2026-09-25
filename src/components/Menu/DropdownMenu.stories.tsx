@@ -1,16 +1,25 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuCheckboxItem,
+  DropdownMenuMultiSelectItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
+  DropdownMenuPlainItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioSelectItem,
   DropdownMenuSection,
+  DropdownMenuSegment,
+  DropdownMenuSeparator,
 } from './DropdownMenu';
 import { DropdownMenuSearch } from './DropdownMenuSearch';
-import { DropdownMenuItemVariant, DropdownMenuVariant } from './constants';
+import {
+  DropdownMenuItemVariant,
+  DropdownMenuSegmentVariant,
+  DropdownMenuSelectType,
+} from './constants';
 import {
   DropdownTrigger,
   TypeableDropdownTrigger,
@@ -18,6 +27,9 @@ import {
 import { Button } from '../Button/Button';
 import { ButtonVariant } from '../Button/constants';
 import { BodyText } from '../Text';
+import { SettingsGearIcon, LogOutIcon, ArrowRightIcon } from '../Icons';
+import { ToggleSwitch, ToggleSwitchItem } from '../Toggle/Toggle';
+import { ToggleSize, ToggleVariant } from '../Toggle/constants';
 
 const meta = {
   title: 'Menus/DropdownMenu',
@@ -83,66 +95,85 @@ export const TypeableInToolbar: Story = {
   ),
 };
 
-export const Segmented: Story = {
+/** Figma Menu Segment (832:1907) + Dropdown Menu (832:1960). */
+export const Segments: Story = {
   render: () => (
-    <DropdownMenu>
+    <DropdownMenu open>
       <DropdownMenuTrigger asChild>
-        <DropdownTrigger>Segmented</DropdownTrigger>
+        <DropdownTrigger>Segments</DropdownTrigger>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuSection>
           <DropdownMenuItem>Cut</DropdownMenuItem>
           <DropdownMenuItem>Copy</DropdownMenuItem>
-          <DropdownMenuItem>Paste</DropdownMenuItem>
         </DropdownMenuSection>
-        <DropdownMenuSeparator />
+        <DropdownMenuSegment data-testid="seg-divider" />
         <DropdownMenuSection>
           <DropdownMenuItem>Select all</DropdownMenuItem>
-          <DropdownMenuItem>Deselect</DropdownMenuItem>
+        </DropdownMenuSection>
+        <DropdownMenuSegment variant={DropdownMenuSegmentVariant.labeled} data-testid="seg-labeled">
+          Filter by
+        </DropdownMenuSegment>
+        <DropdownMenuSection>
+          <DropdownMenuItem>Owner</DropdownMenuItem>
         </DropdownMenuSection>
       </DropdownMenuContent>
     </DropdownMenu>
   ),
 };
 
-export const SegmentedWithLabels: Story = {
-  render: () => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <DropdownTrigger>With labels</DropdownTrigger>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuSection>
-          <DropdownMenuItem>New file</DropdownMenuItem>
-          <DropdownMenuItem>Open…</DropdownMenuItem>
-        </DropdownMenuSection>
-        <DropdownMenuSeparator />
-        <DropdownMenuSection>
-          <DropdownMenuLabel>Edit</DropdownMenuLabel>
-          <DropdownMenuItem>Cut</DropdownMenuItem>
-          <DropdownMenuItem>Copy</DropdownMenuItem>
-          <DropdownMenuItem>Paste</DropdownMenuItem>
-        </DropdownMenuSection>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  ),
+const SHOES = ['Sneakers', 'Boots', 'Sandals', 'Loafers'] as const;
+
+/** Figma Checkbox Menu Item (826:1554) under selectType=multi — stays open. */
+export const MultiSelect: Story = {
+  render: function MultiSelectStory() {
+    const [picked, setPicked] = useState<string[]>(['Sneakers']);
+    const toggle = (name: string, on: boolean) =>
+      setPicked((prev) => (on ? [...prev, name] : prev.filter((p) => p !== name)));
+    return (
+      <DropdownMenu selectType={DropdownMenuSelectType.multi}>
+        <DropdownMenuTrigger asChild>
+          <DropdownTrigger>{picked.length} Selected</DropdownTrigger>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuSection>
+            {SHOES.map((name) => (
+              <DropdownMenuMultiSelectItem
+                key={name}
+                checked={picked.includes(name)}
+                onCheckedChange={(on) => toggle(name, on === true)}
+                data-testid={`ms-${name}`}
+              >
+                {name}
+              </DropdownMenuMultiSelectItem>
+            ))}
+            <DropdownMenuMultiSelectItem checked disabled data-testid="ms-disabled">Discontinued</DropdownMenuMultiSelectItem>
+          </DropdownMenuSection>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  },
 };
 
-export const WithCheckboxItems: Story = {
-  render: () => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <DropdownTrigger>Checkable items</DropdownTrigger>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuSection>
-          <DropdownMenuCheckboxItem checked>Show sidebar</DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem>Show toolbar</DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem checked>Show statusbar</DropdownMenuCheckboxItem>
-        </DropdownMenuSection>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  ),
+/** Same items under the default selectType=single — each click closes. */
+export const SingleModeCheckboxes: Story = {
+  render: function SingleModeStory() {
+    const [on, setOn] = useState(true);
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <DropdownTrigger>View</DropdownTrigger>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuSection>
+            <DropdownMenuMultiSelectItem checked={on} onCheckedChange={(v) => setOn(v === true)}>
+              Show sidebar
+            </DropdownMenuMultiSelectItem>
+          </DropdownMenuSection>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  },
 };
 
 export const WithDisabledItems: Story = {
@@ -163,55 +194,104 @@ export const WithDisabledItems: Story = {
 };
 
 /**
- * Width variants (Figma `dropdownWidths`). Set `variant` once on the
- * `DropdownMenu` root — every `DropdownMenuContent` beneath it reads the value
- * from context and adopts the matching min-width floor, so items inherit the
- * width with no per-item props.
- *
- * The floor applies in both width modes: with `matchTriggerWidth` (default) it
- * is the lower bound of `max(trigger-width, floor)`; with
- * `matchTriggerWidth={false}` it is the width outright.
+ * Sizing model: items hold the 160px floor; sections and the panel hug the
+ * widest item, and every section/segment stretches to it. `width` on a section
+ * is an explicit override.
  */
-export const WidthVariants: Story = {
+export const HugsWidestItem: Story = {
   render: () => (
-    <div className="flex flex-row items-start gap-xl">
-      {(
-        [
-          [DropdownMenuVariant.action, 'Action (144px)'],
-          [DropdownMenuVariant.standard, 'Standard (160px)'],
-          [DropdownMenuVariant.complex, 'Complex (324px)'],
-        ] as const
-      ).map(([variant, label]) => (
-        <DropdownMenu key={variant} variant={variant}>
-          <DropdownMenuTrigger asChild>
-            <Button variant={ButtonVariant.secondary}>{label}</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent matchTriggerWidth={false}>
-            <DropdownMenuSection>
-              <DropdownMenuItem>Rename</DropdownMenuItem>
-              <DropdownMenuItem>Duplicate</DropdownMenuItem>
-              <DropdownMenuItem>Delete</DropdownMenuItem>
-            </DropdownMenuSection>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ))}
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant={ButtonVariant.secondary}>Hugs</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent matchTriggerWidth={false} data-testid="hug-panel">
+        <DropdownMenuSection>
+          <DropdownMenuItem data-testid="hug-short">Rename</DropdownMenuItem>
+          <DropdownMenuItem>Duplicate this very long item name</DropdownMenuItem>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
   ),
 };
 
-/** A single panel can opt out of the root's variant via its own `variant` prop. */
-export const WidthVariantPerPanelOverride: Story = {
+export const SectionWidthOverride: Story = {
   render: () => (
-    <DropdownMenu variant={DropdownMenuVariant.action}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={ButtonVariant.secondary}>Root=action, panel=complex</Button>
+        <Button variant={ButtonVariant.secondary}>Width 324</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        matchTriggerWidth={false}
-        variant={DropdownMenuVariant.complex}
-      >
+      <DropdownMenuContent matchTriggerWidth={false}>
+        <DropdownMenuSection width={324} data-testid="wide-section">
+          <DropdownMenuItem>Rename</DropdownMenuItem>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+};
+
+/** Multi-select with a typeable trigger: filter by typing, toggle without closing. */
+export const TypeableMultiSelect: Story = {
+  render: function TypeableMultiStory() {
+    const [query, setQuery] = useState('');
+    const [picked, setPicked] = useState<string[]>([]);
+    const visible = SHOES.filter((s) => s.toLowerCase().includes(query.toLowerCase()));
+    return (
+      <DropdownMenu selectType={DropdownMenuSelectType.multi}>
+        <DropdownMenuTrigger asChild>
+          <TypeableDropdownTrigger
+            placeholder="Shoes..."
+            displayValue={picked.length ? `${picked.length} Selected` : undefined}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            data-testid="tm-trigger"
+          />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent focusOnOpen={false}>
+          <DropdownMenuSection>
+            {visible.map((name) => (
+              <DropdownMenuMultiSelectItem
+                key={name}
+                checked={picked.includes(name)}
+                onCheckedChange={(on) =>
+                  setPicked((prev) => (on === true ? [...prev, name] : prev.filter((p) => p !== name)))
+                }
+              >
+                {name}
+              </DropdownMenuMultiSelectItem>
+            ))}
+          </DropdownMenuSection>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  },
+};
+
+/** Fix-round-1 verification: a disabled typeable trigger must never open the menu. */
+export const TypeableDisabledInMenu: Story = {
+  render: () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <TypeableDropdownTrigger disabled placeholder="Users..." data-testid="td-trigger" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent focusOnOpen={false}>
         <DropdownMenuSection>
-          <DropdownMenuItem>This panel overrides to 324px</DropdownMenuItem>
+          <DropdownMenuItem>Item</DropdownMenuItem>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+};
+
+/** selectType travels to any trigger as a plain data-select-type prop (Radix Slot merge). */
+export const SelectTypeOnTrigger: Story = {
+  render: () => (
+    <DropdownMenu selectType={DropdownMenuSelectType.multi}>
+      <DropdownMenuTrigger asChild>
+        <DropdownTrigger data-testid="st-trigger">Multi</DropdownTrigger>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuSection>
+          <DropdownMenuItem>Item</DropdownMenuItem>
         </DropdownMenuSection>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -237,14 +317,94 @@ export const DangerItem: Story = {
   ),
 };
 
+/** Figma Menu Item (825:1814) — the eight variants, composed. */
+export const ItemVariants: Story = {
+  render: () => (
+    <DropdownMenu open>
+      <DropdownMenuTrigger asChild>
+        <DropdownTrigger>Items</DropdownTrigger>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuSection>
+          <DropdownMenuItem data-testid="item-action">Manage</DropdownMenuItem>
+          <DropdownMenuItem><SettingsGearIcon />Settings</DropdownMenuItem>
+          <DropdownMenuItem><span className="flex-1">Settings</span><SettingsGearIcon /></DropdownMenuItem>
+          <DropdownMenuItem variant={DropdownMenuItemVariant.danger} data-testid="item-danger">Delete</DropdownMenuItem>
+          <DropdownMenuItem variant={DropdownMenuItemVariant.danger}><LogOutIcon />Logout</DropdownMenuItem>
+          <DropdownMenuItem variant={DropdownMenuItemVariant.danger}><span className="flex-1">Logout</span><LogOutIcon /></DropdownMenuItem>
+          <DropdownMenuItem>
+            <div className="flex flex-1 items-center justify-between">
+              <span className="flex items-center gap-sm"><SettingsGearIcon />Edit</span>
+              <ArrowRightIcon />
+            </div>
+          </DropdownMenuItem>
+          <DropdownMenuItem disabled data-testid="item-disabled">Disabled</DropdownMenuItem>
+          <DropdownMenuPlainItem data-testid="item-plain">
+            <span className="flex-1">Buildings</span>
+            <ToggleSwitch defaultValue="3d" variant={ToggleVariant.ghost} size={ToggleSize.sm}>
+              <ToggleSwitchItem value="3d">3D</ToggleSwitchItem>
+              <ToggleSwitchItem value="2d">2D</ToggleSwitchItem>
+            </ToggleSwitch>
+          </DropdownMenuPlainItem>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+};
+
+/** Figma Single Select Menu Item (827:3758). */
+export const RadioSelect: Story = {
+  render: function RadioSelectStory() {
+    const [role, setRole] = useState('admin');
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <DropdownTrigger>{role}</DropdownTrigger>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuSection>
+            <DropdownMenuRadioGroup value={role} onValueChange={setRole}>
+              <DropdownMenuRadioSelectItem value="admin" data-testid="radio-admin">Admin</DropdownMenuRadioSelectItem>
+              <DropdownMenuRadioSelectItem value="member">Member</DropdownMenuRadioSelectItem>
+              <DropdownMenuRadioSelectItem value="guest" disabled>Guest</DropdownMenuRadioSelectItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuSection>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  },
+};
+
+/** A disabled item that is also the checked value keeps its selected fill (bg-ghost-active) in every pointer state. */
+export const RadioSelectDisabledChecked: Story = {
+  render: () => (
+    <DropdownMenu open>
+      <DropdownMenuTrigger asChild>
+        <DropdownTrigger>guest</DropdownTrigger>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuSection>
+          <DropdownMenuRadioGroup value="guest">
+            <DropdownMenuRadioSelectItem value="admin">Admin</DropdownMenuRadioSelectItem>
+            <DropdownMenuRadioSelectItem value="member">Member</DropdownMenuRadioSelectItem>
+            <DropdownMenuRadioSelectItem value="guest" disabled data-testid="radio-guest-disabled-checked">
+              Guest
+            </DropdownMenuRadioSelectItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+};
+
 export const ComplexWithoutSearch: Story = {
   render: () => (
-    <DropdownMenu variant={DropdownMenuVariant.complex}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <DropdownTrigger>Recent chats</DropdownTrigger>
       </DropdownMenuTrigger>
       <DropdownMenuContent matchTriggerWidth={false}>
-        <DropdownMenuSection>
+        <DropdownMenuSection width={324}>
           <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
           <DropdownMenuItem>
             <div className="flex flex-col gap-[2px]">
@@ -266,14 +426,14 @@ export const ComplexWithoutSearch: Story = {
 
 export const ComplexWithSearch: Story = {
   render: () => (
-    <DropdownMenu variant={DropdownMenuVariant.complex}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <DropdownTrigger>Search chats</DropdownTrigger>
       </DropdownMenuTrigger>
       <DropdownMenuContent matchTriggerWidth={false} focusOnOpen={false}>
         <DropdownMenuSearch />
         <DropdownMenuSeparator />
-        <DropdownMenuSection>
+        <DropdownMenuSection width={324}>
           <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
           <DropdownMenuItem>
             <div className="flex flex-col gap-[2px]">

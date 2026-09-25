@@ -397,8 +397,8 @@
    * equal columns, so widening the panel makes each day physically bigger. */
   --ui-min-w-calendar-panel: 300px;
   --ui-height-button-micro: 26px;
-  /* Micro segmented-tab item — the compact inline preset row (Figma "Micro"). */
-  --ui-height-tab-micro: 30px;
+  /* Micro segmented-tab item — the compact inline preset row (Figma "Micro", 28px). */
+  --ui-height-tab-micro: 28px;
   --ui-height-slider-track: 22px;
   --ui-radius-slider-inner: 8px;
   --ui-slider-track-gap: 6px;
@@ -458,6 +458,8 @@
    * soft     — panels: modals, menu surfaces, search field shell, Outline inner.
    */
   --ui-radius-tight: 12px;
+  /* Figma `radius-mini` — micro (28px) toggle options / tabs. */
+  --ui-radius-mini: 10px;
   --ui-radius-normal: 18px;
   --ui-radius-soft: 20px;
   --ui-radius-checkbox: 6px;
@@ -480,7 +482,6 @@
   /* ── Menu min-widths ─────────────────────────────────────────────────── */
 
   --ui-min-w-menu: 160px;
-  --ui-min-w-menu-action: 144px;
   --ui-min-w-menu-complex: 324px;
   /* The standalone search field is the same width as a complex menu by
    * design, so it ALIASES that token rather than repeating the number —

@@ -144,11 +144,17 @@ and a label-only hover response driven by `RollHoverText` under an ancestor
 | ------------------ | ------------------------- | ------------------------------ | ------------------------------ |
 | `Input`            | `Input/Input.tsx`         | –                              | `hasError` bool                |
 | `SearchBox`        | `SearchBox/SearchBox.tsx` | –                              | `shortcut` string[]            |
-| `TwoWayToggle`     | `Toggle/Toggle.tsx`       | `@radix-ui/react-toggle-group` | `ToggleVariant` × `ToggleSize` |
-| `TwoWayToggleItem` | same                      | same                           | same (inherits via context)    |
+| `ToggleSwitch`     | `Toggle/Toggle.tsx`       | `@radix-ui/react-toggle-group` | `ToggleVariant` (`primary`\|`ghost`) × `ToggleSize` (`default`\|`sm`\|`icon`\|`iconSm`=28px micro) |
+| `ToggleSwitchItem` | same                      | same                           | same (inherits via context)    |
 | `Checkbox`         | `Checkbox/Checkbox.tsx`   | `@radix-ui/react-checkbox`     | `CheckboxChecked`              |
 | `VerificationCodeInput` | `VerificationCode/VerificationCodeInput.tsx` | –       | `length` (default 6), `hasError`, controlled `value`/`onChange` or `defaultValue` |
 | `CodeDigitInput`   | `VerificationCode/CodeDigitInput.tsx` | –                  | one cell; sized by `--ui-size-code-digit`, glyph via `BaseText` |
+
+`ToggleSwitch` (renamed from `TwoWayToggle` in 5.x — it takes two or more
+options) keeps Radix `ToggleGroup` fully controlled and drops the `""` Radix
+emits when the active option is clicked again, so a selection can never be
+cleared. Controlled (`value` + `onValueChange`) and uncontrolled
+(`defaultValue`) both work; `onValueChange` never receives `""`.
 
 `VerificationCodeInput` owns digits-only entry, auto-advance, backspace-to-previous,
 arrow navigation and paste. The package deliberately ships **no** "verification
@@ -185,10 +191,12 @@ never deep-imports a sibling.
 | -------------------- | ------------------------------------------- | ---------------------- | ------------------------ |
 | `Tabs` (Root)        | `Tabs/Tabs.tsx`                             | `@radix-ui/react-tabs` | –                        |
 | `TabsList`           | same                                        | same                   | –                        |
-| `TabsTrigger`        | same                                        | same                   | `TabVariant` × `TabSize` |
+| `TabsTrigger`        | same                                        | same                   | `TabVariant` × `TabSize` (adds `iconMicro`, 28×28) |
 | `TabsContent`        | same                                        | same                   | –                        |
-| `SegmentedTabSelect` | `SegmentedTabSelect/SegmentedTabSelect.tsx` | wraps Tabs             | `SegmentedVariant`       |
+| `SegmentedTabSelect` | `SegmentedTabSelect/SegmentedTabSelect.tsx` | wraps Tabs             | `SegmentedVariant` × `SegmentedSize` |
 | `SegmentedTabItem`   | same                                        | same                   | inherits from context    |
+
+`TabsTrigger` and `ToggleSwitchItem` are both built on the shared `toggleOptionVariants` recipe (`Toggle/toggleOption.ts`, internal, not re-exported) — Figma's single "Toggle Option" primitive. `tabTriggerVariants` stays exported under its old name as an alias of the shared recipe.
 
 ### Dropdown / menu family
 
@@ -197,15 +205,19 @@ never deep-imports a sibling.
 | `DropdownMenu` (Root)                                                                                         | `Menu/DropdownMenu.tsx`               | `@radix-ui/react-dropdown-menu`                                                     |
 | `DropdownMenuContent`                                                                                         | same                                  | same — portal toggle; `focusOnOpen` (default true, set false with typeable trigger) |
 | `DropdownMenuItem`                                                                                            | same                                  | same                                                                                |
-| `DropdownMenuCheckboxItem`                                                                                    | same                                  | same                                                                                |
+| `DropdownMenuMultiSelectItem`                                                                                 | same                                  | same — wraps `CheckboxItem`; renamed from `DropdownMenuCheckboxItem`                |
+| `DropdownMenuRadioSelectItem`                                                                                 | same                                  | same — wraps `RadioItem`, use inside `DropdownMenuRadioGroup`                       |
+| `DropdownMenuPlainItem`                                                                                       | same                                  | plain `div`, item geometry with no interactive states; not roving-focus reachable; interactive children are pointer-only, provide a keyboard-reachable equivalent |
+| `DropdownMenuSegment`                                                                                         | same                                  | full-width divider/labeled break between sections; `DropdownMenuSegmentVariant`     |
 | `DropdownMenuLabel`                                                                                           | same                                  | same                                                                                |
 | `DropdownMenuSeparator`                                                                                       | same                                  | same                                                                                |
-| `DropdownMenuSection`                                                                                         | same                                  | layout div — horizontal inset for items/labels; separators sit outside sections     |
-| `DropdownMenuGroup`, `DropdownMenuSub`, `DropdownMenuRadioGroup`, `DropdownMenuTrigger`, `DropdownMenuPortal` | same                                  | pass-throughs                                                                       |
+| `DropdownMenuSection`                                                                                         | same                                  | layout div — horizontal inset for items/labels; `width` prop overrides the hug; separators sit outside sections |
+| `DropdownMenuGroup`, `DropdownMenuSub`, `DropdownMenuRadioGroup`, `DropdownMenuPortal` | same                                  | pass-throughs                                                                       |
+| `DropdownMenuTrigger`                                                                                         | same                                  | thin `forwardRef` wrapper over `Trigger` — reads `selectType` from root context and forwards it as `data-select-type` (Slot-merged onto the consumer's trigger with `asChild`) |
 | `DropdownTrigger`                                                                                             | `DropdownTrigger/DropdownTrigger.tsx` | `Slot`                                                                              | asChild                                                              |
 | `DropdownTriggerContent`                                                                                      | same                                  | –                                                                                   | optional `<div className="flex flex-row gap-xs">` wrapper for consumer-composed trigger content |
 | `TextDropdownTrigger`                                                                                         | same                                  | `Slot`                                                                              | `TextDropdownSize`                                                   |
-| `TypeableDropdownTrigger`                                                                                     | same                                  | –                                                                                   | `<div>` root; `inputRef`; compose with `DropdownMenuTrigger asChild`; `onPointerDown` is state-aware (opens when closed, suppresses toggle when open) |
+| `TypeableDropdownTrigger`                                                                                     | same                                  | –                                                                                   | `<div>` root; `inputRef`; `displayValue` (selection summary in primary tone while the input is empty); receives/re-emits `data-select-type`; compose with `DropdownMenuTrigger asChild`; `onPointerDown` is state-aware (opens when closed, suppresses toggle when open); when `disabled`, does not forward pointerdown/keydown to Radix (cannot open the menu) and emits `aria-disabled`/`data-disabled` instead. Known limitation under `selectType=multi`: after pointer-toggling an item, Radix focuses that item, so further typing reaches Radix typeahead rather than the input — a long-term fix needs a combobox pattern, not a menu |
 
 ### Overlay / modal
 
@@ -434,7 +446,7 @@ Notable component tokens:
 
 - Tooltip themes: `--ui-color-tooltip-inverse-*` and `--ui-color-tooltip-matching-*`. `TooltipContent themeInverse` switches between `ds-tooltip-inverse-theme` and `ds-tooltip-matching-theme`; there is no runtime theme detection.
 - Toast widths: `--ui-width-toast-simple`, `--ui-width-toast-complex`, `--ui-width-toast-viewport`, consumed by `ds-toast-width-simple`, `ds-toast-width-complex`, and `ds-toast-viewport`. Widths are pinned per variant, matching `ToastTypes.simple`/`.complex`.
-- Tooltip/menu widths: `--ui-width-tooltip-rich` (pinned) and `--ui-min-w-tooltip-complex` back `ds-width-tooltip-rich`/`ds-min-w-tooltip-complex`; the simple tooltip intentionally hugs its text. `--ui-min-w-menu` (160) / `-action` (144) / `-complex` (324) back `ds-menu-w-standard`/`-action`/`-complex`, selected by `DropdownMenuVariant` on the menu root.
+- Tooltip/menu widths: `--ui-width-tooltip-rich` (pinned) and `--ui-min-w-tooltip-complex` back `ds-width-tooltip-rich`/`ds-min-w-tooltip-complex`; the simple tooltip intentionally hugs its text. `--ui-min-w-menu` (160) is the floor held by menu ITEMS (`ds-min-w-menu`, internal to `DropdownMenu.tsx`'s `itemBase`), not by the menu root or panel; `--ui-min-w-menu-complex` (324) is a standalone width for a wide `DropdownMenuSection` / `DropdownMenuSearch` (also backs `--ui-min-w-search-box`). `--ui-min-w-menu-action` (144) is REMOVED — width is no longer a menu-level variant.
 - Avatar surface (v3): no dedicated `--ui-color-avatar-bg` token — `Avatar` composes `bg-surface-secondary` + `border-border-secondary` + `text-prominent-color`; brand/logo content is supplied by consumers as children, not via a package provider.
 - **Motion tokens.** Every animated component owns a `--ui-<component>-*` family
   and the component reads them only through CSS — see the architecture skill's
@@ -478,7 +490,7 @@ Notable component tokens:
   - **Borders/surfaces**: `--ui-color-border-primary`/`-secondary` (replaced the single `--ui-color-border`), `--ui-color-surface-primary`/`-secondary`/`--ui-color-surface-page` (the last was `--ui-color-page-background` before 5.4).
   - **Inputs** (all renamed in 5.4 from `border-focus` / `trigger-border-*`): `--ui-color-input-border-focus`, `--ui-color-input-border-hover`, `--ui-color-input-border-danger-focus`.
   - **Focus rings**: `--ui-color-focus-ring-prominent`/`-primary`/`-danger` (replaced the single `--ui-color-focus-ring`).
-  - **Radius**: `--ui-radius-tight`/`-normal`/`-soft` — `-normal` was `-standard` before 5.4, so the utility is `rounded-normal`.
+  - **Radius**: `--ui-radius-tight`/`-normal`/`-soft`/`-mini` (10px, `rounded-mini` — Figma `radius-mini`, backs the 28px micro toggle option/tab) — `-normal` was `-standard` before 5.4, so the utility is `rounded-normal`.
   - Plus slider sizing (`--ui-height-slider-track`, `--ui-radius-slider-inner`, `--ui-slider-track-gap`, `--ui-width-slider-handle`, `--ui-height-slider-handle`), `--ui-height-button-micro`, and shimmer tokens (`--ui-shimmer-base`, `--ui-shimmer-highlight`).
 
 ### Tailwind theme (`@theme inline` in `index.css`)
@@ -507,12 +519,15 @@ The `__GENERATED_*__` block is managed by `scripts/sync-theme.mjs` — do not ha
 - `ds-shape-button-focus-visible` — custom focus outline for ShapeButton
 - Focus ring helpers: `ds-focus-visible-ring`, `ds-focus-within-ring`, `ds-focus-ring-on-focus`, `ds-focus-ring-danger-on-focus`, `ds-focus-ring` — token-backed outline rings for controls that need external focus affordances without `box-shadow` overflow clipping (the destructive variant is named `-danger-`, matching the `--ui-color-focus-ring-danger` token; it was `-error-` before 5.4 and `-destructive-` before v3)
 - `ds-radix-dropdown-content-origin` — `transform-origin: var(--radix-dropdown-menu-content-transform-origin)`
-- `ds-radix-dropdown-match-trigger-width` — trigger width, floored by `--ds-menu-min-w`
-- `ds-min-w-menu` — `min-width: var(--ui-min-w-menu)` (fallback when `matchTriggerWidth` is off)
-- Menu width variants: `ds-menu-w-standard`, `ds-menu-w-action`, `ds-menu-w-complex` — each only sets `--ds-menu-min-w`; the width helper above consumes it, so the floor applies in both width modes
+- `ds-radix-dropdown-match-trigger-width` — `min-width: var(--radix-dropdown-menu-trigger-width)`; only ever WIDENS the panel to the trigger, applied when `matchTriggerWidth` is true (default)
+- `ds-min-w-menu` — `min-width: var(--ui-min-w-menu)` (160px); the menu floor, held by ITEMS (internal `itemBase`), not by the panel or `DropdownMenuSection`
+- `ds-min-w-menu-complex` — `min-width: var(--ui-min-w-menu-complex)` (324px); apply directly to a wide `DropdownMenuSection`
+- `ds-radius-mini-outset-xxs` — `border-radius: calc(var(--ui-radius-mini) + var(--ui-spacing-xxs))` (14px) — the concentric outer radius for a shell wrapping micro toggle options with an xxs inset (`SegmentedTabSelect`'s `container`/`containerIcon` shell); sits beside `ds-radius-tight-inset-xxs`
+- `ds-opacity-disabled` — `opacity: var(--ui-opacity-disabled)`, for dimming a decorative part (e.g. a trigger's icons) without fading the surface behind it
 - Toast helpers: `ds-toast-viewport`, `ds-toast-width-simple`, `ds-toast-width-complex`
 - Tooltip helpers: `ds-tooltip-inverse-theme`, `ds-tooltip-matching-theme`, `ds-width-tooltip-rich`, `ds-min-w-tooltip-complex`
 - Spacing helpers: `ds-gap-ui-xs`, `ds-p-ui-xs`, `ds-px-ui-xs`, `ds-px-ui-sm`, `ds-py-ui-xs`, `ds-py-ui-xxs`, `ds-py-ui-rg`, `ds-pl-ui-md`, `ds-pl-ui-rg`, `ds-pr-ui-rg`, `ds-pr-ui-sm`, `ds-my-ui-xs`
+- `selected:` / `unselected:` — `index.css` `@custom-variant`s matching `[data-state=active]` (Tabs) OR `[data-state=on]` (ToggleGroup), and its negation; back the shared `toggleOptionVariants` recipe (`Toggle/toggleOption.ts`) so one recipe styles both selected states
 - Slider: `ds-slider-fill` (45% of `--ds-slider-color` — Figma applies alpha over the color, which Tailwind's `bg-primary/45` shorthand can't express against a custom property), `ds-slider-dot` + `ds-slider-dot[data-active]` (inactive `--ui-color-secondary-border`, active `--ui-color-text` at 40%), `ds-slider-glide` + `ds-slider-part` (shared settle transition). The dot split is a plain attribute selector, **not** a `data-[active]:` Tailwind variant — a variant only composes with generated utilities, so pairing one with a class defined here emits no rule at all (that bug shipped once already)
 - CopyButton icon-swap helpers (v3): `ds-copy-icon-clipboard`, `ds-copy-icon-check` — both icons share one grid cell; `[data-copied]` cross-fades/scales between them (skipped under `prefers-reduced-motion`)
 
@@ -552,7 +567,7 @@ than interpolating, so the registration is the whole mechanism, not boilerplate.
 
 ### Height/size utilities (in `index.css`)
 
-`h-button`, `h-button-sm`, `size-button`, `size-button-sm` — keyed to `--ui-height-button` and `--ui-height-button-sm` tokens. v3 adds `size-button-micro` (keyed to `--ui-height-button-micro`, backs `ButtonSize.iconMicro`) and `h-slider-track` (keyed to `--ui-height-slider-track`, used by the `Slider*` track).
+`h-button`, `h-button-sm`, `size-button`, `size-button-sm` — keyed to `--ui-height-button` and `--ui-height-button-sm` tokens. v3 adds `size-button-micro` (keyed to `--ui-height-button-micro`, backs `ButtonSize.iconMicro`) and `h-slider-track` (keyed to `--ui-height-slider-track`, used by the `Slider*` track). `h-tab-micro` / `size-tab-micro` are keyed to `--ui-height-tab-micro` (28px, retuned from 30px) and back the `micro`/`icon-micro` `toggleOptionVariants` sizes. `min-h-button` (`min-height: var(--ui-height-button)`) backs dropdown menu items, which switched from a fixed `h-button` so multi-line custom content does not clip.
 
 ---
 

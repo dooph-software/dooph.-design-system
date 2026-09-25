@@ -14,6 +14,7 @@ import {
 } from "react";
 import { cn } from "../../utils/cn";
 import { ChevronDownIcon, IconSize, SearchIcon } from "../Icons";
+import type { DropdownMenuSelectType } from "../Menu/constants";
 // TextDropdownSize (+ its type) lives in ./constants (server-safe), re-exported
 // via index.ts; imported here for internal size resolution.
 import { TextDropdownSize } from "./constants";
@@ -83,6 +84,15 @@ const DropdownTrigger = DropdownTriggerBase as DropdownTriggerComponent;
  * trigger pointerDown — we skip that when the target is the input so the menu stays
  * open while typing. When the menu opens, content onOpenAutoFocus steals focus; pair
  * with DropdownMenuContent focusOnOpen={false} and we refocus the input on data-open.
+ * displayValue renders the selection summary (Figma Single/Multi) in the primary
+ * tone; placeholder is the empty (Figma Placeholder) state.
+ *
+ * Known limitation (multi): after toggling an item with the pointer, focus sits
+ * on that item, so further typing goes to Radix typeahead. Click the input to
+ * resume filtering. Refocusing from content trips the non-modal focus-outside
+ * dismissal.
+ * Long-term fix: a combobox (focus stays on the input, aria-activedescendant)
+ * rather than a menu.
  */
 
 type TypeableInputProps = Pick<
@@ -108,12 +118,20 @@ type TypeableInputProps = Pick<
 
 export type TypeableDropdownTriggerProps = Omit<
   ComponentPropsWithoutRef<"div">,
-  "children"
+  "children" | "onChange" | "onInput"
 > &
   TypeableInputProps & {
     inputClassName?: string;
     inputRef?: Ref<HTMLInputElement>;
     placeholder?: string;
+    /**
+     * The current selection's summary (Figma Single: the chosen label; Multi:
+     * e.g. "2 Selected"). Shown in the primary text tone while the input is
+     * empty; the plain `placeholder` (tertiary tone) shows when this is unset.
+     */
+    displayValue?: string;
+    /** Forwarded by DropdownMenuTrigger from the root's selectType; re-emitted for CSS. */
+    "data-select-type"?: DropdownMenuSelectType;
     /** Set by DropdownMenuTrigger when composed; used to refocus the input after open. */
     "data-state"?: "open" | "closed";
   };
@@ -129,6 +147,7 @@ const TypeableDropdownTrigger = forwardRef<
       inputRef,
       disabled,
       placeholder,
+      displayValue,
       value,
       defaultValue,
       onChange,
@@ -144,6 +163,7 @@ const TypeableDropdownTrigger = forwardRef<
       onPointerDown,
       onKeyDown,
       "data-state": dataState,
+      "data-select-type": dataSelectType,
       ...triggerProps
     },
     ref,
@@ -173,16 +193,23 @@ const TypeableDropdownTrigger = forwardRef<
           "min-w-40 rounded-tight border border-solid border-border-primary",
           "bg-secondary ds-pl-ui-rg ds-pr-ui-sm",
           "transition-all duration-150 ease-out",
-          "[&:hover:not(:focus-within)]:border-input-border-hover [&:hover:not(:focus-within)]:shadow-button-secondary",
-          "focus-within:border-input-border-focus ds-focus-within-ring",
-          // The ring carries its state in its own selector — a
-          // `data-[state=open]:ds-focus-ring` variant composes a Tailwind
-          // variant with a package class and emits no rule at all.
-          "data-[state=open]:border-input-border-focus ds-focus-ring-on-open",
-          disabled ? "cursor-not-allowed" : "cursor-text",
+          disabled
+            ? "cursor-not-allowed bg-secondary-disabled border-secondary-border-disabled"
+            : [
+                "cursor-text",
+                "[&:hover:not(:focus-within)]:border-input-border-hover [&:hover:not(:focus-within)]:shadow-button-secondary",
+                "focus-within:border-input-border-focus ds-focus-within-ring",
+                // The ring carries its state in its own selector — a
+                // `data-[state=open]:ds-focus-ring` variant composes a Tailwind
+                // variant with a package class and emits no rule at all.
+                "data-[state=open]:border-input-border-focus ds-focus-ring-on-open",
+              ],
           className,
         )}
         onPointerDown={(event) => {
+          if (disabled) {
+            return;
+          }
           if (event.target === inputElRef.current) {
             if (dataState !== "open") {
               // Focus BEFORE calling Radix's handler. The DismissableLayer mounts
@@ -202,6 +229,9 @@ const TypeableDropdownTrigger = forwardRef<
           onPointerDown?.(event);
         }}
         onKeyDown={(event) => {
+          if (disabled) {
+            return;
+          }
           if (event.target === inputElRef.current) {
             if (event.key === "ArrowDown") {
               onKeyDown?.(event);
@@ -210,14 +240,17 @@ const TypeableDropdownTrigger = forwardRef<
           }
           onKeyDown?.(event);
         }}
-        data-state={dataState}
         {...triggerProps}
+        data-state={dataState}
+        data-select-type={dataSelectType}
+        aria-disabled={disabled || undefined}
+        data-disabled={disabled ? "" : undefined}
       >
-        <SearchIcon />
+        <SearchIcon className={cn(disabled && "ds-opacity-disabled")} />
         <input
           ref={setInputRef}
           disabled={disabled}
-          placeholder={placeholder}
+          placeholder={displayValue ?? placeholder}
           type="text"
           value={value}
           defaultValue={defaultValue}
@@ -234,11 +267,12 @@ const TypeableDropdownTrigger = forwardRef<
           className={cn(
             "h-full min-w-0 flex-1 bg-transparent text-left text-style-button text-text",
             "placeholder:text-text-tertiary outline-none",
+            displayValue !== undefined && "placeholder:text-text",
             "ds-disabled-state",
             inputClassName,
           )}
         />
-        <ChevronDownIcon />
+        <ChevronDownIcon className={cn(disabled && "ds-opacity-disabled")} />
       </div>
     );
   },

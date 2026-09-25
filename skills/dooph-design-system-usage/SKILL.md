@@ -117,7 +117,7 @@ Reach for these before writing local UI:
   `CTAButton` (marketing CTA — fully round, padded outline ring on `primary`,
   label-only hover roll; `CTAButtonVariant`: `primary` | `secondary`,
   `CTAButtonSize`: `standard` | `big`).
-- **Inputs:** `Input`, `SearchBox`, `Checkbox`, `TwoWayToggle` (+ `TwoWayToggleItem`),
+- **Inputs:** `Input`, `SearchBox`, `Checkbox`, `ToggleSwitch` (+ `ToggleSwitchItem`),
   `SliderContinuous` / `SliderStepped` / `SliderLabeled` (Radix Slider;
   `SliderVariant`: `primary` | `prominent` | `custom` picks the paint bundle —
   hue, track opacity and step-dot colour — while `color` and `stepColor`
@@ -127,9 +127,17 @@ Reach for these before writing local UI:
   adds `labels: { start, end }`), `VerificationCodeInput` (OTP group — `length`
   default 6, digits only, auto-advance/backspace/arrows/paste; `CodeDigitInput`
   is the single cell).
-- **Menus:** `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`,
-  `DropdownMenuItem`, `DropdownMenuCheckboxItem`, `DropdownMenuLabel`,
-  `DropdownMenuSeparator`, `DropdownMenuSection`.
+- **Menus:** `DropdownMenu` (`selectType`: `DropdownMenuSelectType.single`
+  (default, every item closes on select) | `.multi` — under `multi`,
+  `DropdownMenuMultiSelectItem` keeps the menu open; plain items and radio
+  items still close), `DropdownMenuTrigger`, `DropdownMenuContent`,
+  `DropdownMenuItem`, `DropdownMenuMultiSelectItem` (checkbox-style, renamed
+  from `DropdownMenuCheckboxItem`), `DropdownMenuRadioSelectItem` (use inside
+  `DropdownMenuRadioGroup`), `DropdownMenuPlainItem` (item geometry, no
+  interactive states — interactive children are pointer-only inside a Radix
+  menu; provide a keyboard-reachable equivalent), `DropdownMenuLabel`,
+  `DropdownMenuSeparator`, `DropdownMenuSection` (`width` prop for a wide menu),
+  `DropdownMenuSegment` (full-width divider/labeled break between sections).
 - **Triggers:** `DropdownTrigger`, optional `DropdownTriggerContent`, `TypeableDropdownTrigger`, `TextDropdownTrigger`.
 - **Navigation:** `Tabs` (+ `TabsList`, `TabsTrigger`, `TabsContent`),
   `SegmentedTabSelect` (+ `SegmentedTabItem`).

@@ -39,9 +39,10 @@ Two historical renames, neither reversible: v3 renamed `ButtonVariant.destructiv
 | `ButtonSize`       | `size`    | `<Button size={ButtonSize.sm} />`                             |
 | `TabVariant`       | `variant` | `<TabsTrigger variant={TabVariant.ghost} />`                  |
 | `TabSize`          | `size`    | `<TabsTrigger size={TabSize.icon} />`                         |
-| `ToggleVariant`    | `variant` | `<TwoWayToggleItem variant={ToggleVariant.primary} />`        |
-| `ToggleSize`       | `size`    | `<TwoWayToggle size={ToggleSize.sm} />`                       |
-| `SegmentedVariant` | `variant` | `<SegmentedTabSelect variant={SegmentedVariant.secondary} />` |
+| `ToggleVariant`    | `variant` | `<ToggleSwitch variant={ToggleVariant.ghost} />`        |
+| `ToggleSize`       | `size`    | `<ToggleSwitch size={ToggleSize.sm} />`                       |
+| `SegmentedVariant` | `variant` | `<SegmentedTabSelect variant={SegmentedVariant.ghost} size={SegmentedSize.container} />` |
+| `SegmentedSize`    | `size`    | `<SegmentedTabSelect size={SegmentedSize.containerIcon} />`   |
 | `TextDropdownSize` | `size`    | `<TextDropdownTrigger size={TextDropdownSize.sm} />`          |
 | `ShapeButtons`     | `shape`   | `<ShapeButton shape={ShapeButtons.squircle} />`                |
 | `ShapeButtonVariant` | `variant` | `<ShapeButton variant={ShapeButtonVariant.prominent} />`    |
@@ -49,7 +50,8 @@ Two historical renames, neither reversible: v3 renamed `ButtonVariant.destructiv
 | `TextVariant`      | `variant`    | `<BaseText variant={TextVariant.body} />`                          |
 | `CheckboxChecked`  | `checked`    | `<Checkbox checked={CheckboxChecked.indeterminate} />`             |
 | `CopyButtonVariant` | `variant` | `<CopyButton variant={CopyButtonVariant.secondary} value="npm install" />` |
-| `DropdownMenuVariant` | `variant` | `<DropdownMenu variant={DropdownMenuVariant.complex} />` (width floor, inherited by content via context) |
+| `DropdownMenuSelectType` | `selectType` | `<DropdownMenu selectType={DropdownMenuSelectType.multi} />` (items read it via context; triggers get it as Slot-merged `data-select-type`) |
+| `DropdownMenuSegmentVariant` | `variant` | `<DropdownMenuSegment variant={DropdownMenuSegmentVariant.labeled}>Filter by</DropdownMenuSegment>` |
 
 ### The open-value exception
 
@@ -116,7 +118,7 @@ classes (so consumers can override them); explicit props go inline.
 - Const keys are **camelCase** (e.g. `iconSm`, not `IconSm` or `icon-sm`). The string VALUE may differ (`"icon-sm"` to match cva key).
 - The const object and the derived type share the **same identifier** (TypeScript allows a value and a type to share a name).
 - All these exports must be re-exported from `src/index.ts`.
-- Prop name is always `variant` (not `styleVariant`, not `type`, not `kind`). Size prop is always `size`. The only exceptions are geometry props with established Radix/industry names: `shape` (ShapeButton) and `side` (SheetContent, matching Radix's own `side` convention).
+- Prop name is always `variant` (not `styleVariant`, not `type`, not `kind`). Size prop is always `size`. The only exceptions are geometry/mode props with established or genuinely orthogonal names: `shape` (ShapeButton), `side` (SheetContent, matching Radix's own `side` convention), and `selectType` (`DropdownMenu` — it is a selection mode, not a visual variant, so the `variant` name would mislead).
 
 ---
 
@@ -153,7 +155,9 @@ Radix sets these automatically — style against them, never toggle classes in J
 ### DropdownMenu defaults
 
 - **`modal={false}`** on `DropdownMenu` root (package default; Radix default is `true`). Keeps the rest of the page interactable while a menu is open. Pass `modal={true}` when dialog-like focus trapping is required.
-- **`matchTriggerWidth`** defaults to `true` on `DropdownMenuContent` — sets width to the Radix trigger width, floored by `--ds-menu-min-w` (`ds-radix-dropdown-match-trigger-width`). `DropdownMenuVariant` on the root sets that floor via `ds-menu-w-standard`/`-action`/`-complex` and flows down through context; `DropdownMenuContent variant` overrides one panel.
+- **Width is not a menu-level variant.** Items carry the 160px floor (`ds-min-w-menu`, internal to `DropdownMenu.tsx`'s `itemBase`); `DropdownMenuSection` and the panel hug their content — the widest item sets the width, and every section/segment/item stretches to it because the panel is `flex flex-col`. `DropdownMenuSection width` is the explicit override for a wider ("complex") menu. **`matchTriggerWidth`** defaults to `true` on `DropdownMenuContent` — it only ever WIDENS the panel to the Radix trigger width (`ds-radix-dropdown-match-trigger-width`, `min-width: var(--radix-dropdown-menu-trigger-width)`); with it `false`, no panel-level min-width is applied and the items' own floor still holds.
+- **`selectType`** (`DropdownMenuSelectType.single`\|`.multi`, default `single`) on the root flows through `DropdownMenuPresentationContext` to items and, via `DropdownMenuTrigger`'s Slot-merged `data-select-type`, to trigger components. Under `multi`, `DropdownMenuMultiSelectItem` keeps the menu open by calling the consumer's `onSelect` first, then `event.preventDefault()` unless already prevented — this is Radix's documented public keep-open API, distinct from this rule's ban on `preventDefault`/`stopPropagation` on Radix's OWN internal handlers (below). Plain `DropdownMenuItem`s and radio items still close under `multi`.
+- **`DropdownMenuMultiSelectItem`** renders the package's own `Checkbox` as a leading, inert visual: `pointer-events-none` so it never receives its own hover/active (the item owns those states), plus `tabIndex={-1}` and `aria-hidden`.
 - **`DropdownMenuSection`** wraps item groups with horizontal inset (`ds-px-ui-xs`). `DropdownMenuContent` has no horizontal padding so `DropdownMenuSeparator` spans edge-to-edge.
 - **`TypeableDropdownTrigger`**: render as child of `DropdownMenuTrigger asChild`. The component root is a `<div>` (ref + Radix trigger props); the nested `<input>` receives typing. `onPointerDown` is state-aware and pre-focuses the input before calling Radix's handler: for input or chrome clicks that **open** the menu, `inputElRef.current.focus()` is called first (synchronously), then Radix's handler opens the menu. For input clicks when the menu is **already open**, the handler is suppressed entirely (preserves typing without toggling). Chrome clicks when the menu is open call Radix directly (closing). Pair with **`DropdownMenuContent focusOnOpen={false}`** so open does not steal focus to the panel. Pre-focusing before Radix is critical — Radix's non-modal `DismissableLayer` closes the menu when `focusin` fires outside the content after mount; focusing before the open means the `focusin` fires before the layer exists and is ignored. Optional `inputRef` for imperative input access. Open/focus styling uses `data-[state=open]` and `focus-within:` — no `open` prop.
 
@@ -227,7 +231,7 @@ Leaf interactive components (Button, DropdownTrigger, TextDropdownTrigger, Outli
 Wrapping children in a layout span is acceptable ONLY when visually required and the wrapper is not interactive. Examples:
 
 - `OutlineButton` wraps children in `<span className="relative z-10 ...">` to layer above blur orbs — acceptable.
-- `DropdownMenuCheckboxItem` wraps text children in `<span className="flex flex-1">` to push indicator right — acceptable.
+- `DropdownMenuRadioSelectItem` wraps text children in `<span className="flex flex-1">` to push the trailing check right — acceptable.
 - `Avatar` is a composable display shell; consumers pass logo/img/icon content as `children`. Do not add app-level logo providers or asset URL props to the package component.
 
 ### Never

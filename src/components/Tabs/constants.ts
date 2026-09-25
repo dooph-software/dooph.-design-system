@@ -10,7 +10,7 @@ export const TabSize = {
   default: "default",
   /** 34px — Figma `buttonSizes/smallButtonHeight`, `rg` (12px) padding. */
   sm: "sm",
-  /** 30px compact item — backs SegmentedVariant.micro (Figma "Micro"). */
+  /** 28px compact item — Figma Toggle Option "Micro", radius-mini. */
   micro: "micro",
   /**
    * Height follows the parent instead of a fixed value — for a segmented row
@@ -21,6 +21,8 @@ export const TabSize = {
   icon: "icon",
   /** 34×34 icon-only tab, pairing with the small variants. */
   iconSm: "icon-sm",
+  /** 28×28 icon-only tab — Figma Micro icon (Tab Select "Container Icon"). */
+  iconMicro: "icon-micro",
 } as const;
 export type TabSize = (typeof TabSize)[keyof typeof TabSize];
 

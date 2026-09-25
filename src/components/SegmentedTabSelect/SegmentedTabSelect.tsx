@@ -21,73 +21,51 @@ const SegmentedTabContext = createContext<{
   itemSize?: TabSize;
 }>({});
 
-/**
- * Supported SegmentedTabSelect wrapper variants:
- *
- * | variant            | shell | active-tab style | item size |
- * |--------------------|-------|------------------|-----------|
- * | ghost              | –     | ghost            | default   |
- * | ghost-small        | –     | ghost            | sm        |
- * | micro              | –     | ghost            | micro     |
- * | secondary          | ✓     | ghost            | default   |
- * | secondary-small    | ✓     | ghost            | sm        |
- * | primary            | ✓     | primary          | default   |
- * | primary-small      | ✓     | primary          | sm        |
- */
-// SegmentedVariant (+ its type) lives in ./constants (server-safe), re-exported
-// via index.ts; imported here for internal variant resolution.
-import { SegmentedVariant } from './constants';
+// SegmentedVariant/SegmentedSize (+ their types) live in ./constants
+// (server-safe), re-exported via index.ts; imported here for internal
+// variant/size resolution. See constants.ts for the Figma Tab Select
+// variant × size table.
+import { SegmentedSize, SegmentedVariant } from './constants';
 
 export interface SegmentedTabSelectProps
   extends ComponentPropsWithoutRef<typeof TabsPrimitive.Root> {
   variant?: SegmentedVariant;
+  size?: SegmentedSize;
 }
 
-const SHELL_VARIANTS: SegmentedVariant[] = [
-  SegmentedVariant.secondary,
-  SegmentedVariant.secondarySmall,
-  SegmentedVariant.primary,
-  SegmentedVariant.primarySmall,
-];
+const ITEM_SIZE: Record<SegmentedSize, TabSize> = {
+  container: TabSize.micro,
+  'container-icon': TabSize.iconMicro,
+  standard: TabSize.default,
+  icon: TabSize.icon,
+};
 
-const SMALL_VARIANTS: SegmentedVariant[] = [
-  SegmentedVariant.ghostSmall,
-  SegmentedVariant.secondarySmall,
-  SegmentedVariant.primarySmall,
-];
-
-const PRIMARY_ACTIVE_VARIANTS: SegmentedVariant[] = [
-  SegmentedVariant.primary,
-  SegmentedVariant.primarySmall,
+const SHELL_SIZES: SegmentedSize[] = [
+  SegmentedSize.container,
+  SegmentedSize.containerIcon,
 ];
 
 const SegmentedTabSelect = forwardRef<
   ComponentRef<typeof TabsPrimitive.Root>,
   SegmentedTabSelectProps
->(({ className, variant = SegmentedVariant.secondary, children, ...props }, ref) => {
-  const hasShell = SHELL_VARIANTS.includes(variant);
-  const isSmall = SMALL_VARIANTS.includes(variant);
-  const isPrimary = PRIMARY_ACTIVE_VARIANTS.includes(variant);
+>(({ className, variant = SegmentedVariant.primary, size = SegmentedSize.container, children, ...props }, ref) => {
+  const hasShell = SHELL_SIZES.includes(size);
 
   return (
     <SegmentedTabContext.Provider
       value={{
-        tabVariant: isPrimary ? TabVariant.primary : TabVariant.ghost,
-        itemSize:
-          variant === SegmentedVariant.micro
-            ? TabSize.micro
-            : isSmall
-              ? TabSize.sm
-              : TabSize.default,
+        tabVariant: variant === SegmentedVariant.primary ? TabVariant.primary : TabVariant.ghost,
+        itemSize: ITEM_SIZE[size],
       }}
     >
       <TabsPrimitive.Root ref={ref} {...props}>
         <TabsList
           className={cn(
+            'gap-xxs',
             hasShell &&
-              // `standard` (18px) per Figma's shell radius variable.
-              'rounded-normal border border-solid border-border-primary bg-secondary p-1.5',
-            isSmall && hasShell && 'gap-1',
+              // 28px items + xxs inset + 1px border = 38px; outer radius is
+              // radius-mini + xxs so it stays concentric with the items.
+              'h-button p-xxs border border-solid border-border-primary bg-surface-primary ds-radius-mini-outset-xxs',
             className
           )}
         >

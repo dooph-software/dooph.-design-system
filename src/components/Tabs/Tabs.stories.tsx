@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs';
 import { TabSize, TabVariant } from './constants';
+import { TableIcon, GraphIcon, InvoiceIcon } from '../Icons';
 
 const meta = {
   title: 'Navigation/Tabs',
@@ -99,6 +100,38 @@ export const AllVariants: Story = {
           </TabsList>
         </Tabs>
       </div>
+    </div>
+  ),
+};
+
+/** Figma Toggle Option (826:1723) — every size × variant, one selected. */
+export const ToggleOptionSizes: Story = {
+  render: () => (
+    <div className="flex flex-col gap-md">
+      {([TabVariant.primary, TabVariant.ghost] as const).map((variant) => (
+        <div key={variant} className="flex flex-col gap-sm">
+          {([TabSize.default, TabSize.sm, TabSize.micro] as const).map((size) => (
+            <Tabs key={size} defaultValue="grid">
+              <TabsList>
+                <TabsTrigger value="grid" variant={variant} size={size} data-testid={`${variant}-${size}`}>
+                  <TableIcon />Grid
+                </TabsTrigger>
+                <TabsTrigger value="list" variant={variant} size={size}>List</TabsTrigger>
+                <TabsTrigger value="off" variant={variant} size={size} disabled>Off</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          ))}
+          {([TabSize.icon, TabSize.iconSm, TabSize.iconMicro] as const).map((size) => (
+            <Tabs key={size} defaultValue="a">
+              <TabsList>
+                <TabsTrigger value="a" variant={variant} size={size} aria-label="Table" data-testid={`${variant}-${size}`}><TableIcon /></TabsTrigger>
+                <TabsTrigger value="b" variant={variant} size={size} aria-label="Graph"><GraphIcon /></TabsTrigger>
+                <TabsTrigger value="c" variant={variant} size={size} aria-label="Invoice"><InvoiceIcon /></TabsTrigger>
+              </TabsList>
+            </Tabs>
+          ))}
+        </div>
+      ))}
     </div>
   ),
 };
