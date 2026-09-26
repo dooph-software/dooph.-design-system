@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "file-header-contracts": {
+      "source": "dooph-software/dooph-skills",
+      "sourceType": "github",
+      "skillPath": "skills/file-header-contracts/SKILL.md",
+      "computedHash": "2e730ceb437bc2fa3e6a00150f86e997f46d2e38ba6733ffdddb62030b546f30"
+    },
     "radix-ui-design-system": {
       "source": "sickn33/antigravity-awesome-skills",
       "sourceType": "github",
@@ -12,6 +18,12 @@
       "sourceType": "github",
       "skillPath": "skills/skill-creator/SKILL.md",
       "computedHash": "7e3c9cd74e9e2b4828527a857170e86310f2dab5ea8030a9043df2c7e6c88857"
+    },
+    "using-airbnb-visx-lib": {
+      "source": "dooph-software/dooph-skills",
+      "sourceType": "github",
+      "skillPath": "skills/using-airbnb-visx-lib/SKILL.md",
+      "computedHash": "5efb5e81816cf528b48fa0dbef406b942e2f2b39613ea15d7f76380f38b9d429"
     }
   }
 }

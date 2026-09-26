@@ -173,11 +173,13 @@ Reach for these before writing local UI:
 - **Links:** `TextLink` (body-text anchor; ghost foreground at rest, primary
   text on hover/active, no underline; `asChild` for `<Link>` composition).
 - **Text & icons:** `BaseText` + the ten role components — see **Text** below.
-  The six animating wrappers below all import from the same package root, but
+  The seven animating wrappers below all import from the same package root, but
   live under `AnimatedText` rather than `Text` in the source.
   `ShimmerText` (animated "working" sheen masked to child glyphs — children must
   not set an explicit text color), `RollChangeText` (rolls old content out / new
-  content in when `changeKey` or string/number children change), `RollHoverText`
+  content in when `changeKey` or string/number children change), `FadeChangeText`
+  (`RollChangeText` without the blur — same roll and `direction`, sharp edges;
+  tune via `--ui-fade-change-*`), `RollHoverText`
   (per-character roll on hover), `RevealChangeText` (width-animated slot that
   slides content out from one edge and tucks it back under what follows when
   `changeKey` changes or goes `null` — `onSettled` sequences whatever should

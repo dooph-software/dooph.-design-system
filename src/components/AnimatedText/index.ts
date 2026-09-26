@@ -1,3 +1,5 @@
+export { FadeChangeText } from "./FadeChangeText";
+export type { FadeChangeTextProps } from "./FadeChangeText";
 export { RevealChangeText } from "./RevealChangeText";
 export type { RevealChangeTextProps } from "./RevealChangeText";
 export { RollChangeText } from "./RollChangeText";

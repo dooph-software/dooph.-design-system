@@ -130,6 +130,7 @@
   --shadow-button-hover: var(--ui-shadow-button-hover);
   --shadow-button-active: var(--ui-shadow-button-active);
   --shadow-menu: var(--ui-shadow-menu);
+  --shadow-standard: var(--ui-shadow-standard);
   --shadow-cta: var(--ui-shadow-cta);
   --shadow-focus-prominent: var(--ui-shadow-focus-prominent);
   --shadow-focus-primary: var(--ui-shadow-focus-primary);

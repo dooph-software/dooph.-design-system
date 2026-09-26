@@ -36,12 +36,15 @@ src/
     dooph-component-tokens.css ← @layer utilities: ds-* helpers (spacing, disabled states, radix origin)
     theme.css                 ← GENERATED preset (sync-theme.mjs): standalone @theme inline block shipped as ./theme.css for consumer Tailwind builds. Do not hand-edit.
   components/
-    AnimatedText/               ← the six animating text WRAPPERS: ShimmerText,
-                                  RollHoverText, RollChangeText, RevealChangeText,
+    AnimatedText/               ← the seven animating text WRAPPERS: ShimmerText,
+                                  RollHoverText, RollChangeText, FadeChangeText,
+                                  RevealChangeText,
                                   RollingDigitsText (+ rollingDigitsModel.ts),
                                   UnderlineLinkText; constants.ts holds
-                                  RollDirection/RevealDirection. One merged
-                                  AnimatedText.stories.tsx covers all six.
+                                  RollDirection/RevealDirection; useChangeSwap.ts
+                                  is the shared (internal) swap engine behind
+                                  RollChangeText + FadeChangeText. One merged
+                                  AnimatedText.stories.tsx covers all seven.
     Avatar/
     Button/
     CTAButton/                  ← padded-outline marketing CTA; CTAButtonVariant/Size
@@ -320,11 +323,15 @@ The stepped variant carries two behaviours worth knowing before editing it:
 | `serializeAxes`, `TextStyleProps`                                             | `Text/textStyle.ts` — axis-record → `font-variation-settings` string, and the shared prop shape |
 ### AnimatedText
 
-Six wrappers, in their own folder since they animate text rather than define it.
+Seven wrappers, in their own folder since they animate text rather than define it.
 They stay wrappers rather than `BaseText` props on purpose: each must be able to
 wrap icons and arbitrary children, not just text. `AnimatedText/constants.ts`
 (server-safe) holds `RollDirection` and `RevealDirection`; `AnimatedText/index.ts`
 is the barrel, and `src/index.ts` re-exports it alongside `./components/Text`.
+
+`useChangeSwap.ts` (the change-detection / keyed-exit engine shared by
+`RollChangeText` and `FadeChangeText`) is NOT re-exported either — each
+wrapper owns only its keyframes; do not re-inline the engine.
 
 `rollingDigitsModel.ts` is NOT re-exported — `parseDigitsString`,
 `reconcileWheels`, `restingWheels` and `hasTrailingSeparator` are internal.
@@ -333,6 +340,7 @@ is the barrel, and `src/index.ts` re-exports it alongside `./components/Text`.
 | --- | --- |
 | `ShimmerText`                                                                 | `<span>` wrapper applying `ds-shimmer-text` (animated gradient masked to glyphs via `background-clip: text`); children keep their own typography but must not set an explicit text color while shimmering; tune via `--ui-shimmer-base`/`--ui-shimmer-highlight`; respects `prefers-reduced-motion` |
 | `RollChangeText`                                                              | `<span>` wrapper that animates old content rolling out + blurring while new content rolls in on `changeKey` (or string/number `children`) change; `RollDirection.up`/`.down`; keyframes `ds-roll-out`/`ds-roll-in` |
+| `FadeChangeText`                                                              | `RollChangeText` without the blur (shared `useChangeSwap` engine): travel + opacity only, same `RollDirection` via `--ds-roll-dir`; `--ui-fade-change-*` tokens alias the roll-change ones by default; keyframes `ds-fade-change-out`/`ds-fade-change-in` |
 | `RollHoverText`                                                               | `<span>` wrapper rolling each character on hover (`ds-roll-hover*` classes) |
 | `UnderlineLinkText`                                                           | `<span>` wrapper whose underline wipes out right and redraws from the left on hover. The line is a `currentColor` gradient in `background`, so it tracks this element's own colour — put the colour here or ABOVE; a child setting its own colour paints glyphs but not the line. Responds to its own `:hover`, an ancestor `.group:hover`, or the `active` prop |
 | `RollingDigitsText`                                                           | Per-digit 2D roll for a pre-formatted numeric string. See below |
@@ -451,6 +459,7 @@ Notable component tokens:
 - **Motion tokens.** Every animated component owns a `--ui-<component>-*` family
   and the component reads them only through CSS — see the architecture skill's
   Rule 6. Current families: `--ui-roll-hover-*`, `--ui-roll-change-*`,
+  `--ui-fade-change-*`,
   `--ui-underline-link-*`, `--ui-rolling-digits-*` and `--ui-sidebar-icon-*`.
   - `--ui-roll-change-*`: `out-duration`/`in-duration` and `out-ease`/`in-ease`
     (two curves on purpose — the old content leaves on an accelerating ease-in,
@@ -543,7 +552,7 @@ They live in **`@layer components`, not `utilities`** — that is load-bearing, 
 
 `BaseText` typography props are emitted as inline style, never as classes. The previous class-based approach (`ds-font-weight-*` plus `font-*`/`text-*` utilities) is deleted: two of its three props silently did nothing, because the role class was emitted ~50kB later in the compiled sheet and won on source order, and `fontSize` was additionally dropped by tailwind-merge as a colour conflict. Do not reintroduce class-based text props.
 
-`ds-shimmer-text` (also in `index.css`, not `dooph-component-tokens.css`) — animated gradient `background-clip: text` utility backing `ShimmerText`; `@keyframes ds-shimmer` plus the reduced-motion fallback live alongside it. `ds-roll-out`/`ds-roll-in` back `RollChangeText`, `ds-underline-wipe` backs `UnderlineLinkText`, `ds-rolling-digits-{in,out,fade-in,fade-out}` back `RollingDigitsText`, and `ds-spinner-rotate` backs the spokes `LoadingSpinner`.
+`ds-shimmer-text` (also in `index.css`, not `dooph-component-tokens.css`) — animated gradient `background-clip: text` utility backing `ShimmerText`; `@keyframes ds-shimmer` plus the reduced-motion fallback live alongside it. `ds-roll-out`/`ds-roll-in` back `RollChangeText`, `ds-fade-change-out`/`-in` back `FadeChangeText`, `ds-underline-wipe` backs `UnderlineLinkText`, `ds-rolling-digits-{in,out,fade-in,fade-out}` back `RollingDigitsText`, and `ds-spinner-rotate` backs the spokes `LoadingSpinner`.
 
 `.ds-reveal-change` / `.ds-reveal-change-content` (in `index.css`) back
 `RevealChangeText` — a `justify-content`-pinned `overflow: hidden` flex slot
@@ -618,7 +627,7 @@ Check before assuming (`grep -l '"use client"' src/components/**/*.tsx`, not
 which is still a valid directive prologue because comments are not statements).
 Current split among the non-obvious ones: `LoadingSpinner` (`useRef` +
 `useEffect` + rAF), `Calendar`, `DatePicker`, `Popover`, `VerificationCodeInput`,
-`CodeDigitInput`, `RollingDigitsText`, `RollChangeText`, `RevealChangeText` and
+`CodeDigitInput`, `RollingDigitsText`, `RollChangeText`, `FadeChangeText`, `RevealChangeText` and
 `SidebarWithHoverIcon` are client; `ProgressIndicator` (`useMemo`), `WavyDivider`
 (`useId`), `Table` (no hooks), `CTAButton`, `ShimmerText`, `RollHoverText` and
 `UnderlineLinkText` are neutral (all three of those last use only `forwardRef`). `add-use-client.mjs` stamps dist chunks purely from source

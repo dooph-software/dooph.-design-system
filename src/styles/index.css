@@ -165,6 +165,7 @@
   --shadow-button-hover: var(--ui-shadow-button-hover);
   --shadow-button-active: var(--ui-shadow-button-active);
   --shadow-menu: var(--ui-shadow-menu);
+  --shadow-standard: var(--ui-shadow-standard);
   --shadow-cta: var(--ui-shadow-cta);
   --shadow-focus-prominent: var(--ui-shadow-focus-prominent);
   --shadow-focus-primary: var(--ui-shadow-focus-primary);
@@ -706,6 +707,28 @@
     }
   }
 
+  /* FadeChangeText — the roll without blur: transform + opacity only, so
+   * `will-change` names only those. Classes drop when each half ends (the out
+   * node unmounts, the in node loses the class), so neither strands a layer on
+   * settled content. Reduced motion keeps a 1ms animation rather than `none`,
+   * because `animationend` is what retires each half. */
+  .ds-fade-change-out {
+    animation: ds-fade-change-out var(--ui-fade-change-out-duration)
+      var(--ui-fade-change-out-ease) forwards;
+    will-change: transform, opacity;
+  }
+  .ds-fade-change-in {
+    animation: ds-fade-change-in var(--ui-fade-change-in-duration)
+      var(--ui-fade-change-in-ease) both;
+    will-change: transform, opacity;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-fade-change-out,
+    .ds-fade-change-in {
+      animation-duration: 1ms;
+    }
+  }
+
   /* SidebarWithHoverIcon rail. This rule is the icon's entire motion system —
    * the component sets the two targets and reads back what CSS interpolated.
    * Hover is the faster of the two because it answers a pointer; the traverse
@@ -820,6 +843,31 @@
   60%  { filter: blur(calc(var(--ui-roll-change-blur) * 0.375)); }
   to   { transform: translateY(0); filter: blur(0); opacity: 1; }
 }
+/* FadeChangeText — ds-roll-out/-in minus the blur. Same --ds-roll-dir sign
+ * convention; depth from --ui-fade-change-depth.
+ *
+ * Opacity runs on its OWN keyframe offsets, not the travel's: the old face is
+ * gone by 50% of its roll, the new face holds at 0 for the first 30% of its
+ * roll. Sharing the travel's curve (as the blurred roll does) left both faces
+ * near-opaque at once — the in-ease is decelerating — and without blur to mask
+ * it the two words visibly stacked with no fade at all. Transform is only
+ * given at 0%/100%, so it still interpolates as one continuous curve. The
+ * offsets are literal because keyframe selectors cannot read var(). */
+@keyframes ds-fade-change-out {
+  50% { opacity: 0; }
+  to {
+    transform: translateY(calc(var(--ds-roll-dir, 1) * var(--ui-fade-change-depth)));
+    opacity: 0;
+  }
+}
+@keyframes ds-fade-change-in {
+  from {
+    transform: translateY(calc(var(--ds-roll-dir, 1) * -1 * var(--ui-fade-change-depth)));
+    opacity: 0;
+  }
+  30% { opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 
 /* RollingDigitsText slot enter/exit. Deliberately ONE-SIDED: the missing half of
  * each pair is taken from the element's own computed style, so the same four
@@ -850,4 +898,21 @@
   50%    { background-size: 0% var(--ds-underline-thickness, var(--ui-underline-link-thickness));   background-position-x: 100%; }
   50.01% { background-size: 0% var(--ds-underline-thickness, var(--ui-underline-link-thickness));   background-position-x: 0%; }
   100%   { background-size: 100% var(--ds-underline-thickness, var(--ui-underline-link-thickness)); background-position-x: 0%; }
+}
+
+/* AI chat streaming animation (AITextPart / AIThinkingPart `streamingAnimation`).
+ * Each block of streamed prose rises into place out of a blur. Every value is a
+ * --ui-chat-stream-* token. Lives outside @layer with the package's other
+ * keyframes. */
+@keyframes ds-chat-stream-in {
+  from {
+    opacity: 0;
+    filter: blur(var(--ui-chat-stream-blur));
+    transform: translateY(var(--ui-chat-stream-rise));
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
 }

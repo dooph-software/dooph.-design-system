@@ -2,7 +2,7 @@
 // so these dot-accessible enums can be read from React Server Components.
 
 /**
- * Roll direction for RollChangeText / RollHoverText.
+ * Roll direction for RollChangeText / FadeChangeText / RollHoverText.
  *
  * `down` reads as content falling away (new content drops in from above); `up`
  * reads as content travelling upward (new content rises in from below). Both

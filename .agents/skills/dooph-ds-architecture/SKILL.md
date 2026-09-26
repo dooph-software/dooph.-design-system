@@ -315,6 +315,7 @@ component may own the *geometry* of a motion; it must not own its *timing*.
 
 - Every animated component gets a `--ui-<component>-*` family: at minimum a
   duration and an ease. Existing families: `--ui-roll-hover-*`,
+  `--ui-roll-change-*`, `--ui-fade-change-*`,
   `--ui-underline-link-*`, `--ui-rolling-digits-*`, `--ui-sidebar-icon-*`.
 - Reduced motion is a `@media (prefers-reduced-motion: reduce)` block in CSS,
   never a `matchMedia` call in a component. (Rule 5 already forbids `matchMedia`

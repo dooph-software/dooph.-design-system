@@ -386,4 +386,277 @@
       transition: none;
     }
   }
+
+  /*
+   * AI chat parts.
+   *
+   * ShimmerText re-bases. ShimmerText reads --ui-shimmer-base/-highlight; these
+   * point them at the chat's own pair instead of editing ShimmerText, so the
+   * working-row sheen is retunable per role without a second shimmer.
+   */
+  .ds-chat-tool-shimmer {
+    --ui-shimmer-base: var(--ui-chat-tool-shimmer-base);
+    --ui-shimmer-highlight: var(--ui-chat-tool-shimmer-highlight);
+  }
+  .ds-chat-thinking-shimmer {
+    --ui-shimmer-base: var(--ui-chat-thinking-shimmer-base);
+    --ui-shimmer-highlight: var(--ui-chat-thinking-shimmer-highlight);
+  }
+
+  /*
+   * Hover reveal for a settled row's secondary content (meta, copy, chevron).
+   * Scoped to its own root class rather than Tailwind's `.group`: chat parts
+   * are routinely nested inside consumer layout that already uses `.group`,
+   * and a bare group-hover would light up every row in the turn at once.
+   * :focus-within keeps a revealed control reachable from the keyboard.
+   */
+  .ds-chat-reveal {
+    opacity: 0;
+    transition: opacity var(--ui-chat-reveal-duration)
+      var(--ui-chat-reveal-ease);
+  }
+  .ds-chat-reveal-root:hover .ds-chat-reveal,
+  .ds-chat-reveal-root:focus-within .ds-chat-reveal,
+  .ds-chat-reveal-root[data-state="open"] .ds-chat-reveal {
+    opacity: 1;
+  }
+  /* A settled label lifts from ghost to ghost-active under the same hover. */
+  .ds-chat-lift {
+    transition: color var(--ui-chat-reveal-duration) var(--ui-chat-reveal-ease);
+  }
+  .ds-chat-reveal-root:hover .ds-chat-lift,
+  .ds-chat-reveal-root:focus-within .ds-chat-lift,
+  .ds-chat-reveal-root[data-state="open"] .ds-chat-lift {
+    color: var(--ui-color-ghost-foreground-active);
+  }
+  /* The thinking disclosure chevron: down while closed, up while open.
+   * DropdownIcon's own path points up. Both opacity (ds-chat-reveal) and
+   * transform transition, so the list is spelled out here in full. */
+  .ds-chat-chevron {
+    transform: rotate(180deg);
+    transition:
+      transform var(--ui-chat-disclosure-duration)
+        var(--ui-chat-disclosure-ease),
+      opacity var(--ui-chat-reveal-duration) var(--ui-chat-reveal-ease);
+  }
+  [data-state="open"] > .ds-chat-chevron {
+    transform: rotate(0deg);
+  }
+
+  /*
+   * AIThinkingPart transcript disclosure. A grid-rows 0fr↔1fr transition
+   * animates to the content's natural height with no measuring.
+   */
+  .ds-chat-disclosure {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows var(--ui-chat-disclosure-duration)
+        var(--ui-chat-disclosure-ease),
+      opacity var(--ui-chat-disclosure-duration)
+        var(--ui-chat-disclosure-ease);
+  }
+  .ds-chat-disclosure[data-state="open"] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  .ds-chat-disclosure > * {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /*
+   * `streamingAnimation` on AITextPart / AIThinkingPart. Renderer-agnostic:
+   * it animates the prose's top-level blocks and every list item as each
+   * MOUNTS, so it works on any markdown renderer's output.
+   *
+   * - Gated on the attribute, not on the class, so settled history (rendered
+   *   without the prop) never animates on load, chat switch or remount.
+   * - A list animates through its items, never as a block too: animating both
+   *   stacked two blurs on the first items.
+   * - Granularity is the block. Words appended to a paragraph that has
+   *   already mounted appear without animation; word-level motion needs the
+   *   renderer to wrap each word, which is the renderer's job, not ours.
+   */
+  .ds-chat-prose[data-streaming-animation] > :not(ul, ol),
+  .ds-chat-prose[data-streaming-animation] li {
+    animation: ds-chat-stream-in var(--ui-chat-stream-duration)
+      var(--ui-chat-stream-ease) both;
+  }
+
+  /*
+   * The prompt textarea never renders shorter than one line. `1lh` is the
+   * element's OWN computed line height, so the floor follows whatever type
+   * the consumer puts on it (text class, leading) rather than a fixed px.
+   * The padding lives here, beside the calc that depends on it, so the two
+   * cannot drift apart.
+   *
+   * The floor is load-bearing: `overflow-y: auto` zeroes a flex item's
+   * automatic minimum size, so in a height-constrained column the textarea
+   * would otherwise shrink to little more than its padding.
+   */
+  .ds-chat-prompt-textarea {
+    padding: var(--ui-spacing-xxs);
+    min-height: calc(1lh + 2 * var(--ui-spacing-xxs));
+    max-height: var(--ui-chat-prompt-max-height);
+  }
+
+  .ds-chat-model-swatch {
+    width: var(--ui-chat-model-swatch-size);
+    height: var(--ui-chat-model-swatch-size);
+    border-radius: var(--ui-chat-model-swatch-radius);
+    background-color: var(--ds-chat-model-color, var(--ui-color-prominent));
+    flex-shrink: 0;
+  }
+
+  .ds-width-chat-model-tooltip {
+    width: var(--ui-width-chat-model-tooltip);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-chat-reveal,
+    .ds-chat-lift,
+    .ds-chat-chevron,
+    .ds-chat-disclosure {
+      transition: none;
+    }
+    .ds-chat-prose[data-streaming-animation] > :not(ul, ol),
+    .ds-chat-prose[data-streaming-animation] li {
+      animation: none;
+    }
+  }
+
+  /*
+   * ds-chat-prose — typography for rendered markdown (AITextPart, and the
+   * AIThinkingPart transcript). Renderer-agnostic: it styles plain descendant
+   * ELEMENTS, so Streamdown, react-markdown, MDX or hand-written JSX all land
+   * on the same design.
+   *
+   * This lives in `utilities`, NOT `components` like the text-style-* roles, and
+   * that is load-bearing. Markdown renderers put their own utilities on the
+   * elements they emit (Streamdown: `text-sm` on code, `text-xl` on h2,
+   * `list-inside` on lists, `my-4` on blockquotes). Those sit in the consumer's
+   * utilities layer, which beats anything in `components` regardless of
+   * specificity — so a components-layer prose would lose to the renderer on
+   * every element it touches. In the same layer, these descendant selectors
+   * (0,1,1) outrank a renderer's single-class utilities (0,1,0).
+   *
+   * Colour is inherited, never set on a paragraph, so the element carrying
+   * the class decides it (text for an answer, tertiary for a live transcript).
+   * No line-height: leading belongs to the consuming app, as with every role.
+   */
+  .ds-chat-prose > :first-child {
+    margin-top: 0;
+  }
+  .ds-chat-prose > :last-child {
+    margin-bottom: 0;
+  }
+  .ds-chat-prose :is(p, li, blockquote, td, th) {
+    font-size: inherit;
+    color: inherit;
+  }
+  .ds-chat-prose :is(p, ul, ol, blockquote, pre, table) {
+    margin-block: var(--ui-spacing-sm);
+  }
+  .ds-chat-prose :is(strong, b) {
+    font-weight: var(--ui-weight-semibold);
+    color: inherit;
+  }
+  .ds-chat-prose :is(em, i) {
+    font-style: italic;
+  }
+  .ds-chat-prose :is(h1, h2, h3, h4, h5, h6) {
+    color: inherit;
+    margin-top: var(--ui-spacing-rg);
+    margin-bottom: var(--ui-spacing-xs);
+  }
+  .ds-chat-prose h1 {
+    font-family: var(--ui-font-title);
+    font-size: var(--ui-text-title);
+    font-weight: var(--ui-weight-title);
+    font-variation-settings: normal;
+  }
+  .ds-chat-prose h2 {
+    font-family: var(--ui-font-heading);
+    font-size: var(--ui-text-heading);
+    font-weight: var(--ui-weight-heading);
+    font-variation-settings: var(--ui-font-var-heading);
+  }
+  .ds-chat-prose h3 {
+    font-family: var(--ui-font-heading);
+    font-size: var(--ui-text-subheading);
+    font-weight: var(--ui-weight-subheading);
+    font-variation-settings: var(--ui-font-var-heading);
+  }
+  .ds-chat-prose :is(h4, h5, h6) {
+    font-size: inherit;
+    font-weight: var(--ui-weight-semibold);
+  }
+  .ds-chat-prose ul {
+    list-style: disc outside;
+    padding-left: var(--ui-spacing-rg);
+  }
+  .ds-chat-prose ol {
+    list-style: decimal outside;
+    padding-left: var(--ui-spacing-rg);
+  }
+  .ds-chat-prose li {
+    margin-block: var(--ui-spacing-xxxs);
+  }
+  .ds-chat-prose :is(li > ul, li > ol) {
+    margin-block: var(--ui-spacing-xxxs);
+  }
+  .ds-chat-prose a {
+    color: var(--ui-color-text);
+    text-decoration: underline;
+    text-decoration-color: var(--ui-color-border-primary);
+    text-underline-offset: 3px;
+  }
+  .ds-chat-prose a:hover {
+    color: var(--ui-color-text-secondary);
+  }
+  .ds-chat-prose blockquote {
+    border-left: 2px solid var(--ui-color-border-primary);
+    padding-left: var(--ui-spacing-sm);
+    color: var(--ui-color-text-secondary);
+    font-style: normal;
+  }
+  .ds-chat-prose hr {
+    border: 0;
+    border-top: 1px solid var(--ui-color-border-primary);
+    margin-block: var(--ui-spacing-md);
+  }
+  .ds-chat-prose code {
+    font-family: var(--ui-font-mono);
+    font-size: var(--ui-text-mono);
+    font-weight: var(--ui-weight-mono);
+    font-variation-settings: var(--ui-font-var-mono);
+    background-color: var(--ui-color-surface-secondary);
+    border-radius: var(--ui-chat-prose-code-radius);
+    padding: 1px var(--ui-spacing-xxs);
+  }
+  .ds-chat-prose pre {
+    overflow-x: auto;
+    border-radius: var(--ui-radius-tight);
+    background-color: var(--ui-color-surface-secondary);
+    padding: var(--ui-spacing-sm);
+    box-shadow: var(--ui-shadow-button);
+  }
+  .ds-chat-prose pre code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+  }
+  .ds-chat-prose table {
+    border-collapse: collapse;
+  }
+  .ds-chat-prose :is(td, th) {
+    border: 1px solid var(--ui-color-border-primary);
+    padding: var(--ui-spacing-xxs) var(--ui-spacing-xs);
+    text-align: left;
+  }
+  .ds-chat-prose th {
+    font-weight: var(--ui-weight-semibold);
+  }
 }

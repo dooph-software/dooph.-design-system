@@ -68,6 +68,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "storybook": "^10.5.10",
+    "streamdown": "^2.6.0",
     "tailwindcss": "^4.3.3",
     "tailwindcss-animate": "^1.0.7",
     "tsup": "^8.5.1",

@@ -170,6 +170,50 @@
     transparent
   );
 
+  /* AI chat parts (AIToolPart, AIThinkingPart, AITurnSummary, AIPromptInput…).
+   *
+   * The two shimmer pairs RE-BASE ShimmerText rather than restyling it: a
+   * working tool row reads at full ghost-active weight, the thinking row at the
+   * quieter ghost weight (Figma 761:1330 / 761:1346). The highlight keeps the
+   * package's own base-at-35% formula so a consumer retuning either base keeps
+   * the sheen in proportion. */
+  --ui-chat-tool-shimmer-base: var(--ui-color-ghost-foreground-active);
+  --ui-chat-tool-shimmer-highlight: color-mix(
+    in srgb,
+    var(--ui-color-ghost-foreground-active) 35%,
+    transparent
+  );
+  --ui-chat-thinking-shimmer-base: var(--ui-color-ghost-foreground);
+  --ui-chat-thinking-shimmer-highlight: color-mix(
+    in srgb,
+    var(--ui-color-ghost-foreground) 35%,
+    transparent
+  );
+  /* Settled rows reveal their meta (timing, tokens, copy) on hover. */
+  --ui-chat-reveal-duration: 150ms;
+  --ui-chat-reveal-ease: ease-out;
+  /* `streamingAnimation`: each block of prose rises out of a blur as it
+   * arrives. `blur` is px on purpose — a lens effect, not a typographic
+   * measure (the same call as --ui-roll-change-blur). */
+  --ui-chat-stream-duration: 400ms;
+  --ui-chat-stream-ease: ease-out;
+  --ui-chat-stream-blur: 3px;
+  --ui-chat-stream-rise: 4px;
+  /* The thinking transcript's open/close. */
+  --ui-chat-disclosure-duration: 200ms;
+  --ui-chat-disclosure-ease: ease-in-out;
+  /* The prompt textarea grows with its content up to this, then scrolls. The
+   * component reads it back from computed style, so this token is the only
+   * place the cap lives. */
+  --ui-chat-prompt-max-height: 300px;
+  /* The provider swatch in AIModelSelectItem (Figma 761:2073). */
+  --ui-chat-model-swatch-size: 10px;
+  --ui-chat-model-swatch-radius: 3px;
+  /* AIModelTooltipContent panel (Figma 761:2843). */
+  --ui-width-chat-model-tooltip: 242px;
+  /* Inline code inside ds-chat-prose. */
+  --ui-chat-prose-code-radius: 4px;
+
   /* Text roll on hover (RollHoverText). The duration:stagger ratio (~1:14) is
    * what makes the letters read as one travelling wave instead of a metronome —
    * raising the stagger toward the duration turns it into discrete flips. */
@@ -204,6 +248,15 @@
   --ui-roll-change-in-ease: cubic-bezier(0.32, 0.72, 0, 1);
   --ui-roll-change-depth: 0.9em;
   --ui-roll-change-blur: 4px;
+
+  /* Fade-roll on change (FadeChangeText) — the roll above without the blur:
+   * travel + opacity only. Each value ALIASES its roll-change counterpart, so
+   * the two stay one motion by default and either can be retuned alone. */
+  --ui-fade-change-out-duration: var(--ui-roll-change-out-duration);
+  --ui-fade-change-in-duration: var(--ui-roll-change-in-duration);
+  --ui-fade-change-out-ease: var(--ui-roll-change-out-ease);
+  --ui-fade-change-in-ease: var(--ui-roll-change-in-ease);
+  --ui-fade-change-depth: var(--ui-roll-change-depth);
 
   /* Rolling digits (RollingDigitsText) — 2D cash-register snap, not 3D.
    *
@@ -475,6 +528,8 @@
   /* defaults to hover shadow — kept as a separate token for manual override */
   --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.2);
   --ui-shadow-menu: 0 1px 4px 0 rgba(56, 56, 56, 0.15);
+  /* Figma "Shadow Standard" — a soft all-round halo (UserMessageHeader). */
+  --ui-shadow-standard: 0 0 4px 0 rgba(56, 56, 56, 0.1);
   --ui-shadow-cta: 0 1px 2px rgba(56, 56, 56, 0.15);
   --ui-shadow-focus-prominent: 0 0 0 4px var(--ui-color-focus-ring-prominent);
   --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
@@ -615,6 +670,7 @@
   --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.85);
   --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.85);
   --ui-shadow-menu: 0 2px 8px rgba(0, 0, 0, 0.7);
+  --ui-shadow-standard: 0 0 4px 0 rgba(0, 0, 0, 0.65);
   --ui-shadow-cta: 0 1px 2px rgba(0, 0, 0, 0.65);
 
   /* Both variants converge at 60% in dark, per Figma. */

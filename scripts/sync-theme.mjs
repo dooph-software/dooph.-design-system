@@ -108,6 +108,12 @@ const EXCLUDED = new Set([
   "ui-roll-change-in-ease",
   "ui-roll-change-depth",
   "ui-roll-change-blur",
+  // Fade-roll-on-change motion — raw var() in keyframes / @layer utilities only
+  "ui-fade-change-out-duration",
+  "ui-fade-change-in-duration",
+  "ui-fade-change-out-ease",
+  "ui-fade-change-in-ease",
+  "ui-fade-change-depth",
   // Rolling digits motion / decimals offset — raw var() in @layer utilities only
   "ui-rolling-digits-duration",
   "ui-rolling-digits-stagger",

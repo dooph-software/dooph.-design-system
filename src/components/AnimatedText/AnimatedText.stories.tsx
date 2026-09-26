@@ -19,6 +19,7 @@ import {
   TitleText,
 } from "../Text";
 import { TextLink } from "../TextLink";
+import { FadeChangeText } from "./FadeChangeText";
 import { RevealChangeText } from "./RevealChangeText";
 import { RollChangeText } from "./RollChangeText";
 import { RollHoverText } from "./RollHoverText";
@@ -28,11 +29,11 @@ import { UnderlineLinkText } from "./UnderlineLinkText";
 import { RevealDirection, RollDirection } from "./constants";
 
 /*
- * One entry for all six animated text wrappers. They are wrappers rather than
+ * One entry for all seven animated text wrappers. They are wrappers rather than
  * BaseText props on purpose: each has to be able to wrap icons and arbitrary
  * children, not just text.
  *
- * `meta` names no `component`, because there are six. Stories are therefore
+ * `meta` names no `component`, because there are seven. Stories are therefore
  * untyped `StoryObj` and every one is `render`-based — none reads `args`, so
  * the old per-file `args: { children: ... }` placeholders (which existed only
  * to satisfy `StoryObj<typeof meta>`) are gone.
@@ -49,7 +50,7 @@ const meta = {
       page: AnimatedTextDocs,
       description: {
         component:
-          "Six wrappers that animate text without owning its typography. " +
+          "Seven wrappers that animate text without owning its typography. " +
           "Each section below is one wrapper. All of them respect " +
           "`prefers-reduced-motion`, and none defines a color of its own, so " +
           "dark mode needs nothing from them.",
@@ -351,6 +352,83 @@ export const RollChangeChangeKeyWithComplexChildren: Story = {
         <RollChangeText changeKey={model.id}>
           <BodyText fontWeight={model.weight}>{model.name}</BodyText>
         </RollChangeText>
+      </div>
+    );
+  },
+};
+
+
+/* == FadeChangeText ==========================================================
+ *
+ * RollChangeText without the blur: the old text rolls out and fades, the new
+ * text rolls in and fades up. Same `direction` prop; sharp edges throughout.
+ */
+
+export const FadeChangeAutoCyclingStatus: Story = {
+  name: "Auto-cycling status (interval)",
+  render: function FadeAutoCyclingStatusStory() {
+    const [index, setIndex] = useState(0);
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setIndex((i) => (i + 1) % statuses.length);
+      }, 1800);
+      return () => clearInterval(interval);
+    }, []);
+
+    return (
+      <div className="flex flex-col items-start gap-1">
+        <LabelText className="uppercase tracking-wide opacity-40">
+          Job status
+        </LabelText>
+        <FadeChangeText changeKey={statuses[index]} data-testid="fade-status">
+          <BodyText>{statuses[index]}</BodyText>
+        </FadeChangeText>
+      </div>
+    );
+  },
+};
+
+export const FadeChangeVersusRoll: Story = {
+  name: "Fade vs roll (same change)",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Both change on the same interval with the same travel. The only difference is the blur: FadeChangeText stays sharp throughout.",
+      },
+    },
+  },
+  render: function FadeVersusRollStory() {
+    const [index, setIndex] = useState(0);
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setIndex((i) => (i + 1) % models.length);
+      }, 1500);
+      return () => clearInterval(interval);
+    }, []);
+
+    const model = models[index];
+
+    return (
+      <div className="flex gap-12">
+        <div className="flex flex-col items-start gap-1">
+          <LabelText className="uppercase tracking-wide opacity-40">
+            FadeChangeText
+          </LabelText>
+          <FadeChangeText changeKey={model.id}>
+            <BodyText>{model.name}</BodyText>
+          </FadeChangeText>
+        </div>
+        <div className="flex flex-col items-start gap-1">
+          <LabelText className="uppercase tracking-wide opacity-40">
+            RollChangeText
+          </LabelText>
+          <RollChangeText changeKey={model.id}>
+            <BodyText>{model.name}</BodyText>
+          </RollChangeText>
+        </div>
       </div>
     );
   },
@@ -1070,6 +1148,11 @@ function AnimatedTextDocs() {
           RollChangeDirectionUpVsDown,
           RollChangeChangeKeyWithComplexChildren,
         ]}
+      />
+      <StorySection
+        title="FadeChangeText"
+        summary="RollChangeText without the blur: the old value rolls out and fades, the new one rolls in and fades up, with the same `direction` prop. Timing defaults to the roll-change tokens; retune via `--ui-fade-change-*`."
+        stories={[FadeChangeAutoCyclingStatus, FadeChangeVersusRoll]}
       />
       <StorySection
         title="RevealChangeText"
