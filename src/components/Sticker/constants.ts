@@ -27,3 +27,16 @@ export const StickerVariant = {
   custom: "custom",
 } as const;
 export type StickerVariant = (typeof StickerVariant)[keyof typeof StickerVariant];
+
+/**
+ * Dot-accessible sticker sizes.
+ * Usage: <Sticker size={StickerSize.micro} />
+ *
+ * `standard` hugs its content (6px vertical padding, tight radius).
+ * `micro` is a fixed `--ui-height-tab-micro` (28px) chip with `radius-mini`.
+ */
+export const StickerSize = {
+  standard: "standard",
+  micro: "micro",
+} as const;
+export type StickerSize = (typeof StickerSize)[keyof typeof StickerSize];

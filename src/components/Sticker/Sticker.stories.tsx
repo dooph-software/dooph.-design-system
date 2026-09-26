@@ -10,7 +10,7 @@ import {
 } from "../Icons";
 import { ButtonText } from "../Text";
 import { Sticker } from "./Sticker";
-import { StickerVariant } from "./constants";
+import { StickerSize, StickerVariant } from "./constants";
 
 const meta = {
   title: "Bits & Pieces/Sticker",
@@ -21,6 +21,10 @@ const meta = {
     variant: {
       control: "select",
       options: Object.values(StickerVariant),
+    },
+    size: {
+      control: "inline-radio",
+      options: Object.values(StickerSize),
     },
   },
 } satisfies Meta<typeof Sticker>;
@@ -104,6 +108,33 @@ export const Custom: Story = {
       </>
     ),
   },
+};
+
+export const Micro: Story = {
+  args: {
+    variant: StickerVariant.prominent,
+    size: StickerSize.micro,
+    children: (
+      <>
+        <AIPlanIcon size={IconSize.md} />
+        {label("Milestones")}
+      </>
+    ),
+  },
+};
+
+export const Sizes: Story = {
+  args: { children: "Milestones" },
+  render: () => (
+    <div className="flex flex-col items-start gap-sm">
+      {([StickerSize.standard, StickerSize.micro] as const).map((size) => (
+        <Sticker key={size} variant={StickerVariant.prominent} size={size}>
+          <AIPlanIcon size={IconSize.md} />
+          {label("Milestones")}
+        </Sticker>
+      ))}
+    </div>
+  ),
 };
 
 export const AllVariants: Story = {

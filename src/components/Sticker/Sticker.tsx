@@ -5,6 +5,8 @@
  * - `variant` maps through `stickerVariants` onto the content colour and the
  *   wash. Both are already-resolved tokens (the wash is a color-mix at the
  *   sticker opacity), so the component does not apply alpha a second time.
+ * - `size` is the shell. `standard` hugs its label. `micro` is a fixed
+ *   `--ui-height-tab-micro` chip with the mini radius. Paints do not change.
  * - Children are the content. They are wrapped in a row with `gap-xs` so an
  *   icon and a text node sit beside each other without a wrapper at the call
  *   site. The wrapper is layout, not an interactive element.
@@ -24,13 +26,12 @@ import { cva } from "class-variance-authority";
 import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
 import { resolveDsColor, type DsColor } from "../../utils/color";
-import { StickerVariant } from "./constants";
+import { StickerSize, StickerVariant } from "./constants";
 
 const stickerVariants = cva(
   [
     "inline-flex w-fit items-center overflow-clip",
-    "rounded-tight px-sm py-sticker-y",
-    "text-style-button whitespace-nowrap",
+    "px-sm text-style-button whitespace-nowrap",
   ],
   {
     variants: {
@@ -42,9 +43,14 @@ const stickerVariants = cva(
         danger: "bg-sticker-bg-danger text-sticker-danger",
         custom: "",
       },
+      size: {
+        standard: "rounded-tight py-sticker-y",
+        micro: "h-tab-micro rounded-mini",
+      },
     },
     defaultVariants: {
       variant: "prominent",
+      size: "standard",
     },
   },
 );
@@ -67,12 +73,15 @@ type StickerPaintProps =
  * is deliberately NOT intersected — its `variant` includes `null` and would
  * collapse the discriminant. */
 export type StickerProps = StickerPaintProps &
-  Omit<HTMLAttributes<HTMLDivElement>, "color">;
+  Omit<HTMLAttributes<HTMLDivElement>, "color"> & {
+    size?: StickerSize;
+  };
 
 /* The implementation takes the widened shape. Narrowing the union inside the
  * component would mean branching just to read props every arm shares. */
 type StickerBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "color"> & {
   variant?: StickerVariant;
+  size?: StickerSize;
   color?: DsColor;
 };
 
@@ -82,6 +91,7 @@ const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
       className,
       style,
       variant = StickerVariant.prominent,
+      size = StickerSize.standard,
       color,
       children,
       ...props
@@ -106,7 +116,7 @@ const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
     return (
       <div
         ref={ref}
-        className={cn(stickerVariants({ variant }), className)}
+        className={cn(stickerVariants({ variant, size }), className)}
         style={
           customColor
             ? {
