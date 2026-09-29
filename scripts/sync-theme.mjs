@@ -114,6 +114,14 @@ const EXCLUDED = new Set([
   "ui-fade-change-out-ease",
   "ui-fade-change-in-ease",
   "ui-fade-change-depth",
+  // Shape morph motion — raw var() in @layer utilities / keyframes only
+  "ui-shape-morph-duration",
+  "ui-shape-morph-ease",
+  "ui-shape-morph-interval",
+  "ui-shape-morph-passive-spin-duration",
+  "ui-shape-morph-nudge",
+  "ui-shape-morph-nudge-duration",
+  "ui-shape-morph-nudge-ease",
   // Rolling digits motion / decimals offset — raw var() in @layer utilities only
   "ui-rolling-digits-duration",
   "ui-rolling-digits-stagger",

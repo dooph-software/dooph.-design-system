@@ -45,6 +45,26 @@
   initial-value: 0;
 }
 
+/* MorphRotationShape. `step` is the transitioned value the component samples:
+ * integer part = stop, fraction = morph progress; the spring ease overshoots,
+ * so it runs past each stop. `clock` only exists so autoplay has an animation
+ * whose iterations mark each step. */
+@property --ds-shape-morph-step {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --ds-shape-morph-clock {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --ds-shape-morph-lean {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
 /*
  * @theme inline — maps --ui-* tokens into Tailwind utility namespaces.
  * "inline" means Tailwind emits var(--ui-*) references instead of the
@@ -751,6 +771,95 @@
     }
   }
 
+  /* MorphRotationShape — CSS owns every duration and curve; the component only
+   * samples --ds-shape-morph-step and writes geometry.
+   * --ds-shape-morph-target is the input: inline in controlled mode, set by
+   * the loop in autoplay, set by an ancestor's state in embedded mode
+   * (e.g. group-data-[state=open]:[--ds-shape-morph-target:1]). It is NOT
+   * registered, so it inherits from that ancestor, and
+   * --ds-shape-morph-nudge (unregistered) is the hover lean input.
+   *
+   * Reduced motion shortens the transition to 1ms rather than 0: a 0ms
+   * transition fires no transitionrun, and embedded mode has no other signal
+   * that its target moved. Autoplay and passive spinning stop outright. */
+  .ds-shape-morph {
+    --ds-shape-morph-step: var(--ds-shape-morph-target, 0);
+    --ds-shape-morph-lean: var(--ds-shape-morph-nudge, 0);
+    transition:
+      --ds-shape-morph-step var(--ui-shape-morph-duration) var(--ui-shape-morph-ease),
+      --ds-shape-morph-lean var(--ui-shape-morph-nudge-duration)
+        var(--ui-shape-morph-nudge-ease);
+  }
+  .ds-shape-morph[data-mode="autoplay"] {
+    animation: ds-shape-morph-clock var(--ui-shape-morph-interval) linear infinite;
+  }
+  .ds-shape-morph-passive-spin {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation: ds-shape-morph-spin var(--ui-shape-morph-passive-spin-duration)
+      linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-shape-morph {
+      transition-duration: 1ms;
+    }
+    .ds-shape-morph[data-mode="autoplay"],
+    .ds-shape-morph-passive-spin {
+      animation: none;
+    }
+  }
+
+  /* DropdownCaret. State is read from the nearest .ds-dropdown-caret-host
+   * (the trigger root): Radix data-state, :hover, and the disabled forms.
+   * The shape is painted by currentColor, so every state is a colour here. */
+  .ds-dropdown-caret {
+    --ds-dropdown-caret-frame: calc(var(--ui-height-button) - var(--ui-spacing-rg));
+    /* Closed: the primary button's background. */
+    color: var(--ui-color-primary);
+    transition: color var(--ui-shape-morph-nudge-duration) var(--ui-shape-morph-nudge-ease);
+  }
+  .ds-dropdown-caret-frame {
+    width: var(--ds-dropdown-caret-frame);
+    height: var(--ds-dropdown-caret-frame);
+  }
+  .ds-dropdown-caret-chevron {
+    color: var(--ui-color-primary-foreground);
+    transition:
+      rotate var(--ui-shape-morph-duration) var(--ui-shape-morph-ease),
+      color var(--ui-shape-morph-nudge-duration) var(--ui-shape-morph-nudge-ease);
+  }
+  .ds-dropdown-caret-host:hover:not(:disabled):not([aria-disabled="true"]):not([data-disabled])
+    .ds-dropdown-caret {
+    --ds-shape-morph-nudge: var(--ui-shape-morph-nudge);
+  }
+  .ds-dropdown-caret-host[data-state="open"] .ds-dropdown-caret {
+    --ds-shape-morph-target: 1;
+    /* Open: the focused INPUT BORDER, not --ui-color-prominent. The open
+     * trigger draws that exact border, so caret and outline read as one
+     * accent, including the border's own dark-mode value. */
+    color: var(--ui-color-input-border-focus);
+  }
+  .ds-dropdown-caret-host[data-state="open"] .ds-dropdown-caret-chevron {
+    rotate: 180deg;
+  }
+  .ds-dropdown-caret-host:is(:disabled, [aria-disabled="true"], [data-disabled]) .ds-dropdown-caret {
+    /* Disabled: the secondary button's disabled BORDER as a fill. The trigger
+     * uses the secondary disabled background, so that shade would vanish; the
+     * border shade matches the trigger's own disabled border and stays visible. */
+    color: var(--ui-color-secondary-border-disabled);
+  }
+  .ds-dropdown-caret-host:is(:disabled, [aria-disabled="true"], [data-disabled])
+    .ds-dropdown-caret-chevron {
+    color: var(--ui-color-secondary-foreground);
+    opacity: var(--ui-opacity-disabled);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-dropdown-caret,
+    .ds-dropdown-caret-chevron {
+      transition-duration: 1ms;
+    }
+  }
+
   /* RevealChangeText — a slot that slides its content out from one edge and
    * tucks it back under whatever follows. WIDTH is the animated property, not a
    * transform: the point is that the row around it re-centres and re-flows as
@@ -802,6 +911,20 @@
     .ds-reveal-change[data-open="true"] {
       transition-duration: 1ms;
     }
+  }
+}
+
+@keyframes ds-shape-morph-clock {
+  from {
+    --ds-shape-morph-clock: 0;
+  }
+  to {
+    --ds-shape-morph-clock: 1;
+  }
+}
+@keyframes ds-shape-morph-spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

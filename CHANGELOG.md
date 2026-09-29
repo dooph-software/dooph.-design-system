@@ -7,6 +7,21 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ---
 
+## [Unreleased]
+
+### Added
+- `MorphRotationShape` — DS shapes that spring-morph into one another while turning (`autoplay`, `controlled`, `embedded` modes; `restingAngle`; per-instance `timing`).
+- `ShapeMorphSpinner` — M3 Expressive–style shape-morphing loader.
+- Tokens `--ui-shape-morph-duration`, `--ui-shape-morph-ease` (generated spring), `--ui-shape-morph-interval`, `--ui-shape-morph-passive-spin-duration`.
+- Every `Shapes` component exports its outline as `<NAME>_SHAPE_PATH`.
+- `DropdownCaret` — shape-morphing caret (Figma Dropdown Caret); hover leans the shape, open morphs it.
+- `MorphRotationShape` hover nudge: `--ds-shape-morph-nudge` input, `--ui-shape-morph-nudge`, `--ui-shape-morph-nudge-duration`, `--ui-shape-morph-nudge-ease` tokens.
+
+### Changed
+- `DropdownTrigger` and `TypeableDropdownTrigger` use `DropdownCaret` in place of the plain chevron; right padding is now 0.
+
+---
+
 ## [1.1.0] — 2026-06-23
 
 ### Added

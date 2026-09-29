@@ -29,9 +29,13 @@ export type TabSize = (typeof TabSize)[keyof typeof TabSize];
 /**
  * Dot-accessible tab variant constant.
  * Usage: <TabsTrigger variant={TabVariant.primary} />
+ *
+ * `unselected` renders the shared unselected look even when the tab is active —
+ * for a trigger that must never read as chosen.
  */
 export const TabVariant = {
   ghost: "ghost",
   primary: "primary",
+  unselected: "unselected",
 } as const;
 export type TabVariant = (typeof TabVariant)[keyof typeof TabVariant];

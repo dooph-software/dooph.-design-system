@@ -13,6 +13,7 @@ import {
   type Ref,
 } from "react";
 import { cn } from "../../utils/cn";
+import { DropdownCaret, DropdownCaretVariant } from "../DropdownCaret";
 import { ChevronDownIcon, IconSize, SearchIcon } from "../Icons";
 import type { DropdownMenuSelectType } from "../Menu/constants";
 // TextDropdownSize (+ its type) lives in ./constants (server-safe), re-exported
@@ -57,7 +58,7 @@ const DropdownTriggerBase = forwardRef<
         "inline-flex h-button items-center justify-center ds-gap-ui-xs",
         "min-w-40 rounded-tight border border-solid border-border-primary",
         "bg-secondary text-secondary-fg",
-        "ds-pl-ui-rg ds-pr-ui-sm",
+        "ds-dropdown-caret-host ds-pl-ui-rg",
         "text-style-button cursor-pointer select-none",
         "transition-all duration-150 ease-out",
         "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-secondary",
@@ -70,7 +71,7 @@ const DropdownTriggerBase = forwardRef<
       {...props}
     >
       <span className="flex-1 text-left">{children}</span>
-      <ChevronDownIcon />
+      <DropdownCaret variant={DropdownCaretVariant.dropdown} />
     </Comp>
   );
 });
@@ -191,7 +192,7 @@ const TypeableDropdownTrigger = forwardRef<
         className={cn(
           "inline-flex h-button items-center ds-gap-ui-xs",
           "min-w-40 rounded-tight border border-solid border-border-primary",
-          "bg-secondary ds-pl-ui-rg ds-pr-ui-sm",
+          "bg-secondary ds-dropdown-caret-host ds-pl-ui-rg",
           "transition-all duration-150 ease-out",
           disabled
             ? "cursor-not-allowed bg-secondary-disabled border-secondary-border-disabled"
@@ -272,7 +273,7 @@ const TypeableDropdownTrigger = forwardRef<
             inputClassName,
           )}
         />
-        <ChevronDownIcon className={cn(disabled && "ds-opacity-disabled")} />
+        <DropdownCaret variant={DropdownCaretVariant.typeable} />
       </div>
     );
   },

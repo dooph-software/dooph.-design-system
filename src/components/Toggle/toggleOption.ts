@@ -5,9 +5,14 @@
  * ## behavior
  * - `selected:` / `unselected:` (index.css @custom-variant) match both
  *   data-state=active (tabs) and data-state=on (toggle group).
- * - Both variants rest transparent in text-text; unselected hover/press use
- *   ghost-hover / ghost-active. Selected: primary = filled primary (with its
- *   own hover/press), ghost = ghost-active.
+ * - The unselected look is ONE look shared by every variant: the base with no
+ *   `selected:` rule applied — transparent, no border, text-text, with
+ *   ghost-hover / ghost-active on hover/press. Figma `State=Default/Hover/
+ *   Active` are the SELECTED states: primary = filled primary (with its own
+ *   hover/press), ghost = ghost-active.
+ * - `variant: "unselected"` renders that shared look whatever the Radix state:
+ *   no selected fill even when the option is the chosen one, hover/press
+ *   un-gated. It is for an option that must never read as selected.
  * - Disabled drops any fill; opacity comes from ds-disabled-control.
  *
  * ## constraints
@@ -37,6 +42,8 @@ export const toggleOptionVariants = cva(
           "selected:enabled:active:bg-primary-active selected:enabled:active:border-primary-border-active",
         ],
         ghost: "selected:bg-ghost-active",
+        /** The shared unselected look, applied regardless of Radix state. */
+        unselected: "enabled:hover:bg-ghost-hover enabled:active:bg-ghost-active",
       },
       size: {
         /** 38px — Figma Standard. */

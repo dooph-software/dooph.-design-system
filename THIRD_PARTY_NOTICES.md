@@ -61,3 +61,25 @@ Each is used under its stated open-source license.
 | class-variance-authority | Apache-2.0 | https://github.com/joe-bell/cva |
 | clsx | MIT | https://github.com/lukeed/clsx |
 | tailwind-merge | MIT | https://github.com/dcastil/tailwind-merge |
+
+---
+
+## Shape Morphing Engine
+
+`src/components/MorphRotationShape/engine/` is vendored from shape-morph, a
+TypeScript port of Android's `androidx.graphics.shapes`. `engine/svgPath.ts`
+and `scripts/shapeMorphSpring.mjs` port further androidx sources
+(`SvgPathParser.kt`, `PolygonValidation.kt`, Compose `SpringSimulation.kt`,
+`SpringEstimation.kt`), and `MorphRotationShape` follows Compose Material 3
+`LoadingIndicator.kt`.
+
+### shape-morph
+- **License:** MIT
+- **Copyright:** Copyright (c) 2026 Thereallo
+- **Source:** https://github.com/Thereallo1026/shape-morph (commit f4d2697)
+
+### Android Jetpack (androidx) — graphics-shapes, Compose animation-core, Compose Material 3
+- **License:** Apache 2.0
+- **Copyright:** The Android Open Source Project
+- **Source:** https://github.com/androidx/androidx
+- **License text:** https://www.apache.org/licenses/LICENSE-2.0

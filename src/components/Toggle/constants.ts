@@ -5,14 +5,18 @@
  * Dot-accessible toggle (Figma Toggle Switch) variant and size constants.
  * Usage: <ToggleSwitch variant={ToggleVariant.ghost} size={ToggleSize.iconSm} />
  *
- * primary — selected option is filled primary
- * ghost   — selected option is ghost-active
+ * primary    — selected option is filled primary
+ * ghost      — selected option is ghost-active
+ * unselected — always the shared unselected look, even when selected; set it
+ *              per item (<ToggleSwitchItem variant={ToggleVariant.unselected}>)
+ *              for an option that must never read as chosen
  *
  * BREAKING (major): `secondary` was renamed `ghost` to match Figma.
  */
 export const ToggleVariant = {
   primary: "primary",
   ghost: "ghost",
+  unselected: "unselected",
 } as const;
 export type ToggleVariant = (typeof ToggleVariant)[keyof typeof ToggleVariant];
 

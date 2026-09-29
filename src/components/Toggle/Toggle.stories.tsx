@@ -89,6 +89,22 @@ export const Controlled: Story = {
   },
 };
 
+/**
+ * `ToggleVariant.unselected` on an item keeps the shared unselected look even
+ * while it is the selected value — it never shows a primary or ghost fill.
+ */
+export const UnselectedVariant: Story = {
+  render: () => (
+    <ToggleSwitch defaultValue="auto" variant={ToggleVariant.primary}>
+      <ToggleSwitchItem value="auto" variant={ToggleVariant.unselected} data-testid="unsel-selected">
+        Auto
+      </ToggleSwitchItem>
+      <ToggleSwitchItem value="light" data-testid="unsel-primary">Light</ToggleSwitchItem>
+      <ToggleSwitchItem value="dark">Dark</ToggleSwitchItem>
+    </ToggleSwitch>
+  ),
+};
+
 export const Disabled: Story = {
   render: () => (
     <ToggleSwitch defaultValue="off" variant={ToggleVariant.primary} disabled>

@@ -205,7 +205,10 @@ Reach for these before writing local UI:
   traverses the frame when `side` flips and bows into a chevron while hovered;
   clicking mid-hover crosses and reverses in one motion.
 - **Feedback / motion:** `Toast` family, `LoadingSpinner`, `ProgressIndicator`,
-  `LinearProgressIndicator` (Radix Progress; `color` as above), `WavyDivider`.
+  `LinearProgressIndicator` (Radix Progress; `color` as above), `WavyDivider`,
+  `ShapeMorphSpinner` (indeterminate loader that morphs DS shapes — `size`, `color`, optional `shapes`, `timing`),
+  `MorphRotationShape` (shape morph primitive; required `mode`: `MorphRotationShapeMode.autoplay` | `.controlled` (activeIndex) | `.embedded` (set --ds-shape-morph-target from CSS state); give it a box, leave ~9% of the shape per side for rotation spill).
+- `DropdownCaret` — shape caret for dropdown triggers (`variant`: `DropdownCaretVariant.dropdown | .typeable`). Built into `DropdownTrigger` and `TypeableDropdownTrigger`; a custom trigger adds the `ds-dropdown-caret-host` class to its root (1px border, `h-button`, right padding 0).
 - **Utility:** `cn`.
 
 If something genuinely doesn't exist, compose it from these primitives and

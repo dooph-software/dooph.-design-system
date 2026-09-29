@@ -147,7 +147,7 @@ and a label-only hover response driven by `RollHoverText` under an ancestor
 | ------------------ | ------------------------- | ------------------------------ | ------------------------------ |
 | `Input`            | `Input/Input.tsx`         | –                              | `hasError` bool                |
 | `SearchBox`        | `SearchBox/SearchBox.tsx` | –                              | `shortcut` string[]            |
-| `ToggleSwitch`     | `Toggle/Toggle.tsx`       | `@radix-ui/react-toggle-group` | `ToggleVariant` (`primary`\|`ghost`) × `ToggleSize` (`default`\|`sm`\|`icon`\|`iconSm`=28px micro) |
+| `ToggleSwitch`     | `Toggle/Toggle.tsx`       | `@radix-ui/react-toggle-group` | `ToggleVariant` (`primary`\|`ghost`\|`unselected`) × `ToggleSize` (`default`\|`sm`\|`icon`\|`iconSm`=28px micro) |
 | `ToggleSwitchItem` | same                      | same                           | same (inherits via context)    |
 | `Checkbox`         | `Checkbox/Checkbox.tsx`   | `@radix-ui/react-checkbox`     | `CheckboxChecked`              |
 | `VerificationCodeInput` | `VerificationCode/VerificationCodeInput.tsx` | –       | `length` (default 6), `hasError`, controlled `value`/`onChange` or `defaultValue` |
@@ -194,12 +194,12 @@ never deep-imports a sibling.
 | -------------------- | ------------------------------------------- | ---------------------- | ------------------------ |
 | `Tabs` (Root)        | `Tabs/Tabs.tsx`                             | `@radix-ui/react-tabs` | –                        |
 | `TabsList`           | same                                        | same                   | –                        |
-| `TabsTrigger`        | same                                        | same                   | `TabVariant` × `TabSize` (adds `iconMicro`, 28×28) |
+| `TabsTrigger`        | same                                        | same                   | `TabVariant` (`ghost`\|`primary`\|`unselected`) × `TabSize` (adds `iconMicro`, 28×28) |
 | `TabsContent`        | same                                        | same                   | –                        |
 | `SegmentedTabSelect` | `SegmentedTabSelect/SegmentedTabSelect.tsx` | wraps Tabs             | `SegmentedVariant` × `SegmentedSize` |
 | `SegmentedTabItem`   | same                                        | same                   | inherits from context    |
 
-`TabsTrigger` and `ToggleSwitchItem` are both built on the shared `toggleOptionVariants` recipe (`Toggle/toggleOption.ts`, internal, not re-exported) — Figma's single "Toggle Option" primitive. `tabTriggerVariants` stays exported under its old name as an alias of the shared recipe.
+`TabsTrigger` and `ToggleSwitchItem` are both built on the shared `toggleOptionVariants` recipe (`Toggle/toggleOption.ts`, internal, not re-exported) — Figma's single "Toggle Option" primitive. Its unselected look is ONE look shared by every variant; the `unselected` variant value renders it regardless of Radix state (no selected fill even when chosen) for an option that must never read as selected. `tabTriggerVariants` stays exported under its old name as an alias of the shared recipe.
 
 ### Dropdown / menu family
 
