@@ -145,7 +145,7 @@ and a label-only hover response driven by `RollHoverText` under an ancestor
 
 | Component          | File                      | Radix                          | Variants                       |
 | ------------------ | ------------------------- | ------------------------------ | ------------------------------ |
-| `Input`            | `Input/Input.tsx`         | –                              | `hasError` bool                |
+| `Input`            | `Input/Input.tsx`         | –                              | `InputVariant` (`text`\|`number`\|`iconText`\|`iconNumber`; icon ones require `icon`) + `hasError` bool. `text` stays a bare `<input>`; the rest wrap it (chrome on a `<div>`, `ref` on the input); number variants hug their value via a hidden mirror span, min one button height |
 | `SearchBox`        | `SearchBox/SearchBox.tsx` | –                              | `shortcut` string[]            |
 | `ToggleSwitch`     | `Toggle/Toggle.tsx`       | `@radix-ui/react-toggle-group` | `ToggleVariant` (`primary`\|`ghost`\|`unselected`) × `ToggleSize` (`default`\|`sm`\|`icon`\|`iconSm`=28px micro) |
 | `ToggleSwitchItem` | same                      | same                           | same (inherits via context)    |
@@ -490,8 +490,10 @@ Notable component tokens:
     it answers a pointer) · `ease`.
 - **Mono type tokens:** `--ui-font-mono` (Google Sans Code), `--ui-text-mono` and
   `--ui-weight-mono` (both alias the button role), `--ui-font-var-mono`
-  (`"MONO" 1`). The last three are in `EXCLUDED` in `sync-theme.mjs` alongside
-  their peers; `--ui-font-mono` and `--ui-text-mono` do map, to `--font-mono` and
+  (`"MONO" 1`), `--ui-tracking-mono` (-0.03em, Figma "Mono Text"; also
+  `Tracking.mono`). `--ui-weight-mono`, `--ui-font-var-mono` and
+  `--ui-tracking-mono` are in `EXCLUDED` in `sync-theme.mjs` alongside their
+  peers; `--ui-font-mono` and `--ui-text-mono` do map, to `--font-mono` and
   `--text-mono`.
 - **Token vocabulary** (see `tokens.css` and the theming skill's `token-contract.md` for the full list). The 5.4 pass realigned nearly every name with Figma, so anything you remember from before it is suspect — read `tokens.css`, do not recall.
   - **Destructive**: two raw paints `--ui-color-danger-primary`/`-secondary`, plus the danger BUTTON state family `--ui-color-danger`/`-border`/`-hover`/`-border-hover`/`-active`/`-border-active`/`-foreground`/`-foreground-active`/`-disabled`/`-border-disabled` that `ButtonVariant.danger` paints (Figma `ButtonDanger/*`). Every one defaults to an alias of the secondary family or a raw danger paint, which is why they need no `.dark` block. Spelled `--ui-color-error*` before 5.4.

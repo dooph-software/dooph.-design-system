@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useEffect, useRef } from 'react';
 import { Input } from './Input';
+import { InputVariant } from './constants';
+import { TagIcon, UserIcon } from '../Icons';
 
 const meta = {
   title: 'Inputs/Input',
@@ -44,6 +46,47 @@ export const AllStates: Story = {
       <Input placeholder="Disabled" disabled />
       <Input placeholder="Error" hasError />
       <FocusedErrorInput />
+    </div>
+  ),
+};
+
+/**
+ * Figma `Input` — the four variants across placeholder / filled / disabled /
+ * error. Number variants hug their value and never go below a square.
+ */
+export const Variants: Story = {
+  render: () => (
+    <div className="grid grid-cols-[160px_auto_160px_auto] items-center gap-4 p-4">
+      <Input placeholder="Username" data-testid="v-text" />
+      <Input variant={InputVariant.number} placeholder="123.45" data-testid="v-number" />
+      <Input variant={InputVariant.iconText} icon={<UserIcon />} placeholder="Username" data-testid="v-icon-text" />
+      <Input variant={InputVariant.iconNumber} icon={<TagIcon />} placeholder="123.45" data-testid="v-icon-number" />
+
+      <Input defaultValue="jacesimons14" />
+      <Input variant={InputVariant.number} defaultValue="123.45" />
+      <Input variant={InputVariant.iconText} icon={<UserIcon />} defaultValue="jacesimons14" />
+      <Input variant={InputVariant.iconNumber} icon={<TagIcon />} defaultValue="123.45" />
+
+      <Input placeholder="Username" disabled />
+      <Input variant={InputVariant.number} placeholder="123.45" disabled />
+      <Input variant={InputVariant.iconText} icon={<UserIcon />} placeholder="Username" disabled />
+      <Input variant={InputVariant.iconNumber} icon={<TagIcon />} placeholder="123.45" disabled />
+
+      <Input defaultValue="jace@!" hasError />
+      <Input variant={InputVariant.number} defaultValue="12a" hasError />
+      <Input variant={InputVariant.iconText} icon={<UserIcon />} defaultValue="jace@!" hasError />
+      <Input variant={InputVariant.iconNumber} icon={<TagIcon />} defaultValue="12a" hasError />
+    </div>
+  ),
+};
+
+/** Number variant: a single digit is a square; the field grows as you type. */
+export const NumberGrows: Story = {
+  render: () => (
+    <div className="flex items-center gap-4 p-4">
+      <Input variant={InputVariant.number} defaultValue="1" data-testid="n-short" />
+      <Input variant={InputVariant.number} defaultValue="1,240,000.00" data-testid="n-long" />
+      <Input variant={InputVariant.iconNumber} icon={<TagIcon />} defaultValue="7" />
     </div>
   ),
 };

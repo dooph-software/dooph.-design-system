@@ -439,6 +439,10 @@
   --ui-tracking-body: 0.01em;
   --ui-tracking-label: 0;
   --ui-tracking-hero: -0.01em;
+  /* Figma "Mono Text" style: -3%. Tightens Google Sans Code's fixed advances
+   * to sit with the button role beside it; every glyph still shares one
+   * advance, so figures stay aligned. */
+  --ui-tracking-mono: -0.03em;
 
   /* ── Sizing ──────────────────────────────────────────────────────────── */
 

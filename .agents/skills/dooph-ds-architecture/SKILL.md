@@ -47,6 +47,7 @@ Two historical renames, neither reversible: v3 renamed `ButtonVariant.destructiv
 | `ShapeButtons`     | `shape`   | `<ShapeButton shape={ShapeButtons.squircle} />`                |
 | `ShapeButtonVariant` | `variant` | `<ShapeButton variant={ShapeButtonVariant.prominent} />`    |
 | `SheetSide`        | `side`    | `<SheetContent side={SheetSide.right} />`                     |
+| `InputVariant`     | `variant` | `<Input variant={InputVariant.iconNumber} icon={<TagIcon />} />` (icon variants require `icon` — discriminated union + runtime throw) |
 | `TextVariant`      | `variant`    | `<BaseText variant={TextVariant.body} />`                          |
 | `CheckboxChecked`  | `checked`    | `<Checkbox checked={CheckboxChecked.indeterminate} />`             |
 | `CopyButtonVariant` | `variant` | `<CopyButton variant={CopyButtonVariant.secondary} value="npm install" />` |

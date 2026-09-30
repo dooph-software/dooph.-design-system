@@ -68,6 +68,7 @@ export const Tracking = {
   body: 'var(--ui-tracking-body)',
   label: 'var(--ui-tracking-label)',
   hero: 'var(--ui-tracking-hero)',
+  mono: 'var(--ui-tracking-mono)',
 } as const;
 export type TrackingValue = (typeof Tracking)[keyof typeof Tracking];
 

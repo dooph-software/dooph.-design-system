@@ -70,7 +70,7 @@ There are **eight** text roles: `body`, `button`, `heading`, `subheading`, `labe
 - `--ui-weight-body`, `--ui-weight-button`, `--ui-weight-label`, `--ui-weight-subheading`, `--ui-weight-heading`, `--ui-weight-title`, `--ui-weight-hero`, `--ui-weight-mono`
 - `--ui-weight-regular`, `--ui-weight-medium`, `--ui-weight-semibold`, `--ui-weight-bold` — the standard scale behind `FontWeights.*`
 - `--ui-font-var-button`, `--ui-font-var-body`, `--ui-font-var-heading`, `--ui-font-var-mono`
-- `--ui-tracking-body`, `--ui-tracking-label`, `--ui-tracking-hero`
+- `--ui-tracking-body`, `--ui-tracking-label`, `--ui-tracking-hero`, `--ui-tracking-mono` (-3%, Figma "Mono Text")
 
 `--ui-text-mono` and `--ui-weight-mono` alias `--ui-text-body` and `--ui-weight-button` by default, so mono sits at the same optical scale as a button label; override either directly to break that link.
 

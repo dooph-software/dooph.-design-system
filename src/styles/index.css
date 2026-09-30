@@ -276,6 +276,7 @@
     font-style: normal;
     font-weight: var(--ui-weight-mono);
     font-variation-settings: var(--ui-font-var-mono);
+    letter-spacing: var(--ui-tracking-mono);
   }
 
   .text-style-label {
@@ -355,6 +356,9 @@
   }
   .min-h-button {
     min-height: var(--ui-height-button);
+  }
+  .min-w-button {
+    min-width: var(--ui-height-button);
   }
   .h-slider-track {
     height: var(--ui-height-slider-track);

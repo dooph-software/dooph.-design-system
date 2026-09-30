@@ -76,6 +76,12 @@
     outline-color: var(--ui-color-focus-ring-prominent);
   }
 
+  /* Danger colour for a ds-focus-within-ring wrapper (Input with an icon or
+   * the number variant, where the chrome is a wrapper, not the <input>). */
+  .ds-focus-within-ring-danger:focus-within {
+    outline-color: var(--ui-color-focus-ring-danger);
+  }
+
   .ds-focus-ring-on-focus {
     outline: 4px solid transparent;
     outline-offset: 0;

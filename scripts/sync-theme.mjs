@@ -78,6 +78,7 @@ const EXCLUDED = new Set([
   "ui-tracking-body",
   "ui-tracking-label",
   "ui-tracking-hero",
+  "ui-tracking-mono",
   // Icon sizes — used as raw var() only
   "ui-icon-sm",
   "ui-icon-rg",
