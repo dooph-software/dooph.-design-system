@@ -1,0 +1,1626 @@
+diff --git a/scripts/sync-theme.mjs b/scripts/sync-theme.mjs
+index 2f9eabb..dca5138 100644
+--- a/scripts/sync-theme.mjs
++++ b/scripts/sync-theme.mjs
+@@ -104,18 +104,24 @@ const EXCLUDED = new Set([
+   // Checkbox / code digit — exposed via custom @layer utilities
+   "ui-size-checkbox",
+   "ui-size-code-digit",
+-  // Roll-on-change motion — raw var() in keyframes / @layer utilities only
+-  "ui-roll-change-out-duration",
+-  "ui-roll-change-in-duration",
+-  "ui-roll-change-out-ease",
+-  "ui-roll-change-in-ease",
++  // Motion scale — raw var() inside the ds-motion-* helpers and CSS helpers
++  // only. Never a Tailwind theme key: components must not reach the scale
++  // through duration-N / ease-* utilities.
++  "ui-motion-duration-fast",
++  "ui-motion-duration-base",
++  "ui-motion-duration-slow",
++  "ui-motion-duration-slower",
++  "ui-motion-duration-slowest",
++  "ui-motion-ease-standard",
++  "ui-motion-ease-enter",
++  "ui-motion-ease-exit",
++  "ui-motion-ease-linear",
++  // Loop cycle times — raw var() in @layer utilities only
++  "ui-shimmer-duration",
++  // Roll-on-change depth/blur — raw var() in keyframes only
+   "ui-roll-change-depth",
+   "ui-roll-change-blur",
+-  // Fade-roll-on-change motion — raw var() in keyframes / @layer utilities only
+-  "ui-fade-change-out-duration",
+-  "ui-fade-change-in-duration",
+-  "ui-fade-change-out-ease",
+-  "ui-fade-change-in-ease",
++  // Fade-roll-on-change depth — raw var() in keyframes only
+   "ui-fade-change-depth",
+   // Shape morph motion — raw var() in @layer utilities / keyframes only
+   "ui-shape-morph-duration",
+@@ -123,24 +129,14 @@ const EXCLUDED = new Set([
+   "ui-shape-morph-interval",
+   "ui-shape-morph-passive-spin-duration",
+   "ui-shape-morph-nudge",
+-  "ui-shape-morph-nudge-duration",
+-  "ui-shape-morph-nudge-ease",
+-  // Rolling digits motion / decimals offset — raw var() in @layer utilities only
+-  "ui-rolling-digits-duration",
++  // Rolling digits stagger / geometry — raw var() in @layer utilities only
+   "ui-rolling-digits-stagger",
+-  "ui-rolling-digits-enter-duration",
+-  "ui-rolling-digits-exit-duration",
+   "ui-rolling-digits-opacity-ratio",
+-  "ui-rolling-digits-ease",
+   "ui-rolling-digits-digit-width",
+   "ui-rolling-digits-separator-width",
+   "ui-rolling-digits-decimals-rise",
+   "ui-rolling-digits-decimals-gap",
+   "ui-rolling-digits-decimals-size",
+-  // Sidebar rail icon motion — raw var() in @layer utilities only
+-  "ui-sidebar-icon-duration",
+-  "ui-sidebar-icon-hover-duration",
+-  "ui-sidebar-icon-ease",
+   // Tooltip widths — exposed via ds-* helpers
+   "ui-width-tooltip-rich",
+   "ui-min-w-tooltip-complex",
+diff --git a/src/components/AIChat/AITextPart.tsx b/src/components/AIChat/AITextPart.tsx
+index 88587cc..0e6209b 100644
+--- a/src/components/AIChat/AITextPart.tsx
++++ b/src/components/AIChat/AITextPart.tsx
+@@ -6,7 +6,8 @@
+  *   react-markdown, MDX or a plain string. `ds-chat-prose` styles the elements
+  *   any of them emit.
+  * - `streamingAnimation` makes each block rise out of a blur as it mounts
+- *   (`ds-chat-stream-in`, timed by the --ui-chat-stream-* tokens).
++ *   (`ds-chat-stream-in`, timed by the motion scale; blur and rise are
++ *   --ui-chat-stream-* tokens).
+  *
+  * ## constraints
+  * - The package takes NO dependency on a markdown renderer. Do not import one
+diff --git a/src/components/AIChat/AIThinkingPart.tsx b/src/components/AIChat/AIThinkingPart.tsx
+index 689f060..5272526 100644
+--- a/src/components/AIChat/AIThinkingPart.tsx
++++ b/src/components/AIChat/AIThinkingPart.tsx
+@@ -7,7 +7,7 @@
+  *   is always visible — there is nothing to toggle while it is live.
+  * - `thought` with a transcript: the row becomes a disclosure. The chevron is
+  *   revealed on hover and stays while open; the transcript collapses with a
+- *   grid-rows transition timed by `--ui-chat-disclosure-*`.
++ *   grid-rows transition timed by the motion scale (`--ui-motion-*`).
+  * - `thought` without a transcript: a plain settled row.
+  * - Open state is controllable (`open` / `onOpenChange`) or uncontrolled
+  *   (`defaultOpen`). It is the only state this component owns.
+@@ -177,7 +177,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+           {labelNode}
+           {metaNode}
+           {/* Down while closed, up while open — ds-chat-chevron rotates on the
+-              button's data-state, timed by --ui-chat-disclosure-*. */}
++              button's data-state, timed by the motion scale. */}
+           <DropdownIcon
+             size={IconSize.rg}
+             aria-hidden
+diff --git a/src/components/AnimatedText/FadeChangeText.tsx b/src/components/AnimatedText/FadeChangeText.tsx
+index f3420f0..f158fb8 100644
+--- a/src/components/AnimatedText/FadeChangeText.tsx
++++ b/src/components/AnimatedText/FadeChangeText.tsx
+@@ -21,9 +21,11 @@
+  *   stacked with no visible fade. `ds-fade-change-*` keyframes give opacity its
+  *   own offsets — old gone by 50%, new held at 0 until 30% — and must keep
+  *   doing so; see the keyframes' comment in index.css.
+- * - Nothing here may hold a duration. Timing, easing, depth and the
+- *   reduced-motion case are `--ui-fade-change-*` tokens (defaulting to the
+- *   roll-change values) read by `.ds-fade-change-*` in index.css.
++ * - Nothing here may hold a duration. Timing and easing come from the motion
++ *   scale (`--ui-motion-*`, the same steps as the roll) and depth from
++ *   `--ui-fade-change-depth` (defaulting to the roll's), read by
++ *   `.ds-fade-change-*` in index.css; reduced motion is the scale's global
++ *   collapse in tokens.css.
+  */
+ "use client";
+ import {
+diff --git a/src/components/AnimatedText/RevealChangeText.tsx b/src/components/AnimatedText/RevealChangeText.tsx
+index fb985db..01dfe93 100644
+--- a/src/components/AnimatedText/RevealChangeText.tsx
++++ b/src/components/AnimatedText/RevealChangeText.tsx
+@@ -20,12 +20,13 @@
+  *   slot moves. Pair it with RollChangeText for the piece that swaps its text,
+  *   and hang that roll off `onSettled` so it FOLLOWS the reveal rather than
+  *   racing it.
+- * - Nothing here may hold a duration. Timing, easing and the reduced-motion
+- *   case are `--ui-reveal-change-*` tokens read by `.ds-reveal-change` in
+- *   index.css. Reduced motion drops those to 1ms rather than to
+- *   `transition: none`: the content swap AND `onSettled` both hang off
+- *   `transitionend`, which `transition: none` would never fire — stranding the
+- *   outgoing content on screen forever.
++ * - Nothing here may hold a duration. Timing and easing come from the motion
++ *   scale (`--ui-motion-*`) read by `.ds-reveal-change` in index.css. Reduced
++ *   motion is the scale's global collapse in tokens.css, which drops every
++ *   duration to an instant but NON-ZERO value rather than to
++ *   `transition: none` or zero: the content swap AND `onSettled` both hang off
++ *   `transitionend`, which neither `transition: none` nor a zero duration
++ *   would ever fire — stranding the outgoing content on screen forever.
+  * - Slot state is reconciled during RENDER, never in an effect. Doing it in an
+  *   effect commits a frame of stale slot state and schedules another, which is
+  *   the cascading render `react-hooks/set-state-in-effect` flags.
+diff --git a/src/components/AnimatedText/RollChangeText.tsx b/src/components/AnimatedText/RollChangeText.tsx
+index 49d2e6a..dd203e7 100644
+--- a/src/components/AnimatedText/RollChangeText.tsx
++++ b/src/components/AnimatedText/RollChangeText.tsx
+@@ -16,10 +16,11 @@
+  *   FadeChangeText. Do not re-inline it here: its render-phase reconcile, keyed
+  *   exit and independent in/out retirement each fixed a shipped bug, and two
+  *   copies drift. This file owns only the roll's look.
+- * - Nothing here may hold a duration. Timing, easing, depth, blur and the
+- *   reduced-motion case are all `--ui-roll-change-*` tokens read by
+- *   `.ds-roll-change-*` in index.css; out (200ms) is deliberately shorter than
+- *   in (300ms), which is why the two halves retire independently.
++ * - Nothing here may hold a duration. Timing and easing come from the motion
++ *   scale (`--ui-motion-*`), depth and blur from `--ui-roll-change-*`, all read
++ *   by `.ds-roll-change-*` in index.css; reduced motion is the scale's global
++ *   collapse in tokens.css. Out (`base`) is deliberately shorter than in
++ *   (`slow`), which is why the two halves retire independently.
+  */
+ "use client";
+ import {
+diff --git a/src/components/AnimatedText/RollingDigitsText.tsx b/src/components/AnimatedText/RollingDigitsText.tsx
+index faaba43..02ffe5e 100644
+--- a/src/components/AnimatedText/RollingDigitsText.tsx
++++ b/src/components/AnimatedText/RollingDigitsText.tsx
+@@ -28,9 +28,11 @@
+  *   enforced by the discriminated union below, never by a runtime throw.
+  *
+  * ## updating
+- * - Motion lives in CSS and in tokens (`--ui-rolling-digits-*`). Nothing here
+- *   may hold a duration: an earlier version mirrored the CSS timings in JS
+- *   constants to stage the fade against the roll, and the mirror desynced.
++ * - Motion lives in CSS and in tokens: timing and easing on the motion scale
++ *   (`--ui-motion-*`), stagger and fade ratio in `--ui-rolling-digits-*`.
++ *   Nothing here may hold a duration: an earlier version mirrored the CSS
++ *   timings in JS constants to stage the fade against the roll, and the mirror
++ *   desynced.
+  * - There is no timer, no requestAnimationFrame and no transitionend in this
+  *   file, and adding one is almost always the wrong fix. Entry is a mount
+  *   animation, which needs no scheduling; exit is a single `animationend`.
+diff --git a/src/components/AnimatedText/useChangeSwap.ts b/src/components/AnimatedText/useChangeSwap.ts
+index 89b3559..95c3883 100644
+--- a/src/components/AnimatedText/useChangeSwap.ts
++++ b/src/components/AnimatedText/useChangeSwap.ts
+@@ -18,7 +18,7 @@
+  *   `transitionend`. Each half is retired by its OWN `animationend`; an earlier
+  *   RollChangeText ran a `setTimeout(300)` mirroring the CSS, which is the mirror
+  *   that desyncs the moment either side is retuned. Timing lives in each
+- *   wrapper's `--ui-*-change-*` tokens (architecture Rule 6).
++ *   wrapper's CSS classes, on the motion scale (architecture Rule 6).
+  * - The swap is reconciled during RENDER, never in an effect. An effect runs
+  *   after paint, so the browser painted one frame of the new content at rest
+  *   before the animations yanked it back to their `from` pose — that frame read
+diff --git a/src/components/Button/Button.tsx b/src/components/Button/Button.tsx
+index a681ddf..7bbcde0 100644
+--- a/src/components/Button/Button.tsx
++++ b/src/components/Button/Button.tsx
+@@ -38,7 +38,7 @@ const buttonVariants = cva(
+   [
+     "inline-flex items-center justify-center gap-2 whitespace-nowrap",
+     "border border-solid rounded-tight",
+-    "transition-all duration-150 ease-out cursor-pointer select-none",
++    "ds-motion-state cursor-pointer select-none",
+     "ds-focus-visible-ring",
+     "ds-disabled-state",
+     "text-style-button",
+diff --git a/src/components/Checkbox/Checkbox.tsx b/src/components/Checkbox/Checkbox.tsx
+index e8fad1d..b638255 100644
+--- a/src/components/Checkbox/Checkbox.tsx
++++ b/src/components/Checkbox/Checkbox.tsx
+@@ -34,7 +34,7 @@ const checkboxVariants = cva(
+   [
+     "group inline-flex size-checkbox shrink-0 items-center justify-center overflow-hidden align-middle",
+     "rounded-checkbox border border-solid border-border-primary bg-transparent text-primary-fg",
+-    "cursor-pointer select-none transition-all duration-150 ease-out",
++    "cursor-pointer select-none ds-motion-state",
+     "data-[state=unchecked]:hover:bg-secondary-hover data-[state=unchecked]:hover:border-border-primary data-[state=unchecked]:hover:shadow-button-secondary",
+     // active bg stays at hover color intentionally — never while disabled
+     "[&:not([data-disabled])]:active:bg-secondary-hover",
+diff --git a/src/components/DropdownTrigger/DropdownTrigger.tsx b/src/components/DropdownTrigger/DropdownTrigger.tsx
+index 7e276e8..c9ad322 100644
+--- a/src/components/DropdownTrigger/DropdownTrigger.tsx
++++ b/src/components/DropdownTrigger/DropdownTrigger.tsx
+@@ -60,7 +60,7 @@ const DropdownTriggerBase = forwardRef<
+         "bg-secondary text-secondary-fg",
+         "ds-dropdown-caret-host ds-pl-ui-md",
+         "text-style-button cursor-pointer select-none",
+-        "transition-all duration-150 ease-out",
++        "ds-motion-state",
+         "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-secondary",
+         "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active",
+         "ds-focus-visible-ring",
+@@ -193,7 +193,7 @@ const TypeableDropdownTrigger = forwardRef<
+           "inline-flex h-button items-center ds-gap-ui-sm",
+           "min-w-40 rounded-tight border border-solid border-border-primary",
+           "bg-secondary ds-dropdown-caret-host ds-pl-ui-md",
+-          "transition-all duration-150 ease-out",
++          "ds-motion-state",
+           disabled
+             ? "cursor-not-allowed bg-secondary-disabled border-secondary-border-disabled"
+             : [
+@@ -318,7 +318,7 @@ const TextDropdownTriggerBase = forwardRef<
+         className={cn(
+           "inline-flex items-center ds-gap-ui-sm",
+           "rounded-tight border border-transparent bg-transparent",
+-          "cursor-pointer select-none transition-all duration-150 ease-out",
++          "cursor-pointer select-none ds-motion-state",
+           "ds-focus-visible-ring",
+           "ds-disabled-state",
+           size === TextDropdownSize.standard &&
+diff --git a/src/components/HotkeyIndicator/HotkeyIndicator.tsx b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+index 980c9b1..89331b0 100644
+--- a/src/components/HotkeyIndicator/HotkeyIndicator.tsx
++++ b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+@@ -16,7 +16,7 @@ function HotkeyIndicator({ keys, pressed = false, className, ...props }: HotkeyI
+             'inline-flex items-center justify-center',
+             'rounded-tight border border-border-primary',
+             'text-style-label text-ghost-fg',
+-            'transition-colors duration-100',
++            'ds-motion-state',
+             'ds-px-ui-sm ds-py-ui-xxs',
+             keys.length === 1 && 'min-w-[23px] min-h-[23px]',
+             pressed
+diff --git a/src/components/Input/Input.tsx b/src/components/Input/Input.tsx
+index d436748..0aaecc2 100644
+--- a/src/components/Input/Input.tsx
++++ b/src/components/Input/Input.tsx
+@@ -120,7 +120,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+             "flex h-button w-full rounded-tight border border-solid border-border-primary bg-secondary",
+             "ds-pl-ui-md ds-pr-ui-rg",
+             "text-style-button text-text placeholder:text-text-tertiary",
+-            "transition-all duration-100 ds-focus-ring-on-focus",
++            "ds-motion-state ds-focus-ring-on-focus",
+             "hover:border-input-border-hover hover:shadow-button-secondary",
+             "focus:border-input-border-focus",
+             "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled ds-disabled-state",
+@@ -155,7 +155,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+         data-disabled={disabled ? "" : undefined}
+         className={cn(
+           "h-button items-center rounded-tight border border-solid border-border-primary bg-secondary",
+-          "transition-all duration-100 ds-focus-within-ring",
++          "ds-motion-state ds-focus-within-ring",
+           isNumber
+             ? "inline-flex min-w-button justify-center ds-pl-ui-md ds-pr-ui-md"
+             : "flex w-full ds-pl-ui-md ds-pr-ui-rg",
+diff --git a/src/components/Menu/DropdownMenu.tsx b/src/components/Menu/DropdownMenu.tsx
+index b5dee37..1390b79 100644
+--- a/src/components/Menu/DropdownMenu.tsx
++++ b/src/components/Menu/DropdownMenu.tsx
+@@ -165,9 +165,9 @@ const DropdownMenuContent = forwardRef<
+           // Items carry the 160px floor and the panel hugs them; matching the
+           // trigger only ever widens it.
+           matchTriggerWidth && "ds-radix-dropdown-match-trigger-width",
+-          "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-100",
+-          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-1.5 data-[state=closed]:duration-150",
+-          "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
++          "data-[state=open]:animate-in data-[state=open]:fade-in-0",
++          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-1.5",
++          "ds-motion-overlay",
+           className,
+         )}
+         {...props}
+@@ -194,7 +194,7 @@ DropdownMenuContent.displayName = "DropdownMenuContent";
+  * presets rail is 144px wide. Internal: not re-exported from src/index.ts.
+  */
+ export const menuItemClassName =
+-  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-rg rounded-tight px-sm ds-radix-data-disabled text-style-body text-ghost-fg-active outline-none transition-colors duration-100 hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
++  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-rg rounded-tight px-sm ds-radix-data-disabled text-style-body text-ghost-fg-active outline-none ds-motion-state hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
+ 
+ /** Dropdown items also hold the menu's 160px floor; sections and the panel hug them. */
+ const itemBase = cn(menuItemClassName, "ds-min-w-menu");
+diff --git a/src/components/Modal/Modal.tsx b/src/components/Modal/Modal.tsx
+index 221de25..58ee63b 100644
+--- a/src/components/Modal/Modal.tsx
++++ b/src/components/Modal/Modal.tsx
+@@ -26,9 +26,9 @@ const ModalOverlay = forwardRef<
+     className={cn(
+       'fixed inset-0 z-50',
+       'bg-modal-backdrop',
+-      'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-200',
+-      'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:duration-150',
+-      'motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0',
++      'data-[state=open]:animate-in data-[state=open]:fade-in-0',
++      'data-[state=closed]:animate-out data-[state=closed]:fade-out-0',
++      'ds-motion-overlay-dialog',
+       className
+     )}
+     {...props}
+@@ -72,9 +72,9 @@ const ModalContent = forwardRef<
+         'rounded-soft overflow-hidden',
+         'shadow-menu',
+         'focus-visible:outline-none',
+-        'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:duration-200',
+-        'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-150',
+-        'motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0',
++        'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
++        'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
++        'ds-motion-overlay-dialog',
+         className
+       )}
+       {...props}
+diff --git a/src/components/MorphRotationShape/MorphRotationShape.tsx b/src/components/MorphRotationShape/MorphRotationShape.tsx
+index efe7738..074f385 100644
+--- a/src/components/MorphRotationShape/MorphRotationShape.tsx
++++ b/src/components/MorphRotationShape/MorphRotationShape.tsx
+@@ -15,7 +15,7 @@
+  *   indices, so a target two away passes through the shape between, and a
+  *   lower target plays the morph and turn in reverse.
+  * - The drawn value is --ds-shape-morph-step (whole stops, spring ease) PLUS
+- *   --ds-shape-morph-lean (a hover nudge, --ui-shape-morph-nudge-* ease). Two
++ *   --ds-shape-morph-lean (a hover nudge, on the motion scale). Two
+  *   properties because a click while hovered and a hover while open end in the
+  *   same final style; only separate transitions can give them different feels.
+  *   Targets may therefore be fractional and rest there (e.g. 1.15).
+@@ -31,8 +31,9 @@
+  *
+  * ## constraints
+  * - Motion belongs to CSS, geometry belongs here (architecture Rule 6).
+- *   Durations and easing are --ui-shape-morph-* tokens, overridable per
+- *   instance through `timing` (inline custom properties). Nothing in this file
++ *   The step's duration and easing are --ui-shape-morph-* tokens, overridable
++ *   per instance through `timing` (inline custom properties); the lean's are
++ *   the shared motion scale (`--ui-motion-*`). Nothing in this file
+  *   may hold a duration or an easing curve; the spring lives in
+  *   scripts/shapeMorphSpring.mjs and reaches here only as the ease token.
+  * - `d` and the transform are in JSX only for the FIRST render (so SSR output
+diff --git a/src/components/OutlineButton/OutlineButton.tsx b/src/components/OutlineButton/OutlineButton.tsx
+index 7f7274f..e9f590c 100644
+--- a/src/components/OutlineButton/OutlineButton.tsx
++++ b/src/components/OutlineButton/OutlineButton.tsx
+@@ -159,7 +159,7 @@ const OutlineButtonBase = forwardRef<
+             "h-[54px] min-w-[160px] px-3",
+             "border border-solid rounded-soft shadow-button",
+             "text-style-button cursor-pointer select-none",
+-            "transition-all duration-150 ease-out",
++            "ds-motion-state",
+             "ds-focus-visible-ring",
+             "ds-disabled-state",
+             inverseTheme
+@@ -174,8 +174,8 @@ const OutlineButtonBase = forwardRef<
+             /*
+              * Controlled mode — bottom-anchored, always lit.
+              * Orbs sit at the bottom of the frame exactly as they did before cursor
+-             * tracking was introduced. Opacity is set inline so it can be transitioned
+-             * if `glowing` flips at runtime.
++             * tracking was introduced. Opacity is set inline; the ds-outline-orb-*
++             * class transitions it if `glowing` flips at runtime.
+              */
+             <>
+               <span
+@@ -183,13 +183,13 @@ const OutlineButtonBase = forwardRef<
+                 className={cn(
+                   "pointer-events-none absolute rounded-full",
+                   "bottom-[-18px] left-[4%] w-[62%] h-[72%]",
++                  "ds-outline-orb-1",
+                   disabledGlowClass,
+                 )}
+                 style={{
+                   background: color1,
+                   filter: "blur(18px)",
+                   opacity: 0.38,
+-                  transition: "opacity 0.36s ease-out",
+                 }}
+               />
+               <span
+@@ -197,13 +197,13 @@ const OutlineButtonBase = forwardRef<
+                 className={cn(
+                   "pointer-events-none absolute rounded-full",
+                   "bottom-[-14px] right-[6%] w-[48%] h-[64%]",
++                  "ds-outline-orb-2",
+                   disabledGlowClass,
+                 )}
+                 style={{
+                   background: color2,
+                   filter: "blur(24px)",
+                   opacity: 0.22,
+-                  transition: "opacity 0.42s ease-out",
+                 }}
+               />
+             </>
+@@ -242,6 +242,7 @@ const OutlineButtonBase = forwardRef<
+                 className={cn(
+                   "pointer-events-none absolute rounded-full w-[62%] h-[72%]",
+                   "opacity-0 group-hover:opacity-[0.38]",
++                  "ds-outline-orb-1",
+                   disabledGlowClass,
+                 )}
+                 style={{
+@@ -254,8 +255,6 @@ const OutlineButtonBase = forwardRef<
+                     "calc((var(--gx, 0.5) * 0.4 + 0.25) * var(--bw, 160px) - 50%)," +
+                     "calc(var(--gy, 0.5) * var(--bh, 54px) - 50%)" +
+                     ")",
+-                  transition:
+-                    "opacity 0.36s ease-out, transform 0.16s ease-out",
+                 }}
+               />
+               <span
+@@ -263,6 +262,7 @@ const OutlineButtonBase = forwardRef<
+                 className={cn(
+                   "pointer-events-none absolute rounded-full w-[48%] h-[64%]",
+                   "opacity-0 group-hover:opacity-[0.22]",
++                  "ds-outline-orb-2",
+                   disabledGlowClass,
+                 )}
+                 style={{
+@@ -275,8 +275,6 @@ const OutlineButtonBase = forwardRef<
+                     "calc((var(--gx, 0.5) * 0.4 + 0.55) * var(--bw, 160px) - 50%)," +
+                     "calc(var(--gy, 0.5) * var(--bh, 54px) - 50%)" +
+                     ")",
+-                  transition:
+-                    "opacity 0.42s ease-out, transform 0.22s ease-out",
+                 }}
+               />
+             </>
+diff --git a/src/components/Popover/Popover.tsx b/src/components/Popover/Popover.tsx
+index 7ebb2f6..450608e 100644
+--- a/src/components/Popover/Popover.tsx
++++ b/src/components/Popover/Popover.tsx
+@@ -50,6 +50,7 @@ const PopoverContent = forwardRef<
+           "data-[state=open]:animate-in data-[state=closed]:animate-out",
+           "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
+           "data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95",
++          "ds-motion-overlay",
+           "ds-radix-popover-content-origin",
+           className,
+         )}
+diff --git a/src/components/ProgressIndicator/ProgressIndicator.tsx b/src/components/ProgressIndicator/ProgressIndicator.tsx
+index 3bc131e..12fc307 100644
+--- a/src/components/ProgressIndicator/ProgressIndicator.tsx
++++ b/src/components/ProgressIndicator/ProgressIndicator.tsx
+@@ -76,8 +76,9 @@ type InnerSvgProps = ComponentPropsWithoutRef<"svg"> & {
+  * 12 o'clock; track covers the complementary arc with a `gapLength` gap at each
+  * endpoint.
+  *
+- * Both arcs carry a CSS transition (300ms cubic-bezier) so they animate smoothly
+- * together whenever `progress` changes.
++ * Both arcs carry `.ds-progress-arc` (the motion scale's `slow` step on the
++ * `standard` curve) so they animate smoothly together whenever `progress`
++ * changes.
+  */
+ function FlatProgressIndicator({
+   geo,
+@@ -120,9 +121,6 @@ function FlatProgressIndicator({
+     trackOffset = trackLength + circumference - (activeLength + gapLength);
+   }
+ 
+-  const easing = "cubic-bezier(0.4, 0, 0.2, 1)";
+-  const transition = `stroke-dasharray 300ms ${easing}, stroke-dashoffset 300ms ${easing}`;
+-
+   return (
+     <svg
+       {...rest}
+@@ -148,7 +146,7 @@ function FlatProgressIndicator({
+         strokeDasharray={`${trackLength} ${circumference}`}
+         strokeDashoffset={trackOffset}
+         transform={`rotate(-90 ${cx} ${cy})`}
+-        style={{ transition }}
++        className="ds-progress-arc"
+       />
+       {/* Indicator arc — rotated to start at 12 o'clock */}
+       <circle
+@@ -162,7 +160,7 @@ function FlatProgressIndicator({
+         strokeDasharray={circumference}
+         strokeDashoffset={dashOffset}
+         transform={`rotate(-90 ${cx} ${cy})`}
+-        style={{ transition: `stroke-dashoffset 300ms ${easing}` }}
++        className="ds-progress-arc"
+       />
+     </svg>
+   );
+diff --git a/src/components/SearchBox/SearchBox.tsx b/src/components/SearchBox/SearchBox.tsx
+index 7ce1f9d..2093d21 100644
+--- a/src/components/SearchBox/SearchBox.tsx
++++ b/src/components/SearchBox/SearchBox.tsx
+@@ -29,7 +29,7 @@ const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
+           'rounded-soft',
+           'ds-pl-ui-lg ds-pr-ui-md ds-py-ui-md',
+           'ds-min-w-search-box',
+-          'transition-all duration-100',
++          'ds-motion-state',
+           'hover:border-input-border-hover',
+           'focus-within:border-input-border-focus ds-focus-within-ring',
+           className
+diff --git a/src/components/Sheet/Sheet.tsx b/src/components/Sheet/Sheet.tsx
+index 06f09ae..82d8f29 100644
+--- a/src/components/Sheet/Sheet.tsx
++++ b/src/components/Sheet/Sheet.tsx
+@@ -34,9 +34,9 @@ const SheetOverlay = forwardRef<
+     className={cn(
+       "fixed inset-0 z-50",
+       "bg-modal-backdrop",
+-      "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-300",
+-      "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:duration-200",
+-      "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
++      "data-[state=open]:animate-in data-[state=open]:fade-in-0",
++      "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
++      "ds-motion-overlay-sheet",
+       className,
+     )}
+     {...props}
+@@ -49,13 +49,13 @@ SheetOverlay.displayName = "SheetOverlay";
+ /**
+  * Per-side geometry + push animation. Like DropdownMenu, the panel shows only
+  * the settle tail of the movement: it enters from a 20% offset (already 80%
+- * of the way in) while fading in — 300ms on a long-deceleration curve — and
+- * exits 20% back out while fading, 200ms accelerating.
++ * of the way in) while fading in — the scale's `slow` step on the
++ * long-deceleration `enter` curve — and exits 20% back out while fading,
++ * `base` on the accelerating `exit` curve. Both come from
++ * `ds-motion-overlay-sheet`, which the backdrop shares.
+  * The slide distance must be an explicit value (`slide-*-[20%]`) — under
+  * Tailwind v4 the unsuffixed `slide-*` resolves to the 0.25rem translate
+- * DEFAULT, not the plugin's 100%. The timing function is set as an arbitrary property because
+- * `animation-timing-function` has no unambiguous utility (core `ease-*`
+- * targets transitions).
++ * DEFAULT, not the plugin's 100%.
+  *
+  * Uses the same surface/border/shadow tokens as `ModalContent`; the border
+  * sits only on the panel's inner edge.
+@@ -70,9 +70,9 @@ const sheetVariants = cva(
+     "bg-modal-surface border-solid border-border-popovers",
+     "shadow-menu overflow-hidden",
+     "focus-visible:outline-none",
+-    "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-300 data-[state=open]:[animation-timing-function:cubic-bezier(0.32,0.72,0,1)]",
+-    "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:duration-200 data-[state=closed]:[animation-timing-function:cubic-bezier(0.4,0,1,1)]",
+-    "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
++    "data-[state=open]:animate-in data-[state=open]:fade-in-0",
++    "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
++    "ds-motion-overlay-sheet",
+   ),
+   {
+     variants: {
+diff --git a/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx b/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx
+index d270aca..02ee957 100644
+--- a/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx
++++ b/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx
+@@ -22,8 +22,9 @@
+  *   did not own. Consumers wire onPointerEnter/onPointerLeave on their own
+  *   button; the stories show it.
+  * - Motion belongs to CSS, geometry belongs here. Durations and easing are
+- *   tokens on `.ds-sidebar-rail`, including the reduced-motion case. Nothing in
+- *   this file may hold a duration or an easing curve.
++ *   motion-scale tokens read by `.ds-sidebar-rail`, and reduced motion is the
++ *   scale's global collapse in tokens.css. Nothing in this file may hold a
++ *   duration or an easing curve.
+  * - `d` is written imperatively because SVG path data is not animatable in
+  *   every engine. It is in JSX only for the FIRST render (so SSR output is
+  *   right); after that React must never touch it, or a re-render mid-tween
+diff --git a/src/components/Slider/Slider.tsx b/src/components/Slider/Slider.tsx
+index 0a7fce4..2f1c3fe 100644
+--- a/src/components/Slider/Slider.tsx
++++ b/src/components/Slider/Slider.tsx
+@@ -385,7 +385,7 @@ const SliderBase = forwardRef<
+              *
+              * No colour transition, deliberately. Crossing a step is a discrete
+              * event: by the time the dot's state flips the handle has already
+-             * passed it, so fading the colour over 150ms only makes the dot lag
++             * passed it, so fading the colour at all only makes the dot lag
+              * behind the thing that changed it. The handle and fills DO glide
+              * (`.ds-slider-glide`), because they settle onto a position; a dot
+              * does not move, it just switches sides. */}
+diff --git a/src/components/SplitButton/SplitButton.tsx b/src/components/SplitButton/SplitButton.tsx
+index 7625a53..40d9c96 100644
+--- a/src/components/SplitButton/SplitButton.tsx
++++ b/src/components/SplitButton/SplitButton.tsx
+@@ -21,7 +21,7 @@ const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
+         "border border-solid border-border-primary border-r-0",
+         "bg-secondary text-secondary-fg",
+         "text-style-button cursor-pointer select-none",
+-        "transition-all duration-100",
++        "ds-motion-state",
+         "hover:enabled:bg-secondary-hover",
+         "active:enabled:bg-secondary-active",
+         "ds-focus-visible-ring",
+@@ -52,7 +52,7 @@ const SplitButtonTrigger = forwardRef<
+       "rounded-r-tight rounded-l-none",
+       "border border-solid border-border-primary",
+       "bg-secondary text-secondary-fg",
+-      "cursor-pointer select-none transition-all duration-100",
++      "cursor-pointer select-none ds-motion-state",
+       "hover:enabled:bg-secondary-hover",
+       "active:enabled:bg-secondary-active",
+       "ds-focus-visible-ring",
+diff --git a/src/components/Table/Table.tsx b/src/components/Table/Table.tsx
+index 5c2f71b..0529a01 100644
+--- a/src/components/Table/Table.tsx
++++ b/src/components/Table/Table.tsx
+@@ -111,7 +111,7 @@ const TableRow = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+       className={cn(
+         "grid border-b border-border-primary",
+         "not-last:border-b",
+-        "hover:bg-ghost-hover transition-colors duration-100",
++        "hover:bg-ghost-hover ds-motion-state",
+         className,
+       )}
+       style={{
+diff --git a/src/components/TextLink/TextLink.tsx b/src/components/TextLink/TextLink.tsx
+index 290140c..bcdd01c 100644
+--- a/src/components/TextLink/TextLink.tsx
++++ b/src/components/TextLink/TextLink.tsx
+@@ -19,7 +19,7 @@ const TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(
+         ref={ref}
+         className={cn(
+           "text-style-body text-ghost-fg cursor-pointer",
+-          "transition-colors duration-100",
++          "ds-motion-state",
+           "hover:text-ghost-fg-active active:text-ghost-fg-active",
+           "ds-focus-visible-ring rounded-tight",
+           className,
+diff --git a/src/components/Toast/Toast.tsx b/src/components/Toast/Toast.tsx
+index 5d25b53..e532e02 100644
+--- a/src/components/Toast/Toast.tsx
++++ b/src/components/Toast/Toast.tsx
+@@ -57,11 +57,12 @@ const toastRootVariants = cva(
+   [
+     "group pointer-events-auto relative flex w-full overflow-hidden rounded-normal shadow-menu",
+     "data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)]",
+-    "data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-transform",
++    "data-[swipe=cancel]:translate-x-0",
+     "data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)]",
+-    "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-right-2 data-[state=open]:duration-150",
+-    "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-right-2 data-[state=closed]:duration-150",
+-    "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
++    "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-right-2",
++    "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-right-2",
++    // Enter/exit timing AND the swipe-cancel spring-back both come from here.
++    "ds-motion-overlay",
+   ],
+   {
+     variants: {
+diff --git a/src/components/Toggle/toggleOption.ts b/src/components/Toggle/toggleOption.ts
+index 71f92d0..fbaf8f0 100644
+--- a/src/components/Toggle/toggleOption.ts
++++ b/src/components/Toggle/toggleOption.ts
+@@ -27,7 +27,7 @@ export const toggleOptionVariants = cva(
+     "inline-flex items-center justify-center gap-sm whitespace-nowrap",
+     "border border-transparent",
+     "text-style-button text-text cursor-pointer select-none",
+-    "transition-all duration-150 ease-out",
++    "ds-motion-state",
+     "ds-focus-visible-ring focus-visible:border-input-border-focus",
+     "ds-disabled-control",
+     "unselected:enabled:hover:bg-ghost-hover unselected:enabled:active:bg-ghost-active",
+diff --git a/src/components/Tooltip/Tooltip.tsx b/src/components/Tooltip/Tooltip.tsx
+index 73e8f9f..c8006ad 100644
+--- a/src/components/Tooltip/Tooltip.tsx
++++ b/src/components/Tooltip/Tooltip.tsx
+@@ -59,10 +59,10 @@ const TooltipContent = forwardRef<
+         sideOffset={sideOffset}
+         className={cn(
+           "z-50 shadow-menu outline-none",
+-          "data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-[state=delayed-open]:duration-100",
+-          "data-[state=instant-open]:animate-in data-[state=instant-open]:fade-in-0 data-[state=instant-open]:zoom-in-95 data-[state=instant-open]:duration-100",
+-          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-150",
+-          "motion-reduce:data-[state=delayed-open]:duration-0 motion-reduce:data-[state=instant-open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
++          "data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95",
++          "data-[state=instant-open]:animate-in data-[state=instant-open]:fade-in-0 data-[state=instant-open]:zoom-in-95",
++          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
++          "ds-motion-overlay",
+           tooltipThemeClass[themeInverse ? "inverse" : "matching"],
+           variant === TooltipVariant.simple &&
+             "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-lg text-style-body",
+diff --git a/src/components/VerificationCode/CodeDigitInput.tsx b/src/components/VerificationCode/CodeDigitInput.tsx
+index 1f5540b..dc37330 100644
+--- a/src/components/VerificationCode/CodeDigitInput.tsx
++++ b/src/components/VerificationCode/CodeDigitInput.tsx
+@@ -45,7 +45,7 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
+         className={cn(
+           "relative inline-flex size-code-digit shrink-0 items-center justify-center",
+           "rounded-tight border border-solid",
+-          "transition-all duration-100",
++          "ds-motion-state",
+           hasError
+             ? "border-danger-primary bg-secondary text-danger-primary"
+             : "border-secondary-border bg-secondary text-text",
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index 97fad3a..a934be1 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -9,6 +9,82 @@
+  */
+ 
+ @layer utilities {
++  /*
++   * Motion helpers — the only way a component's className reaches the motion
++   * scale (--ui-motion-* in tokens.css). Components never write duration-N,
++   * ease-* or inline timing; reduced motion needs nothing here, because the
++   * global block in tokens.css collapses the scale itself.
++   */
++
++  /* Hover / press / focus feedback. Lists every paint a state change touches
++   * — colours, background, border, outline (the focus rings are outlines),
++   * shadow, opacity, filter — plus the transform family, so a press scale or
++   * nudge still eases like it did under `transition-all`. Layout properties
++   * are deliberately left out: none of these controls animates its size.
++   *
++   * Wrapped in :where() so it has zero specificity: a consumer's own
++   * `transition-*` / `duration-*` class on the same element still wins, as it
++   * did when the component carried those utilities itself. */
++  :where(.ds-motion-state) {
++    transition-property:
++      color, background-color, border-color, outline-color,
++      text-decoration-color, fill, stroke, opacity, box-shadow, filter,
++      transform, translate, scale, rotate;
++    transition-duration: var(--ui-motion-duration-fast);
++    transition-timing-function: var(--ui-motion-ease-standard);
++  }
++
++  /* Overlay enter/exit for the tailwindcss-animate keyframes (animate-in /
++   * animate-out + fade-* / zoom-* / slide-*), keyed off Radix `data-state`.
++   * These set only the duration and curve; the component keeps the keyframe
++   * utilities that pick WHAT moves. Entering uses the `enter` curve, leaving
++   * the `exit` curve. The selectors carry the state on purpose: they must
++   * outrank the plugin's `data-[state=…]:animate-in`, which hard-codes its
++   * own default duration at the same (0,2,0) specificity and loses only on
++   * source order to this later layer block.
++   *
++   *   ds-motion-overlay        — small overlays: menu, tooltip, popover,
++   *                              toast. fast in, fast out. Tooltip's
++   *                              delayed-open / instant-open count as open.
++   *   ds-motion-overlay-dialog — modal panel + backdrop. base in, fast out.
++   *   ds-motion-overlay-sheet  — sheet panel + backdrop. slow in, base out. */
++  .ds-motion-overlay:is(
++      [data-state="open"],
++      [data-state="delayed-open"],
++      [data-state="instant-open"]
++    ) {
++    animation-duration: var(--ui-motion-duration-fast);
++    animation-timing-function: var(--ui-motion-ease-enter);
++  }
++  .ds-motion-overlay[data-state="closed"] {
++    animation-duration: var(--ui-motion-duration-fast);
++    animation-timing-function: var(--ui-motion-ease-exit);
++  }
++  /* Toast swipe released short of the dismiss threshold: the toast springs
++   * back to rest. Radix sets data-swipe="cancel" and clears the move offset;
++   * this is the transition that carries it home. */
++  .ds-motion-overlay[data-swipe="cancel"] {
++    transition-property: transform, translate;
++    transition-duration: var(--ui-motion-duration-fast);
++    transition-timing-function: var(--ui-motion-ease-standard);
++  }
++  .ds-motion-overlay-dialog[data-state="open"] {
++    animation-duration: var(--ui-motion-duration-base);
++    animation-timing-function: var(--ui-motion-ease-enter);
++  }
++  .ds-motion-overlay-dialog[data-state="closed"] {
++    animation-duration: var(--ui-motion-duration-fast);
++    animation-timing-function: var(--ui-motion-ease-exit);
++  }
++  .ds-motion-overlay-sheet[data-state="open"] {
++    animation-duration: var(--ui-motion-duration-slow);
++    animation-timing-function: var(--ui-motion-ease-enter);
++  }
++  .ds-motion-overlay-sheet[data-state="closed"] {
++    animation-duration: var(--ui-motion-duration-base);
++    animation-timing-function: var(--ui-motion-ease-exit);
++  }
++
+   /* Disabled / inactive (native + aria-invalid disabled pattern) */
+   .ds-disabled-state:is(:disabled, [aria-disabled="true"]) {
+     cursor: not-allowed;
+@@ -39,9 +115,9 @@
+ 
+   .ds-shape-button-shadow {
+     filter: drop-shadow(var(--ui-shadow-button-secondary));
+-    transition:
+-      color 150ms,
+-      filter 150ms;
++    transition-property: color, filter;
++    transition-duration: var(--ui-motion-duration-fast);
++    transition-timing-function: var(--ui-motion-ease-standard);
+   }
+ 
+   .group:not(:disabled):not([aria-disabled="true"]):hover .ds-shape-button-shadow {
+@@ -126,16 +202,20 @@
+   /* Linear progress — width/left interpolate because --progress-pct is a
+    * registered @property in index.css. */
+   .ds-progress-fill {
+-    transition: width 300ms ease-out;
++    transition: width var(--ui-motion-duration-slow)
++      var(--ui-motion-ease-standard);
+   }
+   .ds-progress-remainder {
+-    transition: left 300ms ease-out;
++    transition: left var(--ui-motion-duration-slow)
++      var(--ui-motion-ease-standard);
+   }
+-  @media (prefers-reduced-motion: reduce) {
+-    .ds-progress-fill,
+-    .ds-progress-remainder {
+-      transition: none;
+-    }
++  /* Circular progress (ProgressIndicator, flat variant) — both arcs re-dash
++   * together whenever `progress` changes. A class rather than inline style so
++   * the timing stays on the scale and the reduced-motion block reaches it. */
++  .ds-progress-arc {
++    transition-property: stroke-dasharray, stroke-dashoffset;
++    transition-duration: var(--ui-motion-duration-slow);
++    transition-timing-function: var(--ui-motion-ease-standard);
+   }
+   /* Stepped slider dots. The active/inactive split is a plain attribute
+    * selector rather than a Tailwind `data-[active]:` variant — variants only
+@@ -166,15 +246,8 @@
+   .ds-slider-glide > span:last-child,
+   .ds-slider-glide .ds-slider-part {
+     transition-property: left, width;
+-    transition-duration: 180ms;
+-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+-  }
+-
+-  @media (prefers-reduced-motion: reduce) {
+-    .ds-slider-glide > span:last-child,
+-    .ds-slider-glide .ds-slider-part {
+-      transition-property: none;
+-    }
++    transition-duration: var(--ui-motion-duration-base);
++    transition-timing-function: var(--ui-motion-ease-enter);
+   }
+ 
+   /* Opt-in global text selection colour. Apply to <body> (or any subtree root).
+@@ -216,6 +289,21 @@
+     min-width: var(--ui-min-w-search-box);
+   }
+ 
++  /* OutlineButton accent orbs. Opacity fades the glow in and out; transform
++   * glides each orb after the cursor. Orb 1 (the larger, inner one) answers
++   * faster than orb 2 on both — that two-orb lag is what makes them read as
++   * separate bodies, so keep the steps staggered when retuning. */
++  .ds-outline-orb-1 {
++    transition:
++      opacity var(--ui-motion-duration-slow) var(--ui-motion-ease-standard),
++      transform var(--ui-motion-duration-fast) var(--ui-motion-ease-enter);
++  }
++  .ds-outline-orb-2 {
++    transition:
++      opacity var(--ui-motion-duration-slower) var(--ui-motion-ease-standard),
++      transform var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
++  }
++
+   /* CTAButton — geometry + pill drop-shadow (filter so the round pill edge softens). */
+   .ds-drop-shadow-cta {
+     filter: drop-shadow(var(--ui-shadow-cta));
+@@ -370,8 +458,8 @@
+     grid-area: 1 / 1;
+     display: inline-flex;
+     transition:
+-      opacity 120ms ease-out,
+-      transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
++      opacity var(--ui-motion-duration-fast) var(--ui-motion-ease-standard),
++      transform var(--ui-motion-duration-fast) var(--ui-motion-ease-enter);
+   }
+   [data-copied] .ds-copy-icon-clipboard {
+     opacity: 0;
+@@ -386,13 +474,6 @@
+     transform: scale(1);
+   }
+ 
+-  @media (prefers-reduced-motion: reduce) {
+-    .ds-copy-icon-clipboard,
+-    .ds-copy-icon-check {
+-      transition: none;
+-    }
+-  }
+-
+   /*
+    * AI chat parts.
+    *
+@@ -418,8 +499,8 @@
+    */
+   .ds-chat-reveal {
+     opacity: 0;
+-    transition: opacity var(--ui-chat-reveal-duration)
+-      var(--ui-chat-reveal-ease);
++    transition: opacity var(--ui-motion-duration-fast)
++      var(--ui-motion-ease-standard);
+   }
+   .ds-chat-reveal-root:hover .ds-chat-reveal,
+   .ds-chat-reveal-root:focus-within .ds-chat-reveal,
+@@ -428,7 +509,8 @@
+   }
+   /* A settled label lifts from ghost to ghost-active under the same hover. */
+   .ds-chat-lift {
+-    transition: color var(--ui-chat-reveal-duration) var(--ui-chat-reveal-ease);
++    transition: color var(--ui-motion-duration-fast)
++      var(--ui-motion-ease-standard);
+   }
+   .ds-chat-reveal-root:hover .ds-chat-lift,
+   .ds-chat-reveal-root:focus-within .ds-chat-lift,
+@@ -441,9 +523,8 @@
+   .ds-chat-chevron {
+     transform: rotate(180deg);
+     transition:
+-      transform var(--ui-chat-disclosure-duration)
+-        var(--ui-chat-disclosure-ease),
+-      opacity var(--ui-chat-reveal-duration) var(--ui-chat-reveal-ease);
++      transform var(--ui-motion-duration-base) var(--ui-motion-ease-standard),
++      opacity var(--ui-motion-duration-fast) var(--ui-motion-ease-standard);
+   }
+   [data-state="open"] > .ds-chat-chevron {
+     transform: rotate(0deg);
+@@ -458,10 +539,9 @@
+     grid-template-rows: 0fr;
+     opacity: 0;
+     transition:
+-      grid-template-rows var(--ui-chat-disclosure-duration)
+-        var(--ui-chat-disclosure-ease),
+-      opacity var(--ui-chat-disclosure-duration)
+-        var(--ui-chat-disclosure-ease);
++      grid-template-rows var(--ui-motion-duration-base)
++        var(--ui-motion-ease-standard),
++      opacity var(--ui-motion-duration-base) var(--ui-motion-ease-standard);
+   }
+   .ds-chat-disclosure[data-state="open"] {
+     grid-template-rows: 1fr;
+@@ -487,8 +567,8 @@
+    */
+   .ds-chat-prose[data-streaming-animation] > :not(ul, ol),
+   .ds-chat-prose[data-streaming-animation] li {
+-    animation: ds-chat-stream-in var(--ui-chat-stream-duration)
+-      var(--ui-chat-stream-ease) both;
++    animation: ds-chat-stream-in var(--ui-motion-duration-slower)
++      var(--ui-motion-ease-standard) both;
+   }
+ 
+   /*
+@@ -520,19 +600,6 @@
+     width: var(--ui-width-chat-model-tooltip);
+   }
+ 
+-  @media (prefers-reduced-motion: reduce) {
+-    .ds-chat-reveal,
+-    .ds-chat-lift,
+-    .ds-chat-chevron,
+-    .ds-chat-disclosure {
+-      transition: none;
+-    }
+-    .ds-chat-prose[data-streaming-animation] > :not(ul, ol),
+-    .ds-chat-prose[data-streaming-animation] li {
+-      animation: none;
+-    }
+-  }
+-
+   /*
+    * ds-chat-prose — typography for rendered markdown (AITextPart, and the
+    * AIThinkingPart transcript). Renderer-agnostic: it styles plain descendant
+diff --git a/src/styles/index.css b/src/styles/index.css
+index fabae4b..98638fe 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -31,8 +31,9 @@
+  * CSS owns the motion and the component owns only the geometry: it sets the two
+  * targets as inline style and samples the interpolated values each frame to
+  * write `d` (SVG path data is not itself animatable in every engine). So
+- * duration, easing and reduced-motion are all tokens here, retunable by a
+- * consumer, with no numbers mirrored into JavaScript to drift out of step.
++ * duration and easing come from the motion scale and reduced motion from its
++ * global block, all retunable by a consumer, with no numbers mirrored into
++ * JavaScript to drift out of step.
+  */
+ @property --ds-sidebar-rail-s {
+   syntax: "<number>";
+@@ -380,8 +381,11 @@
+     -webkit-background-clip: text;
+     background-clip: text;
+     color: transparent;
+-    animation: ds-shimmer 2s linear infinite;
++    animation: ds-shimmer var(--ui-shimmer-duration)
++      var(--ui-motion-ease-linear) infinite;
+   }
++  /* A loop, so the global scale collapse does not reach it: stop it and swap
++   * the sheen for the plain inherited colour. */
+   @media (prefers-reduced-motion: reduce) {
+     .ds-shimmer-text {
+       animation: none;
+@@ -421,10 +425,9 @@
+   .ds-roll-hover-in {
+     display: inline-block;
+     transform-origin: 50% 50% calc(-1 * var(--ui-roll-hover-depth));
+-    transition:
+-      transform var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+-      filter var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+-      opacity var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1);
++    transition-property: transform, filter, opacity;
++    transition-duration: var(--ui-motion-duration-slower);
++    transition-timing-function: var(--ui-motion-ease-enter);
+     transition-delay: calc(var(--i) * var(--ui-roll-hover-stagger));
+   }
+   /* absolute so the incoming face contributes no width; the outgoing face in
+@@ -463,6 +466,8 @@
+     opacity: 1;
+   }
+ 
++  /* Kept beside the global block because it does more than shorten: it
++   * shows a static frame (the rest face only), so a hover never swaps faces. */
+   @media (prefers-reduced-motion: reduce) {
+     .ds-roll-hover-out,
+     .ds-roll-hover-in {
+@@ -506,15 +511,8 @@
+   .ds-underline-link:hover,
+   .group:hover .ds-underline-link,
+   .ds-underline-link[data-active="true"] {
+-    animation: ds-underline-wipe var(--ui-underline-link-duration)
+-      var(--ui-underline-link-ease) both;
+-  }
+-  @media (prefers-reduced-motion: reduce) {
+-    .ds-underline-link:hover,
+-    .group:hover .ds-underline-link,
+-    .ds-underline-link[data-active="true"] {
+-      animation: none;
+-    }
++    animation: ds-underline-wipe var(--ui-motion-duration-slowest)
++      var(--ui-motion-ease-enter) both;
+   }
+ 
+   /* RollingDigitsText — 2D cash-register digit roll (no blur, no 3D).
+@@ -595,14 +593,14 @@
+   .ds-rolling-digits-wheel[data-entering],
+   .ds-rolling-digits-sep[data-entering] {
+     animation:
+-      ds-rolling-digits-in var(--ui-rolling-digits-enter-duration)
+-        var(--ui-rolling-digits-ease),
++      ds-rolling-digits-in var(--ui-motion-duration-slow)
++        var(--ui-motion-ease-enter),
+       ds-rolling-digits-fade-in
+         calc(
+-          var(--ui-rolling-digits-enter-duration) *
++          var(--ui-motion-duration-slow) *
+             var(--ui-rolling-digits-opacity-ratio)
+         )
+-        var(--ui-rolling-digits-ease);
++        var(--ui-motion-ease-enter);
+   }
+   /* Declared after the entering rule so it wins on source order when a wheel
+    * that entered earlier is now leaving — both are single-class selectors.
+@@ -611,14 +609,14 @@
+   .ds-rolling-digits-wheel[data-exiting],
+   .ds-rolling-digits-sep[data-exiting] {
+     animation:
+-      ds-rolling-digits-out var(--ui-rolling-digits-exit-duration)
+-        var(--ui-rolling-digits-ease) forwards,
++      ds-rolling-digits-out var(--ui-motion-duration-base)
++        var(--ui-motion-ease-enter) forwards,
+       ds-rolling-digits-fade-out
+         calc(
+-          var(--ui-rolling-digits-exit-duration) *
++          var(--ui-motion-duration-base) *
+             var(--ui-rolling-digits-opacity-ratio)
+         )
+-        var(--ui-rolling-digits-ease) forwards;
++        var(--ui-motion-ease-enter) forwards;
+   }
+ 
+   /* Sets the wheel's baseline. Never visible; never removed from flow. */
+@@ -652,9 +650,9 @@
+      * symmetric per wheel instead of accumulating across the figure. */
+     text-align: center;
+     transform: translateY(calc(var(--ds-digit, 0) * -10%));
+-    transition: transform var(--ui-rolling-digits-duration)
+-      var(--ui-rolling-digits-ease);
+-    /* At the 0ms default every delay computes to zero and the figure moves as
++    transition: transform var(--ui-motion-duration-base)
++      var(--ui-motion-ease-enter);
++    /* At the zero default every delay computes to zero and the figure moves as
+      * one. Raising the token cascades right-to-left, ones place leading. */
+     transition-delay: calc(var(--ds-place, 0) * var(--ui-rolling-digits-stagger));
+   }
+@@ -685,27 +683,16 @@
+     font-size: var(--ui-rolling-digits-decimals-size);
+   }
+ 
+-  @media (prefers-reduced-motion: reduce) {
+-    /* The roll is suppressed outright — it is pure decoration. Enter and exit
+-     * are NOT: they are layout, and the exit animation's `animationend` is what
+-     * unmounts a departing wheel. Collapsing them to 1ms keeps that event
+-     * firing (`animation: none` would starve it and strand blank slots) while
+-     * making the change read as instant. */
+-    .ds-rolling-digits-col {
+-      transition: none;
+-      transition-delay: 0ms;
+-    }
+-    .ds-rolling-digits-wheel[data-entering],
+-    .ds-rolling-digits-sep[data-entering],
+-    .ds-rolling-digits-wheel[data-exiting],
+-    .ds-rolling-digits-sep[data-exiting] {
+-      animation-duration: 1ms;
+-    }
+-  }
++  /* Reduced motion needs no rule here: the global block in tokens.css
++   * collapses the scale and zeroes the stagger, so the roll and the slot
++   * enter/exit all become instant. The exit must still RUN rather than be
++   * removed — its `animationend` is what unmounts a departing wheel, and
++   * `animation: none` would starve it and strand blank slots. */
+ 
+   /* RollChangeText. Real classes rather than arbitrary `animate-[…]` values so
+-   * the timing lives in tokens — and so the reduced-motion case can collapse the
+-   * duration instead of removing the animation. That distinction is
++   * the timing lives on the motion scale — and so reduced motion (the global
++   * block in tokens.css) collapses the duration instead of removing the
++   * animation. That distinction is
+    * load-bearing: each node is retired by its own `animationend`, and
+    * `animation: none` would starve that event and strand the old content on
+    * screen forever.
+@@ -718,64 +705,50 @@
+    * ends (the out node unmounts, the in node drops the class), so neither
+    * strands a layer on settled content. */
+   .ds-roll-change-out {
+-    animation: ds-roll-out var(--ui-roll-change-out-duration)
+-      var(--ui-roll-change-out-ease) forwards;
++    animation: ds-roll-out var(--ui-motion-duration-base)
++      var(--ui-motion-ease-exit) forwards;
+     will-change: transform, filter, opacity;
+   }
+   .ds-roll-change-in {
+-    animation: ds-roll-in var(--ui-roll-change-in-duration)
+-      var(--ui-roll-change-in-ease) both;
++    animation: ds-roll-in var(--ui-motion-duration-slow)
++      var(--ui-motion-ease-enter) both;
+     will-change: transform, filter, opacity;
+   }
+-  @media (prefers-reduced-motion: reduce) {
+-    .ds-roll-change-out,
+-    .ds-roll-change-in {
+-      animation-duration: 1ms;
+-    }
+-  }
+ 
+   /* FadeChangeText — the roll without blur: transform + opacity only, so
+    * `will-change` names only those. Classes drop when each half ends (the out
+    * node unmounts, the in node loses the class), so neither strands a layer on
+-   * settled content. Reduced motion keeps a 1ms animation rather than `none`,
+-   * because `animationend` is what retires each half. */
++   * settled content. Timing matches the roll's, on the motion scale. Reduced
++   * motion collapses the scale rather than removing the animation, because
++   * `animationend` is what retires each half. */
+   .ds-fade-change-out {
+-    animation: ds-fade-change-out var(--ui-fade-change-out-duration)
+-      var(--ui-fade-change-out-ease) forwards;
++    animation: ds-fade-change-out var(--ui-motion-duration-base)
++      var(--ui-motion-ease-exit) forwards;
+     will-change: transform, opacity;
+   }
+   .ds-fade-change-in {
+-    animation: ds-fade-change-in var(--ui-fade-change-in-duration)
+-      var(--ui-fade-change-in-ease) both;
++    animation: ds-fade-change-in var(--ui-motion-duration-slow)
++      var(--ui-motion-ease-enter) both;
+     will-change: transform, opacity;
+   }
+-  @media (prefers-reduced-motion: reduce) {
+-    .ds-fade-change-out,
+-    .ds-fade-change-in {
+-      animation-duration: 1ms;
+-    }
+-  }
+ 
+   /* SidebarWithHoverIcon rail. This rule is the icon's entire motion system —
+    * the component sets the two targets and reads back what CSS interpolated.
+-   * Hover is the faster of the two because it answers a pointer; the traverse
+-   * is a state change and carries more weight.
++   * Two independent motions: the rail TRAVERSING the frame when `side` flips
++   * (`slow`), and pulling out into a chevron on hover (`base`). Hover is the
++   * faster of the two because it answers a pointer; the traverse is a state
++   * change and carries more weight.
+    *
+-   * Under reduced motion the durations go to zero rather than the transitions
+-   * being removed: the component's sampling loop terminates when the values
+-   * reach their targets, so a zero duration means it writes the final path once
+-   * and stops on the very first frame. */
++   * Under reduced motion the global block collapses both durations to an
++   * instant rather than the transitions being removed: the component's sampling loop
++   * terminates when the values reach their targets, so it writes the final
++   * path within a frame and stops. */
+   .ds-sidebar-rail {
+     transition:
+-      --ds-sidebar-rail-s var(--ui-sidebar-icon-duration)
+-        var(--ui-sidebar-icon-ease),
+-      --ds-sidebar-rail-h var(--ui-sidebar-icon-hover-duration)
+-        var(--ui-sidebar-icon-ease);
+-  }
+-  @media (prefers-reduced-motion: reduce) {
+-    .ds-sidebar-rail {
+-      transition-duration: 0ms;
+-    }
++      --ds-sidebar-rail-s var(--ui-motion-duration-slow)
++        var(--ui-motion-ease-enter),
++      --ds-sidebar-rail-h var(--ui-motion-duration-base)
++        var(--ui-motion-ease-enter);
+   }
+ 
+   /* MorphRotationShape — CSS owns every duration and curve; the component only
+@@ -786,16 +759,22 @@
+    * registered, so it inherits from that ancestor, and
+    * --ds-shape-morph-nudge (unregistered) is the hover lean input.
+    *
+-   * Reduced motion shortens the transition to 1ms rather than 0: a 0ms
+-   * transition fires no transitionrun, and embedded mode has no other signal
+-   * that its target moved. Autoplay and passive spinning stop outright. */
++   * The step runs on the generated spring (--ui-shape-morph-*, off the
++   * scale); the hover lean runs on the scale (`base`, `enter`).
++   *
++   * Reduced motion: the step's duration is NOT on the scale (and `timing` may
++   * set it inline), so the global block cannot reach it. This rule shortens
++   * every transition here to the scale's own collapsed value — non-zero,
++   * because a zero-length transition fires no transitionrun and embedded mode
++   * has no other signal that its target moved. Autoplay and passive spinning
++   * are loops and stop outright. */
+   .ds-shape-morph {
+     --ds-shape-morph-step: var(--ds-shape-morph-target, 0);
+     --ds-shape-morph-lean: var(--ds-shape-morph-nudge, 0);
+     transition:
+       --ds-shape-morph-step var(--ui-shape-morph-duration) var(--ui-shape-morph-ease),
+-      --ds-shape-morph-lean var(--ui-shape-morph-nudge-duration)
+-        var(--ui-shape-morph-nudge-ease);
++      --ds-shape-morph-lean var(--ui-motion-duration-base)
++        var(--ui-motion-ease-enter);
+   }
+   .ds-shape-morph[data-mode="autoplay"] {
+     animation: ds-shape-morph-clock var(--ui-shape-morph-interval) linear infinite;
+@@ -808,7 +787,9 @@
+   }
+   @media (prefers-reduced-motion: reduce) {
+     .ds-shape-morph {
+-      transition-duration: 1ms;
++      /* Inside this query the scale is already collapsed, so this is the
++       * global reduced duration — one source, not a second literal. */
++      transition-duration: var(--ui-motion-duration-fast);
+     }
+     .ds-shape-morph[data-mode="autoplay"],
+     .ds-shape-morph-passive-spin {
+@@ -823,7 +804,7 @@
+     --ds-dropdown-caret-frame: calc(var(--ui-height-button) - var(--ui-spacing-md));
+     /* Closed: the primary button's background. */
+     color: var(--ui-color-primary);
+-    transition: color var(--ui-shape-morph-nudge-duration) var(--ui-shape-morph-nudge-ease);
++    transition: color var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
+   }
+   .ds-dropdown-caret-frame {
+     width: var(--ds-dropdown-caret-frame);
+@@ -833,7 +814,7 @@
+     color: var(--ui-color-primary-foreground);
+     transition:
+       rotate var(--ui-shape-morph-duration) var(--ui-shape-morph-ease),
+-      color var(--ui-shape-morph-nudge-duration) var(--ui-shape-morph-nudge-ease);
++      color var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
+   }
+   .ds-dropdown-caret-host:hover:not(:disabled):not([aria-disabled="true"]):not([data-disabled])
+     .ds-dropdown-caret {
+@@ -860,10 +841,13 @@
+     color: var(--ui-color-secondary-foreground);
+     opacity: var(--ui-opacity-disabled);
+   }
++  /* The chevron's flip rides the shape-morph spring, which is off the scale,
++   * so the global block cannot reach it. Inside this query the scale is
++   * already collapsed: this borrows that one reduced duration. */
+   @media (prefers-reduced-motion: reduce) {
+     .ds-dropdown-caret,
+     .ds-dropdown-caret-chevron {
+-      transition-duration: 1ms;
++      transition-duration: var(--ui-motion-duration-fast);
+     }
+   }
+ 
+@@ -881,15 +865,23 @@
+    * `grid-template-columns: 1fr -> 0fr` slot: that sizes rows fine, but for a
+    * COLUMN in a shrink-to-fit container the `overflow: hidden` item has an
+    * automatic minimum of 0, so `1fr` has no free space to claim and collapses
+-   * the content to nothing. */
++   * the content to nothing.
++   *
++   * Timing is on the motion scale, one shared `enter` curve. The reveal
++   * (`slower`) is deliberately slower than a roll: it is motion the eye is
++   * meant to follow. The collapse (`slow`) is shorter because tucking away is
++   * the half nobody needs to read, and because a value CHANGE runs both back
++   * to back. One curve, unlike the roll's split pair: both halves are the SAME
++   * slot moving, and an accelerating collapse reads as the content being
++   * yanked rather than tucked. */
+   .ds-reveal-change {
+     display: inline-flex;
+     align-items: center;
+     justify-content: flex-end;
+     overflow: hidden;
+     width: 0;
+-    transition: width var(--ui-reveal-change-out-duration)
+-      var(--ui-reveal-change-ease);
++    transition: width var(--ui-motion-duration-slow)
++      var(--ui-motion-ease-enter);
+   }
+   .ds-reveal-change[data-direction="right"] {
+     justify-content: flex-start;
+@@ -899,7 +891,7 @@
+    * so the slot is never briefly empty; nothing animates on that first render. */
+   .ds-reveal-change[data-open="true"] {
+     width: var(--ds-reveal-change-width, auto);
+-    transition-duration: var(--ui-reveal-change-in-duration);
++    transition-duration: var(--ui-motion-duration-slower);
+   }
+   .ds-reveal-change-content {
+     display: inline-flex;
+@@ -911,14 +903,9 @@
+   /* Reduced motion still needs the transition to RUN, just instantly: the
+    * content swap at the end of a collapse and the `onSettled` callback both
+    * hang off transitionend, and `transition: none` would starve them —
+-   * stranding the outgoing content on screen forever. 1ms reads as instant and
+-   * still fires. Same trade the rolling text makes. */
+-  @media (prefers-reduced-motion: reduce) {
+-    .ds-reveal-change,
+-    .ds-reveal-change[data-open="true"] {
+-      transition-duration: 1ms;
+-    }
+-  }
++   * stranding the outgoing content on screen forever. The global block in
++   * tokens.css collapses the scale to a non-zero instant for exactly this
++   * reason, so no rule is needed here. Same trade the rolling text makes. */
+ }
+ 
+ @keyframes ds-shape-morph-clock {
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index ce9f126..f033cc6 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -162,6 +162,42 @@
+   --ui-color-ai-openai: #000000;
+   --ui-color-ai-spacexai: #000000;
+ 
++  /* ── Motion ──────────────────────────────────────────────────────────────
++   * One scale for the whole system: every transition and animation in the
++   * package reads a duration and a curve from here, so retuning one token
++   * retunes that step everywhere. Components consume it through the ds-motion-*
++   * helpers and through var() inside CSS helpers — never through duration-N /
++   * ease-* utilities or inline timing. A component keeps a motion token of its
++   * own only when the value cannot sit on the scale: loops, staggers and the
++   * generated shape-morph spring. Reduced motion is the single
++   * `prefers-reduced-motion` block at the end of this file.
++   *
++   *   fast    — state feedback (hover, press, focus colour); small overlays in
++   *             and out (menu, tooltip, popover, toast); quick swaps.
++   *   base    — large overlay in and out (modal in, sheet out); disclosure;
++   *             content swap out; small transforms.
++   *   slow    — content swap in; sheet in; progress fills.
++   *   slower  — reveals; chat streaming.
++   *   slowest — expressive hover (underline link). */
++  --ui-motion-duration-fast: 150ms;
++  --ui-motion-duration-base: 200ms;
++  --ui-motion-duration-slow: 300ms;
++  --ui-motion-duration-slower: 420ms;
++  --ui-motion-duration-slowest: 600ms;
++  /*   standard — starts and ends on screen: state feedback, fades, progress.
++   *   enter    — the house curve: entering, swapping in, expressive moves,
++   *              glides. A long deceleration that settles.
++   *   exit     — leaving: overlay exits, swap out. Accelerates away.
++   *   linear   — loops (spinners, shimmer). */
++  --ui-motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
++  --ui-motion-ease-enter: cubic-bezier(0.32, 0.72, 0, 1);
++  --ui-motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
++  --ui-motion-ease-linear: linear;
++  /* Loop cycle times are not transitions, so they sit off the scale and are
++   * NOT collapsed under reduced motion — each loop's own reduce rule stops it
++   * or swaps in a static frame instead. */
++  --ui-shimmer-duration: 2000ms;
++
+   /* Text shimmer (ShimmerText) */
+   --ui-shimmer-base: var(--ui-color-text-tertiary);
+   --ui-shimmer-highlight: color-mix(
+@@ -189,19 +225,12 @@
+     var(--ui-color-ghost-foreground) 35%,
+     transparent
+   );
+-  /* Settled rows reveal their meta (timing, tokens, copy) on hover. */
+-  --ui-chat-reveal-duration: 150ms;
+-  --ui-chat-reveal-ease: ease-out;
+   /* `streamingAnimation`: each block of prose rises out of a blur as it
+    * arrives. `blur` is px on purpose — a lens effect, not a typographic
+-   * measure (the same call as --ui-roll-change-blur). */
+-  --ui-chat-stream-duration: 400ms;
+-  --ui-chat-stream-ease: ease-out;
++   * measure (the same call as --ui-roll-change-blur). Its timing, like the
++   * hover reveal's and the transcript disclosure's, is on the motion scale. */
+   --ui-chat-stream-blur: 3px;
+   --ui-chat-stream-rise: 4px;
+-  /* The thinking transcript's open/close. */
+-  --ui-chat-disclosure-duration: 200ms;
+-  --ui-chat-disclosure-ease: ease-in-out;
+   /* The prompt textarea grows with its content up to this, then scrolls. The
+    * component reads it back from computed style, so this token is the only
+    * place the cap lives. */
+@@ -214,10 +243,10 @@
+   /* Inline code inside ds-chat-prose. */
+   --ui-chat-prose-code-radius: 4px;
+ 
+-  /* Text roll on hover (RollHoverText). The duration:stagger ratio (~1:14) is
+-   * what makes the letters read as one travelling wave instead of a metronome —
++  /* Text roll on hover (RollHoverText). Each letter rolls over
++   * --ui-motion-duration-slower; the duration:stagger ratio (~1:12) is what
++   * makes the letters read as one travelling wave instead of a metronome —
+    * raising the stagger toward the duration turns it into discrete flips. */
+-  --ui-roll-hover-duration: 500ms;
+   --ui-roll-hover-stagger: 35ms;
+   --ui-roll-hover-blur: 3px;
+   --ui-roll-hover-depth: 0.5em;
+@@ -226,11 +255,11 @@
+    * make the same component subtle in a button and overdone in a hero. */
+   --ui-roll-hover-perspective: 10em;
+ 
+-  /* Text roll on change (RollChangeText). Two halves with deliberately
+-   * different curves: the old content leaves on an accelerating ease-in (it is
++  /* Text roll on change (RollChangeText). Timing is on the motion scale: the
++   * old content leaves over `base` on the accelerating `exit` curve (it is
+    * being thrown away, so it should not linger) while the new content arrives
+-   * on the house decelerating curve and settles. Giving them one shared ease
+-   * flattens that read.
++   * over `slow` on the decelerating `enter` curve and settles. Giving the two
++   * halves one shared ease flattens that read.
+    *
+    * `depth` is in em so the travel scales with the type, like the hover roll's.
+    * `blur` is in px on purpose: it is a lens effect, not a typographic measure,
+@@ -239,23 +268,16 @@
+    * second one, so the two stay in proportion.
+    *
+    * The exiting node is unmounted by its own `animationend`, so nothing in the
+-   * component mirrors `out-duration`. It used to be duplicated as a JS
++   * component mirrors the out duration. It used to be duplicated as a JS
+    * setTimeout, which is precisely the mirror that desyncs the moment either
+    * side is retuned. */
+-  --ui-roll-change-out-duration: 200ms;
+-  --ui-roll-change-in-duration: 300ms;
+-  --ui-roll-change-out-ease: cubic-bezier(0.4, 0, 1, 1);
+-  --ui-roll-change-in-ease: cubic-bezier(0.32, 0.72, 0, 1);
+   --ui-roll-change-depth: 0.9em;
+   --ui-roll-change-blur: 4px;
+ 
+   /* Fade-roll on change (FadeChangeText) — the roll above without the blur:
+-   * travel + opacity only. Each value ALIASES its roll-change counterpart, so
+-   * the two stay one motion by default and either can be retuned alone. */
+-  --ui-fade-change-out-duration: var(--ui-roll-change-out-duration);
+-  --ui-fade-change-in-duration: var(--ui-roll-change-in-duration);
+-  --ui-fade-change-out-ease: var(--ui-roll-change-out-ease);
+-  --ui-fade-change-in-ease: var(--ui-roll-change-in-ease);
++   * travel + opacity only, on the same motion-scale timing. The depth ALIASES
++   * the roll's, so the two stay one motion by default and either can be
++   * retuned alone. */
+   --ui-fade-change-depth: var(--ui-roll-change-depth);
+ 
+   /* Shape morph — MorphRotationShape / ShapeMorphSpinner.
+@@ -271,27 +293,26 @@
+   --ui-shape-morph-passive-spin-duration: 4666ms;
+ 
+   /* Hover nudge: how far a hovered shape leans toward the next stop (a
+-   * fraction of one step, applied to morph AND turn), and its own gentle,
+-   * non-overshooting timing so hovering never wobbles. */
++   * fraction of one step, applied to morph AND turn). The lean is timed on the
++   * motion scale (`base`, `enter`) — gentle and non-overshooting, so hovering
++   * never wobbles. */
+   --ui-shape-morph-nudge: 0.15;
+-  --ui-shape-morph-nudge-duration: 180ms;
+-  --ui-shape-morph-nudge-ease: cubic-bezier(0.2, 0, 0, 1);
+ 
+   /* Rolling digits (RollingDigitsText) — 2D cash-register snap, not 3D.
+    *
+-   * `duration` governs the ROLL: a wheel already on screen translating to its
+-   * new digit. `stagger` defaults to 0ms so every wheel starts and lands
+-   * together, one snap for the whole figure; it stays a token so a consumer can
+-   * dial in a right-to-left cascade (ones place leads) without patching the
+-   * package.
++   * Timing is on the motion scale, all on the `enter` curve. The ROLL — a
++   * wheel already on screen translating to its new digit — runs over `base`.
++   * `stagger` defaults to zero so every wheel starts and lands together, one
++   * snap for the whole figure; it stays a token so a consumer can dial in a
++   * right-to-left cascade (ones place leads) without patching the package.
+    *
+-   * `enter-duration` / `exit-duration` govern a whole SLOT — a wheel or a
+-   * grouping separator — opening from or collapsing to zero width while it
+-   * fades. Width and opacity are the same animation, and it runs CONCURRENTLY
+-   * with the roll of the wheels already on screen. `opacity-ratio` is the
+-   * FRACTION of that duration the fade occupies: opacity finishes early so an
+-   * arriving glyph (which is drawn at full 1ch and overflows its narrower slot)
+-   * is already opaque by the time it stops overlapping its neighbour.
++   * A whole SLOT — a wheel or a grouping separator — opens from zero width
++   * over `slow` and collapses to zero width over `base`, fading as it goes.
++   * Width and opacity are the same animation, and it runs CONCURRENTLY with
++   * the roll of the wheels already on screen. `opacity-ratio` is the FRACTION
++   * of that duration the fade occupies: opacity finishes early so an arriving
++   * glyph (which is drawn at full 1ch and overflows its narrower slot) is
++   * already opaque by the time it stops overlapping its neighbour.
+    *
+    * `digit-width` and `separator-width` are the two slot widths. Both have to
+    * be fixed lengths because `width` cannot animate from `auto`, and both are
+@@ -320,57 +341,24 @@
+    * stay measured against it. Override `decimals-size` to change the
+    * proportion; `decimals-rise` needs re-tuning alongside it, since top-aligning
+    * a taller decimals box takes less rise. */
+-  --ui-rolling-digits-duration: 240ms;
+   --ui-rolling-digits-stagger: 0ms;
+-  --ui-rolling-digits-enter-duration: 260ms;
+-  --ui-rolling-digits-exit-duration: 200ms;
+   --ui-rolling-digits-opacity-ratio: 0.55;
+-  --ui-rolling-digits-ease: cubic-bezier(0.32, 0.72, 0, 1);
+   --ui-rolling-digits-digit-width: 1ch;
+   --ui-rolling-digits-separator-width: 0.34em;
+   --ui-rolling-digits-decimals-size: 0.5em;
+   --ui-rolling-digits-decimals-rise: 0.525em;
+   --ui-rolling-digits-decimals-gap: 0.06em;
+ 
+-  /* Sidebar rail icon (SidebarWithHoverIcon). Two independent motions: the rail
+-   * TRAVERSING the frame when `side` flips, and the rail pulling out into a
+-   * chevron on hover. Hover is the faster of the two — it answers a pointer, so
+-   * it has to feel immediate, while the traverse is a state change and reads
+-   * better with some weight.
+-   *
+-   * These are real CSS transition durations on two registered custom
+-   * properties, not numbers mirrored into JS: the component only samples the
+-   * interpolated values and writes the path. Retuning them here retunes the
+-   * icon, including under `prefers-reduced-motion`, with no JS involved. */
+-  --ui-sidebar-icon-duration: 260ms;
+-  --ui-sidebar-icon-hover-duration: 180ms;
+-  --ui-sidebar-icon-ease: cubic-bezier(0.32, 0.72, 0, 1);
+-
+   /* Text underline link wipe (UnderlineLinkText). On hover the line sweeps out
+    * to the right then redraws in from the left. Thickness/offset are in em so the
+    * underline scales with the text. The line is positioned at
+    * `calc(1em + offset)` from the top of each line box — just under the em
+    * square, like a native text-decoration underline — rather than at the bottom
+    * of the line box (which drifts with leading). Positive offset pushes further
+-   * down; 0 sits at the em-square bottom; negative pulls into the glyphs. */
++   * down; 0 sits at the em-square bottom; negative pulls into the glyphs. The
++   * sweep is timed on the motion scale (`slowest`, `enter`). */
+   --ui-underline-link-thickness: 0.08em;
+   --ui-underline-link-offset: 0.05em;
+-  --ui-underline-link-duration: 600ms;
+-  --ui-underline-link-ease: cubic-bezier(0.32, 0.72, 0, 1);
+-
+-  /* Text reveal on change (RevealChangeText). The slot's width is what animates,
+-   * so these are deliberately slower than the roll tokens: a reveal is motion
+-   * the eye is meant to follow, where a roll is a quick swap. The collapse is
+-   * shorter than the reveal because tucking away is the half nobody needs to
+-   * read — and because a value CHANGE runs both back to back, so the pair is
+-   * what has to stay under the limit of feeling sluggish.
+-   *
+-   * One shared ease, unlike --ui-roll-change-*'s split pair: both halves here
+-   * are the SAME slot moving, and giving the collapse its own accelerating
+-   * curve reads as the content being yanked rather than tucked. */
+-  --ui-reveal-change-in-duration: 420ms;
+-  --ui-reveal-change-out-duration: 320ms;
+-  --ui-reveal-change-ease: cubic-bezier(0.32, 0.72, 0, 1);
+ 
+   /* ── Typography ──────────────────────────────────────────────────────── */
+ 
+@@ -724,3 +712,35 @@
+   --ui-radius-avatar: 8px;
+   --ui-radius-avatar-sm: 6px;
+ }
++
++/* ── Reduced motion — the ONE place it is handled ───────────────────────────
++ * Every transition and animation in the package reads its duration from the
++ * motion scale, so collapsing the scale here makes the whole system instant.
++ * No component carries a reduce override that only shortens a duration.
++ *
++ * 1ms, NOT 0ms, and that is load-bearing: a 0ms transition never fires
++ * `transitionrun` or `transitionend`, and several components hang real work
++ * off those events (RevealChangeText swaps its content and calls `onSettled`
++ * on `transitionend`; MorphRotationShape starts sampling on `transitionrun`).
++ * At 0ms they would strand content on screen. 1ms reads as instant and still
++ * fires every event.
++ *
++ * Staggers go to zero so nothing waits on a delay. Loop cycle times
++ * (--ui-shimmer-duration, --ui-shape-morph-*) are deliberately absent: a loop
++ * at 1ms would strobe, so each loop's own reduce rule stops it or shows a
++ * static frame instead.
++ *
++ * `.light` is listed beside `:root` because it redeclares the scale; without
++ * it a `.light` subtree would quietly restore full-length motion. */
++@media (prefers-reduced-motion: reduce) {
++  :root,
++  .light {
++    --ui-motion-duration-fast: 1ms;
++    --ui-motion-duration-base: 1ms;
++    --ui-motion-duration-slow: 1ms;
++    --ui-motion-duration-slower: 1ms;
++    --ui-motion-duration-slowest: 1ms;
++    --ui-roll-hover-stagger: 0ms;
++    --ui-rolling-digits-stagger: 0ms;
++  }
++}

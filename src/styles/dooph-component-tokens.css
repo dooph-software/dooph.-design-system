@@ -8,8 +8,104 @@
  * approachable for consumers who bundle CSS without Tailwind.
  */
 
+/* LinearProgressIndicator — types --progress-pct as a <number>. The
+ * fill/remainder motion is a width/left transition (.ds-progress-* below), not
+ * a transition of this property. Outside @layer: an at-rule, kept in this file
+ * with the rest of its system. */
+@property --progress-pct {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/* ProgressIndicator (flat) — the ONE animated value of the ring: progress
+ * 0–1, set inline on the <svg>. Registered as a <number> so it interpolates;
+ * .ds-progress-ring transitions it and both arcs derive every dash value from
+ * it (see .ds-progress-ring-* below). */
+@property --ds-pi-progress {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 @layer utilities {
-  /* Disabled / inactive (native + aria-invalid disabled pattern) */
+  /*
+   * Motion helpers — the only way a component's className reaches the motion
+   * scale (--ui-motion-* in tokens.css). Components never write duration-N,
+   * ease-* or inline timing; reduced motion needs nothing here, because the
+   * global block in tokens.css collapses the scale itself.
+   */
+
+  /* Hover / press / focus feedback. Lists every paint a state change touches
+   * — colours, background, border, outline (the focus rings are outlines),
+   * shadow, opacity, filter — plus the transform family, so a press scale or
+   * nudge still eases like it did under `transition-all`. Layout properties
+   * are deliberately left out: none of these controls animates its size.
+   *
+   * Wrapped in :where() so it has zero specificity: a consumer's own
+   * `transition-*` / `duration-*` class on the same element still wins, as it
+   * did when the component carried those utilities itself. */
+  :where(.ds-motion-state) {
+    transition-property:
+      color, background-color, border-color, outline-color,
+      text-decoration-color, fill, stroke, opacity, box-shadow, filter,
+      transform, translate, scale, rotate;
+    transition-duration: var(--ui-motion-duration-fast);
+    transition-timing-function: var(--ui-motion-ease-standard);
+  }
+
+  /* Overlay enter/exit for the tailwindcss-animate keyframes (animate-in /
+   * animate-out + fade-* / zoom-* / slide-*), keyed off Radix `data-state`.
+   * These set only the duration and curve; the component keeps the keyframe
+   * utilities that pick WHAT moves. Entering uses the `enter` curve, leaving
+   * the `exit` curve. The selectors carry the state on purpose: they must
+   * outrank the plugin's `data-[state=…]:animate-in`, which hard-codes its
+   * own default duration at the same (0,2,0) specificity and loses only on
+   * source order to this later layer block.
+   *
+   *   ds-motion-overlay        — small overlays: menu, tooltip, popover,
+   *                              toast. fast in, fast out. Tooltip's
+   *                              delayed-open / instant-open count as open.
+   *   ds-motion-overlay-dialog — modal panel + backdrop. base in, fast out.
+   *   ds-motion-overlay-sheet  — sheet panel + backdrop. slow in, base out. */
+  .ds-motion-overlay:is(
+      [data-state="open"],
+      [data-state="delayed-open"],
+      [data-state="instant-open"]
+    ) {
+    animation-duration: var(--ui-motion-duration-fast);
+    animation-timing-function: var(--ui-motion-ease-enter);
+  }
+  .ds-motion-overlay[data-state="closed"] {
+    animation-duration: var(--ui-motion-duration-fast);
+    animation-timing-function: var(--ui-motion-ease-exit);
+  }
+  /* Toast swipe released short of the dismiss threshold: the toast springs
+   * back to rest. Radix sets data-swipe="cancel" and clears the move offset;
+   * this is the transition that carries it home. */
+  .ds-motion-overlay[data-swipe="cancel"] {
+    transition-property: transform, translate;
+    transition-duration: var(--ui-motion-duration-fast);
+    transition-timing-function: var(--ui-motion-ease-standard);
+  }
+  .ds-motion-overlay-dialog[data-state="open"] {
+    animation-duration: var(--ui-motion-duration-base);
+    animation-timing-function: var(--ui-motion-ease-enter);
+  }
+  .ds-motion-overlay-dialog[data-state="closed"] {
+    animation-duration: var(--ui-motion-duration-fast);
+    animation-timing-function: var(--ui-motion-ease-exit);
+  }
+  .ds-motion-overlay-sheet[data-state="open"] {
+    animation-duration: var(--ui-motion-duration-slow);
+    animation-timing-function: var(--ui-motion-ease-enter);
+  }
+  .ds-motion-overlay-sheet[data-state="closed"] {
+    animation-duration: var(--ui-motion-duration-base);
+    animation-timing-function: var(--ui-motion-ease-exit);
+  }
+
+  /* Disabled / inactive (native :disabled + aria-disabled="true") */
   .ds-disabled-state:is(:disabled, [aria-disabled="true"]) {
     cursor: not-allowed;
     opacity: var(--ui-opacity-disabled);
@@ -24,24 +120,20 @@
     opacity: var(--ui-opacity-disabled);
   }
 
-  /*
-   * Native disabled only — for controls that don't use aria-disabled.
-   */
-  .ds-disabled-control:disabled {
-    cursor: not-allowed;
-    opacity: var(--ui-opacity-disabled);
-  }
-
-  .ds-shape-button-focus-visible:focus-visible {
+  /* Offset variant of ds-focus-visible-ring for organic (non-rectangular)
+   * shapes, where a flush ring would cut through the shape. */
+  .ds-shape-button-focus-visible:focus-visible:not(:disabled):not([data-disabled]):not(
+      [aria-disabled="true"]
+    ) {
     outline: 2px solid var(--ui-color-focus-ring-prominent);
     outline-offset: 2px;
   }
 
   .ds-shape-button-shadow {
     filter: drop-shadow(var(--ui-shadow-button-secondary));
-    transition:
-      color 150ms,
-      filter 150ms;
+    transition-property: color, filter;
+    transition-duration: var(--ui-motion-duration-fast);
+    transition-timing-function: var(--ui-motion-ease-standard);
   }
 
   .group:not(:disabled):not([aria-disabled="true"]):hover .ds-shape-button-shadow {
@@ -56,8 +148,13 @@
     filter: none;
   }
 
+  /* Compact controls opt into the small ring width; every ds-focus-* helper reads it. */
+  .ds-focus-ring-sm {
+    --ds-focus-ring-width: var(--ui-focus-ring-width-sm);
+  }
+
   .ds-focus-visible-ring {
-    outline: 4px solid transparent;
+    outline: var(--ds-focus-ring-width, var(--ui-focus-ring-width)) solid transparent;
     outline-offset: 0;
   }
 
@@ -68,7 +165,7 @@
   }
 
   .ds-focus-within-ring {
-    outline: 4px solid transparent;
+    outline: var(--ds-focus-ring-width, var(--ui-focus-ring-width)) solid transparent;
     outline-offset: 0;
   }
 
@@ -83,7 +180,7 @@
   }
 
   .ds-focus-ring-on-focus {
-    outline: 4px solid transparent;
+    outline: var(--ds-focus-ring-width, var(--ui-focus-ring-width)) solid transparent;
     outline-offset: 0;
   }
 
@@ -95,16 +192,11 @@
     outline-color: var(--ui-color-focus-ring-danger);
   }
 
-  .ds-focus-ring {
-    outline: 4px solid var(--ui-color-focus-ring-prominent);
-    outline-offset: 0;
-  }
-
   /* Open-state ring for popover/menu triggers. The state lives in the SELECTOR,
-   * not in a Tailwind variant: `data-[state=open]:ds-focus-ring` composes a
+   * not in a Tailwind variant: `data-[state=open]:<any ds-* class>` composes a
    * variant with a package class, which emits no rule at all. */
   .ds-focus-ring-on-open {
-    outline: 4px solid transparent;
+    outline: var(--ds-focus-ring-width, var(--ui-focus-ring-width)) solid transparent;
     outline-offset: 0;
   }
 
@@ -112,8 +204,10 @@
     outline-color: var(--ui-color-focus-ring-prominent);
   }
 
-  /* Active slider track — the handle color at 45% (Figma applies alpha on top).
-   * --ds-slider-color is set on the Slider root from its `color` prop. */
+  /* Active slider track — the handle color at --ds-slider-track-opacity (the
+   * variant's --ui-slider-track-*-active-opacity; Figma applies alpha on top).
+   * The Slider root sets --ds-slider-color (its `color` prop, else the
+   * variant's hue) and --ds-slider-track-opacity (from `variant`). */
   .ds-slider-fill {
     background-color: color-mix(
       in srgb,
@@ -123,26 +217,117 @@
     );
   }
 
-  /* Linear progress — width/left interpolate because --progress-pct is a
-   * registered @property in index.css. */
+  /* Slider geometry. The Slider root sets --ds-slider-pct, --ds-slider-pad and
+   * --ds-slider-color inline. The thumb-aligned term
+   * (pct / 100 × (100% − handle) …) is the same formula as thumbAlignedLeft()
+   * in Slider.tsx — change them together, or the fills drift off the thumb.
+   * Helpers, not utilities: none of these elements takes the consumer's
+   * className (that goes to Slider's outer box), so nothing needs to merge. */
+  .ds-slider-root {
+    height: var(--ui-height-slider-handle);
+  }
+  .ds-slider-active-part {
+    left: calc(-1 * var(--ds-slider-pad));
+    width: max(0px, calc(var(--ds-slider-pct) / 100 * (100% - var(--ui-width-slider-handle)) - var(--ui-slider-track-gap) + var(--ds-slider-pad)));
+  }
+  .ds-slider-inactive-part {
+    right: calc(-1 * var(--ds-slider-pad));
+    left: min(100%, calc(var(--ds-slider-pct) / 100 * (100% - var(--ui-width-slider-handle)) + var(--ui-width-slider-handle) + var(--ui-slider-track-gap)));
+  }
+  .ds-slider-thumb {
+    width: var(--ui-width-slider-handle);
+    height: var(--ui-height-slider-handle);
+    background-color: var(--ds-slider-color);
+  }
+
+  /* Linear progress — width/left transition whenever --progress-pct changes
+   * their computed value. The root sets --progress-pct and --ds-progress-color
+   * inline. The fill never narrows below the bar's height (a round nub at 0%);
+   * fill and remainder sit --ui-spacing-xxs apart, half on each side of the
+   * value. Helpers, not utilities: only the root takes the consumer's
+   * className (its height is the mergeable `h-linear-progress`). */
   .ds-progress-fill {
-    transition: width 300ms ease-out;
+    width: max(var(--ui-height-linear-progress), calc(var(--progress-pct) * 1% - var(--ui-spacing-xxs) / 2));
+    background-color: var(--ds-progress-color);
+    transition: width var(--ui-motion-duration-slow)
+      var(--ui-motion-ease-standard);
   }
   .ds-progress-remainder {
-    transition: left 300ms ease-out;
+    left: max(var(--ui-height-linear-progress), min(100%, calc(var(--progress-pct) * 1% + var(--ui-spacing-xxs) / 2)));
+    transition: left var(--ui-motion-duration-slow)
+      var(--ui-motion-ease-standard);
   }
-  @media (prefers-reduced-motion: reduce) {
-    .ds-progress-fill,
-    .ds-progress-remainder {
-      transition: none;
-    }
+  /* Circular progress (ProgressIndicator, flat variant). The <svg> sets
+   * --ds-pi-progress (0–1), --ds-pi-c (circumference) and --ds-pi-gap (the M3
+   * gap, round-cap allowance included) inline, all in user units. ONLY
+   * --ds-pi-progress transitions; every dash value of both arcs is a calc() of
+   * it, so each frame is one consistent drawing. Do not transition the dash
+   * properties themselves: four independent transitions restart from their
+   * own mid-flight values when interrupted, and the track's length and offset
+   * disagree — it slides backwards or its length hits 0 and it vanishes.
+   *
+   * Track (complement of the indicator, a gap clear of each end):
+   *   gap   = --ds-pi-gap × --ds-pi-gap-on, where gap-on is a discrete 0|1
+   *           set inline from the TARGET progress (> 0). It is a plain custom
+   *           property (not registered), so it never transitions: the end gaps
+   *           appear / vanish at once, as in the static M3 form, while only
+   *           the arc scalar animates.
+   *   start = C·p + gap   → dashoffset −start
+   *   len   = C·(1 − p) − 2·gap → dasharray "len C"
+   * A zero-length round-capped dash still paints a dot, so each arc's
+   * stroke-opacity drops to 0 when its length is ≤ 0 (the elements stay
+   * mounted; nothing remounts mid-animation). */
+  .ds-progress-ring {
+    transition: --ds-pi-progress var(--ui-motion-duration-slow)
+      var(--ui-motion-ease-standard);
+  }
+  .ds-progress-ring-indicator {
+    stroke-dasharray: calc(var(--ds-pi-c) * 1px);
+    stroke-dashoffset: calc(var(--ds-pi-c) * (1 - var(--ds-pi-progress)) * 1px);
+    stroke-opacity: clamp(0, var(--ds-pi-c) * var(--ds-pi-progress) * 1000000, 1);
+  }
+  .ds-progress-ring-track {
+    --ds-pi-gap-now: calc(var(--ds-pi-gap) * var(--ds-pi-gap-on));
+    --ds-pi-track-len: calc(var(--ds-pi-c) * (1 - var(--ds-pi-progress)) - 2 * var(--ds-pi-gap-now));
+    stroke-dasharray: max(0px, var(--ds-pi-track-len) * 1px) calc(var(--ds-pi-c) * 1px);
+    stroke-dashoffset: calc((var(--ds-pi-c) * var(--ds-pi-progress) + var(--ds-pi-gap-now)) * -1px);
+    stroke-opacity: clamp(0, var(--ds-pi-track-len) * 1000000, 1);
   }
   /* Stepped slider dots. The active/inactive split is a plain attribute
    * selector rather than a Tailwind `data-[active]:` variant — variants only
    * compose with generated utilities, so pairing one with a class defined here
-   * silently produced no rule and every dot stayed the inactive tone. */
+   * silently produced no rule and every dot stayed the inactive tone.
+   *
+   * The helper owns the dot's geometry too, so the highlighted step can grow
+   * from it. ONLY `height` transitions: the colour flip stays discrete on
+   * purpose (see the step-dot comment in Slider.tsx). The dot is centred with
+   * a -50% translate of its own height, so it grows from its centre. */
   .ds-slider-dot {
+    width: var(--ui-size-slider-step);
+    height: var(--ui-size-slider-step);
     background-color: var(--ui-color-slider-step-inactive);
+    transition-property: height;
+    transition-duration: var(--ui-motion-duration-base);
+    transition-timing-function: var(--ui-motion-ease-standard);
+  }
+
+  /* The step a slider's `highlightedStep` picks: same width and paint, drawn
+   * tall. Plain attribute selector for the same reason as [data-active]. */
+  /* Only the highlighted dot fades its colour. The other dots switch paint
+   * instantly on purpose: a fast drag sweeps many of them at once, and staggered
+   * fades read as lag. A single dot cannot lag, so it may ease. */
+  .ds-slider-dot[data-highlighted] {
+    height: var(--ui-height-slider-step-tall);
+    transition-property: height, background-color;
+  }
+
+  /* During a drag the tall step marks the value the drag started from, so it
+   * takes the solid slider colour on BOTH sides of the thumb until release.
+   * On the filled side it still reads: the fill is the same colour at
+   * --ds-slider-track-opacity (50-70%), the dot is opaque. Outranks the
+   * [data-active] paint by specificity, so no JS or grouping change is needed. */
+  [data-dragging] .ds-slider-dot[data-highlighted] {
+    background-color: var(--ds-slider-color, var(--ui-color-primary));
   }
 
   /* The active dot is a flat token, not a mix of --ds-slider-color: Figma
@@ -166,15 +351,8 @@
   .ds-slider-glide > span:last-child,
   .ds-slider-glide .ds-slider-part {
     transition-property: left, width;
-    transition-duration: 180ms;
-    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .ds-slider-glide > span:last-child,
-    .ds-slider-glide .ds-slider-part {
-      transition-property: none;
-    }
+    transition-duration: var(--ui-motion-duration-base);
+    transition-timing-function: var(--ui-motion-ease-enter);
   }
 
   /* Opt-in global text selection colour. Apply to <body> (or any subtree root).
@@ -216,9 +394,86 @@
     min-width: var(--ui-min-w-search-box);
   }
 
+  /* OutlineButton accent orbs. Opacity fades the glow in and out; transform
+   * glides each orb after the cursor. Orb 1 (the larger, inner one) answers
+   * faster than orb 2 on both — that two-orb lag is what makes them read as
+   * separate bodies, so keep the steps staggered when retuning. */
+  .ds-outline-orb-1 {
+    transition:
+      opacity var(--ui-motion-duration-slow) var(--ui-motion-ease-standard),
+      transform var(--ui-motion-duration-fast) var(--ui-motion-ease-enter);
+  }
+  .ds-outline-orb-2 {
+    transition:
+      opacity var(--ui-motion-duration-slower) var(--ui-motion-ease-standard),
+      transform var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
+  }
+
+  /* OutlineButton — the inner button box, and the orbs' paint and placement
+   * (all values: --ui-outline-button-* in tokens.css). Only the consumer's
+   * glow colour stays inline. `glow-*` is the static `glowing` mode, anchored
+   * below the bottom edge; `trail-*` is the hover mode, whose position comes
+   * from the cursor-tracking transform in OutlineButton.tsx. The disabled
+   * `group-disabled:!opacity-0` utilities still win: they are !important. */
+  .ds-size-outline-button {
+    height: var(--ui-height-outline-button);
+    min-width: var(--ui-min-w-outline-button);
+  }
+  .ds-outline-button-glow-1 {
+    bottom: var(--ui-outline-button-orb-1-bottom);
+    left: var(--ui-outline-button-orb-1-left);
+    width: var(--ui-outline-button-orb-1-width);
+    height: var(--ui-outline-button-orb-1-height);
+    opacity: var(--ui-outline-button-orb-1-opacity);
+    filter: blur(var(--ui-outline-button-orb-1-blur));
+  }
+  .ds-outline-button-glow-2 {
+    bottom: var(--ui-outline-button-orb-2-bottom);
+    right: var(--ui-outline-button-orb-2-right);
+    width: var(--ui-outline-button-orb-2-width);
+    height: var(--ui-outline-button-orb-2-height);
+    opacity: var(--ui-outline-button-orb-2-opacity);
+    filter: blur(var(--ui-outline-button-orb-2-blur));
+  }
+  .ds-outline-button-trail-1 {
+    width: var(--ui-outline-button-orb-1-width);
+    height: var(--ui-outline-button-orb-1-height);
+    opacity: 0;
+    filter: blur(var(--ui-outline-button-orb-1-hover-blur));
+  }
+  .ds-outline-button-trail-2 {
+    width: var(--ui-outline-button-orb-2-width);
+    height: var(--ui-outline-button-orb-2-height);
+    opacity: 0;
+    filter: blur(var(--ui-outline-button-orb-2-hover-blur));
+  }
+  /* Same selector and hover-capable gate as Tailwind's `group-hover:`, which
+   * these rules replace, so touch devices still never latch the glow on. */
+  @media (hover: hover) {
+    .ds-outline-button-trail-1:is(:where(.group):hover *) {
+      opacity: var(--ui-outline-button-orb-1-opacity);
+    }
+    .ds-outline-button-trail-2:is(:where(.group):hover *) {
+      opacity: var(--ui-outline-button-orb-2-opacity);
+    }
+  }
+
   /* CTAButton — geometry + pill drop-shadow (filter so the round pill edge softens). */
   .ds-drop-shadow-cta {
     filter: drop-shadow(var(--ui-shadow-cta));
+  }
+
+  /* CTAButton end shape — hover/focus-visible tilt. The shape never morphs; it
+   * only leans by the amount DropdownCaret's hover nudge does: the nudge token
+   * is a fraction of one step (--ui-shape-morph-nudge, 0.15) and a step turns
+   * 90deg (MorphRotationShape's M3 turn), so 0.15 * 90deg = 13.5deg clockwise.
+   * Motion scale, like the nudge's own lean. The trigger is the root `.group`
+   * (:where keeps specificity flat, as the outline-button orbs above do). */
+  .ds-cta-shape-tilt {
+    transition: rotate var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
+  }
+  .ds-cta-shape-tilt:is(:where(.group):is(:hover, :focus-visible) *) {
+    rotate: calc(var(--ui-shape-morph-nudge) * 90deg);
   }
 
   .ds-size-cta-chip-standard {
@@ -231,9 +486,14 @@
     height: var(--ui-size-cta-chip-big);
   }
 
-  .ds-size-cta-icon {
-    width: var(--ui-size-cta-icon);
-    height: var(--ui-size-cta-icon);
+  .ds-size-cta-icon-standard {
+    width: var(--ui-size-cta-icon-standard);
+    height: var(--ui-size-cta-icon-standard);
+  }
+
+  .ds-size-cta-icon-big {
+    width: var(--ui-size-cta-icon-big);
+    height: var(--ui-size-cta-icon-big);
   }
 
   .ds-min-w-cta-content-standard {
@@ -244,23 +504,23 @@
     min-width: var(--ui-min-w-cta-content-big);
   }
 
-  .ds-min-w-cta-pill-big {
-    min-width: var(--ui-min-w-cta-pill-big);
+  .ds-gap-cta-content-standard {
+    gap: var(--ui-spacing-cta-content-standard);
   }
 
   .ds-gap-cta-content-big {
     gap: var(--ui-spacing-cta-content-big);
   }
 
-  .ds-px-ui-sm {
-    padding-inline: var(--ui-spacing-sm);
+  .ds-px-ui-rg {
+    padding-inline: var(--ui-spacing-rg);
   }
 
   /* Toast sizing — fixed design widths capped to the available viewport. */
   .ds-toast-viewport {
     width: min(
       var(--ui-width-toast-viewport),
-      calc(100vw - (var(--ui-spacing-md) * 2))
+      calc(100vw - (var(--ui-spacing-lg) * 2))
     );
   }
 
@@ -319,6 +579,19 @@
     border-radius: calc(var(--ui-radius-mini) + var(--ui-spacing-xxs));
   }
 
+  /* A 14px icon slot (SplitButtonAction's leading icon). */
+  .ds-size-icon-rg {
+    width: var(--ui-icon-rg);
+    height: var(--ui-icon-rg);
+  }
+
+  /* Single-key HotkeyIndicator: a one-glyph key never gets narrower or
+   * shorter than this square. */
+  .ds-min-size-kbd {
+    min-width: var(--ui-size-kbd);
+    min-height: var(--ui-size-kbd);
+  }
+
   /* Dims a decorative part (e.g. a trigger's icons) without fading the
    * surface behind it — Figma applies opacity-disabled to content only. */
   .ds-opacity-disabled {
@@ -326,71 +599,74 @@
   }
 
   /* spacing — semantic names mirror token stems */
-  .ds-gap-ui-xs {
-    gap: var(--ui-spacing-xs);
+  .ds-gap-ui-sm {
+    gap: var(--ui-spacing-sm);
   }
-  .ds-p-ui-xs {
-    padding: var(--ui-spacing-xs);
+  .ds-p-ui-sm {
+    padding: var(--ui-spacing-sm);
   }
-  .ds-px-ui-xs {
-    padding-inline: var(--ui-spacing-xs);
+  .ds-px-ui-sm {
+    padding-inline: var(--ui-spacing-sm);
   }
-  .ds-py-ui-xs {
-    padding-block: var(--ui-spacing-xs);
+  .ds-py-ui-sm {
+    padding-block: var(--ui-spacing-sm);
   }
   .ds-py-ui-xxs {
     padding-block: var(--ui-spacing-xxs);
   }
-  .ds-py-ui-rg {
-    padding-block: var(--ui-spacing-rg);
+  .ds-py-ui-md {
+    padding-block: var(--ui-spacing-md);
+  }
+  .ds-pl-ui-lg {
+    padding-left: var(--ui-spacing-lg);
   }
   .ds-pl-ui-md {
     padding-left: var(--ui-spacing-md);
   }
-  .ds-pl-ui-rg {
-    padding-left: var(--ui-spacing-rg);
+  .ds-pr-ui-md {
+    padding-right: var(--ui-spacing-md);
   }
   .ds-pr-ui-rg {
     padding-right: var(--ui-spacing-rg);
   }
-  .ds-pr-ui-sm {
-    padding-right: var(--ui-spacing-sm);
+
+  /* Button medium / big — the pill sizes' off-scale horizontal padding. */
+  .ds-px-button-medium {
+    padding-inline: var(--ui-spacing-button-medium-x);
   }
-  .ds-my-ui-xs {
-    margin-block: var(--ui-spacing-xs);
+  .ds-px-button-big {
+    padding-inline: var(--ui-spacing-button-big-x);
   }
 
   /*
    * CopyButton — stacked clipboard/check icons swap via [data-copied].
    * Both icons share the same grid cell (parent has `grid place-items-center`)
-   * so the swap is a cross-fade + scale instead of a layout shift.
+   * so the swap is a zoom swap, not a layout shift: the outgoing icon scales
+   * 1 -> 0.6 and fades out (exit curve); the incoming one scales 0.6 -> 1 and
+   * fades in (enter curve). A transition is read from the state being entered,
+   * so the visible state carries the enter timing and the hidden state the
+   * exit timing. Duration is --ui-motion-duration-fast on both.
    */
   .ds-copy-icon-clipboard,
   .ds-copy-icon-check {
     grid-area: 1 / 1;
     display: inline-flex;
-    transition:
-      opacity 120ms ease-out,
-      transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
   }
-  [data-copied] .ds-copy-icon-clipboard {
-    opacity: 0;
-    transform: scale(0.6);
-  }
-  .ds-copy-icon-check {
-    opacity: 0;
-    transform: scale(0.5);
-  }
+  .ds-copy-icon-clipboard,
   [data-copied] .ds-copy-icon-check {
     opacity: 1;
     transform: scale(1);
+    transition:
+      opacity var(--ui-motion-duration-fast) var(--ui-motion-ease-enter),
+      transform var(--ui-motion-duration-fast) var(--ui-motion-ease-enter);
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    .ds-copy-icon-clipboard,
-    .ds-copy-icon-check {
-      transition: none;
-    }
+  [data-copied] .ds-copy-icon-clipboard,
+  .ds-copy-icon-check {
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity var(--ui-motion-duration-fast) var(--ui-motion-ease-exit),
+      transform var(--ui-motion-duration-fast) var(--ui-motion-ease-exit);
   }
 
   /*
@@ -408,6 +684,22 @@
     --ui-shimmer-base: var(--ui-chat-thinking-shimmer-base);
     --ui-shimmer-highlight: var(--ui-chat-thinking-shimmer-highlight);
   }
+  /*
+   * Reduced motion: ShimmerText drops its gradient and falls back to
+   * `color: inherit` (index.css), which would discard the re-based tone. Paint
+   * each live chat label in its own base colour instead. Two classes are
+   * required: this file is imported (index.css) ahead of index.css's own
+   * `.ds-shimmer-text` rules in the same layer, so a one-class selector would
+   * lose to `color: inherit` on source order.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    .ds-shimmer-text.ds-chat-tool-shimmer {
+      color: var(--ui-chat-tool-shimmer-base);
+    }
+    .ds-shimmer-text.ds-chat-thinking-shimmer {
+      color: var(--ui-chat-thinking-shimmer-base);
+    }
+  }
 
   /*
    * Hover reveal for a settled row's secondary content (meta, copy, chevron).
@@ -418,22 +710,24 @@
    */
   .ds-chat-reveal {
     opacity: 0;
-    transition: opacity var(--ui-chat-reveal-duration)
-      var(--ui-chat-reveal-ease);
+    transition: opacity var(--ui-motion-duration-fast)
+      var(--ui-motion-ease-standard);
   }
   .ds-chat-reveal-root:hover .ds-chat-reveal,
   .ds-chat-reveal-root:focus-within .ds-chat-reveal,
   .ds-chat-reveal-root[data-state="open"] .ds-chat-reveal {
     opacity: 1;
   }
-  /* A settled label lifts from ghost to ghost-active under the same hover. */
+  /* A settled label (resting at text-secondary) lifts to text-primary under the
+   * same hover. */
   .ds-chat-lift {
-    transition: color var(--ui-chat-reveal-duration) var(--ui-chat-reveal-ease);
+    transition: color var(--ui-motion-duration-fast)
+      var(--ui-motion-ease-standard);
   }
   .ds-chat-reveal-root:hover .ds-chat-lift,
   .ds-chat-reveal-root:focus-within .ds-chat-lift,
   .ds-chat-reveal-root[data-state="open"] .ds-chat-lift {
-    color: var(--ui-color-ghost-foreground-active);
+    color: var(--ui-color-text);
   }
   /* The thinking disclosure chevron: down while closed, up while open.
    * DropdownIcon's own path points up. Both opacity (ds-chat-reveal) and
@@ -441,9 +735,8 @@
   .ds-chat-chevron {
     transform: rotate(180deg);
     transition:
-      transform var(--ui-chat-disclosure-duration)
-        var(--ui-chat-disclosure-ease),
-      opacity var(--ui-chat-reveal-duration) var(--ui-chat-reveal-ease);
+      transform var(--ui-motion-duration-base) var(--ui-motion-ease-standard),
+      opacity var(--ui-motion-duration-fast) var(--ui-motion-ease-standard);
   }
   [data-state="open"] > .ds-chat-chevron {
     transform: rotate(0deg);
@@ -458,10 +751,9 @@
     grid-template-rows: 0fr;
     opacity: 0;
     transition:
-      grid-template-rows var(--ui-chat-disclosure-duration)
-        var(--ui-chat-disclosure-ease),
-      opacity var(--ui-chat-disclosure-duration)
-        var(--ui-chat-disclosure-ease);
+      grid-template-rows var(--ui-motion-duration-base)
+        var(--ui-motion-ease-standard),
+      opacity var(--ui-motion-duration-base) var(--ui-motion-ease-standard);
   }
   .ds-chat-disclosure[data-state="open"] {
     grid-template-rows: 1fr;
@@ -487,8 +779,8 @@
    */
   .ds-chat-prose[data-streaming-animation] > :not(ul, ol),
   .ds-chat-prose[data-streaming-animation] li {
-    animation: ds-chat-stream-in var(--ui-chat-stream-duration)
-      var(--ui-chat-stream-ease) both;
+    animation: ds-chat-stream-in var(--ui-motion-duration-slower)
+      var(--ui-motion-ease-standard) both;
   }
 
   /*
@@ -516,21 +808,15 @@
     flex-shrink: 0;
   }
 
-  .ds-width-chat-model-tooltip {
-    width: var(--ui-width-chat-model-tooltip);
+  /* AIModelTooltipContent's model name. The provider colour arrives as
+   * --ds-chat-model-color (set on the tooltip root); without it,
+   * currentColor on `color` inherits, which is the untinted look. */
+  .ds-chat-model-name {
+    color: var(--ds-chat-model-color, currentColor);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .ds-chat-reveal,
-    .ds-chat-lift,
-    .ds-chat-chevron,
-    .ds-chat-disclosure {
-      transition: none;
-    }
-    .ds-chat-prose[data-streaming-animation] > :not(ul, ol),
-    .ds-chat-prose[data-streaming-animation] li {
-      animation: none;
-    }
+  .ds-width-chat-model-tooltip {
+    width: var(--ui-width-chat-model-tooltip);
   }
 
   /*
@@ -563,7 +849,7 @@
     color: inherit;
   }
   .ds-chat-prose :is(p, ul, ol, blockquote, pre, table) {
-    margin-block: var(--ui-spacing-sm);
+    margin-block: var(--ui-spacing-rg);
   }
   .ds-chat-prose :is(strong, b) {
     font-weight: var(--ui-weight-semibold);
@@ -574,8 +860,8 @@
   }
   .ds-chat-prose :is(h1, h2, h3, h4, h5, h6) {
     color: inherit;
-    margin-top: var(--ui-spacing-rg);
-    margin-bottom: var(--ui-spacing-xs);
+    margin-top: var(--ui-spacing-md);
+    margin-bottom: var(--ui-spacing-sm);
   }
   .ds-chat-prose h1 {
     font-family: var(--ui-font-title);
@@ -601,11 +887,11 @@
   }
   .ds-chat-prose ul {
     list-style: disc outside;
-    padding-left: var(--ui-spacing-rg);
+    padding-left: var(--ui-spacing-md);
   }
   .ds-chat-prose ol {
     list-style: decimal outside;
-    padding-left: var(--ui-spacing-rg);
+    padding-left: var(--ui-spacing-md);
   }
   .ds-chat-prose li {
     margin-block: var(--ui-spacing-xxxs);
@@ -617,21 +903,22 @@
     color: var(--ui-color-text);
     text-decoration: underline;
     text-decoration-color: var(--ui-color-border-primary);
-    text-underline-offset: 3px;
+    text-underline-offset: var(--ui-chat-prose-link-offset);
   }
   .ds-chat-prose a:hover {
     color: var(--ui-color-text-secondary);
   }
   .ds-chat-prose blockquote {
-    border-left: 2px solid var(--ui-color-border-primary);
-    padding-left: var(--ui-spacing-sm);
+    border-left: var(--ui-chat-prose-quote-border-width) solid
+      var(--ui-color-border-primary);
+    padding-left: var(--ui-spacing-rg);
     color: var(--ui-color-text-secondary);
     font-style: normal;
   }
   .ds-chat-prose hr {
     border: 0;
     border-top: 1px solid var(--ui-color-border-primary);
-    margin-block: var(--ui-spacing-md);
+    margin-block: var(--ui-spacing-lg);
   }
   .ds-chat-prose code {
     font-family: var(--ui-font-mono);
@@ -646,7 +933,7 @@
     overflow-x: auto;
     border-radius: var(--ui-radius-tight);
     background-color: var(--ui-color-surface-secondary);
-    padding: var(--ui-spacing-sm);
+    padding: var(--ui-spacing-rg);
     box-shadow: var(--ui-shadow-button);
   }
   .ds-chat-prose pre code {
@@ -659,10 +946,27 @@
   }
   .ds-chat-prose :is(td, th) {
     border: 1px solid var(--ui-color-border-primary);
-    padding: var(--ui-spacing-xxs) var(--ui-spacing-xs);
+    padding: var(--ui-spacing-xxs) var(--ui-spacing-sm);
     text-align: left;
   }
   .ds-chat-prose th {
     font-weight: var(--ui-weight-semibold);
+  }
+}
+
+/* AI chat streaming animation (AITextPart / AIThinkingPart `streamingAnimation`).
+ * Each block of streamed prose rises into place out of a blur. Every value is a
+ * --ui-chat-stream-* token. Outside @layer (an inline-style animation cannot
+ * reach a layered @keyframes), and in this file beside .ds-chat-prose. */
+@keyframes ds-chat-stream-in {
+  from {
+    opacity: 0;
+    filter: blur(var(--ui-chat-stream-blur));
+    transform: translateY(var(--ui-chat-stream-rise));
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
   }
 }

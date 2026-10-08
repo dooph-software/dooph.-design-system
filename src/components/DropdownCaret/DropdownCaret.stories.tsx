@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Button, ButtonVariant } from "../Button";
+import { DropdownTrigger, TypeableDropdownTrigger } from "../DropdownTrigger";
 import { ButtonText } from "../Text";
 import { DropdownCaret } from "./DropdownCaret";
 import { DropdownCaretVariant } from "./constants";
@@ -51,4 +52,34 @@ function InteractiveDemo() {
 /** Toggle open with the button; hover the host for the nudge in either state. */
 export const Interactive: Story = {
   render: () => <InteractiveDemo />,
+};
+
+/** The real triggers in each expression, closed / open / disabled. */
+const TriggerColumn = ({ label }: { label: string }) => (
+  <div className="flex flex-col gap-md">
+    <ButtonText>{label}</ButtonText>
+    <DropdownTrigger>Select option</DropdownTrigger>
+    <DropdownTrigger data-state="open">Menu open</DropdownTrigger>
+    <DropdownTrigger disabled>Disabled</DropdownTrigger>
+    <TypeableDropdownTrigger placeholder="Search or select…" />
+    <TypeableDropdownTrigger placeholder="Menu open…" data-state="open" />
+    <TypeableDropdownTrigger placeholder="Disabled" disabled />
+  </div>
+);
+
+/**
+ * The caret's shape and hover nudge are expressive details. Under
+ * `data-ds-expression="practical"` (normally on <html>, nested here only to
+ * compare) they are neutral: a plain chevron in the trigger's text colour, no
+ * shape, no empty frame, no hover lean. Hover the triggers in both columns.
+ */
+export const Practical: Story = {
+  render: () => (
+    <div className="flex flex-row gap-xxl">
+      <TriggerColumn label="Default (signature)" />
+      <div data-ds-expression="practical">
+        <TriggerColumn label="Practical" />
+      </div>
+    </div>
+  ),
 };

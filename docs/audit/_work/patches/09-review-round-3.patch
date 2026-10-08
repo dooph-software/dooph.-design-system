@@ -1,0 +1,302 @@
+diff --git a/src/components/Input/Input.stories.tsx b/src/components/Input/Input.stories.tsx
+index 3c4b21b..70c17f8 100644
+--- a/src/components/Input/Input.stories.tsx
++++ b/src/components/Input/Input.stories.tsx
+@@ -106,6 +106,8 @@ export const NumberAutoWidth: Story = {
+ /**
+  * `format`: shown formatted with Intl.NumberFormat while blurred, raw while
+  * focused. Type or paste without separators; `onValueChange` gets the raw string.
++ * Entry is filtered: letters and symbols can't be typed, only one decimal
++ * separator is accepted, and pasted text is cleaned ("12ab3.4.5" becomes "123.45").
+  */
+ function FormattedNumbers() {
+   const [raw, setRaw] = useState('1234567.89');
+@@ -128,3 +130,21 @@ function FormattedNumbers() {
+ }
+ 
+ export const NumberFormatted: Story = { render: () => <FormattedNumbers /> };
++
++/**
++ * `min` / `max`: a committed value outside the range (on blur) shows the error
++ * state; the value is never clamped. The first field starts out of range, the
++ * second uses `hasError={false}` to suppress the automatic error, and a `min`
++ * of 0 means a minus sign can't be typed at all.
++ */
++export const NumberRange: Story = {
++  name: 'Number — range',
++  render: () => (
++    <div className="flex w-60 flex-col gap-4 p-4">
++      <Input variant={InputVariant.number} min={0} max={100} defaultValue="150" data-testid="r-out" />
++      <Input variant={InputVariant.number} min={0} max={100} defaultValue="50" data-testid="r-in" />
++      <Input variant={InputVariant.number} min={0} max={100} defaultValue="150" hasError={false} data-testid="r-suppressed" />
++      <Input variant={InputVariant.number} min={-10} max={10} defaultValue="-5" data-testid="r-negative" />
++    </div>
++  ),
++};
+diff --git a/src/components/Input/Input.tsx b/src/components/Input/Input.tsx
+index 215f47a..7ed86cb 100644
+--- a/src/components/Input/Input.tsx
++++ b/src/components/Input/Input.tsx
+@@ -28,8 +28,24 @@
+  *   `onChange` keeps native semantics and always still runs; with `format` on,
+  *   its `event.target.value` is the displayed text, so read `onValueChange`.
+  *   `value` / `defaultValue` are raw values in both modes.
++ * - Number variants filter at ENTRY: only digits, one decimal separator and a
++ *   leading minus (only when `min` is undefined or negative) can be typed; a
++ *   keystroke or paste that would add nothing valid is blocked in
++ *   `onBeforeInput`, and whatever slips through (partly valid paste,
++ *   autofill, IME) is sanitised in the change handler before `onChange` /
++ *   `onValueChange` run — so a paste of "12ab3.4.5" becomes "123.45". The
++ *   decimal separator is the `locale`'s when `format` is on, else "."; the
++ *   comma (or the locale's group separator) and whitespace are stripped as
++ *   grouping. Consumer `onBeforeInput`, `onChange` and `onPaste` still run.
++ * - `min` / `max` (number variants, numbers) never clamp. When the committed
++ *   value is outside [min, max] the field shows the danger chrome and sets
++ *   `aria-invalid`. Committed means the value on blur when uncontrolled (the
++ *   `defaultValue` until then) and the current `value` when controlled.
++ *   Empty or half-typed text ("-", ".") is never out of range.
+  * - `hasError` paints the danger chrome and sets `aria-invalid` on the
+- *   `<input>` (a consumer's own `aria-invalid` wins).
++ *   `<input>` (a consumer's own `aria-invalid` wins). It is authoritative:
++ *   `true` forces the error, `false` suppresses the range-derived one, and
++ *   only when it is omitted does the range decide.
+  * - Clicking the wrapper's chrome (padding, icon) focuses the input.
+  *
+  * ## constraints
+@@ -50,6 +66,12 @@
+  *   display text and `defaultValue` is never passed down. Raw state stays
+  *   `value` or the component's own state, never the display text, or blur
+  *   would re-parse formatted text.
++ * - Input filtering happens at entry, never as a validation error after the
++ *   fact: an invalid character must not reach the DOM value, `onChange` or
++ *   `onValueChange`. Range errors are DERIVED from the committed value on
++ *   every render and never stored, and `hasError` always overrides them, so
++ *   a consumer's own validation can't be fought by the automatic one. Never
++ *   clamp `value`: the consumer decides what to do with an out-of-range number.
+  * - `InputVariant.text` without `icon` stays a bare `<input>`: existing
+  *   consumers style and measure that element directly, and wrapping it would
+  *   move their `className` onto a different node.
+@@ -69,6 +91,7 @@ import {
+   useState,
+   type ChangeEvent,
+   type FocusEvent,
++  type InputEvent as ReactInputEvent,
+   type InputHTMLAttributes,
+   type PointerEvent,
+   type ReactElement,
+@@ -77,8 +100,20 @@ import { cn } from "../../utils/cn";
+ import { useComposedRefs } from "../../utils/composeRefs";
+ import { InputVariant } from "./constants";
+ 
+-type InputBaseProps = InputHTMLAttributes<HTMLInputElement> & {
++type InputBaseProps = Omit<InputHTMLAttributes<HTMLInputElement>, "min" | "max"> & {
++  /**
++   * Forces the error chrome and `aria-invalid` on (`true`) or off (`false`).
++   * Omit it to let `min` / `max` decide on number variants.
++   */
+   hasError?: boolean;
++  /**
++   * Number variants: lowest allowed value. Also decides whether a leading minus
++   * can be typed (only when `min` is undefined or negative). Out-of-range
++   * committed values show the error state; the value is never clamped.
++   */
++  min?: number;
++  /** Number variants: highest allowed value; out-of-range shows the error state, never clamps. */
++  max?: number;
+   /** Number variants: hug the value instead of filling the container. Default off. */
+   autoWidth?: boolean;
+   /**
+@@ -100,12 +135,44 @@ const WHITESPACE = /[\s  ]/g;
+ const escapeRegExp = (text: string) =>
+   text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+ 
+-/** Reads what the user typed or pasted as a raw numeric string ("." decimal). */
+-function parseDisplay(text: string, { group, decimal }: NumberSeparators) {
+-  let raw = text.replace(WHITESPACE, "");
+-  if (group) raw = raw.replace(new RegExp(escapeRegExp(group), "g"), "");
+-  if (decimal !== ".") raw = raw.replace(decimal, ".");
+-  return raw;
++const DEFAULT_SEPARATORS: NumberSeparators = { group: ",", decimal: "." };
++
++/**
++ * Keeps only what a number field may show: digits, one decimal separator and,
++ * when allowed, a leading minus. Grouping separators and whitespace are
++ * stripped. The decimal stays the locale's (display form).
++ */
++function sanitizeNumberText(
++  text: string,
++  { group, decimal }: NumberSeparators,
++  allowNegative: boolean,
++) {
++  let rest = text.replace(WHITESPACE, "");
++  if (group) rest = rest.replace(new RegExp(escapeRegExp(group), "g"), "");
++  let out = "";
++  let hasDecimal = false;
++  for (const char of rest) {
++    if (char >= "0" && char <= "9") out += char;
++    else if (char === decimal && !hasDecimal) {
++      hasDecimal = true;
++      out += char;
++    } else if ((char === "-" || char === "\u2212") && allowNegative && out === "") {
++      out = "-";
++    }
++  }
++  return out;
++}
++
++/** Display text (locale decimal) to a raw numeric string ("." decimal). */
++function toRaw(text: string, { decimal }: NumberSeparators) {
++  return decimal === "." ? text : text.replace(decimal, ".");
++}
++
++function isOutOfRange(raw: string, min?: number, max?: number) {
++  if (raw.trim() === "") return false;
++  const n = Number(raw);
++  if (!Number.isFinite(n)) return false;
++  return (min !== undefined && n < min) || (max !== undefined && n > max);
+ }
+ 
+ export type InputProps =
+@@ -129,7 +196,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+       value,
+       defaultValue,
+       onChange,
++      onBeforeInput,
+       onValueChange,
++      min,
++      max,
+       onFocus,
+       onBlur,
+       autoWidth,
+@@ -176,11 +246,52 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+       // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [formatOn, formatKey, locale]);
+     const [focused, setFocused] = useState(false);
++    // The value as of the last blur (uncontrolled range check) — see the header.
++    const [committedValue, setCommittedValue] = useState(() =>
++      String(defaultValue ?? ""),
++    );
++
++    // Entry filter — see the header. Number variants only.
++    const separators = formatting?.separators ?? DEFAULT_SEPARATORS;
++    const allowNegative = min === undefined || min < 0;
++
++    const handleBeforeInput = (event: ReactInputEvent<HTMLInputElement>) => {
++      onBeforeInput?.(event);
++      if (event.defaultPrevented || (event.nativeEvent as InputEvent).isComposing) {
++        return;
++      }
++      const { data } = event;
++      const input = event.currentTarget;
++      if (!data || input.selectionStart === null || input.selectionEnd === null) {
++        return;
++      }
++      const before = input.value.slice(0, input.selectionStart);
++      const after = input.value.slice(input.selectionEnd);
++      // Block only an insertion that adds nothing valid; a partly valid paste
++      // goes through and handleChange sanitises it.
++      const kept = sanitizeNumberText(before + after, separators, allowNegative);
++      const next = sanitizeNumberText(before + data + after, separators, allowNegative);
++      if (next === kept) event.preventDefault();
++    };
+ 
+     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+-      const raw = formatting
+-        ? parseDisplay(event.target.value, formatting.separators)
+-        : event.target.value;
++      let display = event.target.value;
++      if (isNumber) {
++        const caret = event.target.selectionStart ?? display.length;
++        const clean = sanitizeNumberText(display, separators, allowNegative);
++        if (clean !== display) {
++          const cleanCaret = sanitizeNumberText(
++            display.slice(0, caret),
++            separators,
++            allowNegative,
++          ).length;
++          // Before onChange, so the consumer reads the sanitised text.
++          event.target.value = clean;
++          event.target.setSelectionRange(cleanCaret, cleanCaret);
++          display = clean;
++        }
++      }
++      const raw = formatting ? toRaw(display, formatting.separators) : display;
+       if (!isControlled) setUncontrolledValue(raw);
+       onChange?.(event);
+       onValueChange?.(raw);
+@@ -191,10 +302,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+     };
+     const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+       if (formatting) setFocused(false);
++      setCommittedValue(rawValue);
+       onBlur?.(event);
+     };
+ 
+     const rawValue = isControlled ? String(value) : uncontrolledValue;
++    // Range errors are derived, and hasError always wins — see the header.
++    const outOfRange =
++      isNumber &&
++      isOutOfRange(isControlled ? rawValue : committedValue, min, max);
++    const showError = hasError ?? outOfRange;
+     let displayValue: string | undefined;
+     if (formatting) {
+       if (focused) {
+@@ -218,8 +335,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+     const fieldProps = {
+       // Before ...props, so a consumer's explicit aria-invalid still wins
+       // (the CodeDigitInput order).
+-      "aria-invalid": hasError || undefined,
+-      ...(isNumber && { inputMode: "decimal" as const }),
++      "aria-invalid": showError || undefined,
++      ...(isNumber
++        ? { inputMode: "decimal" as const, onBeforeInput: handleBeforeInput }
++        : { onBeforeInput, min, max }),
+       ...props,
+       ref: setRefs,
+       // With `format` the input is always controlled by the display text — see the header.
+@@ -247,7 +366,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+             "enabled:hover:not-focus:border-input-border-hover enabled:hover:shadow-button-secondary",
+             "focus:border-input-border-focus",
+             "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled ds-disabled-state",
+-            hasError &&
++            showError &&
+               "border-danger-primary focus:border-input-border-danger-focus ds-focus-ring-danger-on-focus",
+             className,
+           )}
+@@ -288,11 +407,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+           "cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-secondary-disabled",
+           // The error border wins over the disabled one here, as it did when
+           // this was a class ternary (the error classes came later in cn).
+-          !hasError && "data-[disabled]:border-secondary-border-disabled",
+-          !hasError &&
++          !showError && "data-[disabled]:border-secondary-border-disabled",
++          !showError &&
+             "[&:hover:not(:focus-within):not([data-disabled])]:border-input-border-hover [&:hover:not(:focus-within):not([data-disabled])]:shadow-button-secondary",
+           "focus-within:border-input-border-focus",
+-          hasError &&
++          showError &&
+             "border-danger-primary focus-within:border-input-border-danger-focus ds-focus-within-ring-danger",
+           className,
+         )}
+diff --git a/src/components/Popover/Popover.tsx b/src/components/Popover/Popover.tsx
+index 0cf3245..3571dc7 100644
+--- a/src/components/Popover/Popover.tsx
++++ b/src/components/Popover/Popover.tsx
+@@ -28,7 +28,7 @@ const PopoverContent = forwardRef<
+     {
+       className,
+       align = "start",
+-      sideOffset = 4,
++      sideOffset = 6,
+       collisionPadding = 8,
+       portal = true,
+       portalProps,
+@@ -44,7 +44,7 @@ const PopoverContent = forwardRef<
+         collisionPadding={collisionPadding}
+         className={cn(
+           "z-50 overflow-hidden rounded-normal",
+-          "border border-solid border-border-primary bg-surface-primary shadow-button",
++          "border border-solid border-border-popovers bg-modal-surface shadow-menu",
+           "data-[state=open]:animate-in data-[state=closed]:animate-out",
+           "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
+           "data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95",

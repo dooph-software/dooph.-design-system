@@ -1,0 +1,145 @@
+### U6-F4: Checkbox and CodeDigitInput draw focus/press rings with `shadow-focus-*` box-shadows instead of the `ds-focus-*` outline helpers
+- severity: S2
+- category: rule-violation
+- rules: [R8.14]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg -n shadow-focus src --glob '*.tsx' --glob '!*.stories.tsx' → only Checkbox.tsx (2) and CodeDigitInput.tsx (1)"
+- locations:
+  - src/components/Checkbox/Checkbox.tsx:55
+  - src/components/Checkbox/Checkbox.tsx:60
+  - src/components/VerificationCode/CodeDigitInput.tsx:54-56
+- evidence: |
+    Checkbox.tsx:55  "[&:not([data-disabled])]:active:border-input-border-hover [&:not([data-disabled])]:active:shadow-focus-prominent",
+    Checkbox.tsx:60  "[&:not([data-disabled])]:active:border-primary [&:not([data-disabled])]:active:shadow-focus-primary",
+    CodeDigitInput.tsx:54-56  !disabled && !hasError &&
+                               "focus-within:border-input-border-focus focus-within:shadow-focus-prominent",
+    codebase SKILL.md:531  token-backed outline rings for controls that need external focus affordances without `box-shadow` overflow clipping
+- impact: contrib:57 names `shadow-focus-prominent`/`shadow-focus-primary` in component class strings as the thing not to do; these are the last three uses in the package. CodeDigitInput has no `ds-focus-*` helper at all, so its only keyboard focus indicator is a box-shadow that is clipped by any `overflow-hidden` ancestor (the exact failure the outline helpers exist to avoid, SKILL.md:531). Checkbox already has `ds-focus-visible-ring` (Checkbox.tsx:41), so its press-state `shadow-focus-*` is a second, differently-implemented ring on the same control.
+- recommendation: Use `ds-focus-within-ring` on the CodeDigitInput cell (as Input's wrapper variants do, Input.tsx:158) and decide whether Checkbox's press-state shadow is a focus ring (→ helper) or a press effect (→ its own non-`focus` token).
+- breaking: none
+- contract: src/components/Checkbox/Checkbox.tsx "Style states via Radix `data-[state]` / `data-[disabled]` only" → consistent
+- remediation: tbd
+- related: [U6-F15]
+
+
+### U4-F11: `ShapeButton` uses its own focus helper (`outline-none ds-shape-button-focus-visible`, 2px + 2px offset) instead of the `ds-focus-*` ring the rest of the family uses
+- severity: S3
+- category: inconsistency
+- rules: [R8.14]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "read dooph-component-tokens.css:35-38 vs :59-68; `ds-focus-visible-ring` is used by Button.tsx:42, CTAButton.tsx:109, OutlineButton.tsx:163, SplitButton.tsx:27,58 (CopyButton inherits via Button)."
+- locations:
+  - src/components/ShapeButton/ShapeButton.tsx:126
+  - src/styles/dooph-component-tokens.css:35-38
+- evidence: |
+    ShapeButton.tsx:126  "outline-none ds-shape-button-focus-visible",
+    dooph-component-tokens.css:35-37  .ds-shape-button-focus-visible:focus-visible { outline: 2px solid var(--ui-color-focus-ring-prominent); outline-offset: 2px; }
+    dooph-component-tokens.css:60     outline: 4px solid transparent;   (ds-focus-visible-ring)
+    dooph-component-tokens.css:64     .ds-focus-visible-ring:focus-visible:not(:disabled):not([data-disabled]):not(
+- impact: contrib:57 names the `ds-focus-*` helpers as the focus mechanism. The parallel helper draws a different ring (2px offset vs 4px flush) and, unlike `ds-focus-visible-ring`, does not suppress the ring on disabled/aria-disabled elements. Nothing records whether the geometry difference is a Figma decision, so the next focus-ring change will miss it.
+- recommendation: Use `ds-focus-visible-ring` or, if the offset ring is intended for non-rectangular shapes, make it a documented `ds-focus-*` variant with the same disabled exclusions and name it in contrib:57.
+- breaking: none
+- contract: src/components/ShapeButton/ShapeButton.tsx:12-16 → consistent (constraint is about shape primitives only)
+- remediation: tbd
+- related: []
+
+
+### U6-F22: TabsContent removes the focus outline (`focus-visible:outline-none`) from a panel Radix makes focusable, with no `ds-focus-*` replacement
+- severity: S3
+- category: rule-violation
+- rules: [R8.14]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Tabs.tsx:56; built copy node_modules/@radix-ui/react-tabs/dist/index.mjs:167-172 renders the panel with role=\"tabpanel\" and `tabIndex: 0`"
+- locations:
+  - src/components/Tabs/Tabs.tsx:53-58
+- evidence: |
+    Tabs.tsx:56  className={cn("focus-visible:outline-none", className)}
+    radix tabs index.mjs:172  tabIndex: 0,
+- impact: Every `TabsContent` is a Tab stop; a keyboard user tabbing out of the tablist lands on an element with no visible focus (WCAG 2.4.7). Every other focusable part in this unit uses a `ds-focus-*` helper (toggleOption.ts:31, Checkbox.tsx:41, Slider.tsx:409, Input.tsx:123/158).
+- recommendation: Replace with `ds-focus-visible-ring` (or document why the panel should be focusable yet unmarked).
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U6-F4]
+
+
+### U7-F3: PopoverContent animates fade + zoom with no reduced-motion override, unlike every other Radix overlay content in the package
+- severity: S2
+- category: rule-violation
+- rules: [R6.2, R6.1]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "`rg -n 'animate-in|motion-reduce' src/components --glob '*.tsx'`; built rule docs/audit/_work/dist-styles.css:2005-2007 (`animation-name: enter; animation-duration: 150ms;` — the utility itself has no reduced-motion branch)"
+- locations:
+  - src/components/Popover/Popover.tsx:50-52
+- evidence: |
+    Popover.tsx:50   "data-[state=open]:animate-in data-[state=closed]:animate-out",
+    Popover.tsx:51   "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
+    Popover.tsx:52   "data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95",
+    DropdownMenu.tsx:170  "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
+    Modal.tsx:31,77 / Sheet.tsx:39,75  same motion-reduce pair
+- impact: Users with `prefers-reduced-motion: reduce` get a 150ms scale-from-95% animation every time a DatePicker (or any Popover) opens or closes, while the menus opened from inside that same panel (CalendarCaption's month/year DropdownMenus) respect the preference. Also no `--ui-popover-*` duration/ease family (R6.1), though that gap is shared by the other overlays.
+- recommendation: Give PopoverContent the same reduced-motion opt-out the other overlay contents carry (or move overlay motion onto tokens with a CSS `@media (prefers-reduced-motion)` branch, family-wide).
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U7-F4]
+
+
+### U4-F6: `OutlineButton` emits component-decided blur radii and opacities as inline style, duplicating the same opacity literals as arbitrary classes
+- severity: S2
+- category: rule-violation
+- rules: [R8.12, R8.11, R8.1]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "read OutlineButton.tsx:188-193, 202-207, 244, 247-249, 265, 268-270; rg -n \"blur|opacity\" src/styles/tokens.css → no outline/glow tokens."
+- locations:
+  - src/components/OutlineButton/OutlineButton.tsx:188-193
+  - src/components/OutlineButton/OutlineButton.tsx:202-207
+  - src/components/OutlineButton/OutlineButton.tsx:244-249
+  - src/components/OutlineButton/OutlineButton.tsx:265-270
+- evidence: |
+    OutlineButton.tsx:190  filter: "blur(18px)",
+    OutlineButton.tsx:191  opacity: 0.38,
+    OutlineButton.tsx:204  filter: "blur(24px)",
+    OutlineButton.tsx:205  opacity: 0.22,
+    OutlineButton.tsx:244  "opacity-0 group-hover:opacity-[0.38]",   / :249 filter: "blur(20px)",
+    OutlineButton.tsx:265  "opacity-0 group-hover:opacity-[0.22]",   / :270 filter: "blur(26px)",
+- impact: contrib:54 allows `style={{}}` only for caller-supplied or token-referencing values, "Never for a design value the component itself decided". `glowColor1/2` (`background`) is the sanctioned use; blur and opacity are not — and because they are inline, a consumer cannot override them with CSS at all. The glow intensity (0.38/0.22) is written twice in two mechanisms (inline for `glowing`, arbitrary class for hover) and the blur differs between modes (18/24 vs 20/26) with nothing recording whether that is intended, so a retune will touch one mode and miss the other.
+- recommendation: Move orb paint (blur, opacity per orb) to `--ui-outline-button-glow-*` tokens read by `ds-*` classes shared by both modes; keep only `background` (glowColor) and the `--gx/--gy/--bw/--bh` targets inline.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U4-F5, U4-F7]
+
+
+### U10-F8: `IconSize` is declared as `IconSizes` with a `| string` arm baked into the derived type, renamed only by an alias hard-coded in the generator; the shipped JSDoc teaches the unexported name
+- severity: S2
+- category: rule-violation
+- rules: [R1.2, R1.4]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read BaseIcon.tsx, Icons/index.ts, scripts/generate-icon-exports.mjs in full; `rg -n \"\(string & \{\}\)\" src` → the repo's open-value form (utils/color.ts:44, Text/constants.ts:139-145, ProgressIndicator.tsx:57); `rg -n \"\] \| string;\" src` → only BaseIcon.tsx:15. ../dooph-ds-audit-build/dist/components/Icons/BaseIcon.d.ts:7 ships ` * Usage: <ChevronDownIcon size={IconSizes.md} />`; dist-index.d.ts:13 `export { BaseIcon, IconProps, IconSizes as IconSize }`."
+- locations:
+  - src/components/Icons/BaseIcon.tsx:3-15,18
+  - scripts/generate-icon-exports.mjs:41
+  - src/components/Icons/index.ts:3
+  - src/components/Icons/Icons.stories.tsx:2,50,169,193-202
+- evidence: |
+    BaseIcon.tsx:7   * Usage: <ChevronDownIcon size={IconSizes.md} />
+    BaseIcon.tsx:9   export const IconSizes = {
+    BaseIcon.tsx:15  export type IconSizes = (typeof IconSizes)[keyof typeof IconSizes] | string;
+    BaseIcon.tsx:19-22  color?: string; strokeWidth?: number | string; strokeColor?: string; fillColor?: string;
+    generate-icon-exports.mjs:41  'export { BaseIcon, IconSizes as IconSize } from "./BaseIcon";',
+    Icons.stories.tsx:2  import { BaseIcon, IconProps, IconSizes } from "./BaseIcon";
+- impact: `| string` inside the derived type absorbs the four literals, so the public `IconSize` type is plain `string` — no autocomplete, and it is not the key-union every other const/type pair provides (R1.2). Hovering `IconSize` in a consumer editor shows JSDoc telling them to write `IconSizes.md`, a name the package does not export. The rename lives in the generator script, so source, stories and codebase skill (:398 "`IconSize` enum") use two names for one thing. The colour props are bare `string` while the repo already has `DsColor` for exactly this (R1.4).
+- recommendation: Rename the source const/type to `IconSize` with the plain derived type, put the open arm on the prop (`size?: IconSize | (string & {}) | number`), drop the generator alias, and type the colour props with the existing `DsColor`/`(string & {})` form.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U10-F7]
+
+

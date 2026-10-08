@@ -16,6 +16,7 @@ const TODAY = new Date(2026, 4, 15);
 const meta: Meta<typeof Calendar> = {
   title: "Dates/Calendar",
   component: Calendar,
+  tags: ["autodocs"],
 };
 export default meta;
 
@@ -27,8 +28,8 @@ export const SingleDay: Story = {
     return (
       <Calendar
         mode={DatePickerMode.singleDay}
-        selected={selected}
-        onSelect={setSelected}
+        value={selected}
+        onValueChange={setSelected}
         today={TODAY}
       />
     );
@@ -44,8 +45,8 @@ export const DateRangeMode: Story = {
     return (
       <Calendar
         mode={DatePickerMode.dateRange}
-        selected={selected}
-        onSelect={setSelected}
+        value={selected}
+        onValueChange={setSelected}
         today={TODAY}
       />
     );
@@ -60,8 +61,8 @@ export const WithPresets: Story = {
     return (
       <Calendar
         mode={DatePickerMode.dateRange}
-        selected={selected}
-        onSelect={setSelected}
+        value={selected}
+        onValueChange={setSelected}
         today={TODAY}
       >
         <CalendarPresetsPanel>
@@ -69,9 +70,9 @@ export const WithPresets: Story = {
             <CalendarPresetItem
               key={preset.id}
               preset={preset}
-              selected={selected}
+              value={selected}
               today={TODAY}
-              onSelect={setSelected}
+              onValueChange={setSelected}
             />
           ))}
         </CalendarPresetsPanel>
@@ -86,8 +87,8 @@ export const DisabledFutureDates: Story = {
     return (
       <Calendar
         mode={DatePickerMode.singleDay}
-        selected={selected}
-        onSelect={setSelected}
+        value={selected}
+        onValueChange={setSelected}
         today={TODAY}
         disabled={{ after: TODAY }}
       />
@@ -101,8 +102,8 @@ export const CustomRenderDay: Story = {
     return (
       <Calendar
         mode={DatePickerMode.singleDay}
-        selected={selected}
-        onSelect={setSelected}
+        value={selected}
+        onValueChange={setSelected}
         today={TODAY}
         renderDay={({ date }) => (
           <div className="flex flex-col items-center">
@@ -127,13 +128,13 @@ export const EdgeMonths: Story = {
       new Date(2100, 1, 1),
     ];
     return (
-      <div className="flex flex-wrap gap-md">
+      <div className="flex flex-wrap gap-lg">
         {months.map((month) => (
           <Calendar
             key={month.toISOString()}
             mode={DatePickerMode.singleDay}
-            selected={month}
-            onSelect={() => {}}
+            value={month}
+            onValueChange={() => {}}
             month={month}
             today={TODAY}
           />
@@ -149,11 +150,62 @@ export const YearBounds: Story = {
     return (
       <Calendar
         mode={DatePickerMode.singleDay}
-        selected={selected}
-        onSelect={setSelected}
+        value={selected}
+        onValueChange={setSelected}
         today={TODAY}
         yearBounds={{ from: new Date(2026, 0, 1), to: new Date(2026, 11, 31) }}
       />
     );
   },
+};
+
+/**
+ * An invalid single-day `value` (here `Invalid Date`) warns in development and
+ * renders NOTHING — it never crashes.
+ */
+export const InvalidSingleDayValueRendersNothing: Story = {
+  render: () => (
+    <div className="flex flex-col gap-rg">
+      <BodyText>The calendar below received an Invalid Date and renders nothing.</BodyText>
+      <Calendar
+        mode={DatePickerMode.singleDay}
+        value={new Date("not a date")}
+        onValueChange={() => {}}
+        today={TODAY}
+      />
+    </div>
+  ),
+};
+
+/**
+ * An invalid range `value` (here an Invalid Date as `from`) warns in
+ * development and renders NOTHING — it never crashes.
+ */
+export const InvalidRangeValueRendersNothing: Story = {
+  render: () => (
+    <div className="flex flex-col gap-rg">
+      <BodyText>The calendar below received a range with an invalid end and renders nothing.</BodyText>
+      <Calendar
+        mode={DatePickerMode.dateRange}
+        value={{ from: new Date(NaN), to: TODAY }}
+        onValueChange={() => {}}
+        today={TODAY}
+      />
+    </div>
+  ),
+};
+
+/** A `mode` other than the two DatePickerMode values warns and renders nothing. */
+export const UnknownModeRendersNothing: Story = {
+  render: () => (
+    <div className="flex flex-col gap-rg">
+      <BodyText>The calendar below received an unknown mode and renders nothing.</BodyText>
+      <Calendar
+        mode={"week" as unknown as typeof DatePickerMode.singleDay}
+        value={TODAY}
+        onValueChange={() => {}}
+        today={TODAY}
+      />
+    </div>
+  ),
 };

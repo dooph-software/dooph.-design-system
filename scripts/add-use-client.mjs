@@ -8,13 +8,15 @@
 // Running here — after tsup has flushed the real files to disk — is reliable.
 //
 // How it decides which outputs to stamp:
-// 1. Scan src/ for modules whose first lines carry a "use client" directive
-//    (the source of truth — kept in lockstep with the component files).
+// 1. Scan src/ for modules whose directive prologue (after any header comment,
+//    which R11.9 puts first) carries "use client". A "use client" line anywhere
+//    else fails the build.
 // 2. Read tsup's emitted metafiles (dist/metafile-esm.json + metafile-cjs.json),
 //    which map every output chunk to the exact input modules bundled into it.
 // 3. Any output whose inputs include a client source gets the directive prepended
 //    as its very first line (before imports/requires). Pure modules (cn, types,
-//    icons, BaseText, Shapes) never match, so they stay server-safe.
+//    icons, BaseText, Shapes) never match, so they stay server-safe. The paired
+//    `.map` is shifted down one generated line so stack traces stay aligned.
 
 import {
   existsSync,
@@ -33,21 +35,44 @@ const DIRECTIVE = 'use client';
 
 const toPosix = (p) => p.split(path.sep).join('/');
 
-/** True if a source file declares the directive within its prologue. */
-function hasDirective(contents) {
-  // Inspect the first handful of non-empty lines; the directive must precede
-  // imports, but allow a leading BOM/comment-free blank prologue.
-  const lines = contents.split('\n').slice(0, 5);
-  return lines.some((line) => {
-    const t = line.trim();
-    return (
-      t === `"${DIRECTIVE}";` ||
-      t === `'${DIRECTIVE}';` ||
-      t === `"${DIRECTIVE}"` ||
-      t === `'${DIRECTIVE}'`
-    );
-  });
+/** String-literal statements at the top of a module (its directive prologue),
+ *  after a BOM, whitespace and comments — the same rule a JS parser applies. */
+function prologueDirectives(contents) {
+  const src = contents.replace(/^﻿/, '');
+  const found = [];
+  let i = 0;
+  for (;;) {
+    const ws = /\s*/y;
+    ws.lastIndex = i;
+    ws.exec(src);
+    i = ws.lastIndex;
+    if (src.startsWith('//', i)) {
+      const nl = src.indexOf('\n', i);
+      i = nl === -1 ? src.length : nl + 1;
+      continue;
+    }
+    if (src.startsWith('/*', i)) {
+      const end = src.indexOf('*/', i + 2);
+      if (end === -1) return found;
+      i = end + 2;
+      continue;
+    }
+    const lit = /(["'])([^"'\\\n]*)\1[ \t]*;?/y;
+    lit.lastIndex = i;
+    const m = lit.exec(src);
+    if (!m) return found;
+    found.push(m[2]);
+    i = lit.lastIndex;
+  }
 }
+
+/** True if a source file declares the directive in its prologue. */
+function hasDirective(contents) {
+  return prologueDirectives(contents).includes(DIRECTIVE);
+}
+
+/** A `"use client"` line anywhere in the file (used to catch misplaced directives). */
+const DIRECTIVE_LINE = /^\s*(["'])use client\1;?\s*$/m;
 
 /** Recursively collect client source modules, keyed as posix paths relative to cwd. */
 function collectClientSources(dir, acc) {
@@ -56,8 +81,13 @@ function collectClientSources(dir, acc) {
     if (statSync(full).isDirectory()) {
       collectClientSources(full, acc);
     } else if (/\.(ts|tsx|js|jsx)$/.test(entry)) {
-      if (hasDirective(readFileSync(full, 'utf8'))) {
+      const contents = readFileSync(full, 'utf8');
+      if (hasDirective(contents)) {
         acc.add(toPosix(path.relative(cwd, full)));
+      } else if (DIRECTIVE_LINE.test(contents)) {
+        throw new Error(
+          `[add-use-client] ${toPosix(path.relative(cwd, full))} has a "use client" line outside its directive prologue (only comments may precede it).`,
+        );
       }
     }
   }
@@ -106,6 +136,14 @@ function run() {
       const contents = readFileSync(full, 'utf8');
       if (alreadyStamped(contents)) continue;
       writeFileSync(full, `"${DIRECTIVE}";\n${contents}`);
+      // The directive adds one line at the top; shift the paired source map by one
+      // generated line (a leading ';' in `mappings`) so stack traces stay aligned.
+      const mapPath = `${full}.map`;
+      if (existsSync(mapPath)) {
+        const map = JSON.parse(readFileSync(mapPath, 'utf8'));
+        map.mappings = `;${map.mappings}`;
+        writeFileSync(mapPath, JSON.stringify(map));
+      }
       stamped.add(toPosix(outPath));
     }
   }

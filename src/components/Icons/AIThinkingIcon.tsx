@@ -14,5 +14,3 @@ export const AIThinkingIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default AIThinkingIcon;

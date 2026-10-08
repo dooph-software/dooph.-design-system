@@ -1,12 +1,28 @@
-import type { ReactNode } from "react";
-import { BaseIcon } from "../Icons";
+import type { FunctionComponent, ReactNode } from "react";
+import { BaseIcon, type IconProps } from "../Icons";
 
-export interface ShapeProps {
-  size: number;
+/** Shape props plus the icon's `<svg>` passthrough (`className`, `aria-*`,
+ *  `id`, handlers, `style`, `ref`). Shapes size by `size` and paint by
+ *  fill/stroke, so the icon's `size`/`strokeWidth`/`color` are replaced, not
+ *  inherited. */
+export interface ShapeProps
+  extends Omit<IconProps, "size" | "strokeWidth" | "color" | "children"> {
+  /** px number, or any CSS length — e.g. a `var(--ui-size-*)` token. */
+  size: number | string;
   strokeColor?: string;
   fillColor?: string;
   strokeWeight?: number | string;
 }
+
+declare const dsShape: unique symbol;
+
+/** One of the DS shapes, as built by createShape. The brand is type-only (no
+ *  runtime marker). It lets `shapes` props reject components getShapePath
+ *  cannot map, such as `memo(CloverShape)` or a hand-written shape, at compile
+ *  time instead of throwing during render. */
+export type DsShapeComponent = FunctionComponent<ShapeProps> & {
+  readonly [dsShape]: true;
+};
 
 type BaseShapeProps = ShapeProps & {
   children?: ReactNode;
@@ -54,11 +70,14 @@ export const BaseShape = ({
   fillColor,
   strokeWeight = "1px",
   children,
+  ...rest
 }: BaseShapeProps) => {
   return (
     <BaseIcon
+      // First, so the shape's own size, stroke and fill below still win.
+      {...rest}
       size={size}
-      strokeColor={strokeColor ?? undefined}
+      strokeColor={strokeColor}
       fillColor={fillColor}
       strokeWidth={strokeWeight}
     >
@@ -66,5 +85,3 @@ export const BaseShape = ({
     </BaseIcon>
   );
 };
-
-export default BaseShape;

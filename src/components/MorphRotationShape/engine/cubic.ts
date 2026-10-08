@@ -4,7 +4,7 @@
  * (Apache 2.0). See THIRD_PARTY_NOTICES.md.
  *
  * ## constraints
- * - Keep this file a faithful port. Behaviour fixes belong in ../svgPath.ts
+ * - Keep this file a faithful port. Behaviour fixes belong in ./svgPath.ts
  *   (see its convexity note), not here, so the port can be diffed against
  *   upstream.
  */

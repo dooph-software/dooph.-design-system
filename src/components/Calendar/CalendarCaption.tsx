@@ -15,6 +15,12 @@ import { BodyText, ButtonText } from "../Text";
 import { addMonths } from "./dateUtils";
 import { buildYearOptions, formatMonthName, isYearOutOfBounds } from "./dateFormat";
 
+/** Accessible names for the caption's month arrows. English by default. */
+export type CalendarLabels = {
+  previousMonth?: string;
+  nextMonth?: string;
+};
+
 export type CalendarCaptionProps = {
   /** First day of the displayed month. */
   viewMonth: Date;
@@ -24,6 +30,8 @@ export type CalendarCaptionProps = {
   yearBounds?: { from?: Date; to?: Date };
   onMonthChange: (month: Date) => void;
   locale?: string;
+  /** Accessible names for the month arrows; pair with `locale`. */
+  labels?: CalendarLabels;
   className?: string;
 };
 
@@ -34,6 +42,7 @@ function CalendarCaption({
   yearBounds,
   onMonthChange,
   locale,
+  labels,
   className,
 }: CalendarCaptionProps) {
   const years = buildYearOptions(viewMonth, value, today, yearBounds);
@@ -42,12 +51,11 @@ function CalendarCaption({
   // Clamping already prevents navigating out of bounds — disabling the button
   // tells the user that, instead of letting them click into a no-op.
   //
-  // Guarded on the CURRENT view being in bounds. Step 5 makes an out-of-bounds
-  // `viewMonth` reachable for the first time (a controlled `month` prop is now
-  // respected rather than clamped), and in that state BOTH neighbours are also
-  // out of bounds — so an unguarded test would disable both arrows, including
-  // the one pointing back toward the bounds, stranding the user exactly where
-  // they most need to navigate.
+  // Guarded on the CURRENT view being in bounds. A controlled `month` is
+  // respected rather than clamped, so `viewMonth` can be out of bounds, and then
+  // BOTH neighbours are out of bounds too — an unguarded test would disable both
+  // arrows, including the one pointing back toward the bounds, stranding the
+  // user exactly where they most need to navigate.
   const viewInBounds = !isYearOutOfBounds(viewMonth, yearBounds);
   const atFloor =
     viewInBounds && isYearOutOfBounds(addMonths(viewMonth, -1), yearBounds);
@@ -55,8 +63,8 @@ function CalendarCaption({
     viewInBounds && isYearOutOfBounds(addMonths(viewMonth, 1), yearBounds);
 
   return (
-    <div className={cn("flex items-center justify-between gap-xs", className)}>
-      <div className="flex items-center gap-xs">
+    <div className={cn("flex items-center justify-between gap-sm", className)}>
+      <div className="flex items-center gap-sm">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <TextDropdownTrigger
@@ -114,7 +122,7 @@ function CalendarCaption({
         <Button
           variant={ButtonVariant.ghost}
           size={ButtonSize.iconSm}
-          aria-label="Previous month"
+          aria-label={labels?.previousMonth ?? "Previous month"}
           disabled={atFloor}
           className="text-ghost-fg-active"
           onClick={() => onMonthChange(addMonths(viewMonth, -1))}
@@ -124,7 +132,7 @@ function CalendarCaption({
         <Button
           variant={ButtonVariant.ghost}
           size={ButtonSize.iconSm}
-          aria-label="Next month"
+          aria-label={labels?.nextMonth ?? "Next month"}
           disabled={atCeiling}
           className="text-ghost-fg-active"
           onClick={() => onMonthChange(addMonths(viewMonth, 1))}

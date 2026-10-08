@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { LinearProgressIndicator } from './LinearProgressIndicator';
 import { DS_COLOR_TOKENS } from '../../utils/color';
 import { LabelText } from '../Text';
@@ -50,7 +50,7 @@ export const Colors: Story = {
   },
   render: () => (
     <div className="flex w-96 flex-col gap-4">
-      {(['primary', 'brand', 'text', 'error-primary'] as const).map((c) => (
+      {(['primary', 'prominent', 'text', 'danger-primary'] as const).map((c) => (
         <div key={c} className="flex flex-col gap-1">
           <LabelText className="text-text-tertiary">{c}</LabelText>
           <LinearProgressIndicator color={c} value={60} max={100} />
@@ -87,7 +87,7 @@ export const AnimatedDemo: Story = {
         </div>
         <div className="flex w-96 flex-col gap-2">
           <div className="flex items-center justify-between">
-            <LabelText>Brand - Animated</LabelText>
+            <LabelText>Prominent - Animated</LabelText>
             <LabelText className="text-text-tertiary">{value}%</LabelText>
           </div>
           <LinearProgressIndicator color="prominent" value={value} max={100} />

@@ -1,0 +1,15 @@
+src\components\HotkeyIndicator\HotkeyIndicator.tsx:23:              ? 'bg-ghost-active border-border-primary'
+src\components\DropdownTrigger\DropdownTrigger.tsx:198:            ? "cursor-not-allowed bg-secondary-disabled border-secondary-border-disabled"
+src\components\VerificationCode\CodeDigitInput.tsx:50:            ? "border-danger-primary bg-secondary text-danger-primary"
+src\components\CTAButton\CTAButton.tsx:75:          isPrimary ? "bg-primary" : "bg-secondary",
+src\components\CTAButton\CTAButton.tsx:84:              isPrimary ? "text-primary-fg" : "text-secondary-fg",
+src\components\CTAButton\CTAButton.tsx:95:              isPrimary ? "bg-secondary" : "bg-primary",
+src\components\Input\Input.tsx:135:    const fieldText = isNumber ? "text-style-mono" : "text-style-button";
+src\components\Input\Input.tsx:160:            ? "inline-flex min-w-button justify-center ds-pl-ui-rg ds-pr-ui-rg"
+src\components\Input\Input.tsx:164:            ? "cursor-not-allowed bg-secondary-disabled border-secondary-border-disabled"
+src\components\OutlineButton\OutlineButton.tsx:166:              ? "bg-primary border-primary text-primary-fg"
+src\components\MorphRotationShape\MorphRotationShape.tsx:351:        <g className={isLoader ? "ds-shape-morph-passive-spin" : undefined}>
+src\components\Toast\Toast.tsx:287:                        ? "text-prominent-fg"
+src\components\Toast\Toast.tsx:299:                        ? "text-prominent-fg"
+src\components\AIChat\AIToolPart.tsx:72:                ? "text-danger-primary"
+src\components\Slider\Slider.tsx:339:              '--ds-slider-pad': showSteps ? 'var(--ui-spacing-xs)' : '0px',

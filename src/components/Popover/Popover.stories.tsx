@@ -17,7 +17,7 @@ export const Default: Story = {
       <PopoverTrigger asChild>
         <Button variant={ButtonVariant.secondary}>Open popover</Button>
       </PopoverTrigger>
-      <PopoverContent className="p-md">
+      <PopoverContent className="p-lg">
         <BodyText>Anchored panel content.</BodyText>
       </PopoverContent>
     </Popover>
@@ -31,7 +31,7 @@ export const AlignedEnd: Story = {
         <PopoverTrigger asChild>
           <Button variant={ButtonVariant.secondary}>Aligned end</Button>
         </PopoverTrigger>
-        <PopoverContent align="end" className="p-md">
+        <PopoverContent align="end" className="p-lg">
           <BodyText>Right-aligned to the trigger.</BodyText>
         </PopoverContent>
       </Popover>
@@ -45,7 +45,7 @@ export const Inline: Story = {
       <PopoverTrigger asChild>
         <Button variant={ButtonVariant.secondary}>Not portalled</Button>
       </PopoverTrigger>
-      <PopoverContent portal={false} className="p-md">
+      <PopoverContent portal={false} className="p-lg">
         <BodyText>Rendered in place rather than in a portal.</BodyText>
       </PopoverContent>
     </Popover>

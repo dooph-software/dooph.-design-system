@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useEffect, useRef } from 'react';
 import {
   DropdownTrigger,
@@ -40,7 +40,7 @@ export const Typeable: Story = {
   render: () => <TypeableDropdownTrigger placeholder="Search or select…" />,
 };
 
-/** Menu-open chrome (border + ds-focus-ring), not keyboard focus — see TypeableFocused. */
+/** Menu-open chrome (border + ds-focus-ring-on-open), not keyboard focus — see TypeableFocused. */
 export const TypeableOpen: Story = {
   render: () => (
     <TypeableDropdownTrigger placeholder="Menu open…" data-state="open" />
@@ -75,7 +75,7 @@ export const TypeableFocused: Story = {
 /** Figma Typeable Dropdown Trigger (38:410) — Placeholder / Single / Multi / Disabled. */
 export const TypeableStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-sm">
+    <div className="flex flex-col gap-rg">
       <TypeableDropdownTrigger placeholder="Users..." data-testid="tt-placeholder" />
       <TypeableDropdownTrigger placeholder="Users..." displayValue="jacesimons14" data-testid="tt-single" />
       <TypeableDropdownTrigger placeholder="Users..." displayValue="2 Selected" data-testid="tt-multi" />
@@ -90,6 +90,24 @@ export const Text: Story = {
 
 export const TextSmall: Story = {
   render: () => <TextDropdownTrigger size={TextDropdownSize.sm}>Filter</TextDropdownTrigger>,
+};
+
+/** `asChild` renders the consumer's element as the root; the caret renders inside it. */
+export const SecondaryAsChild: Story = {
+  render: () => (
+    <DropdownTrigger asChild>
+      <a href="#sort">Sort by name</a>
+    </DropdownTrigger>
+  ),
+};
+
+/** `asChild` renders the consumer's element as the root; the chevron renders inside it. */
+export const TextAsChild: Story = {
+  render: () => (
+    <TextDropdownTrigger asChild>
+      <a href="#sort">Sort by name</a>
+    </TextDropdownTrigger>
+  ),
 };
 
 export const AllTriggers: Story = {

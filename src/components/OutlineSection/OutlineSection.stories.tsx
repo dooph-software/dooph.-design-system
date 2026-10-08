@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Avatar, AvatarSize } from '../Avatar/Avatar';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Avatar, AvatarSize } from '../Avatar';
 import { Button } from '../Button/Button';
 import { ButtonSize, ButtonVariant } from '../Button/constants';
 import { CheckIcon, OrganizationIcon, PlusIcon } from '../Icons';
@@ -32,10 +32,10 @@ export const Default: Story = {
 export const Card: Story = {
   render: () => (
     <OutlineSection>
-      <div className="flex w-80 flex-col gap-md">
-        <div className="flex items-start justify-between gap-sm">
-          <div className="flex items-center gap-sm">
-            <Avatar size={AvatarSize.small}>
+      <div className="flex w-80 flex-col gap-lg">
+        <div className="flex items-start justify-between gap-rg">
+          <div className="flex items-center gap-rg">
+            <Avatar size={AvatarSize.sm}>
               <OrganizationIcon />
             </Avatar>
             <div className="flex flex-col">
@@ -53,8 +53,8 @@ export const Card: Story = {
           Billing is on track for this cycle. Two seats are still unassigned.
         </BodyText>
 
-        <div className="flex flex-col gap-xs">
-          <div className="flex items-center justify-between gap-sm">
+        <div className="flex flex-col gap-sm">
+          <div className="flex items-center justify-between gap-rg">
             <LabelText>Seats used</LabelText>
             <LabelText>18 / 24</LabelText>
           </div>
@@ -70,7 +70,7 @@ export const Card: Story = {
           <SegmentedTabItem value="billing">Billing</SegmentedTabItem>
         </SegmentedTabSelect>
 
-        <div className="flex items-center justify-end gap-sm">
+        <div className="flex items-center justify-end gap-rg">
           <Button variant={ButtonVariant.secondary} size={ButtonSize.sm}>
             <PlusIcon />
             Invite

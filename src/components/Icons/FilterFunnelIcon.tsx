@@ -7,5 +7,3 @@ export const FilterFunnelIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default FilterFunnelIcon;

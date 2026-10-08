@@ -1,2 +1,2 @@
-export { SplitButton, SplitButtonAction, SplitButtonTrigger } from './SplitButton';
-export type { SplitButtonProps, SplitButtonActionProps, SplitButtonTriggerProps } from './SplitButton';
+export { SplitButton, SplitButtonAction, SplitButtonGroup, SplitButtonTrigger } from './SplitButton';
+export type { SplitButtonProps, SplitButtonActionProps, SplitButtonGroupProps, SplitButtonTriggerProps } from './SplitButton';

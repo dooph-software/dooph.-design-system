@@ -1,0 +1,45 @@
+defined classes: 120
+
+== defined in >1 place ==
+
+== ds-* defined OUTSIDE dooph-component-tokens.css ==
+  ds-shimmer-text index.css:369[utilities]
+  ds-roll-hover index.css:398[utilities]
+  ds-roll-hover-word index.css:401[utilities]
+  ds-roll-hover-char index.css:406[utilities]
+  ds-roll-hover-out index.css:417[utilities]
+  ds-roll-hover-in index.css:418[utilities]
+  ds-underline-link index.css:493[utilities]
+  ds-rolling-digits index.css:553[utilities]
+  ds-rolling-digits-figure index.css:556[utilities]
+  ds-rolling-digits-wheel index.css:575[utilities]
+  ds-rolling-digits-sep index.css:576[utilities]
+  ds-rolling-digits-space index.css:622[utilities]
+  ds-rolling-digits-clip index.css:634[utilities]
+  ds-rolling-digits-col index.css:646[utilities]
+  ds-rolling-digits-decimals index.css:666[utilities]
+  ds-roll-change-out index.css:717[utilities]
+  ds-roll-change-in index.css:722[utilities]
+  ds-fade-change-out index.css:739[utilities]
+  ds-fade-change-in index.css:744[utilities]
+  ds-sidebar-rail index.css:765[utilities]
+  ds-shape-morph index.css:789[utilities]
+  ds-shape-morph-passive-spin index.css:800[utilities]
+  ds-dropdown-caret index.css:819[utilities]
+  ds-dropdown-caret-frame index.css:825[utilities]
+  ds-dropdown-caret-chevron index.css:829[utilities]
+  ds-dropdown-caret-host index.css:835[utilities]
+  ds-reveal-change index.css:882[utilities]
+  ds-reveal-change-content index.css:901[utilities]
+
+== not in @layer utilities/components ==
+
+== unused by components (non-story tsx/ts) ==
+  ds-focus-ring | story files: 0 | consumer skills: -
+  ds-selection | story files: 0 | consumer skills: -
+  ds-my-ui-xs | story files: 0 | consumer skills: -
+
+== ds-*/text-style-* referenced in src ts/tsx but NOT defined in src/styles ==
+  ds-reveal-opaque src/components/AnimatedText/RevealChangeText.tsx
+  ds-spinner-rotate src/components/LoadingSpinner/LoadingSpinner.tsx
+  ds-shape-morph-clock src/components/MorphRotationShape/MorphRotationShape.tsx

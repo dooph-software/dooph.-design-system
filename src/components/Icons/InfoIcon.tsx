@@ -9,5 +9,3 @@ export const InfoIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default InfoIcon;

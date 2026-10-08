@@ -1,0 +1,2 @@
+:root { --ui-color-danger: red; --ui-color-danger-foreground: white; }
+.x { color: var(--ui-color-danger-primary); }

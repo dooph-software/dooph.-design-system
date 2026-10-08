@@ -9,5 +9,3 @@ export const ThreeDotsIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default ThreeDotsIcon;

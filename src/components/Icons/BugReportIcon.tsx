@@ -17,5 +17,3 @@ export const BugReportIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default BugReportIcon;

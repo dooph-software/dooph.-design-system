@@ -1,9 +1,8 @@
 "use client";
 
-import { Slot } from "@radix-ui/react-slot";
+import { Slot, Slottable } from "@radix-ui/react-slot";
 import {
   forwardRef,
-  useCallback,
   useRef,
   type ComponentPropsWithoutRef,
   type ComponentPropsWithRef,
@@ -13,6 +12,7 @@ import {
   type Ref,
 } from "react";
 import { cn } from "../../utils/cn";
+import { useComposedRefs } from "../../utils/composeRefs";
 import { DropdownCaret, DropdownCaretVariant } from "../DropdownCaret";
 import { ChevronDownIcon, IconSize, SearchIcon } from "../Icons";
 import type { DropdownMenuSelectType } from "../Menu/constants";
@@ -42,25 +42,27 @@ const DropdownTriggerContent = forwardRef<
   HTMLDivElement,
   DropdownTriggerContentProps
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex flex-row gap-xs", className)} {...props} />
+  <div ref={ref} className={cn("flex flex-row gap-sm", className)} {...props} />
 ));
 DropdownTriggerContent.displayName = "DropdownTriggerContent";
 
+/* Typed at the default element so the render body's bindings keep their
+ * types; only the exported cast is polymorphic. */
 const DropdownTriggerBase = forwardRef<
   HTMLElement,
-  DropdownTriggerProps<ElementType>
+  DropdownTriggerProps<"button">
 >(({ className, children, asChild = false, ...props }, ref) => {
   const Comp = (asChild ? Slot : "button") as ElementType;
   return (
     <Comp
       ref={ref as ForwardedRef<HTMLElement>}
       className={cn(
-        "inline-flex h-button items-center justify-center ds-gap-ui-xs",
-        "min-w-40 rounded-tight border border-solid border-border-primary",
+        "inline-flex h-button items-center justify-center ds-gap-ui-sm",
+        "min-w-menu rounded-tight border border-solid border-border-primary",
         "bg-secondary text-secondary-fg",
-        "ds-dropdown-caret-host ds-pl-ui-rg",
+        "ds-dropdown-caret-host ds-pl-ui-md",
         "text-style-button cursor-pointer select-none",
-        "transition-all duration-150 ease-out",
+        "ds-motion-state",
         "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-secondary",
         "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active",
         "ds-focus-visible-ring",
@@ -70,7 +72,10 @@ const DropdownTriggerBase = forwardRef<
       )}
       {...props}
     >
-      <span className="flex-1 text-left">{children}</span>
+      {/* flex-1 pushes the caret to the far edge; Slottable marks the asChild target. */}
+      <Slottable child={children}>
+        {(child) => <span className="flex-1 text-left">{child}</span>}
+      </Slottable>
       <DropdownCaret variant={DropdownCaretVariant.dropdown} />
     </Comp>
   );
@@ -165,46 +170,31 @@ const TypeableDropdownTrigger = forwardRef<
       onKeyDown,
       "data-state": dataState,
       "data-select-type": dataSelectType,
-      ...triggerProps
+      ...rest
     },
     ref,
   ) => {
     const inputElRef = useRef<HTMLInputElement>(null);
-    const setInputRef = useCallback(
-      (node: HTMLInputElement | null) => {
-        inputElRef.current = node;
+    const setInputRef = useComposedRefs(inputElRef, inputRef);
 
-        if (typeof inputRef === "function") {
-          inputRef(node);
-          return;
-        }
-
-        if (inputRef) {
-          inputRef.current = node;
-        }
-      },
-      [inputRef],
-    );
+    // Radix Trigger's Slot merges type="button"; a <div> has no type.
+    const { type: _slotType, ...triggerProps } = rest as typeof rest & { type?: string };
 
     return (
       <div
         ref={ref}
         className={cn(
-          "inline-flex h-button items-center ds-gap-ui-xs",
-          "min-w-40 rounded-tight border border-solid border-border-primary",
-          "bg-secondary ds-dropdown-caret-host ds-pl-ui-rg",
-          "transition-all duration-150 ease-out",
-          disabled
-            ? "cursor-not-allowed bg-secondary-disabled border-secondary-border-disabled"
-            : [
-                "cursor-text",
-                "[&:hover:not(:focus-within)]:border-input-border-hover [&:hover:not(:focus-within)]:shadow-button-secondary",
-                "focus-within:border-input-border-focus ds-focus-within-ring",
-                // The ring carries its state in its own selector — a
-                // `data-[state=open]:ds-focus-ring` variant composes a Tailwind
-                // variant with a package class and emits no rule at all.
-                "data-[state=open]:border-input-border-focus ds-focus-ring-on-open",
-              ],
+          "inline-flex h-button items-center ds-gap-ui-sm",
+          "min-w-menu rounded-tight border border-solid border-border-primary",
+          "bg-secondary ds-dropdown-caret-host ds-pl-ui-md",
+          "ds-motion-state",
+          "cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-secondary-disabled data-[disabled]:border-secondary-border-disabled",
+          "[&:hover:not(:focus-within):not([data-disabled])]:border-input-border-hover [&:hover:not(:focus-within):not([data-disabled])]:shadow-button-secondary",
+          "focus-within:border-input-border-focus ds-focus-within-ring",
+          // The ring carries its state in its own selector — a
+          // `data-[state=open]:ds-*` variant composes a Tailwind
+          // variant with a package class and emits no rule at all.
+          "data-[state=open]:border-input-border-focus ds-focus-ring-on-open",
           className,
         )}
         onPointerDown={(event) => {
@@ -297,15 +287,16 @@ type TextDropdownTriggerComponent = <TElement extends ElementType = "button">(
   },
 ) => ReactElement | null;
 
+/* Typed at the default element, as DropdownTriggerBase above. */
 const TextDropdownTriggerBase = forwardRef<
   HTMLElement,
-  TextDropdownTriggerProps<ElementType>
+  TextDropdownTriggerProps<"button">
 >(
   (
     {
       className,
       children,
-      size = TextDropdownSize.default,
+      size = TextDropdownSize.standard,
       asChild = false,
       ...props
     },
@@ -316,20 +307,22 @@ const TextDropdownTriggerBase = forwardRef<
       <Comp
         ref={ref as ForwardedRef<HTMLElement>}
         className={cn(
-          "inline-flex items-center ds-gap-ui-xs",
+          "inline-flex items-center ds-gap-ui-sm",
           "rounded-tight border border-transparent bg-transparent",
-          "cursor-pointer select-none transition-all duration-150 ease-out",
+          "cursor-pointer select-none ds-motion-state",
           "ds-focus-visible-ring",
           "ds-disabled-state",
-          size === TextDropdownSize.default &&
-            "h-[30px] text-style-button text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+          size === TextDropdownSize.standard &&
+            "h-text-trigger text-style-button text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
           size === TextDropdownSize.sm &&
             "text-style-label text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
           className,
         )}
         {...props}
       >
-        <span>{children}</span>
+        {/* Keeps multi-node children one inline run, so the root's gap sits
+         * only between the label and the chevron. Slottable marks the asChild target. */}
+        <Slottable child={children}>{(child) => <span>{child}</span>}</Slottable>
         <ChevronDownIcon
           size={
             size === TextDropdownSize.sm ? IconSize.sm : IconSize.rg

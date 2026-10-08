@@ -2,13 +2,18 @@
 // these values. Re-exported via the barrel; LoadingSpinner.tsx imports them.
 
 export const LoadingSpinnerVariant = {
-  /** Smooth circular arc — rAF-driven discrete arcs with M3 gap behaviour. */
+  /** Smooth circular arc — CSS-driven discrete arc and track with M3 gap behaviour. */
   flat: "flat",
   /**
    * Icon spinner — the LoadingSpinnerIcon paths rotate at a constant linear
    * rate. Communicates "loading" via a familiar eight-spoke icon.
    */
   spokes: "spokes",
+  /**
+   * The StarShape outline, filled, turning at a constant linear rate. Sized at
+   * ShapeMorphSpinner's shape-to-box ratio so the turn stays inside the box.
+   */
+  star: "star",
 } as const;
 export type LoadingSpinnerVariant =
   (typeof LoadingSpinnerVariant)[keyof typeof LoadingSpinnerVariant];

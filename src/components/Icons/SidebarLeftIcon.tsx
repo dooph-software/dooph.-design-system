@@ -8,5 +8,3 @@ export const SidebarLeftIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default SidebarLeftIcon;

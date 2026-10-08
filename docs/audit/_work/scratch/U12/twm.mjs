@@ -1,0 +1,10 @@
+import { createRequire } from "node:module";
+const require = createRequire("C:/Users/stick/Github/dooph/dooph-ds-audit-build/package.json");
+const { extendTailwindMerge } = require("tailwind-merge");
+const { clsx } = require("clsx");
+const twMerge = extendTailwindMerge({ extend: { classGroups: { "text-style": ["text-style-button","text-style-body","text-style-label","text-style-title","text-style-heading","text-style-subheading","text-style-hero","text-style-mono"] } } });
+const cn = (...i) => twMerge(clsx(i));
+const btnText = "inline-flex items-center justify-center gap-2 whitespace-nowrap border border-solid rounded-tight transition-all duration-150 ease-out cursor-pointer select-none ds-focus-visible-ring ds-disabled-state text-style-button text-ghost-fg border-transparent [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active [&:not(:disabled):not([aria-disabled=true])]:active:text-ghost-fg-active h-button px-3";
+console.log("TableHeaderCell sort button =>\n", cn(btnText, "w-full justify-start gap-1 text-text-primary"));
+console.log("\nTable root + story className =>\n", cn("flex flex-col w-full border border-border-primary rounded-normal", "h-[420px] border border-border-primary rounded-soft"));
+console.log("\nTableRow =>\n", cn("grid border-b border-border-primary","not-last:border-b","hover:bg-ghost-hover transition-colors duration-100"));

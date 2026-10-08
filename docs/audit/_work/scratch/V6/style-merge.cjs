@@ -1,0 +1,13 @@
+const B='C:/Users/stick/Github/dooph/dooph-ds-audit-build';
+const React=require(B+'/node_modules/react');
+const {renderToStaticMarkup}=require(B+'/node_modules/react-dom/server');
+const ds=require(B+'/dist/index.cjs');
+const h=React.createElement;
+const styleOf=(html,tag)=>{const m=html.match(/<div[^>]*style="([^"]*)"/g);return m;};
+console.log('TableHeader no style :', styleOf(renderToStaticMarkup(h(ds.TableHeader))));
+console.log('TableHeader opacity  :', styleOf(renderToStaticMarkup(h(ds.TableHeader,{style:{opacity:.5}}))));
+console.log('TableRow no style    :', styleOf(renderToStaticMarkup(h(ds.TableRow))));
+console.log('TableRow opacity     :', styleOf(renderToStaticMarkup(h(ds.TableRow,{style:{opacity:.5}}))));
+console.log('Table opacity        :', styleOf(renderToStaticMarkup(h(ds.Table,{columns:'1fr 2fr',style:{opacity:.5}}))));
+const sl=(p)=>{const html=renderToStaticMarkup(h(ds.SliderStepped,{defaultValue:[2],min:0,max:4,step:1,'aria-label':'s',...p}));return (html.match(/<span[^>]*style="([^"]*)"/)||[])[1];};
+console.log('\nSlider consumer style margin + --ds-slider-track-opacity:\n ', sl({style:{margin:4,'--ds-slider-track-opacity':'0.9','--ui-slider-track-primary-active-opacity':'0.33'}}));

@@ -8,5 +8,3 @@ export const SettingsBoltIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default SettingsBoltIcon;

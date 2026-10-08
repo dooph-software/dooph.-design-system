@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { forwardRef, type AnchorHTMLAttributes } from "react";
 import { TextLink } from "./TextLink";
 import { BodyText } from "../Text";
 
@@ -24,28 +25,18 @@ export const Default: Story = {
   },
 };
 
-export const Interactive: Story = {
-  name: "Interactive (Hover/Active)",
-  parameters: {
-    docs: {
-      description: {
-        story: "Ghost foreground at rest, primary text on hover/active. No underline.",
-      },
-    },
-  },
-  args: {
-    href: "#",
-    children: "Hover or click to see state change",
-  },
-};
+/** Stands in for Next.js `Link`: a component that renders its own `<a>` and forwards the ref. */
+const RouterLink = forwardRef<
+  HTMLAnchorElement,
+  AnchorHTMLAttributes<HTMLAnchorElement>
+>((props, ref) => <a ref={ref} {...props} />);
+RouterLink.displayName = "RouterLink";
 
 export const WithAsChild: Story = {
-  name: "asChild with button",
+  name: "asChild with a router link",
   render: () => (
     <TextLink asChild>
-      <button onClick={() => alert("Button clicked!")}>
-        Click as button
-      </button>
+      <RouterLink href="#changelog">Changelog</RouterLink>
     </TextLink>
   ),
 };

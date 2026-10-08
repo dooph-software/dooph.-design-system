@@ -16,17 +16,14 @@ import { CopyButtonVariant } from "./constants";
 const REVERT_MS = 2000;
 
 export interface CopyButtonProps
-  extends Omit<
-    ComponentPropsWithoutRef<typeof Button>,
-    "variant" | "size" | "children" | "asChild"
-  > {
+  extends Omit<ComponentPropsWithoutRef<"button">, "children"> {
   /** Text written to the clipboard. */
   value: string;
   variant?: CopyButtonVariant;
   onCopied?: (value: string) => void;
 }
 
-const CopyButton = forwardRef<HTMLElement, CopyButtonProps>(
+const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
   (
     {
       value,
@@ -49,7 +46,7 @@ const CopyButton = forwardRef<HTMLElement, CopyButtonProps>(
 
     const handleClick = useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
-        onClick?.(e as never);
+        onClick?.(e);
         void navigator.clipboard
           .writeText(value)
           .then(() => {
@@ -69,7 +66,7 @@ const CopyButton = forwardRef<HTMLElement, CopyButtonProps>(
       variant === CopyButtonVariant.ghost ? IconSize.rg : IconSize.md;
     return (
       <Button
-        ref={ref as React.Ref<HTMLButtonElement>}
+        ref={ref}
         variant={
           variant === CopyButtonVariant.ghost
             ? ButtonVariant.ghost

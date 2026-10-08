@@ -9,5 +9,3 @@ export const KeyIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default KeyIcon;

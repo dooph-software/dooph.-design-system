@@ -1,0 +1,708 @@
+diff --git a/package.json b/package.json
+index ac2755e..0894de3 100644
+--- a/package.json
++++ b/package.json
+@@ -39,14 +39,15 @@
+   ],
+   "scripts": {
+     "generate-icon-exports": "node scripts/generate-icon-exports.mjs",
++    "generate-shape-morph-ease": "node scripts/generate-shape-morph-ease.mjs",
+     "prep-release:patch": "npm version patch && npm run build && git push --follow-tags",
+     "prep-release:major": "npm version major && npm run build && git push --follow-tags",
+     "prep-release:minor": "npm version minor && npm run build && git push --follow-tags",
+     "sync-tokens": "node scripts/sync-theme.mjs",
+-    "build:js": "tsup",
++    "build:js": "node --max-old-space-size=8192 node_modules/tsup/dist/cli-default.js",
+     "build:css": "tailwindcss -i src/styles/index.css -o dist/styles.css && npm run copy-theme",
+     "copy-theme": "node scripts/copy-theme.mjs",
+-    "build": "npm run generate-icon-exports && npm run sync-tokens && npm run build:js",
++    "build": "npm run generate-icon-exports && npm run generate-shape-morph-ease && npm run sync-tokens && npm run build:js",
+     "build:watch": "tsup --watch",
+     "storybook": "storybook dev -p 6006",
+     "build-storybook": "storybook build",
+@@ -68,6 +69,7 @@
+     "react": "^19.2.8",
+     "react-dom": "^19.2.8",
+     "storybook": "^10.5.10",
++    "streamdown": "^2.6.0",
+     "tailwindcss": "^4.3.3",
+     "tailwindcss-animate": "^1.0.7",
+     "tsup": "^8.5.1",
+diff --git a/src/components/AIChat/constants.ts b/src/components/AIChat/constants.ts
+new file mode 100644
+index 0000000..e398cdf
+--- /dev/null
++++ b/src/components/AIChat/constants.ts
+@@ -0,0 +1,48 @@
++// Server-safe constants — no client APIs, intentionally NO "use client" directive
++// so these dot-accessible enums can be read from React Server Components.
++
++/**
++ * Which kind of work an AIToolPart row reports (Figma 761:1329 `Variant`).
++ *
++ * simple — an ordinary tool call. Settled rows lift their label and reveal
++ *          `meta` on hover.
++ * skill  — a skill/instructions load. Figma draws it as a quiet, static row:
++ *          no hover response and no meta.
++ *
++ * Usage: <AIToolPart variant={AIToolPartVariant.skill} />
++ */
++export const AIToolPartVariant = {
++  simple: "simple",
++  skill: "skill",
++} as const;
++export type AIToolPartVariant =
++  (typeof AIToolPartVariant)[keyof typeof AIToolPartVariant];
++
++/**
++ * Lifecycle of the tool call an AIToolPart row reports. Deliberately NOT the AI
++ * SDK's part states — the consumer maps its own states onto these three
++ * (e.g. `input-streaming`/`input-available` → active, `output-error` → error).
++ *
++ * Usage: <AIToolPart state={AIToolPartState.active} />
++ */
++export const AIToolPartState = {
++  active: "active",
++  complete: "complete",
++  error: "error",
++} as const;
++export type AIToolPartState =
++  (typeof AIToolPartState)[keyof typeof AIToolPartState];
++
++/**
++ * AIThinkingPart phase (Figma 761:1345 `Variant`). `thinking` is live — the
++ * label shimmers and any transcript streams inline, always visible. `thought`
++ * is settled — a transcript collapses behind a disclosure.
++ *
++ * Usage: <AIThinkingPart state={AIThinkingPartState.thinking} />
++ */
++export const AIThinkingPartState = {
++  thinking: "thinking",
++  thought: "thought",
++} as const;
++export type AIThinkingPartState =
++  (typeof AIThinkingPartState)[keyof typeof AIThinkingPartState];
+diff --git a/src/components/AnimatedText/constants.ts b/src/components/AnimatedText/constants.ts
+new file mode 100644
+index 0000000..ce5fc61
+--- /dev/null
++++ b/src/components/AnimatedText/constants.ts
+@@ -0,0 +1,32 @@
++// Server-safe constants — no client APIs, intentionally NO "use client" directive
++// so these dot-accessible enums can be read from React Server Components.
++
++/**
++ * Roll direction for RollChangeText / FadeChangeText / RollHoverText.
++ *
++ * `down` reads as content falling away (new content drops in from above); `up`
++ * reads as content travelling upward (new content rises in from below). Both
++ * RollChangeText and RollHoverText default to `down`, preserving their original
++ * motion when the prop is omitted.
++ */
++export const RollDirection = {
++  up: 'up',
++  down: 'down',
++} as const;
++export type RollDirection = (typeof RollDirection)[keyof typeof RollDirection];
++
++/**
++ * Reveal direction for RevealChangeText — the edge the content travels toward
++ * as the slot opens.
++ *
++ * `left` (the default) pins the content's RIGHT edge, so it reveals out to the
++ * left and collapses by tucking back under whatever sits to its right — the
++ * breadcrumb-stem case, where the stem hides under the separator. `right` pins
++ * the LEFT edge, so the content grows rightward into the space after it.
++ */
++export const RevealDirection = {
++  left: 'left',
++  right: 'right',
++} as const;
++export type RevealDirection =
++  (typeof RevealDirection)[keyof typeof RevealDirection];
+diff --git a/src/components/Button/constants.ts b/src/components/Button/constants.ts
+index 497cab9..ff5cd7a 100644
+--- a/src/components/Button/constants.ts
++++ b/src/components/Button/constants.ts
+@@ -8,7 +8,7 @@
+ export const ButtonVariant = {
+   primary: "primary",
+   secondary: "secondary",
+-  brand: "brand",
++  prominent: "prominent",
+   danger: "danger",
+   ghost: "ghost",
+   text: "text",
+diff --git a/src/components/Checkbox/constants.ts b/src/components/Checkbox/constants.ts
+index 24595db..25a7015 100644
+--- a/src/components/Checkbox/constants.ts
++++ b/src/components/Checkbox/constants.ts
+@@ -10,7 +10,7 @@ export type CheckboxChecked =
+   (typeof CheckboxChecked)[keyof typeof CheckboxChecked];
+ 
+ export const CheckboxVariant = {
+-  brand: "brand",
++  prominent: "prominent",
+   primary: "primary",
+ } as const;
+ export type CheckboxVariant =
+diff --git a/src/components/DropdownCaret/constants.ts b/src/components/DropdownCaret/constants.ts
+new file mode 100644
+index 0000000..d719ea5
+--- /dev/null
++++ b/src/components/DropdownCaret/constants.ts
+@@ -0,0 +1,9 @@
++// Server-safe constants — no "use client" so RSC code can read them.
++
++export const DropdownCaretVariant = {
++  /** DropdownTrigger: squircle closed, pixircle open. */
++  dropdown: "dropdown",
++  /** TypeableDropdownTrigger: clover closed, puff open. */
++  typeable: "typeable",
++} as const;
++export type DropdownCaretVariant = (typeof DropdownCaretVariant)[keyof typeof DropdownCaretVariant];
+diff --git a/src/components/Icons/BaseIcon.tsx b/src/components/Icons/BaseIcon.tsx
+index 69f015e..44aa06f 100644
+--- a/src/components/Icons/BaseIcon.tsx
++++ b/src/components/Icons/BaseIcon.tsx
+@@ -4,12 +4,13 @@ import { cn } from "../../utils/cn";
+  * Dot-accessible icon size constants.
+  * Values resolve via CSS tokens so consuming projects can override.
+  *
+- * Usage: <ChevronDownIcon size={IconSizes.medium} />
++ * Usage: <ChevronDownIcon size={IconSizes.md} />
+  */
+ export const IconSizes = {
+-  tiny: "var(--ui-icon-tiny)", // 12px
+-  standard: "var(--ui-icon-standard)", // 14px
+-  medium: "var(--ui-icon-medium)", // 16px
++  sm: "var(--ui-icon-sm)", // 12px
++  rg: "var(--ui-icon-rg)", // 14px
++  md: "var(--ui-icon-md)", // 16px
++  lg: "var(--ui-icon-lg)", // 18px
+ } as const;
+ export type IconSizes = (typeof IconSizes)[keyof typeof IconSizes] | string;
+ 
+@@ -35,7 +36,7 @@ export interface IconProps {
+  *   );
+  */
+ export const BaseIcon = ({
+-  size = IconSizes.standard,
++  size = IconSizes.rg,
+   color,
+   strokeWidth,
+   strokeColor,
+@@ -57,7 +58,7 @@ export const BaseIcon = ({
+       height: size,
+       fill: fillColor ?? undefined,
+       stroke: strokeColor ?? color ?? "currentColor",
+-      strokeWidth: strokeWidth ?? "var(--ui-icon-stroke)",
++      strokeWidth: strokeWidth ?? "var(--ui-icon-stroke-width)",
+     }}
+   >
+     {children}
+diff --git a/src/components/Input/constants.ts b/src/components/Input/constants.ts
+new file mode 100644
+index 0000000..fe1d3bc
+--- /dev/null
++++ b/src/components/Input/constants.ts
+@@ -0,0 +1,19 @@
++// Server-safe constants — no client APIs, intentionally NO "use client" directive
++// so these dot-accessible enums can be read from React Server Components.
++
++/**
++ * Dot-accessible Input variants, mirroring Figma's `Input` component 1:1.
++ * Usage: <Input variant={InputVariant.iconNumber} icon={<HashIcon />} />
++ *
++ * text       — body text, fills its container (the default)
++ * number     — mono figures; hugs its value, never narrower than a square
++ * iconText   — `text` with a leading icon (requires `icon`)
++ * iconNumber — `number` with a leading icon (requires `icon`)
++ */
++export const InputVariant = {
++  text: "text",
++  number: "number",
++  iconText: "icon-text",
++  iconNumber: "icon-number",
++} as const;
++export type InputVariant = (typeof InputVariant)[keyof typeof InputVariant];
+diff --git a/src/components/LoadingSpinner/constants.ts b/src/components/LoadingSpinner/constants.ts
+index ad388a7..ab49e93 100644
+--- a/src/components/LoadingSpinner/constants.ts
++++ b/src/components/LoadingSpinner/constants.ts
+@@ -15,7 +15,7 @@ export type LoadingSpinnerVariant =
+ 
+ export const LoadingSpinnerColor = {
+   primary: "primary",
+-  brand: "brand",
++  prominent: "prominent",
+ } as const;
+ export type LoadingSpinnerColor =
+   (typeof LoadingSpinnerColor)[keyof typeof LoadingSpinnerColor];
+diff --git a/src/components/Menu/constants.ts b/src/components/Menu/constants.ts
+index ecab867..951c924 100644
+--- a/src/components/Menu/constants.ts
++++ b/src/components/Menu/constants.ts
+@@ -2,24 +2,22 @@
+ // so these dot-accessible enums can be read from React Server Components.
+ 
+ /**
+- * Dot-accessible dropdown menu width variants (Figma `dropdownWidths`).
++ * Dot-accessible menu selection mode, set once on the DropdownMenu root.
++ * Usage: <DropdownMenu selectType={DropdownMenuSelectType.multi}>
+  *
+- * Set once on the `DropdownMenu` root; `DropdownMenuContent` reads it from
+- * context and applies the matching min-width floor, so items inherit the width
+- * without per-item props.
++ * single — every item closes the menu on select (also covers action menus).
++ * multi  — DropdownMenuMultiSelectItem keeps the menu open; plain items still
++ *          close. Triggers receive it as data-select-type.
+  *
+- * Usage: <DropdownMenu variant={DropdownMenuVariant.complex}>
++ * BREAKING (major): DropdownMenuVariant (standard/action/complex) was removed.
++ * Items hold the 160px floor; set DropdownMenuSection `width` for wider menus.
+  */
+-export const DropdownMenuVariant = {
+-  /** 160px floor — the default menu. */
+-  standard: "standard",
+-  /** 144px floor — compact action/context menus. */
+-  action: "action",
+-  /** 324px floor — wide popovers with rich content. */
+-  complex: "complex",
++export const DropdownMenuSelectType = {
++  single: "single",
++  multi: "multi",
+ } as const;
+-export type DropdownMenuVariant =
+-  (typeof DropdownMenuVariant)[keyof typeof DropdownMenuVariant];
++export type DropdownMenuSelectType =
++  (typeof DropdownMenuSelectType)[keyof typeof DropdownMenuSelectType];
+ 
+ /**
+  * Dot-accessible menu item tone.
+@@ -31,3 +29,14 @@ export const DropdownMenuItemVariant = {
+ } as const;
+ export type DropdownMenuItemVariant =
+   (typeof DropdownMenuItemVariant)[keyof typeof DropdownMenuItemVariant];
++
++/**
++ * Figma Menu Segment — full-width break between sections.
++ * Usage: <DropdownMenuSegment variant={DropdownMenuSegmentVariant.labeled}>Filter by</DropdownMenuSegment>
++ */
++export const DropdownMenuSegmentVariant = {
++  divider: "divider",
++  labeled: "labeled",
++} as const;
++export type DropdownMenuSegmentVariant =
++  (typeof DropdownMenuSegmentVariant)[keyof typeof DropdownMenuSegmentVariant];
+diff --git a/src/components/MorphRotationShape/constants.ts b/src/components/MorphRotationShape/constants.ts
+new file mode 100644
+index 0000000..c81bbe0
+--- /dev/null
++++ b/src/components/MorphRotationShape/constants.ts
+@@ -0,0 +1,11 @@
++// Server-safe constants — no "use client" so RSC code can read them.
++
++export const MorphRotationShapeMode = {
++  /** Steps on its own every --ui-shape-morph-interval, with passive spinning. The loader. */
++  autoplay: "autoplay",
++  /** Steps when `activeIndex` changes; always forward, directly to the new shape. */
++  controlled: "controlled",
++  /** Steps when an ancestor's CSS sets --ds-shape-morph-target (e.g. on data-state=open). */
++  embedded: "embedded",
++} as const;
++export type MorphRotationShapeMode = (typeof MorphRotationShapeMode)[keyof typeof MorphRotationShapeMode];
+diff --git a/src/components/SegmentedTabSelect/constants.ts b/src/components/SegmentedTabSelect/constants.ts
+index 4adb8fb..b3fd639 100644
+--- a/src/components/SegmentedTabSelect/constants.ts
++++ b/src/components/SegmentedTabSelect/constants.ts
+@@ -1,15 +1,32 @@
+ // Server-safe constants — no client APIs, intentionally NO "use client" directive
+ // so these dot-accessible enums can be read from React Server Components.
+ 
++/**
++ * Figma Tab Select — variant × size.
++ * Usage: <SegmentedTabSelect variant={SegmentedVariant.ghost} size={SegmentedSize.containerIcon} />
++ *
++ * BREAKING (major): the flat keys ghostSmall, micro, secondary,
++ * secondarySmall and primarySmall were removed; combine variant and size.
++ * The no-prop default also changed, from secondary (shell + ghost) to
++ * primary + container — a silent visual change for no-prop callers.
++ */
+ export const SegmentedVariant = {
+-  ghost: 'ghost',
+-  ghostSmall: 'ghost-small',
+-  /** 30px shell-less row — Figma "Micro". Used by the date range split trigger. */
+-  micro: 'micro',
+-  secondary: 'secondary',
+-  secondarySmall: 'secondary-small',
+   primary: 'primary',
+-  primarySmall: 'primary-small',
++  ghost: 'ghost',
+ } as const;
+ export type SegmentedVariant =
+   (typeof SegmentedVariant)[keyof typeof SegmentedVariant];
++
++/**
++ * container      — bordered shell, 28px micro text items (38px overall)
++ * standard       — no shell, 38px text items
++ * containerIcon  — bordered shell, 28×28 micro icon items
++ * icon           — no shell, 38×38 icon items
++ */
++export const SegmentedSize = {
++  container: 'container',
++  standard: 'standard',
++  containerIcon: 'container-icon',
++  icon: 'icon',
++} as const;
++export type SegmentedSize = (typeof SegmentedSize)[keyof typeof SegmentedSize];
+diff --git a/src/components/ShapeButton/constants.ts b/src/components/ShapeButton/constants.ts
+index 0b20e56..fdd3525 100644
+--- a/src/components/ShapeButton/constants.ts
++++ b/src/components/ShapeButton/constants.ts
+@@ -5,14 +5,28 @@ import type { Shapes } from "../Shapes";
+ 
+ /**
+  * Dot-accessible shape constants.
+- * Usage: <ShapeButton shape={ShapeButtons.gem} />
++ * Usage: <ShapeButton shape={ShapeButtons.squircle} />
++ *
++ * This is deliberately a SUBSET of `Shapes`: the Figma ShapeButton component
++ * offers these five, while `Shapes/` carries the full set for arbitrary use.
++ * `satisfies Record<string, Shapes>` is what keeps the subset honest.
+  */
+ export const ShapeButtons = {
+-  arrow: "arrow",
+   clover: "clover",
+   cookie: "cookie",
+-  gem: "gem",
++  diamond: "diamond",
+   puff: "puff",
+-  star: "star",
++  squircle: "squircle",
+ } as const satisfies Record<string, Shapes>;
+ export type ShapeButtons = (typeof ShapeButtons)[keyof typeof ShapeButtons];
++
++/**
++ * Dot-accessible color variants.
++ * Usage: <ShapeButton variant={ShapeButtonVariant.primary} />
++ */
++export const ShapeButtonVariant = {
++  prominent: "prominent",
++  primary: "primary",
++} as const;
++export type ShapeButtonVariant =
++  (typeof ShapeButtonVariant)[keyof typeof ShapeButtonVariant];
+diff --git a/src/components/Slider/constants.ts b/src/components/Slider/constants.ts
+new file mode 100644
+index 0000000..f74be1c
+--- /dev/null
++++ b/src/components/Slider/constants.ts
+@@ -0,0 +1,27 @@
++// Server-safe constants — no client APIs, intentionally NO "use client" directive
++// so these dot-accessible enums can be read from React Server Components.
++
++/**
++ * Dot-accessible slider color variants.
++ * Usage: <SliderStepped variant={SliderVariant.prominent} />
++ *
++ * A variant selects a BUNDLE of three paints — the default hue, the active
++ * track's opacity, and the active step dot's colour — because Figma tunes all
++ * three together per variant and they are not derivable from one another (the
++ * step dot is composed from the CONTENT paint, not from the track's hue).
++ *
++ * `color` and `stepColor` then override the hue and the dot independently, on
++ * top of whichever bundle is in play.
++ *
++ * `custom` is the variant with no palette of its own: it carries primary's
++ * opacity and step colour as a floor, and REQUIRES `color`. That requirement is
++ * enforced twice over — `SliderProps` is a discriminated union, so omitting it
++ * is a compile error, and `SliderBase` throws if the value arrives anyway (a
++ * JavaScript consumer, or a `variant` computed at runtime).
++ */
++export const SliderVariant = {
++  primary: "primary",
++  prominent: "prominent",
++  custom: "custom",
++} as const;
++export type SliderVariant = (typeof SliderVariant)[keyof typeof SliderVariant];
+diff --git a/src/components/Sticker/constants.ts b/src/components/Sticker/constants.ts
+new file mode 100644
+index 0000000..3f74033
+--- /dev/null
++++ b/src/components/Sticker/constants.ts
+@@ -0,0 +1,42 @@
++// Server-safe constants — no client APIs, intentionally NO "use client" directive
++// so these dot-accessible enums can be read from React Server Components.
++
++/**
++ * Dot-accessible sticker variants.
++ * Usage: <Sticker variant={StickerVariant.prominent} />
++ *
++ * A variant selects a pair of paints — the content colour and the wash behind
++ * it. They are not the same hue for every variant: secondary washes the
++ * secondary button's active border, and danger washes danger-secondary while
++ * its content is danger-primary. The wash alpha is `--ui-sticker-bg-opacity`
++ * (20%), except the light secondary wash, which uses
++ * `--ui-sticker-bg-opacity-secondary`.
++ *
++ * `custom` has no palette of its own and REQUIRES `color`. The content is that
++ * colour and the wash is the same colour at `--ui-sticker-bg-opacity`. The
++ * requirement is enforced twice — `StickerProps` is a discriminated union, so
++ * omitting `color` is a compile error, and `Sticker` throws if the value
++ * arrives anyway (a JavaScript consumer, or a `variant` computed at runtime).
++ */
++export const StickerVariant = {
++  prominent: "prominent",
++  alternate: "alternate",
++  secondary: "secondary",
++  tertiary: "tertiary",
++  danger: "danger",
++  custom: "custom",
++} as const;
++export type StickerVariant = (typeof StickerVariant)[keyof typeof StickerVariant];
++
++/**
++ * Dot-accessible sticker sizes.
++ * Usage: <Sticker size={StickerSize.micro} />
++ *
++ * `standard` hugs its content (6px vertical padding, tight radius).
++ * `micro` is a fixed `--ui-height-tab-micro` (28px) chip with `radius-mini`.
++ */
++export const StickerSize = {
++  standard: "standard",
++  micro: "micro",
++} as const;
++export type StickerSize = (typeof StickerSize)[keyof typeof StickerSize];
+diff --git a/src/components/Tabs/constants.ts b/src/components/Tabs/constants.ts
+index af895d5..2659498 100644
+--- a/src/components/Tabs/constants.ts
++++ b/src/components/Tabs/constants.ts
+@@ -10,7 +10,7 @@ export const TabSize = {
+   default: "default",
+   /** 34px — Figma `buttonSizes/smallButtonHeight`, `rg` (12px) padding. */
+   sm: "sm",
+-  /** 30px compact item — backs SegmentedVariant.micro (Figma "Micro"). */
++  /** 28px compact item — Figma Toggle Option "Micro", radius-mini. */
+   micro: "micro",
+   /**
+    * Height follows the parent instead of a fixed value — for a segmented row
+@@ -21,15 +21,21 @@ export const TabSize = {
+   icon: "icon",
+   /** 34×34 icon-only tab, pairing with the small variants. */
+   iconSm: "icon-sm",
++  /** 28×28 icon-only tab — Figma Micro icon (Tab Select "Container Icon"). */
++  iconMicro: "icon-micro",
+ } as const;
+ export type TabSize = (typeof TabSize)[keyof typeof TabSize];
+ 
+ /**
+  * Dot-accessible tab variant constant.
+  * Usage: <TabsTrigger variant={TabVariant.primary} />
++ *
++ * `unselected` renders the shared unselected look even when the tab is active —
++ * for a trigger that must never read as chosen.
+  */
+ export const TabVariant = {
+   ghost: "ghost",
+   primary: "primary",
++  unselected: "unselected",
+ } as const;
+ export type TabVariant = (typeof TabVariant)[keyof typeof TabVariant];
+diff --git a/src/components/Text/constants.ts b/src/components/Text/constants.ts
+index b07bd05..939aa9c 100644
+--- a/src/components/Text/constants.ts
++++ b/src/components/Text/constants.ts
+@@ -16,46 +16,18 @@
+ /** Text role. Selects the default family/size/weight/tracking/axis bundle. */
+ export const TextVariant = {
+   button: 'button',
++  heroButton: 'heroButton',
+   heading: 'heading',
+   subheading: 'subheading',
+   hero: 'hero',
+   title: 'title',
+   body: 'body',
++  heroBody: 'heroBody',
+   label: 'label',
+   mono: 'mono',
+ } as const;
+ export type TextVariant = (typeof TextVariant)[keyof typeof TextVariant];
+ 
+-/**
+- * Roll direction for RollChangeText / RollHoverText.
+- *
+- * `down` reads as content travelling downward (new content settles in from
+- * above); `up` reads as content travelling upward (new content rises in from
+- * below). Both RollChangeText and RollHoverText default to `down`, preserving
+- * their original motion when the prop is omitted.
+- */
+-export const RollDirection = {
+-  up: 'up',
+-  down: 'down',
+-} as const;
+-export type RollDirection = (typeof RollDirection)[keyof typeof RollDirection];
+-
+-/**
+- * Reveal direction for RevealChangeText — the edge the content travels toward
+- * as the slot opens.
+- *
+- * `left` (the default) pins the content's RIGHT edge, so it reveals out to the
+- * left and collapses by tucking back under whatever sits to its right — the
+- * breadcrumb-stem case, where the stem hides under the separator. `right` pins
+- * the LEFT edge, so the content grows rightward into the space after it.
+- */
+-export const RevealDirection = {
+-  left: 'left',
+-  right: 'right',
+-} as const;
+-export type RevealDirection =
+-  (typeof RevealDirection)[keyof typeof RevealDirection];
+-
+ /** Font family per role. Each --ui-font-* stack is independently overridable. */
+ export const Fonts = {
+   body: 'var(--ui-font-body)',
+@@ -72,6 +44,8 @@ export type Font = (typeof Fonts)[keyof typeof Fonts];
+ export const FontSizes = {
+   label: 'var(--ui-text-label)',
+   body: 'var(--ui-text-body)',
++  heroBody: 'var(--ui-text-hero-body)',
++  heroButton: 'var(--ui-text-hero-button)',
+   mono: 'var(--ui-text-mono)',
+   subheading: 'var(--ui-text-subheading)',
+   heading: 'var(--ui-text-heading)',
+@@ -94,6 +68,7 @@ export const Tracking = {
+   body: 'var(--ui-tracking-body)',
+   label: 'var(--ui-tracking-label)',
+   hero: 'var(--ui-tracking-hero)',
++  mono: 'var(--ui-tracking-mono)',
+ } as const;
+ export type TrackingValue = (typeof Tracking)[keyof typeof Tracking];
+ 
+@@ -133,7 +108,11 @@ export type FontAxis = (typeof FontAxes)[keyof typeof FontAxes];
+  */
+ export const ROLE_AXIS_TOKEN: Partial<Record<TextVariant, string>> = {
+   button: 'var(--ui-font-var-button)',
++  /* The hero-scale roles share their base role's axes verbatim — that is what
++   * makes them the same face at a different size rather than a new voice. */
++  heroButton: 'var(--ui-font-var-button)',
+   body: 'var(--ui-font-var-body)',
++  heroBody: 'var(--ui-font-var-body)',
+   heading: 'var(--ui-font-var-heading)',
+   subheading: 'var(--ui-font-var-heading)',
+   mono: 'var(--ui-font-var-mono)',
+@@ -142,11 +121,13 @@ export const ROLE_AXIS_TOKEN: Partial<Record<TextVariant, string>> = {
+ /** Role → the class carrying its defaults (see index.css, `components` layer). */
+ export const TEXT_VARIANT_CLASS: Record<TextVariant, string> = {
+   button: 'text-style-button',
++  heroButton: 'text-style-hero-button',
+   heading: 'text-style-heading',
+   subheading: 'text-style-subheading',
+   hero: 'text-style-hero',
+   title: 'text-style-title',
+   body: 'text-style-body',
++  heroBody: 'text-style-hero-body',
+   label: 'text-style-label',
+   mono: 'text-style-mono',
+ };
+diff --git a/src/components/Toast/constants.ts b/src/components/Toast/constants.ts
+index f7aa7f9..4150911 100644
+--- a/src/components/Toast/constants.ts
++++ b/src/components/Toast/constants.ts
+@@ -3,8 +3,8 @@
+ 
+ export const ToastTypes = {
+   simple: "simple",
+-  brand: "brand",
+-  error: "error",
++  prominent: "prominent",
++  danger: "danger",
+   complex: "complex",
+ } as const;
+ export type ToastTypes = (typeof ToastTypes)[keyof typeof ToastTypes];
+diff --git a/src/components/Toggle/constants.ts b/src/components/Toggle/constants.ts
+index 7552e04..e9aca23 100644
+--- a/src/components/Toggle/constants.ts
++++ b/src/components/Toggle/constants.ts
+@@ -2,20 +2,33 @@
+ // so these dot-accessible enums can be read from React Server Components.
+ 
+ /**
+- * Dot-accessible toggle variant and size constants.
+- * Usage: <TwoWayToggleItem variant={ToggleVariant.primary} size={ToggleSize.sm} />
++ * Dot-accessible toggle (Figma Toggle Switch) variant and size constants.
++ * Usage: <ToggleSwitch variant={ToggleVariant.ghost} size={ToggleSize.iconSm} />
+  *
+- * primary — selected item gets primary (dark) button fill; resting text is dark (text-text)
+- * secondary — selected item gets ghost-active fill; resting text is ghost-fg
++ * primary    — selected option is filled primary
++ * ghost      — selected option is ghost-active
++ * unselected — always the shared unselected look, even when selected; set it
++ *              per item (<ToggleSwitchItem variant={ToggleVariant.unselected}>)
++ *              for an option that must never read as chosen
++ *
++ * BREAKING (major): `secondary` was renamed `ghost` to match Figma.
+  */
+ export const ToggleVariant = {
+   primary: "primary",
+-  secondary: "secondary",
++  ghost: "ghost",
++  unselected: "unselected",
+ } as const;
+ export type ToggleVariant = (typeof ToggleVariant)[keyof typeof ToggleVariant];
+ 
++/**
++ * Named after the Figma Toggle Switch sizes.
++ * default 38 · sm 34 · icon 38×38 · iconSm = Figma "Icon Small", the 28×28
++ * MICRO icon option (not the 34×34 one).
++ */
+ export const ToggleSize = {
+   default: "default",
+   sm: "sm",
++  icon: "icon",
++  iconSm: "icon-sm",
+ } as const;
+ export type ToggleSize = (typeof ToggleSize)[keyof typeof ToggleSize];
+diff --git a/src/index.ts b/src/index.ts
+index dc7188e..3963dca 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -3,6 +3,7 @@ export * from './components/Button';
+ export * from './components/CTAButton';
+ export * from './components/CopyButton';
+ export * from './components/Avatar';
++export * from './components/Sticker';
+ export * from './components/Checkbox';
+ export * from './components/HotkeyIndicator';
+ export * from './components/Icons';
+@@ -10,6 +11,7 @@ export * from './components/SidebarWithHoverIcon';
+ export * from './components/Input';
+ export * from './components/Tabs';
+ export * from './components/SegmentedTabSelect';
++export * from './components/AnimatedText';
+ export * from './components/Text';
+ export * from './components/TextLink';
+ export * from './components/Toggle';
+@@ -20,6 +22,8 @@ export * from './components/OutlineSection';
+ export * from './components/OutlineButton';
+ export * from './components/Shapes';
+ export * from './components/ShapeButton';
++export * from './components/MorphRotationShape';
++export * from './components/DropdownCaret';
+ export * from './components/Modal';
+ export * from './components/Sheet';
+ export * from './components/Popover';
+@@ -28,11 +32,13 @@ export * from './components/Table';
+ export * from './components/Toast';
+ export * from './components/Tooltip';
+ export * from './components/Slider';
++export * from './components/AIChat';
+ 
+ export * from './components/WavyDivider/WavyDivider';
+ export * from './components/WavyDivider/constants';
+ export * from './components/LoadingSpinner/LoadingSpinner';
+ export * from './components/LoadingSpinner/constants';
++export * from './components/ShapeMorphSpinner';
+ export * from './components/ProgressIndicator/ProgressIndicator';
+ export * from './components/ProgressIndicator/constants';
+ export * from './components/LinearProgressIndicator';

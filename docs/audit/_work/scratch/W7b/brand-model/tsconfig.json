@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx", "strict": true, "noEmit": true, "module": "esnext", "moduleResolution": "bundler", "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "react": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types/react"],
+      "react/jsx-runtime": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types/react/jsx-runtime"]
+    },
+    "typeRoots": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types"]
+  },
+  "files": ["model.tsx"]
+}

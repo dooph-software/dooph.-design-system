@@ -5,7 +5,7 @@ import {
   Markdown,
   Title,
 } from "@storybook/addon-docs/blocks";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useCallback, useEffect, useState } from "react";
 import { Button, ButtonSize, ButtonVariant } from "../Button";
 import { OutlineButton } from "../OutlineButton";
@@ -209,8 +209,8 @@ export const RollHoverDirectionUpVsDown: Story = {
     docs: {
       description: {
         story:
-          "`direction` flips the barrel roll. `up` (default) rolls each glyph upward; `down` rolls it " +
-          "downward. Hover each to compare.",
+          "`direction` flips the barrel roll. `down` (default) rolls each glyph downward; `up` rolls it " +
+          "upward. Hover each to compare.",
       },
     },
   },
@@ -251,7 +251,8 @@ export const RollHoverControlledActive: Story = {
  *
  * When content changes, the old text rolls away and blurs out while the new
  * text rolls in and settles into focus. Respects `prefers-reduced-motion`
- * (animation classes are `motion-safe:` scoped). The roll owns no color
+ * (the global block in tokens.css collapses the motion scale to 1ms, so the
+ * roll still runs and retires its nodes, but reads as instant). The roll owns no color
  * tokens — it only transforms and blurs children that are already themed.
  */
 
@@ -382,6 +383,36 @@ export const FadeChangeAutoCyclingStatus: Story = {
           Job status
         </LabelText>
         <FadeChangeText changeKey={statuses[index]} data-testid="fade-status">
+          <BodyText>{statuses[index]}</BodyText>
+        </FadeChangeText>
+      </div>
+    );
+  },
+};
+
+/** Contradicts direction (default down): new text rises in from below. */
+export const FadeChangeDirectionUp: Story = {
+  name: "Direction up",
+  render: function FadeDirectionUpStory() {
+    const [index, setIndex] = useState(0);
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setIndex((i) => (i + 1) % statuses.length);
+      }, 1800);
+      return () => clearInterval(interval);
+    }, []);
+
+    return (
+      <div className="flex flex-col items-start gap-1">
+        <LabelText className="uppercase tracking-wide opacity-40">
+          Job status
+        </LabelText>
+        <FadeChangeText
+          changeKey={statuses[index]}
+          direction={RollDirection.up}
+          data-testid="fade-status-up"
+        >
           <BodyText>{statuses[index]}</BodyText>
         </FadeChangeText>
       </div>
@@ -718,7 +749,7 @@ function Demo({
 }) {
   const [value, setValue] = useState(values[0]);
   return (
-    <div className="flex flex-col items-start gap-md p-4">
+    <div className="flex flex-col items-start gap-lg p-4">
       <BaseText fontSize={28} fontWeight={FontWeights.medium}>
         {smallDecimals ? (
           <RollingDigitsText smallDecimals smallDecimalsComponent={LabelText}>
@@ -817,7 +848,7 @@ const FORMATS: Array<{ value: string; note: string }> = [
 export const RollingDigitsFormats: Story = {
   name: "Formats",
   render: () => (
-    <div className="flex flex-col items-start gap-sm p-4">
+    <div className="flex flex-col items-start gap-rg p-4">
       {FORMATS.map((f) => (
         <div key={f.value} className="flex items-baseline gap-4">
           <BaseText
@@ -842,7 +873,7 @@ export const RollingDigitsScales: Story = {
   render: () => {
     const [value, setValue] = useState("$982.10");
     return (
-      <div className="flex flex-col items-start gap-md p-4">
+      <div className="flex flex-col items-start gap-lg p-4">
         <LabelText>
           <RollingDigitsText>{value}</RollingDigitsText>
         </LabelText>
@@ -878,7 +909,7 @@ export const RollingDigitsTableScrub: Story = {
   render: () => {
     const [amount, setAmount] = useState(TOTAL);
     return (
-      <div className="flex flex-col items-start gap-md p-4">
+      <div className="flex flex-col items-start gap-lg p-4">
         <BaseText fontSize={28} fontWeight={FontWeights.medium}>
           <RollingDigitsText smallDecimals smallDecimalsComponent={LabelText}>
             {amount}
@@ -928,7 +959,7 @@ export const RollingDigitsLiveTicker: Story = {
       currency: "USD",
     });
     return (
-      <div className="flex flex-col items-start gap-md p-4">
+      <div className="flex flex-col items-start gap-lg p-4">
         <Figure>{value}</Figure>
         <BodyText className="max-w-[46ch] text-text-secondary">
           Random walk every 700ms, wide enough to cross magnitudes. Watch the
@@ -1152,7 +1183,11 @@ function AnimatedTextDocs() {
       <StorySection
         title="FadeChangeText"
         summary="RollChangeText without the blur: the old value rolls out and fades, the new one rolls in and fades up, with the same `direction` prop. Timing defaults to the roll-change tokens; retune via `--ui-fade-change-*`."
-        stories={[FadeChangeAutoCyclingStatus, FadeChangeVersusRoll]}
+        stories={[
+          FadeChangeAutoCyclingStatus,
+          FadeChangeDirectionUp,
+          FadeChangeVersusRoll,
+        ]}
       />
       <StorySection
         title="RevealChangeText"

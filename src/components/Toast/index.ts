@@ -8,8 +8,9 @@ export {
   ToastViewport,
   useToast,
 } from "./Toast";
-export { ToastTypes } from "./constants";
+export { ToastVariant } from "./constants";
 export type {
+  ToastOptions,
   ToastDescriptionProps,
   ToastProviderProps,
   ToastRootProps,

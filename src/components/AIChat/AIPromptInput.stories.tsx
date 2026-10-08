@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Button } from "../Button";
 import { ButtonSize, ButtonVariant } from "../Button/constants";
@@ -9,7 +9,7 @@ import {
   IconSize,
   PlusIcon,
 } from "../Icons";
-import { LoadingSpinnerColor } from "../LoadingSpinner/constants";
+import { LoadingSpinnerColor, LoadingSpinnerSize } from "../LoadingSpinner/constants";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,20 +67,25 @@ function Composer({
   responding = false,
   used = 0,
   budget = 0,
+  disabled = false,
+  stoppable = true,
 }: {
   defaultValue?: string;
   responding?: boolean;
   used?: number;
   budget?: number;
+  disabled?: boolean;
+  stoppable?: boolean;
 }) {
   const [sent, setSent] = useState<string | null>(null);
   return (
-    <div className="flex w-[418px] flex-col gap-sm">
+    <div className="flex w-[418px] flex-col gap-rg">
       <AIPromptInput
         defaultValue={defaultValue}
         onSubmit={setSent}
         responding={responding}
-        onStop={() => setSent("(stopped)")}
+        disabled={disabled}
+        onStop={stoppable ? () => setSent("(stopped)") : undefined}
       >
         <AIPromptInputTextarea placeholder="Ask Aspect" />
         <AIPromptInputToolbar>
@@ -143,10 +148,11 @@ export const LongPrompt: Story = {
 
 /** The gauge's colour is the consumer's: tiers that contradict the primary
  * default, chosen at the call site. It is never clamped — the figures stay in
- * range because the consumer keeps them there. */
+ * range because the consumer keeps them there. The last one contradicts the
+ * default size (sm). */
 export const ContextGaugeColors: Story = {
   render: () => (
-    <div className="flex items-center gap-rg">
+    <div className="flex items-center gap-md">
       <AIContextGauge used={30} budget={100} />
       <AIContextGauge used={75} budget={100} color={LoadingSpinnerColor.prominent} />
       <AIContextGauge
@@ -155,6 +161,21 @@ export const ContextGaugeColors: Story = {
         color="var(--ui-color-danger-primary)"
       />
       <AIContextGauge used={50} budget={100} color="var(--ui-color-ai-anthropic)" />
+      <AIContextGauge used={50} budget={100} size={LoadingSpinnerSize.md} />
     </div>
+  ),
+};
+
+/** Contradicts disabled (default false). */
+export const Disabled: Story = {
+  render: () => (
+    <Composer disabled defaultValue="Read-only while the workspace syncs." />
+  ),
+};
+
+/** responding without onStop: no stop button is offered, and submit stays blocked. */
+export const RespondingWithoutStop: Story = {
+  render: () => (
+    <Composer responding stoppable={false} used={42_000} budget={100_000} />
   ),
 };

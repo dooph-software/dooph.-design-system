@@ -15,9 +15,7 @@
  *   `Shapes/` exports, never a re-drawn copy of it. Figma's ShapeButton
  *   variants embed their own flattened SVGs; those are not the source of truth.
  */
-"use client";
-
-import { Slot } from "@radix-ui/react-slot";
+import { Slot, Slottable } from "@radix-ui/react-slot";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
@@ -47,7 +45,7 @@ type ShapeButtonOwnProps = {
 };
 
 type ShapeComponentProps = {
-  size: number;
+  size: number | string;
   strokeColor?: string;
   fillColor?: string;
   strokeWeight?: number | string;
@@ -61,19 +59,17 @@ const shapeComponents = {
   squircle: SquircleShape,
 } satisfies Record<ShapeButtons, ComponentType<ShapeComponentProps>>;
 
-const SHAPE_SIZE = 46;
-
 /** Fill colors for the shape span — `currentColor` is the shape's paint. */
 const shapeFillClasses = {
   prominent: [
     "text-prominent",
-    "group-hover:text-prominent-hover",
-    "group-active:text-prominent-active",
+    "[.group:not(:disabled):not([aria-disabled=true]):hover_&]:text-prominent-hover",
+    "[.group:not(:disabled):not([aria-disabled=true]):active_&]:text-prominent-active",
   ],
   primary: [
     "text-primary",
-    "group-hover:text-primary-hover",
-    "group-active:text-primary-active",
+    "[.group:not(:disabled):not([aria-disabled=true]):hover_&]:text-primary-hover",
+    "[.group:not(:disabled):not([aria-disabled=true]):active_&]:text-primary-active",
   ],
 } satisfies Record<ShapeButtonVariant, string[]>;
 
@@ -93,6 +89,8 @@ type ShapeButtonComponent = <TElement extends ElementType = "button">(
   },
 ) => ReactElement | null;
 
+/* Typed at the default element so the render body's bindings keep their
+ * types; only the exported cast is polymorphic. */
 /**
  * An icon button with an organic SVG shape background.
  *
@@ -101,7 +99,7 @@ type ShapeButtonComponent = <TElement extends ElementType = "button">(
  *   <SendIcon />
  * </ShapeButton>
  */
-const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
+const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<"button">>(
   (
     {
       className,
@@ -114,18 +112,17 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
     ref,
   ) => {
     const Comp = (asChild ? Slot : "button") as ElementType;
-    const Shape = shapeComponents[shape as ShapeButtons];
-    const resolvedVariant = variant as ShapeButtonVariant;
+    const Shape = shapeComponents[shape];
 
     return (
       <Comp
         ref={ref as ForwardedRef<HTMLElement>}
         className={cn(
           "group relative inline-flex items-center justify-center",
-          "size-[46px] cursor-pointer select-none",
+          "size-shape-button cursor-pointer select-none",
           "outline-none ds-shape-button-focus-visible",
           "ds-disabled-state",
-          contentClasses[resolvedVariant],
+          contentClasses[variant],
           className,
         )}
         {...props}
@@ -134,22 +131,27 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
         <span
           className={cn(
             "ds-shape-button-shadow absolute inset-0 flex items-center justify-center",
-            shapeFillClasses[resolvedVariant],
-            "group-disabled:text-secondary-disabled",
+            shapeFillClasses[variant],
+            "[.group:is(:disabled,[aria-disabled=true])_&]:text-secondary-disabled",
           )}
           aria-hidden
         >
           <Shape
-            size={SHAPE_SIZE}
+            size="var(--ui-size-shape-button)"
             strokeColor="transparent"
             fillColor="currentColor"
           />
         </span>
 
-        {/* Icon slot — centered within the shape */}
-        <span className="relative z-10 inline-flex items-center justify-center">
-          {children}
-        </span>
+        {/* Icon slot — centered within the shape. Slottable marks the asChild
+         * target; the span wraps that element's own children. */}
+        <Slottable child={children}>
+          {(child) => (
+            <span className="relative z-10 inline-flex items-center justify-center">
+              {child}
+            </span>
+          )}
+        </Slottable>
       </Comp>
     );
   },

@@ -1,0 +1,14 @@
+EXCLUDED entries: 89  ALIASES: 11  root tokens: 259
+EXCLUDED naming non-existent tokens: []
+ALIASES naming non-existent tokens: []
+EXCLUDED no-op entries (no prefix rule matches; would be skipped anyway): 82
+EXCLUDED effective entries: [
+  'ui-color-slider-step-primary-active',
+  'ui-color-slider-step-prominent-active',
+  'ui-color-slider-step-inactive',
+  'ui-spacing-cta-content-big',
+  'ui-color-focus-ring-prominent',
+  'ui-color-focus-ring-primary',
+  'ui-color-focus-ring-danger'
+]
+Tokens silently skipped (unmapped, not in EXCLUDED): 41 ui-shimmer-base ui-shimmer-highlight ui-chat-tool-shimmer-base ui-chat-tool-shimmer-highlight ui-chat-thinking-shimmer-base ui-chat-thinking-shimmer-highlight ui-chat-reveal-duration ui-chat-reveal-ease ui-chat-stream-duration ui-chat-stream-ease ui-chat-stream-blur ui-chat-stream-rise ui-chat-disclosure-duration ui-chat-disclosure-ease ui-chat-prompt-max-height ui-chat-model-swatch-size ui-chat-model-swatch-radius ui-width-chat-model-tooltip ui-chat-prose-code-radius ui-roll-hover-duration ui-roll-hover-stagger ui-roll-hover-blur ui-roll-hover-depth ui-roll-hover-perspective ui-underline-link-thickness ui-underline-link-offset ui-underline-link-duration ui-underline-link-ease ui-reveal-change-in-duration ui-reveal-change-out-duration ui-reveal-change-ease ui-size-spinner-sm ui-size-spinner-rg ui-size-spinner-md ui-size-spinner-xl ui-width-toast-simple ui-width-toast-complex ui-width-toast-viewport ui-width-calendar-presets ui-min-w-calendar-panel ui-height-tab-micro

@@ -9,5 +9,3 @@ export const DownloadIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default DownloadIcon;

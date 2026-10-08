@@ -8,5 +8,3 @@ export const ArrowDownRightIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default ArrowDownRightIcon;

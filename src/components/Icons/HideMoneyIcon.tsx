@@ -8,5 +8,3 @@ export const HideMoneyIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default HideMoneyIcon;

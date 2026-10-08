@@ -1,0 +1,3029 @@
+diff --git a/.storybook/preview.ts b/.storybook/preview.ts
+index 98c6cc3..55b160b 100644
+--- a/.storybook/preview.ts
++++ b/.storybook/preview.ts
+@@ -1,4 +1,4 @@
+-import type { Preview } from '@storybook/react';
++import type { Preview } from '@storybook/react-vite';
+ import '../src/styles/index.css';
+ 
+ const preview: Preview = {
+diff --git a/scripts/sync-theme.mjs b/scripts/sync-theme.mjs
+index 83439f0..737fc90 100644
+--- a/scripts/sync-theme.mjs
++++ b/scripts/sync-theme.mjs
+@@ -7,17 +7,21 @@
+  *                         src/utils/twMergeTheme.ts (tailwind-merge lists for cn)
+  *
+  * Run manually:  node scripts/sync-theme.mjs
+- * Wired into:    npm run prebuild  (see package.json)
++ * Wired into:    npm run sync-tokens (which npm run build and build:watch run
++ *                first; see package.json)
+  *
+  * HOW IT WORKS
+  * ─────────────
+  * 1. Parse tokens.css and extract every --ui-* variable name from :root { }
+- * 2. Map each name to a Tailwind theme token using the rules in TOKEN_MAP
++ * 2. Map each name to a Tailwind theme token (toThemeEntry: prefix rules +
++ *    ALIASES; EXCLUDED names and names no rule matches are skipped)
+  * 3. Replace the @theme inline { } block in index.css between the auto-gen markers
++ * 4. Write the same entries to theme.css, and derive the twMergeTheme.ts lists
+  *
+  * HOW TO ADD A NEW TOKEN
+  * ──────────────────────
+- * 1. Add --ui-color-foo (or --ui-shadow-foo etc.) to tokens.css (light + dark)
++ * 1. Add --ui-color-foo (or --ui-shadow-foo etc.) to tokens.css :root (add a
++ *    .dark override only when the value differs)
+  * 2. Run `node scripts/sync-theme.mjs`  — done.
+  *
+  * If the automatic name derivation is wrong (e.g. you want --color-bar instead of
+@@ -60,9 +64,12 @@ const ALIASES = {
+   "ui-prominent-color-ter": "color-prominent-color-ter",
+ };
+ 
+-// ── Tokens excluded from @theme (used only as raw var() refs or in @layer) ───
++// ── Tokens excluded from @theme ───────────────────────────────────────────────
++// Only an entry a prefix rule in toThemeEntry would otherwise map has an effect;
++// the rest record raw-var()-only tokens. A token no rule matches is skipped
++// whether it is listed or not.
+ const EXCLUDED = new Set([
+-  // Font variation axes and weights — used in @layer utilities .text-style-*
++  // Font variation axes and weights — used in @layer components .text-style-*
+   "ui-font-var-button",
+   "ui-font-var-body",
+   "ui-font-var-heading",
+@@ -175,7 +182,8 @@ const EXCLUDED = new Set([
+   // Tooltip widths — exposed via ds-* helpers
+   "ui-width-tooltip-rich",
+   "ui-min-w-tooltip-complex",
+-  // Menu widths — used as raw var() only
++  // Menu widths — read by the custom .min-w-menu utility and the ds-min-w-*
++  // helpers, never a theme key
+   "ui-min-w-menu",
+   "ui-min-w-menu-complex",
+   "ui-min-w-search-box",
+@@ -190,13 +198,14 @@ const EXCLUDED = new Set([
+   "ui-min-w-cta-content-big",
+   "ui-spacing-cta-content-standard",
+   "ui-spacing-cta-content-big",
+-  // Opacity — used as var() in arbitrary Tailwind values
++  // Opacity — read by ds-* helpers and index.css rules, not utilities
+   "ui-opacity-disabled",
+   // Sticker washes — raw var() inside the sticker bg color-mix and the
+   // custom variant's inline background. Not a utility.
+   "ui-sticker-bg-opacity",
+   "ui-sticker-bg-opacity-secondary",
+-  // Focus ring colors — only used inside shadow values
++  // Focus ring colors — used inside shadow values and by the ds-focus-* outline
++  // helpers
+   "ui-color-focus-ring-prominent",
+   "ui-color-focus-ring-primary",
+   "ui-color-focus-ring-danger",
+diff --git a/src/components/AIChat/AIChatParts.stories.tsx b/src/components/AIChat/AIChatParts.stories.tsx
+index f97c4f5..75fd7ab 100644
+--- a/src/components/AIChat/AIChatParts.stories.tsx
++++ b/src/components/AIChat/AIChatParts.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { useEffect, useState } from "react";
+ import { Button } from "../Button";
+ import { ButtonSize, ButtonVariant } from "../Button/constants";
+diff --git a/src/components/AIChat/AIChatStreaming.stories.tsx b/src/components/AIChat/AIChatStreaming.stories.tsx
+index 80c5def..04a6209 100644
+--- a/src/components/AIChat/AIChatStreaming.stories.tsx
++++ b/src/components/AIChat/AIChatStreaming.stories.tsx
+@@ -19,7 +19,7 @@
+  *     and animate it via `streamingAnimation` — Streamdown's own word
+  *     animation stays OFF, so nothing here depends on it.
+  */
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import {
+   Fragment,
+   useCallback,
+diff --git a/src/components/AIChat/AIModelSelect.stories.tsx b/src/components/AIChat/AIModelSelect.stories.tsx
+index 3aa16db..a953437 100644
+--- a/src/components/AIChat/AIModelSelect.stories.tsx
++++ b/src/components/AIChat/AIModelSelect.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { useState } from "react";
+ import {
+   DropdownMenu,
+@@ -16,6 +16,7 @@ import {
+   AIModelTooltipContent,
+   AIThinkingEffortSelector,
+ } from "./AIModelSelect";
++import { BodyText } from "../Text";
+ 
+ /* A STORY-ONLY catalogue. The package ships no models, providers or effort
+  * levels — this is the shape a consumer maps their own catalogue into. */
+@@ -208,7 +209,7 @@ export const ModelTooltip: Story = {
+       <div className="flex h-[200px] items-start">
+         <Tooltip open>
+           <TooltipTrigger asChild>
+-            <span className="text-style-body text-text">Claude Sonnet 5</span>
++            <BodyText className="text-text">Claude Sonnet 5</BodyText>
+           </TooltipTrigger>
+           <AIModelTooltipContent
+             side="bottom"
+@@ -222,3 +223,26 @@ export const ModelTooltip: Story = {
+     </TooltipProvider>
+   ),
+ };
++
++/** Contradicts themeInverse (false here, flipping Tooltip's own true default). */
++export const ModelTooltipInverse: Story = {
++  render: () => (
++    <TooltipProvider>
++      <div className="flex h-[200px] items-start">
++        <Tooltip open>
++          <TooltipTrigger asChild>
++            <BodyText className="text-text">Claude Sonnet 5</BodyText>
++          </TooltipTrigger>
++          <AIModelTooltipContent
++            themeInverse
++            side="bottom"
++            title="Claude Sonnet 5"
++            description="Dependable, straightforward and quick. Best for daily tasks and quick responses"
++            capability={30}
++            color="var(--ui-color-ai-anthropic)"
++          />
++        </Tooltip>
++      </div>
++    </TooltipProvider>
++  ),
++};
+diff --git a/src/components/AIChat/AIPromptInput.stories.tsx b/src/components/AIChat/AIPromptInput.stories.tsx
+index a15586d..bcf9da8 100644
+--- a/src/components/AIChat/AIPromptInput.stories.tsx
++++ b/src/components/AIChat/AIPromptInput.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { useState } from "react";
+ import { Button } from "../Button";
+ import { ButtonSize, ButtonVariant } from "../Button/constants";
+@@ -9,7 +9,7 @@ import {
+   IconSize,
+   PlusIcon,
+ } from "../Icons";
+-import { LoadingSpinnerColor } from "../LoadingSpinner/constants";
++import { LoadingSpinnerColor, LoadingSpinnerSize } from "../LoadingSpinner/constants";
+ import {
+   DropdownMenu,
+   DropdownMenuContent,
+@@ -67,11 +67,15 @@ function Composer({
+   responding = false,
+   used = 0,
+   budget = 0,
++  disabled = false,
++  stoppable = true,
+ }: {
+   defaultValue?: string;
+   responding?: boolean;
+   used?: number;
+   budget?: number;
++  disabled?: boolean;
++  stoppable?: boolean;
+ }) {
+   const [sent, setSent] = useState<string | null>(null);
+   return (
+@@ -80,7 +84,8 @@ function Composer({
+         defaultValue={defaultValue}
+         onSubmit={setSent}
+         responding={responding}
+-        onStop={() => setSent("(stopped)")}
++        disabled={disabled}
++        onStop={stoppable ? () => setSent("(stopped)") : undefined}
+       >
+         <AIPromptInputTextarea placeholder="Ask Aspect" />
+         <AIPromptInputToolbar>
+@@ -143,7 +148,8 @@ export const LongPrompt: Story = {
+ 
+ /** The gauge's colour is the consumer's: tiers that contradict the primary
+  * default, chosen at the call site. It is never clamped — the figures stay in
+- * range because the consumer keeps them there. */
++ * range because the consumer keeps them there. The last one contradicts the
++ * default size (sm). */
+ export const ContextGaugeColors: Story = {
+   render: () => (
+     <div className="flex items-center gap-md">
+@@ -155,6 +161,21 @@ export const ContextGaugeColors: Story = {
+         color="var(--ui-color-danger-primary)"
+       />
+       <AIContextGauge used={50} budget={100} color="var(--ui-color-ai-anthropic)" />
++      <AIContextGauge used={50} budget={100} size={LoadingSpinnerSize.md} />
+     </div>
+   ),
+ };
++
++/** Contradicts disabled (default false). */
++export const Disabled: Story = {
++  render: () => (
++    <Composer disabled defaultValue="Read-only while the workspace syncs." />
++  ),
++};
++
++/** responding without onStop: no stop button is offered, and submit stays blocked. */
++export const RespondingWithoutStop: Story = {
++  render: () => (
++    <Composer responding stoppable={false} used={42_000} budget={100_000} />
++  ),
++};
+diff --git a/src/components/AIChat/AIPromptInput.tsx b/src/components/AIChat/AIPromptInput.tsx
+index 3a7e293..92c9514 100644
+--- a/src/components/AIChat/AIPromptInput.tsx
++++ b/src/components/AIChat/AIPromptInput.tsx
+@@ -43,10 +43,10 @@ import {
+   type FormHTMLAttributes,
+   type HTMLAttributes,
+   type KeyboardEvent,
+-  type Ref,
+   type TextareaHTMLAttributes,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { useComposedRefs } from "../../utils/composeRefs";
+ import { Button } from "../Button";
+ import { ButtonSize, ButtonVariant } from "../Button/constants";
+ import { ArrowUpIcon, IconSize, StopFilledIcon } from "../Icons";
+@@ -176,17 +176,13 @@ export type AIPromptInputTextareaProps = Omit<
+   "value" | "defaultValue"
+ >;
+ 
+-function assignRef<T>(ref: Ref<T> | undefined, node: T | null) {
+-  if (typeof ref === "function") ref(node);
+-  else if (ref) (ref as { current: T | null }).current = node;
+-}
+-
+ const AIPromptInputTextarea = forwardRef<
+   HTMLTextAreaElement,
+   AIPromptInputTextareaProps
+ >(({ className, onChange, onKeyDown, rows = 1, disabled, ...props }, ref) => {
+   const ctx = usePromptInput("AIPromptInputTextarea");
+   const { textareaRef, value } = ctx;
++  const composedRef = useComposedRefs(textareaRef, ref);
+ 
+   // Height follows content; CSS max-height is the cap. Layout effect so the
+   // resize lands before paint and the text never visibly jumps.
+@@ -202,10 +198,7 @@ const AIPromptInputTextarea = forwardRef<
+ 
+   return (
+     <textarea
+-      ref={(node) => {
+-        textareaRef.current = node;
+-        assignRef(ref, node);
+-      }}
++      ref={composedRef}
+       rows={rows}
+       value={value}
+       disabled={disabled ?? ctx.disabled}
+diff --git a/src/components/AIChat/constants.ts b/src/components/AIChat/constants.ts
+index e398cdf..a816f9d 100644
+--- a/src/components/AIChat/constants.ts
++++ b/src/components/AIChat/constants.ts
+@@ -38,6 +38,10 @@ export type AIToolPartState =
+  * label shimmers and any transcript streams inline, always visible. `thought`
+  * is settled — a transcript collapses behind a disclosure.
+  *
++ * Figma labels this property `Variant`, but it is a lifecycle phase, so the
++ * prop is `state` — the same split as AIToolPart (`state` = lifecycle,
++ * `variant` = kind of work).
++ *
+  * Usage: <AIThinkingPart state={AIThinkingPartState.thinking} />
+  */
+ export const AIThinkingPartState = {
+diff --git a/src/components/AnimatedText/AnimatedText.stories.tsx b/src/components/AnimatedText/AnimatedText.stories.tsx
+index 13b20da..4d8527e 100644
+--- a/src/components/AnimatedText/AnimatedText.stories.tsx
++++ b/src/components/AnimatedText/AnimatedText.stories.tsx
+@@ -5,7 +5,7 @@ import {
+   Markdown,
+   Title,
+ } from "@storybook/addon-docs/blocks";
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { useCallback, useEffect, useState } from "react";
+ import { Button, ButtonSize, ButtonVariant } from "../Button";
+ import { OutlineButton } from "../OutlineButton";
+@@ -209,8 +209,8 @@ export const RollHoverDirectionUpVsDown: Story = {
+     docs: {
+       description: {
+         story:
+-          "`direction` flips the barrel roll. `up` (default) rolls each glyph upward; `down` rolls it " +
+-          "downward. Hover each to compare.",
++          "`direction` flips the barrel roll. `down` (default) rolls each glyph downward; `up` rolls it " +
++          "upward. Hover each to compare.",
+       },
+     },
+   },
+@@ -251,7 +251,8 @@ export const RollHoverControlledActive: Story = {
+  *
+  * When content changes, the old text rolls away and blurs out while the new
+  * text rolls in and settles into focus. Respects `prefers-reduced-motion`
+- * (animation classes are `motion-safe:` scoped). The roll owns no color
++ * (the global block in tokens.css collapses the motion scale to 1ms, so the
++ * roll still runs and retires its nodes, but reads as instant). The roll owns no color
+  * tokens — it only transforms and blurs children that are already themed.
+  */
+ 
+@@ -389,6 +390,36 @@ export const FadeChangeAutoCyclingStatus: Story = {
+   },
+ };
+ 
++/** Contradicts direction (default down): new text rises in from below. */
++export const FadeChangeDirectionUp: Story = {
++  name: "Direction up",
++  render: function FadeDirectionUpStory() {
++    const [index, setIndex] = useState(0);
++
++    useEffect(() => {
++      const interval = setInterval(() => {
++        setIndex((i) => (i + 1) % statuses.length);
++      }, 1800);
++      return () => clearInterval(interval);
++    }, []);
++
++    return (
++      <div className="flex flex-col items-start gap-1">
++        <LabelText className="uppercase tracking-wide opacity-40">
++          Job status
++        </LabelText>
++        <FadeChangeText
++          changeKey={statuses[index]}
++          direction={RollDirection.up}
++          data-testid="fade-status-up"
++        >
++          <BodyText>{statuses[index]}</BodyText>
++        </FadeChangeText>
++      </div>
++    );
++  },
++};
++
+ export const FadeChangeVersusRoll: Story = {
+   name: "Fade vs roll (same change)",
+   parameters: {
+@@ -1152,7 +1183,11 @@ function AnimatedTextDocs() {
+       <StorySection
+         title="FadeChangeText"
+         summary="RollChangeText without the blur: the old value rolls out and fades, the new one rolls in and fades up, with the same `direction` prop. Timing defaults to the roll-change tokens; retune via `--ui-fade-change-*`."
+-        stories={[FadeChangeAutoCyclingStatus, FadeChangeVersusRoll]}
++        stories={[
++          FadeChangeAutoCyclingStatus,
++          FadeChangeDirectionUp,
++          FadeChangeVersusRoll,
++        ]}
+       />
+       <StorySection
+         title="RevealChangeText"
+diff --git a/src/components/AnimatedText/RollingDigitsText.tsx b/src/components/AnimatedText/RollingDigitsText.tsx
+index 6747dc1..4344c91 100644
+--- a/src/components/AnimatedText/RollingDigitsText.tsx
++++ b/src/components/AnimatedText/RollingDigitsText.tsx
+@@ -123,9 +123,9 @@ function Wheel({
+         } as CSSProperties
+       }
+       /* Only the wheel reports; its separator is a sibling that unmounts with
+-       * it. Guarded on the target because the roll's own transitionend and any
+-       * animation a consumer puts on the content would otherwise both land
+-       * here. */
++       * it. Guarded on the target because an animation a consumer puts on the
++       * content would otherwise bubble its own animationend here (the column's
++       * roll is a transition, so it never fires animationend). */
+       onAnimationEnd={(e) => {
+         if (state.exiting && e.target === e.currentTarget) onExited(state.key);
+       }}
+diff --git a/src/components/Avatar/Avatar.stories.tsx b/src/components/Avatar/Avatar.stories.tsx
+index 9257489..79836e8 100644
+--- a/src/components/Avatar/Avatar.stories.tsx
++++ b/src/components/Avatar/Avatar.stories.tsx
+@@ -1,6 +1,7 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { OrganizationIcon } from "../Icons";
+ import { Avatar, AvatarSize } from "./Avatar";
++import { LabelText } from "../Text";
+ 
+ const LogoMark = () => (
+   <svg
+@@ -12,11 +13,11 @@ const LogoMark = () => (
+   >
+     <path
+       d="M154.703 38.0255C153.795 66.185 153.341 95.6313 153.341 126.365C153.341 156.795 153.795 186.241 154.703 214.704H113.885V190.25C109.496 200.394 104.286 205.753 96.4263 210.327C88.5664 214.759 79.2775 216.975 68.5595 216.975C59.2705 216.975 45.5108 214.01 38.0796 208.72C30.6485 203.431 24.8608 196.283 20.7165 187.277C16.5722 178.128 14.5 168.121 14.5 157.257C14.5 146.535 15.9625 134.178 20.1068 124.743C24.2511 115.165 31.2317 104.415 38.6628 98.697C46.2369 92.8359 59.0182 89.9053 68.5929 89.9053C79.7397 89.9053 88.1363 92.9246 96.8878 98.4599C105.639 103.995 111.456 109.027 115.751 118.588C115.751 109.959 115.399 96.1612 114.793 77.0854C114.188 58.6152 113.885 45.5952 113.885 38.0255H154.703ZM85.6008 183.313C94.137 183.313 101.105 180.96 106.506 176.255C111.906 171.376 114.606 163.708 114.606 153.252C114.606 144.016 111.906 137.22 106.506 132.863C101.105 128.506 94.3112 126.328 86.1235 126.328C78.2841 126.328 71.6643 128.855 66.2638 133.909C61.0376 138.788 58.4245 145.236 58.4245 153.252C58.4245 162.14 60.8634 169.372 65.7412 174.948C70.619 180.525 77.2389 183.313 85.6008 183.313Z"
+-      fill="#0A0A0A"
++      className="fill-text"
+     />
+     <path
+       d="M240.5 184.322C240.5 201.101 226.921 214.704 210.169 214.704C193.418 214.704 179.839 201.101 179.839 184.322C179.839 167.542 193.418 153.94 210.169 153.94C226.921 153.94 240.5 167.542 240.5 184.322Z"
+-      fill="#390EF8"
++      className="fill-prominent-color"
+     />
+   </svg>
+ );
+@@ -59,7 +60,7 @@ export const WithIcon: Story = {
+ 
+ export const AllSizes: Story = {
+   render: () => (
+-    <div className="flex items-center gap-3">
++    <div className="flex items-center gap-md">
+       <Avatar>
+         <LogoMark />
+       </Avatar>
+@@ -76,7 +77,7 @@ export const AllSizes: Story = {
+ export const WithCustomChildren: Story = {
+   render: () => (
+     <Avatar size={AvatarSize.sm}>
+-      <span className="text-style-label text-text">⌘</span>
++      <LabelText className="text-text">⌘</LabelText>
+     </Avatar>
+   ),
+ };
+diff --git a/src/components/Button/Button.stories.tsx b/src/components/Button/Button.stories.tsx
+index 50b661d..58fe450 100644
+--- a/src/components/Button/Button.stories.tsx
++++ b/src/components/Button/Button.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { IconSize, NewChatIcon, SidebarLeftIcon } from "../Icons";
+ import { LabelText } from "../Text";
+ import { Button } from "./Button";
+@@ -31,7 +31,9 @@ export const Primary: Story = {
+ export const Secondary: Story = {
+   args: { children: "Button", variant: ButtonVariant.secondary },
+ };
++/** Export kept as `Brand` so the story URL is stable; the variant is `prominent`. */
+ export const Brand: Story = {
++  name: "Prominent",
+   args: { children: "Button", variant: ButtonVariant.prominent },
+ };
+ export const Danger: Story = {
+@@ -117,7 +119,7 @@ export const DisabledAll: Story = {
+       {(
+         Object.values(ButtonVariant).filter(
+           (v) => v !== ButtonVariant.text,
+-        ) as (typeof ButtonVariant)[keyof typeof ButtonVariant][]
++        ) as ButtonVariant[]
+       ).map((v) => (
+         <Button key={v} variant={v} disabled>
+           {v}
+diff --git a/src/components/Button/Button.tsx b/src/components/Button/Button.tsx
+index 6ed92db..a67bef5 100644
+--- a/src/components/Button/Button.tsx
++++ b/src/components/Button/Button.tsx
+@@ -31,7 +31,9 @@
+  *   tokens.
+  * - `prominent` was called `brand` before 5.4, in both the variant key and the
+  *   token family (`--ui-color-brand-*`). Neither spelling survives.
+- * - Keep `ButtonVariant.prominent` in the API even if icon stories omit it.
++ * - Keep `ButtonVariant.prominent` in the API although the icon-size stories
++ *   omit it — the stories are not the inventory, and dropping the key breaks
++ *   every consumer's prominent call to action.
+  */
+ import { Slot } from "@radix-ui/react-slot";
+ import { cva, type VariantProps } from "class-variance-authority";
+diff --git a/src/components/CTAButton/CTAButton.stories.tsx b/src/components/CTAButton/CTAButton.stories.tsx
+index b2bc3bc..bffa2a6 100644
+--- a/src/components/CTAButton/CTAButton.stories.tsx
++++ b/src/components/CTAButton/CTAButton.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { ChevronsRightIcon } from "../Icons";
+ import { CTAButton } from "./CTAButton";
+ import { CTAButtonSize, CTAButtonVariant } from "./constants";
+diff --git a/src/components/Calendar/CalendarCaption.tsx b/src/components/Calendar/CalendarCaption.tsx
+index 763cf4e..2bde46f 100644
+--- a/src/components/Calendar/CalendarCaption.tsx
++++ b/src/components/Calendar/CalendarCaption.tsx
+@@ -51,12 +51,11 @@ function CalendarCaption({
+   // Clamping already prevents navigating out of bounds — disabling the button
+   // tells the user that, instead of letting them click into a no-op.
+   //
+-  // Guarded on the CURRENT view being in bounds. Step 5 makes an out-of-bounds
+-  // `viewMonth` reachable for the first time (a controlled `month` prop is now
+-  // respected rather than clamped), and in that state BOTH neighbours are also
+-  // out of bounds — so an unguarded test would disable both arrows, including
+-  // the one pointing back toward the bounds, stranding the user exactly where
+-  // they most need to navigate.
++  // Guarded on the CURRENT view being in bounds. A controlled `month` is
++  // respected rather than clamped, so `viewMonth` can be out of bounds, and then
++  // BOTH neighbours are out of bounds too — an unguarded test would disable both
++  // arrows, including the one pointing back toward the bounds, stranding the
++  // user exactly where they most need to navigate.
+   const viewInBounds = !isYearOutOfBounds(viewMonth, yearBounds);
+   const atFloor =
+     viewInBounds && isYearOutOfBounds(addMonths(viewMonth, -1), yearBounds);
+diff --git a/src/components/Calendar/CalendarGrid.tsx b/src/components/Calendar/CalendarGrid.tsx
+index bc156d9..20953e5 100644
+--- a/src/components/Calendar/CalendarGrid.tsx
++++ b/src/components/Calendar/CalendarGrid.tsx
+@@ -54,7 +54,7 @@ export type CalendarGridProps = {
+   className?: string;
+ };
+ 
+-/** Seven narrow weekday names taken from any known week — no lookup table. */
++/** Seven short weekday names taken from any known week — no lookup table. */
+ function getWeekdayNames(locale: string | undefined): string[] {
+   const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
+   // 2026-05-31 is a Sunday, so this walks Sun..Sat in order.
+diff --git a/src/components/Calendar/dateUtils.ts b/src/components/Calendar/dateUtils.ts
+index 5ba217d..388a016 100644
+--- a/src/components/Calendar/dateUtils.ts
++++ b/src/components/Calendar/dateUtils.ts
+@@ -6,7 +6,8 @@
+ //      and renders as the 14th in negative-offset zones.
+ //   2. Never add milliseconds to move by days — a DST boundary makes
+ //      `t + 86400000` land on 01:00, not the next midnight. Always construct.
+-//   3. Never compare with `getTime()` — compare y/m/d, or compare day keys.
++//   3. Never compare raw `getTime()` of un-normalised dates — compare after
++//      `startOfDay`, compare y/m/d, or compare day keys.
+ 
+ import type { DateRange } from "./constants";
+ 
+diff --git a/src/components/Calendar/rangeSelection.ts b/src/components/Calendar/rangeSelection.ts
+index 41b911e..04881e4 100644
+--- a/src/components/Calendar/rangeSelection.ts
++++ b/src/components/Calendar/rangeSelection.ts
+@@ -39,7 +39,7 @@ export function previewRange(anchor: Date, hovered: Date): DateRange {
+ 
+ export type DayRangePosition = "none" | "start" | "middle" | "end" | "single";
+ 
+-/** Drives the band rounding in CalendarGrid — see the layer model in Task 9. */
++/** Drives the band rounding in CalendarGrid. */
+ export function getDayRangePosition(
+   day: Date,
+   range: DateRange | null,
+diff --git a/src/components/Checkbox/Checkbox.stories.tsx b/src/components/Checkbox/Checkbox.stories.tsx
+index 4e308de..93f4fea 100644
+--- a/src/components/Checkbox/Checkbox.stories.tsx
++++ b/src/components/Checkbox/Checkbox.stories.tsx
+@@ -1,5 +1,5 @@
+ import { useState } from 'react';
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { Checkbox } from './Checkbox';
+ import {
+   CheckboxChecked,
+diff --git a/src/components/Checkbox/Checkbox.tsx b/src/components/Checkbox/Checkbox.tsx
+index 7460e1b..2ea2d3f 100644
+--- a/src/components/Checkbox/Checkbox.tsx
++++ b/src/components/Checkbox/Checkbox.tsx
+@@ -13,8 +13,10 @@
+  * ## constraints
+  * - Style states via Radix `data-[state]` / `data-[disabled]` only — no JS
+  *   class toggling for checked/disabled.
+- * - Indicator SVGs stay decorative (`aria-hidden`); do not replace with
+- *   interactive children unless composing via the `children` escape hatch.
++ * - Indicator SVGs stay decorative (`aria-hidden`) — an interactive element
++ *   inside the checkbox button is a nested control that assistive tech
++ *   cannot reach. Custom indicator content goes through the `children`
++ *   escape hatch.
+  */
+ import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+ import { cva, type VariantProps } from "class-variance-authority";
+diff --git a/src/components/CopyButton/CopyButton.stories.tsx b/src/components/CopyButton/CopyButton.stories.tsx
+index e153c2d..071e0bc 100644
+--- a/src/components/CopyButton/CopyButton.stories.tsx
++++ b/src/components/CopyButton/CopyButton.stories.tsx
+@@ -1,7 +1,8 @@
+ import { useState } from "react";
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { CopyButton } from "./CopyButton";
+ import { CopyButtonVariant } from "./constants";
++import { BodyText, MonoText } from "../Text";
+ 
+ const meta = {
+   title: "Buttons/CopyButton",
+@@ -37,7 +38,7 @@ export const Secondary: Story = {
+ 
+ export const AllVariants: Story = {
+   render: () => (
+-    <div className="flex items-center gap-4 p-4">
++    <div className="flex items-center gap-lg p-lg">
+       <CopyButton variant={CopyButtonVariant.ghost} value="ghost-value" />
+       <CopyButton variant={CopyButtonVariant.secondary} value="secondary-value" />
+     </div>
+@@ -59,18 +60,18 @@ export const CopiedValueFeedback: Story = {
+       const snippet = "npx create-dooph-app@latest";
+ 
+       return (
+-        <div className="flex flex-col items-start gap-3 p-4">
+-          <div className="flex items-center gap-2 rounded-tight border border-solid border-secondary-border bg-secondary px-3 py-2">
+-            <code className="text-style-body">{snippet}</code>
++        <div className="flex flex-col items-start gap-md p-lg">
++          <div className="flex items-center gap-sm rounded-tight border border-solid border-secondary-border bg-secondary px-md py-sm">
++            <MonoText as="code">{snippet}</MonoText>
+             <CopyButton
+               variant={CopyButtonVariant.ghost}
+               value={snippet}
+               onCopied={setLastCopied}
+             />
+           </div>
+-          <p className="text-style-body">
++          <BodyText as="p">
+             {lastCopied ? `Copied: "${lastCopied}"` : "Nothing copied yet."}
+-          </p>
++          </BodyText>
+         </div>
+       );
+     }
+diff --git a/src/components/DatePicker/DatePicker.stories.tsx b/src/components/DatePicker/DatePicker.stories.tsx
+index 8f9b244..95e6653 100644
+--- a/src/components/DatePicker/DatePicker.stories.tsx
++++ b/src/components/DatePicker/DatePicker.stories.tsx
+@@ -159,3 +159,22 @@ export const InvalidValueEmptyLabel: Story = {
+     </div>
+   ),
+ };
++
++/** Contradicts DEFAULT_SPLIT_TRIGGER_PRESETS and the default locale. */
++export const SplitTriggerCustomPresetsLocale: Story = {
++  render: () => {
++    const [value, setValue] = useState<DateRange>(
++      CalendarPresets.days.fourteen.getRange(TODAY),
++    );
++    return (
++      <DatePicker
++        mode={DatePickerMode.dateRange}
++        value={value}
++        onValueChange={setValue}
++        splitPresets={[CalendarPresets.days.fourteen, CalendarPresets.months.six]}
++        locale="de-DE"
++        today={TODAY}
++      />
++    );
++  },
++};
+diff --git a/src/components/DropdownCaret/DropdownCaret.stories.tsx b/src/components/DropdownCaret/DropdownCaret.stories.tsx
+index 3d44872..b5d4d2e 100644
+--- a/src/components/DropdownCaret/DropdownCaret.stories.tsx
++++ b/src/components/DropdownCaret/DropdownCaret.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { useState } from "react";
+ import { Button, ButtonVariant } from "../Button";
+ import { ButtonText } from "../Text";
+diff --git a/src/components/DropdownTrigger/DropdownTrigger.stories.tsx b/src/components/DropdownTrigger/DropdownTrigger.stories.tsx
+index 5ecee13..ae91f2d 100644
+--- a/src/components/DropdownTrigger/DropdownTrigger.stories.tsx
++++ b/src/components/DropdownTrigger/DropdownTrigger.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { useEffect, useRef } from 'react';
+ import {
+   DropdownTrigger,
+diff --git a/src/components/DropdownTrigger/DropdownTrigger.tsx b/src/components/DropdownTrigger/DropdownTrigger.tsx
+index fdbdf5c..29bad84 100644
+--- a/src/components/DropdownTrigger/DropdownTrigger.tsx
++++ b/src/components/DropdownTrigger/DropdownTrigger.tsx
+@@ -3,7 +3,6 @@
+ import { Slot, Slottable } from "@radix-ui/react-slot";
+ import {
+   forwardRef,
+-  useCallback,
+   useRef,
+   type ComponentPropsWithoutRef,
+   type ComponentPropsWithRef,
+@@ -13,6 +12,7 @@ import {
+   type Ref,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { useComposedRefs } from "../../utils/composeRefs";
+ import { DropdownCaret, DropdownCaretVariant } from "../DropdownCaret";
+ import { ChevronDownIcon, IconSize, SearchIcon } from "../Icons";
+ import type { DropdownMenuSelectType } from "../Menu/constants";
+@@ -173,21 +173,7 @@ const TypeableDropdownTrigger = forwardRef<
+     ref,
+   ) => {
+     const inputElRef = useRef<HTMLInputElement>(null);
+-    const setInputRef = useCallback(
+-      (node: HTMLInputElement | null) => {
+-        inputElRef.current = node;
+-
+-        if (typeof inputRef === "function") {
+-          inputRef(node);
+-          return;
+-        }
+-
+-        if (inputRef) {
+-          inputRef.current = node;
+-        }
+-      },
+-      [inputRef],
+-    );
++    const setInputRef = useComposedRefs(inputElRef, inputRef);
+ 
+     // Radix Trigger's Slot merges type="button"; a <div> has no type.
+     const { type: _slotType, ...triggerProps } = rest as typeof rest & { type?: string };
+diff --git a/src/components/HotkeyIndicator/HotkeyIndicator.stories.tsx b/src/components/HotkeyIndicator/HotkeyIndicator.stories.tsx
+index 0e93c57..5f28daa 100644
+--- a/src/components/HotkeyIndicator/HotkeyIndicator.stories.tsx
++++ b/src/components/HotkeyIndicator/HotkeyIndicator.stories.tsx
+@@ -1,6 +1,7 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { HotkeyIndicator } from './HotkeyIndicator';
+ import { HotkeyIndicatorVariant } from './constants';
++import { LabelText } from '../Text';
+ 
+ const meta = {
+   title: 'Bits & Pieces/HotkeyIndicator',
+@@ -26,15 +27,15 @@ export const AllStates: Story = {
+   render: () => (
+     <div className="flex flex-col gap-4 p-4">
+       <div className="flex items-center gap-2">
+-        <span className="text-style-label text-ghost-fg w-20">Single</span>
++        <LabelText className="text-ghost-fg w-20">Single</LabelText>
+         <HotkeyIndicator keys={['⌘']} />
+       </div>
+       <div className="flex items-center gap-2">
+-        <span className="text-style-label text-ghost-fg w-20">Multiple</span>
++        <LabelText className="text-ghost-fg w-20">Multiple</LabelText>
+         <HotkeyIndicator keys={['⌘', 'K']} />
+       </div>
+       <div className="flex items-center gap-2">
+-        <span className="text-style-label text-ghost-fg w-20">Pressed</span>
++        <LabelText className="text-ghost-fg w-20">Pressed</LabelText>
+         <HotkeyIndicator keys={['Esc']} pressed />
+       </div>
+     </div>
+diff --git a/src/components/HotkeyIndicator/HotkeyIndicator.tsx b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+index dc28750..bc2b7a1 100644
+--- a/src/components/HotkeyIndicator/HotkeyIndicator.tsx
++++ b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+@@ -1,4 +1,4 @@
+-import { type HTMLAttributes } from 'react';
++import { forwardRef, type HTMLAttributes } from 'react';
+ import { cn } from '../../utils/cn';
+ import { HotkeyIndicatorVariant } from './constants';
+ 
+@@ -9,44 +9,51 @@ export interface HotkeyIndicatorProps extends HTMLAttributes<HTMLSpanElement> {
+   variant?: HotkeyIndicatorVariant;
+ }
+ 
+-function HotkeyIndicator({
+-  keys,
+-  pressed = false,
+-  variant = HotkeyIndicatorVariant.default,
+-  className,
+-  ...props
+-}: HotkeyIndicatorProps) {
+-  return (
+-    <span
+-      data-pressed={pressed || undefined}
+-      className={cn('group/hotkey inline-flex items-center gap-xxs', className)}
+-      {...props}
+-    >
+-      {keys.map((key, i) => (
+-        <kbd
+-          key={i}
+-          className={cn(
+-            'inline-flex items-center justify-center',
+-            'rounded-tight border',
+-            'text-style-label',
+-            'ds-motion-state',
+-            'ds-px-ui-sm ds-py-ui-xxs',
+-            keys.length === 1 && 'ds-min-size-kbd',
+-            variant === HotkeyIndicatorVariant.menu
+-              ? 'h-6 min-h-6 text-text-tertiary'
+-              : 'text-ghost-fg',
+-            variant === HotkeyIndicatorVariant.menu
+-              ? 'bg-secondary-hover border-secondary-border-hover'
+-              : 'bg-surface-page border-border-primary',
+-            // `pressed` is read from the root's data-pressed (both variants).
+-            'group-data-[pressed]/hotkey:bg-ghost-active group-data-[pressed]/hotkey:border-border-primary'
+-          )}
+-        >
+-          {key}
+-        </kbd>
+-      ))}
+-    </span>
+-  );
+-}
++const HotkeyIndicator = forwardRef<HTMLSpanElement, HotkeyIndicatorProps>(
++  function HotkeyIndicator(
++    {
++      keys,
++      pressed = false,
++      variant = HotkeyIndicatorVariant.default,
++      className,
++      ...props
++    },
++    ref,
++  ) {
++    return (
++      <span
++        ref={ref}
++        data-pressed={pressed || undefined}
++        className={cn('group/hotkey inline-flex items-center gap-xxs', className)}
++        {...props}
++      >
++        {keys.map((key, i) => (
++          <kbd
++            key={i}
++            className={cn(
++              'inline-flex items-center justify-center',
++              'rounded-tight border',
++              'text-style-label',
++              'ds-motion-state',
++              'ds-px-ui-sm ds-py-ui-xxs',
++              keys.length === 1 && 'ds-min-size-kbd',
++              variant === HotkeyIndicatorVariant.menu
++                ? 'h-6 min-h-6 text-text-tertiary'
++                : 'text-ghost-fg',
++              variant === HotkeyIndicatorVariant.menu
++                ? 'bg-secondary-hover border-secondary-border-hover'
++                : 'bg-surface-page border-border-primary',
++              // `pressed` is read from the root's data-pressed (both variants).
++              'group-data-[pressed]/hotkey:bg-ghost-active group-data-[pressed]/hotkey:border-border-primary'
++            )}
++          >
++            {key}
++          </kbd>
++        ))}
++      </span>
++    );
++  },
++);
++HotkeyIndicator.displayName = "HotkeyIndicator";
+ 
+ export { HotkeyIndicator };
+diff --git a/src/components/Icons/BaseIcon.tsx b/src/components/Icons/BaseIcon.tsx
+index 1d9ab8c..be05044 100644
+--- a/src/components/Icons/BaseIcon.tsx
++++ b/src/components/Icons/BaseIcon.tsx
+@@ -108,8 +108,8 @@ export const BaseIcon = forwardRef<SVGSVGElement, IconProps>(
+         height: size,
+         // `color` sets CSS color, so every `currentColor` paint in the icon —
+         // the default stroke and any filled child — follows the prop.
+-        color: color ?? undefined,
+-        fill: fillColor ?? undefined,
++        color,
++        fill: fillColor,
+         stroke: strokeColor ?? "currentColor",
+         strokeWidth: strokeWidth ?? "var(--ui-icon-stroke-width)",
+         ...style,
+diff --git a/src/components/Icons/Icons.stories.tsx b/src/components/Icons/Icons.stories.tsx
+index 461502e..fa0915e 100644
+--- a/src/components/Icons/Icons.stories.tsx
++++ b/src/components/Icons/Icons.stories.tsx
+@@ -15,10 +15,13 @@ import { SearchIcon } from "./SearchIcon";
+ import { SendIcon } from "./SendIcon";
+ import { SettingsBoltIcon } from "./SettingsBoltIcon";
+ import { SettingsGearIcon } from "./SettingsGearIcon";
++import { SidebarLeftHoverIcon } from "./SidebarLeftHoverIcon";
+ import { SidebarLeftIcon } from "./SidebarLeftIcon";
++import { SidebarRightHoverIcon } from "./SidebarRightHoverIcon";
+ import { SidebarRightIcon } from "./SidebarRightIcon";
+ import { StopFilledIcon } from "./StopFilledIcon";
+ import { TagIcon } from "./TagIcon";
++import { LabelText } from "../Text";
+ 
+ const meta = {
+   component: BaseIcon,
+@@ -51,15 +54,7 @@ const IconCell = ({
+     }}
+   >
+     <Icon size={IconSize.rg} />
+-    <span
+-      style={{
+-        fontSize: 11,
+-        textAlign: "center",
+-        color: "var(--color-text-secondary)",
+-      }}
+-    >
+-      {label}
+-    </span>
++    <LabelText className="text-center text-text-secondary">{label}</LabelText>
+   </div>
+ );
+ 
+@@ -107,19 +102,19 @@ export const SidebarIcons: Story = {
+     >
+       <IconCell
+         icon={(props) => <SidebarLeftIcon {...props} />}
+-        label="LeftSidebar Closed"
++        label="SidebarLeft"
+       />
+       <IconCell
+-        icon={(props) => <SidebarLeftIcon {...props} />}
+-        label="LeftSidebar Open"
++        icon={(props) => <SidebarLeftHoverIcon {...props} />}
++        label="SidebarLeftHover"
+       />
+       <IconCell
+         icon={(props) => <SidebarRightIcon {...props} />}
+-        label="RightSidebar Closed"
++        label="SidebarRight"
+       />
+       <IconCell
+-        icon={(props) => <SidebarRightIcon {...props} />}
+-        label="RightSidebar Open"
++        icon={(props) => <SidebarRightHoverIcon {...props} />}
++        label="SidebarRightHover"
+       />
+     </div>
+   ),
+@@ -213,3 +208,15 @@ export const Colors: Story = {
+     </div>
+   ),
+ };
++
++/** Renders the args, so the size, strokeWidth and colour controls do something.
++ * Contradicts the default stroke width (--ui-icon-stroke-width) and colours. */
++export const Playground: Story = {
++  args: {
++    size: IconSize.md,
++    strokeWidth: 3,
++    strokeColor: "var(--ui-color-prominent)",
++    fillColor: "var(--ui-color-surface-secondary)",
++    children: <path d="M6 18h6a3 3 0 0 0 3 -3v-10l-4 4m8 0l-4 -4" />,
++  },
++};
+diff --git a/src/components/Icons/ShowMoneyIcon.tsx b/src/components/Icons/ShowMoneyIcon.tsx
+index de78987..f82f748 100644
+--- a/src/components/Icons/ShowMoneyIcon.tsx
++++ b/src/components/Icons/ShowMoneyIcon.tsx
+@@ -3,7 +3,6 @@ import { BaseIcon, IconProps } from "./BaseIcon";
+ export const ShowMoneyIcon = (props: IconProps) => {
+   return (
+     <BaseIcon {...props}>
+-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+       <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+       <path d="M13.193 17.924c-.39 .05 -.788 .076 -1.193 .076c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.005 0 5.592 1.394 7.761 4.181" />
+       <path d="M21 15h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+diff --git a/src/components/Input/Input.stories.tsx b/src/components/Input/Input.stories.tsx
+index 293a63f..e8b2fa6 100644
+--- a/src/components/Input/Input.stories.tsx
++++ b/src/components/Input/Input.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { useEffect, useRef } from 'react';
+ import { Input } from './Input';
+ import { InputVariant } from './constants';
+diff --git a/src/components/Input/Input.tsx b/src/components/Input/Input.tsx
+index 1cdaf8b..7bd627c 100644
+--- a/src/components/Input/Input.tsx
++++ b/src/components/Input/Input.tsx
+@@ -46,6 +46,7 @@ import {
+   type ReactElement,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { useComposedRefs } from "../../utils/composeRefs";
+ import { InputVariant } from "./constants";
+ 
+ type InputBaseProps = InputHTMLAttributes<HTMLInputElement> & {
+@@ -85,11 +86,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+       variant === InputVariant.iconText || variant === InputVariant.iconNumber;
+ 
+     const inputEl = useRef<HTMLInputElement | null>(null);
+-    const setRefs = (node: HTMLInputElement | null) => {
+-      inputEl.current = node;
+-      if (typeof ref === "function") ref(node);
+-      else if (ref) ref.current = node;
+-    };
++    const setRefs = useComposedRefs(inputEl, ref);
+ 
+     const isControlled = value !== undefined;
+     const [uncontrolledValue, setUncontrolledValue] = useState(() =>
+diff --git a/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx b/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx
+index 4162993..074beac 100644
+--- a/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx
++++ b/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx
+@@ -1,5 +1,5 @@
+ import { useState, useEffect } from 'react';
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { LinearProgressIndicator } from './LinearProgressIndicator';
+ import { DS_COLOR_TOKENS } from '../../utils/color';
+ import { LabelText } from '../Text';
+diff --git a/src/components/LoadingSpinner/LoadingSpinner.stories.tsx b/src/components/LoadingSpinner/LoadingSpinner.stories.tsx
+index c137fab..4e59bd4 100644
+--- a/src/components/LoadingSpinner/LoadingSpinner.stories.tsx
++++ b/src/components/LoadingSpinner/LoadingSpinner.stories.tsx
+@@ -1,10 +1,11 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { LoadingSpinner } from "./LoadingSpinner";
+ import {
+   LoadingSpinnerColor,
+   LoadingSpinnerSize,
+   LoadingSpinnerVariant,
+ } from "./constants";
++import { LabelText } from "../Text";
+ 
+ const meta = {
+   title: "Progress/LoadingSpinner",
+@@ -147,7 +148,7 @@ export const AllVariantsAndColors: Story = {
+   render: () => (
+     <div className="flex flex-col gap-6">
+       <div className="flex items-center gap-4">
+-        <span className="w-12 text-style-label text-text-secondary">flat</span>
++        <LabelText className="w-12 text-text-secondary">flat</LabelText>
+         <LoadingSpinner
+           variant={LoadingSpinnerVariant.flat}
+           color={LoadingSpinnerColor.primary}
+@@ -160,7 +161,7 @@ export const AllVariantsAndColors: Story = {
+         />
+       </div>
+       <div className="flex items-center gap-4">
+-        <span className="w-12 text-style-label text-text-secondary">spokes</span>
++        <LabelText className="w-12 text-text-secondary">spokes</LabelText>
+         <LoadingSpinner
+           variant={LoadingSpinnerVariant.spokes}
+           color={LoadingSpinnerColor.primary}
+@@ -173,7 +174,7 @@ export const AllVariantsAndColors: Story = {
+         />
+       </div>
+       <div className="flex items-center gap-lg">
+-        <span className="w-12 text-style-label text-text-secondary">star</span>
++        <LabelText className="w-12 text-text-secondary">star</LabelText>
+         <LoadingSpinner
+           variant={LoadingSpinnerVariant.star}
+           color={LoadingSpinnerColor.primary}
+diff --git a/src/components/LoadingSpinner/spinnerGeometry.ts b/src/components/LoadingSpinner/spinnerGeometry.ts
+index cda6503..71278bd 100644
+--- a/src/components/LoadingSpinner/spinnerGeometry.ts
++++ b/src/components/LoadingSpinner/spinnerGeometry.ts
+@@ -43,7 +43,10 @@ export const SPINNER_SIZE_VARS = {
+   xl: "var(--ui-size-spinner-xl)",
+ } as const;
+ 
+-/** Stroke width in px for each size. Scales with diameter. */
++/**
++ * Stroke width per size, in viewBox user units — the rendered size comes from
++ * the --ui-size-spinner-* token and the stroke scales with it.
++ */
+ export const SPINNER_STROKE_WIDTHS = { sm: 2, rg: 2.5, md: 3, xl: 3 } as const;
+ 
+ /** Starting angle in radians — 12 o'clock position. */
+diff --git a/src/components/Menu/DropdownMenu.stories.tsx b/src/components/Menu/DropdownMenu.stories.tsx
+index d960490..f032310 100644
+--- a/src/components/Menu/DropdownMenu.stories.tsx
++++ b/src/components/Menu/DropdownMenu.stories.tsx
+@@ -1,5 +1,5 @@
+ import { useState } from 'react';
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import {
+   DropdownMenu,
+   DropdownMenuTrigger,
+@@ -488,3 +488,20 @@ export const Submenu: Story = {
+     </DropdownMenu>
+   ),
+ };
++
++/** modal traps focus and blocks the page; the panel renders in place; leaving the window closes it. */
++export const ModalInlineDismissOnFocusLoss: Story = {
++  render: () => (
++    <DropdownMenu modal>
++      <DropdownMenuTrigger asChild>
++        <DropdownTrigger>Modal, in place</DropdownTrigger>
++      </DropdownMenuTrigger>
++      <DropdownMenuContent portal={false} dismissOnFocusLoss>
++        <DropdownMenuSection>
++          <DropdownMenuItem>Rename</DropdownMenuItem>
++          <DropdownMenuItem>Duplicate</DropdownMenuItem>
++        </DropdownMenuSection>
++      </DropdownMenuContent>
++    </DropdownMenu>
++  ),
++};
+diff --git a/src/components/Menu/DropdownMenuSearch.tsx b/src/components/Menu/DropdownMenuSearch.tsx
+index b4f72cf..1cf4bcd 100644
+--- a/src/components/Menu/DropdownMenuSearch.tsx
++++ b/src/components/Menu/DropdownMenuSearch.tsx
+@@ -7,6 +7,8 @@
+  *   separator inside DropdownMenuContent.
+  * - Forwards ref to the input. Stops keydown propagation so Radix typeahead
+  *   does not steal keystrokes while typing.
++ * - `className` styles the row `<div>`; `ref`, `style` and every other prop
++ *   land on the `<input>`.
+  * - Not keyboard-reachable inside DropdownMenuContent: Radix prevents Tab
+  *   there and moves focus only among its own items, and this input stops
+  *   keydown propagation, so ArrowDown never reaches the menu. As with
+diff --git a/src/components/Modal/Modal.stories.tsx b/src/components/Modal/Modal.stories.tsx
+index 26d3ce9..1e70e52 100644
+--- a/src/components/Modal/Modal.stories.tsx
++++ b/src/components/Modal/Modal.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { useState } from 'react';
+ import {
+   Modal,
+@@ -10,6 +10,7 @@ import {
+ } from './Modal';
+ import { Button } from '../Button/Button';
+ import { ButtonVariant, ButtonSize } from '../Button/constants';
++import { ButtonText, LabelText } from '../Text';
+ 
+ const meta = {
+   title: 'Overlays/Modal',
+@@ -28,13 +29,12 @@ export const Default: Story = {
+         <Button variant={ButtonVariant.primary}>Open modal</Button>
+       </ModalTrigger>
+       <ModalContent className="w-[400px]">
+-        <ModalTitle className="sr-only">Modal</ModalTitle>
+         <div className="flex flex-col gap-4 p-6">
+-          <p className="text-style-heading text-text">Modal title</p>
+-          <p className="text-style-body text-text-secondary">
++          <ModalTitle>Modal title</ModalTitle>
++          <ModalDescription>
+             This is the raw modal primitive. No internal padding or flex is added by
+             the component — you compose it directly.
+-          </p>
++          </ModalDescription>
+           <div className="flex justify-end gap-2">
+             <ModalClose asChild>
+               <Button variant={ButtonVariant.secondary}>Cancel</Button>
+@@ -56,9 +56,8 @@ export const LargerContent: Story = {
+         <Button variant={ButtonVariant.secondary}>Open large modal</Button>
+       </ModalTrigger>
+       <ModalContent className="w-[560px]">
+-        <ModalTitle className="sr-only">Large modal</ModalTitle>
+         <div className="flex flex-col gap-4 p-6">
+-          <p className="text-style-heading text-text">Larger modal</p>
++          <ModalTitle>Larger modal</ModalTitle>
+           <ModalDescription>
+             The width and padding are entirely up to the consumer. The primitive
+             only provides the surface, border, backdrop, and animation.
+@@ -69,7 +68,7 @@ export const LargerContent: Story = {
+                 key={item}
+                 className="flex items-center justify-between rounded-normal border border-border-primary px-4 py-3"
+               >
+-                <span className="text-style-button text-text">{item}</span>
++                <ButtonText className="text-text">{item}</ButtonText>
+                 <Button variant={ButtonVariant.ghost} size={ButtonSize.sm}>Select</Button>
+               </div>
+             ))}
+@@ -95,13 +94,12 @@ export const Controlled: Story = {
+         </Button>
+         <Modal open={open} onOpenChange={setOpen}>
+           <ModalContent className="w-[400px]">
+-            <ModalTitle className="sr-only">Controlled modal</ModalTitle>
+             <div className="flex flex-col gap-4 p-6">
+-              <p className="text-style-heading text-text">Controlled modal</p>
+-              <p className="text-style-body text-text-secondary">
++              <ModalTitle>Controlled modal</ModalTitle>
++              <ModalDescription>
+                 Open/close state is managed externally via the{' '}
+-                <code className="text-style-label bg-surface-secondary rounded px-1">open</code> prop.
+-              </p>
++                <LabelText as="code" className="bg-surface-secondary rounded-tight px-xxs">open</LabelText> prop.
++              </ModalDescription>
+               <div className="flex justify-end">
+                 <Button variant={ButtonVariant.secondary} onClick={() => setOpen(false)}>
+                   Close
+@@ -122,13 +120,12 @@ export const NoOverlay: Story = {
+         <Button variant={ButtonVariant.secondary}>Open (no backdrop)</Button>
+       </ModalTrigger>
+       <ModalContent withOverlay={false} className="w-[400px]">
+-        <ModalTitle className="sr-only">Modal without overlay</ModalTitle>
+         <div className="flex flex-col gap-4 p-6">
+-          <p className="text-style-heading text-text">No backdrop</p>
+-          <p className="text-style-body text-text-secondary">
++          <ModalTitle>No backdrop</ModalTitle>
++          <ModalDescription>
+             Rendered without the fullscreen overlay. Useful for in-page panels or
+             when a custom backdrop is already present.
+-          </p>
++          </ModalDescription>
+           <div className="flex justify-end">
+             <ModalClose asChild>
+               <Button variant={ButtonVariant.secondary}>Close</Button>
+diff --git a/src/components/MorphRotationShape/MorphRotationShape.stories.tsx b/src/components/MorphRotationShape/MorphRotationShape.stories.tsx
+index 8132691..40b3e46 100644
+--- a/src/components/MorphRotationShape/MorphRotationShape.stories.tsx
++++ b/src/components/MorphRotationShape/MorphRotationShape.stories.tsx
+@@ -1,13 +1,6 @@
+-import type { Meta, StoryObj } from "@storybook/react";
+-import { useState } from "react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
++import { useEffect, useRef, useState } from "react";
+ import { Button, ButtonVariant } from "../Button";
+-import { ChevronDownIcon } from "../Icons";
+-import {
+-  DropdownMenu,
+-  DropdownMenuContent,
+-  DropdownMenuItem,
+-  DropdownMenuTrigger,
+-} from "../Menu";
+ import {
+   CloverShape,
+   CookieShape,
+@@ -76,37 +69,7 @@ export const ShapeKeys: Story = {
+   render: () => <ControlledDemo shapes={[Shapes.clover, Shapes.puff, Shapes.squircle]} />,
+ };
+ 
+-/**
+- * Figma 874:1682 / 874:1723 — a caret frame in a dropdown trigger. The trigger
+- * passes no props: Radix sets data-state=open and CSS moves the target.
+- * 31px frame, 2.5px inset = the ~9% spill budget around a 26px shape.
+- */
+-export const EmbeddedDropdownCaret: Story = {
+-  render: () => (
+-    <DropdownMenu>
+-      <DropdownMenuTrigger asChild>
+-        <Button variant={ButtonVariant.secondary} className="group">
+-          <ButtonText>Users</ButtonText>
+-          <span className="relative inline-flex size-[31px] items-center justify-center">
+-            <MorphRotationShape
+-              mode={MorphRotationShapeMode.embedded}
+-              shapes={[CloverShape, PuffShape]}
+-              className="absolute inset-[2.5px] text-primary transition-colors group-data-[state=open]:text-prominent group-data-[state=open]:[--ds-shape-morph-target:1]"
+-            />
+-            <span className="relative text-primary-fg transition-transform group-data-[state=open]:rotate-180">
+-              <ChevronDownIcon size={14} />
+-            </span>
+-          </span>
+-        </Button>
+-      </DropdownMenuTrigger>
+-      <DropdownMenuContent>
+-        <DropdownMenuItem>
+-          <ButtonText>Everyone</ButtonText>
+-        </DropdownMenuItem>
+-      </DropdownMenuContent>
+-    </DropdownMenu>
+-  ),
+-};
++/* Embedded mode inside a trigger: see Menus/DropdownCaret, the shipped embedding. */
+ 
+ /** Contradicts the token defaults on purpose: a slow, linear step. */
+ export const TimingOverride: Story = {
+@@ -121,3 +84,33 @@ export const TimingOverride: Story = {
+     </span>
+   ),
+ };
++
++/** A consumer ref must reach the span WITHOUT displacing the component's own:
++ *  the status shows the span's tag, and every click still lands a step. */
++function ForwardedRefDemo() {
++  const ref = useRef<HTMLSpanElement>(null);
++  const [index, setIndex] = useState(0);
++  const [landed, setLanded] = useState(0);
++  const [tag, setTag] = useState("–");
++  useEffect(() => setTag(ref.current?.tagName ?? "null"), []);
++  return (
++    <div className="flex flex-col items-center gap-lg">
++      <span className="relative block size-[120px] text-primary">
++        <MorphRotationShape
++          ref={ref}
++          mode={MorphRotationShapeMode.controlled}
++          shapes={[CloverShape, PuffShape]}
++          activeIndex={index}
++          onStepComplete={() => setLanded((n) => n + 1)}
++          className="absolute inset-[11px]"
++        />
++      </span>
++      <Button variant={ButtonVariant.secondary} onClick={() => setIndex((i) => i + 1)}>
++        <ButtonText>Next shape</ButtonText>
++      </Button>
++      <ButtonText>ref: {tag} · landed: {landed}</ButtonText>
++    </div>
++  );
++}
++
++export const ForwardedRef: Story = { render: () => <ForwardedRefDemo /> };
+diff --git a/src/components/MorphRotationShape/MorphRotationShape.tsx b/src/components/MorphRotationShape/MorphRotationShape.tsx
+index 560abb1..d92deb9 100644
+--- a/src/components/MorphRotationShape/MorphRotationShape.tsx
++++ b/src/components/MorphRotationShape/MorphRotationShape.tsx
+@@ -57,12 +57,15 @@
+ import {
+   type ComponentPropsWithoutRef,
+   type CSSProperties,
++  forwardRef,
++  type ForwardedRef,
+   useLayoutEffect,
+   useMemo,
+   useRef,
+   useState,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { useComposedRefs } from "../../utils/composeRefs";
+ import { getShapePath, type ShapeInput } from "../Shapes/shapePaths";
+ import { MorphRotationShapeMode } from "./constants";
+ import { Morph } from "./engine/morph";
+@@ -162,11 +165,14 @@ function useShapesKey(shapes: ShapeInput[]): number {
+   return ref.current.key;
+ }
+ 
+-export const MorphRotationShape = (props: MorphRotationShapeProps) => {
+-  assertProps(props);
+-  const key = useShapesKey(props.shapes);
+-  return <MorphRotationShapeInner key={key} {...props} />;
+-};
++export const MorphRotationShape = forwardRef<HTMLSpanElement, MorphRotationShapeProps>(
++  (props, ref) => {
++    assertProps(props);
++    const key = useShapesKey(props.shapes);
++    return <MorphRotationShapeInner key={key} {...props} forwardedRef={ref} />;
++  },
++);
++MorphRotationShape.displayName = "MorphRotationShape";
+ 
+ const MorphRotationShapeInner = ({
+   mode,
+@@ -177,9 +183,11 @@ const MorphRotationShapeInner = ({
+   onStepComplete,
+   className,
+   style,
++  forwardedRef,
+   ...spanProps
+-}: MorphRotationShapeProps) => {
++}: MorphRotationShapeProps & { forwardedRef: ForwardedRef<HTMLSpanElement> }) => {
+   const spanRef = useRef<HTMLSpanElement>(null);
++  const composedRef = useComposedRefs(spanRef, forwardedRef);
+   const gRef = useRef<SVGGElement>(null);
+   const pathRef = useRef<SVGPathElement>(null);
+ 
+@@ -340,12 +348,14 @@ const MorphRotationShapeInner = ({
+ 
+   return (
+     <span
+-      ref={spanRef}
+       data-mode={mode}
+       aria-hidden={spanProps.role ? undefined : true}
+       className={cn("ds-shape-morph block", className)}
+       style={{ ...(styleVars as CSSProperties), ...style }}
+       {...spanProps}
++      /* Last, and composed: a consumer ref must never displace spanRef — the
++       * sampling loop and the listeners read it (see ## constraints). */
++      ref={composedRef}
+     >
+       <svg viewBox="0 0 100 100" className="block size-full overflow-visible" aria-hidden focusable="false">
+         <g className={isLoader ? "ds-shape-morph-passive-spin" : undefined}>
+diff --git a/src/components/MorphRotationShape/engine/cubic.ts b/src/components/MorphRotationShape/engine/cubic.ts
+index 0b50795..fbf6649 100644
+--- a/src/components/MorphRotationShape/engine/cubic.ts
++++ b/src/components/MorphRotationShape/engine/cubic.ts
+@@ -4,7 +4,7 @@
+  * (Apache 2.0). See THIRD_PARTY_NOTICES.md.
+  *
+  * ## constraints
+- * - Keep this file a faithful port. Behaviour fixes belong in ../svgPath.ts
++ * - Keep this file a faithful port. Behaviour fixes belong in ./svgPath.ts
+  *   (see its convexity note), not here, so the port can be diffed against
+  *   upstream.
+  */
+diff --git a/src/components/MorphRotationShape/engine/morph.ts b/src/components/MorphRotationShape/engine/morph.ts
+index 5b2d360..c618d57 100644
+--- a/src/components/MorphRotationShape/engine/morph.ts
++++ b/src/components/MorphRotationShape/engine/morph.ts
+@@ -4,7 +4,7 @@
+  * (Apache 2.0). See THIRD_PARTY_NOTICES.md.
+  *
+  * ## constraints
+- * - Keep this file a faithful port. Behaviour fixes belong in ../svgPath.ts
++ * - Keep this file a faithful port. Behaviour fixes belong in ./svgPath.ts
+  *   (see its convexity note), not here, so the port can be diffed against
+  *   upstream.
+  */
+diff --git a/src/components/MorphRotationShape/engine/polygon.ts b/src/components/MorphRotationShape/engine/polygon.ts
+index c578c9b..5b3e44c 100644
+--- a/src/components/MorphRotationShape/engine/polygon.ts
++++ b/src/components/MorphRotationShape/engine/polygon.ts
+@@ -4,7 +4,7 @@
+  * (Apache 2.0). See THIRD_PARTY_NOTICES.md.
+  *
+  * ## constraints
+- * - Keep this file a faithful port. Behaviour fixes belong in ../svgPath.ts
++ * - Keep this file a faithful port. Behaviour fixes belong in ./svgPath.ts
+  *   (see its convexity note), not here, so the port can be diffed against
+  *   upstream.
+  */
+diff --git a/src/components/MorphRotationShape/engine/utils.ts b/src/components/MorphRotationShape/engine/utils.ts
+index febf97b..4b6e59b 100644
+--- a/src/components/MorphRotationShape/engine/utils.ts
++++ b/src/components/MorphRotationShape/engine/utils.ts
+@@ -4,7 +4,7 @@
+  * (Apache 2.0). See THIRD_PARTY_NOTICES.md.
+  *
+  * ## constraints
+- * - Keep this file a faithful port. Behaviour fixes belong in ../svgPath.ts
++ * - Keep this file a faithful port. Behaviour fixes belong in ./svgPath.ts
+  *   (see its convexity note), not here, so the port can be diffed against
+  *   upstream.
+  */
+diff --git a/src/components/OutlineButton/OutlineButton.stories.tsx b/src/components/OutlineButton/OutlineButton.stories.tsx
+index a2dfde4..1b54f2a 100644
+--- a/src/components/OutlineButton/OutlineButton.stories.tsx
++++ b/src/components/OutlineButton/OutlineButton.stories.tsx
+@@ -1,26 +1,8 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { useState } from "react";
+ import { LabelText } from "../Text";
+ import { OutlineButton } from "./OutlineButton";
+-
+-const SearchIcon = () => (
+-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+-    <circle
+-      cx="7"
+-      cy="7"
+-      r="4.25"
+-      stroke="currentColor"
+-      strokeWidth="1.5"
+-      strokeLinecap="round"
+-    />
+-    <path
+-      d="M10.5 10.5L13 13"
+-      stroke="currentColor"
+-      strokeWidth="1.5"
+-      strokeLinecap="round"
+-    />
+-  </svg>
+-);
++import { IconSize, SearchIcon } from "../Icons";
+ 
+ const meta = {
+   title: "Buttons/OutlineButton",
+@@ -48,7 +30,7 @@ export const Default: Story = {
+ export const WithIcon: Story = {
+   render: () => (
+     <OutlineButton>
+-      <SearchIcon />
++      <SearchIcon size={IconSize.md} />
+       Find anything
+     </OutlineButton>
+   ),
+@@ -62,7 +44,7 @@ export const Disabled: Story = {
+ export const ThemeInverse: Story = {
+   render: () => (
+     <OutlineButton themeInverse>
+-      <SearchIcon />
++      <SearchIcon size={IconSize.md} />
+       Find anything
+     </OutlineButton>
+   ),
+@@ -81,7 +63,7 @@ export const Glowing: Story = {
+ export const CustomGlowColors: Story = {
+   render: () => (
+     <OutlineButton glowColor1="#c084fc" glowColor2="#42e6f5">
+-      <SearchIcon />
++      <SearchIcon size={IconSize.md} />
+       Custom glow
+     </OutlineButton>
+   ),
+@@ -91,7 +73,7 @@ export const CustomAccent: Story = {
+   render: () => (
+     <div style={{ "--ui-prominent-color-alt": "#c084fc" } as React.CSSProperties}>
+       <OutlineButton>
+-        <SearchIcon />
++        <SearchIcon size={IconSize.md} />
+         Custom accent token
+       </OutlineButton>
+     </div>
+diff --git a/src/components/OutlineButton/OutlineButton.tsx b/src/components/OutlineButton/OutlineButton.tsx
+index ab99893..f0e0625 100644
+--- a/src/components/OutlineButton/OutlineButton.tsx
++++ b/src/components/OutlineButton/OutlineButton.tsx
+@@ -9,11 +9,10 @@ import {
+   type ComponentPropsWithRef,
+   type ElementType,
+   type ForwardedRef,
+-  type MutableRefObject,
+   type ReactElement,
+-  type RefCallback,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { useComposedRefs } from "../../utils/composeRefs";
+ 
+ type OutlineButtonOwnProps = {
+   asChild?: boolean;
+@@ -57,6 +56,9 @@ type OutlineButtonComponent = <TElement extends ElementType = "button">(
+  * stay visible without any hover condition — useful for a persistent "lit" state
+  * driven by application logic.
+  *
++ * `className` styles the outer pill frame `<div>`; `ref`, `style`, handlers and
++ * every other prop go to the inner button (the slotted element under `asChild`).
++ *
+  * @example
+  * <OutlineButton><SearchIcon /> Find anything</OutlineButton>
+  *
+@@ -90,17 +92,7 @@ const OutlineButtonBase = forwardRef<
+     // Internal ref for direct DOM mutations — keeps cursor tracking out of React state.
+     const innerElRef = useRef<HTMLElement | null>(null);
+ 
+-    const composedRef = useCallback(
+-      (node: HTMLElement | null) => {
+-        innerElRef.current = node;
+-        if (typeof ref === "function") {
+-          (ref as RefCallback<HTMLElement>)(node);
+-        } else if (ref) {
+-          (ref as MutableRefObject<HTMLElement | null>).current = node;
+-        }
+-      },
+-      [ref],
+-    );
++    const composedRef = useComposedRefs<HTMLElement>(innerElRef, ref);
+ 
+     // The consumer's mouse handlers are destructured out of `props` and run
+     // first here; left in `...props` they would replace the glow tracking.
+@@ -215,19 +207,11 @@ const OutlineButtonBase = forwardRef<
+              * Hover / cursor-tracking mode — "gutter rolling."
+              *
+              * Each orb is anchored at left:0, top:0 and translated so its CENTER
+-             * sits exactly at the cursor position inside the button:
+-             *
+-             *   translateX = gx * bw − 50%  (−50% centers the orb on that point)
+-             *
+-             * When the cursor is at any wall (gx=0 or gx=1), the orb center is ON
+-             * the wall — half the orb is clipped outside, the other half blooms in
+-             * from the edge. This is the "gutter" effect.
+-             *
+-             * Orb 2 tracks the diagonally opposite point (1−gx, 1−gy) so the two
+-             * colors always sit on opposite sides of the button, making them visually
+-             * distinct even when different glowColor props are supplied.
+-             *
+-             * overflow-hidden on the parent clips both orbs cleanly.
++             * sits at a point derived from the cursor position (--gx/--gy, 0–1)
++             * inside the button — the exact mapping is in the comment below. Near
++             * a wall part of an orb is clipped outside and the rest blooms in from
++             * the edge (the "gutter" effect). overflow-hidden on the parent clips
++             * both orbs cleanly.
+              */
+             <>
+               {/*
+diff --git a/src/components/OutlineSection/OutlineSection.stories.tsx b/src/components/OutlineSection/OutlineSection.stories.tsx
+index 3421604..a635b77 100644
+--- a/src/components/OutlineSection/OutlineSection.stories.tsx
++++ b/src/components/OutlineSection/OutlineSection.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { Avatar, AvatarSize } from '../Avatar/Avatar';
+ import { Button } from '../Button/Button';
+ import { ButtonSize, ButtonVariant } from '../Button/constants';
+diff --git a/src/components/OutlineSection/OutlineSection.tsx b/src/components/OutlineSection/OutlineSection.tsx
+index b950ecf..8b7040e 100644
+--- a/src/components/OutlineSection/OutlineSection.tsx
++++ b/src/components/OutlineSection/OutlineSection.tsx
+@@ -5,7 +5,7 @@ export interface OutlineSectionProps extends HTMLAttributes<HTMLDivElement> {}
+ 
+ /**
+  * A double-border container shell for composing surface-level content.
+- * Outer ring: dashed/thin border. Inner card: bg-secondary surface with shadow.
++ * Outer ring: solid 1px border. Inner card: bg-secondary surface with shadow.
+  * Use as a composable slot — place any content as children.
+  *
+  * @example
+diff --git a/src/components/ProgressIndicator/ProgressIndicator.stories.tsx b/src/components/ProgressIndicator/ProgressIndicator.stories.tsx
+index 22576a4..1965e24 100644
+--- a/src/components/ProgressIndicator/ProgressIndicator.stories.tsx
++++ b/src/components/ProgressIndicator/ProgressIndicator.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { useState } from "react";
+ import {
+   LoadingSpinnerColor,
+@@ -6,6 +6,8 @@ import {
+ } from "../LoadingSpinner/constants";
+ import { ProgressIndicator } from "./ProgressIndicator";
+ import { ProgressIndicatorVariant } from "./constants";
++import { SliderContinuous } from "../Slider";
++import { LabelText } from "../Text";
+ 
+ const meta = {
+   title: "Progress/ProgressIndicator",
+@@ -116,19 +118,27 @@ export const Interactive: Story = {
+             size={LoadingSpinnerSize.md}
+           />
+         </div>
+-        <input
+-          type="range"
++        <SliderContinuous
++          className="w-48"
+           min={0}
+           max={1}
+           step={0.01}
+-          value={value}
+-          onChange={(e) => setValue(Number(e.target.value))}
+-          className="w-48"
++          value={[value]}
++          onValueChange={([v]) => setValue(v)}
+         />
+-        <span className="text-style-label text-text-secondary">
++        <LabelText className="text-text-secondary">
+           {Math.round(value * 100)} %
+-        </span>
++        </LabelText>
+       </div>
+     );
+   },
+ };
++
++/** Contradicts the default colour (primary). */
++export const Prominent: Story = {
++  args: {
++    progress: 0.6,
++    color: LoadingSpinnerColor.prominent,
++    size: LoadingSpinnerSize.md,
++  },
++};
+diff --git a/src/components/SearchBox/SearchBox.stories.tsx b/src/components/SearchBox/SearchBox.stories.tsx
+index ecf5a9a..607ebff 100644
+--- a/src/components/SearchBox/SearchBox.stories.tsx
++++ b/src/components/SearchBox/SearchBox.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { SearchBox } from './SearchBox';
+ 
+ const meta = {
+diff --git a/src/components/SearchBox/SearchBox.tsx b/src/components/SearchBox/SearchBox.tsx
+index 0541ded..0de7930 100644
+--- a/src/components/SearchBox/SearchBox.tsx
++++ b/src/components/SearchBox/SearchBox.tsx
+@@ -15,6 +15,7 @@ export interface SearchBoxProps extends Omit<InputHTMLAttributes<HTMLInputElemen
+  * Larger corner radius (rounded-soft) and leading search icon distinguish it from Input.
+  * Accepts an optional keyboard shortcut indicator on the trailing edge.
+  * Twin of `DropdownMenuSearch` (same icon + input + hotkey row, no menu): apply row fixes to both.
++ * `className` styles the bordered field `<div>`; `ref`, `style` and every other prop go to the `<input>`.
+  *
+  * @example
+  * <SearchBox placeholder="Search..." shortcut={['⌘', 'K']} />
+diff --git a/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx b/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx
+index b254973..8449314 100644
+--- a/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx
++++ b/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx
+@@ -1,7 +1,8 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { GraphIcon, InvoiceIcon, TableIcon } from '../Icons';
+ import { SegmentedTabItem, SegmentedTabSelect } from './SegmentedTabSelect';
+ import { SegmentedSize, SegmentedVariant } from './constants';
++import { TabSize, TabVariant } from '../Tabs/constants';
+ 
+ const meta = {
+   title: 'Navigation/SegmentedTabSelect',
+@@ -58,3 +59,22 @@ export const IconSizes: Story = {
+     </div>
+   ),
+ };
++
++/** Items contradict the inherited variant and size. */
++export const ItemOverrides: Story = {
++  render: () => (
++    <SegmentedTabSelect
++      defaultValue="funding"
++      variant={SegmentedVariant.primary}
++      size={SegmentedSize.standard}
++    >
++      <SegmentedTabItem value="funding">Funding</SegmentedTabItem>
++      <SegmentedTabItem value="all" variant={TabVariant.unselected}>
++        All
++      </SegmentedTabItem>
++      <SegmentedTabItem value="tx" size={TabSize.sm}>
++        Transactions
++      </SegmentedTabItem>
++    </SegmentedTabSelect>
++  ),
++};
+diff --git a/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx b/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
+index 61a29a8..7f3b65f 100644
+--- a/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
++++ b/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
+@@ -11,6 +11,11 @@ import * as TabsPrimitive from '@radix-ui/react-tabs';
+ import { TabsList, TabsTrigger, type TabsTriggerProps } from '../Tabs/Tabs';
+ import { TabSize, TabVariant } from '../Tabs/constants';
+ import { cn } from '../../utils/cn';
++// SegmentedVariant/SegmentedSize (+ their types) live in ./constants
++// (server-safe), re-exported via index.ts; imported here for internal
++// variant/size resolution. See constants.ts for the Figma Tab Select
++// variant × size table.
++import { SegmentedSize, SegmentedVariant } from './constants';
+ 
+ /**
+  * Context that SegmentedTabSelect passes down to SegmentedTabItem,
+@@ -21,12 +26,6 @@ const SegmentedTabContext = createContext<{
+   itemSize?: TabSize;
+ }>({});
+ 
+-// SegmentedVariant/SegmentedSize (+ their types) live in ./constants
+-// (server-safe), re-exported via index.ts; imported here for internal
+-// variant/size resolution. See constants.ts for the Figma Tab Select
+-// variant × size table.
+-import { SegmentedSize, SegmentedVariant } from './constants';
+-
+ export interface SegmentedTabSelectProps
+   extends ComponentPropsWithoutRef<typeof TabsPrimitive.Root> {
+   variant?: SegmentedVariant;
+@@ -45,6 +44,8 @@ const SHELL_SIZES: SegmentedSize[] = [
+   SegmentedSize.containerIcon,
+ ];
+ 
++/** Props, `ref` and `style` go to the Radix Tabs Root; `className` styles the
++ * inner TabsList (the visible shell at the container sizes). */
+ const SegmentedTabSelect = forwardRef<
+   ComponentRef<typeof TabsPrimitive.Root>,
+   SegmentedTabSelectProps
+diff --git a/src/components/ShapeButton/ShapeButton.stories.tsx b/src/components/ShapeButton/ShapeButton.stories.tsx
+index 825509c..0b8fb12 100644
+--- a/src/components/ShapeButton/ShapeButton.stories.tsx
++++ b/src/components/ShapeButton/ShapeButton.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { SendIcon } from "../Icons";
+ import { LabelText } from "../Text";
+ import { ShapeButton } from "./ShapeButton";
+@@ -25,7 +25,9 @@ const meta = {
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
++/** Export kept as `Brand` so the story URL is stable; the variant is `prominent`. */
+ export const Brand: Story = {
++  name: "Prominent",
+   args: {
+     shape: ShapeButtons.clover,
+     variant: ShapeButtonVariant.prominent,
+diff --git a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.stories.tsx b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.stories.tsx
+index 0ca5971..370e15c 100644
+--- a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.stories.tsx
++++ b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { LoadingSpinnerColor, LoadingSpinnerSize } from "../LoadingSpinner/constants";
+ import { CloverShape, CookieShape, SquircleShape } from "../Shapes";
+ import { ShapeMorphSpinner } from "./ShapeMorphSpinner";
+@@ -40,3 +40,11 @@ export const Colors: Story = {
+ export const CustomShapes: Story = {
+   args: { shapes: [CookieShape, CloverShape, SquircleShape], size: LoadingSpinnerSize.xl },
+ };
++
++/** Contradicts the --ui-shape-morph-* timing tokens for this instance. */
++export const SlowTiming: Story = {
++  args: {
++    size: LoadingSpinnerSize.xl,
++    timing: { duration: 1200, interval: 2400, ease: "linear" },
++  },
++};
+diff --git a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
+index c68313a..f1ce688 100644
+--- a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
++++ b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
+@@ -5,7 +5,7 @@
+  * --ui-size-spinner-* (never a JS size table), so overriding those tokens
+  * resizes it.
+  */
+-import type { ComponentPropsWithoutRef } from "react";
++import { forwardRef, type ComponentPropsWithoutRef } from "react";
+ import { cn } from "../../utils/cn";
+ import { resolveDsColor, type DsColor } from "../../utils/color";
+ import { LoadingSpinnerColor, LoadingSpinnerSize } from "../LoadingSpinner/constants";
+@@ -40,29 +40,36 @@ export type ShapeMorphSpinnerProps = Omit<ComponentPropsWithoutRef<"span">, "chi
+   timing?: MorphRotationShapeAutoplayTiming;
+ };
+ 
+-export const ShapeMorphSpinner = ({
+-  size = LoadingSpinnerSize.md,
+-  color = LoadingSpinnerColor.primary,
+-  shapes = DEFAULT_SHAPE_KEYS,
+-  timing,
+-  className,
+-  style,
+-  "aria-label": ariaLabel = "Loading",
+-  ...rest
+-}: ShapeMorphSpinnerProps) => (
+-  <MorphRotationShape
+-    mode={MorphRotationShapeMode.autoplay}
+-    shapes={shapes}
+-    timing={timing}
+-    role="progressbar"
+-    aria-label={ariaLabel}
+-    className={cn("inline-block shrink-0", className)}
+-    style={{
+-      width: `var(--ui-size-spinner-${size})`,
+-      height: `var(--ui-size-spinner-${size})`,
+-      color: resolveDsColor(color, "var(--ui-color-primary)"),
+-      ...style,
+-    }}
+-    {...rest}
+-  />
++export const ShapeMorphSpinner = forwardRef<HTMLSpanElement, ShapeMorphSpinnerProps>(
++  (
++    {
++      size = LoadingSpinnerSize.md,
++      color = LoadingSpinnerColor.primary,
++      shapes = DEFAULT_SHAPE_KEYS,
++      timing,
++      className,
++      style,
++      "aria-label": ariaLabel = "Loading",
++      ...rest
++    },
++    ref,
++  ) => (
++    <MorphRotationShape
++      ref={ref}
++      mode={MorphRotationShapeMode.autoplay}
++      shapes={shapes}
++      timing={timing}
++      role="progressbar"
++      aria-label={ariaLabel}
++      className={cn("inline-block shrink-0", className)}
++      style={{
++        width: `var(--ui-size-spinner-${size})`,
++        height: `var(--ui-size-spinner-${size})`,
++        color: resolveDsColor(color, "var(--ui-color-primary)"),
++        ...style,
++      }}
++      {...rest}
++    />
++  ),
+ );
++ShapeMorphSpinner.displayName = "ShapeMorphSpinner";
+diff --git a/src/components/Shapes/BaseShape.tsx b/src/components/Shapes/BaseShape.tsx
+index cbad235..43000e3 100644
+--- a/src/components/Shapes/BaseShape.tsx
++++ b/src/components/Shapes/BaseShape.tsx
+@@ -77,7 +77,7 @@ export const BaseShape = ({
+       // First, so the shape's own size, stroke and fill below still win.
+       {...rest}
+       size={size}
+-      strokeColor={strokeColor ?? undefined}
++      strokeColor={strokeColor}
+       fillColor={fillColor}
+       strokeWidth={strokeWeight}
+     >
+diff --git a/src/components/Shapes/Shapes.stories.tsx b/src/components/Shapes/Shapes.stories.tsx
+index 3470d33..6d43c9e 100644
+--- a/src/components/Shapes/Shapes.stories.tsx
++++ b/src/components/Shapes/Shapes.stories.tsx
+@@ -15,6 +15,7 @@ import {
+   StarShape,
+   TripleShape,
+ } from "./index";
++import { LabelText } from "../Text";
+ 
+ type ShapeProps = {
+   size: number;
+@@ -78,7 +79,7 @@ const ShapeCell = ({
+ }) => (
+   <div className="flex flex-col items-center gap-3 rounded-normal border border-border-primary bg-surface-primary p-4">
+     <Shape size={size} strokeColor="transparent" fillColor={fillColor} />
+-    <span className="text-style-label text-text-secondary">{label}</span>
++    <LabelText className="text-text-secondary">{label}</LabelText>
+   </div>
+ );
+ 
+@@ -154,7 +155,7 @@ export const Sizes: Story = {
+             strokeColor="transparent"
+             fillColor="var(--color-primary)"
+           />
+-          <span className="text-style-label text-text-secondary">{size}px</span>
++          <LabelText className="text-text-secondary">{size}px</LabelText>
+         </div>
+       ))}
+     </div>
+diff --git a/src/components/Sheet/Sheet.stories.tsx b/src/components/Sheet/Sheet.stories.tsx
+index a280e79..1b1df72 100644
+--- a/src/components/Sheet/Sheet.stories.tsx
++++ b/src/components/Sheet/Sheet.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { useState } from 'react';
+ import {
+   Sheet,
+@@ -11,6 +11,7 @@ import {
+ import { SheetSide } from './constants';
+ import { Button } from '../Button/Button';
+ import { ButtonVariant, ButtonSize } from '../Button/constants';
++import { ButtonText, LabelText } from '../Text';
+ 
+ const meta = {
+   title: 'Overlays/Sheet',
+@@ -24,9 +25,8 @@ type Story = StoryObj<typeof meta>;
+ 
+ const DemoBody = ({ side }: { side: SheetSide }) => (
+   <>
+-    <SheetTitle className="sr-only">Sheet from {side}</SheetTitle>
+     <div className="flex h-full flex-col gap-4 p-6">
+-      <p className="text-style-heading text-text">Sheet from {side}</p>
++      <SheetTitle>Sheet from {side}</SheetTitle>
+       <SheetDescription>
+         The sheet slides in from the {side} edge with a gentle ease while the
+         backdrop fades in. Click outside or press Escape to dismiss.
+@@ -37,7 +37,7 @@ const DemoBody = ({ side }: { side: SheetSide }) => (
+             key={item}
+             className="flex items-center justify-between rounded-normal border border-border-primary px-4 py-3"
+           >
+-            <span className="text-style-button text-text">{item}</span>
++            <ButtonText className="text-text">{item}</ButtonText>
+             <Button variant={ButtonVariant.ghost} size={ButtonSize.sm}>
+               Select
+             </Button>
+@@ -118,16 +118,18 @@ export const Controlled: Story = {
+         </Button>
+         <Sheet open={open} onOpenChange={setOpen}>
+           <SheetContent side={SheetSide.right}>
+-            <SheetTitle className="sr-only">Controlled sheet</SheetTitle>
+             <div className="flex flex-col gap-4 p-6">
+-              <p className="text-style-heading text-text">Controlled sheet</p>
+-              <p className="text-style-body text-text-secondary">
++              <SheetTitle>Controlled sheet</SheetTitle>
++              <SheetDescription>
+                 Open/close state is managed externally via the{' '}
+-                <code className="text-style-label bg-surface-secondary rounded px-1">
++                <LabelText
++                  as="code"
++                  className="bg-surface-secondary rounded-tight px-xxs"
++                >
+                   open
+-                </code>{' '}
++                </LabelText>{' '}
+                 prop.
+-              </p>
++              </SheetDescription>
+               <div className="flex justify-end">
+                 <Button
+                   variant={ButtonVariant.secondary}
+@@ -151,13 +153,12 @@ export const CustomWidth: Story = {
+         <Button variant={ButtonVariant.secondary}>Open wide sheet</Button>
+       </SheetTrigger>
+       <SheetContent side={SheetSide.right} className="w-[540px] max-w-none">
+-        <SheetTitle className="sr-only">Wide sheet</SheetTitle>
+         <div className="flex flex-col gap-4 p-6">
+-          <p className="text-style-heading text-text">Custom width</p>
+-          <p className="text-style-body text-text-secondary">
+-            Cross-axis size is fully overridable via className — tailwind-merge
+-            lets the consumer width win over the default.
+-          </p>
++          <SheetTitle>Custom width</SheetTitle>
++          <SheetDescription>
++            Cross-axis size is overridable via className — override max-w-* along
++            with the width, since the default caps it at max-w-96.
++          </SheetDescription>
+         </div>
+       </SheetContent>
+     </Sheet>
+@@ -191,3 +192,17 @@ function SheetInContainerDemo() {
+ export const CustomContainer: Story = {
+   render: () => <SheetInContainerDemo />,
+ };
++
++/** Contradicts withOverlay (default true): no backdrop, the page stays visible. */
++export const NoOverlay: Story = {
++  render: () => (
++    <Sheet>
++      <SheetTrigger asChild>
++        <Button variant={ButtonVariant.secondary}>Open (no backdrop)</Button>
++      </SheetTrigger>
++      <SheetContent side={SheetSide.right} withOverlay={false}>
++        <DemoBody side={SheetSide.right} />
++      </SheetContent>
++    </Sheet>
++  ),
++};
+diff --git a/src/components/Sheet/Sheet.tsx b/src/components/Sheet/Sheet.tsx
+index 57802e0..6ff3241 100644
+--- a/src/components/Sheet/Sheet.tsx
++++ b/src/components/Sheet/Sheet.tsx
+@@ -61,9 +61,9 @@ SheetOverlay.displayName = "SheetOverlay";
+  * Takes the shared dialog surface (`dialogShell.tsx`) that `ModalContent`
+  * also uses; the border sits only on the panel's inner edge.
+  *
+- * Default cross-axis size (width for left/right, height for top/bottom) is a
+- * sensible starting point and is fully overridable via `className`
+- * (tailwind-merge lets consumer widths/heights win).
++ * Default cross-axis size: left/right sheets are `w-3/4 max-w-96`, so a
++ * consumer width needs a `max-w-*` override too (e.g. `max-w-none` next to the
++ * width); top/bottom sheets size to their content (no default height).
+  */
+ const sheetVariants = cva(
+   cn(
+diff --git a/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.stories.tsx b/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.stories.tsx
+index 54ae759..cee2597 100644
+--- a/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.stories.tsx
++++ b/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { useState } from "react";
+ import { Button } from "../Button";
+ import { ButtonSize, ButtonVariant } from "../Button/constants";
+diff --git a/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx b/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx
+index 4c748e0..a3695dd 100644
+--- a/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx
++++ b/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx
+@@ -29,8 +29,8 @@
+  *   every engine. It is in JSX only for the FIRST render (so SSR output is
+  *   right); after that React must never touch it, or a re-render mid-tween
+  *   snaps the rail.
+- * - One `getComputedStyle` pair per frame per icon. Fine for a toggle; do not
+- *   render hundreds of these animating at once.
++ * - One `getComputedStyle` call (two property reads) per frame per icon. Fine
++ *   for a toggle; do not render hundreds of these animating at once.
+  *
+  * ## updating
+  * The sampling loop is self-terminating: it stops as soon as both properties
+diff --git a/src/components/Slider/Slider.stories.tsx b/src/components/Slider/Slider.stories.tsx
+index 5becb92..966ee5c 100644
+--- a/src/components/Slider/Slider.stories.tsx
++++ b/src/components/Slider/Slider.stories.tsx
+@@ -1,5 +1,5 @@
+ import { useState } from 'react';
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { SliderContinuous, SliderStepped, SliderLabeled } from './Slider';
+ import { SliderVariant } from './constants';
+ import { DS_COLOR_TOKENS } from '../../utils/color';
+diff --git a/src/components/Slider/Slider.tsx b/src/components/Slider/Slider.tsx
+index 7cf2c7b..bf7bf3c 100644
+--- a/src/components/Slider/Slider.tsx
++++ b/src/components/Slider/Slider.tsx
+@@ -366,7 +366,7 @@ const SliderBase = forwardRef<
+           style={
+             {
+               ...style,
+-              '--slider-pct': pct,
++              '--ds-slider-pct': pct,
+               '--ds-slider-color': resolveDsColor(color, paints.color),
+               '--ds-slider-track-opacity': paints.trackOpacity,
+               '--ds-slider-step-active': resolveDsColor(
+@@ -402,7 +402,7 @@ const SliderBase = forwardRef<
+                 'ds-slider-part absolute inset-y-0 overflow-hidden data-[hidden]:hidden',
+                 'rounded-l-tight rounded-r-slider-inner',
+                 'left-[calc(-1*var(--ds-slider-pad))]',
+-                'w-[max(0px,calc(var(--slider-pct)/100*(100%-var(--ui-width-slider-handle))-var(--ui-slider-track-gap)+var(--ds-slider-pad)))]',
++                'w-[max(0px,calc(var(--ds-slider-pct)/100*(100%-var(--ui-width-slider-handle))-var(--ui-slider-track-gap)+var(--ds-slider-pad)))]',
+                 'ds-slider-fill',
+               )}
+             />
+@@ -414,7 +414,7 @@ const SliderBase = forwardRef<
+                 'ds-slider-part absolute inset-y-0 overflow-hidden data-[hidden]:hidden',
+                 'rounded-r-tight rounded-l-slider-inner',
+                 'right-[calc(-1*var(--ds-slider-pad))]',
+-                'left-[min(100%,calc(var(--slider-pct)/100*(100%-var(--ui-width-slider-handle))+var(--ui-width-slider-handle)+var(--ui-slider-track-gap)))]',
++                'left-[min(100%,calc(var(--ds-slider-pct)/100*(100%-var(--ui-width-slider-handle))+var(--ui-width-slider-handle)+var(--ui-slider-track-gap)))]',
+                 'bg-secondary border border-solid border-secondary-border',
+               )}
+             />
+@@ -464,12 +464,16 @@ const SliderBase = forwardRef<
+ );
+ SliderBase.displayName = 'SliderBase';
+ 
++/** `className` styles the outer box, which owns the width; `ref`, `style` and
++ * every other prop go to the Radix Root inside it. */
+ const SliderContinuous = forwardRef<
+   ComponentRef<typeof SliderPrimitive.Root>,
+   SliderProps
+ >((props, ref) => <SliderBase ref={ref} showSteps={false} {...props} />);
+ SliderContinuous.displayName = 'SliderContinuous';
+ 
++/** `className` styles the outer box, which owns the width and the end-dot
++ * inset; `ref`, `style` and every other prop go to the Radix Root inside it. */
+ const SliderStepped = forwardRef<
+   ComponentRef<typeof SliderPrimitive.Root>,
+   SliderSteppedProps
+@@ -487,6 +491,8 @@ export type SliderLabeledProps = SliderProps & {
+   highlightedStep?: number;
+ };
+ 
++/** `className` styles the outer column (track + labels); `ref`, `style` and
++ * every other prop go to the slider's Radix Root. */
+ const SliderLabeled = forwardRef<
+   ComponentRef<typeof SliderPrimitive.Root>,
+   SliderLabeledProps
+diff --git a/src/components/SplitButton/SplitButton.stories.tsx b/src/components/SplitButton/SplitButton.stories.tsx
+index aba3e11..6244e6c 100644
+--- a/src/components/SplitButton/SplitButton.stories.tsx
++++ b/src/components/SplitButton/SplitButton.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import {
+   SplitButton,
+   SplitButtonAction,
+@@ -11,15 +11,17 @@ import {
+   DropdownMenuItem,
+   DropdownMenuSection,
+ } from "../Menu/DropdownMenu";
++import { IconSize, PlusIcon } from "../Icons";
+ 
+ const meta = {
+   title: "Buttons/SplitButton",
++  component: SplitButton,
+   parameters: { layout: "centered" },
+   tags: ["autodocs"],
+-} satisfies Meta;
++} satisfies Meta<typeof SplitButton>;
+ 
+ export default meta;
+-type Story = StoryObj;
++type Story = StoryObj<typeof meta>;
+ 
+ export const Default: Story = {
+   render: () => <SplitButton>Save</SplitButton>,
+@@ -28,16 +30,7 @@ export const Default: Story = {
+ export const WithIcon: Story = {
+   render: () => (
+     <SplitButton
+-      icon={
+-        <svg viewBox="0 0 14 14" fill="none" width="14" height="14">
+-          <path
+-            d="M7 2v10M2 7h10"
+-            stroke="currentColor"
+-            strokeWidth="1.5"
+-            strokeLinecap="round"
+-          />
+-        </svg>
+-      }
++      icon={<PlusIcon size={IconSize.rg} />}
+     >
+       New file
+     </SplitButton>
+diff --git a/src/components/SplitButton/SplitButton.tsx b/src/components/SplitButton/SplitButton.tsx
+index 934db19..b5c73ee 100644
+--- a/src/components/SplitButton/SplitButton.tsx
++++ b/src/components/SplitButton/SplitButton.tsx
+@@ -1,4 +1,4 @@
+-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
++import { forwardRef, type ButtonHTMLAttributes, type HTMLAttributes, type ReactNode } from "react";
+ import { cn } from "../../utils/cn";
+ import { ChevronDownIcon } from "../Icons";
+ 
+@@ -66,31 +66,27 @@ SplitButtonTrigger.displayName = "SplitButtonTrigger";
+ 
+ /* SplitButton (composite) */
+ 
+-export interface SplitButtonProps {
++export interface SplitButtonProps extends HTMLAttributes<HTMLDivElement> {
+   actionProps?: SplitButtonActionProps;
+   triggerProps?: SplitButtonTriggerProps;
+   icon?: ReactNode;
+-  children?: ReactNode;
+-  className?: string;
+   disabled?: boolean;
+ }
+ 
+-function SplitButton({
+-  actionProps,
+-  triggerProps,
+-  icon,
+-  children,
+-  className,
+-  disabled,
+-}: SplitButtonProps) {
+-  return (
+-    <div className={cn("inline-flex rounded-tight shadow-button", className)}>
++const SplitButton = forwardRef<HTMLDivElement, SplitButtonProps>(
++  ({ actionProps, triggerProps, icon, children, className, disabled, ...props }, ref) => (
++    <div
++      ref={ref}
++      className={cn("inline-flex rounded-tight shadow-button", className)}
++      {...props}
++    >
+       <SplitButtonAction icon={icon} disabled={disabled} {...actionProps}>
+         {children}
+       </SplitButtonAction>
+       <SplitButtonTrigger disabled={disabled} {...triggerProps} />
+     </div>
+-  );
+-}
++  ),
++);
++SplitButton.displayName = "SplitButton";
+ 
+ export { SplitButton, SplitButtonAction, SplitButtonTrigger };
+diff --git a/src/components/Sticker/Sticker.stories.tsx b/src/components/Sticker/Sticker.stories.tsx
+index dca68fe..bf26069 100644
+--- a/src/components/Sticker/Sticker.stories.tsx
++++ b/src/components/Sticker/Sticker.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import {
+   AIPlanIcon,
+   AISkillIcon,
+@@ -124,7 +124,6 @@ export const Micro: Story = {
+ };
+ 
+ export const Sizes: Story = {
+-  args: { children: "Milestones" },
+   render: () => (
+     <div className="flex flex-col items-start gap-rg">
+       {([StickerSize.standard, StickerSize.micro] as const).map((size) => (
+@@ -138,7 +137,6 @@ export const Sizes: Story = {
+ };
+ 
+ export const AllVariants: Story = {
+-  args: { children: "Milestones" },
+   render: () => (
+     <div className="flex flex-col items-start gap-rg">
+       <Sticker variant={StickerVariant.prominent}>
+diff --git a/src/components/Table/Table.stories.tsx b/src/components/Table/Table.stories.tsx
+index 4b491f2..ebd4f80 100644
+--- a/src/components/Table/Table.stories.tsx
++++ b/src/components/Table/Table.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { useState } from "react";
+ import { BodyText } from "../Text/BaseText";
+ import {
+@@ -37,7 +37,7 @@ const SortableHeader = () => {
+   return (
+     <Table
+       columns={COLUMNS}
+-      className="h-[420px] border border-border-primary rounded-soft"
++      className="h-[420px]"
+     >
+       <TableHeader>
+         <TableHeaderCell
+@@ -72,10 +72,8 @@ const SortableHeader = () => {
+ 
+       <TableRow>
+         <TableCell>
+-          <div>
+-            <BodyText>Bob Chen</BodyText>
+-            <BodyText className="text-text-secondary">Engineering</BodyText>
+-          </div>
++          <BodyText>Bob Chen</BodyText>
++          <BodyText className="text-text-secondary">Engineering</BodyText>
+         </TableCell>
+         <TableCell>
+           <BodyText>Invited</BodyText>
+@@ -93,10 +91,8 @@ const SortableHeader = () => {
+ 
+       <TableRow>
+         <TableCell>
+-          <div>
+-            <BodyText>Carol Wu</BodyText>
+-            <BodyText className="text-text-secondary">Design</BodyText>
+-          </div>
++          <BodyText>Carol Wu</BodyText>
++          <BodyText className="text-text-secondary">Design</BodyText>
+         </TableCell>
+         <TableCell>
+           <BodyText>Active</BodyText>
+@@ -219,30 +215,22 @@ export const CellStackedContent: Story = {
+       </TableHeader>
+       <TableRow>
+         <TableCell>
+-          <div>
+-            <BodyText>Dana Lee</BodyText>
+-            <BodyText className="text-text-secondary">Product</BodyText>
+-          </div>
++          <BodyText>Dana Lee</BodyText>
++          <BodyText className="text-text-secondary">Product</BodyText>
+         </TableCell>
+         <TableCell>
+-          <div>
+-            <BodyText>dana@example.com</BodyText>
+-            <BodyText className="text-text-secondary">+1 555-0123</BodyText>
+-          </div>
++          <BodyText>dana@example.com</BodyText>
++          <BodyText className="text-text-secondary">+1 555-0123</BodyText>
+         </TableCell>
+       </TableRow>
+       <TableRow>
+         <TableCell>
+-          <div>
+-            <BodyText>Evan Ruiz</BodyText>
+-            <BodyText className="text-text-secondary">Engineering</BodyText>
+-          </div>
++          <BodyText>Evan Ruiz</BodyText>
++          <BodyText className="text-text-secondary">Engineering</BodyText>
+         </TableCell>
+         <TableCell>
+-          <div>
+-            <BodyText>evan@example.com</BodyText>
+-            <BodyText className="text-text-secondary">+1 555-0456</BodyText>
+-          </div>
++          <BodyText>evan@example.com</BodyText>
++          <BodyText className="text-text-secondary">+1 555-0456</BodyText>
+         </TableCell>
+       </TableRow>
+     </Table>
+@@ -265,3 +253,40 @@ export const Placeholder: Story = {
+     </Table>
+   ),
+ };
++
++/** Contradicts the default row height (auto) through rowHeight, which sets --table-row-height. */
++export const RowsCustomHeight: Story = {
++  args: { columns: "1fr 1fr" },
++  render: () => (
++    <Table columns="1fr 1fr" rowHeight="var(--ui-height-button)">
++      <TableHeader>
++        <TableHeaderCell>Name</TableHeaderCell>
++        <TableHeaderCell>Value</TableHeaderCell>
++      </TableHeader>
++      <TableRow>
++        <TableCell>
++          <BodyText>Row one</BodyText>
++        </TableCell>
++        <TableCell>
++          <BodyText>100</BodyText>
++        </TableCell>
++      </TableRow>
++      <TableRow>
++        <TableCell>
++          <BodyText>Row two</BodyText>
++        </TableCell>
++        <TableCell>
++          <BodyText>200</BodyText>
++        </TableCell>
++      </TableRow>
++      <TableRow>
++        <TableCell>
++          <BodyText>Row three</BodyText>
++        </TableCell>
++        <TableCell>
++          <BodyText>300</BodyText>
++        </TableCell>
++      </TableRow>
++    </Table>
++  ),
++};
+diff --git a/src/components/Table/Table.tsx b/src/components/Table/Table.tsx
+index 5283af5..1814c6a 100644
+--- a/src/components/Table/Table.tsx
++++ b/src/components/Table/Table.tsx
+@@ -130,7 +130,7 @@ const TableRow = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+       ref={ref}
+       role="row"
+       className={cn(
+-        "grid border-b border-border-primary",
++        "grid border-border-primary",
+         "not-last:border-b",
+         "hover:bg-ghost-hover ds-motion-state",
+         className,
+diff --git a/src/components/Tabs/Tabs.stories.tsx b/src/components/Tabs/Tabs.stories.tsx
+index 460b8d7..4d75dd9 100644
+--- a/src/components/Tabs/Tabs.stories.tsx
++++ b/src/components/Tabs/Tabs.stories.tsx
+@@ -1,7 +1,8 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs';
+ import { TabSize, TabVariant } from './constants';
+ import { TableIcon, GraphIcon, InvoiceIcon } from '../Icons';
++import { LabelText } from '../Text';
+ 
+ const meta = {
+   title: 'Navigation/Tabs',
+@@ -47,18 +48,11 @@ export const IconTabs: Story = {
+   render: () => (
+     <Tabs defaultValue="grid">
+       <TabsList>
+-        <TabsTrigger value="list" variant={TabVariant.ghost} size={TabSize.icon}>
+-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+-            <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+-          </svg>
++        <TabsTrigger value="list" variant={TabVariant.ghost} size={TabSize.icon} aria-label="List">
++          <TableIcon />
+         </TabsTrigger>
+-        <TabsTrigger value="grid" variant={TabVariant.ghost} size={TabSize.icon}>
+-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
+-            <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
+-            <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
+-            <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
+-            <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
+-          </svg>
++        <TabsTrigger value="grid" variant={TabVariant.ghost} size={TabSize.icon} aria-label="Grid">
++          <GraphIcon />
+         </TabsTrigger>
+       </TabsList>
+     </Tabs>
+@@ -81,7 +75,7 @@ export const AllVariants: Story = {
+   render: () => (
+     <div className="flex flex-col gap-6 p-4">
+       <div className="flex flex-col gap-2">
+-        <span className="text-style-label text-text-secondary">Ghost</span>
++        <LabelText className="text-text-secondary">Ghost</LabelText>
+         <Tabs defaultValue="a">
+           <TabsList>
+             <TabsTrigger value="a" variant={TabVariant.ghost}>First</TabsTrigger>
+@@ -91,7 +85,7 @@ export const AllVariants: Story = {
+         </Tabs>
+       </div>
+       <div className="flex flex-col gap-2">
+-        <span className="text-style-label text-text-secondary">Primary</span>
++        <LabelText className="text-text-secondary">Primary</LabelText>
+         <Tabs defaultValue="a">
+           <TabsList>
+             <TabsTrigger value="a" variant={TabVariant.primary}>First</TabsTrigger>
+@@ -135,3 +129,21 @@ export const ToggleOptionSizes: Story = {
+     </div>
+   ),
+ };
++
++/** Contradicts the variant/size defaults: an `unselected` trigger stays unchosen while active; `fill` follows the parent's 48px height. */
++export const UnselectedAndFill: Story = {
++  render: () => (
++    <div className="flex h-12 items-stretch">
++      <Tabs defaultValue="all" className="flex">
++        <TabsList className="h-full">
++          <TabsTrigger value="all" variant={TabVariant.unselected} size={TabSize.fill}>
++            All
++          </TabsTrigger>
++          <TabsTrigger value="mine" variant={TabVariant.primary} size={TabSize.fill}>
++            Mine
++          </TabsTrigger>
++        </TabsList>
++      </Tabs>
++    </div>
++  ),
++};
+diff --git a/src/components/Text/BaseText.stories.tsx b/src/components/Text/BaseText.stories.tsx
+index b80f433..f6d258d 100644
+--- a/src/components/Text/BaseText.stories.tsx
++++ b/src/components/Text/BaseText.stories.tsx
+@@ -1,5 +1,5 @@
+ import type { ReactNode } from 'react';
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import {
+   BaseText,
+   BodyText,
+@@ -158,7 +158,7 @@ export const Mono: Story = {
+       <Row label="font={Fonts.mono} on BodyText">
+         <BodyText font={Fonts.mono}>{MONO_SAMPLE}</BodyText>
+       </Row>
+-      <Row label="MonoText fontSize={20} fontWeight={700}">
++      <Row label="MonoText fontSize={20} fontWeight={FontWeights.bold}">
+         <MonoText fontSize={20} fontWeight={FontWeights.bold}>
+           {MONO_SAMPLE}
+         </MonoText>
+diff --git a/src/components/Text/BaseText.tsx b/src/components/Text/BaseText.tsx
+index 23b30c1..ef4c644 100644
+--- a/src/components/Text/BaseText.tsx
++++ b/src/components/Text/BaseText.tsx
+@@ -38,7 +38,8 @@ type PolymorphicTextComponent<TOwnProps> = <
+ ) => ReactElement | null;
+ 
+ /**
+- * BaseText — every visible string in the system renders through this.
++ * BaseText — the typography primitive behind every role component and consumer
++ * text (DS controls such as Button apply `text-style-*` classes directly).
+  *
+  * Three tiers decide the final typography, in this order:
+  *
+diff --git a/src/components/TextLink/TextLink.stories.tsx b/src/components/TextLink/TextLink.stories.tsx
+index cce6858..406acaf 100644
+--- a/src/components/TextLink/TextLink.stories.tsx
++++ b/src/components/TextLink/TextLink.stories.tsx
+@@ -1,4 +1,5 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
++import { forwardRef, type AnchorHTMLAttributes } from "react";
+ import { TextLink } from "./TextLink";
+ import { BodyText } from "../Text";
+ 
+@@ -24,28 +25,18 @@ export const Default: Story = {
+   },
+ };
+ 
+-export const Interactive: Story = {
+-  name: "Interactive (Hover/Active)",
+-  parameters: {
+-    docs: {
+-      description: {
+-        story: "Ghost foreground at rest, primary text on hover/active. No underline.",
+-      },
+-    },
+-  },
+-  args: {
+-    href: "#",
+-    children: "Hover or click to see state change",
+-  },
+-};
++/** Stands in for Next.js `Link`: a component that renders its own `<a>` and forwards the ref. */
++const RouterLink = forwardRef<
++  HTMLAnchorElement,
++  AnchorHTMLAttributes<HTMLAnchorElement>
++>((props, ref) => <a ref={ref} {...props} />);
++RouterLink.displayName = "RouterLink";
+ 
+ export const WithAsChild: Story = {
+-  name: "asChild with button",
++  name: "asChild with a router link",
+   render: () => (
+     <TextLink asChild>
+-      <button onClick={() => alert("Button clicked!")}>
+-        Click as button
+-      </button>
++      <RouterLink href="#changelog">Changelog</RouterLink>
+     </TextLink>
+   ),
+ };
+diff --git a/src/components/Toast/Toast.stories.tsx b/src/components/Toast/Toast.stories.tsx
+index fccf9d2..a7041d1 100644
+--- a/src/components/Toast/Toast.stories.tsx
++++ b/src/components/Toast/Toast.stories.tsx
+@@ -1,5 +1,5 @@
+ import { useState } from "react";
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { Button, ButtonVariant } from "../Button";
+ import {
+   ToastDescription,
+@@ -53,7 +53,9 @@ export const Standard: Story = {
+   ),
+ };
+ 
++/** Export kept as `Brand` so the story URL is stable; the variant is `prominent`. */
+ export const Brand: Story = {
++  name: "Prominent",
+   render: () => (
+     <ToastProvider>
+       <ToastDemo label="Published" variant={ToastVariant.prominent} />
+@@ -61,7 +63,9 @@ export const Brand: Story = {
+   ),
+ };
+ 
++/** Export kept as `Error` so the story URL is stable; the variant is `danger`. */
+ export const Error: Story = {
++  name: "Danger",
+   render: () => (
+     <ToastProvider>
+       <ToastDemo label="Upload failed" variant={ToastVariant.danger} />
+diff --git a/src/components/Toast/Toast.tsx b/src/components/Toast/Toast.tsx
+index a3fcd16..ca5a90e 100644
+--- a/src/components/Toast/Toast.tsx
++++ b/src/components/Toast/Toast.tsx
+@@ -81,7 +81,7 @@ const toastRootVariants = cva(
+       },
+     },
+     defaultVariants: {
+-      variant: "simple",
++      variant: ToastVariant.simple,
+     },
+   },
+ );
+@@ -176,7 +176,10 @@ const ToastClose = forwardRef<
+         variant: ButtonVariant.ghost,
+         size: ButtonSize.iconSm,
+       }),
+-      "shrink-0 text-current hover:text-current active:text-current",
++      // The ghost variant's own guarded selector, so cn() drops its
++      // hover/active text colour and this one wins (a bare hover:text-current
++      // loses on specificity and the icon vanished on the prominent toast).
++      "shrink-0 text-current [&:not(:disabled):not([aria-disabled=true])]:hover:text-current [&:not(:disabled):not([aria-disabled=true])]:active:text-current",
+       className,
+     )}
+     {...props}
+diff --git a/src/components/Toggle/FancyToggleSwitch.stories.tsx b/src/components/Toggle/FancyToggleSwitch.stories.tsx
+index bbef03f..dc20d7c 100644
+--- a/src/components/Toggle/FancyToggleSwitch.stories.tsx
++++ b/src/components/Toggle/FancyToggleSwitch.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { useState } from 'react';
+ import { FancyToggleSwitch, FancyToggleSwitchItem } from './FancyToggleSwitch';
+ import { FancyToggleSelectType } from './constants';
+diff --git a/src/components/Toggle/Toggle.stories.tsx b/src/components/Toggle/Toggle.stories.tsx
+index e073b0a..306876d 100644
+--- a/src/components/Toggle/Toggle.stories.tsx
++++ b/src/components/Toggle/Toggle.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from '@storybook/react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { useState } from 'react';
+ import { ToggleSwitch, ToggleSwitchItem } from './Toggle';
+ import { ToggleSize, ToggleVariant } from './constants';
+@@ -113,3 +113,15 @@ export const Disabled: Story = {
+     </ToggleSwitch>
+   ),
+ };
++
++/** An item's size contradicts the switch's (default: inherited from the switch). */
++export const ItemSizeOverride: Story = {
++  render: () => (
++    <ToggleSwitch defaultValue="a" variant={ToggleVariant.primary} size={ToggleSize.standard}>
++      <ToggleSwitchItem value="a">Standard</ToggleSwitchItem>
++      <ToggleSwitchItem value="b" size={ToggleSize.sm}>
++        Small
++      </ToggleSwitchItem>
++    </ToggleSwitch>
++  ),
++};
+diff --git a/src/components/Tooltip/Tooltip.stories.tsx b/src/components/Tooltip/Tooltip.stories.tsx
+index ec82d0f..5efee68 100644
+--- a/src/components/Tooltip/Tooltip.stories.tsx
++++ b/src/components/Tooltip/Tooltip.stories.tsx
+@@ -1,4 +1,4 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { Button, ButtonSize, ButtonVariant } from "../Button";
+ import { HotkeyIndicator } from "../HotkeyIndicator";
+ import { HelpIcon, SettingsGearIcon } from "../Icons";
+@@ -126,3 +126,21 @@ export const ThemeInverseDisabled: Story = {
+     </Tooltip>
+   ),
+ };
++
++/** portal={false} renders inside the clipping box (and is clipped); sideOffset 16; no open delay. */
++export const InlineNoDelay: Story = {
++  render: () => (
++    <TooltipProvider delayDuration={0}>
++      <div className="flex h-24 w-64 items-start justify-center overflow-hidden border border-solid border-border-primary p-lg">
++        <Tooltip>
++          <TooltipTrigger asChild>
++            <Button variant={ButtonVariant.ghost}>Inline, clipped</Button>
++          </TooltipTrigger>
++          <TooltipContent portal={false} sideOffset={16} side="bottom">
++            Rendered in place, not portalled
++          </TooltipContent>
++        </Tooltip>
++      </div>
++    </TooltipProvider>
++  ),
++};
+diff --git a/src/components/Tooltip/Tooltip.tsx b/src/components/Tooltip/Tooltip.tsx
+index 59d7ab3..b811769 100644
+--- a/src/components/Tooltip/Tooltip.tsx
++++ b/src/components/Tooltip/Tooltip.tsx
+@@ -96,16 +96,9 @@ const TooltipTitle = forwardRef<HTMLElement, TooltipTitleProps>(
+ TooltipTitle.displayName = "TooltipTitle";
+ 
+ export type TooltipBodyProps = Omit<BaseTextProps, "variant">;
+-const TooltipBody = forwardRef<HTMLElement, TooltipBodyProps>(
+-  ({ className, ...props }, ref) => (
+-    <BaseText
+-      ref={ref}
+-      variant={TextVariant.body}
+-      className={className}
+-      {...props}
+-    />
+-  ),
+-);
++const TooltipBody = forwardRef<HTMLElement, TooltipBodyProps>((props, ref) => (
++  <BaseText ref={ref} variant={TextVariant.body} {...props} />
++));
+ TooltipBody.displayName = "TooltipBody";
+ 
+ export {
+diff --git a/src/components/VerificationCode/CodeDigitInput.tsx b/src/components/VerificationCode/CodeDigitInput.tsx
+index eb86e8f..d0cfbb5 100644
+--- a/src/components/VerificationCode/CodeDigitInput.tsx
++++ b/src/components/VerificationCode/CodeDigitInput.tsx
+@@ -9,9 +9,13 @@
+  * - `hasError` paints danger-primary border + text; `disabled` uses secondary
+  *   disabled tokens + `ds-radix-data-disabled` on the cell (the inner `<input>`
+  *   carries `disabled`); focus uses the prominent focus ring.
++ * - `className` styles the cell `<div>` (the chrome); `ref`, `style` and every
++ *   other prop land on the `<input>`.
+  *
+  * ## constraints
+- * - Prefer composing through VerificationCodeInput for multi-digit flows.
++ * - Compose multi-digit flows through VerificationCodeInput — a hand-built
++ *   row of cells loses its auto-advance, backspace, arrow navigation, paste
++ *   and sequential entry.
+  * - Do not hardcode Host Grotesk here; body role + size/weight props own it.
+  */
+ import { forwardRef, type InputHTMLAttributes } from "react";
+diff --git a/src/components/VerificationCode/VerificationCode.stories.tsx b/src/components/VerificationCode/VerificationCode.stories.tsx
+index eddb76d..ee2f637 100644
+--- a/src/components/VerificationCode/VerificationCode.stories.tsx
++++ b/src/components/VerificationCode/VerificationCode.stories.tsx
+@@ -1,5 +1,5 @@
+ import { useEffect, useRef, useState } from "react";
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { Button } from "../Button/Button";
+ import { ButtonVariant } from "../Button/constants";
+ import { BodyText, HeadingText, LabelText } from "../Text";
+diff --git a/src/components/VerificationCode/VerificationCodeInput.tsx b/src/components/VerificationCode/VerificationCodeInput.tsx
+index 8ee6a93..52956fc 100644
+--- a/src/components/VerificationCode/VerificationCodeInput.tsx
++++ b/src/components/VerificationCode/VerificationCodeInput.tsx
+@@ -15,7 +15,8 @@
+  * ## constraints
+  * - Digit glyphs go through CodeDigitInput → BaseText (18 / medium / body).
+  * - Do not ship a package-level “verification section” layout — compose in
+- *   stories / apps with role text + Button.
++ *   stories / apps with role text + Button; a packaged layout would fix copy
++ *   and a Button arrangement that each app has to own.
+  * - Focus moves made by this component (`focusAt`) skip the sequential-entry
+  *   redirect. They run inside the same event as `setValue`, before the new
+  *   value renders, so the redirect would read the stale value and bounce focus
+@@ -45,7 +46,6 @@ export interface VerificationCodeInputProps
+   hasError?: boolean;
+   disabled?: boolean;
+   autoFocus?: boolean;
+-  "aria-label"?: string;
+   /** Accessible name of each digit cell. Default `Digit ${index + 1} of ${length}`. */
+   digitLabel?: (index: number, length: number) => string;
+ }
+diff --git a/src/components/WavyDivider/WavyDivider.stories.tsx b/src/components/WavyDivider/WavyDivider.stories.tsx
+index 6b49549..6460c6e 100644
+--- a/src/components/WavyDivider/WavyDivider.stories.tsx
++++ b/src/components/WavyDivider/WavyDivider.stories.tsx
+@@ -1,6 +1,7 @@
+-import type { Meta, StoryObj } from "@storybook/react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { WavyDivider } from "./WavyDivider";
+ import { WavyDividerVariant } from "./constants";
++import { BodyText, LabelText } from "../Text";
+ 
+ const meta = {
+   title: "Bits & Pieces/WavyDivider",
+@@ -39,22 +40,31 @@ export const Low: Story = {
+   },
+ };
+ 
++/** Contradicts strokeWeight (default 2). */
++export const HeavyStroke: Story = {
++  args: {
++    variant: WavyDividerVariant.high,
++    strokeWeight: 4,
++    className: "text-border",
++  },
++};
++
+ export const BothVariants: Story = {
+   render: () => (
+     <div className="flex w-80 flex-col gap-6">
+       <div className="flex flex-col gap-2">
+-        <span className="text-style-label text-text-secondary">
++        <LabelText className="text-text-secondary">
+           High frequency
+-        </span>
++        </LabelText>
+         <WavyDivider
+           variant={WavyDividerVariant.high}
+           className="text-border"
+         />
+       </div>
+       <div className="flex flex-col gap-2">
+-        <span className="text-style-label text-text-secondary">
++        <LabelText className="text-text-secondary">
+           Low frequency
+-        </span>
++        </LabelText>
+         <WavyDivider variant={WavyDividerVariant.low} className="text-border" />
+       </div>
+     </div>
+@@ -78,13 +88,13 @@ export const Variants: Story = {
+ export const InContext: Story = {
+   render: () => (
+     <div className="flex w-80 flex-col gap-4 rounded-normal border border-border-primary bg-surface-primary p-5">
+-      <p className="text-style-body text-text">
++      <BodyText as="p" className="text-text">
+         Above the divider — some content goes here.
+-      </p>
++      </BodyText>
+       <WavyDivider variant={WavyDividerVariant.high} className="text-border" />
+-      <p className="text-style-body text-text-secondary">
++      <BodyText as="p" className="text-text-secondary">
+         Below the divider — more content follows.
+-      </p>
++      </BodyText>
+     </div>
+   ),
+ };
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index 391018f..1b67543 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -8,6 +8,16 @@
+  * approachable for consumers who bundle CSS without Tailwind.
+  */
+ 
++/* LinearProgressIndicator — types --progress-pct as a <number>. The
++ * fill/remainder motion is a width/left transition (.ds-progress-* below), not
++ * a transition of this property. Outside @layer: an at-rule, kept in this file
++ * with the rest of its system. */
++@property --progress-pct {
++  syntax: "<number>";
++  inherits: true;
++  initial-value: 0;
++}
++
+ @layer utilities {
+   /*
+    * Motion helpers — the only way a component's className reaches the motion
+@@ -85,7 +95,7 @@
+     animation-timing-function: var(--ui-motion-ease-exit);
+   }
+ 
+-  /* Disabled / inactive (native + aria-invalid disabled pattern) */
++  /* Disabled / inactive (native :disabled + aria-disabled="true") */
+   .ds-disabled-state:is(:disabled, [aria-disabled="true"]) {
+     cursor: not-allowed;
+     opacity: var(--ui-opacity-disabled);
+@@ -179,8 +189,10 @@
+     outline-color: var(--ui-color-focus-ring-prominent);
+   }
+ 
+-  /* Active slider track — the handle color at 45% (Figma applies alpha on top).
+-   * --ds-slider-color is set on the Slider root from its `color` prop. */
++  /* Active slider track — the handle color at --ds-slider-track-opacity (the
++   * variant's --ui-slider-track-*-active-opacity; Figma applies alpha on top).
++   * The Slider root sets --ds-slider-color (its `color` prop, else the
++   * variant's hue) and --ds-slider-track-opacity (from `variant`). */
+   .ds-slider-fill {
+     background-color: color-mix(
+       in srgb,
+@@ -190,8 +202,8 @@
+     );
+   }
+ 
+-  /* Linear progress — width/left interpolate because --progress-pct is a
+-   * registered @property in index.css. */
++  /* Linear progress — width/left transition whenever --progress-pct changes
++   * their computed value. */
+   .ds-progress-fill {
+     transition: width var(--ui-motion-duration-slow)
+       var(--ui-motion-ease-standard);
+@@ -786,13 +798,14 @@
+     color: var(--ui-color-text);
+     text-decoration: underline;
+     text-decoration-color: var(--ui-color-border-primary);
+-    text-underline-offset: 3px;
++    text-underline-offset: var(--ui-chat-prose-link-offset);
+   }
+   .ds-chat-prose a:hover {
+     color: var(--ui-color-text-secondary);
+   }
+   .ds-chat-prose blockquote {
+-    border-left: 2px solid var(--ui-color-border-primary);
++    border-left: var(--ui-chat-prose-quote-border-width) solid
++      var(--ui-color-border-primary);
+     padding-left: var(--ui-spacing-rg);
+     color: var(--ui-color-text-secondary);
+     font-style: normal;
+@@ -835,3 +848,20 @@
+     font-weight: var(--ui-weight-semibold);
+   }
+ }
++
++/* AI chat streaming animation (AITextPart / AIThinkingPart `streamingAnimation`).
++ * Each block of streamed prose rises into place out of a blur. Every value is a
++ * --ui-chat-stream-* token. Outside @layer (an inline-style animation cannot
++ * reach a layered @keyframes), and in this file beside .ds-chat-prose. */
++@keyframes ds-chat-stream-in {
++  from {
++    opacity: 0;
++    filter: blur(var(--ui-chat-stream-blur));
++    transform: translateY(var(--ui-chat-stream-rise));
++  }
++  to {
++    opacity: 1;
++    filter: blur(0);
++    transform: translateY(0);
++  }
++}
+diff --git a/src/styles/index.css b/src/styles/index.css
+index dcaa641..ad6ef9d 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -13,13 +13,6 @@
+ @custom-variant unselected (&:not([data-state="active"], [data-state="on"]));
+ @plugin "tailwindcss-animate";
+ 
+-/* Register so --progress-pct interpolates when LinearProgressIndicator value changes. */
+-@property --progress-pct {
+-  syntax: "<number>";
+-  inherits: true;
+-  initial-value: 0;
+-}
+-
+ /*
+  * SidebarWithHoverIcon rail — the two scalars the icon's path is a function of.
+  * Registered so they INTERPOLATE: an unregistered custom property is a token
+@@ -82,6 +75,9 @@
+  * "inline" means Tailwind emits var(--ui-*) references instead of the
+  * resolved values, so overriding --ui-* at :root automatically updates
+  * all generated utilities.
++ *
++ * Everything between the __GENERATED_THEME_*__ markers is written by
++ * scripts/sync-theme.mjs (npm run sync-tokens) — do not edit it by hand.
+  */
+ /* __GENERATED_THEME_START__ */
+ @theme inline {
+@@ -1167,20 +1163,3 @@
+   50.01% { background-size: 0% var(--ds-underline-thickness, var(--ui-underline-link-thickness));   background-position-x: 0%; }
+   100%   { background-size: 100% var(--ds-underline-thickness, var(--ui-underline-link-thickness)); background-position-x: 0%; }
+ }
+-
+-/* AI chat streaming animation (AITextPart / AIThinkingPart `streamingAnimation`).
+- * Each block of streamed prose rises into place out of a blur. Every value is a
+- * --ui-chat-stream-* token. Lives outside @layer with the package's other
+- * keyframes. */
+-@keyframes ds-chat-stream-in {
+-  from {
+-    opacity: 0;
+-    filter: blur(var(--ui-chat-stream-blur));
+-    transform: translateY(var(--ui-chat-stream-rise));
+-  }
+-  to {
+-    opacity: 1;
+-    filter: blur(0);
+-    transform: translateY(0);
+-  }
+-}
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index e501a38..334b098 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -238,9 +238,9 @@
+    * hover reveal's and the transcript disclosure's, is on the motion scale. */
+   --ui-chat-stream-blur: 3px;
+   --ui-chat-stream-rise: 4px;
+-  /* The prompt textarea grows with its content up to this, then scrolls. The
+-   * component reads it back from computed style, so this token is the only
+-   * place the cap lives. */
++  /* The prompt textarea grows with its content up to this, then scrolls. CSS
++   * max-height applies the cap and the component only sets height =
++   * scrollHeight, so this token is the only place the cap lives. */
+   --ui-chat-prompt-max-height: 300px;
+   /* The provider swatch in AIModelSelectItem (Figma 761:2073). */
+   --ui-chat-model-swatch-size: 10px;
+@@ -249,6 +249,9 @@
+   --ui-width-chat-model-tooltip: 242px;
+   /* Inline code inside ds-chat-prose. */
+   --ui-chat-prose-code-radius: 4px;
++  /* Links and blockquotes inside ds-chat-prose. */
++  --ui-chat-prose-link-offset: 3px;
++  --ui-chat-prose-quote-border-width: 2px;
+ 
+   /* Text roll on hover (RollHoverText). Each letter rolls over
+    * --ui-motion-duration-slower; the duration:stagger ratio (~1:12) is what
+@@ -494,7 +497,8 @@
+   --ui-width-tooltip-rich: 175px;
+   --ui-min-w-tooltip-complex: 242px;
+ 
+-  /* Calendar — day-cell corner radius, presets rail width, panel min-width. */
++  /* Calendar — presets rail width and panel min-width (the day-cell radius is
++   * with the radii, --ui-radius-calendar-day). */
+   --ui-width-calendar-presets: 144px;
+   /* Panel width sets the day-cell size: cells are aspect-square across seven
+    * equal columns, so widening the panel makes each day physically bigger. */
+@@ -568,9 +572,10 @@
+   --ui-icon-stroke-width: 2;
+ 
+   /* ── Radius (semantic corners) ────────────────────────────────────────────
+-   * tight     — compact chrome: buttons, tabs, dense controls (kbd, etc.).
+-   * standard — triggers, grouped inputs, dropdown rows, segmented shells.
+-   * soft     — panels: modals, menu surfaces, search field shell, Outline inner.
++   * tight  — compact chrome: buttons, tabs, dense controls (kbd, etc.).
++   * mini   — micro (28px) toggle options / tabs.
++   * normal — triggers, grouped inputs, dropdown rows, segmented shells.
++   * soft   — panels: modals, menu surfaces, search field shell, Outline inner.
+    */
+   --ui-radius-tight: 12px;
+   /* Figma `radius-mini` — micro (28px) toggle options / tabs. */
+@@ -789,11 +794,10 @@
+ 
+   --ui-opacity-disabled: 0.5;
+ 
+-  /* Secondary's own opacity variable drops to 60%, but the dark sticker WASH
+-   * does not use it — Figma binds `color-sticker-bg-secondary` to the shared
++  /* The dark secondary WASH does not read --ui-sticker-bg-opacity-secondary
++   * (80%, light only) — Figma binds `color-sticker-bg-secondary` to the shared
+    * 20% opacity in dark. Danger stops being a composite at all: both the
+    * content and the wash are a literal white, not danger-primary/secondary. */
+-  --ui-sticker-bg-opacity-secondary: 60%;
+   --ui-color-sticker-bg-secondary: color-mix(
+     in srgb,
+     var(--ui-color-secondary-border-active) var(--ui-sticker-bg-opacity),
+diff --git a/src/utils/composeRefs.ts b/src/utils/composeRefs.ts
+new file mode 100644
+index 0000000..e91a783
+--- /dev/null
++++ b/src/utils/composeRefs.ts
+@@ -0,0 +1,26 @@
++// No "use client": this module calls only `useCallback`, which runs in React's
++// server build and is not a client trigger under the package's directive rule.
++// Every component that calls `useComposedRefs` carries its own directive when it
++// needs one.
++import { useCallback, type Ref, type RefCallback } from "react";
++
++function assignRef<T>(ref: Ref<T> | undefined, node: T | null) {
++  if (typeof ref === "function") ref(node);
++  else if (ref) (ref as { current: T | null }).current = node;
++}
++
++/**
++ * Internal (not exported from src/index.ts). One callback ref that writes the
++ * node into every given ref. Memoized on the refs themselves, so React does
++ * not detach and re-attach a consumer's callback ref on every render, which
++ * an inline merge would do.
++ */
++export function useComposedRefs<T>(
++  ...refs: (Ref<T> | undefined)[]
++): RefCallback<T> {
++  // Each call site passes a fixed number of refs, so `refs` is a
++  // stable-length dependency list.
++  return useCallback((node: T | null) => {
++    for (const ref of refs) assignRef(ref, node);
++  }, refs);
++}

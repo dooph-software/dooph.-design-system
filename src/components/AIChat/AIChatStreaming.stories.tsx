@@ -19,7 +19,7 @@
  *     and animate it via `streamingAnimation` — Streamdown's own word
  *     animation stays OFF, so nothing here depends on it.
  */
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Fragment,
   useCallback,
@@ -552,7 +552,7 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
           stickToBottom.current =
             el.scrollHeight - el.scrollTop - el.clientHeight < 80;
         }}
-        className="relative flex min-h-0 flex-1 flex-col overflow-y-auto px-rg"
+        className="relative flex min-h-0 flex-1 flex-col overflow-y-auto px-md"
       >
         {turns.length === 0 ? (
           <div className="flex flex-1 items-center justify-center">
@@ -561,7 +561,7 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
             </BodyText>
           </div>
         ) : (
-          <div className="flex flex-col gap-md pb-md pt-rg">
+          <div className="flex flex-col gap-lg pb-lg pt-md">
             <ChatDivider>Today</ChatDivider>
             {turns.map((turn, index) => {
               const [head, ...replies] = turn;
@@ -573,7 +573,7 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
               return (
                 // Each turn is its own container, so its sticky header is
                 // pushed away by the next turn's — the consumer's layout.
-                <div key={head.id} className="flex flex-col gap-rg">
+                <div key={head.id} className="flex flex-col gap-md">
                   {switched ? (
                     <ChatDivider>
                       Switched to{" "}
@@ -583,7 +583,7 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
                       {effortLabel(head.meta.effort)}
                     </ChatDivider>
                   ) : null}
-                  <div className="sticky top-0 z-10 bg-surface-page pt-xs">
+                  <div className="sticky top-0 z-10 bg-surface-page pt-sm">
                     <UserMessageHeader className="line-clamp-4">
                       {textOf(head)}
                     </UserMessageHeader>
@@ -614,7 +614,7 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
         )}
       </div>
 
-      <div className="px-rg pb-rg">
+      <div className="px-md pb-md">
         <AIPromptInput
           onSubmit={(text) => void send(text)}
           responding={responding}

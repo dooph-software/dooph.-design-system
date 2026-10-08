@@ -1,0 +1,8 @@
+ex06_usage_L254.tsx(9,2): error TS2304: Cannot find name 'HeroText'.
+ex06_usage_L254.tsx(9,48): error TS2304: Cannot find name 'HeroText'.
+ex15_usage_prose_claims.tsx(67,6): error TS2322: Type '{ mode: "autoplay"; }' is not assignable to type 'IntrinsicAttributes & MorphRotationShapeProps'.
+  Property 'shapes' is missing in type '{ mode: "autoplay"; }' but required in type '{ shapes: ShapeComponent[]; }'.
+ex15_usage_prose_claims.tsx(71,24): error TS2322: Type 'number' is not assignable to type 'LoadingSpinnerSize | undefined'.
+ex15_usage_prose_claims.tsx(77,6): error TS2739: Type '{ children: string; variant: "primary"; size: "big"; }' is missing the following properties from type 'CTAButtonProps': text, icon
+ex15_usage_prose_claims.tsx(92,6): error TS2322: Type '{ mode: "date-range"; }' is not assignable to type 'IntrinsicAttributes & DatePickerProps'.
+  Type '{ mode: "date-range"; }' is missing the following properties from type '{ mode: "date-range"; value: DateRange; onChange: (range: DateRange) => void; splitPresets?: CalendarPreset[] | undefined; }': value, onChange

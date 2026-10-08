@@ -6,5 +6,3 @@ export const AIToolReadIcon = (props: IconProps) => (
     <circle cx="12" cy="12" r="3" />
   </BaseIcon>
 );
-
-export default AIToolReadIcon;

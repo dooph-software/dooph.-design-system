@@ -1,0 +1,13 @@
+const { createRequire } = require('module');
+const B = 'C:/Users/stick/Github/dooph/dooph-ds-audit-build';
+const req = createRequire(B + '/package.json');
+const React = req('react'); const { renderToStaticMarkup } = req('react-dom/server');
+const DS = req(B + '/dist/index.cjs');
+const h = React.createElement;
+const html = renderToStaticMarkup(h(DS.TableHeaderCell, { sortDirection: DS.TableSortDirection ? Object.values(DS.TableSortDirection)[0] : 'none', onSort: () => {} }, 'Name'));
+const btn = html.match(/<button[^>]*class="([^"]*)"/)[1].split(/\s+/);
+console.log('TableSortDirection =', JSON.stringify(DS.TableSortDirection));
+console.log('button classes containing text-:', btn.filter(c => /(^|:)text-/.test(c)).join('  '));
+console.log('has text-ghost-fg (bare):', btn.includes('text-ghost-fg'), ' has text-text-primary:', btn.includes('text-text-primary'));
+console.log('dist cn: ', DS.cn('text-ghost-fg border-transparent', 'w-full text-text-primary'));
+console.log('dist cn control (text-text): ', DS.cn('text-ghost-fg', 'text-text'));

@@ -1,5 +1,8 @@
-/* Shared color resolution for components that take a free-form `color` prop
- * (Slider, LinearProgressIndicator).
+/* Shared color resolution for every component `color` prop that accepts DS
+ * colour names — the one name lookup in the package (Slider*,
+ * LinearProgressIndicator, Sticker, AIModelSelect, LoadingSpinner,
+ * ProgressIndicator / AIContextGauge, ShapeMorphSpinner). A component-private
+ * name→var table is a bug: names must mean the same thing everywhere.
  *
  * Deliberately server-safe (no "use client") so the token map can be read from
  * RSC code, the same reason the dot-accessible enums live in constants modules.

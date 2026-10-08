@@ -1,0 +1,487 @@
+/*
+ * dooph Design System — Token Layer
+ *
+ * Theming contract:
+ * — Light palette: `:root` and `.light` (same declarations). Default look for
+ *   apps that omit theme classes or force `class="light"` (e.g. next-themes).
+ * — Dark palette: `.dark` on the app root (typically `<html>`). Your theme
+ *   provider decides when `.light` vs `.dark` applies (manual toggle, saved
+ *   preference, three-way light/dark/system, etc.).
+ * — There is NO `prefers-color-scheme` remapping here: system mode is the
+ *   consuming app's job (providers add/remove `.dark` from OS preference).
+ *
+ * Consuming apps override `--ui-*` in their CSS after importing this bundle,
+ * targeting `:root` / `.light` / `.dark` as needed — never hardcoded in components.
+ */
+
+:root,
+.light {
+  /* ── Colors ─────────────────────────────────────────────────────────── */
+
+  /* Primary (dark neutral) — borders alias bg per state (Figma) */
+  --ui-color-primary: #171717;
+  --ui-color-primary-border: var(--ui-color-primary);
+  --ui-color-primary-hover: #2c2c2c;
+  --ui-color-primary-border-hover: var(--ui-color-primary-hover);
+  --ui-color-primary-active: #3d3d3d;
+  --ui-color-primary-border-active: var(--ui-color-primary-active);
+  --ui-color-primary-foreground: #ffffff;
+  /* Disabled paints alias secondary so all solid buttons share one disabled look;
+   * token names stay so consumers can still override primary-disabled alone. */
+  --ui-color-primary-disabled: var(--ui-color-secondary-disabled);
+  --ui-color-primary-border-disabled: var(--ui-color-secondary-border-disabled);
+
+  /* Secondary (light surface) — borders are distinct Figma literals */
+  --ui-color-secondary: #fdfdfd;
+  --ui-color-secondary-border: #e2e3e4;
+  --ui-color-secondary-hover: #efefef;
+  --ui-color-secondary-border-hover: #e2e3e4;
+  --ui-color-secondary-active: #e3e3e3;
+  --ui-color-secondary-border-active: #e2e3e4;
+  --ui-color-secondary-foreground: #161616;
+  --ui-color-secondary-disabled: #f5f5f5;
+  --ui-color-secondary-border-disabled: #e9e9e9;
+
+  /* Brand (teal) — borders alias bg per state (Figma) */
+  --ui-color-brand: #4f666d;
+  --ui-color-brand-border: var(--ui-color-brand);
+  --ui-color-brand-hover: #45555b;
+  --ui-color-brand-border-hover: var(--ui-color-brand-hover);
+  --ui-color-brand-active: #323d41;
+  --ui-color-brand-border-active: var(--ui-color-brand-active);
+  --ui-color-brand-foreground: #ffffff;
+  --ui-color-brand-border-disabled: transparent;
+
+  /* Error (unified destructive palette — no .dark overrides yet) */
+  --ui-color-error-primary: #ea3f3f;
+  --ui-color-error-secondary: #ff5858;
+
+  /* Ghost (no rest bg; hover/active are translucent overlays) */
+  --ui-color-ghost-foreground: #4a4a4a;
+  --ui-color-ghost-hover: rgba(0, 0, 0, 0.04);
+  --ui-color-ghost-active: rgba(0, 0, 0, 0.08);
+  --ui-color-ghost-foreground-active: #161616;
+
+  /* Surfaces (Figma: pageBackground / surfacePrimary / surfaceSecondary) */
+  --ui-color-page-background: #fdfeff;
+  --ui-color-surface-primary: #ffffff;
+  --ui-color-surface-secondary: #fcfcfc;
+
+  /* Text selection (::selection). The package ships only the tokens — applying
+     them is a global, app-owned decision; use the .ds-selection opt-in class or
+     write your own ::selection rule.
+
+     Aliased to the primary button pair, so a selection reads as a primary
+     surface and follows a rebrand for free. Note this inverts with the palette
+     (dark-on-light in light mode, light-on-dark in dark) because primary does;
+     override both tokens if you need a fixed colour. No .dark block: the alias
+     already resolves per palette. */
+  --ui-color-selection: var(--ui-color-primary);
+  --ui-color-selection-foreground: var(--ui-color-primary-foreground);
+
+  /* Modals */
+  --ui-color-modal-surface: #fdfdfd;
+  --ui-color-modal-backdrop: rgba(0, 0, 0, 0.35);
+
+  /* Tooltips */
+  --ui-color-tooltip-inverse-surface: var(--ui-color-primary);
+  --ui-color-tooltip-inverse-text: var(--ui-color-primary-foreground);
+  --ui-color-tooltip-inverse-border: var(--ui-color-primary);
+  --ui-color-tooltip-matching-surface: var(--ui-color-secondary);
+  --ui-color-tooltip-matching-text: var(--ui-color-secondary-foreground);
+  --ui-color-tooltip-matching-border: var(--ui-color-border-primary);
+
+  /* Borders (Figma: borderPrimary / borderSecondary; popovers is the DS name
+   * for Figma borderModal, shared by modal/menu/toast panels) */
+  --ui-color-border-primary: #dddddd;
+  --ui-color-border-secondary: #dfdfdf;
+  --ui-color-border-popovers: #ebebeb;
+  --ui-color-border-focus: var(--ui-color-brand-border);
+  /* CTAButton padded outline ring (primary variant only) */
+  --ui-color-border-cta: rgba(56, 56, 56, 0.5);
+  --ui-color-trigger-border-hover: #b4b4b4;
+  --ui-color-trigger-border-error-focus: var(--ui-color-error-primary);
+
+  /* Text */
+  --ui-color-text: #161616;
+  --ui-color-text-secondary: #4a4a4a;
+  --ui-color-text-tertiary: #606060;
+
+  /* Focus rings (Figma: Dropdowns/focusRingBrand|Primary|Error) */
+  --ui-color-focus-ring-brand: rgba(70, 86, 92, 0.35);
+  --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.25);
+  --ui-color-focus-ring-error: rgba(236, 85, 85, 0.35);
+
+  /* Brand identity (Figma: brandColor / brandColorAlt — replaces logo/logo-alt/accent) */
+  --ui-brand-color: #46565c;
+  --ui-brand-color-alt: #44c0e5;
+
+  /* Text shimmer (ShimmerText) */
+  --ui-shimmer-base: var(--ui-color-text-tertiary);
+  --ui-shimmer-highlight: color-mix(
+    in srgb,
+    var(--ui-color-text-tertiary) 35%,
+    transparent
+  );
+
+  /* Text roll on hover (RollHoverText). The duration:stagger ratio (~1:14) is
+   * what makes the letters read as one travelling wave instead of a metronome —
+   * raising the stagger toward the duration turns it into discrete flips. */
+  --ui-roll-hover-duration: 500ms;
+  --ui-roll-hover-stagger: 35ms;
+  --ui-roll-hover-blur: 3px;
+  --ui-roll-hover-depth: 0.5em;
+  /* Both in em so depth/perspective stays constant at every font size — the
+   * ratio is what governs how 3D the roll reads, and a px perspective would
+   * make the same component subtle in a button and overdone in a hero. */
+  --ui-roll-hover-perspective: 10em;
+
+  /* Text roll on change (RollChangeText). Two halves with deliberately
+   * different curves: the old content leaves on an accelerating ease-in (it is
+   * being thrown away, so it should not linger) while the new content arrives
+   * on the house decelerating curve and settles. Giving them one shared ease
+   * flattens that read.
+   *
+   * `depth` is in em so the travel scales with the type, like the hover roll's.
+   * `blur` is in px on purpose: it is a lens effect, not a typographic measure,
+   * and scaling it with font size makes large text look smeared rather than
+   * fast. The in-animation's mid-point blur is derived from this token, not a
+   * second one, so the two stay in proportion.
+   *
+   * The exiting node is unmounted by its own `animationend`, so nothing in the
+   * component mirrors `out-duration`. It used to be duplicated as a JS
+   * setTimeout, which is precisely the mirror that desyncs the moment either
+   * side is retuned. */
+  --ui-roll-change-out-duration: 200ms;
+  --ui-roll-change-in-duration: 300ms;
+  --ui-roll-change-out-ease: cubic-bezier(0.4, 0, 1, 1);
+  --ui-roll-change-in-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ui-roll-change-depth: 0.9em;
+  --ui-roll-change-blur: 4px;
+
+  /* Rolling digits (RollingDigitsText) — 2D cash-register snap, not 3D.
+   *
+   * `duration` governs the ROLL: a wheel already on screen translating to its
+   * new digit. `stagger` defaults to 0ms so every wheel starts and lands
+   * together, one snap for the whole figure; it stays a token so a consumer can
+   * dial in a right-to-left cascade (ones place leads) without patching the
+   * package.
+   *
+   * `enter-duration` / `exit-duration` govern a whole SLOT — a wheel or a
+   * grouping separator — opening from or collapsing to zero width while it
+   * fades. Width and opacity are the same animation, and it runs CONCURRENTLY
+   * with the roll of the wheels already on screen. `opacity-ratio` is the
+   * FRACTION of that duration the fade occupies: opacity finishes early so an
+   * arriving glyph (which is drawn at full 1ch and overflows its narrower slot)
+   * is already opaque by the time it stops overlapping its neighbour.
+   *
+   * `digit-width` and `separator-width` are the two slot widths. Both have to
+   * be fixed lengths because `width` cannot animate from `auto`, and both are
+   * relative units so the figure scales with its type.
+   *
+   * `digit-width` defaults to 1ch, which is the advance of "0" — very close to,
+   * but not exactly, the TABULAR advance the figure actually renders at (Google
+   * Sans Flex: 1ch is about 2% under). Every wheel is centred in its own slot,
+   * so the error is symmetric per digit rather than cumulative, and the only
+   * visible effect is a figure fractionally tighter than the same string set as
+   * plain text. Retune this if a consumer's face drifts further.
+   *
+   * `separator-width` is measured to the default face's comma. Too narrow only
+   * means the glyph is optically tight — the separator does not clip, because
+   * its overflow is visible and its glyph is centred.
+   *
+   * `decimals-size` / `decimals-rise` / `decimals-gap` are all in em of the
+   * PARENT — the integer part — not of the decimals. That is what keeps the
+   * decimals a fixed PROPORTION of the figure at every size: a role passed as
+   * `smallDecimalsComponent` carries its own absolute font size (LabelText is a
+   * flat 12px), which would read correctly beside 23px integers and far too
+   * small beside 40px ones. So these tokens own the size and the passed role
+   * owns family, weight and tracking — applied by the
+   * `.ds-rolling-digits-decimals > *` rule in index.css, which sizes the CHILD
+   * precisely so the wrapper keeps inheriting the parent's em and `rise`/`gap`
+   * stay measured against it. Override `decimals-size` to change the
+   * proportion; `decimals-rise` needs re-tuning alongside it, since top-aligning
+   * a taller decimals box takes less rise. */
+  --ui-rolling-digits-duration: 240ms;
+  --ui-rolling-digits-stagger: 0ms;
+  --ui-rolling-digits-enter-duration: 260ms;
+  --ui-rolling-digits-exit-duration: 200ms;
+  --ui-rolling-digits-opacity-ratio: 0.55;
+  --ui-rolling-digits-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ui-rolling-digits-digit-width: 1ch;
+  --ui-rolling-digits-separator-width: 0.34em;
+  --ui-rolling-digits-decimals-size: 0.5em;
+  --ui-rolling-digits-decimals-rise: 0.525em;
+  --ui-rolling-digits-decimals-gap: 0.06em;
+
+  /* Sidebar rail icon (SidebarWithHoverIcon). Two independent motions: the rail
+   * TRAVERSING the frame when `side` flips, and the rail pulling out into a
+   * chevron on hover. Hover is the faster of the two — it answers a pointer, so
+   * it has to feel immediate, while the traverse is a state change and reads
+   * better with some weight.
+   *
+   * These are real CSS transition durations on two registered custom
+   * properties, not numbers mirrored into JS: the component only samples the
+   * interpolated values and writes the path. Retuning them here retunes the
+   * icon, including under `prefers-reduced-motion`, with no JS involved. */
+  --ui-sidebar-icon-duration: 260ms;
+  --ui-sidebar-icon-hover-duration: 180ms;
+  --ui-sidebar-icon-ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Text underline link wipe (UnderlineLinkText). On hover the line sweeps out
+   * to the right then redraws in from the left. Thickness/offset are in em so the
+   * underline scales with the text. The line is positioned at
+   * `calc(1em + offset)` from the top of each line box — just under the em
+   * square, like a native text-decoration underline — rather than at the bottom
+   * of the line box (which drifts with leading). Positive offset pushes further
+   * down; 0 sits at the em-square bottom; negative pulls into the glyphs. */
+  --ui-underline-link-thickness: 0.08em;
+  --ui-underline-link-offset: 0.05em;
+  --ui-underline-link-duration: 600ms;
+  --ui-underline-link-ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Text reveal on change (RevealChangeText). The slot's width is what animates,
+   * so these are deliberately slower than the roll tokens: a reveal is motion
+   * the eye is meant to follow, where a roll is a quick swap. The collapse is
+   * shorter than the reveal because tucking away is the half nobody needs to
+   * read — and because a value CHANGE runs both back to back, so the pair is
+   * what has to stay under the limit of feeling sluggish.
+   *
+   * One shared ease, unlike --ui-roll-change-*'s split pair: both halves here
+   * are the SAME slot moving, and giving the collapse its own accelerating
+   * curve reads as the content being yanked rather than tucked. */
+  --ui-reveal-change-in-duration: 420ms;
+  --ui-reveal-change-out-duration: 320ms;
+  --ui-reveal-change-ease: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
+
+  /* Font family contract — one token per text role. Consumers load fonts and
+   * may override any role independently (e.g. only buttons in a display face). */
+  --ui-font-body: "Google Sans Flex", system-ui, sans-serif;
+  --ui-font-button: "Google Sans Flex", system-ui, sans-serif;
+  --ui-font-heading: "Google Sans Flex", system-ui, sans-serif;
+  --ui-font-label: "Host Grotesk", system-ui, sans-serif;
+  --ui-font-title: "Bricolage Grotesque", system-ui, sans-serif;
+  --ui-font-hero: "Bricolage Grotesque", system-ui, sans-serif;
+  /* The mono role deliberately falls back to the platform's UI monospace face
+   * rather than to `monospace`, whose browser default is both smaller than the
+   * surrounding text and, on Windows, Courier New. */
+  --ui-font-mono:
+    "Google Sans Code", ui-monospace, "SF Mono", SFMono-Regular, Menlo,
+    Consolas, monospace;
+
+  /* Font sizes */
+  --ui-text-label: 12px;
+  --ui-text-body: 14px;
+  /* Mono matches the button role's size and weight by aliasing them, so a
+   * consumer who retunes button type keeps mono in step; override either token
+   * directly to break that link. */
+  --ui-text-mono: var(--ui-text-body);
+  --ui-text-subheading: 18px;
+  --ui-text-heading: 20px;
+  --ui-text-title: 40px;
+  --ui-text-hero: 55px;
+
+  /* Font weights — by role */
+  --ui-weight-body: 400;
+  --ui-weight-button: 500;
+  --ui-weight-label: var(--ui-weight-regular);
+  --ui-weight-subheading: var(--ui-weight-heading);
+  --ui-weight-heading: 600;
+  --ui-weight-title: 700;
+  --ui-weight-hero: 700;
+  --ui-weight-mono: var(--ui-weight-button);
+
+  /* Font weights — by name (BaseText `fontWeight` prop; consumer-overridable) */
+  --ui-weight-regular: 400;
+  --ui-weight-medium: 500;
+  --ui-weight-semibold: 600;
+  --ui-weight-bold: 700;
+
+  /* Variable font axes for Google Sans Flex text styles */
+  --ui-font-var-button: "wdth" 100, "GRAD" 11, "ROND" 100, "slnt" 0;
+  --ui-font-var-body: "wdth" 100, "GRAD" 19, "ROND" 100, "slnt" 0;
+  --ui-font-var-heading: "wdth" 100, "GRAD" 11, "ROND" 100, "slnt" 0;
+  /* Google Sans Code ships a MONO axis: 0 is its proportional cut, 1 the fixed
+   * pitch one. Naming it here rather than trusting the family default is what
+   * guarantees fixed advances, which is the entire point of the role. A face
+   * without the axis ignores it silently. */
+  --ui-font-var-mono: "MONO" 1;
+
+  /* Letter spacing */
+  --ui-tracking-body: 0.01em;
+  --ui-tracking-label: 0;
+  --ui-tracking-hero: -0.01em;
+
+  /* ── Sizing ──────────────────────────────────────────────────────────── */
+
+  --ui-height-button: 38px;
+  --ui-height-button-sm: 34px;
+  --ui-size-checkbox: 18px;
+  --ui-size-code-digit: 46px;
+
+  /* Loading spinner / progress indicator diameters */
+  --ui-size-spinner-sm: 16px;
+  --ui-size-spinner-rg: 22px;
+  --ui-size-spinner-md: 32px;
+  --ui-size-spinner-xl: 40px;
+  /* Toast widths — pinned per layout variant (capped to the container so a
+   * narrow viewport can't overflow). */
+  --ui-width-toast-simple: 230px;
+  --ui-width-toast-complex: 360px;
+  --ui-width-toast-viewport: var(--ui-width-toast-complex);
+
+  /* Tooltip widths — the simple variant is intentionally hug (no token):
+   * it sets whitespace-nowrap and sizes to its content. */
+  --ui-width-tooltip-rich: 175px;
+  --ui-min-w-tooltip-complex: 242px;
+
+  /* Calendar — day-cell corner radius, presets rail width, panel min-width. */
+  --ui-width-calendar-presets: 144px;
+  /* Panel width sets the day-cell size: cells are aspect-square across seven
+   * equal columns, so widening the panel makes each day physically bigger. */
+  --ui-min-w-calendar-panel: 300px;
+  --ui-height-button-micro: 26px;
+  /* Micro segmented-tab item — the compact inline preset row (Figma "Micro"). */
+  --ui-height-tab-micro: 30px;
+  --ui-height-slider-track: 22px;
+  --ui-radius-slider-inner: 8px;
+  --ui-slider-track-gap: 6px;
+  --ui-width-slider-handle: 6px;
+  --ui-height-slider-handle: 42px;
+
+  /* ── Spacing ─────────────────────────────────────────────────────────── */
+
+  --ui-spacing-xxs: 2px;
+  --ui-spacing-xxs: 4px;
+  --ui-spacing-xs: 8px;
+  --ui-spacing-sm: 10px;
+  --ui-spacing-rg: 12px;
+  --ui-spacing-md: 16px;
+  --ui-spacing-lg: 20px;
+  --ui-spacing-xl: 28px;
+  --ui-spacing-xxl: 40px;
+
+  /* ── Icons ───────────────────────────────────────────────────────────── */
+
+  --ui-icon-tiny: 12px;
+  --ui-icon-standard: 14px;
+  --ui-icon-medium: 16px;
+  --ui-icon-large: 20px;
+  --ui-icon-stroke: 2;
+
+  /* ── Radius (semantic corners) ────────────────────────────────────────────
+   * tight     — compact chrome: buttons, tabs, dense controls (kbd, etc.).
+   * standard — triggers, grouped inputs, dropdown rows, segmented shells.
+   * soft     — panels: modals, menu surfaces, search field shell, Outline inner.
+   */
+  --ui-radius-tight: 12px;
+  --ui-radius-standard: 18px;
+  --ui-radius-soft: 20px;
+  --ui-radius-checkbox: 6px;
+  --ui-radius-avatar: 8px;
+  --ui-radius-avatar-sm: 6px;
+  --ui-radius-calendar-day: 8px;
+
+  /* ── Shadows ─────────────────────────────────────────────────────────── */
+
+  --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.1);
+  --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.2);
+  /* defaults to hover shadow — kept as a separate token for manual override */
+  --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --ui-shadow-menu: 0 1px 4px 0 rgba(56, 56, 56, 0.15);
+  --ui-shadow-cta: 0 1px 2px rgba(56, 56, 56, 0.15);
+  --ui-shadow-focus-brand: 0 0 0 4px var(--ui-color-focus-ring-brand);
+  --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
+
+  /* ── Menu min-widths ─────────────────────────────────────────────────── */
+
+  --ui-min-w-menu: 160px;
+  --ui-min-w-menu-action: 144px;
+  --ui-min-w-menu-complex: 324px;
+  /* The standalone search field is the same width as a complex menu by
+   * design, so it ALIASES that token rather than repeating the number —
+   * but it keeps its own name, so a consumer can widen the search field
+   * without touching menus. Same arrangement as primary-disabled. */
+  --ui-min-w-search-box: var(--ui-min-w-menu-complex);
+
+  /* ── CTAButton ───────────────────────────────────────────────────────── */
+
+  --ui-text-cta-standard: 24px;
+  --ui-text-cta-big: 28px;
+  --ui-size-cta-chip-standard: 46px;
+  --ui-size-cta-chip-big: 60px;
+  --ui-size-cta-icon: 20px;
+  --ui-min-w-cta-content-standard: 330px;
+  --ui-min-w-cta-content-big: 350px;
+  --ui-min-w-cta-pill-big: 370px;
+  --ui-spacing-cta-content-big: 60px;
+
+  /* ── Disabled ────────────────────────────────────────────────────────── */
+
+  --ui-opacity-disabled: 0.6;
+}
+
+/* ── Dark mode — class on app root (<html>) · consuming app attaches/removes ─ */
+
+.dark {
+  --ui-color-primary: #f9f9f9;
+  --ui-color-primary-foreground: #000000;
+  --ui-color-primary-hover: #f0f0f0;
+  --ui-color-primary-active: #cdcdcd;
+  --ui-color-primary-disabled: var(--ui-color-secondary-disabled);
+  --ui-color-primary-border-disabled: var(--ui-color-secondary-border-disabled);
+
+  --ui-color-secondary: #1d1d1f;
+  --ui-color-secondary-foreground: #ffffff;
+  --ui-color-secondary-hover: #2b2b2d;
+  --ui-color-secondary-active: #313235;
+  --ui-color-secondary-disabled: #222224;
+  --ui-color-secondary-border: #303235;
+  --ui-color-secondary-border-hover: #313235;
+  --ui-color-secondary-border-active: #3a3b3f;
+  --ui-color-secondary-border-disabled: #1f1f21;
+
+  --ui-color-brand: #5a6f75;
+
+  --ui-color-ghost-hover: rgba(255, 255, 255, 0.04);
+  --ui-color-ghost-active: rgba(255, 255, 255, 0.08);
+  --ui-color-ghost-foreground: #afafaf;
+  --ui-color-ghost-foreground-active: #ffffff;
+
+  --ui-color-page-background: #131c1d;
+  --ui-color-surface-primary: #000000;
+  --ui-color-surface-secondary: #242425;
+
+  --ui-color-modal-surface: #212124;
+  --ui-color-modal-backdrop: rgba(0, 0, 0, 0.7);
+
+  --ui-color-border-primary: #333437;
+  --ui-color-border-secondary: #3e3f42;
+  --ui-color-border-popovers: #36363b;
+  --ui-color-border-cta: rgba(255, 255, 255, 0.35);
+  --ui-color-trigger-border-hover: #3a3b3f;
+
+  --ui-color-text: #ffffff;
+  --ui-color-text-secondary: #afafaf;
+  --ui-color-text-tertiary: #717171;
+
+  --ui-color-focus-ring-brand: rgba(70, 86, 92, 0.15);
+  --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.15);
+  --ui-color-focus-ring-error: rgba(236, 85, 85, 0.15);
+
+  --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.65);
+  --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.65);
+  --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.85);
+  --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.85);
+  --ui-shadow-menu: 0 2px 8px rgba(0, 0, 0, 0.7);
+  --ui-shadow-cta: 0 1px 2px rgba(0, 0, 0, 0.65);
+
+  --ui-opacity-disabled: 0.5;
+  --ui-size-checkbox: 18px;
+  --ui-radius-checkbox: 6px;
+  --ui-radius-avatar: 8px;
+  --ui-radius-avatar-sm: 6px;
+}

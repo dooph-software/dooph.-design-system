@@ -1,0 +1,44 @@
+### Expression system: cascade layers, the practical preset, and the dropdown caret as its first detail (next-plan "Expression system: signature vs practical")
+
+- files:
+  - `src/styles/tokens.css`: header rewritten (authority, expression tokens), `@layer ds.tokens, ds.expression;` on line 1, every existing block (`:root,.light`, `.dark`, the reduced-motion `@media`) inside `@layer ds.tokens { … }`, not re-indented, so the shape-morph ease generator's markers and output are unchanged. New expression `:root` block (`--ui-caret-shape-scale: 1`, `--ui-caret-nudge: var(--ui-shape-morph-nudge)`, each marked `/* expression */`), declared on `:root` only so a `.light`/`.dark` subtree can't restore a detail. New `@layer ds.expression { [data-ds-expression="practical"] { both: 0 } }`.
+  - `src/styles/index.css` (DropdownCaret block, hand-written part only): the frame size, chevron colour and hover nudge now read the expression tokens, only inside `.ds-expr-caret-shape` / `.ds-expr-caret-nudge` rules.
+  - `src/components/DropdownCaret/DropdownCaret.tsx`: on the root, `size-button` → `h-button` plus `ds-expr-caret-shape ds-expr-caret-nudge`. The header contract has new behaviour and constraint lines, and the stale "spacing-rg" now reads spacing-md, which is what the CSS uses.
+  - `src/components/DropdownCaret/DropdownCaret.stories.tsx`: new `Practical` story, showing the real DropdownTrigger and TypeableDropdownTrigger (closed, open, disabled) as Default and inside a `data-ds-expression="practical"` wrapper.
+  - `scripts/sync-theme.mjs`: both caret tokens added to `EXCLUDED`. The header now says which `:root` block is parsed. The parser itself is unchanged, because the layer wrapper didn't confuse it.
+  - `docs/audit/_work/scratch/expression-check.mjs` (new), plus a PASS/FAIL line added to the end of `scoreboard.mjs`.
+  - `docs/audit/_work/agent-rules.md`: rule 12. `docs/audit/doc-refresh.md`: an expression principle.
+- what changed: the DS token defaults now sit in cascade layers. A consumer's unlayered `--ui-*` overrides always win, and the expression preset beats the DS defaults. On the dropdown caret, `--ui-caret-shape-scale` set to 0 removes the morphing shape and its frame. The caret root shrinks from 38px square to the chevron plus a trailing inset equal to the host's leading `ds-pl-ui-md`, and the chevron takes `--ui-color-secondary-foreground` in place of the primary foreground. `--ui-caret-nudge` set to 0 removes the hover lean. With the defaults (1 and the shape-morph nudge), nothing changes.
+- consumer impact (**precedence change, read carefully**):
+  - Previously the DS tokens were unlayered, so a consumer override won only if it came later in the cascade, or had higher specificity. A consumer `:root { --ui-x }` loaded BEFORE the DS stylesheet lost, and so did one with lower specificity, such as `:where(:root)`. **Now the DS tokens sit in `@layer ds.tokens`, so a consumer's unlayered override always wins, whatever its import order or specificity.** The rule in one line: your tokens.css > the expression preset > DS defaults.
+  - A side effect: a consumer `:root { --ui-color-x }` override now beats the DS's `.dark` value even when the consumer's CSS loads first. Before, that was only true when it loaded after. Consumers who override a colour for light only should scope that override to `:root:not(.dark)` or `.light`.
+  - In the same way, a consumer override of `--ui-motion-duration-*` now always beats the DS's reduced-motion collapse, so the consumer needs their own reduce block. Before, this held only when the consumer's CSS loaded after the DS stylesheet.
+  - A consumer that puts its own overrides inside a cascade layer of its own takes part in layer ordering. Any layer declared before `ds` loses to it.
+  - Layered rules elsewhere in the DS (Tailwind `components`/`utilities`) are unaffected. They were below the unlayered tokens before, and they are below `ds.tokens`, the last-declared layer, now.
+  - Opt-in: `<html data-ds-expression="practical">` gives plain chevrons in DropdownTrigger and TypeableDropdownTrigger.
+  - Browsers without `color-mix()` fall back, via Tailwind's emitted `@supports`, to the primary-foreground chevron. Under practical that chevron would sit on the trigger without its shape. The DS already relies on `color-mix` for the sticker washes.
+- breaking: no for the API. The behaviour change is the precedence bullets above: an override that used to lose, because it loaded first or had low specificity, now wins. Flag this in the v6 notes as a behaviour change, even though no rename is involved.
+- verified:
+  - `npm run lint`: exit 0.
+  - `npm run sync-tokens` (136 tokens): `theme.css` and `twMergeTheme.ts` are byte-identical to the pre-change copies, and so is the generated block in `index.css` (`cmp`).
+  - Tailwind CLI compile, before and after, diffed with indentation normalised:
+    - the token change alone adds only the two `@layer` wrappers, the expression `:root` block and the preset;
+    - the full change adds only the caret block rewrite;
+    - one unrelated `.ds-cta-shape-tilt` addition comes from another agent's concurrent CTA work.
+  - In the compiled CSS, the reduced-motion `@media` is nested inside `ds.tokens` after `:root,.light`, so it still applies, and the browser CSSOM confirms it.
+  - Storybook, `Menus/DropdownCaret` → Practical, measured:
+    - Default: root 38×38, frame 26×26, white chevron, nudge 0.15 on hover.
+    - Practical: root 27×38, frame and shape 0×0. The chevron sits flush in the root, 12px from the inner border, matching the 12px leading padding. Colour #161616 (dark: #fff). The hover nudge resolves to 0.
+  - An unlayered `:root{--ui-caret-nudge:.3}` inserted FIRST in `<head>` still beat the preset on `<html data-ds-expression="practical">`.
+  - Server render: no inline expression token. The chevron is `var(--ui-icon-rg)` wide, matching the width calc.
+  - expression-check: PASS (2 tokens, 7 reads). A scratch copy with 6 planted violations failed with exit 1 and reported all 6.
+  - Scoreboard: every metric unchanged, plus the new PASS line.
+  - One fix along the way: Tailwind's automatic source scan picked up a literal arbitrary-property example in my docs and script comments and emitted a junk utility. I reworded both.
+- docs owed:
+  - The theming `token-contract.md` needs the authority rule, the layer names, and the warning that import order no longer matters (with the `.dark` and reduced-motion side effects above).
+  - The consumer skill and README need the `data-ds-expression="practical"` setup: on `<html>` in Next.js `app/layout.tsx` or Vite `index.html`, nesting discouraged, and debugging by reading the token's computed value.
+  - CHANGELOG `[Unreleased]`: Added, the expression system and practical preset. Changed, the token precedence (cascade layers).
+  - Architecture skill: rule 12 text.
+  - Future expression candidate, not done: the chevron's open flip rides the shape-morph spring and overshoots. That may also count as expressive under practical.
+
+## DONE

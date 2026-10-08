@@ -6,7 +6,8 @@
  * Usage: <Input variant={InputVariant.iconNumber} icon={<HashIcon />} />
  *
  * text       — body text, fills its container (the default)
- * number     — mono figures; hugs its value, never narrower than a square
+ * number     — mono figures, left-aligned; fills its container like `text`
+ *              (never narrower than a square). `autoWidth` hugs the value.
  * iconText   — `text` with a leading icon (requires `icon`)
  * iconNumber — `number` with a leading icon (requires `icon`)
  */

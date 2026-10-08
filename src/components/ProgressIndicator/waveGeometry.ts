@@ -131,6 +131,14 @@ function splitCubicAtHalf(
  * Returns the smooth circular remainder track, or `null` when no track should
  * be painted. A zero-length round-capped SVG dash still renders a dot, so the
  * complete state must omit the track rather than relying on a `0` dash.
+ * Used by the wavy ProgressIndicator variant (not transitioned). The flat
+ * variant draws the same track in CSS from one animated number — see
+ * `.ds-progress-ring-track` in dooph-component-tokens.css; keep the two in
+ * step (they agree at 0 and from 1 % up; flat ramps its gaps in below 1 %).
+ *
+ * `offset` is the NEGATIVE start position (−(active + gap)), the same form
+ * the flat CSS uses: it stays continuous with the full circle at 0 (offset 0),
+ * where a positive wrap (length + C − start) would jump by ≈2C.
  */
 export function getWavyTrackGeometry(
   progress: number,
@@ -150,7 +158,7 @@ export function getWavyTrackGeometry(
 
   return {
     length,
-    offset: length + circumference - (activeLength + gapLength),
+    offset: -(activeLength + gapLength),
   };
 }
 

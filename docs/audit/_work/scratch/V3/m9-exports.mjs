@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+const R = 'C:/Users/stick/Github/dooph/dooph-Design-System/';
+const dts = fs.readFileSync(R + 'docs/audit/_work/dist-index.d.ts', 'utf8');
+const js = fs.readFileSync('C:/Users/stick/Github/dooph/dooph-ds-audit-build/dist/index.js', 'utf8');
+const grab = (src) => [...src.matchAll(/export\s*\{([^}]*)\}/g)].flatMap(m => m[1].split(',')).map(s => s.trim()).filter(Boolean).map(s => s.replace(/^type\s+/, '').split(/\s+as\s+/).pop().trim());
+const names = [...new Set([...grab(dts), ...[...dts.matchAll(/export\s+declare\s+(?:const|function|class|type|interface)\s+([\w$]+)/g)].map(m => m[1])])];
+const values = new Set([...js.matchAll(/export\s*\{([^}]*)\}/g)].pop()[1].split(',').map(s => s.trim()).filter(Boolean).map(s => s.split(/\s+as\s+/).pop().trim()));
+const doc = ['skills/dooph-design-system-usage/SKILL.md', 'skills/dooph-design-system-usage/references/responsive-sheet-modal.md'].map(f => fs.readFileSync(R + f, 'utf8')).join('\n');
+const has = (n) => new RegExp('(?<![\w$])' + n.replace(/\$/g, '\$') + '(?![\w$])').test(doc);
+const absent = names.filter(n => !has(n));
+const icons = absent.filter(n => /Icon$/.test(n)), props = absent.filter(n => /Props$/.test(n));
+const other = absent.filter(n => !/Icon$/.test(n) && !/Props$/.test(n));
+console.log('exported names (d.ts):', names.length, '| runtime values (index.js):', values.size, '| mentioned in usage skill:', names.length - absent.length, '| absent:', absent.length, `(Icons ${icons.length}, Props ${props.length}, other ${other.length})`);
+const ov = other.filter(n => values.has(n)), ot = other.filter(n => !values.has(n));
+console.log('absent other runtime VALUES:', ov.length); console.log('  ' + ov.join(' '));
+console.log('absent other TYPE-only:', ot.length);

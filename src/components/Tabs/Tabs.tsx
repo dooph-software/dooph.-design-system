@@ -1,7 +1,4 @@
-"use client";
-
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { type VariantProps } from "class-variance-authority";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
@@ -9,6 +6,7 @@ import {
 } from "react";
 import { cn } from "../../utils/cn";
 import { toggleOptionVariants } from "../Toggle/toggleOption";
+import type { TabSize, TabVariant } from "./constants";
 
 const TabsRoot = TabsPrimitive.Root;
 
@@ -18,7 +16,7 @@ const TabsList = forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn("inline-flex items-center gap-1", className)}
+    className={cn("inline-flex items-center gap-xxs", className)}
     {...props}
   />
 ));
@@ -30,10 +28,16 @@ const tabTriggerVariants = toggleOptionVariants;
 // TabSize / TabVariant (+ their types) live in ./constants — kept server-safe
 // (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
 
+/* `size` / `variant` are typed from the `TabSize` / `TabVariant` consts, not
+ * cva's `VariantProps`: that admits `null`, which cva reads as "no variant"
+ * (an unsized or unfilled tab). */
 export interface TabsTriggerProps
-  extends
-    ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>,
-    VariantProps<typeof tabTriggerVariants> {}
+  extends ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
+  /** Defaults to `standard`. */
+  size?: TabSize;
+  /** Defaults to `ghost`. */
+  variant?: TabVariant;
+}
 
 const TabsTrigger = forwardRef<
   ComponentRef<typeof TabsPrimitive.Trigger>,
@@ -53,7 +57,7 @@ const TabsContent = forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
-    className={cn("focus-visible:outline-none", className)}
+    className={cn("ds-focus-visible-ring", className)}
     {...props}
   />
 ));

@@ -1,0 +1,133 @@
+src\utils\color.ts:9: *   color={model.providerColor}  -> any CSS color, passed through untouched
+src\utils\color.ts:57:  return DS_COLOR_TOKENS[color as DsColorToken] ?? color;
+src\utils\cn.ts:5: * tailwind-merge classifies any unknown `text-{word}` class as a text-color utility.
+src\components\LinearProgressIndicator\LinearProgressIndicator.tsx:10: * - `color` accepts a DS token name or any CSS color (same contract as Slider).
+src\components\LinearProgressIndicator\LinearProgressIndicator.tsx:17:import * as ProgressPrimitive from '@radix-ui/react-progress';
+src\components\LinearProgressIndicator\LinearProgressIndicator.tsx:30:   * any CSS color. Defaults to the primary token. */
+src\components\LinearProgressIndicator\LinearProgressIndicator.tsx:53:        } as CSSProperties
+src\components\WavyDivider\WavyDivider.tsx:12:// clip), and the pattern repeats horizontally to fill any width — no JS measuring.
+src\components\WavyDivider\WavyDivider.tsx:38:  /** Stroke weight in px (default 2). Accepts any SVG stroke-width value. */
+src\components\WavyDivider\WavyDivider.tsx:49: * (`currentColor`), so tint it with any text-* utility.
+src\components\LinearProgressIndicator\LinearProgressIndicator.stories.tsx:47:          '`color` takes a DS token name or any CSS color. It defaults to the primary token.',
+src\components\CTAButton\CTAButton.tsx:122:          {cloneElement(children as ReactElement, undefined, content)}
+src\components\Sheet\Sheet.tsx:3:import * as DialogPrimitive from "@radix-ui/react-dialog";
+src\components\Button\Button.tsx:126:    const Comp = (asChild ? Slot : "button") as ElementType;
+src\components\Button\Button.tsx:129:        ref={ref as ForwardedRef<HTMLElement>}
+src\components\Button\Button.tsx:139:const Button = ButtonBase as ButtonComponent;
+src\components\Input\Input.tsx:31: *   was asked for (same rule as SliderVariant.custom).
+src\components\Text\BaseText.stories.tsx:416:      note="as renders any element while keeping the role's typography and that element's own prop typing."
+src\components\Text\constants.ts:78: * Only some fonts implement any given axis — Google Sans Flex has all of these,
+src\components\Text\constants.ts:136: * autocomplete while still accepting any CSS value. */
+src\components\Text\constants.ts:138:/** `Fonts.*` or any CSS font-family list. */
+src\components\Text\constants.ts:140:/** `FontSizes.*`, any CSS length, or a number (px). */
+src\components\Text\constants.ts:142:/** `FontWeights.*`, any CSS weight, or a number (e.g. 450). */
+src\components\Text\constants.ts:146:/** `Tracking.*`, any CSS length, or a number (px). */
+src\components\Text\BaseText.tsx:80:    const role = unstyled ? undefined : (variant as TextVariant);
+src\components\Text\BaseText.tsx:88:        ref={ref as ForwardedRef<HTMLElement>}
+src\components\Text\BaseText.tsx:95:            ? ({ ...typography, ...style } as CSSProperties)
+src\components\Text\BaseText.tsx:106:  BaseTextBase as PolymorphicTextComponent<BaseTextOwnProps>;
+src\components\Text\BaseText.tsx:130:  return Role as RoleTextComponent;
+src\components\DropdownTrigger\DropdownTrigger.tsx:53:  const Comp = (asChild ? Slot : "button") as ElementType;
+src\components\DropdownTrigger\DropdownTrigger.tsx:56:      ref={ref as ForwardedRef<HTMLElement>}
+src\components\DropdownTrigger\DropdownTrigger.tsx:80:const DropdownTrigger = DropdownTriggerBase as DropdownTriggerComponent;
+src\components\DropdownTrigger\DropdownTrigger.tsx:314:    const Comp = (asChild ? Slot : "button") as ElementType;
+src\components\DropdownTrigger\DropdownTrigger.tsx:317:        ref={ref as ForwardedRef<HTMLElement>}
+src\components\DropdownTrigger\DropdownTrigger.tsx:345:  TextDropdownTriggerBase as TextDropdownTriggerComponent;
+src\components\Tabs\Tabs.tsx:3:import * as TabsPrimitive from "@radix-ui/react-tabs";
+src\components\Tabs\Tabs.tsx:62:export { TabsRoot as Tabs, TabsContent, TabsList, TabsTrigger, tabTriggerVariants };
+src\components\Popover\Popover.tsx:3:import * as PopoverPrimitive from "@radix-ui/react-popover";
+src\components\AnimatedText\AnimatedText.stories.tsx:967:          "`thickness` sets the underline stroke weight — a number is px, or pass any CSS length " +
+src\components\CopyButton\CopyButton.tsx:72:        ref={ref as React.Ref<HTMLButtonElement>}
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:143:          } as CSSProperties
+src\components\Slider\Slider.tsx:3:import * as SliderPrimitive from '@radix-ui/react-slider';
+src\components\Slider\Slider.tsx:25: * as CalendarProps: a discriminated union on the variant, so the compiler
+src\components\Slider\Slider.tsx:32:       * from it at the bundle's opacity. A DS token name or any CSS color. */
+src\components\Slider\Slider.tsx:34:      /** Overrides the bundle's active STEP DOT. A DS token name or any CSS
+src\components\Slider\Slider.tsx:296:    const paints = VARIANT_PAINTS[variant as SliderVariant];
+src\components\Slider\Slider.tsx:340:            } as CSSProperties
+src\components\AnimatedText\UnderlineLinkText.tsx:8:   * Underline stroke weight. A number is treated as px; any CSS length (e.g.
+src\components\AnimatedText\UnderlineLinkText.tsx:13:   * Distance of the underline below the em-square bottom. A number is px; any
+src\components\AnimatedText\UnderlineLinkText.tsx:57:        } as CSSProperties
+src\components\Slider\Slider.stories.tsx:206:          '`color` takes a DS token name or any CSS color. The handle renders it solid and the active track renders it at 45%.',
+src\components\Checkbox\Checkbox.tsx:20:import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+src\components\AnimatedText\RollingDigitsText.tsx:126:        } as CSSProperties
+src\components\AnimatedText\RollingDigitsText.tsx:129:       * it. Guarded on the target because the roll's own transitionend and any
+src\components\AnimatedText\RollingDigitsText.tsx:237:  } = props as RollingDigitsTextBaseProps & {
+src\components\DropdownCaret\DropdownCaret.stories.tsx:12:/** A stand-in host: any element with the host class, a 1px border and the trigger height. */
+src\components\DropdownCaret\DropdownCaret.stories.tsx:23:/** Figma 887:1825: every State × Color × TriggerVariant. Hover any closed/open host to see the nudge. */
+src\components\Tooltip\Tooltip.tsx:3:import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+src\components\AnimatedText\RollHoverText.tsx:58:          } as CSSProperties
+src\components\AnimatedText\RollHoverText.tsx:81:                  style={{ "--i": index++ } as CSSProperties}
+src\components\Table\Table.tsx:35:        } as React.CSSProperties
+src\components\AnimatedText\RollChangeText.tsx:68:          } as CSSProperties
+src\components\Checkbox\Checkbox.stories.tsx:7:  type CheckboxChecked as CheckboxCheckedValue,
+src\components\AIChat\constants.ts:38: * label shimmers and any transcript streams inline, always visible. `thought`
+src\components\AIChat\AIPromptInput.tsx:145:          // A click on the card's own padding focuses the textarea, as Figma's
+src\components\AnimatedText\RevealChangeText.tsx:238:          } as CSSProperties
+src\components\AIChat\AIThinkingPart.tsx:22: *   secondary once opened, as Figma draws them.
+src\components\AIChat\ChatDivider.tsx:8: * - The rules take the leftover width so the label stays centred at any width;
+src\components\OutlineSection\OutlineSection.tsx:9: * Use as a composable slot — place any content as children.
+src\components\AIChat\AIModelSelect.tsx:14: * - Provider colour is an open design value (`color`: DS token name or any CSS
+src\components\AIChat\AIModelSelect.tsx:95:      } as CSSProperties
+src\components\AIChat\AIModelSelect.tsx:122:  /** Slider paint: a DS token name or any CSS colour (e.g. the provider's). */
+src\components\AIChat\AIModelSelect.tsx:192:  /** Provider colour for the name and the bar: DS token name or any CSS colour. */
+src\components\AIChat\AITextPart.tsx:7: *   any of them emit.
+src\components\AIChat\AITextPart.tsx:18: *   of every message in on load. Turning it off mid-flight settles any block
+src\components\AnimatedText\FadeChangeText.tsx:72:          } as CSSProperties
+src\components\AIChat\AIModelSelect.stories.tsx:113:              onValueChange={(id) => onModelChange(id as StoryModelId)}
+src\components\AIChat\AIContextGauge.tsx:7: *   design value (a LoadingSpinnerColor key or any CSS colour), so warning
+src\components\Sticker\Sticker.tsx:66:       * name or any CSS color. The wash is this colour at
+src\components\Modal\Modal.tsx:8:import * as DialogPrimitive from '@radix-ui/react-dialog';
+src\components\Icons\BaseIcon.tsx:29: * BaseIcon — render any SVG icon by passing path(s) as children.
+src\components\AIChat\AIChatStreaming.stories.tsx:240:): FauxMessage => ({ ...m, parts: [...m.parts.slice(0, -1), fn(m.parts.at(-1)!)] });
+src\components\AIChat\AIChatParts.stories.tsx:123:/** Not in Figma: a failure CAN carry a reason, revealed on hover like any
+src\components\LoadingSpinner\spinnerGeometry.ts:7: *   - RENDERED SIZE (`cssSize`) — `var(--ui-size-spinner-*)`, applied as CSS.
+src\components\OutlineButton\OutlineButton.tsx:57: * stay visible without any hover condition — useful for a persistent "lit" state
+src\components\OutlineButton\OutlineButton.tsx:86:    const Comp = (asChild ? Slot : "button") as ElementType;
+src\components\OutlineButton\OutlineButton.tsx:95:          (ref as RefCallback<HTMLElement>)(node);
+src\components\OutlineButton\OutlineButton.tsx:97:          (ref as MutableRefObject<HTMLElement | null>).current = node;
+src\components\OutlineButton\OutlineButton.tsx:155:          ref={composedRef as ForwardedRef<HTMLElement>}
+src\components\OutlineButton\OutlineButton.tsx:219:             * When the cursor is at any wall (gx=0 or gx=1), the orb center is ON
+src\components\OutlineButton\OutlineButton.tsx:297:const OutlineButton = OutlineButtonBase as OutlineButtonComponent;
+src\components\LoadingSpinner\LoadingSpinner.tsx:35:  return COLOR_TOKENS[color as LoadingSpinnerColor] ?? color;
+src\components\LoadingSpinner\LoadingSpinner.tsx:43:   * Preset color alias or any CSS string (e.g. `"#ff6b6b"`).
+src\components\LoadingSpinner\LoadingSpinner.tsx:186:      /* Numeric width/height stay as ATTRIBUTES so the drawing has an
+src\components\LoadingSpinner\LoadingSpinner.tsx:263:        } as React.CSSProperties
+src\components\LoadingSpinner\LoadingSpinner.tsx:300:    const geo = getSpinnerGeometry(size as SpinnerSizeKey);
+src\components\OutlineButton\OutlineButton.stories.tsx:90:    <div style={{ "--ui-prominent-color-alt": "#c084fc" } as React.CSSProperties}>
+src\components\Menu\DropdownMenu.stories.tsx:285:/** selectType travels to any trigger as a plain data-select-type prop (Radix Slot merge). */
+src\components\Toast\Toast.tsx:3:import * as ToastPrimitive from "@radix-ui/react-toast";
+src\components\Menu\DropdownMenu.tsx:23:import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+src\components\Menu\DropdownMenu.tsx:130:    // Radix dismisses on any outside-interaction signal, including focus moving
+src\components\Menu\DropdownMenu.tsx:143:      const target = event.target as Node | null;
+src\components\Menu\DropdownMenu.tsx:158:            } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>)
+src\components\Menu\DropdownMenu.tsx:403:  DropdownMenuRoot as DropdownMenu,
+src\components\Toggle\toggleOption.ts:16: * - Disabled drops any fill; opacity comes from ds-disabled-control.
+src\components\ProgressIndicator\waveGeometry.test.ts:5:// @ts-expect-error TS5097 -- required by the zero-dependency Node test command.
+src\components\ProgressIndicator\waveGeometry.test.ts:42:    waveGeometryModule as unknown as Record<string, unknown>
+src\components\ShapeMorphSpinner\ShapeMorphSpinner.tsx:40:  /** Preset alias or any CSS colour. */
+src\components\ShapeMorphSpinner\ShapeMorphSpinner.tsx:67:      color: COLOR_TOKENS[color as LoadingSpinnerColor] ?? color,
+src\components\ProgressIndicator\ProgressIndicator.tsx:52:   * Preset alias or any CSS string (e.g. `"#ff6b6b"`).
+src\components\ProgressIndicator\ProgressIndicator.tsx:129:      /* Numeric width/height stay as ATTRIBUTES so the drawing has an
+src\components\ProgressIndicator\ProgressIndicator.tsx:221:      /* Numeric width/height stay as ATTRIBUTES so the drawing has an
+src\components\ProgressIndicator\ProgressIndicator.tsx:298:    const geo = getSpinnerGeometry(size as SpinnerSizeKey);
+src\components\Toggle\Toggle.tsx:20:import * as ToggleGroup from "@radix-ui/react-toggle-group";
+src\components\ShapeButton\ShapeButton.tsx:116:    const Comp = (asChild ? Slot : "button") as ElementType;
+src\components\ShapeButton\ShapeButton.tsx:117:    const Shape = shapeComponents[shape as ShapeButtons];
+src\components\ShapeButton\ShapeButton.tsx:118:    const resolvedVariant = variant as ShapeButtonVariant;
+src\components\ShapeButton\ShapeButton.tsx:122:        ref={ref as ForwardedRef<HTMLElement>}
+src\components\ShapeButton\ShapeButton.tsx:160:const ShapeButton = ShapeButtonBase as ShapeButtonComponent;
+src\components\Icons\index.ts:3:export { BaseIcon, IconSizes as IconSize } from "./BaseIcon";
+src\components\Calendar\CalendarGrid.tsx:57:/** Seven narrow weekday names taken from any known week — no lookup table. */
+src\components\Calendar\constants.ts:21: * The complete range contract. Structural, not nominal: any consumer object
+src\components\MorphRotationShape\MorphRotationShape.tsx:22: * - Fit: `autoplay` scales every shape to survive any rotation and re-centres
+src\components\MorphRotationShape\MorphRotationShape.tsx:125:  /** Bounds-normalized, as Compose does for the loader. */
+src\components\MorphRotationShape\MorphRotationShape.tsx:347:      style={{ ...(styleVars as CSSProperties), ...style }}
+src\components\MorphRotationShape\engine\polygon.ts:172:    first: null as Cubic | null,
+src\components\MorphRotationShape\engine\polygon.ts:173:    last: null as Cubic | null,
+src\components\MorphRotationShape\engine\polygon.ts:174:    result: [] as Cubic[],
+src\components\MorphRotationShape\engine\svgPath.ts:13: *   stretches any shape that does not touch all four edges (Pentagon is 23
+src\components\Calendar\dateFormat.ts:91:  let first = hasFrom ? bounds!.from!.getFullYear() : nowYear - YEARS_BACK;
+src\components\Calendar\dateFormat.ts:92:  let last = hasTo ? bounds!.to!.getFullYear() : nowYear + YEARS_FORWARD;
+src\components\MorphRotationShape\geometry.ts:37:/** Compose LoadingIndicator calculateScaleFactor: fit every shape at any rotation. */
+src\components\SegmentedTabSelect\SegmentedTabSelect.tsx:10:import * as TabsPrimitive from '@radix-ui/react-tabs';

@@ -1,0 +1,12 @@
+--- NEUTRAL = (none) ; consumer callbacks are server references
+CalendarCaption: CalendarCaption is a CLIENT REFERENCE ($$id chunk-LQDN7FLX.js#CalendarCaption)
+CalendarPresetItem: CalendarPresetItem is a CLIENT REFERENCE ($$id chunk-EP2KBENK.js#CalendarPresetItem)
+CalendarPresetsPanel: CalendarPresetsPanel is a CLIENT REFERENCE ($$id chunk-EP2KBENK.js#CalendarPresetsPanel)
+DatePickerSplitTrigger: DatePickerSplitTrigger is a CLIENT REFERENCE ($$id chunk-N6ZVVDUC.js#DatePickerSplitTrigger)
+CalendarGrid: CalendarGrid is a CLIENT REFERENCE ($$id chunk-CMLMBSJI.js#CalendarGrid)
+AIThinkingEffortSelector: PROBLEMS
+    - RollChangeText render THREW TypeError: useRef is not a function
+    - client:chunk-OZPS7OXF.js#SliderLabeled: function prop "onValueChange"
+AIModelSelectTrigger: clean (no missing React API, no function prop to host/client component)
+AIModelSelectItem: clean (no missing React API, no function prop to host/client component)
+AIModelTooltipContent: clean (no missing React API, no function prop to host/client component)

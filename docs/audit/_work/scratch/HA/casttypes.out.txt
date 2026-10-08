@@ -1,0 +1,37 @@
+src/components/AIChat/AIPromptInput.tsx:177 | UPCAST(assignable) | src=RefObject<T | null> | tgt={ current: T | null; }
+src/components/AnimatedText/RollingDigitsText.tsx:237 | UPCAST(assignable) | src=RollingDigitsTextProps | tgt=Omit<HTMLAttributes<HTMLSpanElement>, "children"> & { children: string; } & { smallDecimals?: boolean | undefined; small
+src/components/AnimatedText/RollingDigitsText.tsx:306 | UPCAST(assignable) | src=ForwardRefExoticComponent<RollingDigitsTextProps & RefAttributes<HTMLSpanElement>> | tgt=(props: RollingDigitsTextProps & { ref?: Ref<HTMLSpanElement> | undefined; }) => ReactNode
+src/components/Button/Button.tsx:126 | UPCAST(assignable) | src="button" | ForwardRefExoticComponent<HTMLAttributes<HTMLElement> & { children?: ReactNode; } & RefAttributes<HTMLElement | tgt=ElementType
+src/components/Button/Button.tsx:129 | REDUNDANT | src=ForwardedRef<HTMLElement> | tgt=ForwardedRef<HTMLElement>
+src/components/Button/Button.tsx:139 | NARROW | src=ForwardRefExoticComponent<Omit<ButtonProps<ElementType>, "ref"> & RefAttributes<HTMLElement>> | tgt=ButtonComponent
+src/components/CopyButton/CopyButton.tsx:52 | NARROW | src=MouseEvent<HTMLButtonElement, MouseEvent> | tgt=never
+src/components/CopyButton/CopyButton.tsx:72 | NARROW | src=ForwardedRef<HTMLElement> | tgt=Ref<HTMLButtonElement>
+src/components/CTAButton/CTAButton.tsx:122 | UPCAST(assignable) | src=ReactElement<unknown, string | JSXElementConstructor<any>> | ReactPortal | tgt=ReactElement<unknown, string | JSXElementConstructor<any>>
+src/components/DropdownTrigger/DropdownTrigger.tsx:53 | UPCAST(assignable) | src="button" | ForwardRefExoticComponent<HTMLAttributes<HTMLElement> & { children?: ReactNode; } & RefAttributes<HTMLElement | tgt=ElementType
+src/components/DropdownTrigger/DropdownTrigger.tsx:56 | REDUNDANT | src=ForwardedRef<HTMLElement> | tgt=ForwardedRef<HTMLElement>
+src/components/DropdownTrigger/DropdownTrigger.tsx:80 | NARROW | src=ForwardRefExoticComponent<Omit<DropdownTriggerProps<ElementType>, "ref"> & RefAttributes<HTMLElement>> | tgt=DropdownTriggerComponent
+src/components/DropdownTrigger/DropdownTrigger.tsx:314 | UPCAST(assignable) | src="button" | ForwardRefExoticComponent<HTMLAttributes<HTMLElement> & { children?: ReactNode; } & RefAttributes<HTMLElement | tgt=ElementType
+src/components/DropdownTrigger/DropdownTrigger.tsx:317 | REDUNDANT | src=ForwardedRef<HTMLElement> | tgt=ForwardedRef<HTMLElement>
+src/components/DropdownTrigger/DropdownTrigger.tsx:345 | NARROW | src=ForwardRefExoticComponent<Omit<TextDropdownTriggerProps<ElementType>, "ref"> & RefAttributes<HTMLElement>> | tgt=TextDropdownTriggerComponent
+src/components/LoadingSpinner/LoadingSpinner.tsx:35 | NARROW | src=string | tgt=LoadingSpinnerColor
+src/components/LoadingSpinner/LoadingSpinner.tsx:300 | UPCAST(assignable) | src=LoadingSpinnerSize | tgt="sm" | "rg" | "md" | "xl"
+src/components/Menu/DropdownMenu.tsx:143 | NARROW | src=EventTarget | null | tgt=Node | null
+src/components/Menu/DropdownMenu.tsx:156 | NARROW | src={ onOpenAutoFocus: (event: Event) => void; } | tgt=Omit<DropdownMenuContentProps & RefAttributes<HTMLDivElement>, "ref">
+src/components/OutlineButton/OutlineButton.tsx:86 | UPCAST(assignable) | src="button" | ForwardRefExoticComponent<HTMLAttributes<HTMLElement> & { children?: ReactNode; } & RefAttributes<HTMLElement | tgt=ElementType
+src/components/OutlineButton/OutlineButton.tsx:95 | UPCAST(assignable) | src=(instance: HTMLElement | null) => void | tgt=RefCallback<HTMLElement>
+src/components/OutlineButton/OutlineButton.tsx:97 | UPCAST(assignable) | src=RefObject<HTMLElement | null> | tgt=MutableRefObject<HTMLElement | null>
+src/components/OutlineButton/OutlineButton.tsx:155 | UPCAST(assignable) | src=(node: HTMLElement | null) => void | tgt=ForwardedRef<HTMLElement>
+src/components/OutlineButton/OutlineButton.tsx:297 | NARROW | src=ForwardRefExoticComponent<Omit<OutlineButtonProps<ElementType>, "ref"> & RefAttributes<HTMLElement>> | tgt=OutlineButtonComponent
+src/components/ProgressIndicator/ProgressIndicator.tsx:298 | REDUNDANT | src="sm" | "rg" | "md" | "xl" | tgt="sm" | "rg" | "md" | "xl"
+src/components/ShapeButton/ShapeButton.tsx:116 | UPCAST(assignable) | src="button" | ForwardRefExoticComponent<HTMLAttributes<HTMLElement> & { children?: ReactNode; } & RefAttributes<HTMLElement | tgt=ElementType
+src/components/ShapeButton/ShapeButton.tsx:117 | FROM-ANY | src=any | tgt=ShapeButtons
+src/components/ShapeButton/ShapeButton.tsx:118 | FROM-ANY | src=any | tgt=ShapeButtonVariant
+src/components/ShapeButton/ShapeButton.tsx:122 | REDUNDANT | src=ForwardedRef<HTMLElement> | tgt=ForwardedRef<HTMLElement>
+src/components/ShapeButton/ShapeButton.tsx:160 | NARROW | src=ForwardRefExoticComponent<Omit<ShapeButtonProps<ElementType>, "ref"> & RefAttributes<HTMLElement>> | tgt=ShapeButtonComponent
+src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx:67 | NARROW | src=LoadingSpinnerColor | (string & {}) | tgt=LoadingSpinnerColor
+src/components/Slider/Slider.tsx:296 | REDUNDANT | src=SliderVariant | tgt=SliderVariant
+src/components/Text/BaseText.tsx:80 | FROM-ANY | src=any | tgt=TextVariant
+src/components/Text/BaseText.tsx:88 | REDUNDANT | src=ForwardedRef<HTMLElement> | tgt=ForwardedRef<HTMLElement>
+src/components/Text/BaseText.tsx:106 | NARROW | src=ForwardRefExoticComponent<Omit<BaseTextProps<ElementType>, "ref"> & RefAttributes<HTMLElement>> | tgt=PolymorphicTextComponent<BaseTextOwnProps>
+src/components/Text/BaseText.tsx:130 | NARROW | src=ForwardRefExoticComponent<Omit<RoleTextProps<ElementType>, "ref"> & RefAttributes<HTMLElement>> | tgt=RoleTextComponent
+src/utils/color.ts:57 | NARROW | src=DsColor | tgt="text" | "primary" | "secondary" | "prominent" | "danger" | "danger-primary" | "danger-secondary" | "text-secondary" | "

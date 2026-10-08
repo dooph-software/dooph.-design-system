@@ -1,0 +1,99 @@
+src\utils\color.ts:19:  primary: 'var(--ui-color-primary)',
+src\utils\color.ts:20:  secondary: 'var(--ui-color-secondary)',
+src\utils\color.ts:21:  prominent: 'var(--ui-color-prominent)',
+src\utils\color.ts:22:  danger: 'var(--ui-color-danger-primary)',
+src\utils\color.ts:23:  'danger-primary': 'var(--ui-color-danger-primary)',
+src\utils\color.ts:24:  'danger-secondary': 'var(--ui-color-danger-secondary)',
+src\utils\color.ts:25:  text: 'var(--ui-color-text)',
+src\utils\color.ts:26:  'text-secondary': 'var(--ui-color-text-secondary)',
+src\utils\color.ts:27:  'text-tertiary': 'var(--ui-color-text-tertiary)',
+src\utils\color.ts:28:  'border-primary': 'var(--ui-color-border-primary)',
+src\utils\color.ts:29:  'border-secondary': 'var(--ui-color-border-secondary)',
+src\utils\color.ts:30:  'surface-primary': 'var(--ui-color-surface-primary)',
+src\utils\color.ts:31:  'surface-secondary': 'var(--ui-color-surface-secondary)',
+src\utils\color.ts:32:  'surface-page': 'var(--ui-color-surface-page)',
+src\utils\color.ts:35:  'prominent-color': 'var(--ui-prominent-color)',
+src\utils\color.ts:36:  'prominent-color-alt': 'var(--ui-prominent-color-alt)',
+src\utils\color.ts:37:  'prominent-color-ter': 'var(--ui-prominent-color-ter)',
+src\components\LoadingSpinner\spinnerGeometry.ts:7: *   - RENDERED SIZE (`cssSize`) — `var(--ui-size-spinner-*)`, applied as CSS.
+src\components\LoadingSpinner\spinnerGeometry.ts:36:  sm: "var(--ui-size-spinner-sm)",
+src\components\LoadingSpinner\spinnerGeometry.ts:37:  rg: "var(--ui-size-spinner-rg)",
+src\components\LoadingSpinner\spinnerGeometry.ts:38:  md: "var(--ui-size-spinner-md)",
+src\components\LoadingSpinner\spinnerGeometry.ts:39:  xl: "var(--ui-size-spinner-xl)",
+src\components\LoadingSpinner\spinnerGeometry.ts:79:   * Rendered size: `var(--ui-size-spinner-*)`. Apply it as a CSS width/height
+src\components\LoadingSpinner\LoadingSpinner.tsx:29:  primary: "var(--ui-color-primary)",
+src\components\LoadingSpinner\LoadingSpinner.tsx:30:  prominent: "var(--ui-color-prominent)",
+src\components\LoadingSpinner\LoadingSpinner.tsx:200:        stroke="var(--ui-color-border-primary)"
+src\components\LoadingSpinner\LoadingSpinner.tsx:259:          strokeWidth: "var(--ui-icon-stroke-width)",
+src\components\LinearProgressIndicator\LinearProgressIndicator.tsx:34:const DEFAULT_COLOR = 'var(--ui-color-primary)';
+src\components\CTAButton\CTAButton.tsx:20:    fontSize: "var(--ui-text-cta-standard)",
+src\components\CTAButton\CTAButton.tsx:26:    fontSize: "var(--ui-text-cta-big)",
+src\components\Icons\BaseIcon.tsx:10:  sm: "var(--ui-icon-sm)", // 12px
+src\components\Icons\BaseIcon.tsx:11:  rg: "var(--ui-icon-rg)", // 14px
+src\components\Icons\BaseIcon.tsx:12:  md: "var(--ui-icon-md)", // 16px
+src\components\Icons\BaseIcon.tsx:13:  lg: "var(--ui-icon-lg)", // 18px
+src\components\Icons\BaseIcon.tsx:61:      strokeWidth: strokeWidth ?? "var(--ui-icon-stroke-width)",
+src\components\OutlineButton\OutlineButton.tsx:34:  /** Background color for the left / larger orb. Defaults to `var(--ui-prominent-color-alt)`. */
+src\components\OutlineButton\OutlineButton.tsx:36:  /** Background color for the right / smaller orb. Defaults to `var(--ui-prominent-color-alt)`. */
+src\components\OutlineButton\OutlineButton.tsx:133:    const color1 = glowColor1 ?? "var(--ui-prominent-color-alt)";
+src\components\OutlineButton\OutlineButton.tsx:134:    const color2 = glowColor2 ?? "var(--ui-prominent-color-alt)";
+src\components\ProgressIndicator\ProgressIndicator.tsx:34:  primary: "var(--ui-color-primary)",
+src\components\ProgressIndicator\ProgressIndicator.tsx:35:  prominent: "var(--ui-color-prominent)",
+src\components\ProgressIndicator\ProgressIndicator.tsx:145:        stroke="var(--ui-color-border-primary)"
+src\components\ProgressIndicator\ProgressIndicator.tsx:238:          stroke="var(--ui-color-border-primary)"
+src\components\ShapeMorphSpinner\ShapeMorphSpinner.tsx:34:  primary: "var(--ui-color-primary)",
+src\components\ShapeMorphSpinner\ShapeMorphSpinner.tsx:35:  prominent: "var(--ui-color-prominent)",
+src\components\ShapeMorphSpinner\ShapeMorphSpinner.tsx:65:      width: `var(--ui-size-spinner-${size})`,
+src\components\ShapeMorphSpinner\ShapeMorphSpinner.tsx:66:      height: `var(--ui-size-spinner-${size})`,
+src\components\Slider\Slider.tsx:58:    color: 'var(--ui-color-primary)',
+src\components\Slider\Slider.tsx:59:    trackOpacity: 'var(--ui-slider-track-primary-active-opacity)',
+src\components\Slider\Slider.tsx:60:    stepActive: 'var(--ui-color-slider-step-primary-active)',
+src\components\Slider\Slider.tsx:63:    color: 'var(--ui-color-prominent)',
+src\components\Slider\Slider.tsx:64:    trackOpacity: 'var(--ui-slider-track-prominent-active-opacity)',
+src\components\Slider\Slider.tsx:65:    stepActive: 'var(--ui-color-slider-step-prominent-active)',
+src\components\Slider\Slider.tsx:73:    color: 'var(--ui-color-primary)',
+src\components\Slider\Slider.tsx:74:    trackOpacity: 'var(--ui-slider-track-primary-active-opacity)',
+src\components\Slider\Slider.tsx:75:    stepActive: 'var(--ui-color-slider-step-primary-active)',
+src\components\Slider\Slider.tsx:100:  `calc(${percent} / 100 * (100% - var(--ui-width-slider-handle)) + var(--ui-width-slider-handle) / 2)`;
+src\components\Slider\Slider.tsx:339:              '--ds-slider-pad': showSteps ? 'var(--ui-spacing-xs)' : '0px',
+src\components\Slider\Slider.tsx:344:            'h-[var(--ui-height-slider-handle)]',
+src\components\Slider\Slider.tsx:368:                'w-[max(0px,calc(var(--slider-pct)/100*(100%-var(--ui-width-slider-handle))-var(--ui-slider-track-gap)+var(--ds-slider-pad)))]',
+src\components\Slider\Slider.tsx:380:                'left-[min(100%,calc(var(--slider-pct)/100*(100%-var(--ui-width-slider-handle))+var(--ui-width-slider-handle)+var(--ui-slider-track-gap)))]',
+src\components\Slider\Slider.tsx:408:              'block h-[var(--ui-height-slider-handle)] w-[var(--ui-width-slider-handle)]',
+src\components\AIChat\AIContextGauge.tsx:9: *   `color={ratio > 0.9 ? "var(--ui-color-danger-primary)" : undefined}`.
+src\components\Text\BaseText.tsx:54: * `FontWeights`, `Tracking`), which resolve to `var(--ui-*)` so a consuming
+src\components\Text\textStyle.ts:25:/** Numbers mean px; strings (incl. `var(--ui-*)` tokens) pass through. */
+src\components\Sticker\Sticker.tsx:113:        ? resolveDsColor(color, "var(--ui-color-prominent)")
+src\components\Sticker\Sticker.tsx:125:                backgroundColor: `color-mix(in srgb, ${customColor} var(--ui-sticker-bg-opacity), transparent)`,
+src\components\Text\constants.ts:10: *   - devtools shows `font-weight: var(--ui-weight-medium)`, which reads as
+src\components\Text\constants.ts:33:  body: 'var(--ui-font-body)',
+src\components\Text\constants.ts:34:  button: 'var(--ui-font-button)',
+src\components\Text\constants.ts:35:  heading: 'var(--ui-font-heading)',
+src\components\Text\constants.ts:36:  label: 'var(--ui-font-label)',
+src\components\Text\constants.ts:37:  title: 'var(--ui-font-title)',
+src\components\Text\constants.ts:38:  hero: 'var(--ui-font-hero)',
+src\components\Text\constants.ts:39:  mono: 'var(--ui-font-mono)',
+src\components\Text\constants.ts:45:  label: 'var(--ui-text-label)',
+src\components\Text\constants.ts:46:  body: 'var(--ui-text-body)',
+src\components\Text\constants.ts:47:  heroBody: 'var(--ui-text-hero-body)',
+src\components\Text\constants.ts:48:  heroButton: 'var(--ui-text-hero-button)',
+src\components\Text\constants.ts:49:  mono: 'var(--ui-text-mono)',
+src\components\Text\constants.ts:50:  subheading: 'var(--ui-text-subheading)',
+src\components\Text\constants.ts:51:  heading: 'var(--ui-text-heading)',
+src\components\Text\constants.ts:52:  title: 'var(--ui-text-title)',
+src\components\Text\constants.ts:53:  hero: 'var(--ui-text-hero)',
+src\components\Text\constants.ts:59:  regular: 'var(--ui-weight-regular)',
+src\components\Text\constants.ts:60:  medium: 'var(--ui-weight-medium)',
+src\components\Text\constants.ts:61:  semibold: 'var(--ui-weight-semibold)',
+src\components\Text\constants.ts:62:  bold: 'var(--ui-weight-bold)',
+src\components\Text\constants.ts:68:  body: 'var(--ui-tracking-body)',
+src\components\Text\constants.ts:69:  label: 'var(--ui-tracking-label)',
+src\components\Text\constants.ts:70:  hero: 'var(--ui-tracking-hero)',
+src\components\Text\constants.ts:71:  mono: 'var(--ui-tracking-mono)',
+src\components\Text\constants.ts:110:  button: 'var(--ui-font-var-button)',
+src\components\Text\constants.ts:113:  heroButton: 'var(--ui-font-var-button)',
+src\components\Text\constants.ts:114:  body: 'var(--ui-font-var-body)',
+src\components\Text\constants.ts:115:  heroBody: 'var(--ui-font-var-body)',
+src\components\Text\constants.ts:116:  heading: 'var(--ui-font-var-heading)',
+src\components\Text\constants.ts:117:  subheading: 'var(--ui-font-var-heading)',
+src\components\Text\constants.ts:118:  mono: 'var(--ui-font-var-mono)',

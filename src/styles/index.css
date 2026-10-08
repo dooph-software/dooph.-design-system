@@ -13,13 +13,6 @@
 @custom-variant unselected (&:not([data-state="active"], [data-state="on"]));
 @plugin "tailwindcss-animate";
 
-/* Register so --progress-pct interpolates when LinearProgressIndicator value changes. */
-@property --progress-pct {
-  syntax: "<number>";
-  inherits: true;
-  initial-value: 0;
-}
-
 /*
  * SidebarWithHoverIcon rail — the two scalars the icon's path is a function of.
  * Registered so they INTERPOLATE: an unregistered custom property is a token
@@ -31,8 +24,9 @@
  * CSS owns the motion and the component owns only the geometry: it sets the two
  * targets as inline style and samples the interpolated values each frame to
  * write `d` (SVG path data is not itself animatable in every engine). So
- * duration, easing and reduced-motion are all tokens here, retunable by a
- * consumer, with no numbers mirrored into JavaScript to drift out of step.
+ * duration and easing come from the motion scale and reduced motion from its
+ * global block, all retunable by a consumer, with no numbers mirrored into
+ * JavaScript to drift out of step.
  */
 @property --ds-sidebar-rail-s {
   syntax: "<number>";
@@ -65,11 +59,32 @@
   initial-value: 0;
 }
 
+/* LoadingSpinner (flat) — Material's circular indeterminate dash, as two
+ * numbers animated on the <svg> once per --ui-spinner-duration:
+ *   --ds-spinner-grow  0 → 1 → 1   the arc's length, min → max sweep
+ *   --ds-spinner-tail  0 → .118 → .985  where the arc's tail sits, in turns
+ * Both arc paths compute their dashes from the same two values, so the arc
+ * and the track cannot drift apart. Registered so the animation interpolates
+ * numbers; inherited so the paths read the values animated on their <svg>. */
+@property --ds-spinner-grow {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --ds-spinner-tail {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 /*
  * @theme inline — maps --ui-* tokens into Tailwind utility namespaces.
  * "inline" means Tailwind emits var(--ui-*) references instead of the
  * resolved values, so overriding --ui-* at :root automatically updates
  * all generated utilities.
+ *
+ * Everything between the __GENERATED_THEME_*__ markers is written by
+ * scripts/sync-theme.mjs (npm run sync-tokens) — do not edit it by hand.
  */
 /* __GENERATED_THEME_START__ */
 @theme inline {
@@ -159,6 +174,7 @@
   --text-hero-button: var(--ui-text-hero-button);
   --text-mono: var(--ui-text-mono);
   --text-subheading: var(--ui-text-subheading);
+  --text-code-digit: var(--ui-text-code-digit);
   --text-heading: var(--ui-text-heading);
   --text-title: var(--ui-text-title);
   --text-hero: var(--ui-text-hero);
@@ -172,10 +188,14 @@
   --spacing-lg: var(--ui-spacing-lg);
   --spacing-xl: var(--ui-spacing-xl);
   --spacing-xxl: var(--ui-spacing-xxl);
+  --spacing-xxxl: var(--ui-spacing-xxxl);
+  --spacing-toast-inset: var(--ui-spacing-toast-inset);
+  --spacing-table-placeholder-y: var(--ui-spacing-table-placeholder-y);
   --radius-tight: var(--ui-radius-tight);
   --radius-mini: var(--ui-radius-mini);
   --radius-normal: var(--ui-radius-normal);
   --radius-soft: var(--ui-radius-soft);
+  --radius-outline-frame: var(--ui-radius-outline-frame);
   --radius-checkbox: var(--ui-radius-checkbox);
   --radius-avatar: var(--ui-radius-avatar);
   --radius-avatar-sm: var(--ui-radius-avatar-sm);
@@ -189,6 +209,8 @@
   --shadow-cta: var(--ui-shadow-cta);
   --shadow-focus-prominent: var(--ui-shadow-focus-prominent);
   --shadow-focus-primary: var(--ui-shadow-focus-primary);
+  --shadow-press-prominent: var(--ui-shadow-press-prominent);
+  --shadow-press-primary: var(--ui-shadow-press-primary);
   --text-cta-standard: var(--ui-text-cta-standard);
   --text-cta-big: var(--ui-text-cta-big);
   --color-sticker-prominent: var(--ui-color-sticker-prominent);
@@ -317,6 +339,19 @@
     letter-spacing: var(--ui-tracking-hero);
   }
 
+  /* Hero CTA label: the button role (family, axes) at semibold. Sized for the
+   * standard CTA; the big CTA sets --ui-text-cta-big through BaseText's
+   * fontSize prop. Spelled out like the hero-scale pair, so keep it in sync by
+   * hand if the button role gains a property. */
+  .text-style-cta {
+    font-family: var(--ui-font-button);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-cta-standard);
+    font-style: normal;
+    font-weight: var(--ui-weight-cta);
+    font-variation-settings: var(--ui-font-var-button);
+  }
+
 }
 
 @layer utilities {
@@ -326,6 +361,12 @@
   }
   .h-button-sm {
     height: var(--ui-height-button-sm);
+  }
+  .h-button-medium {
+    height: var(--ui-height-button-medium);
+  }
+  .h-button-big {
+    height: var(--ui-height-button-big);
   }
   .size-button {
     width: var(--ui-height-button);
@@ -343,16 +384,43 @@
     width: var(--ui-size-code-digit);
     height: var(--ui-size-code-digit);
   }
+  .size-checkbox-icon {
+    width: var(--ui-size-checkbox-icon);
+    height: var(--ui-size-checkbox-icon);
+  }
+  .size-avatar {
+    width: var(--ui-size-avatar);
+    height: var(--ui-size-avatar);
+  }
+  .size-avatar-sm {
+    width: var(--ui-size-avatar-sm);
+    height: var(--ui-size-avatar-sm);
+  }
+  .size-shape-button {
+    width: var(--ui-size-shape-button);
+    height: var(--ui-size-shape-button);
+  }
+  .h-menu-label {
+    height: var(--ui-height-menu-label);
+  }
+  .h-text-trigger {
+    height: var(--ui-height-text-trigger);
+  }
+  .h-linear-progress {
+    height: var(--ui-height-linear-progress);
+  }
+  /* The 160px menu floor as a merge-aware utility, for a root that also takes
+   * the consumer className (DropdownTrigger): a consumer `min-w-*` replaces it.
+   * `.ds-min-w-menu` carries the same value on menu items. */
+  .min-w-menu {
+    min-width: var(--ui-min-w-menu);
+  }
   .size-button-micro {
     width: var(--ui-height-button-micro);
     height: var(--ui-height-button-micro);
   }
-  .h-tab-micro {
-    height: var(--ui-height-tab-micro);
-  }
-  .size-tab-micro {
-    width: var(--ui-height-tab-micro);
-    height: var(--ui-height-tab-micro);
+  .h-button-micro {
+    height: var(--ui-height-button-micro);
   }
   .min-h-button {
     min-height: var(--ui-height-button);
@@ -377,8 +445,11 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    animation: ds-shimmer 2s linear infinite;
+    animation: ds-shimmer var(--ui-shimmer-duration)
+      var(--ui-motion-ease-linear) infinite;
   }
+  /* A loop, so the global scale collapse does not reach it: stop it and swap
+   * the sheen for the plain inherited colour. */
   @media (prefers-reduced-motion: reduce) {
     .ds-shimmer-text {
       animation: none;
@@ -418,10 +489,9 @@
   .ds-roll-hover-in {
     display: inline-block;
     transform-origin: 50% 50% calc(-1 * var(--ui-roll-hover-depth));
-    transition:
-      transform var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
-      filter var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
-      opacity var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1);
+    transition-property: transform, filter, opacity;
+    transition-duration: var(--ui-motion-duration-slower);
+    transition-timing-function: var(--ui-motion-ease-enter);
     transition-delay: calc(var(--i) * var(--ui-roll-hover-stagger));
   }
   /* absolute so the incoming face contributes no width; the outgoing face in
@@ -460,6 +530,8 @@
     opacity: 1;
   }
 
+  /* Kept beside the global block because it does more than shorten: it
+   * shows a static frame (the rest face only), so a hover never swaps faces. */
   @media (prefers-reduced-motion: reduce) {
     .ds-roll-hover-out,
     .ds-roll-hover-in {
@@ -503,15 +575,8 @@
   .ds-underline-link:hover,
   .group:hover .ds-underline-link,
   .ds-underline-link[data-active="true"] {
-    animation: ds-underline-wipe var(--ui-underline-link-duration)
-      var(--ui-underline-link-ease) both;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ds-underline-link:hover,
-    .group:hover .ds-underline-link,
-    .ds-underline-link[data-active="true"] {
-      animation: none;
-    }
+    animation: ds-underline-wipe var(--ui-motion-duration-slowest)
+      var(--ui-motion-ease-enter) both;
   }
 
   /* RollingDigitsText — 2D cash-register digit roll (no blur, no 3D).
@@ -592,14 +657,14 @@
   .ds-rolling-digits-wheel[data-entering],
   .ds-rolling-digits-sep[data-entering] {
     animation:
-      ds-rolling-digits-in var(--ui-rolling-digits-enter-duration)
-        var(--ui-rolling-digits-ease),
+      ds-rolling-digits-in var(--ui-motion-duration-slow)
+        var(--ui-motion-ease-enter),
       ds-rolling-digits-fade-in
         calc(
-          var(--ui-rolling-digits-enter-duration) *
+          var(--ui-motion-duration-slow) *
             var(--ui-rolling-digits-opacity-ratio)
         )
-        var(--ui-rolling-digits-ease);
+        var(--ui-motion-ease-enter);
   }
   /* Declared after the entering rule so it wins on source order when a wheel
    * that entered earlier is now leaving — both are single-class selectors.
@@ -608,14 +673,14 @@
   .ds-rolling-digits-wheel[data-exiting],
   .ds-rolling-digits-sep[data-exiting] {
     animation:
-      ds-rolling-digits-out var(--ui-rolling-digits-exit-duration)
-        var(--ui-rolling-digits-ease) forwards,
+      ds-rolling-digits-out var(--ui-motion-duration-base)
+        var(--ui-motion-ease-enter) forwards,
       ds-rolling-digits-fade-out
         calc(
-          var(--ui-rolling-digits-exit-duration) *
+          var(--ui-motion-duration-base) *
             var(--ui-rolling-digits-opacity-ratio)
         )
-        var(--ui-rolling-digits-ease) forwards;
+        var(--ui-motion-ease-enter) forwards;
   }
 
   /* Sets the wheel's baseline. Never visible; never removed from flow. */
@@ -649,9 +714,9 @@
      * symmetric per wheel instead of accumulating across the figure. */
     text-align: center;
     transform: translateY(calc(var(--ds-digit, 0) * -10%));
-    transition: transform var(--ui-rolling-digits-duration)
-      var(--ui-rolling-digits-ease);
-    /* At the 0ms default every delay computes to zero and the figure moves as
+    transition: transform var(--ui-motion-duration-base)
+      var(--ui-motion-ease-enter);
+    /* At the zero default every delay computes to zero and the figure moves as
      * one. Raising the token cascades right-to-left, ones place leading. */
     transition-delay: calc(var(--ds-place, 0) * var(--ui-rolling-digits-stagger));
   }
@@ -682,27 +747,16 @@
     font-size: var(--ui-rolling-digits-decimals-size);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    /* The roll is suppressed outright — it is pure decoration. Enter and exit
-     * are NOT: they are layout, and the exit animation's `animationend` is what
-     * unmounts a departing wheel. Collapsing them to 1ms keeps that event
-     * firing (`animation: none` would starve it and strand blank slots) while
-     * making the change read as instant. */
-    .ds-rolling-digits-col {
-      transition: none;
-      transition-delay: 0ms;
-    }
-    .ds-rolling-digits-wheel[data-entering],
-    .ds-rolling-digits-sep[data-entering],
-    .ds-rolling-digits-wheel[data-exiting],
-    .ds-rolling-digits-sep[data-exiting] {
-      animation-duration: 1ms;
-    }
-  }
+  /* Reduced motion needs no rule here: the global block in tokens.css
+   * collapses the scale and zeroes the stagger, so the roll and the slot
+   * enter/exit all become instant. The exit must still RUN rather than be
+   * removed — its `animationend` is what unmounts a departing wheel, and
+   * `animation: none` would starve it and strand blank slots. */
 
   /* RollChangeText. Real classes rather than arbitrary `animate-[…]` values so
-   * the timing lives in tokens — and so the reduced-motion case can collapse the
-   * duration instead of removing the animation. That distinction is
+   * the timing lives on the motion scale — and so reduced motion (the global
+   * block in tokens.css) collapses the duration instead of removing the
+   * animation. That distinction is
    * load-bearing: each node is retired by its own `animationend`, and
    * `animation: none` would starve that event and strand the old content on
    * screen forever.
@@ -714,65 +768,71 @@
    * the roll used to hitch. Both classes are removed the moment their animation
    * ends (the out node unmounts, the in node drops the class), so neither
    * strands a layer on settled content. */
+  /* The soft clip shared by RollChangeText and FadeChangeText (ChangeSwapShell).
+   * A vertical mask fades the rolling face out at the top and bottom instead of
+   * the old hard `overflow: hidden` slicing glyphs and their blur halo. The box
+   * gets --ui-roll-change-breathe of padding top and bottom, cancelled by an
+   * equal negative margin: its margin box (and so its outer size and baseline
+   * position in the line) is exactly what it was without either. The fade
+   * zones are exactly that breathing room (em stops, not a percentage): the
+   * resting line sits wholly in the opaque middle at any line-height, where an
+   * 18% stop would dim tall glyphs at a tight leading. The mask also clips to
+   * the border box, so nothing paints outside it. */
+  .ds-change-swap {
+    padding-block: var(--ui-roll-change-breathe);
+    margin-block: calc(var(--ui-roll-change-breathe) * -1);
+    mask-image: linear-gradient(
+      transparent,
+      #000 var(--ui-roll-change-breathe),
+      #000 calc(100% - var(--ui-roll-change-breathe)),
+      transparent
+    );
+  }
   .ds-roll-change-out {
-    animation: ds-roll-out var(--ui-roll-change-out-duration)
-      var(--ui-roll-change-out-ease) forwards;
+    animation: ds-roll-out var(--ui-motion-duration-base)
+      var(--ui-motion-ease-exit) forwards;
     will-change: transform, filter, opacity;
   }
   .ds-roll-change-in {
-    animation: ds-roll-in var(--ui-roll-change-in-duration)
-      var(--ui-roll-change-in-ease) both;
+    animation: ds-roll-in var(--ui-motion-duration-slow)
+      var(--ui-motion-ease-enter) both;
     will-change: transform, filter, opacity;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ds-roll-change-out,
-    .ds-roll-change-in {
-      animation-duration: 1ms;
-    }
   }
 
   /* FadeChangeText — the roll without blur: transform + opacity only, so
    * `will-change` names only those. Classes drop when each half ends (the out
    * node unmounts, the in node loses the class), so neither strands a layer on
-   * settled content. Reduced motion keeps a 1ms animation rather than `none`,
-   * because `animationend` is what retires each half. */
+   * settled content. Timing matches the roll's, on the motion scale. Reduced
+   * motion collapses the scale rather than removing the animation, because
+   * `animationend` is what retires each half. */
   .ds-fade-change-out {
-    animation: ds-fade-change-out var(--ui-fade-change-out-duration)
-      var(--ui-fade-change-out-ease) forwards;
+    animation: ds-fade-change-out var(--ui-motion-duration-base)
+      var(--ui-motion-ease-exit) forwards;
     will-change: transform, opacity;
   }
   .ds-fade-change-in {
-    animation: ds-fade-change-in var(--ui-fade-change-in-duration)
-      var(--ui-fade-change-in-ease) both;
+    animation: ds-fade-change-in var(--ui-motion-duration-slow)
+      var(--ui-motion-ease-enter) both;
     will-change: transform, opacity;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ds-fade-change-out,
-    .ds-fade-change-in {
-      animation-duration: 1ms;
-    }
   }
 
   /* SidebarWithHoverIcon rail. This rule is the icon's entire motion system —
    * the component sets the two targets and reads back what CSS interpolated.
-   * Hover is the faster of the two because it answers a pointer; the traverse
-   * is a state change and carries more weight.
+   * Two independent motions: the rail TRAVERSING the frame when `side` flips
+   * (`slow`), and pulling out into a chevron on hover (`base`). Hover is the
+   * faster of the two because it answers a pointer; the traverse is a state
+   * change and carries more weight.
    *
-   * Under reduced motion the durations go to zero rather than the transitions
-   * being removed: the component's sampling loop terminates when the values
-   * reach their targets, so a zero duration means it writes the final path once
-   * and stops on the very first frame. */
+   * Under reduced motion the global block collapses both durations to an
+   * instant rather than the transitions being removed: the component's sampling loop
+   * terminates when the values reach their targets, so it writes the final
+   * path within a frame and stops. */
   .ds-sidebar-rail {
     transition:
-      --ds-sidebar-rail-s var(--ui-sidebar-icon-duration)
-        var(--ui-sidebar-icon-ease),
-      --ds-sidebar-rail-h var(--ui-sidebar-icon-hover-duration)
-        var(--ui-sidebar-icon-ease);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ds-sidebar-rail {
-      transition-duration: 0ms;
-    }
+      --ds-sidebar-rail-s var(--ui-motion-duration-slow)
+        var(--ui-motion-ease-enter),
+      --ds-sidebar-rail-h var(--ui-motion-duration-base)
+        var(--ui-motion-ease-enter);
   }
 
   /* MorphRotationShape — CSS owns every duration and curve; the component only
@@ -783,16 +843,22 @@
    * registered, so it inherits from that ancestor, and
    * --ds-shape-morph-nudge (unregistered) is the hover lean input.
    *
-   * Reduced motion shortens the transition to 1ms rather than 0: a 0ms
-   * transition fires no transitionrun, and embedded mode has no other signal
-   * that its target moved. Autoplay and passive spinning stop outright. */
+   * The step runs on the generated spring (--ui-shape-morph-*, off the
+   * scale); the hover lean runs on the scale (`base`, `enter`).
+   *
+   * Reduced motion: the step's duration is NOT on the scale (and `timing` may
+   * set it inline), so the global block cannot reach it. This rule shortens
+   * every transition here to the scale's own collapsed value — non-zero,
+   * because a zero-length transition fires no transitionrun and embedded mode
+   * has no other signal that its target moved. Autoplay and passive spinning
+   * are loops and stop outright. */
   .ds-shape-morph {
     --ds-shape-morph-step: var(--ds-shape-morph-target, 0);
     --ds-shape-morph-lean: var(--ds-shape-morph-nudge, 0);
     transition:
       --ds-shape-morph-step var(--ui-shape-morph-duration) var(--ui-shape-morph-ease),
-      --ds-shape-morph-lean var(--ui-shape-morph-nudge-duration)
-        var(--ui-shape-morph-nudge-ease);
+      --ds-shape-morph-lean var(--ui-motion-duration-base)
+        var(--ui-motion-ease-enter);
   }
   .ds-shape-morph[data-mode="autoplay"] {
     animation: ds-shape-morph-clock var(--ui-shape-morph-interval) linear infinite;
@@ -805,10 +871,112 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .ds-shape-morph {
-      transition-duration: 1ms;
+      /* Inside this query the scale is already collapsed, so this is the
+       * global reduced duration — one source, not a second literal. */
+      transition-duration: var(--ui-motion-duration-fast);
     }
     .ds-shape-morph[data-mode="autoplay"],
     .ds-shape-morph-passive-spin {
+      animation: none;
+    }
+  }
+
+  /* LoadingSpinner — CSS owns the clock (architecture Rule 6); the component
+   * owns geometry only, written as inline custom properties on the <svg>:
+   *   --ds-spinner-c            circumference of the arc path, user units
+   *   --ds-spinner-gap          visual-gap allowance between the arcs,
+   *                             as a fraction of one turn
+   *   --ds-spinner-sweep-min/-max  the arc's length range, fractions of a turn
+   *   --ds-spinner-time-scale   per-size factor on the spin duration
+   *
+   * Flat: Material's circular indeterminate recipe. The group turns at a
+   * constant rate, one turn per --ui-spinner-rotate-duration. On the <svg>,
+   * --ds-spinner-grow and --ds-spinner-tail (ds-spinner-dash keyframes, on
+   * the standard curve per segment) move the arc along its path: first the
+   * head races ahead while the tail creeps (the arc grows to its max sweep),
+   * then the tail chases the head, which is held at the end of the first lap
+   * (sweep is clipped to 1 − tail), so the arc shrinks to a dot and the cycle
+   * restarts from it. Turn and dash run as two independent loops, as in
+   * Material.
+   *
+   * The path is a TWO-lap open circle starting one gap before 12 o'clock, so
+   * path position p (in turns along the path) sits p − gap turns past
+   * 12 o'clock. The arc covers [gap + tail, gap + tail + sweep] and the track, its
+   * complement a gap clear of each end, [tail + sweep + 2·gap, tail + 1]:
+   * both stay strictly inside (0, 2) turns, so neither dash ever reaches
+   * either end of the path (a dash cut by the path's seam splits in two and
+   * its round caps flash). Each dash pattern's gap is the whole path (2C),
+   * so no second dash ever appears. Both dashes are positioned in user units
+   * (× 1px, which is one user unit inside an SVG).
+   *
+   * Reduced motion: loops are off the scale, so the global block cannot
+   * reach them. The flat arc freezes at its longest, tail at 12 o'clock;
+   * the spokes and star stop turning. */
+  .ds-spinner-flat {
+    animation: ds-spinner-dash var(--ui-spinner-duration)
+      var(--ui-motion-ease-standard) infinite;
+  }
+  .ds-spinner-flat-turn {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation: ds-spinner-rotate var(--ui-spinner-rotate-duration)
+      var(--ui-motion-ease-linear) infinite;
+  }
+  .ds-spinner-flat-arc {
+    --ds-spinner-sweep: min(
+      calc(
+        var(--ds-spinner-sweep-min) +
+          (var(--ds-spinner-sweep-max) - var(--ds-spinner-sweep-min)) *
+          var(--ds-spinner-grow)
+      ),
+      calc(1 - var(--ds-spinner-tail))
+    );
+  }
+  /* Active arc: starts `tail` past 12 o'clock and runs `sweep` of a turn. */
+  .ds-spinner-flat-indicator {
+    stroke-dasharray:
+      calc(var(--ds-spinner-sweep) * var(--ds-spinner-c) * 1px)
+      calc(var(--ds-spinner-c) * 2px);
+    stroke-dashoffset: calc(
+      (var(--ds-spinner-gap) + var(--ds-spinner-tail)) *
+        var(--ds-spinner-c) * -1px
+    );
+  }
+  /* Track: the complement, a gap clear of the arc at both ends. */
+  .ds-spinner-flat-track {
+    stroke-dasharray:
+      max(
+        0px,
+        calc(
+          (1 - var(--ds-spinner-sweep) - 2 * var(--ds-spinner-gap)) *
+            var(--ds-spinner-c) * 1px
+        )
+      )
+      calc(var(--ds-spinner-c) * 2px);
+    stroke-dashoffset: calc(
+      (
+          var(--ds-spinner-tail) + var(--ds-spinner-sweep) + 2 *
+            var(--ds-spinner-gap)
+        ) *
+        var(--ds-spinner-c) * -1px
+    );
+  }
+  /* Spokes and star: a constant linear turn of an inner group. */
+  .ds-spinner-spin {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation: ds-spinner-rotate
+      calc(var(--ui-spinner-spokes-duration) * var(--ds-spinner-time-scale, 1))
+      var(--ui-motion-ease-linear) infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-spinner-flat {
+      animation: none;
+      --ds-spinner-grow: 1;
+      --ds-spinner-tail: 0;
+    }
+    .ds-spinner-flat-turn,
+    .ds-spinner-spin {
       animation: none;
     }
   }
@@ -817,24 +985,57 @@
    * (the trigger root): Radix data-state, :hover, and the disabled forms.
    * The shape is painted by currentColor, so every state is a colour here. */
   .ds-dropdown-caret {
-    --ds-dropdown-caret-frame: calc(var(--ui-height-button) - var(--ui-spacing-rg));
+    --ds-dropdown-caret-frame: calc(var(--ui-height-button) - var(--ui-spacing-md));
     /* Closed: the primary button's background. */
     color: var(--ui-color-primary);
-    transition: color var(--ui-shape-morph-nudge-duration) var(--ui-shape-morph-nudge-ease);
-  }
-  .ds-dropdown-caret-frame {
-    width: var(--ds-dropdown-caret-frame);
-    height: var(--ds-dropdown-caret-frame);
+    transition: color var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
   }
   .ds-dropdown-caret-chevron {
-    color: var(--ui-color-primary-foreground);
     transition:
       rotate var(--ui-shape-morph-duration) var(--ui-shape-morph-ease),
-      color var(--ui-shape-morph-nudge-duration) var(--ui-shape-morph-nudge-ease);
+      color var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
   }
+  /* Expressive detail: the caret's SHAPE, read from --ui-caret-shape-scale
+   * (an expression token; the practical preset sets it to 0). Every read of it
+   * lives in a .ds-expr-caret-shape rule.
+   *   1  the signature caret: a square the trigger's height, the morphing
+   *      shape in a frame of height-button minus spacing-md, and the chevron in
+   *      the primary FOREGROUND, because it sits on the shape.
+   *   0  a plain chevron: no frame (the shape fills the frame, so it draws
+   *      nothing), the root shrinks to the chevron plus a trailing inset that
+   *      mirrors the host's leading ds-pl-ui-md (+1px for the -mr-px pull over
+   *      the border), and the chevron takes the trigger's text colour.
+   * Values in between interpolate; 0 and 1 are the designed settings. The
+   * frame may be narrower than the chevron: it overflows centred, and the
+   * root's own width is what lays out. */
+  .ds-expr-caret-shape {
+    width: calc(
+      var(--ui-height-button) * var(--ui-caret-shape-scale) +
+        (var(--ui-icon-rg) + var(--ui-spacing-md) + 1px) *
+        (1 - var(--ui-caret-shape-scale))
+    );
+    padding-inline-end: calc(
+      (var(--ui-spacing-md) + 1px) * (1 - var(--ui-caret-shape-scale))
+    );
+  }
+  .ds-expr-caret-shape .ds-dropdown-caret-frame {
+    width: calc(var(--ds-dropdown-caret-frame) * var(--ui-caret-shape-scale));
+    height: calc(var(--ds-dropdown-caret-frame) * var(--ui-caret-shape-scale));
+  }
+  .ds-expr-caret-shape .ds-dropdown-caret-chevron {
+    color: color-mix(
+      in srgb,
+      var(--ui-color-primary-foreground)
+        clamp(0%, calc(var(--ui-caret-shape-scale) * 100%), 100%),
+      var(--ui-color-secondary-foreground)
+    );
+  }
+  /* Expressive detail: the hover NUDGE, read from --ui-caret-nudge (an
+   * expression token, following --ui-shape-morph-nudge by default; the
+   * practical preset sets it to 0). */
   .ds-dropdown-caret-host:hover:not(:disabled):not([aria-disabled="true"]):not([data-disabled])
-    .ds-dropdown-caret {
-    --ds-shape-morph-nudge: var(--ui-shape-morph-nudge);
+    .ds-expr-caret-nudge {
+    --ds-shape-morph-nudge: var(--ui-caret-nudge);
   }
   .ds-dropdown-caret-host[data-state="open"] .ds-dropdown-caret {
     --ds-shape-morph-target: 1;
@@ -855,12 +1056,20 @@
   .ds-dropdown-caret-host:is(:disabled, [aria-disabled="true"], [data-disabled])
     .ds-dropdown-caret-chevron {
     color: var(--ui-color-secondary-foreground);
+  }
+  /* Content-only fade, for hosts whose surface stays opaque (TypeableDropdownTrigger).
+   * A host carrying ds-disabled-state already fades as a whole. */
+  .ds-dropdown-caret-host:not(.ds-disabled-state):is(:disabled, [aria-disabled="true"], [data-disabled])
+    .ds-dropdown-caret-chevron {
     opacity: var(--ui-opacity-disabled);
   }
+  /* The chevron's flip rides the shape-morph spring, which is off the scale,
+   * so the global block cannot reach it. Inside this query the scale is
+   * already collapsed: this borrows that one reduced duration. */
   @media (prefers-reduced-motion: reduce) {
     .ds-dropdown-caret,
     .ds-dropdown-caret-chevron {
-      transition-duration: 1ms;
+      transition-duration: var(--ui-motion-duration-fast);
     }
   }
 
@@ -878,15 +1087,23 @@
    * `grid-template-columns: 1fr -> 0fr` slot: that sizes rows fine, but for a
    * COLUMN in a shrink-to-fit container the `overflow: hidden` item has an
    * automatic minimum of 0, so `1fr` has no free space to claim and collapses
-   * the content to nothing. */
+   * the content to nothing.
+   *
+   * Timing is on the motion scale, one shared `enter` curve. The reveal
+   * (`slower`) is deliberately slower than a roll: it is motion the eye is
+   * meant to follow. The collapse (`slow`) is shorter because tucking away is
+   * the half nobody needs to read, and because a value CHANGE runs both back
+   * to back. One curve, unlike the roll's split pair: both halves are the SAME
+   * slot moving, and an accelerating collapse reads as the content being
+   * yanked rather than tucked. */
   .ds-reveal-change {
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
     overflow: hidden;
     width: 0;
-    transition: width var(--ui-reveal-change-out-duration)
-      var(--ui-reveal-change-ease);
+    transition: width var(--ui-motion-duration-slow)
+      var(--ui-motion-ease-enter);
   }
   .ds-reveal-change[data-direction="right"] {
     justify-content: flex-start;
@@ -896,7 +1113,7 @@
    * so the slot is never briefly empty; nothing animates on that first render. */
   .ds-reveal-change[data-open="true"] {
     width: var(--ds-reveal-change-width, auto);
-    transition-duration: var(--ui-reveal-change-in-duration);
+    transition-duration: var(--ui-motion-duration-slower);
   }
   .ds-reveal-change-content {
     display: inline-flex;
@@ -908,14 +1125,9 @@
   /* Reduced motion still needs the transition to RUN, just instantly: the
    * content swap at the end of a collapse and the `onSettled` callback both
    * hang off transitionend, and `transition: none` would starve them —
-   * stranding the outgoing content on screen forever. 1ms reads as instant and
-   * still fires. Same trade the rolling text makes. */
-  @media (prefers-reduced-motion: reduce) {
-    .ds-reveal-change,
-    .ds-reveal-change[data-open="true"] {
-      transition-duration: 1ms;
-    }
-  }
+   * stranding the outgoing content on screen forever. The global block in
+   * tokens.css collapses the scale to a non-zero instant for exactly this
+   * reason, so no rule is needed here. Same trade the rolling text makes. */
 }
 
 @keyframes ds-shape-morph-clock {
@@ -933,16 +1145,31 @@
 }
 
 /*
- * Loading spinner keyframes — defined outside @layer so they are globally
- * reachable from SVG element animations applied via inline style.
+ * Loading spinner keyframes — read by the .ds-spinner-* helpers above.
  *
- * ds-spinner-rotate: continuous 360° spin for the wavy LoadingSpinner SVG
- * container. The flat variant is now fully rAF-driven and does not use CSS
- * animation; this keyframe is only referenced by WavySpinner.
+ * ds-spinner-rotate: one full turn, for every variant's turning group.
+ * ds-spinner-dash: the flat arc's Material dash cycle. The stops are
+ *   Material's own, rescaled from its 44-unit circle (circumference ≈ 126.9):
+ *   dash 1 → 100 → 100 becomes grow 0 → 1 → 1 (min → max sweep), and offset
+ *   0 → −15 → −125 becomes tail 0 → 15/126.9 → 125/126.9 of a turn.
  */
 @keyframes ds-spinner-rotate {
   to {
     transform: rotate(360deg);
+  }
+}
+@keyframes ds-spinner-dash {
+  0% {
+    --ds-spinner-grow: 0;
+    --ds-spinner-tail: 0;
+  }
+  50% {
+    --ds-spinner-grow: 1;
+    --ds-spinner-tail: 0.118;
+  }
+  100% {
+    --ds-spinner-grow: 1;
+    --ds-spinner-tail: 0.985;
   }
 }
 
@@ -1025,21 +1252,4 @@
   50%    { background-size: 0% var(--ds-underline-thickness, var(--ui-underline-link-thickness));   background-position-x: 100%; }
   50.01% { background-size: 0% var(--ds-underline-thickness, var(--ui-underline-link-thickness));   background-position-x: 0%; }
   100%   { background-size: 100% var(--ds-underline-thickness, var(--ui-underline-link-thickness)); background-position-x: 0%; }
-}
-
-/* AI chat streaming animation (AITextPart / AIThinkingPart `streamingAnimation`).
- * Each block of streamed prose rises into place out of a blur. Every value is a
- * --ui-chat-stream-* token. Lives outside @layer with the package's other
- * keyframes. */
-@keyframes ds-chat-stream-in {
-  from {
-    opacity: 0;
-    filter: blur(var(--ui-chat-stream-blur));
-    transform: translateY(var(--ui-chat-stream-rise));
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-    transform: translateY(0);
-  }
 }

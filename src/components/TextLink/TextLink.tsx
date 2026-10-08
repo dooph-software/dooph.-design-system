@@ -19,7 +19,7 @@ const TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(
         ref={ref}
         className={cn(
           "text-style-body text-ghost-fg cursor-pointer",
-          "transition-colors duration-100",
+          "ds-motion-state",
           "hover:text-ghost-fg-active active:text-ghost-fg-active",
           "ds-focus-visible-ring rounded-tight",
           className,

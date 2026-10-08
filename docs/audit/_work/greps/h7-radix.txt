@@ -1,0 +1,39 @@
+src\components\Menu\index.ts:4:  DropdownMenuPortal,
+src\components\Menu\DropdownMenuSearch.tsx:47:      event.stopPropagation();
+src\components\Menu\DropdownMenu.tsx:89:const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+src\components\Menu\DropdownMenu.tsx:104:    portalProps?: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>;
+src\components\Menu\DropdownMenu.tsx:126:          event.preventDefault();
+src\components\Menu\DropdownMenu.tsx:137:        event.preventDefault();
+src\components\Menu\DropdownMenu.tsx:145:        event.preventDefault();
+src\components\Menu\DropdownMenu.tsx:182:      <DropdownMenuPrimitive.Portal {...portalProps}>
+src\components\Menu\DropdownMenu.tsx:184:      </DropdownMenuPrimitive.Portal>
+src\components\Menu\DropdownMenu.tsx:287: * first, then preventDefault (Radix's public keep-open API) unless they
+src\components\Menu\DropdownMenu.tsx:305:      event.preventDefault();
+src\components\Menu\DropdownMenu.tsx:410:  DropdownMenuPortal,
+src\components\VerificationCode\VerificationCodeInput.tsx:99:        event.preventDefault();
+src\components\VerificationCode\VerificationCodeInput.tsx:112:        event.preventDefault();
+src\components\VerificationCode\VerificationCodeInput.tsx:117:        event.preventDefault();
+src\components\VerificationCode\VerificationCodeInput.tsx:123:      event.preventDefault();
+src\components\Input\Input.tsx:145:      event.preventDefault();
+src\components\Tooltip\Tooltip.tsx:37:  portalProps?: ComponentPropsWithoutRef<typeof TooltipPrimitive.Portal>;
+src\components\Tooltip\Tooltip.tsx:84:      <TooltipPrimitive.Portal {...portalProps}>
+src\components\Tooltip\Tooltip.tsx:86:      </TooltipPrimitive.Portal>
+src\components\Popover\Popover.tsx:14:const PopoverPortal = PopoverPrimitive.Portal;
+src\components\Popover\Popover.tsx:22:  portalProps?: ComponentPropsWithoutRef<typeof PopoverPrimitive.Portal>;
+src\components\Popover\Popover.tsx:61:      <PopoverPrimitive.Portal {...portalProps}>{content}</PopoverPrimitive.Portal>
+src\components\Popover\Popover.tsx:74:  PopoverPortal,
+src\components\Popover\index.ts:6:  PopoverPortal,
+src\components\Sheet\Sheet.tsx:13:/* ── Root / Trigger / Portal / Close (thin pass-throughs) ─────────── */
+src\components\Sheet\Sheet.tsx:17:const SheetPortal = DialogPrimitive.Portal;
+src\components\Sheet\Sheet.tsx:138:    <SheetPortal>
+src\components\Sheet\Sheet.tsx:147:    </SheetPortal>
+src\components\Sheet\Sheet.tsx:184:  SheetPortal,
+src\components\Slider\Slider.tsx:250:      event.preventDefault(); // stops Radix moving by the fine drag step
+src\components\AIChat\AIPromptInput.tsx:142:            event.preventDefault();
+src\components\AIChat\AIPromptInput.tsx:220:          event.preventDefault();
+src\components\Calendar\Calendar.tsx:312:      event.preventDefault();
+src\components\Modal\Modal.tsx:11:/* ── Root / Trigger / Portal / Close (thin pass-throughs) ─────────── */
+src\components\Modal\Modal.tsx:15:const ModalPortal = DialogPrimitive.Portal;
+src\components\Modal\Modal.tsx:64:  <ModalPortal>
+src\components\Modal\Modal.tsx:84:  </ModalPortal>
+src\components\Modal\Modal.tsx:117:  ModalPortal,

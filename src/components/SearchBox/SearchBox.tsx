@@ -1,8 +1,7 @@
-"use client";
-
 import { forwardRef, type InputHTMLAttributes } from 'react';
 import { cn } from '../../utils/cn';
 import { HotkeyIndicator } from '../HotkeyIndicator/HotkeyIndicator';
+import { IconSize, SearchIcon } from '../Icons';
 
 export interface SearchBoxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** Keyboard shortcut keys displayed on the right. E.g. ['⌘', 'K'] or ['Ctrl', 'k']. */
@@ -15,56 +14,38 @@ export interface SearchBoxProps extends Omit<InputHTMLAttributes<HTMLInputElemen
  * A search input field styled per the design system.
  * Larger corner radius (rounded-soft) and leading search icon distinguish it from Input.
  * Accepts an optional keyboard shortcut indicator on the trailing edge.
+ * Twin of `DropdownMenuSearch` (same icon + input + hotkey row, no menu): apply row fixes to both.
+ * `className` styles the bordered field `<div>`; `ref`, `style` and every other prop go to the `<input>`.
  *
  * @example
  * <SearchBox placeholder="Search..." shortcut={['⌘', 'K']} />
  */
 const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
-  ({ className, shortcut, showShortcut = !!shortcut, placeholder = 'Search', ...props }, ref) => {
+  ({ className, shortcut, showShortcut = !!shortcut, placeholder = 'Search', disabled, ...props }, ref) => {
     return (
       <div
+        data-disabled={disabled ? '' : undefined}
         className={cn(
-          'flex items-center gap-2',
+          'flex items-center gap-sm',
           'bg-secondary border border-solid border-border-primary',
           'rounded-soft',
-          'ds-pl-ui-md ds-pr-ui-rg ds-py-ui-rg',
+          'ds-pl-ui-lg ds-pr-ui-md ds-py-ui-md',
           'ds-min-w-search-box',
-          'transition-all duration-100',
-          'hover:border-input-border-hover',
+          'ds-motion-state',
+          '[&:not([data-disabled])]:hover:border-input-border-hover',
           'focus-within:border-input-border-focus ds-focus-within-ring',
+          'ds-radix-data-disabled data-[disabled]:bg-secondary-disabled data-[disabled]:border-secondary-border-disabled',
           className
         )}
       >
-        {/* Search icon */}
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          aria-hidden
-          focusable="false"
-          className="shrink-0 text-text-tertiary"
-        >
-          <circle
-            cx="7"
-            cy="7"
-            r="4.25"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M10.5 10.5L13 13"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
+        {/* Search icon — the DS glyph, the same one DropdownMenuSearch draws */}
+        <SearchIcon size={IconSize.md} className="shrink-0 text-text-tertiary" />
 
         {/* Native input */}
         <input
           ref={ref}
           placeholder={placeholder}
+          disabled={disabled}
           className={cn(
             'flex-1 min-w-0 bg-transparent outline-none',
             'text-style-button text-text placeholder:text-text-tertiary',

@@ -1,0 +1,81 @@
+## as-CSSProperties (15)
+src/components/AIChat/AIModelSelect.tsx:90 | { ...style, ...(color ? { "--ds-chat-model-color": resolveDsColor(color, "") } : {}), } as CSSProperties
+src/components/AnimatedText/FadeChangeText.tsx:69 | { "--ds-roll-dir": direction === RollDirection.up ? -1 : 1, ...style, } as CSSProperties
+src/components/AnimatedText/RevealChangeText.tsx:233 | { ...(width === null ? {} : { "--ds-reveal-change-width": `${width}px` }), ...style, } as CSSProperties
+src/components/AnimatedText/RollChangeText.tsx:65 | { "--ds-roll-dir": direction === RollDirection.up ? -1 : 1, ...style, } as CSSProperties
+src/components/AnimatedText/RollHoverText.tsx:55 | { "--ds-roll-dir": direction === RollDirection.up ? -1 : 1, ...style, } as CSSProperties
+src/components/AnimatedText/RollHoverText.tsx:81 | { "--i": index++ } as CSSProperties
+src/components/AnimatedText/RollingDigitsText.tsx:123 | { "--ds-digit": state.digit, "--ds-place": state.place, } as CSSProperties
+src/components/AnimatedText/UnderlineLinkText.tsx:49 | { ...(thickness != null ? { "--ds-underline-thickness": toLength(thickness) } : {}), ...(offset != null ? { "-
+src/components/LinearProgressIndicator/LinearProgressIndicator.tsx:49 | { ...style, '--progress-pct': pct, '--ds-progress-color': resolveDsColor(color, DEFAULT_COLOR), } as CSSProper
+src/components/LoadingSpinner/LoadingSpinner.tsx:255 | { width: cssSize, height: cssSize, stroke: strokeColor, strokeWidth: "var(--ui-icon-stroke-width)", animation:
+src/components/MorphRotationShape/MorphRotationShape.tsx:347 | styleVars as CSSProperties
+src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx:140 | { "--ds-sidebar-rail-s": targetS, "--ds-sidebar-rail-h": targetH, } as CSSProperties
+src/components/Slider/Slider.tsx:330 | { ...style, '--slider-pct': pct, '--ds-slider-color': resolveDsColor(color, paints.color), '--ds-slider-track-
+src/components/Table/Table.tsx:31 | { "--table-cols": columns, ...(rowHeight ? { "--table-row-height": rowHeight } : {}), ...style, } as React.CSS
+src/components/Text/BaseText.tsx:95 | { ...typography, ...style } as CSSProperties
+
+## as (25)
+src/components/AIChat/AIPromptInput.tsx:177 | ref as { current: T | null }
+src/components/AnimatedText/RollingDigitsText.tsx:237 | props as RollingDigitsTextBaseProps & { smallDecimals?: boolean; smallDecimalsComponent?: SmallDecimalsCompone
+src/components/CopyButton/CopyButton.tsx:52 | e as never
+src/components/CTAButton/CTAButton.tsx:122 | children as ReactElement
+src/components/LoadingSpinner/LoadingSpinner.tsx:35 | color as LoadingSpinnerColor
+src/components/LoadingSpinner/LoadingSpinner.tsx:300 | size as SpinnerSizeKey
+src/components/Menu/DropdownMenu.tsx:143 | event.target as Node | null
+src/components/MorphRotationShape/engine/cubic.ts:80 | b as number
+src/components/MorphRotationShape/engine/cubic.ts:81 | c as number
+src/components/MorphRotationShape/engine/cubic.ts:82 | d as number
+src/components/MorphRotationShape/engine/cubic.ts:83 | e as number
+src/components/MorphRotationShape/engine/cubic.ts:84 | f as number
+src/components/MorphRotationShape/engine/cubic.ts:85 | g as number
+src/components/MorphRotationShape/engine/cubic.ts:86 | h as number
+src/components/MorphRotationShape/engine/polygon.ts:172 | null as Cubic | null
+src/components/MorphRotationShape/engine/polygon.ts:173 | null as Cubic | null
+src/components/MorphRotationShape/engine/polygon.ts:174 | [] as Cubic[]
+src/components/ProgressIndicator/ProgressIndicator.tsx:298 | size as SpinnerSizeKey
+src/components/ShapeButton/ShapeButton.tsx:117 | shape as ShapeButtons
+src/components/ShapeButton/ShapeButton.tsx:118 | variant as ShapeButtonVariant
+src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx:67 | color as LoadingSpinnerColor
+src/components/Slider/Slider.tsx:296 | variant as SliderVariant
+src/components/Text/BaseText.tsx:80 | variant as TextVariant
+src/components/Text/BaseText.tsx:106 | BaseTextBase as PolymorphicTextComponent<BaseTextOwnProps>
+src/utils/color.ts:57 | color as DsColorToken
+
+## as-Ref (11)
+src/components/AnimatedText/RollingDigitsText.tsx:306 | RollingDigitsTextBase as ( props: RollingDigitsTextProps & { ref?: React.Ref<HTMLSpanElement> }, ) => ReactNod
+src/components/Button/Button.tsx:129 | ref as ForwardedRef<HTMLElement>
+src/components/CopyButton/CopyButton.tsx:72 | ref as React.Ref<HTMLButtonElement>
+src/components/DropdownTrigger/DropdownTrigger.tsx:56 | ref as ForwardedRef<HTMLElement>
+src/components/DropdownTrigger/DropdownTrigger.tsx:317 | ref as ForwardedRef<HTMLElement>
+src/components/Menu/DropdownMenu.tsx:156 | { onOpenAutoFocus: handleOpenAutoFocus, } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+src/components/OutlineButton/OutlineButton.tsx:95 | ref as RefCallback<HTMLElement>
+src/components/OutlineButton/OutlineButton.tsx:97 | ref as MutableRefObject<HTMLElement | null>
+src/components/OutlineButton/OutlineButton.tsx:155 | composedRef as ForwardedRef<HTMLElement>
+src/components/ShapeButton/ShapeButton.tsx:122 | ref as ForwardedRef<HTMLElement>
+src/components/Text/BaseText.tsx:88 | ref as ForwardedRef<HTMLElement>
+
+## as-Component/ElementType (11)
+src/components/Button/Button.tsx:126 | (asChild ? Slot : "button") as ElementType
+src/components/Button/Button.tsx:139 | ButtonBase as ButtonComponent
+src/components/DropdownTrigger/DropdownTrigger.tsx:53 | (asChild ? Slot : "button") as ElementType
+src/components/DropdownTrigger/DropdownTrigger.tsx:80 | DropdownTriggerBase as DropdownTriggerComponent
+src/components/DropdownTrigger/DropdownTrigger.tsx:314 | (asChild ? Slot : "button") as ElementType
+src/components/DropdownTrigger/DropdownTrigger.tsx:345 | TextDropdownTriggerBase as TextDropdownTriggerComponent
+src/components/OutlineButton/OutlineButton.tsx:86 | (asChild ? Slot : "button") as ElementType
+src/components/OutlineButton/OutlineButton.tsx:297 | OutlineButtonBase as OutlineButtonComponent
+src/components/ShapeButton/ShapeButton.tsx:116 | (asChild ? Slot : "button") as ElementType
+src/components/ShapeButton/ShapeButton.tsx:160 | ShapeButtonBase as ShapeButtonComponent
+src/components/Text/BaseText.tsx:130 | Role as RoleTextComponent
+
+## non-null! (4)
+src/components/Calendar/dateFormat.ts:91 | bounds!.from!
+src/components/Calendar/dateFormat.ts:91 | bounds!
+src/components/Calendar/dateFormat.ts:92 | bounds!.to!
+src/components/Calendar/dateFormat.ts:92 | bounds!
+
+## ts-expect-error (1)
+src/components/ProgressIndicator/waveGeometry.test.ts:5 | // @ts-expect-error TS5097 -- required by the zero-dependency Node test command.
+
+## as-unknown-as (1)
+src/components/ProgressIndicator/waveGeometry.test.ts:42 | waveGeometryModule as unknown as Record<string, unknown>

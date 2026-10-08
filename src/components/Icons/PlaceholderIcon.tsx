@@ -7,5 +7,3 @@ export const PlaceholderIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default PlaceholderIcon;

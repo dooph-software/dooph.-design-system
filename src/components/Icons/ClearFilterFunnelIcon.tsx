@@ -9,5 +9,3 @@ export const ClearFilterFunnelIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default ClearFilterFunnelIcon;

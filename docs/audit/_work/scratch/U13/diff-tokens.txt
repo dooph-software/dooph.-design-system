@@ -1,0 +1,474 @@
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index ab72031..a876635 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -42,19 +42,47 @@
+   --ui-color-secondary-disabled: #f5f5f5;
+   --ui-color-secondary-border-disabled: #e9e9e9;
+ 
+-  /* Brand (teal) — borders alias bg per state (Figma) */
+-  --ui-color-brand: #4f666d;
+-  --ui-color-brand-border: var(--ui-color-brand);
+-  --ui-color-brand-hover: #45555b;
+-  --ui-color-brand-border-hover: var(--ui-color-brand-hover);
+-  --ui-color-brand-active: #323d41;
+-  --ui-color-brand-border-active: var(--ui-color-brand-active);
+-  --ui-color-brand-foreground: #ffffff;
+-  --ui-color-brand-border-disabled: transparent;
+-
+-  /* Error (unified destructive palette — no .dark overrides yet) */
+-  --ui-color-error-primary: #ea3f3f;
+-  --ui-color-error-secondary: #ff5858;
++  /* Prominent (deep violet) — Figma ButtonProminent/*. Borders alias bg per
++   * state. Fully mode-invariant, so this family has no .dark override at all:
++   * the Figma group carries identical values in both modes, INCLUDING the
++   * content colour. That last part is worth stating because the Figma export
++   * aliases the content to Text/text-inverted, which flips to black in dark —
++   * black on #340fd9 is 2.2:1 and unreadable, and the export's own resolved
++   * values report white for both modes. White is the intended paint; do not
++   * "fix" this into an inverted alias. */
++  --ui-color-prominent: #340fd9;
++  --ui-color-prominent-border: var(--ui-color-prominent);
++  --ui-color-prominent-hover: #2406ac;
++  --ui-color-prominent-border-hover: var(--ui-color-prominent-hover);
++  --ui-color-prominent-active: #1a0189;
++  --ui-color-prominent-border-active: var(--ui-color-prominent-active);
++  --ui-color-prominent-foreground: #ffffff;
++  /* Disabled aliases secondary, matching every other solid button (Figma). */
++  --ui-color-prominent-disabled: var(--ui-color-secondary-disabled);
++  --ui-color-prominent-border-disabled: var(
++    --ui-color-secondary-border-disabled
++  );
++
++  /* Danger — the raw destructive palette (Figma danger-primary / -secondary).
++   * Mode-invariant, so no .dark override. */
++  --ui-color-danger-primary: #ea3f3f;
++  --ui-color-danger-secondary: #ff5858;
++
++  /* Danger button (Figma ButtonDanger/*) — a full state family so consumers can
++   * retune the danger button without touching the secondary family it defaults
++   * to. Every value is an ALIAS, which is also what makes a .dark block
++   * unnecessary: the aliased tokens are themselves redefined per mode, so these
++   * follow along for free. Override any one of them to break that link. */
++  --ui-color-danger: var(--ui-color-secondary);
++  --ui-color-danger-border: var(--ui-color-secondary-border);
++  --ui-color-danger-hover: var(--ui-color-danger-secondary);
++  --ui-color-danger-border-hover: var(--ui-color-danger-secondary);
++  --ui-color-danger-active: var(--ui-color-danger-primary);
++  --ui-color-danger-border-active: var(--ui-color-danger-primary);
++  --ui-color-danger-foreground: var(--ui-color-danger-primary);
++  --ui-color-danger-foreground-active: var(--ui-color-secondary-foreground);
++  --ui-color-danger-disabled: var(--ui-color-secondary-disabled);
++  --ui-color-danger-border-disabled: var(--ui-color-secondary-border-disabled);
+ 
+   /* Ghost (no rest bg; hover/active are translucent overlays) */
+   --ui-color-ghost-foreground: #4a4a4a;
+@@ -62,8 +90,8 @@
+   --ui-color-ghost-active: rgba(0, 0, 0, 0.08);
+   --ui-color-ghost-foreground-active: #161616;
+ 
+-  /* Surfaces (Figma: pageBackground / surfacePrimary / surfaceSecondary) */
+-  --ui-color-page-background: #fdfeff;
++  /* Surfaces (Figma: surface-page / surface-primary / surface-secondary) */
++  --ui-color-surface-page: #fdfeff;
+   --ui-color-surface-primary: #ffffff;
+   --ui-color-surface-secondary: #fcfcfc;
+ 
+@@ -91,30 +119,48 @@
+   --ui-color-tooltip-matching-text: var(--ui-color-secondary-foreground);
+   --ui-color-tooltip-matching-border: var(--ui-color-border-primary);
+ 
+-  /* Borders (Figma: borderPrimary / borderSecondary; popovers is the DS name
+-   * for Figma borderModal, shared by modal/menu/toast panels) */
++  /* Borders (Figma: border-primary / border-secondary; popovers is the DS name
++   * for Figma modal-border, shared by modal/menu/toast panels) */
+   --ui-color-border-primary: #dddddd;
+   --ui-color-border-secondary: #dfdfdf;
+   --ui-color-border-popovers: #ebebeb;
+-  --ui-color-border-focus: var(--ui-color-brand-border);
++  --ui-color-input-border-focus: var(--ui-color-prominent-border-hover);
+   /* CTAButton padded outline ring (primary variant only) */
+   --ui-color-border-cta: rgba(56, 56, 56, 0.5);
+-  --ui-color-trigger-border-hover: #b4b4b4;
+-  --ui-color-trigger-border-error-focus: var(--ui-color-error-primary);
++  --ui-color-input-border-hover: #b4b4b4;
++  --ui-color-input-border-danger-focus: var(--ui-color-danger-primary);
+ 
+   /* Text */
+   --ui-color-text: #161616;
+   --ui-color-text-secondary: #4a4a4a;
+   --ui-color-text-tertiary: #606060;
+ 
+-  /* Focus rings (Figma: Dropdowns/focusRingBrand|Primary|Error) */
+-  --ui-color-focus-ring-brand: rgba(70, 86, 92, 0.35);
++  /* Focus rings (Figma: Inputs/focus-ring-prominent|-primary|-danger). Each is
++   * its source paint at a fixed alpha: prominent = button-prominent-hover in
++   * light and button-prominent (rest) in dark, primary = button-primary,
++   * danger = danger-primary. They are literal rgba() rather than color-mix()
++   * over the source token because a consumer overriding, say,
++   * --ui-color-prominent should be able to retune the ring independently. */
++  --ui-color-focus-ring-prominent: rgba(36, 6, 172, 0.35);
+   --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.25);
+-  --ui-color-focus-ring-error: rgba(236, 85, 85, 0.35);
+-
+-  /* Brand identity (Figma: brandColor / brandColorAlt — replaces logo/logo-alt/accent) */
+-  --ui-brand-color: #46565c;
+-  --ui-brand-color-alt: #44c0e5;
++  --ui-color-focus-ring-danger: rgba(234, 63, 63, 0.35);
++
++  /* Prominent identity (Figma: color-prominent / -alt / -ter) — the
++   * brand-identity trio, distinct from the --ui-color-prominent BUTTON family
++   * above. All three are mode-invariant: `-alt` used to carry #44c0e5 in dark,
++   * and that value is now `-ter` in its own right rather than a dark override. */
++  --ui-prominent-color: #390ef8;
++  --ui-prominent-color-alt: #13c29f;
++  --ui-prominent-color-ter: #44c0e5;
++
++  /* AI model marks (Figma ai-models/*). Brand colours for third-party model
++   * providers — identity paints for a badge or icon, not a UI role, so no
++   * component reads them by default. openai and spacexai are the two that
++   * inverse per mode. */
++  --ui-color-ai-anthropic: #e48844;
++  --ui-color-ai-gemini: #154bff;
++  --ui-color-ai-openai: #000000;
++  --ui-color-ai-spacexai: #000000;
+ 
+   /* Text shimmer (ShimmerText) */
+   --ui-shimmer-base: var(--ui-color-text-tertiary);
+@@ -124,6 +170,50 @@
+     transparent
+   );
+ 
++  /* AI chat parts (AIToolPart, AIThinkingPart, AITurnSummary, AIPromptInput…).
++   *
++   * The two shimmer pairs RE-BASE ShimmerText rather than restyling it: a
++   * working tool row reads at full ghost-active weight, the thinking row at the
++   * quieter ghost weight (Figma 761:1330 / 761:1346). The highlight keeps the
++   * package's own base-at-35% formula so a consumer retuning either base keeps
++   * the sheen in proportion. */
++  --ui-chat-tool-shimmer-base: var(--ui-color-ghost-foreground-active);
++  --ui-chat-tool-shimmer-highlight: color-mix(
++    in srgb,
++    var(--ui-color-ghost-foreground-active) 35%,
++    transparent
++  );
++  --ui-chat-thinking-shimmer-base: var(--ui-color-ghost-foreground);
++  --ui-chat-thinking-shimmer-highlight: color-mix(
++    in srgb,
++    var(--ui-color-ghost-foreground) 35%,
++    transparent
++  );
++  /* Settled rows reveal their meta (timing, tokens, copy) on hover. */
++  --ui-chat-reveal-duration: 150ms;
++  --ui-chat-reveal-ease: ease-out;
++  /* `streamingAnimation`: each block of prose rises out of a blur as it
++   * arrives. `blur` is px on purpose — a lens effect, not a typographic
++   * measure (the same call as --ui-roll-change-blur). */
++  --ui-chat-stream-duration: 400ms;
++  --ui-chat-stream-ease: ease-out;
++  --ui-chat-stream-blur: 3px;
++  --ui-chat-stream-rise: 4px;
++  /* The thinking transcript's open/close. */
++  --ui-chat-disclosure-duration: 200ms;
++  --ui-chat-disclosure-ease: ease-in-out;
++  /* The prompt textarea grows with its content up to this, then scrolls. The
++   * component reads it back from computed style, so this token is the only
++   * place the cap lives. */
++  --ui-chat-prompt-max-height: 300px;
++  /* The provider swatch in AIModelSelectItem (Figma 761:2073). */
++  --ui-chat-model-swatch-size: 10px;
++  --ui-chat-model-swatch-radius: 3px;
++  /* AIModelTooltipContent panel (Figma 761:2843). */
++  --ui-width-chat-model-tooltip: 242px;
++  /* Inline code inside ds-chat-prose. */
++  --ui-chat-prose-code-radius: 4px;
++
+   /* Text roll on hover (RollHoverText). The duration:stagger ratio (~1:14) is
+    * what makes the letters read as one travelling wave instead of a metronome —
+    * raising the stagger toward the duration turns it into discrete flips. */
+@@ -159,6 +249,34 @@
+   --ui-roll-change-depth: 0.9em;
+   --ui-roll-change-blur: 4px;
+ 
++  /* Fade-roll on change (FadeChangeText) — the roll above without the blur:
++   * travel + opacity only. Each value ALIASES its roll-change counterpart, so
++   * the two stay one motion by default and either can be retuned alone. */
++  --ui-fade-change-out-duration: var(--ui-roll-change-out-duration);
++  --ui-fade-change-in-duration: var(--ui-roll-change-in-duration);
++  --ui-fade-change-out-ease: var(--ui-roll-change-out-ease);
++  --ui-fade-change-in-ease: var(--ui-roll-change-in-ease);
++  --ui-fade-change-depth: var(--ui-roll-change-depth);
++
++  /* Shape morph — MorphRotationShape / ShapeMorphSpinner.
++   * duration + ease are GENERATED by scripts/generate-shape-morph-ease.mjs
++   * from the tuned spring in scripts/shapeMorphSpring.mjs. Edit the constants
++   * there and run `npm run generate-shape-morph-ease`, never these two lines.
++   * The ease overshoots (~1.095) on purpose: that is the morph's backspin. */
++  /* __SHAPE_MORPH_EASE_START__ */
++  --ui-shape-morph-duration: 498ms;
++  --ui-shape-morph-ease: linear(0, 0.0058 1.56%, 0.0221 3.13%, 0.0475 4.69%, 0.0805 6.25%, 0.1198 7.81%, 0.1643 9.38%, 0.2127 10.94%, 0.2640 12.50%, 0.3173 14.06%, 0.3718 15.63%, 0.4266 17.19%, 0.4811 18.75%, 0.5348 20.31%, 0.5871 21.88%, 0.6376 23.44%, 0.6860 25.00%, 0.7319 26.56%, 0.7752 28.13%, 0.8157 29.69%, 0.8533 31.25%, 0.8878 32.81%, 0.9194 34.38%, 0.9480 35.94%, 0.9736 37.50%, 0.9964 39.06%, 1.0164 40.63%, 1.0337 42.19%, 1.0486 43.75%, 1.0610 45.31%, 1.0712 46.88%, 1.0793 48.44%, 1.0856 50.00%, 1.0901 51.56%, 1.0930 53.13%, 1.0945 54.69%, 1.0947 56.25%, 1.0939 57.81%, 1.0921 59.38%, 1.0895 60.94%, 1.0865 62.50%, 1.0832 64.06%, 1.0795 65.63%, 1.0755 67.19%, 1.0713 68.75%, 1.0669 70.31%, 1.0623 71.88%, 1.0576 73.44%, 1.0528 75.00%, 1.0480 76.56%, 1.0432 78.13%, 1.0384 79.69%, 1.0338 81.25%, 1.0292 82.81%, 1.0249 84.38%, 1.0207 85.94%, 1.0168 87.50%, 1.0132 89.06%, 1.0100 90.63%, 1.0071 92.19%, 1.0047 93.75%, 1.0027 95.31%, 1.0012 96.88%, 1.0003 98.44%, 1 100%);
++  /* __SHAPE_MORPH_EASE_END__ */
++  --ui-shape-morph-interval: 650ms;
++  --ui-shape-morph-passive-spin-duration: 4666ms;
++
++  /* Hover nudge: how far a hovered shape leans toward the next stop (a
++   * fraction of one step, applied to morph AND turn), and its own gentle,
++   * non-overshooting timing so hovering never wobbles. */
++  --ui-shape-morph-nudge: 0.15;
++  --ui-shape-morph-nudge-duration: 180ms;
++  --ui-shape-morph-nudge-ease: cubic-bezier(0.2, 0, 0, 1);
++
+   /* Rolling digits (RollingDigitsText) — 2D cash-register snap, not 3D.
+    *
+    * `duration` governs the ROLL: a wheel already on screen translating to its
+@@ -274,6 +392,14 @@
+   /* Font sizes */
+   --ui-text-label: 12px;
+   --ui-text-body: 14px;
++  /* The hero-scale pair. `heroBody` and `heroButton` are the body and button
++   * roles at a larger size and NOTHING else: family, weight, tracking and
++   * variable axes all still come from --ui-font-body / --ui-font-button, so
++   * retuning a base role carries its hero-scale twin with it. Only the size is
++   * its own, which is the entire reason these roles exist. Independent
++   * literals rather than one shared token, so either can be retuned alone. */
++  --ui-text-hero-body: 16px;
++  --ui-text-hero-button: 16px;
+   /* Mono matches the button role's size and weight by aliasing them, so a
+    * consumer who retunes button type keeps mono in step; override either token
+    * directly to break that link. */
+@@ -313,6 +439,10 @@
+   --ui-tracking-body: 0.01em;
+   --ui-tracking-label: 0;
+   --ui-tracking-hero: -0.01em;
++  /* Figma "Mono Text" style: -3%. Tightens Google Sans Code's fixed advances
++   * to sit with the button role beside it; every glyph still shares one
++   * advance, so figures stay aligned. */
++  --ui-tracking-mono: -0.03em;
+ 
+   /* ── Sizing ──────────────────────────────────────────────────────────── */
+ 
+@@ -343,17 +473,44 @@
+    * equal columns, so widening the panel makes each day physically bigger. */
+   --ui-min-w-calendar-panel: 300px;
+   --ui-height-button-micro: 26px;
+-  /* Micro segmented-tab item — the compact inline preset row (Figma "Micro"). */
+-  --ui-height-tab-micro: 30px;
++  /* Micro segmented-tab item — the compact inline preset row (Figma "Micro", 28px). */
++  --ui-height-tab-micro: 28px;
+   --ui-height-slider-track: 22px;
+   --ui-radius-slider-inner: 8px;
+   --ui-slider-track-gap: 6px;
+   --ui-width-slider-handle: 6px;
+   --ui-height-slider-handle: 42px;
+ 
++  /* Slider paints (Figma SliderPrimary/* and SliderProminent/*).
++   *
++   * The ACTIVE TRACK is an OPACITY, not a colour, and that is deliberate: the
++   * track is tinted from the component's `color` prop, which accepts any CSS
++   * colour, so baking Figma's resolved rgba() here would stop a provider brand
++   * colour from tinting the fill at all. Figma composes each variant's track
++   * from its own button paint at a fixed alpha; we keep the alpha and let
++   * `color` supply the hue, which reproduces both variants exactly when `color`
++   * is the matching token and still works for an arbitrary colour.
++   *
++   * The ACTIVE STEP dot is a real colour, because Figma composes it from the
++   * TEXT/content paint rather than from the slider's own hue — it is the mark
++   * read ON the filled track, so it does not follow `color`.
++   *
++   * Each pair is selected by `SliderVariant`; `color` still overrides the hue
++   * on top of whichever pair is in play.
++   *
++   * The prominent dark step is white, departing from the Figma export, which
++   * resolves it to text-inverted = black. Black at 40% on a #340fd9 track is
++   * invisible; see the note on the prominent family above for why that content
++   * alias is white in both modes. */
++  --ui-slider-track-primary-active-opacity: 50%;
++  --ui-slider-track-prominent-active-opacity: 70%;
++  --ui-color-slider-step-primary-active: rgba(22, 22, 22, 0.5);
++  --ui-color-slider-step-prominent-active: rgba(22, 22, 22, 0.6);
++  --ui-color-slider-step-inactive: var(--ui-color-secondary-border);
++
+   /* ── Spacing ─────────────────────────────────────────────────────────── */
+ 
+-  --ui-spacing-xxs: 2px;
++  --ui-spacing-xxxs: 2px;
+   --ui-spacing-xxs: 4px;
+   --ui-spacing-xs: 8px;
+   --ui-spacing-sm: 10px;
+@@ -365,11 +522,11 @@
+ 
+   /* ── Icons ───────────────────────────────────────────────────────────── */
+ 
+-  --ui-icon-tiny: 12px;
+-  --ui-icon-standard: 14px;
+-  --ui-icon-medium: 16px;
+-  --ui-icon-large: 20px;
+-  --ui-icon-stroke: 2;
++  --ui-icon-sm: 12px;
++  --ui-icon-rg: 14px;
++  --ui-icon-md: 16px;
++  --ui-icon-lg: 18px;
++  --ui-icon-stroke-width: 2;
+ 
+   /* ── Radius (semantic corners) ────────────────────────────────────────────
+    * tight     — compact chrome: buttons, tabs, dense controls (kbd, etc.).
+@@ -377,7 +534,9 @@
+    * soft     — panels: modals, menu surfaces, search field shell, Outline inner.
+    */
+   --ui-radius-tight: 12px;
+-  --ui-radius-standard: 18px;
++  /* Figma `radius-mini` — micro (28px) toggle options / tabs. */
++  --ui-radius-mini: 10px;
++  --ui-radius-normal: 18px;
+   --ui-radius-soft: 20px;
+   --ui-radius-checkbox: 6px;
+   --ui-radius-avatar: 8px;
+@@ -392,14 +551,15 @@
+   /* defaults to hover shadow — kept as a separate token for manual override */
+   --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.2);
+   --ui-shadow-menu: 0 1px 4px 0 rgba(56, 56, 56, 0.15);
++  /* Figma "Shadow Standard" — a soft all-round halo (UserMessageHeader). */
++  --ui-shadow-standard: 0 0 4px 0 rgba(56, 56, 56, 0.1);
+   --ui-shadow-cta: 0 1px 2px rgba(56, 56, 56, 0.15);
+-  --ui-shadow-focus-brand: 0 0 0 4px var(--ui-color-focus-ring-brand);
++  --ui-shadow-focus-prominent: 0 0 0 4px var(--ui-color-focus-ring-prominent);
+   --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
+ 
+   /* ── Menu min-widths ─────────────────────────────────────────────────── */
+ 
+   --ui-min-w-menu: 160px;
+-  --ui-min-w-menu-action: 144px;
+   --ui-min-w-menu-complex: 324px;
+   /* The standalone search field is the same width as a complex menu by
+    * design, so it ALIASES that token rather than repeating the number —
+@@ -419,6 +579,59 @@
+   --ui-min-w-cta-pill-big: 370px;
+   --ui-spacing-cta-content-big: 60px;
+ 
++  /* ── Stickers ──────────────────────────────────────────────────────────
++   * Figma collection Colors - Statics, group `stickers/`.
++   *
++   * Content colours alias the paint Figma aliases, so retuning that paint
++   * retunes the sticker. Backgrounds are a SEPARATE hue at an opacity: most
++   * variants share the content hue, but secondary's wash is the secondary
++   * button's active border and danger's wash is danger-secondary (the content
++   * is danger-primary). The opacity stays its own token so `StickerVariant.custom`
++   * can tint an arbitrary colour with it — baking the alpha into the hex would
++   * freeze that.
++   *
++   * Figma spells the shared opacity `sticker-bg-opactity` (missing i). The
++   * token uses the corrected spelling. */
++
++  --ui-color-sticker-prominent: var(--ui-color-prominent);
++  --ui-color-sticker-secondary: var(--ui-color-text-tertiary);
++  --ui-color-sticker-alternate: var(--ui-prominent-color-alt);
++  --ui-color-sticker-tertiary: var(--ui-prominent-color-ter);
++  --ui-color-sticker-danger: var(--ui-color-danger-primary);
++
++  --ui-sticker-bg-opacity: 20%;
++  --ui-sticker-bg-opacity-secondary: 80%;
++
++  --ui-color-sticker-bg-prominent: color-mix(
++    in srgb,
++    var(--ui-color-prominent) var(--ui-sticker-bg-opacity),
++    transparent
++  );
++  --ui-color-sticker-bg-secondary: color-mix(
++    in srgb,
++    var(--ui-color-secondary-border-active)
++      var(--ui-sticker-bg-opacity-secondary),
++    transparent
++  );
++  --ui-color-sticker-bg-alternate: color-mix(
++    in srgb,
++    var(--ui-prominent-color-alt) var(--ui-sticker-bg-opacity),
++    transparent
++  );
++  --ui-color-sticker-bg-tertiary: color-mix(
++    in srgb,
++    var(--ui-prominent-color-ter) var(--ui-sticker-bg-opacity),
++    transparent
++  );
++  --ui-color-sticker-bg-danger: color-mix(
++    in srgb,
++    var(--ui-color-danger-secondary) var(--ui-sticker-bg-opacity),
++    transparent
++  );
++
++  /* Figma's sticker vertical padding is a raw 6px, off the spacing scale. */
++  --ui-spacing-sticker-y: 6px;
++
+   /* ── Disabled ────────────────────────────────────────────────────────── */
+ 
+   --ui-opacity-disabled: 0.6;
+@@ -444,14 +657,12 @@
+   --ui-color-secondary-border-active: #3a3b3f;
+   --ui-color-secondary-border-disabled: #1f1f21;
+ 
+-  --ui-color-brand: #5a6f75;
+-
+   --ui-color-ghost-hover: rgba(255, 255, 255, 0.04);
+   --ui-color-ghost-active: rgba(255, 255, 255, 0.08);
+   --ui-color-ghost-foreground: #afafaf;
+   --ui-color-ghost-foreground-active: #ffffff;
+ 
+-  --ui-color-page-background: #131c1d;
++  --ui-color-surface-page: #131c1d;
+   --ui-color-surface-primary: #000000;
+   --ui-color-surface-secondary: #242425;
+ 
+@@ -462,24 +673,50 @@
+   --ui-color-border-secondary: #3e3f42;
+   --ui-color-border-popovers: #36363b;
+   --ui-color-border-cta: rgba(255, 255, 255, 0.35);
+-  --ui-color-trigger-border-hover: #3a3b3f;
++  --ui-color-input-border-hover: #3a3b3f;
++
++  --ui-color-ai-openai: #ffffff;
++  --ui-color-ai-spacexai: #ffffff;
+ 
+   --ui-color-text: #ffffff;
+   --ui-color-text-secondary: #afafaf;
+   --ui-color-text-tertiary: #717171;
+ 
+-  --ui-color-focus-ring-brand: rgba(70, 86, 92, 0.15);
+-  --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.15);
+-  --ui-color-focus-ring-error: rgba(236, 85, 85, 0.15);
++  /* The prominent ring keys to the rest paint (not :hover) in dark, per Figma. */
++  --ui-color-focus-ring-prominent: rgba(52, 15, 217, 0.15);
++  --ui-color-focus-ring-primary: rgba(249, 249, 249, 0.15);
++  --ui-color-focus-ring-danger: rgba(234, 63, 63, 0.15);
++  --ui-color-input-border-focus: var(--ui-color-prominent-border-active);
+ 
+   --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.65);
+   --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.65);
+   --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.85);
+   --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.85);
+   --ui-shadow-menu: 0 2px 8px rgba(0, 0, 0, 0.7);
++  --ui-shadow-standard: 0 0 4px 0 rgba(0, 0, 0, 0.65);
+   --ui-shadow-cta: 0 1px 2px rgba(0, 0, 0, 0.65);
+ 
++  /* Both variants converge at 60% in dark, per Figma. */
++  --ui-slider-track-primary-active-opacity: 60%;
++  --ui-slider-track-prominent-active-opacity: 60%;
++  --ui-color-slider-step-primary-active: rgba(0, 0, 0, 0.4);
++  --ui-color-slider-step-prominent-active: rgba(255, 255, 255, 0.4);
++
+   --ui-opacity-disabled: 0.5;
++
++  /* Secondary's own opacity variable drops to 60%, but the dark sticker WASH
++   * does not use it — Figma binds `color-sticker-bg-secondary` to the shared
++   * 20% opacity in dark. Danger stops being a composite at all: both the
++   * content and the wash are a literal white, not danger-primary/secondary. */
++  --ui-sticker-bg-opacity-secondary: 60%;
++  --ui-color-sticker-bg-secondary: color-mix(
++    in srgb,
++    var(--ui-color-secondary-border-active) var(--ui-sticker-bg-opacity),
++    transparent
++  );
++  --ui-color-sticker-danger: #ffffff;
++  --ui-color-sticker-bg-danger: #ffffff;
++
+   --ui-size-checkbox: 18px;
+   --ui-radius-checkbox: 6px;
+   --ui-radius-avatar: 8px;

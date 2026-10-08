@@ -1,0 +1,27 @@
+const ASSUME_YES = process.argv.slice(2).some((a) => a === "--yes" || a === "-y");
+const rl = createInterface({ input: process.stdin, output: process.stdout });
+const queued = [];
+const waiting = [];
+let stdinClosed = false;
+rl.on("line", (line) => {
+  const next = waiting.shift();
+  if (next) next(line.trim());
+  else queued.push(line.trim());
+});
+rl.on("close", () => {
+  stdinClosed = true;
+  while (waiting.length) waiting.shift()("");
+});
+const ask = (q) => {
+  process.stdout.write(q);
+  if (ASSUME_YES) {
+    process.stdout.write("y (--yes)\n");
+    return Promise.resolve("y");
+  }
+  if (queued.length) return Promise.resolve(queued.shift());
+  if (stdinClosed) {
+    process.stdout.write(dim("(no input — using the default)") + "\n");
+    return Promise.resolve("");
+  }
+  return new Promise((res) => waiting.push(res));
+};

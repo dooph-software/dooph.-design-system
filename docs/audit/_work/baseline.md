@@ -1,0 +1,25 @@
+# Phase 0 baseline
+
+- audited SHA: b436647c5b5713bdadceef3b5def90b0ad5357f1 (short b436647), branch main
+- date: 2026-09-29
+- `git status --porcelain` at start: empty
+- `git ls-files | wc -l`: 504
+- `npm run lint` (tsc --noEmit) in place: exit 0, no errors
+- worktree: ../dooph-ds-audit-build @ b436647 (detached)
+  - `npm ci`: exit 0
+  - `npm run build`: exit 0
+    - generate-icon-exports: "Generated src\components\Icons\index.ts with 88 icon exports."
+    - generate-shape-morph-ease: "shape-morph ease: 498ms, 956 chars"
+    - sync-tokens: "✓  @theme inline regenerated — 129 tokens mapped (index.css + theme.css)."
+    - tsup v8.5.1, target es2020, multi-entry (every src/**/*.{ts,tsx} except stories)
+    - "[add-use-client] stamped "use client" on 48 output chunk(s) from 24 client source module(s)."
+    - tailwindcss v4.3.3 → dist/styles.css 120602 B; dist/theme.css 8198 B
+  - `git status --porcelain` after build: EMPTY → no generated drift (Icons/index.ts, index.css generated block, theme.css, shape-morph ease all reproduce byte-identically)
+  - `npm pack --dry-run`: 2519 files, 721.2 kB packed / 3.3 MB unpacked, version 5.3.0; ships LICENSE.txt, README.md, bin/init.mjs, dist/**, package.json, skills/** (7 skill files incl. v5 codemod). Full list: ../ds-audit-pack.txt (outside repo; copied to _work/pack.txt)
+  - `npm run build-storybook`: see storybook.txt
+- Version state:
+  - package.json version: 5.3.0
+  - latest tag: v5.3.0 (2026-09-10); npm registry latest 5.3.0
+  - HEAD is 11 commits past v5.3.0 (git log v5.3.0..HEAD)
+  - v5.3.0 tokens.css contains 10 lines matching `color-brand`; HEAD tokens.css has 0 `color-brand`... and 16 `color-prominent` lines → the "5.4" renames described as history in skills are UNRELEASED
+  - CHANGELOG.md: headings are [Unreleased], [1.1.0] 2026-06-23, [1.0.0] 2026-06-09, template. No entries for 2.x–5.3.0. [Unreleased] lists only MorphRotationShape/ShapeMorphSpinner/DropdownCaret/shape tokens — omits the token renames, IconSize rename, GemShape removal, ButtonVariant.brand→prominent, AIChat, Sticker, ToggleSwitch rename, etc.

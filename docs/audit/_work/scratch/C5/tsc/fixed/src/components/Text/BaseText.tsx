@@ -1,0 +1,179 @@
+import {
+  forwardRef,
+  type ComponentPropsWithoutRef,
+  type ComponentPropsWithRef,
+  type CSSProperties,
+  type ElementType,
+  type ForwardedRef,
+  type ReactElement,
+} from "react";
+import { cn } from "../../utils/cn";
+import { TEXT_VARIANT_CLASS, TextVariant } from "./constants";
+import { buildTextStyle, type TextStyleProps } from "./textStyle";
+
+type BaseTextOwnProps = TextStyleProps & {
+  /** Role providing the defaults. Ignored when `unstyled`. */
+  variant?: TextVariant;
+  /** Drop the role class entirely and style from props/className alone. */
+  unstyled?: boolean;
+};
+
+/* `as` is typed as the generic itself, not ElementType — that is what lets TS
+ * infer the element from the value and admit its props (as="label" + htmlFor). */
+export type BaseTextProps<TElement extends ElementType = "span"> =
+  BaseTextOwnProps & { as?: TElement } & Omit<
+      ComponentPropsWithoutRef<TElement>,
+      keyof BaseTextOwnProps | "as"
+    >;
+
+type PolymorphicTextComponent<TOwnProps> = <
+  TElement extends ElementType = "span",
+>(
+  props: TOwnProps & { as?: TElement } & Omit<
+      ComponentPropsWithoutRef<TElement>,
+      keyof TOwnProps | "as"
+    > & {
+      ref?: ComponentPropsWithRef<TElement>["ref"];
+    },
+) => ReactElement | null;
+
+/**
+ * BaseText — every visible string in the system renders through this.
+ *
+ * Three tiers decide the final typography, in this order:
+ *
+ *   1. props        — written as inline style, so they beat everything
+ *   2. className    — the consumer's own utilities (leading-*, text-2xl, …)
+ *   3. role class   — `.text-style-*`, in the `components` layer so utilities win
+ *
+ * That ordering is the whole point of the design: a prop is explicit and must
+ * never lose to cascade order, while a role default is ambient and must stay
+ * overridable. `style` still outranks props, as the last-resort escape hatch.
+ *
+ * Values come from the dot-accessible constants (`Fonts`, `FontSizes`,
+ * `FontWeights`, `Tracking`), which resolve to `var(--ui-*)` so a consuming
+ * project's token overrides apply, or from raw CSS values / numbers:
+ *
+ *   <BaseText font={Fonts.body} fontWeight={FontWeights.regular} />
+ *   <BodyText fontSize={16} fontWeight={450} lineHeight={1.6} />
+ *   <BodyText axes={{ [FontAxes.grade]: 40 }} />
+ */
+/* The render function sees the own props plus span attributes; only the exported
+ * cast below is polymorphic. `as` stays ElementType so any tag can render. */
+type BaseTextRenderProps = BaseTextOwnProps & { as?: ElementType } & Omit<
+  ComponentPropsWithoutRef<"span">,
+  keyof BaseTextOwnProps | "as"
+>;
+
+const BaseTextBase = forwardRef<HTMLElement, BaseTextRenderProps>(
+  (
+    {
+      variant = TextVariant.body,
+      as: Tag = "span",
+      unstyled = false,
+      className,
+      style,
+      font,
+      fontSize,
+      fontWeight,
+      lineHeight,
+      letterSpacing,
+      axes,
+      tabular,
+      ...props
+    },
+    ref,
+  ) => {
+    const role = unstyled ? undefined : variant;
+    const typography = buildTextStyle(
+      { font, fontSize, fontWeight, lineHeight, letterSpacing, axes, tabular },
+      role,
+    );
+
+    return (
+      <Tag
+        ref={ref as ForwardedRef<HTMLElement>}
+        className={cn(role && TEXT_VARIANT_CLASS[role], className)}
+        /* Spread `style` last: an explicit style prop is the final override,
+         * and merging (rather than replacing) means passing one does not wipe
+         * the typography the props asked for. */
+        style={
+          typography || style
+            ? ({ ...typography, ...style } as CSSProperties)
+            : undefined
+        }
+        {...props}
+      />
+    );
+  },
+);
+BaseTextBase.displayName = "BaseText";
+
+export const BaseText =
+  BaseTextBase as PolymorphicTextComponent<BaseTextOwnProps>;
+
+/* ── Pre-composed roles ─────────────────────────────────────────────────
+ * Each is BaseText with `variant` fixed. Built through a factory so they stay
+ * identical by construction; the cast restores the polymorphic `as` typing
+ * that a plain forwardRef wrapper erases. */
+
+export type RoleTextProps<TElement extends ElementType = "span"> = Omit<
+  BaseTextProps<TElement>,
+  "variant"
+>;
+
+type RoleTextComponent = PolymorphicTextComponent<
+  Omit<BaseTextOwnProps, "variant">
+>;
+
+const createRoleText = (
+  variant: TextVariant,
+  displayName: string,
+): RoleTextComponent => {
+  const Role = forwardRef<HTMLElement, RoleTextProps<ElementType>>(
+    (props, ref) => <BaseText ref={ref} variant={variant} {...props} />,
+  );
+  Role.displayName = displayName;
+  return Role as RoleTextComponent;
+};
+
+export const ButtonText = createRoleText(TextVariant.button, "ButtonText");
+export const HeadingText = createRoleText(TextVariant.heading, "HeadingText");
+export const SubheadingText = createRoleText(
+  TextVariant.subheading,
+  "SubheadingText",
+);
+export const HeroText = createRoleText(TextVariant.hero, "HeroText");
+export const TitleText = createRoleText(TextVariant.title, "TitleText");
+export const BodyText = createRoleText(TextVariant.body, "BodyText");
+/* Hero-scale body and button: their base role at a larger size, and identical
+ * in every other respect. Not related to `HeroText`, which is the 55px display
+ * role in the title family — these two stay in the body/button faces. */
+export const HeroBodyText = createRoleText(
+  TextVariant.heroBody,
+  "HeroBodyText",
+);
+export const HeroButtonText = createRoleText(
+  TextVariant.heroButton,
+  "HeroButtonText",
+);
+export const LabelText = createRoleText(TextVariant.label, "LabelText");
+/* Button's size and weight in the mono family — the two roles' size and weight
+ * tokens alias each other, so mono sits at the same optical scale beside a
+ * button label. Reach for `tabular` on the others when you only want aligned
+ * figures; use this when the run should read as code, a key, or an id. */
+export const MonoText = createRoleText(TextVariant.mono, "MonoText");
+
+export type ButtonTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type HeadingTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type SubheadingTextProps<T extends ElementType = "span"> =
+  RoleTextProps<T>;
+export type HeroTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type TitleTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type BodyTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type HeroBodyTextProps<T extends ElementType = "span"> =
+  RoleTextProps<T>;
+export type HeroButtonTextProps<T extends ElementType = "span"> =
+  RoleTextProps<T>;
+export type LabelTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+export type MonoTextProps<T extends ElementType = "span"> = RoleTextProps<T>;

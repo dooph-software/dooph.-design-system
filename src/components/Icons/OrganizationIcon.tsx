@@ -17,5 +17,3 @@ export const OrganizationIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default OrganizationIcon;

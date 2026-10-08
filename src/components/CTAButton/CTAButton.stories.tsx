@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { DownloadIcon } from "../Icons";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { ChevronsRightIcon } from "../Icons";
 import { CTAButton } from "./CTAButton";
 import { CTAButtonSize, CTAButtonVariant } from "./constants";
 
@@ -25,13 +25,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const downloadIcon = <DownloadIcon size={20} />;
+/* Fills the per-size icon slot (22px standard, 26px big). */
+const chevronsIcon = <ChevronsRightIcon size="100%" />;
 
 export const PrimaryStandard: Story = {
   args: {
     text: "Download for Mac",
     href: "#",
-    icon: downloadIcon,
+    icon: chevronsIcon,
     size: CTAButtonSize.standard,
     variant: CTAButtonVariant.primary,
   },
@@ -41,7 +42,7 @@ export const PrimaryBig: Story = {
   args: {
     text: "Get started",
     href: "#",
-    icon: downloadIcon,
+    icon: chevronsIcon,
     size: CTAButtonSize.big,
     variant: CTAButtonVariant.primary,
   },
@@ -51,7 +52,7 @@ export const SecondaryStandard: Story = {
   args: {
     text: "View docs",
     href: "#",
-    icon: downloadIcon,
+    icon: chevronsIcon,
     size: CTAButtonSize.standard,
     variant: CTAButtonVariant.secondary,
   },
@@ -61,7 +62,7 @@ export const SecondaryBig: Story = {
   args: {
     text: "Talk to us",
     href: "#",
-    icon: downloadIcon,
+    icon: chevronsIcon,
     size: CTAButtonSize.big,
     variant: CTAButtonVariant.secondary,
   },
@@ -71,7 +72,7 @@ export const AsChildButton: Story = {
   name: "asChild with button",
   args: {
     text: "Continue",
-    icon: downloadIcon,
+    icon: chevronsIcon,
     size: CTAButtonSize.standard,
     variant: CTAButtonVariant.primary,
   },
@@ -86,35 +87,35 @@ export const AllVariants: Story = {
   args: {
     text: "Primary standard",
     href: "#",
-    icon: downloadIcon,
+    icon: chevronsIcon,
   },
   render: () => (
-    <div className="flex flex-col items-start gap-md">
+    <div className="flex flex-col items-start gap-lg">
       <CTAButton
         text="Primary standard"
         href="#"
-        icon={downloadIcon}
+        icon={chevronsIcon}
         size={CTAButtonSize.standard}
         variant={CTAButtonVariant.primary}
       />
       <CTAButton
         text="Primary big"
         href="#"
-        icon={downloadIcon}
+        icon={chevronsIcon}
         size={CTAButtonSize.big}
         variant={CTAButtonVariant.primary}
       />
       <CTAButton
         text="Secondary standard"
         href="#"
-        icon={downloadIcon}
+        icon={chevronsIcon}
         size={CTAButtonSize.standard}
         variant={CTAButtonVariant.secondary}
       />
       <CTAButton
         text="Secondary big"
         href="#"
-        icon={downloadIcon}
+        icon={chevronsIcon}
         size={CTAButtonSize.big}
         variant={CTAButtonVariant.secondary}
       />

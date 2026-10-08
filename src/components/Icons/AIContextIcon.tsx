@@ -8,5 +8,3 @@ export const AIContextIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default AIContextIcon;

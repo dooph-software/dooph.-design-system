@@ -8,5 +8,3 @@ export const ChevronsRightLeftIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default ChevronsRightLeftIcon;

@@ -7,5 +7,3 @@ export const DropdownIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default DropdownIcon;

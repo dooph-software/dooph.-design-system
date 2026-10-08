@@ -11,13 +11,27 @@
  * - Items hold the 160px width floor; sections and the panel hug.
  * - Items use ghost button surfaces (`ghost-hover` / `ghost-active`). Content
  *   is always `ghost-fg-active` (primary), never the faded `ghost-fg` rest
- *   tone — except `DropdownMenuItemVariant.danger`, which paints
+ *   tone. `DropdownMenuItemVariant.danger` is the one exception: it paints
  *   danger-primary on hover and active.
  * - Default `modal={false}`; portals on by default with an escape hatch.
+ * - `DropdownMenuSub` + `DropdownMenuSubTrigger` + `DropdownMenuSubContent`
+ *   build a submenu: the trigger is a menu item with a trailing chevron, the
+ *   sub panel shares the root panel's chrome and portals by default too.
  *
  * ## constraints
- * - Do not hardcode a search field into `DropdownMenuContent`.
- * - Style open/disabled/highlighted via Radix data attributes only.
+ * - Do not hardcode a search field into `DropdownMenuContent` — every menu
+ *   would carry a search row and lose free-form composition.
+ * - Style open/disabled/highlighted via Radix data attributes only — a
+ *   JS-toggled class drifts from Radix's state (keyboard highlight and
+ *   pointer hover disagree).
+ * - `focusOnOpen={false}` and `onOpenAutoFocus` reach Radix's PRIVATE
+ *   `onOpenAutoFocus` (react-menu `MenuContentImplPrivateProps`, 2.1.24)
+ *   through the cast at the Content spread; the public Content type does not
+ *   have it, so passing it directly does not compile. On every
+ *   @radix-ui/react-dropdown-menu bump, `rg -n onOpenAutoFocus
+ *   node_modules/@radix-ui/react-menu/dist/index.mjs` must still show it
+ *   spread into FocusScope's onMountAutoFocus, or TypeableDropdownTrigger
+ *   loses focus to the panel on open.
  */
 
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
@@ -28,11 +42,13 @@ import {
   type ComponentPropsWithoutRef,
   type ComponentRef,
   type HTMLAttributes,
+  type ReactNode,
 } from "react";
 import { cn } from "../../utils/cn";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { CheckboxVariant } from "../Checkbox/constants";
-import CheckIcon from "../Icons/CheckIcon";
+import { CheckIcon } from "../Icons/CheckIcon";
+import { ChevronRightIcon, IconSize } from "../Icons";
 // DropdownMenuSelectType / DropdownMenuItemVariant live in ./constants — kept
 // server-safe (no "use client") so RSC code can read the enum values.
 import {
@@ -50,15 +66,17 @@ const DropdownMenuPresentationContext = createContext<{
   selectType: DropdownMenuSelectType;
 }>({ selectType: DropdownMenuSelectType.single });
 
+export type DropdownMenuProps = ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> & {
+  /** Selection mode for the whole menu. Default single. */
+  selectType?: DropdownMenuSelectType;
+};
+
 /** Non-modal by default so page UI stays interactable while a menu is open. Pass modal={true} for dialog-like focus trapping. */
 function DropdownMenuRoot({
   modal = false,
   selectType = DropdownMenuSelectType.single,
   ...props
-}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> & {
-  /** Selection mode for the whole menu. Default single. */
-  selectType?: DropdownMenuSelectType;
-}) {
+}: DropdownMenuProps) {
   return (
     <DropdownMenuPresentationContext.Provider value={{ selectType }}>
       <DropdownMenuPrimitive.Root modal={modal} {...props} />
@@ -91,18 +109,32 @@ const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 
+/** Panel chrome shared by DropdownMenuContent and DropdownMenuSubContent. */
+const menuPanelClassName = [
+  "z-50 flex flex-col gap-sm overflow-hidden rounded-normal border border-solid border-border-popovers bg-modal-surface",
+  "ds-py-ui-sm",
+  "shadow-menu",
+  "ds-radix-dropdown-content-origin",
+  "data-[state=open]:animate-in data-[state=open]:fade-in-0",
+  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-1.5",
+  "ds-motion-overlay",
+];
+
+export type DropdownMenuContentProps = ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & {
+  /** When true, the menu closes when focus leaves the browser window (devtools, screenshot tools, alt-tab). Default false. */
+  dismissOnFocusLoss?: boolean;
+  /** When false, menu open does not move focus into the panel (required for TypeableDropdownTrigger). Default true. */
+  focusOnOpen?: boolean;
+  matchTriggerWidth?: boolean;
+  /** Radix-private prop, passed through by cast — see ## constraints. */
+  onOpenAutoFocus?: (event: Event) => void;
+  portal?: boolean;
+  portalProps?: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>;
+};
+
 const DropdownMenuContent = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Content>,
-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & {
-    /** When true, the menu closes when focus leaves the browser window (devtools, screenshot tools, alt-tab). Default false. */
-    dismissOnFocusLoss?: boolean;
-    /** When false, menu open does not move focus into the panel (required for TypeableDropdownTrigger). Default true. */
-    focusOnOpen?: boolean;
-    matchTriggerWidth?: boolean;
-    onOpenAutoFocus?: (event: Event) => void;
-    portal?: boolean;
-    portalProps?: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>;
-  }
+  DropdownMenuContentProps
 >(
   (
     {
@@ -158,16 +190,10 @@ const DropdownMenuContent = forwardRef<
             } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>)
           : {})}
         className={cn(
-          "z-50 flex flex-col gap-xs overflow-hidden rounded-normal border border-solid border-border-popovers bg-modal-surface",
-          "ds-py-ui-xs",
-          "shadow-menu",
-          "ds-radix-dropdown-content-origin",
+          menuPanelClassName,
           // Items carry the 160px floor and the panel hugs them; matching the
           // trigger only ever widens it.
           matchTriggerWidth && "ds-radix-dropdown-match-trigger-width",
-          "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-100",
-          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-1.5 data-[state=closed]:duration-150",
-          "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
           className,
         )}
         {...props}
@@ -194,16 +220,64 @@ DropdownMenuContent.displayName = "DropdownMenuContent";
  * presets rail is 144px wide. Internal: not re-exported from src/index.ts.
  */
 export const menuItemClassName =
-  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-sm rounded-tight px-xs ds-radix-data-disabled text-style-body text-ghost-fg-active outline-none transition-colors duration-100 hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
+  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-rg rounded-tight px-sm ds-radix-data-disabled text-style-body text-ghost-fg-active outline-none ds-motion-state hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
 
 /** Dropdown items also hold the menu's 160px floor; sections and the panel hug them. */
 const itemBase = cn(menuItemClassName, "ds-min-w-menu");
 
+/** Opens a DropdownMenuSub. Menu Item geometry, with the item's open fill while its submenu is open and a trailing chevron. */
+const DropdownMenuSubTrigger = forwardRef<
+  ComponentRef<typeof DropdownMenuPrimitive.SubTrigger>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger>
+>(({ className, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubTrigger
+    ref={ref}
+    className={cn(itemBase, "data-[state=open]:bg-ghost-active", className)}
+    {...props}
+  >
+    <span className="flex flex-1 items-center gap-rg">{children}</span>
+    <span className="flex shrink-0" aria-hidden>
+      <ChevronRightIcon size={IconSize.rg} />
+    </span>
+  </DropdownMenuPrimitive.SubTrigger>
+));
+DropdownMenuSubTrigger.displayName = "DropdownMenuSubTrigger";
+
+/** The submenu panel. Same chrome as DropdownMenuContent; portals by default. */
+const DropdownMenuSubContent = forwardRef<
+  ComponentRef<typeof DropdownMenuPrimitive.SubContent>,
+  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent> & {
+    portal?: boolean;
+    portalProps?: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>;
+  }
+>(({ className, portal = true, portalProps, ...props }, ref) => {
+  const content = (
+    <DropdownMenuPrimitive.SubContent
+      ref={ref}
+      className={cn(menuPanelClassName, className)}
+      {...props}
+    />
+  );
+
+  if (!portal) {
+    return content;
+  }
+
+  return (
+    <DropdownMenuPrimitive.Portal {...portalProps}>
+      {content}
+    </DropdownMenuPrimitive.Portal>
+  );
+});
+DropdownMenuSubContent.displayName = "DropdownMenuSubContent";
+
+export type DropdownMenuItemProps = ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+  variant?: DropdownMenuItemVariant;
+};
+
 const DropdownMenuItem = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Item>,
-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
-    variant?: DropdownMenuItemVariant;
-  }
+  DropdownMenuItemProps
 >(({ className, variant = DropdownMenuItemVariant.default, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}
@@ -237,7 +311,7 @@ const DropdownMenuPlainItem = forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex min-h-button w-full items-center gap-sm rounded-tight pl-xs ds-min-w-menu",
+      "flex min-h-button w-full items-center gap-rg rounded-tight pl-sm ds-min-w-menu",
       "text-style-body text-ghost-fg-active",
       className,
     )}
@@ -265,7 +339,7 @@ const DropdownMenuRadioSelectItem = forwardRef<
     )}
     {...props}
   >
-    <span className="flex flex-1 items-center gap-sm">{children}</span>
+    <span className="flex flex-1 items-center gap-rg">{children}</span>
     <DropdownMenuPrimitive.ItemIndicator className="flex shrink-0">
       <CheckIcon />
     </DropdownMenuPrimitive.ItemIndicator>
@@ -323,7 +397,8 @@ const DropdownMenuMultiSelectItem = forwardRef<
         aria-hidden
         className="pointer-events-none ml-xxxs data-disabled:opacity-100!"
       />
-      <span className="flex flex-1 items-center gap-sm">{children}</span>
+      {/* flex-1 fills the row beside the leading checkbox, so the label takes the remaining width. */}
+      <span className="flex flex-1 items-center gap-rg">{children}</span>
     </DropdownMenuPrimitive.CheckboxItem>
   );
 });
@@ -336,7 +411,7 @@ const DropdownMenuLabel = forwardRef<
   <DropdownMenuPrimitive.Label
     ref={ref}
     className={cn(
-      "flex h-[30px] items-center px-xs",
+      "flex h-menu-label items-center px-sm",
       "text-style-label text-text-secondary",
       className,
     )}
@@ -360,15 +435,17 @@ DropdownMenuSeparator.displayName = "DropdownMenuSeparator";
 export interface DropdownMenuSegmentProps extends HTMLAttributes<HTMLDivElement> {
   /** divider (default) or labeled — a labeled segment shows `children` as its label. */
   variant?: DropdownMenuSegmentVariant;
+  /** Rendered only when `variant` is `labeled`; the divider ignores it. */
+  children?: ReactNode;
 }
 
 /** Figma Menu Segment — place directly in DropdownMenuContent, between sections. */
 const DropdownMenuSegment = forwardRef<HTMLDivElement, DropdownMenuSegmentProps>(
   ({ className, variant = DropdownMenuSegmentVariant.divider, children, ...props }, ref) => (
-    <div ref={ref} className={cn("flex w-full flex-col gap-xs", className)} {...props}>
+    <div ref={ref} className={cn("flex w-full flex-col gap-sm", className)} {...props}>
       <DropdownMenuSeparator />
       {variant === DropdownMenuSegmentVariant.labeled ? (
-        <div className="flex ds-px-ui-xs">
+        <div className="flex ds-px-ui-sm">
           <DropdownMenuLabel>{children}</DropdownMenuLabel>
         </div>
       ) : null}
@@ -391,7 +468,7 @@ const DropdownMenuSection = forwardRef<HTMLDivElement, DropdownMenuSectionProps>
   ({ className, width, style, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("flex flex-col ds-px-ui-xs", className)}
+      className={cn("flex flex-col ds-px-ui-sm", className)}
       style={width === undefined ? style : { ...style, width }}
       {...props}
     />
@@ -414,5 +491,7 @@ export {
   DropdownMenuSegment,
   DropdownMenuSeparator,
   DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 };

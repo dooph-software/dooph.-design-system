@@ -1,0 +1,6 @@
+src\components\VerificationCode\CodeDigitInput.tsx:69:            hasError && "text-danger-primary",
+src\components\DropdownTrigger\DropdownTrigger.tsx:250:        <SearchIcon className={cn(disabled && "ds-opacity-disabled")} />
+src\components\Calendar\CalendarPresetsPanel.tsx:70:          isActive && "bg-ghost-active",
+src\components\Input\Input.tsx:181:              disabled && "ds-opacity-disabled",
+src\components\AIChat\AIToolPart.tsx:84:              !isActive && "ds-chat-reveal",
+src\components\Slider\Slider.tsx:355:            showSteps && interacted && !dragging && 'ds-slider-glide',

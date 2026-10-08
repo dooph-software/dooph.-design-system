@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import {
   Sheet,
@@ -11,6 +11,7 @@ import {
 import { SheetSide } from './constants';
 import { Button } from '../Button/Button';
 import { ButtonVariant, ButtonSize } from '../Button/constants';
+import { ButtonText, LabelText } from '../Text';
 
 const meta = {
   title: 'Overlays/Sheet',
@@ -24,9 +25,8 @@ type Story = StoryObj<typeof meta>;
 
 const DemoBody = ({ side }: { side: SheetSide }) => (
   <>
-    <SheetTitle className="sr-only">Sheet from {side}</SheetTitle>
     <div className="flex h-full flex-col gap-4 p-6">
-      <p className="text-style-heading text-text">Sheet from {side}</p>
+      <SheetTitle>Sheet from {side}</SheetTitle>
       <SheetDescription>
         The sheet slides in from the {side} edge with a gentle ease while the
         backdrop fades in. Click outside or press Escape to dismiss.
@@ -37,7 +37,7 @@ const DemoBody = ({ side }: { side: SheetSide }) => (
             key={item}
             className="flex items-center justify-between rounded-normal border border-border-primary px-4 py-3"
           >
-            <span className="text-style-button text-text">{item}</span>
+            <ButtonText className="text-text">{item}</ButtonText>
             <Button variant={ButtonVariant.ghost} size={ButtonSize.sm}>
               Select
             </Button>
@@ -118,16 +118,18 @@ export const Controlled: Story = {
         </Button>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetContent side={SheetSide.right}>
-            <SheetTitle className="sr-only">Controlled sheet</SheetTitle>
             <div className="flex flex-col gap-4 p-6">
-              <p className="text-style-heading text-text">Controlled sheet</p>
-              <p className="text-style-body text-text-secondary">
+              <SheetTitle>Controlled sheet</SheetTitle>
+              <SheetDescription>
                 Open/close state is managed externally via the{' '}
-                <code className="text-style-label bg-surface-secondary rounded px-1">
+                <LabelText
+                  as="code"
+                  className="bg-surface-secondary rounded-tight px-xxs"
+                >
                   open
-                </code>{' '}
+                </LabelText>{' '}
                 prop.
-              </p>
+              </SheetDescription>
               <div className="flex justify-end">
                 <Button
                   variant={ButtonVariant.secondary}
@@ -151,14 +153,55 @@ export const CustomWidth: Story = {
         <Button variant={ButtonVariant.secondary}>Open wide sheet</Button>
       </SheetTrigger>
       <SheetContent side={SheetSide.right} className="w-[540px] max-w-none">
-        <SheetTitle className="sr-only">Wide sheet</SheetTitle>
         <div className="flex flex-col gap-4 p-6">
-          <p className="text-style-heading text-text">Custom width</p>
-          <p className="text-style-body text-text-secondary">
-            Cross-axis size is fully overridable via className — tailwind-merge
-            lets the consumer width win over the default.
-          </p>
+          <SheetTitle>Custom width</SheetTitle>
+          <SheetDescription>
+            Cross-axis size is overridable via className — override max-w-* along
+            with the width, since the default caps it at max-w-96.
+          </SheetDescription>
         </div>
+      </SheetContent>
+    </Sheet>
+  ),
+};
+
+function SheetInContainerDemo() {
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  return (
+    <div className="flex flex-col items-center gap-md">
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant={ButtonVariant.primary}>Open into the frame</Button>
+        </SheetTrigger>
+        <SheetContent
+          side={SheetSide.right}
+          portalProps={{ container }}
+          aria-describedby={undefined}
+        >
+          <div className="p-xl">
+            <SheetTitle>Portalled into a local container</SheetTitle>
+          </div>
+        </SheetContent>
+      </Sheet>
+      <div ref={setContainer} data-testid="sheet-container" />
+    </div>
+  );
+}
+
+/** `portalProps={{ container }}` mounts the overlay and panel into a chosen element instead of `document.body`. `portal={false}` renders them in place. */
+export const CustomContainer: Story = {
+  render: () => <SheetInContainerDemo />,
+};
+
+/** Contradicts withOverlay (default true): no backdrop, the page stays visible. */
+export const NoOverlay: Story = {
+  render: () => (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant={ButtonVariant.secondary}>Open (no backdrop)</Button>
+      </SheetTrigger>
+      <SheetContent side={SheetSide.right} withOverlay={false}>
+        <DemoBody side={SheetSide.right} />
       </SheetContent>
     </Sheet>
   ),

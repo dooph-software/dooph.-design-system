@@ -7,5 +7,3 @@ export const TableIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default TableIcon;

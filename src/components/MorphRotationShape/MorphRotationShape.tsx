@@ -15,7 +15,7 @@
  *   indices, so a target two away passes through the shape between, and a
  *   lower target plays the morph and turn in reverse.
  * - The drawn value is --ds-shape-morph-step (whole stops, spring ease) PLUS
- *   --ds-shape-morph-lean (a hover nudge, --ui-shape-morph-nudge-* ease). Two
+ *   --ds-shape-morph-lean (a hover nudge, on the motion scale). Two
  *   properties because a click while hovered and a hover while open end in the
  *   same final style; only separate transitions can give them different feels.
  *   Targets may therefore be fractional and rest there (e.g. 1.15).
@@ -31,8 +31,9 @@
  *
  * ## constraints
  * - Motion belongs to CSS, geometry belongs here (architecture Rule 6).
- *   Durations and easing are --ui-shape-morph-* tokens, overridable per
- *   instance through `timing` (inline custom properties). Nothing in this file
+ *   The step's duration and easing are --ui-shape-morph-* tokens, overridable
+ *   per instance through `timing` (inline custom properties); the lean's are
+ *   the shared motion scale (`--ui-motion-*`). Nothing in this file
  *   may hold a duration or an easing curve; the spring lives in
  *   scripts/shapeMorphSpring.mjs and reaches here only as the ease token.
  * - `d` and the transform are in JSX only for the FIRST render (so SSR output
@@ -55,16 +56,17 @@
 
 import {
   type ComponentPropsWithoutRef,
-  type ComponentType,
   type CSSProperties,
+  forwardRef,
+  type ForwardedRef,
   useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 import { cn } from "../../utils/cn";
-import type { ShapeProps } from "../Shapes/BaseShape";
-import { getShapePath } from "../Shapes/shapePaths";
+import { useComposedRefs } from "../../utils/composeRefs";
+import { getShapePath, type ShapeInput } from "../Shapes/shapePaths";
 import { MorphRotationShapeMode } from "./constants";
 import { Morph } from "./engine/morph";
 import { toPathD } from "./engine/pathD";
@@ -83,12 +85,13 @@ const NOMINAL_TURN_DEG = 90;
 /** Below this the transitioned value has landed. */
 const EPSILON = 0.001;
 
-type ShapeComponent = ComponentType<ShapeProps>;
 type SpanProps = Omit<ComponentPropsWithoutRef<"span">, "children">;
 
 type CommonProps = SpanProps & {
-  /** DS shape components in play order, e.g. `[CloverShape, PuffShape]`. At least two. */
-  shapes: ShapeComponent[];
+  /** DS shapes in play order: components (`[CloverShape, PuffShape]`) or
+   * `Shapes` keys (`[Shapes.clover, Shapes.puff]`, the form a Server Component
+   * can pass). At least two. */
+  shapes: readonly ShapeInput[];
 };
 
 export type MorphRotationShapeProps = CommonProps &
@@ -127,13 +130,13 @@ interface ShapeData {
   symmetry: number;
 }
 
-const shapeCache = new Map<ShapeComponent, ShapeData>();
-function shapeData(Component: ShapeComponent): ShapeData {
-  let data = shapeCache.get(Component);
+const shapeCache = new Map<ShapeInput, ShapeData>();
+function shapeData(shape: ShapeInput): ShapeData {
+  let data = shapeCache.get(shape);
   if (!data) {
-    const frame = polygonFromSvgPath(getShapePath(Component));
+    const frame = polygonFromSvgPath(getShapePath(shape));
     data = { frame, loader: frame.normalized(), symmetry: rotationalSymmetry(frame) };
-    shapeCache.set(Component, data);
+    shapeCache.set(shape, data);
   }
   return data;
 }
@@ -145,15 +148,15 @@ function assertProps(props: MorphRotationShapeProps) {
     throw new Error(`MorphRotationShape: unknown mode "${String(props.mode)}"`);
   }
   if (!Array.isArray(props.shapes) || props.shapes.length < 2) {
-    throw new Error("MorphRotationShape: `shapes` needs at least two DS shape components");
+    throw new Error("MorphRotationShape: `shapes` needs at least two DS shapes (components or Shapes keys)");
   }
   if (props.mode === MorphRotationShapeMode.controlled && !Number.isInteger(props.activeIndex)) {
     throw new Error("MorphRotationShape: `controlled` mode requires an integer `activeIndex`");
   }
 }
 
-/** Changes only when the shapes array's elements (by identity) change. */
-function useShapesKey(shapes: ShapeComponent[]): number {
+/** Changes only when the shapes array's elements change (components by identity, keys by value). */
+function useShapesKey(shapes: readonly ShapeInput[]): number {
   const ref = useRef({ shapes, key: 0 });
   const prev = ref.current.shapes;
   if (prev.length !== shapes.length || prev.some((s, i) => s !== shapes[i])) {
@@ -162,11 +165,14 @@ function useShapesKey(shapes: ShapeComponent[]): number {
   return ref.current.key;
 }
 
-export const MorphRotationShape = (props: MorphRotationShapeProps) => {
-  assertProps(props);
-  const key = useShapesKey(props.shapes);
-  return <MorphRotationShapeInner key={key} {...props} />;
-};
+export const MorphRotationShape = forwardRef<HTMLSpanElement, MorphRotationShapeProps>(
+  (props, ref) => {
+    assertProps(props);
+    const key = useShapesKey(props.shapes);
+    return <MorphRotationShapeInner key={key} {...props} forwardedRef={ref} />;
+  },
+);
+MorphRotationShape.displayName = "MorphRotationShape";
 
 const MorphRotationShapeInner = ({
   mode,
@@ -177,9 +183,11 @@ const MorphRotationShapeInner = ({
   onStepComplete,
   className,
   style,
+  forwardedRef,
   ...spanProps
-}: MorphRotationShapeProps) => {
+}: MorphRotationShapeProps & { forwardedRef: ForwardedRef<HTMLSpanElement> }) => {
   const spanRef = useRef<HTMLSpanElement>(null);
+  const composedRef = useComposedRefs(spanRef, forwardedRef);
   const gRef = useRef<SVGGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
 
@@ -340,12 +348,14 @@ const MorphRotationShapeInner = ({
 
   return (
     <span
-      ref={spanRef}
       data-mode={mode}
       aria-hidden={spanProps.role ? undefined : true}
       className={cn("ds-shape-morph block", className)}
       style={{ ...(styleVars as CSSProperties), ...style }}
       {...spanProps}
+      /* Last, and composed: a consumer ref must never displace spanRef — the
+       * sampling loop and the listeners read it (see ## constraints). */
+      ref={composedRef}
     >
       <svg viewBox="0 0 100 100" className="block size-full overflow-visible" aria-hidden focusable="false">
         <g className={isLoader ? "ds-shape-morph-passive-spin" : undefined}>

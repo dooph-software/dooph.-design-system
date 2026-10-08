@@ -1,3 +1,5 @@
+@layer ds.tokens, ds.expression;
+
 /*
  * dooph Design System — Token Layer
  *
@@ -10,9 +12,24 @@
  * — There is NO `prefers-color-scheme` remapping here: system mode is the
  *   consuming app's job (providers add/remove `.dark` from OS preference).
  *
- * Consuming apps override `--ui-*` in their CSS after importing this bundle,
- * targeting `:root` / `.light` / `.dark` as needed — never hardcoded in components.
+ * Authority — cascade layers, so precedence never depends on file order or
+ * selector specificity. Everything below sits in two layers:
+ *   ds.tokens      the DS defaults (light, dark, reduced motion)
+ *   ds.expression  the expression presets ([data-ds-expression="…"])
+ * A consuming app's own tokens.css is UNLAYERED, so it always wins:
+ *   your tokens.css > the expression preset > DS defaults.
+ * Override `--ui-*` there, targeting `:root` / `.light` / `.dark` as needed —
+ * never hardcoded in components. Import order no longer matters.
+ *
+ * Expression tokens: one per expressive DETAIL inside a practical component
+ * (e.g. the dropdown caret's shape). Each line ends in an `expression`
+ * marker comment, is read only through a `.ds-expr-*` helper, and has its
+ * neutral value in the practical preset at the end of this file. Components
+ * never set them.
+ * Checked by docs/audit/_work/scratch/expression-check.mjs.
  */
+
+@layer ds.tokens {
 
 :root,
 .light {
@@ -85,7 +102,7 @@
   --ui-color-danger-border-disabled: var(--ui-color-secondary-border-disabled);
 
   /* Ghost (no rest bg; hover/active are translucent overlays) */
-  --ui-color-ghost-foreground: #4a4a4a;
+  --ui-color-ghost-foreground: var(--ui-color-text);
   --ui-color-ghost-hover: rgba(0, 0, 0, 0.04);
   --ui-color-ghost-active: rgba(0, 0, 0, 0.08);
   --ui-color-ghost-foreground-active: #161616;
@@ -141,6 +158,10 @@
    * danger = danger-primary. They are literal rgba() rather than color-mix()
    * over the source token because a consumer overriding, say,
    * --ui-color-prominent should be able to retune the ring independently. */
+  /* Focus-ring outline width (Figma buttonSizes/focus-ring-spread), and the small
+   * step for compact controls such as Checkbox, where 4px reads as huge. */
+  --ui-focus-ring-width: 4px;
+  --ui-focus-ring-width-sm: 2px;
   --ui-color-focus-ring-prominent: rgba(36, 6, 172, 0.35);
   --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.25);
   --ui-color-focus-ring-danger: rgba(234, 63, 63, 0.35);
@@ -162,6 +183,52 @@
   --ui-color-ai-openai: #000000;
   --ui-color-ai-spacexai: #000000;
 
+  /* ── Motion ──────────────────────────────────────────────────────────────
+   * One scale for the whole system: every transition and animation in the
+   * package reads a duration and a curve from here, so retuning one token
+   * retunes that step everywhere. Components consume it through the ds-motion-*
+   * helpers and through var() inside CSS helpers — never through duration-N /
+   * ease-* utilities or inline timing. A component keeps a motion token of its
+   * own only when the value cannot sit on the scale: loops, staggers and the
+   * generated shape-morph spring. Reduced motion is the single
+   * `prefers-reduced-motion` block at the end of this file.
+   *
+   *   fast    — state feedback (hover, press, focus colour); small overlays in
+   *             and out (menu, tooltip, popover, toast); quick swaps.
+   *   base    — large overlay in and out (modal in, sheet out); disclosure;
+   *             content swap out; small transforms.
+   *   slow    — content swap in; sheet in; progress fills.
+   *   slower  — reveals; chat streaming.
+   *   slowest — expressive hover (underline link). */
+  --ui-motion-duration-fast: 150ms;
+  --ui-motion-duration-base: 200ms;
+  --ui-motion-duration-slow: 300ms;
+  --ui-motion-duration-slower: 420ms;
+  --ui-motion-duration-slowest: 600ms;
+  /*   standard — starts and ends on screen: state feedback, fades, progress.
+   *   enter    — the house curve: entering, swapping in, expressive moves,
+   *              glides. A long deceleration that settles.
+   *   exit     — leaving: overlay exits, swap out. Accelerates away.
+   *   linear   — loops (spinners, shimmer). */
+  --ui-motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ui-motion-ease-enter: cubic-bezier(0.32, 0.72, 0, 1);
+  --ui-motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ui-motion-ease-linear: linear;
+  /* Loop cycle times are not transitions, so they sit off the scale and are
+   * NOT collapsed under reduced motion — each loop's own reduce rule stops it
+   * or swaps in a static frame instead. */
+  --ui-shimmer-duration: 2000ms;
+  /* LoadingSpinner. `duration` is one flat-arc dash cycle (Material's
+   * circular indeterminate: the arc grows, then its tail chases the head
+   * round and it shrinks to a dot). `rotate-duration` is one constant turn of
+   * the flat variant's arc group, a separate loop. Both are Material's
+   * 1.4s. `spokes-duration` is one turn of the spokes and star variants at
+   * the `rg` size; the component scales it per size by a geometry factor, so
+   * retuning this retunes all four sizes together. */
+  --ui-spinner-duration: 1400ms;
+  --ui-spinner-rotate-duration: 1400ms;
+  --ui-spinner-spokes-duration: 1800ms;
+
   /* Text shimmer (ShimmerText) */
   --ui-shimmer-base: var(--ui-color-text-tertiary);
   --ui-shimmer-highlight: color-mix(
@@ -174,7 +241,8 @@
    *
    * The two shimmer pairs RE-BASE ShimmerText rather than restyling it: a
    * working tool row reads at full ghost-active weight, the thinking row at the
-   * quieter ghost weight (Figma 761:1330 / 761:1346). The highlight keeps the
+   * quieter text-secondary weight, the colour a settled thinking label rests at
+   * (Figma 761:1330 / 761:1346). The highlight keeps the
    * package's own base-at-35% formula so a consumer retuning either base keeps
    * the sheen in proportion. */
   --ui-chat-tool-shimmer-base: var(--ui-color-ghost-foreground-active);
@@ -183,28 +251,22 @@
     var(--ui-color-ghost-foreground-active) 35%,
     transparent
   );
-  --ui-chat-thinking-shimmer-base: var(--ui-color-ghost-foreground);
+  --ui-chat-thinking-shimmer-base: var(--ui-color-text-secondary);
   --ui-chat-thinking-shimmer-highlight: color-mix(
     in srgb,
-    var(--ui-color-ghost-foreground) 35%,
+    var(--ui-color-text-secondary) 35%,
     transparent
   );
-  /* Settled rows reveal their meta (timing, tokens, copy) on hover. */
-  --ui-chat-reveal-duration: 150ms;
-  --ui-chat-reveal-ease: ease-out;
   /* `streamingAnimation`: each block of prose rises out of a blur as it
    * arrives. `blur` is px on purpose — a lens effect, not a typographic
-   * measure (the same call as --ui-roll-change-blur). */
-  --ui-chat-stream-duration: 400ms;
-  --ui-chat-stream-ease: ease-out;
+   * measure (the roll's blur, --ui-roll-change-blur, is em because it must
+   * stay inside a clip box that scales with the type). Its timing, like the
+   * hover reveal's and the transcript disclosure's, is on the motion scale. */
   --ui-chat-stream-blur: 3px;
   --ui-chat-stream-rise: 4px;
-  /* The thinking transcript's open/close. */
-  --ui-chat-disclosure-duration: 200ms;
-  --ui-chat-disclosure-ease: ease-in-out;
-  /* The prompt textarea grows with its content up to this, then scrolls. The
-   * component reads it back from computed style, so this token is the only
-   * place the cap lives. */
+  /* The prompt textarea grows with its content up to this, then scrolls. CSS
+   * max-height applies the cap and the component only sets height =
+   * scrollHeight, so this token is the only place the cap lives. */
   --ui-chat-prompt-max-height: 300px;
   /* The provider swatch in AIModelSelectItem (Figma 761:2073). */
   --ui-chat-model-swatch-size: 10px;
@@ -213,11 +275,14 @@
   --ui-width-chat-model-tooltip: 242px;
   /* Inline code inside ds-chat-prose. */
   --ui-chat-prose-code-radius: 4px;
+  /* Links and blockquotes inside ds-chat-prose. */
+  --ui-chat-prose-link-offset: 3px;
+  --ui-chat-prose-quote-border-width: 2px;
 
-  /* Text roll on hover (RollHoverText). The duration:stagger ratio (~1:14) is
-   * what makes the letters read as one travelling wave instead of a metronome —
+  /* Text roll on hover (RollHoverText). Each letter rolls over
+   * --ui-motion-duration-slower; the duration:stagger ratio (~1:12) is what
+   * makes the letters read as one travelling wave instead of a metronome —
    * raising the stagger toward the duration turns it into discrete flips. */
-  --ui-roll-hover-duration: 500ms;
   --ui-roll-hover-stagger: 35ms;
   --ui-roll-hover-blur: 3px;
   --ui-roll-hover-depth: 0.5em;
@@ -226,36 +291,34 @@
    * make the same component subtle in a button and overdone in a hero. */
   --ui-roll-hover-perspective: 10em;
 
-  /* Text roll on change (RollChangeText). Two halves with deliberately
-   * different curves: the old content leaves on an accelerating ease-in (it is
+  /* Text roll on change (RollChangeText). Timing is on the motion scale: the
+   * old content leaves over `base` on the accelerating `exit` curve (it is
    * being thrown away, so it should not linger) while the new content arrives
-   * on the house decelerating curve and settles. Giving them one shared ease
-   * flattens that read.
+   * over `slow` on the decelerating `enter` curve and settles. Giving the two
+   * halves one shared ease flattens that read.
    *
    * `depth` is in em so the travel scales with the type, like the hover roll's.
-   * `blur` is in px on purpose: it is a lens effect, not a typographic measure,
-   * and scaling it with font size makes large text look smeared rather than
-   * fast. The in-animation's mid-point blur is derived from this token, not a
-   * second one, so the two stay in proportion.
+   * `blur` is in em too (~0.1em, 1.6px at 16px): a fixed 4px halo outgrew small
+   * type and was sliced at the clip edge mid-roll. The in-animation's mid-point
+   * blur is derived from this token, not a second one, so the two stay in
+   * proportion.
+   *
+   * `breathe` is the vertical room the clip box gets above and below the line
+   * (padding, cancelled by an equal negative margin so layout does not move)
+   * so the soft mask fades the blur halo instead of cutting it.
    *
    * The exiting node is unmounted by its own `animationend`, so nothing in the
-   * component mirrors `out-duration`. It used to be duplicated as a JS
+   * component mirrors the out duration. It used to be duplicated as a JS
    * setTimeout, which is precisely the mirror that desyncs the moment either
    * side is retuned. */
-  --ui-roll-change-out-duration: 200ms;
-  --ui-roll-change-in-duration: 300ms;
-  --ui-roll-change-out-ease: cubic-bezier(0.4, 0, 1, 1);
-  --ui-roll-change-in-ease: cubic-bezier(0.32, 0.72, 0, 1);
-  --ui-roll-change-depth: 0.9em;
-  --ui-roll-change-blur: 4px;
+  --ui-roll-change-depth: 0.55em;
+  --ui-roll-change-blur: 0.1em;
+  --ui-roll-change-breathe: 0.15em;
 
   /* Fade-roll on change (FadeChangeText) — the roll above without the blur:
-   * travel + opacity only. Each value ALIASES its roll-change counterpart, so
-   * the two stay one motion by default and either can be retuned alone. */
-  --ui-fade-change-out-duration: var(--ui-roll-change-out-duration);
-  --ui-fade-change-in-duration: var(--ui-roll-change-in-duration);
-  --ui-fade-change-out-ease: var(--ui-roll-change-out-ease);
-  --ui-fade-change-in-ease: var(--ui-roll-change-in-ease);
+   * travel + opacity only, on the same motion-scale timing. The depth ALIASES
+   * the roll's, so the two stay one motion by default and either can be
+   * retuned alone. */
   --ui-fade-change-depth: var(--ui-roll-change-depth);
 
   /* Shape morph — MorphRotationShape / ShapeMorphSpinner.
@@ -271,27 +334,26 @@
   --ui-shape-morph-passive-spin-duration: 4666ms;
 
   /* Hover nudge: how far a hovered shape leans toward the next stop (a
-   * fraction of one step, applied to morph AND turn), and its own gentle,
-   * non-overshooting timing so hovering never wobbles. */
+   * fraction of one step, applied to morph AND turn). The lean is timed on the
+   * motion scale (`base`, `enter`) — gentle and non-overshooting, so hovering
+   * never wobbles. */
   --ui-shape-morph-nudge: 0.15;
-  --ui-shape-morph-nudge-duration: 180ms;
-  --ui-shape-morph-nudge-ease: cubic-bezier(0.2, 0, 0, 1);
 
   /* Rolling digits (RollingDigitsText) — 2D cash-register snap, not 3D.
    *
-   * `duration` governs the ROLL: a wheel already on screen translating to its
-   * new digit. `stagger` defaults to 0ms so every wheel starts and lands
-   * together, one snap for the whole figure; it stays a token so a consumer can
-   * dial in a right-to-left cascade (ones place leads) without patching the
-   * package.
+   * Timing is on the motion scale, all on the `enter` curve. The ROLL — a
+   * wheel already on screen translating to its new digit — runs over `base`.
+   * `stagger` defaults to zero so every wheel starts and lands together, one
+   * snap for the whole figure; it stays a token so a consumer can dial in a
+   * right-to-left cascade (ones place leads) without patching the package.
    *
-   * `enter-duration` / `exit-duration` govern a whole SLOT — a wheel or a
-   * grouping separator — opening from or collapsing to zero width while it
-   * fades. Width and opacity are the same animation, and it runs CONCURRENTLY
-   * with the roll of the wheels already on screen. `opacity-ratio` is the
-   * FRACTION of that duration the fade occupies: opacity finishes early so an
-   * arriving glyph (which is drawn at full 1ch and overflows its narrower slot)
-   * is already opaque by the time it stops overlapping its neighbour.
+   * A whole SLOT — a wheel or a grouping separator — opens from zero width
+   * over `slow` and collapses to zero width over `base`, fading as it goes.
+   * Width and opacity are the same animation, and it runs CONCURRENTLY with
+   * the roll of the wheels already on screen. `opacity-ratio` is the FRACTION
+   * of that duration the fade occupies: opacity finishes early so an arriving
+   * glyph (which is drawn at full 1ch and overflows its narrower slot) is
+   * already opaque by the time it stops overlapping its neighbour.
    *
    * `digit-width` and `separator-width` are the two slot widths. Both have to
    * be fixed lengths because `width` cannot animate from `auto`, and both are
@@ -320,31 +382,13 @@
    * stay measured against it. Override `decimals-size` to change the
    * proportion; `decimals-rise` needs re-tuning alongside it, since top-aligning
    * a taller decimals box takes less rise. */
-  --ui-rolling-digits-duration: 240ms;
   --ui-rolling-digits-stagger: 0ms;
-  --ui-rolling-digits-enter-duration: 260ms;
-  --ui-rolling-digits-exit-duration: 200ms;
   --ui-rolling-digits-opacity-ratio: 0.55;
-  --ui-rolling-digits-ease: cubic-bezier(0.32, 0.72, 0, 1);
   --ui-rolling-digits-digit-width: 1ch;
   --ui-rolling-digits-separator-width: 0.34em;
   --ui-rolling-digits-decimals-size: 0.5em;
   --ui-rolling-digits-decimals-rise: 0.525em;
   --ui-rolling-digits-decimals-gap: 0.06em;
-
-  /* Sidebar rail icon (SidebarWithHoverIcon). Two independent motions: the rail
-   * TRAVERSING the frame when `side` flips, and the rail pulling out into a
-   * chevron on hover. Hover is the faster of the two — it answers a pointer, so
-   * it has to feel immediate, while the traverse is a state change and reads
-   * better with some weight.
-   *
-   * These are real CSS transition durations on two registered custom
-   * properties, not numbers mirrored into JS: the component only samples the
-   * interpolated values and writes the path. Retuning them here retunes the
-   * icon, including under `prefers-reduced-motion`, with no JS involved. */
-  --ui-sidebar-icon-duration: 260ms;
-  --ui-sidebar-icon-hover-duration: 180ms;
-  --ui-sidebar-icon-ease: cubic-bezier(0.32, 0.72, 0, 1);
 
   /* Text underline link wipe (UnderlineLinkText). On hover the line sweeps out
    * to the right then redraws in from the left. Thickness/offset are in em so the
@@ -352,25 +396,10 @@
    * `calc(1em + offset)` from the top of each line box — just under the em
    * square, like a native text-decoration underline — rather than at the bottom
    * of the line box (which drifts with leading). Positive offset pushes further
-   * down; 0 sits at the em-square bottom; negative pulls into the glyphs. */
+   * down; 0 sits at the em-square bottom; negative pulls into the glyphs. The
+   * sweep is timed on the motion scale (`slowest`, `enter`). */
   --ui-underline-link-thickness: 0.08em;
   --ui-underline-link-offset: 0.05em;
-  --ui-underline-link-duration: 600ms;
-  --ui-underline-link-ease: cubic-bezier(0.32, 0.72, 0, 1);
-
-  /* Text reveal on change (RevealChangeText). The slot's width is what animates,
-   * so these are deliberately slower than the roll tokens: a reveal is motion
-   * the eye is meant to follow, where a roll is a quick swap. The collapse is
-   * shorter than the reveal because tucking away is the half nobody needs to
-   * read — and because a value CHANGE runs both back to back, so the pair is
-   * what has to stay under the limit of feeling sluggish.
-   *
-   * One shared ease, unlike --ui-roll-change-*'s split pair: both halves here
-   * are the SAME slot moving, and giving the collapse its own accelerating
-   * curve reads as the content being yanked rather than tucked. */
-  --ui-reveal-change-in-duration: 420ms;
-  --ui-reveal-change-out-duration: 320ms;
-  --ui-reveal-change-ease: cubic-bezier(0.32, 0.72, 0, 1);
 
   /* ── Typography ──────────────────────────────────────────────────────── */
 
@@ -405,6 +434,9 @@
    * directly to break that link. */
   --ui-text-mono: var(--ui-text-body);
   --ui-text-subheading: 18px;
+  /* The verification-code digit (CodeDigitInput, `text-code-digit`). 18px like
+   * subheading, but not that role, so it is its own token. */
+  --ui-text-code-digit: 18px;
   --ui-text-heading: 20px;
   --ui-text-title: 40px;
   --ui-text-hero: 55px;
@@ -418,6 +450,8 @@
   --ui-weight-title: 700;
   --ui-weight-hero: 700;
   --ui-weight-mono: var(--ui-weight-button);
+  /* Hero CTA label: the button role, semibold. */
+  --ui-weight-cta: var(--ui-weight-semibold);
 
   /* Font weights — by name (BaseText `fontWeight` prop; consumer-overridable) */
   --ui-weight-regular: 400;
@@ -448,8 +482,35 @@
 
   --ui-height-button: 38px;
   --ui-height-button-sm: 34px;
+  --ui-height-button-medium: 46px;
+  --ui-height-button-big: 54px;
+  /* Horizontal padding of the pill-shaped medium / big buttons. Figma draws
+   * them as raw 22 / 32px, off the spacing scale, so they are their own
+   * tokens. Raw var() inside the ds-px-button-* helpers only. */
+  --ui-spacing-button-medium-x: 22px;
+  --ui-spacing-button-big-x: 32px;
+  /* Micro (28px): micro buttons, icon-micro toggles/tabs, and the compact preset row. */
+  --ui-height-button-micro: 28px;
   --ui-size-checkbox: 18px;
+  /* The check / indeterminate glyph box inside the checkbox (`.size-checkbox-icon`). */
+  --ui-size-checkbox-icon: 10px;
   --ui-size-code-digit: 46px;
+  /* Avatar frame per size (`.size-avatar` / `.size-avatar-sm`). */
+  --ui-size-avatar: 38px;
+  --ui-size-avatar-sm: 22px;
+  /* ShapeButton frame AND the shape drawn in it (`.size-shape-button`, plus
+   * the shape's `size` prop) — one token, so the two cannot drift apart. */
+  --ui-size-shape-button: 46px;
+  /* Floor of a single-key HotkeyIndicator, so a one-glyph key stays square
+   * (`.ds-min-size-kbd`). */
+  --ui-size-kbd: 23px;
+  /* DropdownMenuLabel row height (`.h-menu-label`). */
+  --ui-height-menu-label: 30px;
+  /* TextDropdownTrigger (standard) height. Same row height as the menu label
+   * by design; own name so either retunes alone (`.h-text-trigger`). */
+  --ui-height-text-trigger: var(--ui-height-menu-label);
+  /* LinearProgressIndicator bar height (`.h-linear-progress`). */
+  --ui-height-linear-progress: 4px;
 
   /* Loading spinner / progress indicator diameters */
   --ui-size-spinner-sm: 16px;
@@ -467,19 +528,25 @@
   --ui-width-tooltip-rich: 175px;
   --ui-min-w-tooltip-complex: 242px;
 
-  /* Calendar — day-cell corner radius, presets rail width, panel min-width. */
+  /* Calendar — presets rail width and panel min-width (the day-cell radius is
+   * with the radii, --ui-radius-calendar-day). */
   --ui-width-calendar-presets: 144px;
   /* Panel width sets the day-cell size: cells are aspect-square across seven
    * equal columns, so widening the panel makes each day physically bigger. */
   --ui-min-w-calendar-panel: 300px;
-  --ui-height-button-micro: 26px;
-  /* Micro segmented-tab item — the compact inline preset row (Figma "Micro", 28px). */
-  --ui-height-tab-micro: 28px;
   --ui-height-slider-track: 22px;
   --ui-radius-slider-inner: 8px;
   --ui-slider-track-gap: 6px;
   --ui-width-slider-handle: 6px;
   --ui-height-slider-handle: 42px;
+  /* Stepped slider step marks (Figma "Slider Step"). Every step is a round dot
+   * of --ui-size-slider-step; the one a slider's `highlightedStep` picks keeps
+   * that width and grows to --ui-height-slider-step-tall, a capsule centred on
+   * the same point. 10px is the maintainer's call: Figma draws a 12px pill
+   * overflowing a 10px frame, which is a mistake. Raw var() inside the
+   * .ds-slider-dot helper only, never a utility. */
+  --ui-size-slider-step: 6px;
+  --ui-height-slider-step-tall: 10px;
 
   /* Slider paints (Figma SliderPrimary/* and SliderProminent/*).
    *
@@ -512,13 +579,20 @@
 
   --ui-spacing-xxxs: 2px;
   --ui-spacing-xxs: 4px;
-  --ui-spacing-xs: 8px;
-  --ui-spacing-sm: 10px;
-  --ui-spacing-rg: 12px;
-  --ui-spacing-md: 16px;
-  --ui-spacing-lg: 20px;
-  --ui-spacing-xl: 28px;
-  --ui-spacing-xxl: 40px;
+  --ui-spacing-xs: 6px;
+  --ui-spacing-sm: 8px;
+  --ui-spacing-rg: 10px;
+  --ui-spacing-md: 12px;
+  --ui-spacing-lg: 16px;
+  --ui-spacing-xl: 20px;
+  --ui-spacing-xxl: 26px;
+  --ui-spacing-xxxl: 42px;
+  /* Complex toast top/left inset (Figma), off the spacing scale like
+   * sticker-y (`pl-toast-inset` / `pt-toast-inset`). */
+  --ui-spacing-toast-inset: 14px;
+  /* TablePlaceholder (empty-state row) vertical padding, off the scale
+   * (`py-table-placeholder-y`). */
+  --ui-spacing-table-placeholder-y: 32px;
 
   /* ── Icons ───────────────────────────────────────────────────────────── */
 
@@ -529,15 +603,20 @@
   --ui-icon-stroke-width: 2;
 
   /* ── Radius (semantic corners) ────────────────────────────────────────────
-   * tight     — compact chrome: buttons, tabs, dense controls (kbd, etc.).
-   * standard — triggers, grouped inputs, dropdown rows, segmented shells.
-   * soft     — panels: modals, menu surfaces, search field shell, Outline inner.
+   * tight  — compact chrome: buttons, tabs, dense controls (kbd, etc.).
+   * mini   — micro (28px) toggle options / tabs.
+   * normal — triggers, grouped inputs, dropdown rows, segmented shells.
+   * soft   — panels: modals, menu surfaces, search field shell, Outline inner.
    */
   --ui-radius-tight: 12px;
   /* Figma `radius-mini` — micro (28px) toggle options / tabs. */
   --ui-radius-mini: 10px;
   --ui-radius-normal: 18px;
   --ui-radius-soft: 20px;
+  /* Concentric outer radius of the outline frame wrapping a `soft` surface
+   * with an sm inset: soft (20) + sm (8) = 28px (`rounded-outline-frame`;
+   * OutlineSection, OutlineButton). Override the parts, or this to break it. */
+  --ui-radius-outline-frame: calc(var(--ui-radius-soft) + var(--ui-spacing-sm));
   --ui-radius-checkbox: 6px;
   --ui-radius-avatar: 8px;
   --ui-radius-avatar-sm: 6px;
@@ -556,6 +635,10 @@
   --ui-shadow-cta: 0 1px 2px rgba(56, 56, 56, 0.15);
   --ui-shadow-focus-prominent: 0 0 0 4px var(--ui-color-focus-ring-prominent);
   --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
+  /* Checkbox press ring (Figma active state) — the focus-ring paint, named for
+   * its job so component classes never use a focus shadow for a press. */
+  --ui-shadow-press-prominent: var(--ui-shadow-focus-prominent);
+  --ui-shadow-press-primary: var(--ui-shadow-focus-primary);
 
   /* ── Menu min-widths ─────────────────────────────────────────────────── */
 
@@ -567,16 +650,54 @@
    * without touching menus. Same arrangement as primary-disabled. */
   --ui-min-w-search-box: var(--ui-min-w-menu-complex);
 
+  /* ── OutlineButton ─────────────────────────────────────────────────────
+   * The inner button box, and its two glow orbs. Orb 1 paints `glowColor1`
+   * (the larger, left one), orb 2 `glowColor2`. Read by the
+   * .ds-size-outline-button / .ds-outline-button-glow-* / -trail-* helpers.
+   * The hover (cursor-tracking) mode blurs each orb 2px more than the static
+   * `glowing` mode; that split predates the tokens and is kept as-is. Orb
+   * timing is NOT here: it is on the motion scale (.ds-outline-orb-*). */
+  --ui-height-outline-button: 54px;
+  --ui-min-w-outline-button: 160px;
+  --ui-outline-button-orb-1-opacity: 0.38;
+  --ui-outline-button-orb-2-opacity: 0.22;
+  --ui-outline-button-orb-1-blur: 18px;
+  --ui-outline-button-orb-2-blur: 24px;
+  --ui-outline-button-orb-1-hover-blur: 20px;
+  --ui-outline-button-orb-2-hover-blur: 26px;
+  /* Orb size, as a share of the button box (both modes). */
+  --ui-outline-button-orb-1-width: 62%;
+  --ui-outline-button-orb-1-height: 72%;
+  --ui-outline-button-orb-2-width: 48%;
+  --ui-outline-button-orb-2-height: 64%;
+  /* `glowing` mode anchors: each orb hangs below the bottom edge, orb 1 in
+   * from the left, orb 2 in from the right. */
+  --ui-outline-button-orb-1-bottom: -18px;
+  --ui-outline-button-orb-1-left: 4%;
+  --ui-outline-button-orb-2-bottom: -14px;
+  --ui-outline-button-orb-2-right: 6%;
+
   /* ── CTAButton ───────────────────────────────────────────────────────── */
 
+  /* Label sizes, read by `.text-style-cta` (standard) and the big CTA. */
   --ui-text-cta-standard: 24px;
   --ui-text-cta-big: 28px;
+  /* End-mark frame per size. */
   --ui-size-cta-chip-standard: 46px;
   --ui-size-cta-chip-big: 60px;
-  --ui-size-cta-icon: 20px;
+  /* The FIXED shape drawn in that frame (eight-leaf clover at standard, puff at
+   * big). The clover fills its frame, so it aliases it; the puff sits 5px
+   * inside the big frame (Figma: a 50px puff in a 60px frame). */
+  --ui-size-cta-shape-standard: var(--ui-size-cta-chip-standard);
+  --ui-size-cta-shape-big: var(--ui-size-cta-chip-big);
+  /* Icon centred on the shape, per size. */
+  --ui-size-cta-icon-standard: 22px;
+  --ui-size-cta-icon-big: 26px;
   --ui-min-w-cta-content-standard: 330px;
   --ui-min-w-cta-content-big: 350px;
-  --ui-min-w-cta-pill-big: 370px;
+  /* Label → end-mark gap. Both sizes hug their content with the same 60px gap;
+   * one token per size so either can be retuned alone. */
+  --ui-spacing-cta-content-standard: 60px;
   --ui-spacing-cta-content-big: 60px;
 
   /* ── Stickers ──────────────────────────────────────────────────────────
@@ -659,7 +780,7 @@
 
   --ui-color-ghost-hover: rgba(255, 255, 255, 0.04);
   --ui-color-ghost-active: rgba(255, 255, 255, 0.08);
-  --ui-color-ghost-foreground: #afafaf;
+  --ui-color-ghost-foreground: var(--ui-color-text);
   --ui-color-ghost-foreground-active: #ffffff;
 
   --ui-color-surface-page: #131c1d;
@@ -704,11 +825,10 @@
 
   --ui-opacity-disabled: 0.5;
 
-  /* Secondary's own opacity variable drops to 60%, but the dark sticker WASH
-   * does not use it — Figma binds `color-sticker-bg-secondary` to the shared
+  /* The dark secondary WASH does not read --ui-sticker-bg-opacity-secondary
+   * (80%, light only) — Figma binds `color-sticker-bg-secondary` to the shared
    * 20% opacity in dark. Danger stops being a composite at all: both the
    * content and the wash are a literal white, not danger-primary/secondary. */
-  --ui-sticker-bg-opacity-secondary: 60%;
   --ui-color-sticker-bg-secondary: color-mix(
     in srgb,
     var(--ui-color-secondary-border-active) var(--ui-sticker-bg-opacity),
@@ -721,4 +841,71 @@
   --ui-radius-checkbox: 6px;
   --ui-radius-avatar: 8px;
   --ui-radius-avatar-sm: 6px;
+}
+
+/* ── Reduced motion — the ONE place it is handled ───────────────────────────
+ * Every transition and animation in the package reads its duration from the
+ * motion scale, so collapsing the scale here makes the whole system instant.
+ * No component carries a reduce override that only shortens a duration.
+ *
+ * 1ms, NOT 0ms, and that is load-bearing: a 0ms transition never fires
+ * `transitionrun` or `transitionend`, and several components hang real work
+ * off those events (RevealChangeText swaps its content and calls `onSettled`
+ * on `transitionend`; MorphRotationShape starts sampling on `transitionrun`).
+ * At 0ms they would strand content on screen. 1ms reads as instant and still
+ * fires every event.
+ *
+ * Staggers go to zero so nothing waits on a delay. Loop cycle times
+ * (--ui-shimmer-duration, --ui-shape-morph-*) are deliberately absent: a loop
+ * at 1ms would strobe, so each loop's own reduce rule stops it or shows a
+ * static frame instead.
+ *
+ * `.light` is listed beside `:root` because it redeclares the scale; without
+ * it a `.light` subtree would quietly restore full-length motion.
+ *
+ * `!important` is deliberate and load-bearing: these tokens live in
+ * `@layer ds.tokens`, and a consumer's UNLAYERED override (e.g. a product
+ * tuning --ui-motion-duration-fast) would otherwise beat this block and give
+ * reduced-motion users full animations. A layered !important outranks every
+ * unlayered normal declaration, so the user's accessibility setting always
+ * wins. Do not remove it. */
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  .light {
+    --ui-motion-duration-fast: 1ms !important;
+    --ui-motion-duration-base: 1ms !important;
+    --ui-motion-duration-slow: 1ms !important;
+    --ui-motion-duration-slower: 1ms !important;
+    --ui-motion-duration-slowest: 1ms !important;
+    --ui-roll-hover-stagger: 0ms !important;
+    --ui-rolling-digits-stagger: 0ms !important;
+  }
+}
+
+/* ── Expression details — DS defaults (the signature look) ──────────────────
+ * Declared on :root ONLY, not beside `.light`/`.dark`: a theme-class subtree
+ * must never quietly restore a detail the practical preset turned off. */
+:root {
+  /* DropdownCaret shape: 1 = the morphing shape behind the chevron, in its
+   * square; 0 = a plain chevron, no shape and no frame around it. Values in
+   * between interpolate size and colour; 0 and 1 are the designed settings. */
+  --ui-caret-shape-scale: 1; /* expression */
+  /* DropdownCaret hover lean (a fraction of one step, like
+   * --ui-shape-morph-nudge, which it follows by default); 0 = no lean. */
+  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */
+}
+
+} /* @layer ds.tokens */
+
+/* ── Expression presets ─────────────────────────────────────────────────────
+ * A product-level setting: put the attribute on the root element —
+ * `<html data-ds-expression="practical">` in a Next.js app/layout.tsx, or
+ * index.html in Vite. Nesting works ("nearest ancestor wins") but is
+ * discouraged. Every expression-marked token above MUST appear here with
+ * its neutral value. A product's own unlayered tokens.css still beats this. */
+@layer ds.expression {
+  [data-ds-expression="practical"] {
+    --ui-caret-shape-scale: 0;
+    --ui-caret-nudge: 0;
+  }
 }

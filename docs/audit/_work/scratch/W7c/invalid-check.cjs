@@ -1,0 +1,23 @@
+// WI-C7-11 check (F-070). Usage: node invalid-check.cjs <build-dir>  (defaults to the audit build of b436647)
+const B = process.argv[2] || 'C:/Users/stick/Github/dooph/dooph-ds-audit-build';
+const React = require(B + '/node_modules/react');
+const { renderToStaticMarkup } = require(B + '/node_modules/react-dom/server');
+const ds = require(B + '/dist/index.cjs');
+const h = React.createElement;
+console.error = () => {};
+let fail = 0;
+const check = (label, ok, html) => { console.log((ok ? 'PASS ' : 'FAIL ') + label); if (!ok) { fail = 1; console.log('     ' + html.slice(0, 200)); } };
+const inputTag = (html) => (html.match(/<input[^>]*>/) || [''])[0];
+let html = renderToStaticMarkup(h(ds.Input, { hasError: true }));
+check('Input text hasError -> aria-invalid="true" on <input>', /aria-invalid="true"/.test(inputTag(html)), html);
+html = renderToStaticMarkup(h(ds.Input, { variant: 'icon-text', icon: h('svg'), hasError: true }));
+check('Input iconText hasError -> aria-invalid="true" on <input>', /aria-invalid="true"/.test(inputTag(html)), html);
+html = renderToStaticMarkup(h(ds.Input, { variant: 'number', hasError: true }));
+check('Input number hasError -> aria-invalid="true" on <input>', /aria-invalid="true"/.test(inputTag(html)), html);
+html = renderToStaticMarkup(h(ds.Input, { hasError: true, 'aria-invalid': false }));
+check('explicit aria-invalid={false} still wins', /aria-invalid="false"/.test(inputTag(html)), html);
+html = renderToStaticMarkup(h(ds.Input, {}));
+check('no hasError -> no aria-invalid', !/aria-invalid/.test(inputTag(html)), html);
+html = renderToStaticMarkup(h(ds.VerificationCodeInput, { length: 2, hasError: true }));
+check('still: VerificationCodeInput hasError -> every cell aria-invalid="true"', (html.match(/aria-invalid="true"/g) || []).length === 2, html);
+process.exit(fail);

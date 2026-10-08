@@ -6,7 +6,10 @@
 //      and renders as the 14th in negative-offset zones.
 //   2. Never add milliseconds to move by days — a DST boundary makes
 //      `t + 86400000` land on 01:00, not the next midnight. Always construct.
-//   3. Never compare with `getTime()` — compare y/m/d, or compare day keys.
+//   3. Never compare raw `getTime()` of un-normalised dates — compare after
+//      `startOfDay`, compare y/m/d, or compare day keys.
+
+import type { DateRange } from "./constants";
 
 /** Sunday. Fixed by design; the calendar does not expose a week-start prop. */
 export const WEEK_STARTS_ON = 0;
@@ -14,6 +17,17 @@ export const DAYS_IN_WEEK = 7;
 /** Fixed 6 rows so the panel height never changes between months. */
 export const WEEKS_IN_GRID = 6;
 export const CELLS_IN_GRID = WEEKS_IN_GRID * DAYS_IN_WEEK;
+
+/** A Date holding a real time — not `undefined`, not `new Date("nope")`. */
+export function isValidDate(value: unknown): value is Date {
+  return value instanceof Date && !Number.isNaN(value.getTime());
+}
+
+/** `{ from, to }` with both ends valid Dates. Order is not checked here. */
+export function isValidRange(value: unknown): value is DateRange {
+  const range = value as Partial<DateRange> | null | undefined;
+  return !!range && isValidDate(range.from) && isValidDate(range.to);
+}
 
 /** Midnight on the same local calendar day. */
 export function startOfDay(date: Date): Date {

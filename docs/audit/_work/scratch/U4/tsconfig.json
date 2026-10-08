@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "@dooph-software/design-system": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/dist/index.d.ts"],
+      "react": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types/react/index.d.ts"],
+      "react/*": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types/react/*"],
+      "class-variance-authority": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/class-variance-authority/dist/index.d.ts"],
+      "class-variance-authority/types": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/class-variance-authority/dist/types.d.ts"]
+    }
+  },
+  "files": ["probe.tsx"]
+}

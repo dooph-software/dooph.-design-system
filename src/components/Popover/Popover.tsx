@@ -1,5 +1,3 @@
-"use client";
-
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import {
   forwardRef,
@@ -30,7 +28,7 @@ const PopoverContent = forwardRef<
     {
       className,
       align = "start",
-      sideOffset = 4,
+      sideOffset = 6,
       collisionPadding = 8,
       portal = true,
       portalProps,
@@ -46,10 +44,11 @@ const PopoverContent = forwardRef<
         collisionPadding={collisionPadding}
         className={cn(
           "z-50 overflow-hidden rounded-normal",
-          "border border-solid border-border-primary bg-surface-primary shadow-button",
+          "border border-solid border-border-popovers bg-modal-surface shadow-menu",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
           "data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95",
+          "ds-motion-overlay",
           "ds-radix-popover-content-origin",
           className,
         )}

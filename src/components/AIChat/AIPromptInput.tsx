@@ -13,6 +13,9 @@
  *   then clears itself, a controlled one is cleared by the consumer.
  * - `responding` is Figma's Active: the submit slot becomes a stop button wired
  *   to `onStop`, and submitting is blocked until it ends.
+ * - The <form> carries `data-state="empty|filled|responding"` (Figma's Empty /
+ *   Filled / Active) and `data-disabled` as consumer styling hooks; no package
+ *   rule reads them.
  * - The textarea grows with its content up to `--ui-chat-prompt-max-height`,
  *   then scrolls, and never drops below one line of its own type (`1lh`).
  *   Cap and floor live only in CSS; the component just sets
@@ -36,13 +39,14 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type ComponentPropsWithoutRef,
   type FormHTMLAttributes,
   type HTMLAttributes,
   type KeyboardEvent,
-  type Ref,
   type TextareaHTMLAttributes,
 } from "react";
 import { cn } from "../../utils/cn";
+import { useComposedRefs } from "../../utils/composeRefs";
 import { Button } from "../Button";
 import { ButtonSize, ButtonVariant } from "../Button/constants";
 import { ArrowUpIcon, IconSize, StopFilledIcon } from "../Icons";
@@ -151,7 +155,7 @@ const AIPromptInput = forwardRef<HTMLFormElement, AIPromptInputProps>(
             }
           }}
           className={cn(
-            "flex w-full min-w-0 flex-col gap-rg rounded-normal border border-solid border-border-primary bg-surface-primary p-sm shadow-menu",
+            "flex w-full min-w-0 flex-col gap-md rounded-normal border border-solid border-border-primary bg-surface-primary p-rg shadow-menu",
             "ds-focus-within-ring focus-within:border-input-border-focus",
             className,
           )}
@@ -172,17 +176,13 @@ export type AIPromptInputTextareaProps = Omit<
   "value" | "defaultValue"
 >;
 
-function assignRef<T>(ref: Ref<T> | undefined, node: T | null) {
-  if (typeof ref === "function") ref(node);
-  else if (ref) (ref as { current: T | null }).current = node;
-}
-
 const AIPromptInputTextarea = forwardRef<
   HTMLTextAreaElement,
   AIPromptInputTextareaProps
 >(({ className, onChange, onKeyDown, rows = 1, disabled, ...props }, ref) => {
   const ctx = usePromptInput("AIPromptInputTextarea");
   const { textareaRef, value } = ctx;
+  const composedRef = useComposedRefs(textareaRef, ref);
 
   // Height follows content; CSS max-height is the cap. Layout effect so the
   // resize lands before paint and the text never visibly jumps.
@@ -198,10 +198,7 @@ const AIPromptInputTextarea = forwardRef<
 
   return (
     <textarea
-      ref={(node) => {
-        textareaRef.current = node;
-        assignRef(ref, node);
-      }}
+      ref={composedRef}
       rows={rows}
       value={value}
       disabled={disabled ?? ctx.disabled}
@@ -224,7 +221,7 @@ const AIPromptInputTextarea = forwardRef<
       className={cn(
         "ds-chat-prompt-textarea w-full min-w-0 shrink-0 resize-none overflow-y-auto bg-transparent outline-none",
         "text-style-body text-text placeholder:text-text-tertiary",
-        "ds-disabled-control",
+        "ds-disabled-state",
         className,
       )}
       {...props}
@@ -244,7 +241,7 @@ const AIPromptInputToolbar = forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex w-full min-w-0 items-center justify-between gap-rg", className)}
+    className={cn("flex w-full min-w-0 items-center justify-between gap-md", className)}
     {...props}
   />
 ));
@@ -257,7 +254,7 @@ const AIPromptInputToolbarStart = forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex min-w-0 items-center gap-rg", className)}
+    className={cn("flex min-w-0 items-center gap-md", className)}
     {...props}
   />
 ));
@@ -270,7 +267,7 @@ const AIPromptInputToolbarEnd = forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex min-w-0 items-center gap-xs", className)}
+    className={cn("flex min-w-0 items-center gap-sm", className)}
     {...props}
   />
 ));
@@ -278,39 +275,56 @@ AIPromptInputToolbarEnd.displayName = "AIPromptInputToolbarEnd";
 
 // ── Submit ────────────────────────────────────────────────────────────────────
 
-export interface AIPromptInputSubmitProps {
+export interface AIPromptInputSubmitProps
+  extends Omit<
+    ComponentPropsWithoutRef<"button">,
+    "children" | "type" | "disabled" | "aria-label"
+  > {
   /** Accessible name while sending is possible — the consumer's copy. */
   sendLabel?: string;
   /** Accessible name while responding — the consumer's copy. */
   stopLabel?: string;
-  className?: string;
 }
 
 /**
  * Send when idle, stop while responding. Ghost and disabled while the prompt is
  * empty (Figma Empty); prominent once there is something to send (Filled) or
- * something to stop (Active).
+ * something to stop (Active). Other button props pass through; a consumer
+ * `onClick` runs before `onStop`, and `event.preventDefault()` in it cancels
+ * the stop.
  */
 const AIPromptInputSubmit = forwardRef<
   HTMLButtonElement,
   AIPromptInputSubmitProps
 >(
   (
-    { sendLabel = "Send message", stopLabel = "Stop response", className },
+    {
+      sendLabel = "Send message",
+      stopLabel = "Stop response",
+      className,
+      onClick,
+      ...props
+    },
     ref,
   ) => {
     const { isEmpty, responding, disabled, onStop } =
       usePromptInput("AIPromptInputSubmit");
 
+    // The consumer's props spread FIRST, so type, variant, size, disabled and
+    // the accessible name the part owns always win.
     if (responding && onStop) {
       return (
         <Button
+          {...props}
           ref={ref}
           type="button"
           variant={ButtonVariant.prominent}
           size={ButtonSize.iconSm}
           aria-label={stopLabel}
-          onClick={onStop}
+          onClick={(event) => {
+            onClick?.(event);
+            if (!event.defaultPrevented) onStop();
+          }}
           className={cn("shrink-0", className)}
         >
           <StopFilledIcon size={IconSize.md} />
@@ -321,12 +335,14 @@ const AIPromptInputSubmit = forwardRef<
     const blocked = isEmpty || responding || disabled;
     return (
       <Button
+        {...props}
         ref={ref}
         type="submit"
         variant={blocked ? ButtonVariant.ghost : ButtonVariant.prominent}
         size={ButtonSize.iconSm}
         disabled={blocked}
         aria-label={sendLabel}
+        onClick={onClick}
         className={cn("shrink-0", className)}
       >
         <ArrowUpIcon size={IconSize.md} />

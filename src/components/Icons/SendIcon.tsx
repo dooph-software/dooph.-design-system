@@ -7,5 +7,3 @@ export const SendIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default SendIcon;

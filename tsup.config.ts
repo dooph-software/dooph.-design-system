@@ -1,25 +1,29 @@
 import { execSync } from 'node:child_process';
-import { copyFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 import { defineConfig } from 'tsup';
 
-// tsup runs with `clean: true`, which wipes dist/ before each build. Emitting
-// both CSS assets here (rather than only in the build:css npm script) guarantees
-// dist/styles.css and dist/theme.css are always regenerated together on any path
-// that runs tsup — so the compiled stylesheet and the Tailwind preset can never
-// drift apart or go missing on publish.
-function emitCssAssets() {
-  execSync('npx tailwindcss -i src/styles/index.css -o dist/styles.css', {
-    stdio: 'inherit',
-    cwd: process.cwd(),
-  });
-  // theme.css ships as raw @theme source (the consumer's Tailwind compiles it),
-  // so it is copied, not compiled. Kept in sync by scripts/sync-theme.mjs.
-  copyFileSync(
-    resolve(process.cwd(), 'src/styles/theme.css'),
-    resolve(process.cwd(), 'dist/theme.css'),
-  );
+// tsup runs with clean: true, which wipes dist/ before each build. onSuccess
+// re-emits both CSS assets through scripts/emit-css.mjs (the same script build:css
+// runs), so dist/styles.css and dist/theme.css are always regenerated together on
+// any path that runs tsup.
+
+// tsup's CJS splitting emits maps whose only source is the output file itself
+// (an absolute build-machine path, no sourcesContent), so they map nothing back
+// to src/. Remove them and the comments that point at them; ESM maps stay.
+function dropCjsSourceMaps(distDir: string) {
+  for (const rel of readdirSync(distDir, { recursive: true }) as string[]) {
+    const file = join(distDir, rel);
+    if (rel.endsWith('.cjs.map')) {
+      rmSync(file);
+    } else if (rel.endsWith('.cjs')) {
+      const contents = readFileSync(file, 'utf8');
+      // Not anchored to a line start: an empty chunk is `"use strict";//# sourceMappingURL=…`.
+      const stripped = contents.replace(/\/\/# sourceMappingURL=\S+\.cjs\.map\s*$/, '');
+      if (stripped !== contents) writeFileSync(file, stripped);
+    }
+  }
 }
 
 export default defineConfig({
@@ -30,6 +34,9 @@ export default defineConfig({
   // components keep the directive at the top of THEIR chunk, while pure/server-safe
   // modules (cn, types, icons, BaseText) stay free of it. dist/index.js remains the
   // single public entry, now re-exporting sibling chunks rather than an inlined blob.
+  // The per-module .js/.cjs stubs and their maps are unreachable through `exports`
+  // and are kept out of the tarball by package.json `files`; their .d.ts stay
+  // because dist/index.d.ts references them.
   entry: ['src/**/*.{ts,tsx}', '!src/**/*.stories.tsx', '!src/**/*.test.{ts,tsx}'],
   format: ['esm', 'cjs'],
   dts: true,
@@ -43,6 +50,8 @@ export default defineConfig({
   // itself (esbuild `write: false`), so an esbuild plugin mutating outputFiles in
   // onEnd is ignored — the directive must be applied after the real files land.
   metafile: true,
+  // ESM maps only; the CJS maps tsup emits map each file to itself, so onSuccess
+  // removes them.
   sourcemap: true,
   clean: true,
   external: ['react', 'react-dom', 'react/jsx-runtime'],
@@ -53,6 +62,7 @@ export default defineConfig({
   // keep the build warning-free and preserve directives cleanly.
   onSuccess: async () => {
     execSync('node scripts/add-use-client.mjs', { stdio: 'inherit', cwd: process.cwd() });
-    emitCssAssets();
+    dropCjsSourceMaps(join(process.cwd(), 'dist'));
+    execSync('node scripts/emit-css.mjs', { stdio: 'inherit', cwd: process.cwd() });
   },
 });

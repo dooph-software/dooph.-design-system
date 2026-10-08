@@ -3,6 +3,7 @@
  * (Figma 761:3079). There is no sealed "ModelSelect": the menu is
  * DropdownMenu + these parts + whatever else the consumer adds ("Edit models").
  *
+ * ## behavior
  *   AIModelSelectTrigger     Figma 761:2502 — model name + effort + chevron
  *   AIModelSelectItem        Figma 761:2073 — Auto / Model / Model Selected
  *   AIThinkingEffortSelector Figma 761:2088 — "Thinking <step>" + stepped slider
@@ -12,11 +13,18 @@
  * - No model catalogue, provider enum or reasoning levels live here. Every
  *   label, colour and step list is data the consumer passes in.
  * - Provider colour is an open design value (`color`: DS token name or any CSS
- *   colour), written as a custom property the CSS reads — never a class.
+ *   colour), written as a custom property the CSS reads — never a class: a class
+ *   cannot carry an arbitrary consumer colour.
  * - Selection is a radio choice, so AIModelSelectItem IS a
  *   DropdownMenuRadioSelectItem: wrap items in DropdownMenuRadioGroup and the
  *   selected fill, check and aria-checked all come from the menu itself.
+ * - AIThinkingEffortSelector THROWS when `value` is not one of `steps`. A
+ *   selector that quietly drew step 0 would disagree with the effort the
+ *   consumer sends, the same reason AIContextGauge is not clamped. Mapping an
+ *   effort across a model switch whose steps differ is the consumer's job.
  */
+"use client";
+
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
@@ -36,7 +44,7 @@ import { SliderLabeled } from "../Slider";
 import { SliderVariant } from "../Slider/constants";
 import { BodyText, ButtonText } from "../Text";
 import { TooltipBody, TooltipContent } from "../Tooltip";
-import { TooltipTypes } from "../Tooltip/constants";
+import { TooltipVariant } from "../Tooltip/constants";
 
 // ── Trigger ───────────────────────────────────────────────────────────────────
 
@@ -58,9 +66,10 @@ const AIModelSelectTrigger = forwardRef<
     type="button"
     variant={ButtonVariant.ghost}
     size={ButtonSize.sm}
-    className={cn("shrink-0 gap-xs px-xs", className)}
+    className={cn("shrink-0 gap-sm px-sm", className)}
     {...props}
   >
+    {/* Keeps the model name on one line in the primary text tone; the detail span below uses the ghost tone. */}
     <span className="whitespace-nowrap text-text">{children}</span>
     {detail != null && detail !== false ? (
       <span className="whitespace-nowrap text-style-body text-ghost-fg">
@@ -97,6 +106,7 @@ const AIModelSelectItem = forwardRef<
     {...props}
   >
     <span aria-hidden className="ds-chat-model-swatch" />
+    {/* min-w-0 + truncate lets a long model name ellipsize beside the swatch instead of widening the menu. */}
     <span className="min-w-0 flex-1 truncate">{children}</span>
   </DropdownMenuRadioSelectItem>
 ));
@@ -109,7 +119,11 @@ export interface AIThinkingEffortStep {
   label: string;
 }
 
-export interface AIThinkingEffortSelectorProps {
+export interface AIThinkingEffortSelectorProps
+  extends Omit<
+    ComponentPropsWithoutRef<"div">,
+    "children" | "color" | "onChange" | "defaultValue"
+  > {
   /** Ordered from least to most effort. */
   steps: readonly AIThinkingEffortStep[];
   /** The `value` of the current step. */
@@ -121,7 +135,6 @@ export interface AIThinkingEffortSelectorProps {
   labels: { start: string; end: string };
   /** Slider paint: a DS token name or any CSS colour (e.g. the provider's). */
   color?: DsColor;
-  className?: string;
 }
 
 /**
@@ -134,19 +147,35 @@ const AIThinkingEffortSelector = forwardRef<
   AIThinkingEffortSelectorProps
 >(
   (
-    { steps, value, onValueChange, label, labels, color, className },
+    {
+      steps,
+      value,
+      onValueChange,
+      label,
+      labels,
+      color,
+      className,
+      ...props
+    },
     ref,
   ) => {
-    const index = Math.max(
-      0,
-      steps.findIndex((step) => step.value === value),
-    );
+    const found = steps.findIndex((step) => step.value === value);
+    if (steps.length > 0 && found === -1) {
+      throw new Error(
+        `[AIThinkingEffortSelector] value "${value}" is not one of steps: ${steps
+          .map((step) => step.value)
+          .join(", ")}`,
+      );
+    }
+    // Only an empty `steps` reaches here with -1: no step label, a 0..0 slider.
+    const index = Math.max(0, found);
     const current = steps[index];
 
     return (
       <div
+        {...props}
         ref={ref}
-        className={cn("flex w-full min-w-0 flex-col gap-rg p-xs", className)}
+        className={cn("flex w-full min-w-0 flex-col gap-md p-sm", className)}
       >
         <div className="flex items-center gap-xxs text-text">
           <BodyText>{label}</BodyText>
@@ -209,6 +238,7 @@ const AIModelTooltipContent = forwardRef<
       capability,
       color,
       className,
+      style,
       themeInverse = false,
       ...props
     },
@@ -216,21 +246,27 @@ const AIModelTooltipContent = forwardRef<
   ) => (
     <TooltipContent
       ref={ref}
-      variant={TooltipTypes.complex}
+      variant={TooltipVariant.complex}
       themeInverse={themeInverse}
       className={cn("ds-width-chat-model-tooltip", className)}
+      style={
+        {
+          ...style,
+          ...(color
+            ? { "--ds-chat-model-color": resolveDsColor(color, "") }
+            : {}),
+        } as CSSProperties
+      }
       {...props}
     >
-      <div className="flex w-full flex-col gap-rg px-rg pt-sm pb-md">
-        <div className="flex w-full flex-col gap-xs">
-          <ButtonText
-            style={color ? { color: resolveDsColor(color, "") } : undefined}
-          >
+      <div className="flex w-full flex-col gap-md px-md pt-rg pb-lg">
+        <div className="flex w-full flex-col gap-sm">
+          <ButtonText className="ds-chat-model-name">
             {title}
           </ButtonText>
           <TooltipBody className="text-text">{description}</TooltipBody>
         </div>
-        <div className="flex w-full items-center gap-sm">
+        <div className="flex w-full items-center gap-rg">
           <AISpeedIcon size={IconSize.sm} aria-hidden />
           <LinearProgressIndicator
             className="min-w-0 flex-1"

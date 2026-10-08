@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,6 +13,9 @@ import {
   DropdownMenuSection,
   DropdownMenuSegment,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from './DropdownMenu';
 import { DropdownMenuSearch } from './DropdownMenuSearch';
 import {
@@ -218,10 +221,10 @@ export const SectionWidthOverride: Story = {
   render: () => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={ButtonVariant.secondary}>Width 324</Button>
+        <Button variant={ButtonVariant.secondary}>Width 280</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent matchTriggerWidth={false}>
-        <DropdownMenuSection width={324} data-testid="wide-section">
+        <DropdownMenuSection width={280} data-testid="wide-section">
           <DropdownMenuItem>Rename</DropdownMenuItem>
         </DropdownMenuSection>
       </DropdownMenuContent>
@@ -334,7 +337,7 @@ export const ItemVariants: Story = {
           <DropdownMenuItem variant={DropdownMenuItemVariant.danger}><span className="flex-1">Logout</span><LogOutIcon /></DropdownMenuItem>
           <DropdownMenuItem>
             <div className="flex flex-1 items-center justify-between">
-              <span className="flex items-center gap-sm"><SettingsGearIcon />Edit</span>
+              <span className="flex items-center gap-rg"><SettingsGearIcon />Edit</span>
               <ArrowRightIcon />
             </div>
           </DropdownMenuItem>
@@ -404,7 +407,7 @@ export const ComplexWithoutSearch: Story = {
         <DropdownTrigger>Recent chats</DropdownTrigger>
       </DropdownMenuTrigger>
       <DropdownMenuContent matchTriggerWidth={false}>
-        <DropdownMenuSection width={324}>
+        <DropdownMenuSection width="var(--ui-min-w-menu-complex)">
           <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
           <DropdownMenuItem>
             <div className="flex flex-col gap-[2px]">
@@ -424,6 +427,7 @@ export const ComplexWithoutSearch: Story = {
   ),
 };
 
+/** Pointer-first composition: `DropdownMenuSearch` is not keyboard-reachable inside the menu (see its JSDoc) — ship a keyboard path alongside it. */
 export const ComplexWithSearch: Story = {
   render: () => (
     <DropdownMenu>
@@ -433,7 +437,7 @@ export const ComplexWithSearch: Story = {
       <DropdownMenuContent matchTriggerWidth={false} focusOnOpen={false}>
         <DropdownMenuSearch />
         <DropdownMenuSeparator />
-        <DropdownMenuSection width={324}>
+        <DropdownMenuSection width="var(--ui-min-w-menu-complex)">
           <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
           <DropdownMenuItem>
             <div className="flex flex-col gap-[2px]">
@@ -454,6 +458,48 @@ export const ComplexWithSearch: Story = {
               <BodyText className="text-ghost-fg">bracket-left.dwg</BodyText>
             </div>
           </DropdownMenuItem>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+};
+
+export const Submenu: Story = {
+  render: () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <DropdownTrigger>Open menu</DropdownTrigger>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuSection>
+          <DropdownMenuItem>New file</DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Open recent</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuSection>
+                <DropdownMenuItem>dashboard.fig</DropdownMenuItem>
+                <DropdownMenuItem>roadmap.fig</DropdownMenuItem>
+              </DropdownMenuSection>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          <DropdownMenuItem>Save</DropdownMenuItem>
+        </DropdownMenuSection>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+};
+
+/** modal traps focus and blocks the page; the panel renders in place; leaving the window closes it. */
+export const ModalInlineDismissOnFocusLoss: Story = {
+  render: () => (
+    <DropdownMenu modal>
+      <DropdownMenuTrigger asChild>
+        <DropdownTrigger>Modal, in place</DropdownTrigger>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent portal={false} dismissOnFocusLoss>
+        <DropdownMenuSection>
+          <DropdownMenuItem>Rename</DropdownMenuItem>
+          <DropdownMenuItem>Duplicate</DropdownMenuItem>
         </DropdownMenuSection>
       </DropdownMenuContent>
     </DropdownMenu>

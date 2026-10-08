@@ -1,0 +1,71 @@
+### U7-F10: Calendar localises dates through `locale` but hardcodes English accessible names for its navigation, with no override
+- severity: S3
+- category: api-design
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "`rg -n 'aria-label=\"' src/components --glob '*.tsx' --glob '!*.stories.tsx'` → CalendarCaption.tsx:117,127 plus Toast.tsx:307 (`<ToastClose aria-label=\"Close\" />`, a component with no locale prop); the rest are JSDoc examples"
+- locations:
+  - src/components/Calendar/CalendarCaption.tsx:117,127
+  - src/components/Calendar/Calendar.tsx:39
+- evidence: |
+    Calendar.tsx:39            locale?: string;
+    CalendarCaption.tsx:117    aria-label="Previous month"
+    CalendarCaption.tsx:127    aria-label="Next month"
+    CalendarGrid.tsx:226       aria-label={formatDayAriaLabel(date, locale)}   // localised
+- impact: With `locale="de"` a screen reader announces German day and month names but English navigation buttons, and neither Calendar nor DatePicker exposes a prop to change them; the only workaround is re-implementing the caption.
+- recommendation: Accept label overrides (e.g. `labels={{ previousMonth, nextMonth }}`) threaded from Calendar/DatePicker to CalendarCaption.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+### U6-F8: Slider's accessible name can only come from `aria-label`: it is moved to the Thumb with an English default `'Value'`, while `aria-labelledby`/`id` fall through `...props` onto the Root span, which is not the `role="slider"` element
+- severity: S3
+- category: api-design
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read Slider.tsx:137, 357, 405-406; built copy node_modules/@radix-ui/react-slider/dist/index.mjs:496-497 puts `role: \"slider\"` and `\"aria-label\": props[\"aria-label\"] || label` on the Thumb span; Root carries no role"
+- locations:
+  - src/components/Slider/Slider.tsx:137
+  - src/components/Slider/Slider.tsx:357
+  - src/components/Slider/Slider.tsx:405-406
+  - src/components/VerificationCode/VerificationCodeInput.tsx:57
+  - src/components/VerificationCode/VerificationCodeInput.tsx:154
+- evidence: |
+    Slider.tsx:137  'aria-label': ariaLabel,
+    Slider.tsx:357  {...props}                       (onto <SliderPrimitive.Root>, a span with no role)
+    Slider.tsx:405-406  <SliderPrimitive.Thumb
+                          aria-label={ariaLabel ?? 'Value'}
+    VerificationCodeInput.tsx:57   "aria-label": ariaLabel = "Verification code",
+    VerificationCodeInput.tsx:154  aria-label={`Digit ${index + 1} of ${length}`}
+- impact: A consumer who labels the slider the standard way (`<LabelText id="vol">` + `aria-labelledby="vol"`, or `<label htmlFor>` + `id`) puts the reference on the Root span; the role="slider" Thumb keeps the name "Value", so screen readers announce "Value, slider" for every unlabeled-by-aria-label slider on the page. The per-digit labels in VerificationCodeInput are hardcoded English with no override at all, so non-English apps cannot localise them.
+- recommendation: Forward `aria-labelledby` (and `aria-describedby`) to the Thumb alongside `aria-label`, drop the English fallback or make it a prop; give VerificationCodeInput a way to supply per-digit labels (e.g. a label function prop).
+- breaking: none
+- contract: src/components/VerificationCode/VerificationCodeInput.tsx "Do not ship a package-level “verification section” layout" → consistent
+- remediation: tbd
+- related: [U6-F7]
+
+### HC-F7: `DropdownMenuSub` is exported without `DropdownMenuSubTrigger`/`DropdownMenuSubContent`, so the public submenu root cannot be used without importing Radix directly and hand-styling it
+- severity: S3
+- category: api-design
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg -n 'SubTrigger|SubContent' src docs/audit/_work/dist-index.d.ts → 0; dist-index.d.ts:124 exports DropdownMenuSub; git log -S 'SubContent' -- src → no commit ever added one; git log -S 'DropdownMenuSub = ' -- src → a01e5e8 (initial commit); dist/chunk-CA2GD74E.js imports @radix-ui/react-dropdown-menu as an external; no story or consumer doc uses DropdownMenuSub (the codebase skill:218 lists it as a pass-through)."
+- locations:
+  - src/components/Menu/DropdownMenu.tsx:91
+  - src/components/Menu/DropdownMenu.tsx:416
+  - src/components/Menu/index.ts:7
+  - .agents/skills/dooph-ds-codebase/SKILL.md:218
+- evidence: |
+    DropdownMenu.tsx:91    const DropdownMenuSub = DropdownMenuPrimitive.Sub;
+    DropdownMenu.tsx:402-418  export { DropdownMenuRoot as DropdownMenu, DropdownMenuContent, ..., DropdownMenuSub, DropdownMenuTrigger };   (no SubTrigger / SubContent)
+- impact: A consumer who sees `DropdownMenuSub` in IntelliSense has an export that renders nothing useful on its own. To build a submenu they must add `@radix-ui/react-dropdown-menu` as a direct dependency and import `SubTrigger`/`SubContent` from it. That only works while their copy dedupes to the DS's (a second copy means a second context), and the result bypasses the DS item styling and portal escape hatch. Every other public DropdownMenu part is styled; this one is a vestigial pass-through that has been there since the initial commit.
+- recommendation: Either ship styled `DropdownMenuSubTrigger`/`DropdownMenuSubContent` (the latter with the R2.9 `portal`/`portalProps` hatch, reusing `itemBase` and the content shell) or remove `DropdownMenuSub` from the public surface.
+- breaking: minor (only if removed)
+- contract: src/components/Menu/DropdownMenu.tsx:16 "portals on by default with an escape hatch" (## behavior) → consistent (a SubContent would have to follow it)
+- remediation: tbd
+- related: [U5-F10]
+

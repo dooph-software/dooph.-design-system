@@ -104,6 +104,7 @@
   --text-hero-button: var(--ui-text-hero-button);
   --text-mono: var(--ui-text-mono);
   --text-subheading: var(--ui-text-subheading);
+  --text-code-digit: var(--ui-text-code-digit);
   --text-heading: var(--ui-text-heading);
   --text-title: var(--ui-text-title);
   --text-hero: var(--ui-text-hero);
@@ -117,10 +118,14 @@
   --spacing-lg: var(--ui-spacing-lg);
   --spacing-xl: var(--ui-spacing-xl);
   --spacing-xxl: var(--ui-spacing-xxl);
+  --spacing-xxxl: var(--ui-spacing-xxxl);
+  --spacing-toast-inset: var(--ui-spacing-toast-inset);
+  --spacing-table-placeholder-y: var(--ui-spacing-table-placeholder-y);
   --radius-tight: var(--ui-radius-tight);
   --radius-mini: var(--ui-radius-mini);
   --radius-normal: var(--ui-radius-normal);
   --radius-soft: var(--ui-radius-soft);
+  --radius-outline-frame: var(--ui-radius-outline-frame);
   --radius-checkbox: var(--ui-radius-checkbox);
   --radius-avatar: var(--ui-radius-avatar);
   --radius-avatar-sm: var(--ui-radius-avatar-sm);
@@ -134,6 +139,8 @@
   --shadow-cta: var(--ui-shadow-cta);
   --shadow-focus-prominent: var(--ui-shadow-focus-prominent);
   --shadow-focus-primary: var(--ui-shadow-focus-primary);
+  --shadow-press-prominent: var(--ui-shadow-press-prominent);
+  --shadow-press-primary: var(--ui-shadow-press-primary);
   --text-cta-standard: var(--ui-text-cta-standard);
   --text-cta-big: var(--ui-text-cta-big);
   --color-sticker-prominent: var(--ui-color-sticker-prominent);

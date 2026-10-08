@@ -1,0 +1,15 @@
+<!doctype html><html><body style="background:#fff;margin:0">
+<script>
+// Replicates getSpinnerGeometry('md') + FlatProgressIndicator math (ProgressIndicator.tsx:106-121) for several progress values
+const d=32, sw=3, r=(d-sw)/2, C=2*Math.PI*r, g=sw*2, cx=d/2;
+let html='';
+for (const p of [0.8, 0.88, 0.9, 0.92, 1]) {
+  const a=C*p, off=C*(1-p);
+  const tl=Math.max(0,C-a-2*g), to=tl+C-(a+g);
+  html += `<div style="display:inline-block;margin:8px;text-align:center;font:12px sans-serif">p=${p} tl=${tl.toFixed(2)}<br><svg width="200" height="200" viewBox="0 0 ${d} ${d}">
+  <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="#e0e0e0" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${tl} ${C}" stroke-dashoffset="${to}" transform="rotate(-90 ${cx} ${cx})"/>
+  <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="rgba(0,80,255,0.35)" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 ${cx} ${cx})"/>
+  </svg></div>`;
+}
+document.body.innerHTML=html;
+</script></body></html>

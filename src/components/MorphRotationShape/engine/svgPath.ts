@@ -1,5 +1,6 @@
 /*
  * SVG path `d` -> morphable RoundedPolygon.
+ * Ported from AOSP androidx.graphics.shapes (Apache 2.0). See THIRD_PARTY_NOTICES.md.
  *
  * ## behavior
  * - Port of androidx.graphics.shapes SvgPathParser.parseFeatures:

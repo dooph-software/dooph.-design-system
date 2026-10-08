@@ -8,5 +8,3 @@ export const GraphIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default GraphIcon;

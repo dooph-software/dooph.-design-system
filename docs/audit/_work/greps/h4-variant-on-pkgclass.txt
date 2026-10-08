@@ -1,0 +1,3 @@
+src\components\DropdownTrigger\DropdownTrigger.tsx:204:                // `data-[state=open]:ds-focus-ring` variant composes a Tailwind
+src\components\DatePicker\DatePickerTrigger.tsx:66:          // own selector — a `data-[state=open]:ds-focus-ring` variant would
+src\components\Slider\Slider.tsx:345:            /* ds-radix-data-disabled, NOT `data-[disabled]:ds-disabled-state`.

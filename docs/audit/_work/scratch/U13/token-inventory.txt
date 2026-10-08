@@ -1,0 +1,40 @@
+REMOVED (26):
+  --ui-color-brand = #4f666d | dark #5a6f75
+  --ui-color-brand-border = var(--ui-color-brand)
+  --ui-color-brand-hover = #45555b
+  --ui-color-brand-border-hover = var(--ui-color-brand-hover)
+  --ui-color-brand-active = #323d41
+  --ui-color-brand-border-active = var(--ui-color-brand-active)
+  --ui-color-brand-foreground = #ffffff
+  --ui-color-brand-border-disabled = transparent
+  --ui-color-error-primary = #ea3f3f
+  --ui-color-error-secondary = #ff5858
+  --ui-color-page-background = #fdfeff | dark #131c1d
+  --ui-color-border-focus = var(--ui-color-brand-border)
+  --ui-color-trigger-border-hover = #b4b4b4 | dark #3a3b3f
+  --ui-color-trigger-border-error-focus = var(--ui-color-error-primary)
+  --ui-color-focus-ring-brand = rgba(70, 86, 92, 0.35) | dark rgba(70, 86, 92, 0.15)
+  --ui-color-focus-ring-error = rgba(236, 85, 85, 0.35) | dark rgba(236, 85, 85, 0.15)
+  --ui-brand-color = #46565c
+  --ui-brand-color-alt = #44c0e5
+  --ui-icon-tiny = 12px
+  --ui-icon-standard = 14px
+  --ui-icon-medium = 16px
+  --ui-icon-large = 20px
+  --ui-icon-stroke = 2
+  --ui-radius-standard = 18px
+  --ui-shadow-focus-brand = 0 0 0 4px var(--ui-color-focus-ring-brand)
+  --ui-min-w-menu-action = 144px
+ADDED (94):
+  --ui-color-prominent --ui-color-prominent-border --ui-color-prominent-hover --ui-color-prominent-border-hover --ui-color-prominent-active --ui-color-prominent-border-active --ui-color-prominent-foreground --ui-color-prominent-disabled --ui-color-prominent-border-disabled --ui-color-danger-primary --ui-color-danger-secondary --ui-color-danger --ui-color-danger-border --ui-color-danger-hover --ui-color-danger-border-hover --ui-color-danger-active --ui-color-danger-border-active --ui-color-danger-foreground --ui-color-danger-foreground-active --ui-color-danger-disabled --ui-color-danger-border-disabled --ui-color-surface-page --ui-color-input-border-focus --ui-color-input-border-hover --ui-color-input-border-danger-focus --ui-color-focus-ring-prominent --ui-color-focus-ring-danger --ui-prominent-color --ui-prominent-color-alt --ui-prominent-color-ter --ui-color-ai-anthropic --ui-color-ai-gemini --ui-color-ai-openai --ui-color-ai-spacexai --ui-chat-tool-shimmer-base --ui-chat-tool-shimmer-highlight --ui-chat-thinking-shimmer-base --ui-chat-thinking-shimmer-highlight --ui-chat-reveal-duration --ui-chat-reveal-ease --ui-chat-stream-duration --ui-chat-stream-ease --ui-chat-stream-blur --ui-chat-stream-rise --ui-chat-disclosure-duration --ui-chat-disclosure-ease --ui-chat-prompt-max-height --ui-chat-model-swatch-size --ui-chat-model-swatch-radius --ui-width-chat-model-tooltip --ui-chat-prose-code-radius --ui-fade-change-out-duration --ui-fade-change-in-duration --ui-fade-change-out-ease --ui-fade-change-in-ease --ui-fade-change-depth --ui-shape-morph-duration --ui-shape-morph-ease --ui-shape-morph-interval --ui-shape-morph-passive-spin-duration --ui-shape-morph-nudge --ui-shape-morph-nudge-duration --ui-shape-morph-nudge-ease --ui-text-hero-body --ui-text-hero-button --ui-tracking-mono --ui-slider-track-primary-active-opacity --ui-slider-track-prominent-active-opacity --ui-color-slider-step-primary-active --ui-color-slider-step-prominent-active --ui-color-slider-step-inactive --ui-spacing-xxxs --ui-icon-sm --ui-icon-rg --ui-icon-md --ui-icon-lg --ui-icon-stroke-width --ui-radius-mini --ui-radius-normal --ui-shadow-standard --ui-shadow-focus-prominent --ui-color-sticker-prominent --ui-color-sticker-secondary --ui-color-sticker-alternate --ui-color-sticker-tertiary --ui-color-sticker-danger --ui-sticker-bg-opacity --ui-sticker-bg-opacity-secondary --ui-color-sticker-bg-prominent --ui-color-sticker-bg-secondary --ui-color-sticker-bg-alternate --ui-color-sticker-bg-tertiary --ui-color-sticker-bg-danger --ui-spacing-sticker-y
+VALUE CHANGED (light, same name):
+  --ui-height-tab-micro: 30px  ->  28px
+VALUE CHANGED (dark, same name):
+  --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.15)  ->  rgba(249, 249, 249, 0.15)
+HEAD .dark tokens identical to :root (mode-invariant redeclared):
+  --ui-color-primary-disabled = var(--ui-color-secondary-disabled)
+  --ui-color-primary-border-disabled = var(--ui-color-secondary-border-disabled)
+  --ui-size-checkbox = 18px
+  --ui-radius-checkbox = 6px
+  --ui-radius-avatar = 8px
+  --ui-radius-avatar-sm = 6px

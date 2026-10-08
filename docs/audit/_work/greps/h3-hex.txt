@@ -1,0 +1,4 @@
+src\components\ProgressIndicator\ProgressIndicator.tsx:52:   * Preset alias or any CSS string (e.g. `"#ff6b6b"`).
+src\components\OutlineButton\OutlineButton.tsx:65: * <OutlineButton glowing glowColor1="#c084fc" glowColor2="#a78bfa">
+src\components\LoadingSpinner\LoadingSpinner.tsx:43:   * Preset color alias or any CSS string (e.g. `"#ff6b6b"`).
+src\components\LoadingSpinner\LoadingSpinner.tsx:286: * <LoadingSpinner size={LoadingSpinnerSize.md} color="#a3c2d1" />

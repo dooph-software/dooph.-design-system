@@ -5,7 +5,7 @@ export interface OutlineSectionProps extends HTMLAttributes<HTMLDivElement> {}
 
 /**
  * A double-border container shell for composing surface-level content.
- * Outer ring: dashed/thin border. Inner card: bg-secondary surface with shadow.
+ * Outer ring: solid 1px border. Inner card: bg-secondary surface with shadow.
  * Use as a composable slot — place any content as children.
  *
  * @example
@@ -19,8 +19,8 @@ const OutlineSection = forwardRef<HTMLDivElement, OutlineSectionProps>(
       ref={ref}
       className={cn(
         'inline-flex flex-col items-center justify-center',
-        'border border-solid border-border-primary rounded-[28px]',
-        'ds-p-ui-xs',
+        'border border-solid border-border-primary rounded-outline-frame',
+        'ds-p-ui-sm',
         className
       )}
       {...props}
@@ -29,7 +29,7 @@ const OutlineSection = forwardRef<HTMLDivElement, OutlineSectionProps>(
         className={cn(
           'bg-secondary border border-solid border-border-primary',
           'rounded-soft shadow-menu',
-          'ds-p-ui-xs',
+          'ds-p-ui-sm',
           'inline-flex items-center justify-center',
         )}
       >

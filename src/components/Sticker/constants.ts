@@ -33,7 +33,7 @@ export type StickerVariant = (typeof StickerVariant)[keyof typeof StickerVariant
  * Usage: <Sticker size={StickerSize.micro} />
  *
  * `standard` hugs its content (6px vertical padding, tight radius).
- * `micro` is a fixed `--ui-height-tab-micro` (28px) chip with `radius-mini`.
+ * `micro` is a fixed `--ui-height-button-micro` (28px) chip with `radius-mini`.
  */
 export const StickerSize = {
   standard: "standard",

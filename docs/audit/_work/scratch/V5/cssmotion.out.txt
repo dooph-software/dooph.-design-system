@@ -1,0 +1,14 @@
+index.css:380  [2s | linear]  animation: ds-shimmer 2s linear infinite;
+index.css:693  [0ms]  transition-delay: 0ms;
+index.css:699  [1ms]  animation-duration: 1ms;
+index.css:730  [1ms]  animation-duration: 1ms;
+index.css:752  [1ms]  animation-duration: 1ms;
+index.css:774  [0ms]  transition-duration: 0ms;
+index.css:798  [linear]  animation: ds-shape-morph-clock var(--ui-shape-morph-interval) linear infinite;
+index.css:808  [1ms]  transition-duration: 1ms;
+index.css:863  [1ms]  transition-duration: 1ms;
+index.css:916  [1ms]  transition-duration: 1ms;
+dooph-component-tokens.css:129  [300ms | ease-out]  transition: width 300ms ease-out;
+dooph-component-tokens.css:132  [300ms | ease-out]  transition: left 300ms ease-out;
+dooph-component-tokens.css:169  [180ms]  transition-duration: 180ms;
+dooph-component-tokens.css:170  [cubic-bezier(0.22, 1, 0.36, 1)]  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);

@@ -1,5 +1,6 @@
 import { forwardRef, type CSSProperties, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
+import { toPxLength } from "../../utils/length";
 
 export interface UnderlineLinkTextProps extends HTMLAttributes<HTMLSpanElement> {
   /** Force the wipe regardless of hover (touch, focus-visible, programmatic). */
@@ -18,8 +19,6 @@ export interface UnderlineLinkTextProps extends HTMLAttributes<HTMLSpanElement> 
   offset?: string | number;
 }
 
-const toLength = (value: string | number) =>
-  typeof value === "number" ? `${value}px` : value;
 
 /**
  * UnderlineLinkText — a "sliding underline" link decoration. The underline is
@@ -48,10 +47,10 @@ const UnderlineLinkText = forwardRef<HTMLSpanElement, UnderlineLinkTextProps>(
       style={
         {
           ...(thickness != null
-            ? { "--ds-underline-thickness": toLength(thickness) }
+            ? { "--ds-underline-thickness": toPxLength(thickness) }
             : {}),
           ...(offset != null
-            ? { "--ds-underline-offset": toLength(offset) }
+            ? { "--ds-underline-offset": toPxLength(offset) }
             : {}),
           ...style,
         } as CSSProperties

@@ -1,0 +1,3209 @@
+{
+ "U1:456": {
+  "status": "ok"
+ },
+ "U1:457": {
+  "status": "ok"
+ },
+ "U1:458": {
+  "status": "ok"
+ },
+ "U1:459": {
+  "status": "ok"
+ },
+ "U1:460": {
+  "status": "unchecked"
+ },
+ "U1:461": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "The component reads it back from computed style, so this token is the only place the cap lives"
+  ]
+ },
+ "U1:462": {
+  "status": "ok"
+ },
+ "U1:463": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "tight / standard / soft"
+  ]
+ },
+ "U1:464": {
+  "status": "unchecked"
+ },
+ "U1:465": {
+  "status": "ok"
+ },
+ "U1:466": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "p-md, gap-sm, rounded-normal, font-label, bg-primary"
+  ]
+ },
+ "U1:467": {
+  "status": "unchecked"
+ },
+ "U1:468": {
+  "status": "ok"
+ },
+ "U1:469": {
+  "status": "ok"
+ },
+ "U1:470": {
+  "status": "unchecked"
+ },
+ "U1:471": {
+  "status": "unchecked"
+ },
+ "U1:472": {
+  "status": "ok"
+ },
+ "U1:473": {
+  "status": "ok"
+ },
+ "U1:474": {
+  "status": "unchecked"
+ },
+ "U1:475": {
+  "status": "ok"
+ },
+ "U1:476": {
+  "status": "ok"
+ },
+ "U1:477": {
+  "status": "ok"
+ },
+ "U1:478": {
+  "status": "unchecked"
+ },
+ "U1:479": {
+  "status": "ok"
+ },
+ "U1:480": {
+  "status": "unchecked"
+ },
+ "U1:481": {
+  "status": "ok"
+ },
+ "U1:482": {
+  "status": "ok"
+ },
+ "U1:483": {
+  "status": "ok"
+ },
+ "U1:484": {
+  "status": "unchecked"
+ },
+ "U1:485": {
+  "status": "ok"
+ },
+ "U1:486": {
+  "status": "ok"
+ },
+ "U1:487": {
+  "status": "unchecked"
+ },
+ "U1:488": {
+  "status": "unchecked"
+ },
+ "U1:489": {
+  "status": "ok"
+ },
+ "U1:490": {
+  "status": "ok"
+ },
+ "U1:491": {
+  "status": "ok"
+ },
+ "U1:492": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "ds-toast-*"
+  ]
+ },
+ "U1:493": {
+  "status": "ok"
+ },
+ "U1:494": {
+  "status": "ok"
+ },
+ "U1:495": {
+  "status": "ok"
+ },
+ "U1:496": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "Current families: roll-hover, roll-change, fade-change, underline-link, rolling-digits, sidebar-icon"
+  ]
+ },
+ "U1:497": {
+  "status": "unchecked"
+ },
+ "U1:498": {
+  "status": "unchecked"
+ },
+ "U1:499": {
+  "status": "ok"
+ },
+ "U1:500": {
+  "status": "unchecked"
+ },
+ "U1:501": {
+  "status": "unchecked"
+ },
+ "U1:502": {
+  "status": "ok"
+ },
+ "U1:503": {
+  "status": "ok"
+ },
+ "U1:504": {
+  "status": "ok"
+ },
+ "U1:505": {
+  "status": "ok"
+ },
+ "U1:506": {
+  "status": "ok"
+ },
+ "U1:507": {
+  "status": "unchecked"
+ },
+ "U1:508": {
+  "status": "ok"
+ },
+ "U1:509": {
+  "status": "ok"
+ },
+ "U1:510": {
+  "status": "ok"
+ },
+ "U1:511": {
+  "status": "ok"
+ },
+ "U1:512": {
+  "status": "unchecked"
+ },
+ "U1:513": {
+  "status": "unchecked"
+ },
+ "U1:514": {
+  "status": "ok"
+ },
+ "U1:515": {
+  "status": "ok"
+ },
+ "U1:516": {
+  "status": "ok"
+ },
+ "U1:517": {
+  "status": "unchecked"
+ },
+ "U1:518": {
+  "status": "ok"
+ },
+ "U1:519": {
+  "status": "ok"
+ },
+ "U1:520": {
+  "status": "ok"
+ },
+ "U1:521": {
+  "status": "unchecked"
+ },
+ "U1:522": {
+  "status": "unchecked"
+ },
+ "U1:523": {
+  "status": "ok"
+ },
+ "U1:524": {
+  "status": "ok"
+ },
+ "U1:525": {
+  "status": "ok"
+ },
+ "U1:526": {
+  "status": "ok"
+ },
+ "U1:527": {
+  "status": "ok"
+ },
+ "U1:528": {
+  "status": "unchecked"
+ },
+ "U1:529": {
+  "status": "ok"
+ },
+ "U1:530": {
+  "status": "ok"
+ },
+ "U1:531": {
+  "status": "ok"
+ },
+ "U1:532": {
+  "status": "unchecked"
+ },
+ "U1:533": {
+  "status": "ok"
+ },
+ "U1:534": {
+  "status": "ok"
+ },
+ "U1:535": {
+  "status": "ok"
+ },
+ "U1:536": {
+  "status": "ok"
+ },
+ "U1:537": {
+  "status": "ok"
+ },
+ "U1:538": {
+  "status": "ok"
+ },
+ "U1:539": {
+  "status": "ok"
+ },
+ "U1:540": {
+  "status": "ok"
+ },
+ "U1:541": {
+  "status": "unchecked"
+ },
+ "U1:542": {
+  "status": "unchecked"
+ },
+ "U1:543": {
+  "status": "ok"
+ },
+ "U1:544": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "--ui-font-var-button/body/heading/mono"
+  ]
+ },
+ "U1:545": {
+  "status": "ok"
+ },
+ "U1:546": {
+  "status": "unchecked"
+ },
+ "U1:547": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "Existing families: roll-hover, roll-change, fade-change, underline-link, rolling-digits, sidebar-icon, shape-morph"
+  ]
+ },
+ "U10:535": {
+  "status": "ok"
+ },
+ "U10:536": {
+  "status": "ok"
+ },
+ "U10:537": {
+  "status": "ok"
+ },
+ "U10:538": {
+  "status": "ok"
+ },
+ "U10:539": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "at rest the shape is pixel-identical to the static Shapes component"
+  ]
+ },
+ "U10:540": {
+  "status": "ok"
+ },
+ "U10:541": {
+  "status": "ok"
+ },
+ "U10:542": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "Nothing in this file may hold a duration or an easing curve"
+  ]
+ },
+ "U10:543": {
+  "status": "ok"
+ },
+ "U10:544": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "Sampling starts from this element's OWN transitionrun / animationstart / animationiteration",
+   "Never listen on an ancestor"
+  ]
+ },
+ "U10:545": {
+  "status": "ok"
+ },
+ "U10:546": {
+  "status": "ok"
+ },
+ "U10:547": {
+  "status": "ok"
+ },
+ "U10:548": {
+  "status": "ok"
+ },
+ "U10:549": {
+  "status": "ok"
+ },
+ "U10:550": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "It flattens on the way over, because at the midpoint `dir` is 0"
+  ]
+ },
+ "U10:551": {
+  "status": "ok"
+ },
+ "U10:552": {
+  "status": "ok"
+ },
+ "U10:553": {
+  "status": "ok"
+ },
+ "U10:554": {
+  "status": "ok"
+ },
+ "U10:555": {
+  "status": "ok"
+ },
+ "U10:556": {
+  "status": "ok"
+ },
+ "U10:557": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "parse to cubics -> first continuous sub-path -> detectFeatures -> PolygonValidator.fix"
+  ]
+ },
+ "U10:558": {
+  "status": "ok"
+ },
+ "U10:559": {
+  "status": "ok"
+ },
+ "U10:560": {
+  "status": "ok"
+ },
+ "U10:561": {
+  "status": "ok"
+ },
+ "U10:562": {
+  "status": "ok"
+ },
+ "U10:563": {
+  "status": "ok"
+ },
+ "U10:564": {
+  "status": "ok"
+ },
+ "U10:565": {
+  "status": "ok"
+ },
+ "U10:566": {
+  "status": "ok"
+ },
+ "U10:567": {
+  "status": "ok"
+ },
+ "U10:568": {
+  "status": "ok"
+ },
+ "U10:569": {
+  "status": "ok"
+ },
+ "U10:570": {
+  "status": "ok"
+ },
+ "U10:571": {
+  "status": "ok"
+ },
+ "U10:572": {
+  "status": "ok"
+ },
+ "U10:573": {
+  "status": "ok"
+ },
+ "U10:574": {
+  "status": "ok"
+ },
+ "U10:575": {
+  "status": "ok"
+ },
+ "U10:576": {
+  "status": "ok"
+ },
+ "U10:577": {
+  "status": "ok"
+ },
+ "U10:578": {
+  "status": "ok"
+ },
+ "U10:579": {
+  "status": "ok"
+ },
+ "U10:580": {
+  "status": "ok"
+ },
+ "U10:581": {
+  "status": "ok"
+ },
+ "U10:582": {
+  "status": "ok"
+ },
+ "U10:583": {
+  "status": "ok"
+ },
+ "U10:584": {
+  "status": "ok"
+ },
+ "U10:585": {
+  "status": "ok"
+ },
+ "U10:586": {
+  "status": "ok"
+ },
+ "U10:587": {
+  "status": "ok"
+ },
+ "U10:588": {
+  "status": "ok"
+ },
+ "U10:589": {
+  "status": "unchecked"
+ },
+ "U10:590": {
+  "status": "ok"
+ },
+ "U10:591": {
+  "status": "unchecked"
+ },
+ "U10:592": {
+  "status": "ok"
+ },
+ "U10:593": {
+  "status": "ok"
+ },
+ "U10:594": {
+  "status": "ok"
+ },
+ "U10:595": {
+  "status": "ok"
+ },
+ "U10:596": {
+  "status": "ok"
+ },
+ "U10:597": {
+  "status": "ok"
+ },
+ "U10:598": {
+  "status": "ok"
+ },
+ "U10:599": {
+  "status": "ok"
+ },
+ "U10:600": {
+  "status": "ok"
+ },
+ "U10:601": {
+  "status": "ok"
+ },
+ "U10:602": {
+  "status": "ok"
+ },
+ "U10:603": {
+  "status": "ok"
+ },
+ "U10:604": {
+  "status": "ok"
+ },
+ "U10:605": {
+  "status": "ok"
+ },
+ "U11:439": {
+  "status": "ok"
+ },
+ "U11:440": {
+  "status": "ok"
+ },
+ "U11:441": {
+  "status": "ok"
+ },
+ "U11:442": {
+  "status": "ok"
+ },
+ "U11:443": {
+  "status": "ok"
+ },
+ "U11:444": {
+  "status": "ok"
+ },
+ "U11:445": {
+  "status": "ok"
+ },
+ "U11:446": {
+  "status": "ok"
+ },
+ "U11:447": {
+  "status": "ok"
+ },
+ "U11:448": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "Turning it off mid-flight settles any block still animating straight to rest"
+  ]
+ },
+ "U11:449": {
+  "status": "ok"
+ },
+ "U11:450": {
+  "status": "ok"
+ },
+ "U11:451": {
+  "status": "unchecked"
+ },
+ "U11:452": {
+  "status": "ok"
+ },
+ "U11:453": {
+  "status": "ok"
+ },
+ "U11:454": {
+  "status": "ok"
+ },
+ "U11:455": {
+  "status": "unchecked"
+ },
+ "U11:456": {
+  "status": "unchecked"
+ },
+ "U11:457": {
+  "status": "ok"
+ },
+ "U11:458": {
+  "status": "unchecked"
+ },
+ "U11:459": {
+  "status": "unchecked"
+ },
+ "U11:460": {
+  "status": "unchecked"
+ },
+ "U11:461": {
+  "status": "ok"
+ },
+ "U11:462": {
+  "status": "unchecked"
+ },
+ "U11:463": {
+  "status": "unchecked"
+ },
+ "U11:464": {
+  "status": "ok"
+ },
+ "U11:465": {
+  "status": "unchecked"
+ },
+ "U11:466": {
+  "status": "unchecked"
+ },
+ "U11:467": {
+  "status": "unchecked"
+ },
+ "U11:468": {
+  "status": "unchecked"
+ },
+ "U11:469": {
+  "status": "ok"
+ },
+ "U11:470": {
+  "status": "unchecked"
+ },
+ "U11:471": {
+  "status": "unchecked"
+ },
+ "U11:472": {
+  "status": "ok"
+ },
+ "U11:473": {
+  "status": "ok"
+ },
+ "U11:474": {
+  "status": "ok"
+ },
+ "U11:475": {
+  "status": "unchecked"
+ },
+ "U11:476": {
+  "status": "ok"
+ },
+ "U11:477": {
+  "status": "unchecked"
+ },
+ "U11:478": {
+  "status": "ok"
+ },
+ "U11:479": {
+  "status": "unchecked"
+ },
+ "U11:480": {
+  "status": "unchecked"
+ },
+ "U11:481": {
+  "status": "unchecked"
+ },
+ "U11:482": {
+  "status": "ok"
+ },
+ "U11:483": {
+  "status": "unchecked"
+ },
+ "U11:484": {
+  "status": "unchecked"
+ },
+ "U11:485": {
+  "status": "ok"
+ },
+ "U11:486": {
+  "status": "ok"
+ },
+ "U11:487": {
+  "status": "unchecked"
+ },
+ "U11:488": {
+  "status": "ok"
+ },
+ "U11:489": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "The component reads it back from computed style"
+  ]
+ },
+ "U11:490": {
+  "status": "ok"
+ },
+ "U11:491": {
+  "status": "unchecked"
+ },
+ "U11:492": {
+  "status": "unchecked"
+ },
+ "U11:493": {
+  "status": "unchecked"
+ },
+ "U11:494": {
+  "status": "ok"
+ },
+ "U11:495": {
+  "status": "unchecked"
+ },
+ "U11:496": {
+  "status": "unchecked"
+ },
+ "U11:497": {
+  "status": "unchecked"
+ },
+ "U12:524": {
+  "status": "ok"
+ },
+ "U12:525": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "the wash is a color-mix at the sticker opacity"
+  ]
+ },
+ "U12:526": {
+  "status": "ok"
+ },
+ "U12:527": {
+  "status": "ok"
+ },
+ "U12:528": {
+  "status": "ok"
+ },
+ "U12:529": {
+  "status": "ok"
+ },
+ "U12:530": {
+  "status": "ok"
+ },
+ "U12:531": {
+  "status": "ok"
+ },
+ "U12:532": {
+  "status": "unchecked"
+ },
+ "U12:533": {
+  "status": "ok"
+ },
+ "U12:534": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "The prop union is the real guard"
+  ]
+ },
+ "U12:535": {
+  "status": "ok"
+ },
+ "U12:536": {
+  "status": "unchecked"
+ },
+ "U12:537": {
+  "status": "ok"
+ },
+ "U12:538": {
+  "status": "ok"
+ },
+ "U12:539": {
+  "status": "ok"
+ },
+ "U12:540": {
+  "status": "ok"
+ },
+ "U12:541": {
+  "status": "ok"
+ },
+ "U12:542": {
+  "status": "unchecked"
+ },
+ "U12:543": {
+  "status": "ok"
+ },
+ "U12:544": {
+  "status": "ok"
+ },
+ "U12:545": {
+  "status": "ok"
+ },
+ "U12:546": {
+  "status": "ok"
+ },
+ "U12:547": {
+  "status": "ok"
+ },
+ "U12:548": {
+  "status": "ok"
+ },
+ "U12:549": {
+  "status": "drift",
+  "cited": "630-631",
+  "nearest": 634,
+  "delta": 4,
+  "anchors": [
+   "Table"
+  ]
+ },
+ "U12:550": {
+  "status": "ok"
+ },
+ "U12:551": {
+  "status": "unchecked"
+ },
+ "U12:552": {
+  "status": "ok"
+ },
+ "U12:553": {
+  "status": "ok"
+ },
+ "U12:554": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "Children are the label — an icon and text, laid out in a row"
+  ]
+ },
+ "U12:555": {
+  "status": "ok"
+ },
+ "U12:556": {
+  "status": "ok"
+ },
+ "U12:557": {
+  "status": "ok"
+ },
+ "U12:558": {
+  "status": "ok"
+ },
+ "U12:559": {
+  "status": "ok"
+ },
+ "U12:560": {
+  "status": "ok"
+ },
+ "U13:394": {
+  "status": "unchecked"
+ },
+ "U13:395": {
+  "status": "ok"
+ },
+ "U13:396": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "BodyText, LabelText, HeadingText, SubheadingText, TitleText, HeroText, ButtonText, MonoText"
+  ]
+ },
+ "U13:397": {
+  "status": "ok"
+ },
+ "U13:398": {
+  "status": "ok"
+ },
+ "U13:399": {
+  "status": "ok"
+ },
+ "U13:400": {
+  "status": "ok"
+ },
+ "U13:401": {
+  "status": "ok"
+ },
+ "U13:402": {
+  "status": "ok"
+ },
+ "U13:403": {
+  "status": "ok"
+ },
+ "U13:404": {
+  "status": "ok"
+ },
+ "U13:405": {
+  "status": "ok"
+ },
+ "U13:406": {
+  "status": "ok"
+ },
+ "U13:407": {
+  "status": "ok"
+ },
+ "U13:408": {
+  "status": "ok"
+ },
+ "U13:409": {
+  "status": "ok"
+ },
+ "U13:410": {
+  "status": "ok"
+ },
+ "U13:411": {
+  "status": "ok"
+ },
+ "U13:412": {
+  "status": "ok"
+ },
+ "U13:413": {
+  "status": "ok"
+ },
+ "U13:414": {
+  "status": "ok"
+ },
+ "U13:415": {
+  "status": "ok"
+ },
+ "U13:416": {
+  "status": "ok"
+ },
+ "U13:417": {
+  "status": "ok"
+ },
+ "U13:418": {
+  "status": "ok"
+ },
+ "U13:419": {
+  "status": "ok"
+ },
+ "U13:420": {
+  "status": "ok"
+ },
+ "U13:421": {
+  "status": "ok"
+ },
+ "U13:422": {
+  "status": "ok"
+ },
+ "U13:423": {
+  "status": "ok"
+ },
+ "U13:424": {
+  "status": "ok"
+ },
+ "U13:425": {
+  "status": "ok"
+ },
+ "U13:426": {
+  "status": "unchecked"
+ },
+ "U13:427": {
+  "status": "unchecked"
+ },
+ "U13:428": {
+  "status": "ok"
+ },
+ "U13:429": {
+  "status": "unchecked"
+ },
+ "U13:430": {
+  "status": "unchecked"
+ },
+ "U13:431": {
+  "status": "unchecked"
+ },
+ "U13:432": {
+  "status": "unchecked"
+ },
+ "U13:433": {
+  "status": "unchecked"
+ },
+ "U13:434": {
+  "status": "unchecked"
+ },
+ "U13:435": {
+  "status": "ok"
+ },
+ "U13:436": {
+  "status": "ok"
+ },
+ "U13:437": {
+  "status": "ok"
+ },
+ "U13:438": {
+  "status": "unchecked"
+ },
+ "U13:439": {
+  "status": "unchecked"
+ },
+ "U13:440": {
+  "status": "ok"
+ },
+ "U13:441": {
+  "status": "ok"
+ },
+ "U13:446": {
+  "status": "ok"
+ },
+ "U13:447": {
+  "status": "ok"
+ },
+ "U13:448": {
+  "status": "ok"
+ },
+ "U13:449": {
+  "status": "unchecked"
+ },
+ "U13:454": {
+  "status": "unchecked"
+ },
+ "U13:455": {
+  "status": "unchecked"
+ },
+ "U13:456": {
+  "status": "ok"
+ },
+ "U13:457": {
+  "status": "unchecked"
+ },
+ "U13:458": {
+  "status": "unchecked"
+ },
+ "U13:459": {
+  "status": "unchecked"
+ },
+ "U13:460": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   ".text-style-*"
+  ]
+ },
+ "U13:461": {
+  "status": "ok"
+ },
+ "U13:462": {
+  "status": "ok"
+ },
+ "U13:463": {
+  "status": "unchecked"
+ },
+ "U13:464": {
+  "status": "unchecked"
+ },
+ "U13:465": {
+  "status": "ok"
+ },
+ "U13:466": {
+  "status": "unchecked"
+ },
+ "U13:467": {
+  "status": "ok"
+ },
+ "U13:468": {
+  "status": "unchecked"
+ },
+ "U13:469": {
+  "status": "ok"
+ },
+ "U13:470": {
+  "status": "ok"
+ },
+ "U13:471": {
+  "status": "unchecked"
+ },
+ "U13:472": {
+  "status": "unchecked"
+ },
+ "U13:477": {
+  "status": "unchecked"
+ },
+ "U13:478": {
+  "status": "unchecked"
+ },
+ "U13:479": {
+  "status": "ok"
+ },
+ "U13:480": {
+  "status": "unchecked"
+ },
+ "U13:481": {
+  "status": "unchecked"
+ },
+ "U13:482": {
+  "status": "unchecked"
+ },
+ "U13:483": {
+  "status": "unchecked"
+ },
+ "U13:484": {
+  "status": "unchecked"
+ },
+ "U13:485": {
+  "status": "unchecked"
+ },
+ "U13:486": {
+  "status": "unchecked"
+ },
+ "U13:487": {
+  "status": "unchecked"
+ },
+ "U13:488": {
+  "status": "unchecked"
+ },
+ "U13:489": {
+  "status": "ok"
+ },
+ "U13:490": {
+  "status": "unchecked"
+ },
+ "U13:491": {
+  "status": "ok"
+ },
+ "U13:492": {
+  "status": "ok"
+ },
+ "U13:493": {
+  "status": "ok"
+ },
+ "U13:494": {
+  "status": "unchecked"
+ },
+ "U13:495": {
+  "status": "ok"
+ },
+ "U13:496": {
+  "status": "unchecked"
+ },
+ "U13:497": {
+  "status": "unchecked"
+ },
+ "U13:498": {
+  "status": "unchecked"
+ },
+ "U13:499": {
+  "status": "unchecked"
+ },
+ "U13:500": {
+  "status": "ok"
+ },
+ "U13:501": {
+  "status": "unchecked"
+ },
+ "U13:502": {
+  "status": "unchecked"
+ },
+ "U13:503": {
+  "status": "unchecked"
+ },
+ "U13:504": {
+  "status": "unchecked"
+ },
+ "U13:505": {
+  "status": "ok"
+ },
+ "U13:506": {
+  "status": "unchecked"
+ },
+ "U13:507": {
+  "status": "unchecked"
+ },
+ "U13:512": {
+  "status": "unchecked"
+ },
+ "U13:513": {
+  "status": "ok"
+ },
+ "U13:514": {
+  "status": "unchecked"
+ },
+ "U13:515": {
+  "status": "ok"
+ },
+ "U13:516": {
+  "status": "unchecked"
+ },
+ "U13:517": {
+  "status": "ok"
+ },
+ "U13:518": {
+  "status": "ok"
+ },
+ "U13:519": {
+  "status": "ok"
+ },
+ "U13:520": {
+  "status": "unchecked"
+ },
+ "U13:521": {
+  "status": "ok"
+ },
+ "U13:522": {
+  "status": "ok"
+ },
+ "U13:523": {
+  "status": "unchecked"
+ },
+ "U13:524": {
+  "status": "unchecked"
+ },
+ "U13:529": {
+  "status": "unchecked"
+ },
+ "U13:530": {
+  "status": "unchecked"
+ },
+ "U13:531": {
+  "status": "ok"
+ },
+ "U13:532": {
+  "status": "ok"
+ },
+ "U13:533": {
+  "status": "ok"
+ },
+ "U13:534": {
+  "status": "unchecked"
+ },
+ "U13:535": {
+  "status": "unchecked"
+ },
+ "U13:536": {
+  "status": "ok"
+ },
+ "U13:537": {
+  "status": "unchecked"
+ },
+ "U13:538": {
+  "status": "unchecked"
+ },
+ "U13:539": {
+  "status": "unchecked"
+ },
+ "U13:540": {
+  "status": "ok"
+ },
+ "U13:545": {
+  "status": "unchecked"
+ },
+ "U13:546": {
+  "status": "ok"
+ },
+ "U13:547": {
+  "status": "ok"
+ },
+ "U13:548": {
+  "status": "ok"
+ },
+ "U13:549": {
+  "status": "ok"
+ },
+ "U13:550": {
+  "status": "ok"
+ },
+ "U13:551": {
+  "status": "unchecked"
+ },
+ "U13:552": {
+  "status": "unchecked"
+ },
+ "U13:553": {
+  "status": "ok"
+ },
+ "U13:554": {
+  "status": "ok"
+ },
+ "U13:555": {
+  "status": "unchecked"
+ },
+ "U13:556": {
+  "status": "ok"
+ },
+ "U13:557": {
+  "status": "unchecked"
+ },
+ "U13:558": {
+  "status": "unchecked"
+ },
+ "U13:563": {
+  "status": "unchecked"
+ },
+ "U13:564": {
+  "status": "unchecked"
+ },
+ "U13:565": {
+  "status": "unchecked"
+ },
+ "U13:566": {
+  "status": "unchecked"
+ },
+ "U13:567": {
+  "status": "unchecked"
+ },
+ "U13:568": {
+  "status": "unchecked"
+ },
+ "U13:569": {
+  "status": "unchecked"
+ },
+ "U13:570": {
+  "status": "unchecked"
+ },
+ "U13:571": {
+  "status": "unchecked"
+ },
+ "U13:572": {
+  "status": "unchecked"
+ },
+ "U13:573": {
+  "status": "unchecked"
+ },
+ "U14:593": {
+  "status": "ok"
+ },
+ "U14:594": {
+  "status": "unchecked"
+ },
+ "U14:595": {
+  "status": "unchecked"
+ },
+ "U14:596": {
+  "status": "ok"
+ },
+ "U14:597": {
+  "status": "ok"
+ },
+ "U14:598": {
+  "status": "ok"
+ },
+ "U14:599": {
+  "status": "unchecked"
+ },
+ "U14:600": {
+  "status": "ok"
+ },
+ "U14:601": {
+  "status": "ok"
+ },
+ "U14:602": {
+  "status": "ok"
+ },
+ "U14:603": {
+  "status": "unchecked"
+ },
+ "U14:604": {
+  "status": "unchecked"
+ },
+ "U14:605": {
+  "status": "ok"
+ },
+ "U14:606": {
+  "status": "unchecked"
+ },
+ "U14:607": {
+  "status": "unchecked"
+ },
+ "U14:608": {
+  "status": "unchecked"
+ },
+ "U14:609": {
+  "status": "ok"
+ },
+ "U14:610": {
+  "status": "unchecked"
+ },
+ "U14:611": {
+  "status": "unchecked"
+ },
+ "U14:612": {
+  "status": "unchecked"
+ },
+ "U14:613": {
+  "status": "ok"
+ },
+ "U14:614": {
+  "status": "ok"
+ },
+ "U14:615": {
+  "status": "ok"
+ },
+ "U14:616": {
+  "status": "unchecked"
+ },
+ "U14:617": {
+  "status": "unchecked"
+ },
+ "U14:618": {
+  "status": "ok"
+ },
+ "U14:619": {
+  "status": "unchecked"
+ },
+ "U14:620": {
+  "status": "ok"
+ },
+ "U14:621": {
+  "status": "unchecked"
+ },
+ "U14:622": {
+  "status": "unchecked"
+ },
+ "U14:623": {
+  "status": "unchecked"
+ },
+ "U14:624": {
+  "status": "unchecked"
+ },
+ "U14:625": {
+  "status": "unchecked"
+ },
+ "U14:626": {
+  "status": "ok"
+ },
+ "U14:627": {
+  "status": "ok"
+ },
+ "U14:628": {
+  "status": "ok"
+ },
+ "U14:629": {
+  "status": "ok"
+ },
+ "U14:630": {
+  "status": "unchecked"
+ },
+ "U14:635": {
+  "status": "unchecked"
+ },
+ "U14:636": {
+  "status": "ok"
+ },
+ "U14:637": {
+  "status": "ok"
+ },
+ "U14:638": {
+  "status": "unchecked"
+ },
+ "U14:639": {
+  "status": "ok"
+ },
+ "U14:640": {
+  "status": "unchecked"
+ },
+ "U14:641": {
+  "status": "unchecked"
+ },
+ "U14:642": {
+  "status": "unchecked"
+ },
+ "U14:643": {
+  "status": "ok"
+ },
+ "U14:644": {
+  "status": "unchecked"
+ },
+ "U14:645": {
+  "status": "unchecked"
+ },
+ "U14:646": {
+  "status": "unchecked"
+ },
+ "U14:647": {
+  "status": "unchecked"
+ },
+ "U14:648": {
+  "status": "ok"
+ },
+ "U14:653": {
+  "status": "ok"
+ },
+ "U14:654": {
+  "status": "ok"
+ },
+ "U14:655": {
+  "status": "unchecked"
+ },
+ "U14:656": {
+  "status": "unchecked"
+ },
+ "U14:657": {
+  "status": "unchecked"
+ },
+ "U14:658": {
+  "status": "ok"
+ },
+ "U14:659": {
+  "status": "unchecked"
+ },
+ "U14:660": {
+  "status": "unchecked"
+ },
+ "U14:661": {
+  "status": "unchecked"
+ },
+ "U14:662": {
+  "status": "ok"
+ },
+ "U14:663": {
+  "status": "unchecked"
+ },
+ "U14:664": {
+  "status": "unchecked"
+ },
+ "U14:665": {
+  "status": "unchecked"
+ },
+ "U14:666": {
+  "status": "unchecked"
+ },
+ "U14:671": {
+  "status": "unchecked"
+ },
+ "U14:672": {
+  "status": "ok"
+ },
+ "U14:673": {
+  "status": "unchecked"
+ },
+ "U14:674": {
+  "status": "unchecked"
+ },
+ "U14:675": {
+  "status": "unchecked"
+ },
+ "U14:680": {
+  "status": "unchecked"
+ },
+ "U14:681": {
+  "status": "ok"
+ },
+ "U14:682": {
+  "status": "unchecked"
+ },
+ "U14:683": {
+  "status": "ok"
+ },
+ "U14:684": {
+  "status": "ok"
+ },
+ "U14:685": {
+  "status": "unchecked"
+ },
+ "U14:686": {
+  "status": "unchecked"
+ },
+ "U14:687": {
+  "status": "unchecked"
+ },
+ "U14:688": {
+  "status": "ok"
+ },
+ "U14:689": {
+  "status": "unchecked"
+ },
+ "U14:694": {
+  "status": "ok"
+ },
+ "U14:695": {
+  "status": "unchecked"
+ },
+ "U14:696": {
+  "status": "unchecked"
+ },
+ "U14:697": {
+  "status": "unchecked"
+ },
+ "U14:698": {
+  "status": "unchecked"
+ },
+ "U14:699": {
+  "status": "ok"
+ },
+ "U14:704": {
+  "status": "unchecked"
+ },
+ "U14:705": {
+  "status": "unchecked"
+ },
+ "U14:706": {
+  "status": "unchecked"
+ },
+ "U14:707": {
+  "status": "unchecked"
+ },
+ "U14:712": {
+  "status": "ok"
+ },
+ "U14:713": {
+  "status": "unchecked"
+ },
+ "U14:714": {
+  "status": "unchecked"
+ },
+ "U14:715": {
+  "status": "unchecked"
+ },
+ "U14:716": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "@property --ds-sidebar-rail-{s,h}"
+  ]
+ },
+ "U14:717": {
+  "status": "ok"
+ },
+ "U14:718": {
+  "status": "ok"
+ },
+ "U14:719": {
+  "status": "ok"
+ },
+ "U14:720": {
+  "status": "unchecked"
+ },
+ "U14:721": {
+  "status": "unchecked"
+ },
+ "U14:722": {
+  "status": "unchecked"
+ },
+ "U14:723": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "geometry props with established Radix/industry names"
+  ]
+ },
+ "U14:724": {
+  "status": "ok"
+ },
+ "U2:498": {
+  "status": "ok"
+ },
+ "U2:499": {
+  "status": "ok"
+ },
+ "U2:500": {
+  "status": "ok"
+ },
+ "U2:501": {
+  "status": "ok"
+ },
+ "U2:502": {
+  "status": "ok"
+ },
+ "U2:503": {
+  "status": "drift",
+  "cited": "24",
+  "nearest": 27,
+  "delta": 3,
+  "anchors": [
+   "index.ts ← barrel: all public exports"
+  ]
+ },
+ "U2:504": {
+  "status": "drift",
+  "cited": "25",
+  "nearest": 28,
+  "delta": 3,
+  "anchors": [
+   "utils/cn.ts ← clsx + tailwind-merge helper"
+  ]
+ },
+ "U2:505": {
+  "status": "ok"
+ },
+ "U2:506": {
+  "status": "ok"
+ },
+ "U2:507": {
+  "status": "ok"
+ },
+ "U2:508": {
+  "status": "ok"
+ },
+ "U2:509": {
+  "status": "unchecked"
+ },
+ "U2:510": {
+  "status": "unchecked"
+ },
+ "U2:511": {
+  "status": "unchecked"
+ },
+ "U2:512": {
+  "status": "ok"
+ },
+ "U2:513": {
+  "status": "unchecked"
+ },
+ "U2:514": {
+  "status": "ok"
+ },
+ "U2:515": {
+  "status": "unchecked"
+ },
+ "U2:516": {
+  "status": "unchecked"
+ },
+ "U2:517": {
+  "status": "unchecked"
+ },
+ "U2:518": {
+  "status": "unchecked"
+ },
+ "U2:519": {
+  "status": "unchecked"
+ },
+ "U2:520": {
+  "status": "unchecked"
+ },
+ "U2:521": {
+  "status": "ok"
+ },
+ "U2:522": {
+  "status": "unchecked"
+ },
+ "U2:523": {
+  "status": "ok"
+ },
+ "U2:524": {
+  "status": "unchecked"
+ },
+ "U2:525": {
+  "status": "unchecked"
+ },
+ "U2:526": {
+  "status": "ok"
+ },
+ "U2:527": {
+  "status": "unchecked"
+ },
+ "U2:528": {
+  "status": "ok"
+ },
+ "U2:529": {
+  "status": "ok"
+ },
+ "U2:530": {
+  "status": "ok"
+ },
+ "U2:531": {
+  "status": "ok"
+ },
+ "U2:532": {
+  "status": "unchecked"
+ },
+ "U2:533": {
+  "status": "ok"
+ },
+ "U2:534": {
+  "status": "ok"
+ },
+ "U2:535": {
+  "status": "ok"
+ },
+ "U2:536": {
+  "status": "ok"
+ },
+ "U2:537": {
+  "status": "unchecked"
+ },
+ "U2:538": {
+  "status": "ok"
+ },
+ "U2:539": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "@import …/styles.css",
+   "…/theme.css"
+  ]
+ },
+ "U2:540": {
+  "status": "unchecked"
+ },
+ "U2:541": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "interactive components keep the directive at the top of THEIR chunk"
+  ]
+ },
+ "U2:542": {
+  "status": "unchecked"
+ },
+ "U2:543": {
+  "status": "unchecked"
+ },
+ "U2:544": {
+  "status": "ok"
+ },
+ "U2:545": {
+  "status": "ok"
+ },
+ "U2:546": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "Pure modules (cn, types, icons, BaseText, Shapes) never match"
+  ]
+ },
+ "U2:547": {
+  "status": "ok"
+ },
+ "U2:548": {
+  "status": "ok"
+ },
+ "U2:549": {
+  "status": "unchecked"
+ },
+ "U2:550": {
+  "status": "unchecked"
+ },
+ "U2:551": {
+  "status": "ok"
+ },
+ "U2:552": {
+  "status": "unchecked"
+ },
+ "U2:553": {
+  "status": "ok"
+ },
+ "U2:554": {
+  "status": "ok"
+ },
+ "U2:555": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "--ui-font-var-*"
+  ]
+ },
+ "U2:556": {
+  "status": "ok"
+ },
+ "U2:557": {
+  "status": "ok"
+ },
+ "U2:558": {
+  "status": "ok"
+ },
+ "U2:559": {
+  "status": "ok"
+ },
+ "U2:560": {
+  "status": "unchecked"
+ },
+ "U3:421": {
+  "status": "ok"
+ },
+ "U3:422": {
+  "status": "ok"
+ },
+ "U3:423": {
+  "status": "unchecked"
+ },
+ "U3:424": {
+  "status": "ok"
+ },
+ "U3:425": {
+  "status": "unchecked"
+ },
+ "U3:426": {
+  "status": "ok"
+ },
+ "U3:427": {
+  "status": "ok"
+ },
+ "U3:428": {
+  "status": "unchecked"
+ },
+ "U3:429": {
+  "status": "unchecked"
+ },
+ "U3:430": {
+  "status": "unchecked"
+ },
+ "U3:431": {
+  "status": "unchecked"
+ },
+ "U3:432": {
+  "status": "ok"
+ },
+ "U3:433": {
+  "status": "unchecked"
+ },
+ "U3:434": {
+  "status": "unchecked"
+ },
+ "U3:435": {
+  "status": "ok"
+ },
+ "U3:436": {
+  "status": "unchecked"
+ },
+ "U3:437": {
+  "status": "unchecked"
+ },
+ "U3:438": {
+  "status": "ok"
+ },
+ "U3:439": {
+  "status": "ok"
+ },
+ "U3:440": {
+  "status": "unchecked"
+ },
+ "U3:441": {
+  "status": "unchecked"
+ },
+ "U3:442": {
+  "status": "unchecked"
+ },
+ "U3:443": {
+  "status": "unchecked"
+ },
+ "U3:444": {
+  "status": "ok"
+ },
+ "U3:445": {
+  "status": "unchecked"
+ },
+ "U3:446": {
+  "status": "unchecked"
+ },
+ "U3:447": {
+  "status": "unchecked"
+ },
+ "U3:448": {
+  "status": "unchecked"
+ },
+ "U3:449": {
+  "status": "unchecked"
+ },
+ "U3:450": {
+  "status": "unchecked"
+ },
+ "U3:451": {
+  "status": "unchecked"
+ },
+ "U3:452": {
+  "status": "unchecked"
+ },
+ "U3:453": {
+  "status": "ok"
+ },
+ "U3:454": {
+  "status": "unchecked"
+ },
+ "U3:455": {
+  "status": "unchecked"
+ },
+ "U3:456": {
+  "status": "unchecked"
+ },
+ "U3:457": {
+  "status": "unchecked"
+ },
+ "U3:458": {
+  "status": "unchecked"
+ },
+ "U3:459": {
+  "status": "unchecked"
+ },
+ "U3:460": {
+  "status": "unchecked"
+ },
+ "U3:461": {
+  "status": "unchecked"
+ },
+ "U3:462": {
+  "status": "unchecked"
+ },
+ "U3:463": {
+  "status": "unchecked"
+ },
+ "U3:464": {
+  "status": "ok"
+ },
+ "U3:465": {
+  "status": "unchecked"
+ },
+ "U3:466": {
+  "status": "unchecked"
+ },
+ "U3:467": {
+  "status": "ok"
+ },
+ "U3:468": {
+  "status": "ok"
+ },
+ "U3:469": {
+  "status": "unchecked"
+ },
+ "U3:470": {
+  "status": "ok"
+ },
+ "U3:471": {
+  "status": "unchecked"
+ },
+ "U3:472": {
+  "status": "unchecked"
+ },
+ "U3:473": {
+  "status": "unchecked"
+ },
+ "U3:474": {
+  "status": "ok"
+ },
+ "U3:475": {
+  "status": "ok"
+ },
+ "U3:476": {
+  "status": "ok"
+ },
+ "U3:477": {
+  "status": "ok"
+ },
+ "U3:478": {
+  "status": "unchecked"
+ },
+ "U3:479": {
+  "status": "unchecked"
+ },
+ "U3:480": {
+  "status": "ok"
+ },
+ "U3:481": {
+  "status": "ok"
+ },
+ "U3:482": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "no requestAnimationFrame, no timer and no transitionend in the component"
+  ]
+ },
+ "U3:483": {
+  "status": "unchecked"
+ },
+ "U3:484": {
+  "status": "unchecked"
+ },
+ "U3:485": {
+  "status": "ok"
+ },
+ "U3:486": {
+  "status": "ok"
+ },
+ "U3:487": {
+  "status": "ok"
+ },
+ "U3:488": {
+  "status": "ok"
+ },
+ "U3:489": {
+  "status": "unchecked"
+ },
+ "U3:490": {
+  "status": "ok"
+ },
+ "U3:491": {
+  "status": "ok"
+ },
+ "U3:492": {
+  "status": "ok"
+ },
+ "U3:493": {
+  "status": "unchecked"
+ },
+ "U3:494": {
+  "status": "ok"
+ },
+ "U3:495": {
+  "status": "ok"
+ },
+ "U3:496": {
+  "status": "unchecked"
+ },
+ "U3:497": {
+  "status": "unchecked"
+ },
+ "U3:498": {
+  "status": "unchecked"
+ },
+ "U3:499": {
+  "status": "unchecked"
+ },
+ "U3:500": {
+  "status": "unchecked"
+ },
+ "U3:501": {
+  "status": "unchecked"
+ },
+ "U3:502": {
+  "status": "unchecked"
+ },
+ "U3:503": {
+  "status": "unchecked"
+ },
+ "U3:504": {
+  "status": "unchecked"
+ },
+ "U3:505": {
+  "status": "ok"
+ },
+ "U3:506": {
+  "status": "ok"
+ },
+ "U3:507": {
+  "status": "unchecked"
+ },
+ "U3:508": {
+  "status": "ok"
+ },
+ "U3:509": {
+  "status": "unchecked"
+ },
+ "U3:510": {
+  "status": "ok"
+ },
+ "U3:511": {
+  "status": "unchecked"
+ },
+ "U3:512": {
+  "status": "ok"
+ },
+ "U3:513": {
+  "status": "unchecked"
+ },
+ "U3:514": {
+  "status": "ok"
+ },
+ "U3:515": {
+  "status": "ok"
+ },
+ "U4:580": {
+  "status": "ok"
+ },
+ "U4:581": {
+  "status": "ok"
+ },
+ "U4:582": {
+  "status": "ok"
+ },
+ "U4:583": {
+  "status": "ok"
+ },
+ "U4:584": {
+  "status": "ok"
+ },
+ "U4:585": {
+  "status": "ok"
+ },
+ "U4:586": {
+  "status": "ok"
+ },
+ "U4:587": {
+  "status": "ok"
+ },
+ "U4:588": {
+  "status": "ok"
+ },
+ "U4:589": {
+  "status": "ok"
+ },
+ "U4:590": {
+  "status": "ok"
+ },
+ "U4:591": {
+  "status": "unchecked"
+ },
+ "U4:592": {
+  "status": "ok"
+ },
+ "U4:593": {
+  "status": "ok"
+ },
+ "U4:594": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "CopyButtonVariant (ghost|secondary)"
+  ]
+ },
+ "U4:595": {
+  "status": "ok"
+ },
+ "U4:596": {
+  "status": "ok"
+ },
+ "U4:597": {
+  "status": "ok"
+ },
+ "U4:598": {
+  "status": "ok"
+ },
+ "U4:599": {
+  "status": "ok"
+ },
+ "U4:600": {
+  "status": "ok"
+ },
+ "U4:601": {
+  "status": "ok"
+ },
+ "U4:602": {
+  "status": "ok"
+ },
+ "U4:603": {
+  "status": "ok"
+ },
+ "U4:604": {
+  "status": "ok"
+ },
+ "U4:605": {
+  "status": "ok"
+ },
+ "U4:606": {
+  "status": "ok"
+ },
+ "U4:607": {
+  "status": "ok"
+ },
+ "U4:608": {
+  "status": "ok"
+ },
+ "U4:609": {
+  "status": "unchecked"
+ },
+ "U4:610": {
+  "status": "ok"
+ },
+ "U4:611": {
+  "status": "ok"
+ },
+ "U4:612": {
+  "status": "ok"
+ },
+ "U4:613": {
+  "status": "ok"
+ },
+ "U4:614": {
+  "status": "ok"
+ },
+ "U4:615": {
+  "status": "ok"
+ },
+ "U4:616": {
+  "status": "ok"
+ },
+ "U4:617": {
+  "status": "ok"
+ },
+ "U4:618": {
+  "status": "ok"
+ },
+ "U4:619": {
+  "status": "ok"
+ },
+ "U4:620": {
+  "status": "ok"
+ },
+ "U4:621": {
+  "status": "ok"
+ },
+ "U4:622": {
+  "status": "ok"
+ },
+ "U4:623": {
+  "status": "unchecked"
+ },
+ "U4:624": {
+  "status": "ok"
+ },
+ "U4:625": {
+  "status": "ok"
+ },
+ "U5:410": {
+  "status": "ok"
+ },
+ "U5:411": {
+  "status": "ok"
+ },
+ "U5:412": {
+  "status": "unchecked"
+ },
+ "U5:413": {
+  "status": "ok"
+ },
+ "U5:414": {
+  "status": "ok"
+ },
+ "U5:415": {
+  "status": "unchecked"
+ },
+ "U5:416": {
+  "status": "unchecked"
+ },
+ "U5:417": {
+  "status": "ok"
+ },
+ "U5:418": {
+  "status": "unchecked"
+ },
+ "U5:419": {
+  "status": "unchecked"
+ },
+ "U5:420": {
+  "status": "unchecked"
+ },
+ "U5:421": {
+  "status": "unchecked"
+ },
+ "U5:422": {
+  "status": "ok"
+ },
+ "U5:423": {
+  "status": "unchecked"
+ },
+ "U5:424": {
+  "status": "unchecked"
+ },
+ "U5:425": {
+  "status": "ok"
+ },
+ "U5:426": {
+  "status": "ok"
+ },
+ "U5:427": {
+  "status": "unchecked"
+ },
+ "U5:428": {
+  "status": "ok"
+ },
+ "U5:429": {
+  "status": "ok"
+ },
+ "U5:430": {
+  "status": "unchecked"
+ },
+ "U5:431": {
+  "status": "ok"
+ },
+ "U5:432": {
+  "status": "ok"
+ },
+ "U5:433": {
+  "status": "ok"
+ },
+ "U5:434": {
+  "status": "ok"
+ },
+ "U5:435": {
+  "status": "unchecked"
+ },
+ "U5:436": {
+  "status": "unchecked"
+ },
+ "U5:437": {
+  "status": "ok"
+ },
+ "U5:438": {
+  "status": "unchecked"
+ },
+ "U5:439": {
+  "status": "ok"
+ },
+ "U5:440": {
+  "status": "unchecked"
+ },
+ "U5:441": {
+  "status": "ok"
+ },
+ "U5:442": {
+  "status": "ok"
+ },
+ "U5:443": {
+  "status": "ok"
+ },
+ "U5:444": {
+  "status": "ok"
+ },
+ "U5:445": {
+  "status": "ok"
+ },
+ "U5:446": {
+  "status": "unchecked"
+ },
+ "U5:447": {
+  "status": "unchecked"
+ },
+ "U5:448": {
+  "status": "ok"
+ },
+ "U5:449": {
+  "status": "ok"
+ },
+ "U5:450": {
+  "status": "ok"
+ },
+ "U5:451": {
+  "status": "ok"
+ },
+ "U5:452": {
+  "status": "ok"
+ },
+ "U5:453": {
+  "status": "ok"
+ },
+ "U5:454": {
+  "status": "ok"
+ },
+ "U5:455": {
+  "status": "ok"
+ },
+ "U5:456": {
+  "status": "ok"
+ },
+ "U5:457": {
+  "status": "ok"
+ },
+ "U5:458": {
+  "status": "ok"
+ },
+ "U5:459": {
+  "status": "ok"
+ },
+ "U5:460": {
+  "status": "ok"
+ },
+ "U5:461": {
+  "status": "ok"
+ },
+ "U5:462": {
+  "status": "ok"
+ },
+ "U5:463": {
+  "status": "ok"
+ },
+ "U5:464": {
+  "status": "ok"
+ },
+ "U5:465": {
+  "status": "unchecked"
+ },
+ "U5:466": {
+  "status": "ok"
+ },
+ "U5:467": {
+  "status": "ok"
+ },
+ "U5:468": {
+  "status": "unchecked"
+ },
+ "U5:469": {
+  "status": "unchecked"
+ },
+ "U5:470": {
+  "status": "ok"
+ },
+ "U5:471": {
+  "status": "ok"
+ },
+ "U5:472": {
+  "status": "unchecked"
+ },
+ "U5:473": {
+  "status": "ok"
+ },
+ "U5:474": {
+  "status": "ok"
+ },
+ "U5:475": {
+  "status": "unchecked"
+ },
+ "U6:802": {
+  "status": "unchecked"
+ },
+ "U6:803": {
+  "status": "unchecked"
+ },
+ "U6:804": {
+  "status": "unchecked"
+ },
+ "U6:805": {
+  "status": "unchecked"
+ },
+ "U6:806": {
+  "status": "unchecked"
+ },
+ "U6:807": {
+  "status": "unchecked"
+ },
+ "U6:808": {
+  "status": "unchecked"
+ },
+ "U6:809": {
+  "status": "unchecked"
+ },
+ "U6:810": {
+  "status": "ok"
+ },
+ "U6:811": {
+  "status": "unchecked"
+ },
+ "U6:812": {
+  "status": "ok"
+ },
+ "U6:813": {
+  "status": "unchecked"
+ },
+ "U6:814": {
+  "status": "ok"
+ },
+ "U6:815": {
+  "status": "unchecked"
+ },
+ "U6:816": {
+  "status": "ok"
+ },
+ "U6:817": {
+  "status": "unchecked"
+ },
+ "U6:818": {
+  "status": "unchecked"
+ },
+ "U6:819": {
+  "status": "unchecked"
+ },
+ "U6:820": {
+  "status": "unchecked"
+ },
+ "U6:821": {
+  "status": "unchecked"
+ },
+ "U6:822": {
+  "status": "unchecked"
+ },
+ "U6:823": {
+  "status": "unchecked"
+ },
+ "U6:824": {
+  "status": "unchecked"
+ },
+ "U6:825": {
+  "status": "unchecked"
+ },
+ "U6:826": {
+  "status": "ok"
+ },
+ "U6:827": {
+  "status": "unchecked"
+ },
+ "U6:828": {
+  "status": "ok"
+ },
+ "U6:829": {
+  "status": "unchecked"
+ },
+ "U6:830": {
+  "status": "unchecked"
+ },
+ "U6:831": {
+  "status": "unchecked"
+ },
+ "U6:832": {
+  "status": "unchecked"
+ },
+ "U6:833": {
+  "status": "unchecked"
+ },
+ "U6:834": {
+  "status": "unchecked"
+ },
+ "U6:835": {
+  "status": "unchecked"
+ },
+ "U6:836": {
+  "status": "unchecked"
+ },
+ "U6:837": {
+  "status": "unchecked"
+ },
+ "U6:838": {
+  "status": "unchecked"
+ },
+ "U6:839": {
+  "status": "unchecked"
+ },
+ "U6:840": {
+  "status": "unchecked"
+ },
+ "U6:841": {
+  "status": "unchecked"
+ },
+ "U6:842": {
+  "status": "unchecked"
+ },
+ "U6:843": {
+  "status": "ok"
+ },
+ "U6:844": {
+  "status": "unchecked"
+ },
+ "U6:845": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   ", onValueChange never"
+  ]
+ },
+ "U6:846": {
+  "status": "unchecked"
+ },
+ "U6:847": {
+  "status": "unchecked"
+ },
+ "U6:848": {
+  "status": "ok"
+ },
+ "U6:849": {
+  "status": "ok"
+ },
+ "U6:850": {
+  "status": "unchecked"
+ },
+ "U6:851": {
+  "status": "ok"
+ },
+ "U6:852": {
+  "status": "unchecked"
+ },
+ "U6:853": {
+  "status": "unchecked"
+ },
+ "U6:854": {
+  "status": "unchecked"
+ },
+ "U6:855": {
+  "status": "unchecked"
+ },
+ "U6:856": {
+  "status": "unchecked"
+ },
+ "U6:857": {
+  "status": "unchecked"
+ },
+ "U6:858": {
+  "status": "unchecked"
+ },
+ "U6:859": {
+  "status": "unchecked"
+ },
+ "U6:860": {
+  "status": "unchecked"
+ },
+ "U6:861": {
+  "status": "unchecked"
+ },
+ "U6:862": {
+  "status": "unchecked"
+ },
+ "U6:863": {
+  "status": "unchecked"
+ },
+ "U6:864": {
+  "status": "unchecked"
+ },
+ "U6:865": {
+  "status": "unchecked"
+ },
+ "U6:866": {
+  "status": "unchecked"
+ },
+ "U6:867": {
+  "status": "unchecked"
+ },
+ "U6:868": {
+  "status": "unchecked"
+ },
+ "U6:869": {
+  "status": "unchecked"
+ },
+ "U6:870": {
+  "status": "unchecked"
+ },
+ "U6:871": {
+  "status": "unchecked"
+ },
+ "U6:872": {
+  "status": "ok"
+ },
+ "U6:873": {
+  "status": "unchecked"
+ },
+ "U6:874": {
+  "status": "ok"
+ },
+ "U6:875": {
+  "status": "unchecked"
+ },
+ "U6:876": {
+  "status": "unchecked"
+ },
+ "U6:877": {
+  "status": "ok"
+ },
+ "U7:440": {
+  "status": "ok"
+ },
+ "U7:441": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "Calendar/ ← Calendar + Grid/Caption/PresetsPanel, constants.ts, dateUtils.ts, dateFormat.ts, rangeSelection.ts"
+  ]
+ },
+ "U7:442": {
+  "status": "ok"
+ },
+ "U7:443": {
+  "status": "ok"
+ },
+ "U7:444": {
+  "status": "ok"
+ },
+ "U7:445": {
+  "status": "ok"
+ },
+ "U7:446": {
+  "status": "ok"
+ },
+ "U7:447": {
+  "status": "ok"
+ },
+ "U7:448": {
+  "status": "ok"
+ },
+ "U7:449": {
+  "status": "ok"
+ },
+ "U7:450": {
+  "status": "unchecked"
+ },
+ "U7:451": {
+  "status": "ok"
+ },
+ "U7:452": {
+  "status": "ok"
+ },
+ "U7:453": {
+  "status": "ok"
+ },
+ "U7:454": {
+  "status": "ok"
+ },
+ "U7:455": {
+  "status": "ok"
+ },
+ "U7:456": {
+  "status": "ok"
+ },
+ "U7:457": {
+  "status": "ok"
+ },
+ "U7:458": {
+  "status": "ok"
+ },
+ "U7:459": {
+  "status": "ok"
+ },
+ "U7:460": {
+  "status": "ok"
+ },
+ "U7:461": {
+  "status": "ok"
+ },
+ "U7:462": {
+  "status": "ok"
+ },
+ "U7:463": {
+  "status": "ok"
+ },
+ "U7:464": {
+  "status": "ok"
+ },
+ "U7:465": {
+  "status": "ok"
+ },
+ "U7:466": {
+  "status": "ok"
+ },
+ "U7:467": {
+  "status": "drift",
+  "cited": "95",
+  "nearest": 93,
+  "delta": -2,
+  "anchors": [
+   "New in v5 — additive"
+  ]
+ },
+ "U7:468": {
+  "status": "ok"
+ },
+ "U7:469": {
+  "status": "ok"
+ },
+ "U7:470": {
+  "status": "ok"
+ },
+ "U7:471": {
+  "status": "ok"
+ },
+ "U7:472": {
+  "status": "ok"
+ },
+ "U7:473": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "Server-safe constants — no client APIs, intentionally NO use client"
+  ]
+ },
+ "U7:474": {
+  "status": "ok"
+ },
+ "U8:474": {
+  "status": "ok"
+ },
+ "U8:475": {
+  "status": "ok"
+ },
+ "U8:476": {
+  "status": "ok"
+ },
+ "U8:477": {
+  "status": "ok"
+ },
+ "U8:478": {
+  "status": "ok"
+ },
+ "U8:479": {
+  "status": "ok"
+ },
+ "U8:480": {
+  "status": "ok"
+ },
+ "U8:481": {
+  "status": "ok"
+ },
+ "U8:482": {
+  "status": "ok"
+ },
+ "U8:483": {
+  "status": "ok"
+ },
+ "U8:484": {
+  "status": "ok"
+ },
+ "U8:485": {
+  "status": "ok"
+ },
+ "U8:486": {
+  "status": "ok"
+ },
+ "U8:487": {
+  "status": "ok"
+ },
+ "U8:488": {
+  "status": "ok"
+ },
+ "U8:489": {
+  "status": "ok"
+ },
+ "U8:490": {
+  "status": "ok"
+ },
+ "U8:491": {
+  "status": "ok"
+ },
+ "U8:492": {
+  "status": "unchecked"
+ },
+ "U8:493": {
+  "status": "ok"
+ },
+ "U8:494": {
+  "status": "ok"
+ },
+ "U8:495": {
+  "status": "ok"
+ },
+ "U8:496": {
+  "status": "ok"
+ },
+ "U8:497": {
+  "status": "ok"
+ },
+ "U8:498": {
+  "status": "ok"
+ },
+ "U8:499": {
+  "status": "ok"
+ },
+ "U8:500": {
+  "status": "ok"
+ },
+ "U8:501": {
+  "status": "ok"
+ },
+ "U8:502": {
+  "status": "ok"
+ },
+ "U8:503": {
+  "status": "ok"
+ },
+ "U8:504": {
+  "status": "unchecked"
+ },
+ "U8:505": {
+  "status": "ok"
+ },
+ "U8:506": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "app-side wrapper — intentionally not a packaged component"
+  ]
+ },
+ "U8:507": {
+  "status": "ok"
+ },
+ "U8:508": {
+  "status": "ok"
+ },
+ "U8:509": {
+  "status": "unchecked"
+ },
+ "U8:510": {
+  "status": "ok"
+ },
+ "U8:511": {
+  "status": "ok"
+ },
+ "U8:512": {
+  "status": "ok"
+ },
+ "U8:513": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "both wrap the same Radix Dialog primitive, their parts map 1:1"
+  ]
+ },
+ "U8:514": {
+  "status": "ok"
+ },
+ "U8:515": {
+  "status": "ok"
+ },
+ "U8:516": {
+  "status": "ok"
+ },
+ "U8:517": {
+  "status": "ok"
+ },
+ "U8:518": {
+  "status": "unchecked"
+ },
+ "U8:519": {
+  "status": "ok"
+ },
+ "U8:520": {
+  "status": "unchecked"
+ },
+ "U8:521": {
+  "status": "ok"
+ },
+ "U8:522": {
+  "status": "unchecked"
+ },
+ "U8:523": {
+  "status": "ok"
+ },
+ "U8:524": {
+  "status": "unchecked"
+ },
+ "U8:525": {
+  "status": "ok"
+ },
+ "U8:526": {
+  "status": "ok"
+ },
+ "U8:527": {
+  "status": "ok"
+ },
+ "U8:528": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "*Types",
+   "lives in ./constants (server-safe), re-exported via index.ts"
+  ]
+ },
+ "U9:516": {
+  "status": "ok"
+ },
+ "U9:517": {
+  "status": "ok"
+ },
+ "U9:518": {
+  "status": "ok"
+ },
+ "U9:519": {
+  "status": "ok"
+ },
+ "U9:520": {
+  "status": "ok"
+ },
+ "U9:521": {
+  "status": "ok"
+ },
+ "U9:522": {
+  "status": "ok"
+ },
+ "U9:523": {
+  "status": "unchecked"
+ },
+ "U9:524": {
+  "status": "ok"
+ },
+ "U9:525": {
+  "status": "ok"
+ },
+ "U9:526": {
+  "status": "ok"
+ },
+ "U9:527": {
+  "status": "unchecked"
+ },
+ "U9:528": {
+  "status": "unchecked"
+ },
+ "U9:529": {
+  "status": "ok"
+ },
+ "U9:530": {
+  "status": "ok"
+ },
+ "U9:531": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "getSpinnerGeometry(size)"
+  ]
+ },
+ "U9:532": {
+  "status": "unchecked"
+ },
+ "U9:533": {
+  "status": "unchecked"
+ },
+ "U9:534": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "gapLength = 2 × strokeWidth"
+  ]
+ },
+ "U9:535": {
+  "status": "ok"
+ },
+ "U9:536": {
+  "status": "unchecked"
+ },
+ "U9:537": {
+  "status": "ok"
+ },
+ "U9:538": {
+  "status": "no-anchor-hit",
+  "anchors": [
+   "max(5, round(2πr/15))"
+  ]
+ },
+ "U9:539": {
+  "status": "ok"
+ },
+ "U9:540": {
+  "status": "ok"
+ },
+ "U9:541": {
+  "status": "ok"
+ },
+ "U9:542": {
+  "status": "ok"
+ },
+ "U9:543": {
+  "status": "ok"
+ },
+ "U9:544": {
+  "status": "ok"
+ },
+ "U9:545": {
+  "status": "unchecked"
+ },
+ "U9:546": {
+  "status": "ok"
+ },
+ "U9:547": {
+  "status": "ok"
+ },
+ "U9:548": {
+  "status": "ok"
+ },
+ "U9:549": {
+  "status": "unchecked"
+ },
+ "U9:550": {
+  "status": "ok"
+ },
+ "U9:551": {
+  "status": "ok"
+ },
+ "U9:552": {
+  "status": "ok"
+ },
+ "U9:553": {
+  "status": "unchecked"
+ },
+ "U9:554": {
+  "status": "ok"
+ },
+ "U9:555": {
+  "status": "ok"
+ },
+ "U9:556": {
+  "status": "ok"
+ },
+ "U9:557": {
+  "status": "ok"
+ },
+ "U9:558": {
+  "status": "ok"
+ },
+ "U9:559": {
+  "status": "ok"
+ },
+ "U9:560": {
+  "status": "ok"
+ },
+ "U9:561": {
+  "status": "unchecked"
+ },
+ "U9:562": {
+  "status": "ok"
+ },
+ "U9:563": {
+  "status": "ok"
+ },
+ "U9:564": {
+  "status": "ok"
+ },
+ "U9:565": {
+  "status": "ok"
+ },
+ "U9:566": {
+  "status": "ok"
+ },
+ "U9:567": {
+  "status": "unchecked"
+ },
+ "U9:568": {
+  "status": "ok"
+ },
+ "U9:569": {
+  "status": "unchecked"
+ },
+ "U9:570": {
+  "status": "unchecked"
+ },
+ "U9:571": {
+  "status": "ok"
+ },
+ "U9:572": {
+  "status": "ok"
+ },
+ "U9:573": {
+  "status": "ok"
+ },
+ "U9:574": {
+  "status": "ok"
+ },
+ "U9:575": {
+  "status": "ok"
+ },
+ "U9:576": {
+  "status": "ok"
+ },
+ "U9:577": {
+  "status": "ok"
+ },
+ "U9:578": {
+  "status": "ok"
+ },
+ "U9:579": {
+  "status": "ok"
+ },
+ "U9:580": {
+  "status": "ok"
+ },
+ "U9:581": {
+  "status": "ok"
+ },
+ "U9:582": {
+  "status": "ok"
+ },
+ "U9:583": {
+  "status": "ok"
+ },
+ "U9:584": {
+  "status": "unchecked"
+ },
+ "U9:585": {
+  "status": "ok"
+ },
+ "U9:586": {
+  "status": "ok"
+ },
+ "U9:587": {
+  "status": "unchecked"
+ },
+ "U9:588": {
+  "status": "ok"
+ }
+}

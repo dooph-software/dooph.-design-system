@@ -1,0 +1,69 @@
+--- /c/Users/stick/Github/dooph/dooph-Design-System/docs/audit/_work/scratch/C5/tsc/orig/src/components/CTAButton/CTAButton.tsx	2026-10-01 13:43:49.189962400 -0600
++++ /c/Users/stick/Github/dooph/dooph-Design-System/docs/audit/_work/scratch/C5/tsc/fixed/src/components/CTAButton/CTAButton.tsx	2026-10-01 18:49:20.093517200 -0600
+@@ -6,6 +6,7 @@
+   type AnchorHTMLAttributes,
+   type ReactElement,
+   type ReactNode,
++  type RefAttributes,
+ } from "react";
+ import { cn } from "../../utils/cn";
+ import { RollHoverText } from "../AnimatedText";
+@@ -41,14 +42,47 @@
+    * `<CTAButton asChild text="…" icon={…}><Link href="/pricing" /></CTAButton>`
+    */
+   asChild?: boolean;
++  /**
++   * Read only with `asChild`: the single element CTAButton slots onto (its own
++   * children are replaced by the CTA content). Without `asChild` there is no
++   * place to render children — pass the label as `text`.
++   */
+   children?: ReactNode;
+ }
+ 
++/* Public call signatures: `children` type-checks only together with
++ * `asChild`, so a label passed as children in anchor mode (which renders
++ * nothing) is a compile error rather than silently dropped. */
++type CTAButtonComponent = {
++  (
++    props: Omit<CTAButtonProps, "asChild" | "children"> & {
++      asChild: true;
++      children: ReactElement;
++    } & RefAttributes<HTMLAnchorElement>,
++  ): ReactElement | null;
++  /* A runtime boolean (`asChild={isLink}`) needs an element child to slot onto. */
++  (
++    props: Omit<CTAButtonProps, "asChild" | "children"> & {
++      asChild: boolean;
++      children: ReactElement;
++    } & RefAttributes<HTMLAnchorElement>,
++  ): ReactElement | null;
++  /* Anchor mode — listed LAST because ComponentProps (and so Storybook's
++   * Meta<typeof CTAButton>) reads the last call signature. */
++  (
++    props: Omit<CTAButtonProps, "asChild" | "children"> & {
++      asChild?: false;
++      children?: never;
++    } & RefAttributes<HTMLAnchorElement>,
++  ): ReactElement | null;
++  displayName?: string;
++};
++
+ /**
+  * Padded-outline marketing CTA. The outline ring is primary-only; hover response
+  * is label-only via RollHoverText on an ancestor `.group`. Radii stay fully round.
+  */
+-const CTAButton = forwardRef<HTMLAnchorElement, CTAButtonProps>(
++const CTAButtonBase = forwardRef<HTMLAnchorElement, CTAButtonProps>(
+   (
+     {
+       text,
+@@ -131,6 +165,8 @@
+     );
+   },
+ );
+-CTAButton.displayName = "CTAButton";
++CTAButtonBase.displayName = "CTAButton";
++
++const CTAButton = CTAButtonBase as CTAButtonComponent;
+ 
+ export { CTAButton };

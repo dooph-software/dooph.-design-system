@@ -1,0 +1,163 @@
+### U5-F2: Disabled state is rendered three different ways across the trigger-like controls, and `DropdownTrigger` fades its chevron twice
+- severity: S2
+- category: inconsistency
+- rules: [R8.16, R2.2]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read DropdownTrigger.tsx, SearchBox.tsx, index.css:816-865, dooph-component-tokens.css:13-16,322-326. `--ui-opacity-disabled` is 0.6 (tokens.css:637) / 0.5 (tokens.css:705). No base/preflight rule for input:disabled in dist-styles.css (first 400 lines grep 'disabled' → none)."
+- locations:
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:64-68
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:197-207
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:250
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:272
+  - src/components/SearchBox/SearchBox.tsx:26-36
+  - src/components/SearchBox/SearchBox.tsx:68-71
+  - src/styles/index.css:855-859
+- evidence: |
+    DropdownTrigger.tsx:67   "ds-disabled-state",     // whole root: opacity var(--ui-opacity-disabled)
+    DropdownTrigger.tsx:68   "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled aria-disabled:bg-secondary-disabled ..."
+    DropdownTrigger.tsx:197  disabled
+    DropdownTrigger.tsx:198    ? "cursor-not-allowed bg-secondary-disabled border-secondary-border-disabled"   // Typeable: JS ternary, root NOT faded
+    DropdownTrigger.tsx:250  <SearchIcon className={cn(disabled && "ds-opacity-disabled")} />
+    index.css:857-858        color: var(--ui-color-secondary-foreground); opacity: var(--ui-opacity-disabled);   // caret chevron in a disabled host
+    dooph-component-tokens.css:322-323  /* Dims a decorative part (e.g. a trigger's icons) without fading the surface behind it — Figma applies opacity-disabled to content only. */
+    SearchBox.tsx:33         'hover:border-input-border-hover',   // no disabled treatment anywhere in the file
+- impact: (1) `DropdownTrigger` fades the whole root (surface, border, caret shape) and the caret CSS fades the chevron again, so its chevron renders at 0.36 opacity in light mode, while the same `DropdownCaret` inside a disabled `TypeableDropdownTrigger` renders its shape at full strength and its chevron at 0.6. Two sibling triggers that Figma pairs look different when disabled. The repo already treats this double fade as a bug for the Checkbox inside `DropdownMenuMultiSelectItem` (DropdownMenu.tsx:290-294). (2) `TypeableDropdownTrigger` picks its disabled chrome with a JS ternary instead of styling the `aria-disabled` it already emits, which is a second pattern in the same file. (3) `SearchBox` has no disabled styling at all: its `Disabled` story renders identically to the enabled one (input text stays `text-text`, wrapper hover border still reacts). The next agent that adds a disabled trigger has three precedents to copy.
+- recommendation: Pick one disabled model for the trigger family (the content-only fade that `ds-opacity-disabled` and the caret CSS were written for), apply it via `:disabled`/`[aria-disabled=true]` selectors on all three roots, and give `SearchBox` the same treatment on its wrapper.
+- breaking: none
+- contract: src/components/DropdownCaret/DropdownCaret.tsx:21-22 "Colours live in the .ds-dropdown-caret CSS ... do not move them into props or classes here." → consistent (fix lives in the trigger roots)
+- remediation: tbd
+- related: []
+
+
+### U7-F14: CalendarPresetItem is a native `<button>` whose only disabled helper (inherited from `menuItemClassName`) is the Radix `data-disabled` one, so a `disabled` preset renders and hovers as enabled
+- severity: S2
+- category: rule-violation
+- rules: [R8.16]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read CalendarPresetsPanel.tsx:31-78, DropdownMenu.tsx:190-197, dooph-component-tokens.css:13-25"
+- locations:
+  - src/components/Calendar/CalendarPresetsPanel.tsx:31-34,57-73
+  - src/components/Menu/DropdownMenu.tsx:190-197
+- evidence: |
+    CalendarPresetsPanel.tsx:31-33  export type CalendarPresetItemProps = Omit< ComponentPropsWithoutRef<"button">, "onSelect" | "children" > & {   // accepts `disabled`
+    CalendarPresetsPanel.tsx:67-69  className={cn( menuItemClassName, "ds-focus-visible-ring", ...
+    DropdownMenu.tsx:197  "... ds-radix-data-disabled ... hover:bg-ghost-hover ... data-disabled:hover:bg-transparent data-disabled:active:bg-transparent"
+    dooph-component-tokens.css:13  .ds-disabled-state:is(:disabled, [aria-disabled="true"]) {
+    dooph-component-tokens.css:22  .ds-radix-data-disabled[data-disabled] {
+- impact: `<CalendarPresetItem disabled …>` (e.g. a range outside the consumer's data) is natively inert but keeps full opacity, pointer cursor and the hover fill, because every disabled rule it has keys on `[data-disabled]`, which only Radix items set. `menuItemClassName`'s own comment (DropdownMenu.tsx:191-193) says it exists so non-Radix surfaces "render visually identical items", but its disabled styling is Radix-only.
+- recommendation: Per R8.16, add `ds-disabled-state` (and the `disabled:` hover/active resets) for the native button, or have CalendarPresetItem set `data-disabled` when `disabled`.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U7-F2]
+
+
+### U6-F2: `CodeDigitInput` puts `ds-disabled-state` on a `<div>`, where the helper can never match — the disabled cell gets no opacity/cursor, yet the header says it does
+- severity: S2
+- category: contract-drift
+- rules: [R8.16, R10.4]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read CodeDigitInput.tsx:44-60 (class on wrapper div) vs dooph-component-tokens.css:13 selector; the repo documents the same failure mode itself at Slider.tsx:345-350"
+- locations:
+  - src/components/VerificationCode/CodeDigitInput.tsx:44-53
+  - src/components/VerificationCode/CodeDigitInput.tsx:8-9
+- evidence: |
+    CodeDigitInput.tsx:44     <div
+    CodeDigitInput.tsx:52-53    disabled &&
+                                  "border-secondary-border-disabled bg-secondary-disabled ds-disabled-state",
+    CodeDigitInput.tsx:8-9    * - `hasError` paints ... `disabled` uses secondary
+                              *   disabled tokens + `ds-disabled-state`; focus uses brand focus ring.
+    dooph-component-tokens.css:13  .ds-disabled-state:is(:disabled, [aria-disabled="true"]) {
+    Slider.tsx:348-350  `.ds-disabled-state` keys off `:disabled`/`[aria-disabled]`, which a Radix Root <span>
+                        carrying `data-disabled` never has.
+- impact: Consumers get a disabled verification cell without the DS disabled opacity (`--ui-opacity-disabled`) or `cursor: not-allowed`, unlike every other disabled control; the header asserts the opposite, so a maintainer checking "is disabled styled?" reads the header and moves on. The inner `<input disabled>` carries no disabled helper either (CodeDigitInput.tsx:83-87).
+- recommendation: Put the disabled helper on the element that actually carries `disabled` (the `<input>`), or key the wrapper off a data attribute with a helper that matches it; then make the header state what is true.
+- breaking: minor
+- contract: src/components/VerificationCode/CodeDigitInput.tsx behavior bullet 3 → the header claim is FALSE today (fix code or header together, R10.4)
+- remediation: tbd
+- related: [U6-F1, U6-F9]
+
+
+### U4-F10: Hover/disabled state guards are spelled three ways; only Button's covers `aria-disabled`
+- severity: S3
+- category: inconsistency
+- rules: [R8.16]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "dist-styles.css:1716 `.hover\\:enabled\\:bg-secondary-hover:hover:enabled`; :1587 group-hover:text-prominent-hover and :1606 `group-disabled:text-secondary-disabled:is(:where(.group):disabled *)` (matches `:disabled` only); dooph-component-tokens.css:13 `.ds-disabled-state:is(:disabled, [aria-disabled=\"true\"])`."
+- locations:
+  - src/components/Button/Button.tsx:51-53
+  - src/components/SplitButton/SplitButton.tsx:25-28
+  - src/components/SplitButton/SplitButton.tsx:56-59
+  - src/components/ShapeButton/ShapeButton.tsx:67-78
+  - src/components/ShapeButton/ShapeButton.tsx:138
+- evidence: |
+    Button.tsx:51       "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-primary-hover ..."
+    SplitButton.tsx:25  "hover:enabled:bg-secondary-hover",
+    ShapeButton.tsx:70  "group-hover:text-prominent-hover",
+    ShapeButton.tsx:138 "group-disabled:text-secondary-disabled",
+- impact: `ds-disabled-state` (used by all three) dims both `:disabled` and `aria-disabled="true"`, and Button's variant guards match it; SplitButton's `:enabled` and ShapeButton's `group-hover:`/`group-disabled:` do not, so an `aria-disabled` SplitButton part or ShapeButton (the usual pattern for focusable-but-inactive controls, and the only one available to a slotted `<a>`) still paints hover/active colours and keeps its enabled fill while dimmed. Three spellings of one concern is the trap for the next edit.
+- recommendation: Use one guard (Button's `:not(:disabled):not([aria-disabled=true])`, or a shared `ds-*`/custom variant) across the family, and add `aria-disabled` to ShapeButton's disabled fill.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U4-F9]
+
+
+### U6-F12: Input styles disabled two different ways by branch — CSS pseudo-classes on the bare `<input>` (hover shadow not gated, so a disabled field still lifts on hover) vs a JS ternary on the wrapper, which also sets a `data-disabled` nothing reads; CodeDigitInput likewise emits unread `data-filled`/`data-error`
+- severity: S3
+- category: inconsistency
+- rules: [R8.16]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "dist-styles.css:1679 `.hover\\:shadow-button-secondary:hover` has no `disabled:shadow-*` counterpart (rg -F 'disabled\\:shadow' → 0); rg -n 'data-filled|data-error' repo (excl. node_modules/dist/.claude/docs/audit) → only CodeDigitInput.tsx:59-60; no selector applied to the Input wrapper reads [data-disabled] (ds-radix-data-disabled / ds-focus-visible-ring are not on it)"
+- locations:
+  - src/components/Input/Input.tsx:124-126
+  - src/components/Input/Input.tsx:155
+  - src/components/Input/Input.tsx:163-170
+  - src/components/VerificationCode/CodeDigitInput.tsx:59-60
+- evidence: |
+    Input.tsx:124  "hover:border-input-border-hover hover:shadow-button-secondary",
+    Input.tsx:126  "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled ds-disabled-state",
+    Input.tsx:155  data-disabled={disabled ? "" : undefined}
+    Input.tsx:163-164  disabled
+                         ? "cursor-not-allowed bg-secondary-disabled border-secondary-border-disabled"
+    CodeDigitInput.tsx:59-60  data-filled={filled || undefined}
+                              data-error={hasError || undefined}
+- impact: The two Input branches render the same Figma states through different mechanisms, and they already disagree: the bare text Input shows the hover shadow while disabled (the wrapper variants gate it at Input.tsx:165-168), so `InputVariant.text` and `InputVariant.iconText` look different when disabled and hovered. The attributes set but never read (`data-disabled` on the wrapper, `data-filled`/`data-error`) look like styling hooks, so the next editor either styles against them (a third mechanism) or assumes they are load-bearing and keeps them.
+- recommendation: Pick one mechanism per element — e.g. style the wrapper from its `data-disabled` with `data-[disabled]:` generated utilities and gate the bare input's hover with `enabled:` — and drop attributes no selector or test consumes (or document them as public styling hooks).
+- breaking: none
+- contract: src/components/Input/Input.tsx "`InputVariant.text` without `icon` stays a bare `<input>`" → consistent
+- remediation: tbd
+- related: [U6-F13, U6-F2]
+
+
+### U6-F13: Three near-identical disabled helpers are in use; `toggleOption` uses `ds-disabled-control`, which the contribution checklist does not list and which is a strict subset of `ds-disabled-state`
+- severity: S3
+- category: duplication
+- rules: [R8.16]
+- scope: internal
+- confidence: plausible
+- verified_by: "dooph-component-tokens.css:13-33 (three rules, identical declarations); rg -n ds-disabled-control src → toggleOption.ts:32, AIPromptInput.tsx:227; contrib SKILL.md:59 names only ds-disabled-state / ds-radix-data-disabled; codebase SKILL.md:529 documents the third"
+- locations:
+  - src/components/Toggle/toggleOption.ts:16
+  - src/components/Toggle/toggleOption.ts:32
+  - src/styles/dooph-component-tokens.css:13-33
+- evidence: |
+    dooph-component-tokens.css:13  .ds-disabled-state:is(:disabled, [aria-disabled="true"]) {
+    dooph-component-tokens.css:22  .ds-radix-data-disabled[data-disabled] {
+    dooph-component-tokens.css:30  .ds-disabled-control:disabled {
+      (each body: cursor: not-allowed; opacity: var(--ui-opacity-disabled);)
+    toggleOption.ts:32  "ds-disabled-control",
+    contrib SKILL.md:59  Disabled state uses `ds-disabled-state` (for native + aria-disabled) or `ds-radix-data-disabled` (for Radix data-disabled)
+- impact: Within this unit alone the disabled look is reached through `ds-disabled-control` (Tabs/Toggle options), `ds-radix-data-disabled` (Checkbox, Slider), `ds-disabled-state` (Input, CodeDigitInput — where it is also dead, U6-F2) and a hand-rolled ternary (Input wrapper, U6-F12). A contributor following contrib:59 cannot tell whether `ds-disabled-control` is sanctioned; the helper adds no behaviour `ds-disabled-state` lacks (`:disabled` ⊂ `:is(:disabled,[aria-disabled=true])`).
+- recommendation: Either fold `ds-disabled-control` into `ds-disabled-state` (2 call sites) or add it to contrib:59 with the case it exists for.
+- breaking: none
+- contract: src/components/Toggle/toggleOption.ts behavior "Disabled drops any fill; opacity comes from ds-disabled-control." → conflicts (the header names the helper; swapping it must update the header in the same commit)
+- remediation: tbd
+- related: [U6-F2, U6-F12]
+
+

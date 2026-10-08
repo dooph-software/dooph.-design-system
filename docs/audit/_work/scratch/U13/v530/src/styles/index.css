@@ -1,0 +1,772 @@
+@import "tailwindcss";
+/* Scan design-system source so dist/styles.css always includes every utility used in components. */
+@source "../**/*.{js,ts,jsx,tsx}";
+@import "./tokens.css";
+@import "./dooph-component-tokens.css";
+@plugin "tailwindcss-animate";
+
+/* Register so --progress-pct interpolates when LinearProgressIndicator value changes. */
+@property --progress-pct {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+/*
+ * SidebarWithHoverIcon rail — the two scalars the icon's path is a function of.
+ * Registered so they INTERPOLATE: an unregistered custom property is a token
+ * string and jumps between values, which is the whole reason these exist.
+ *
+ *   --ds-sidebar-rail-s  side.  0 = left, 1 = right.
+ *   --ds-sidebar-rail-h  hover. 0 = straight rail, 1 = chevron.
+ *
+ * CSS owns the motion and the component owns only the geometry: it sets the two
+ * targets as inline style and samples the interpolated values each frame to
+ * write `d` (SVG path data is not itself animatable in every engine). So
+ * duration, easing and reduced-motion are all tokens here, retunable by a
+ * consumer, with no numbers mirrored into JavaScript to drift out of step.
+ */
+@property --ds-sidebar-rail-s {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --ds-sidebar-rail-h {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/*
+ * @theme inline — maps --ui-* tokens into Tailwind utility namespaces.
+ * "inline" means Tailwind emits var(--ui-*) references instead of the
+ * resolved values, so overriding --ui-* at :root automatically updates
+ * all generated utilities.
+ */
+/* __GENERATED_THEME_START__ */
+@theme inline {
+  --color-primary: var(--ui-color-primary);
+  --color-primary-border: var(--ui-color-primary-border);
+  --color-primary-hover: var(--ui-color-primary-hover);
+  --color-primary-border-hover: var(--ui-color-primary-border-hover);
+  --color-primary-active: var(--ui-color-primary-active);
+  --color-primary-border-active: var(--ui-color-primary-border-active);
+  --color-primary-fg: var(--ui-color-primary-foreground);
+  --color-primary-disabled: var(--ui-color-primary-disabled);
+  --color-primary-border-disabled: var(--ui-color-primary-border-disabled);
+  --color-secondary: var(--ui-color-secondary);
+  --color-secondary-border: var(--ui-color-secondary-border);
+  --color-secondary-hover: var(--ui-color-secondary-hover);
+  --color-secondary-border-hover: var(--ui-color-secondary-border-hover);
+  --color-secondary-active: var(--ui-color-secondary-active);
+  --color-secondary-border-active: var(--ui-color-secondary-border-active);
+  --color-secondary-fg: var(--ui-color-secondary-foreground);
+  --color-secondary-disabled: var(--ui-color-secondary-disabled);
+  --color-secondary-border-disabled: var(--ui-color-secondary-border-disabled);
+  --color-brand: var(--ui-color-brand);
+  --color-brand-border: var(--ui-color-brand-border);
+  --color-brand-hover: var(--ui-color-brand-hover);
+  --color-brand-border-hover: var(--ui-color-brand-border-hover);
+  --color-brand-active: var(--ui-color-brand-active);
+  --color-brand-border-active: var(--ui-color-brand-border-active);
+  --color-brand-fg: var(--ui-color-brand-foreground);
+  --color-brand-border-disabled: var(--ui-color-brand-border-disabled);
+  --color-error-primary: var(--ui-color-error-primary);
+  --color-error-secondary: var(--ui-color-error-secondary);
+  --color-ghost-fg: var(--ui-color-ghost-foreground);
+  --color-ghost-hover: var(--ui-color-ghost-hover);
+  --color-ghost-active: var(--ui-color-ghost-active);
+  --color-ghost-fg-active: var(--ui-color-ghost-foreground-active);
+  --color-page-background: var(--ui-color-page-background);
+  --color-surface-primary: var(--ui-color-surface-primary);
+  --color-surface-secondary: var(--ui-color-surface-secondary);
+  --color-selection: var(--ui-color-selection);
+  --color-selection-fg: var(--ui-color-selection-foreground);
+  --color-modal-surface: var(--ui-color-modal-surface);
+  --color-modal-backdrop: var(--ui-color-modal-backdrop);
+  --color-tooltip-inverse-surface: var(--ui-color-tooltip-inverse-surface);
+  --color-tooltip-inverse-text: var(--ui-color-tooltip-inverse-text);
+  --color-tooltip-inverse-border: var(--ui-color-tooltip-inverse-border);
+  --color-tooltip-matching-surface: var(--ui-color-tooltip-matching-surface);
+  --color-tooltip-matching-text: var(--ui-color-tooltip-matching-text);
+  --color-tooltip-matching-border: var(--ui-color-tooltip-matching-border);
+  --color-border-primary: var(--ui-color-border-primary);
+  --color-border-secondary: var(--ui-color-border-secondary);
+  --color-border-popovers: var(--ui-color-border-popovers);
+  --color-border-focus: var(--ui-color-border-focus);
+  --color-border-cta: var(--ui-color-border-cta);
+  --color-trigger-border-hover: var(--ui-color-trigger-border-hover);
+  --color-trigger-border-error-focus: var(--ui-color-trigger-border-error-focus);
+  --color-text: var(--ui-color-text);
+  --color-text-secondary: var(--ui-color-text-secondary);
+  --color-text-tertiary: var(--ui-color-text-tertiary);
+  --color-brand-color: var(--ui-brand-color);
+  --color-brand-color-alt: var(--ui-brand-color-alt);
+  --font-body: var(--ui-font-body);
+  --font-button: var(--ui-font-button);
+  --font-heading: var(--ui-font-heading);
+  --font-label: var(--ui-font-label);
+  --font-title: var(--ui-font-title);
+  --font-hero: var(--ui-font-hero);
+  --font-mono: var(--ui-font-mono);
+  --text-label: var(--ui-text-label);
+  --text-body: var(--ui-text-body);
+  --text-mono: var(--ui-text-mono);
+  --text-subheading: var(--ui-text-subheading);
+  --text-heading: var(--ui-text-heading);
+  --text-title: var(--ui-text-title);
+  --text-hero: var(--ui-text-hero);
+  --radius-slider-inner: var(--ui-radius-slider-inner);
+  --spacing-xxs: var(--ui-spacing-xxs);
+  --spacing-xs: var(--ui-spacing-xs);
+  --spacing-sm: var(--ui-spacing-sm);
+  --spacing-rg: var(--ui-spacing-rg);
+  --spacing-md: var(--ui-spacing-md);
+  --spacing-lg: var(--ui-spacing-lg);
+  --spacing-xl: var(--ui-spacing-xl);
+  --spacing-xxl: var(--ui-spacing-xxl);
+  --radius-tight: var(--ui-radius-tight);
+  --radius-standard: var(--ui-radius-standard);
+  --radius-soft: var(--ui-radius-soft);
+  --radius-checkbox: var(--ui-radius-checkbox);
+  --radius-avatar: var(--ui-radius-avatar);
+  --radius-avatar-sm: var(--ui-radius-avatar-sm);
+  --radius-calendar-day: var(--ui-radius-calendar-day);
+  --shadow-button: var(--ui-shadow-button);
+  --shadow-button-secondary: var(--ui-shadow-button-secondary);
+  --shadow-button-hover: var(--ui-shadow-button-hover);
+  --shadow-button-active: var(--ui-shadow-button-active);
+  --shadow-menu: var(--ui-shadow-menu);
+  --shadow-cta: var(--ui-shadow-cta);
+  --shadow-focus-brand: var(--ui-shadow-focus-brand);
+  --shadow-focus-primary: var(--ui-shadow-focus-primary);
+  --text-cta-standard: var(--ui-text-cta-standard);
+  --text-cta-big: var(--ui-text-cta-big);
+
+  /* Focus ring with error */
+  --shadow-focus-error: 0 0 0 4px var(--ui-color-focus-ring-error);
+}
+/* __GENERATED_THEME_END__ */
+
+/*
+ * Composite text-style classes — the full typographic intent of a role in one
+ * class, including font-variation-settings, which has no Tailwind utility.
+ *
+ * Deliberately in `components`, NOT `utilities`. BaseText applies these as role
+ * DEFAULTS, and a layer that loses to `utilities` is exactly what lets a
+ * consumer's own utility (leading-*, tracking-*, text-2xl) override a role.
+ * Explicit BaseText props outrank both, because they are written inline.
+ *
+ * Nothing here sets line-height: leading is left to inherit so it can be set by
+ * the consuming app or per instance via the lineHeight prop.
+ */
+@layer components {
+  .text-style-button {
+    font-family: var(--ui-font-button);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-body);
+    font-style: normal;
+    font-weight: var(--ui-weight-button);
+    font-variation-settings: var(--ui-font-var-button);
+  }
+
+  .text-style-body {
+    font-family: var(--ui-font-body);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-body);
+    font-style: normal;
+    font-weight: var(--ui-weight-body);
+    font-variation-settings: var(--ui-font-var-body);
+    letter-spacing: var(--ui-tracking-body);
+  }
+
+  /* Mono deliberately mirrors button's size and weight (both tokens alias it)
+   * so a mono run set beside a button label sits at the same optical scale.
+   * The MONO axis is named explicitly — see the token's note on why trusting
+   * the family default is not enough. */
+  .text-style-mono {
+    font-family: var(--ui-font-mono);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-mono);
+    font-style: normal;
+    font-weight: var(--ui-weight-mono);
+    font-variation-settings: var(--ui-font-var-mono);
+  }
+
+  .text-style-label {
+    font-family: var(--ui-font-label);
+    font-size: var(--ui-text-label);
+    font-weight: var(--ui-weight-label);
+    letter-spacing: var(--ui-tracking-label);
+  }
+
+  .text-style-title {
+    font-family: var(--ui-font-title);
+    font-size: var(--ui-text-title);
+    font-weight: var(--ui-weight-title);
+  }
+
+  .text-style-heading {
+    font-family: var(--ui-font-heading);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-heading);
+    font-style: normal;
+    font-weight: var(--ui-weight-heading);
+    font-variation-settings: var(--ui-font-var-heading);
+  }
+
+  .text-style-subheading {
+    font-family: var(--ui-font-heading);
+    font-optical-sizing: auto;
+    font-size: var(--ui-text-subheading);
+    font-style: normal;
+    font-weight: var(--ui-weight-subheading);
+    font-variation-settings: var(--ui-font-var-heading);
+  }
+
+  .text-style-hero {
+    font-family: var(--ui-font-hero);
+    font-size: var(--ui-text-hero);
+    font-weight: var(--ui-weight-hero);
+    letter-spacing: var(--ui-tracking-hero);
+  }
+
+}
+
+@layer utilities {
+  /* Sized to button height tokens */
+  .h-button {
+    height: var(--ui-height-button);
+  }
+  .h-button-sm {
+    height: var(--ui-height-button-sm);
+  }
+  .size-button {
+    width: var(--ui-height-button);
+    height: var(--ui-height-button);
+  }
+  .size-button-sm {
+    width: var(--ui-height-button-sm);
+    height: var(--ui-height-button-sm);
+  }
+  .size-checkbox {
+    width: var(--ui-size-checkbox);
+    height: var(--ui-size-checkbox);
+  }
+  .size-code-digit {
+    width: var(--ui-size-code-digit);
+    height: var(--ui-size-code-digit);
+  }
+  .size-button-micro {
+    width: var(--ui-height-button-micro);
+    height: var(--ui-height-button-micro);
+  }
+  .h-tab-micro {
+    height: var(--ui-height-tab-micro);
+  }
+  .h-slider-track {
+    height: var(--ui-height-slider-track);
+  }
+
+  /* ShimmerText — gradient masked to glyphs (incl. descendants); children must
+   * not set an explicit text color while shimmering. */
+  .ds-shimmer-text {
+    background: linear-gradient(
+      100deg,
+      var(--ui-shimmer-base) 40%,
+      var(--ui-shimmer-highlight) 50%,
+      var(--ui-shimmer-base) 60%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: ds-shimmer 2s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-shimmer-text {
+      animation: none;
+      background: none;
+      color: inherit;
+    }
+  }
+
+  /* RollHoverText — per-character 3D barrel roll on hover. Two identical faces
+   * per glyph; the offscreen face is hidden by opacity + blur rather than by
+   * overflow clipping, so descenders (g, y, p, j) are never cut and the
+   * component stays safe in inline body text.
+   *
+   * transition (not @keyframes) is load-bearing: interrupting a transition
+   * retargets from the current computed value, which is what lets an un-hover
+   * mid-roll reverse from wherever the letter currently sits. */
+  .ds-roll-hover {
+    display: inline;
+  }
+  .ds-roll-hover-word {
+    white-space: nowrap;
+  }
+  /* perspective belongs on the char cell, not the wrapper — per-character
+   * perspective keeps the depth uniform instead of fanning the outer letters. */
+  .ds-roll-hover-char {
+    position: relative;
+    display: inline-block;
+    perspective: var(--ui-roll-hover-perspective);
+  }
+  /* The barrel radius lives in the ROTATION AXIS (transform-origin's z), not in a
+   * translateZ on the faces. Pushing the faces forward with translateZ would put
+   * them closer to the viewer, and perspective would magnify them ~32% at rest —
+   * every glyph would overflow its own cell and collide with its neighbours.
+   * Recessing the axis instead leaves each face at z:0 when it is face-on, so it
+   * renders exactly at its layout size, while still sweeping a cylinder. */
+  .ds-roll-hover-out,
+  .ds-roll-hover-in {
+    display: inline-block;
+    transform-origin: 50% 50% calc(-1 * var(--ui-roll-hover-depth));
+    transition:
+      transform var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+      filter var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+      opacity var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1);
+    transition-delay: calc(var(--i) * var(--ui-roll-hover-stagger));
+  }
+  /* absolute so the incoming face contributes no width; the outgoing face in
+   * normal flow is what gives each cell its natural glyph width. */
+  .ds-roll-hover-in {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Rest. The constant translateZ puts both faces on the surface of a cylinder
+   * rather than hinging them flat — that is the whole source of the depth. */
+  .ds-roll-hover-out {
+    transform: rotateX(0deg);
+    filter: blur(0);
+    opacity: 1;
+  }
+  .ds-roll-hover-in {
+    transform: rotateX(calc(var(--ds-roll-dir, 1) * 90deg));
+    filter: blur(var(--ui-roll-hover-blur));
+    opacity: 0;
+  }
+
+  /* Rolled — self hover, ancestor .group hover, or the controlled `active` prop. */
+  .ds-roll-hover:hover .ds-roll-hover-out,
+  .group:hover .ds-roll-hover .ds-roll-hover-out,
+  .ds-roll-hover[data-active="true"] .ds-roll-hover-out {
+    transform: rotateX(calc(var(--ds-roll-dir, 1) * -90deg));
+    filter: blur(var(--ui-roll-hover-blur));
+    opacity: 0;
+  }
+  .ds-roll-hover:hover .ds-roll-hover-in,
+  .group:hover .ds-roll-hover .ds-roll-hover-in,
+  .ds-roll-hover[data-active="true"] .ds-roll-hover-in {
+    transform: rotateX(0deg);
+    filter: blur(0);
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-roll-hover-out,
+    .ds-roll-hover-in {
+      transition: none;
+    }
+    .ds-roll-hover-in {
+      display: none;
+    }
+    .ds-roll-hover:hover .ds-roll-hover-out,
+    .group:hover .ds-roll-hover .ds-roll-hover-out,
+    .ds-roll-hover[data-active="true"] .ds-roll-hover-out {
+      transform: none;
+      filter: none;
+      opacity: 1;
+    }
+  }
+
+  /* UnderlineLinkText — a "sliding underline". The line is a currentColor
+   * gradient in background (not text-decoration or a pseudo-element) so it
+   * tracks the element's own `color` — including hover/active changes on this
+   * element or an ancestor. Color must live on UnderlineLinkText or above; a
+   * child that sets its own text color will not recolor the underline.
+   *
+   * Position is `calc(1em + offset)` from the top of each line box (with
+   * box-decoration-break: clone so wrapped lines each get their own line), which
+   * sits just under the em square like a native text-decoration underline —
+   * independent of leading. Stroke weight is `--ds-underline-thickness` (from the
+   * `thickness` prop) falling back to the token; offset is likewise
+   * `--ds-underline-offset` → token. On hover it runs a one-shot two-phase sweep
+   * — out to the right, then back in from the left. */
+  .ds-underline-link {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    /* Longhands so the wipe keyframes can retarget only x without resetting y. */
+    background-position-x: 0%;
+    background-position-y: calc(1em + var(--ds-underline-offset, var(--ui-underline-link-offset)));
+    background-size: 100% var(--ds-underline-thickness, var(--ui-underline-link-thickness));
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .ds-underline-link:hover,
+  .group:hover .ds-underline-link,
+  .ds-underline-link[data-active="true"] {
+    animation: ds-underline-wipe var(--ui-underline-link-duration)
+      var(--ui-underline-link-ease) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-underline-link:hover,
+    .group:hover .ds-underline-link,
+    .ds-underline-link[data-active="true"] {
+      animation: none;
+    }
+  }
+
+  /* RollingDigitsText — 2D cash-register digit roll (no blur, no 3D).
+   *
+   * ## structure
+   * Each digit is a WHEEL: a static 0-9 column clipped to one line box and
+   * positioned by --ds-digit. Around it, every animated unit — wheel or
+   * grouping separator — is a slot that owns an EXPLICIT width, because that is
+   * the only thing `width` can animate from and to.
+   *
+   * ## why a transition for the roll and an animation for enter/exit
+   * The roll is a TRANSITION on transform. Re-applying a class that is already
+   * present does not restart an animation, which is why the original
+   * keyframe-based roll fired on roughly every other change; a transition on a
+   * changed value always runs, and an interrupted one retargets from wherever
+   * the wheel currently sits.
+   *
+   * Enter and exit are ANIMATIONS for the mirror-image reason: each runs
+   * exactly once in an element's life, on mount and on unmount. A mount
+   * animation needs no JavaScript at all to start — which is what let the
+   * previous version's double-requestAnimationFrame reveal be deleted outright.
+   *
+   * ## why one keyframe pair covers both wheels and separators
+   * A one-sided keyframe takes its missing half from the element's own computed
+   * style, so `from { width: 0 }` resolves its `to` as
+   * --ui-rolling-digits-digit-width on a wheel and as
+   * --ui-rolling-digits-separator-width on a separator. Do not add explicit
+   * `to` widths here; that genericity is the whole trick.
+   *
+   * ## the baseline invariant
+   * The hidden "0" spacer is what makes alignment work without magic numbers:
+   * it is an ordinary in-flow glyph, so it supplies the wheel's baseline. The
+   * clip is absolutely positioned against it — exactly 1lh tall — and each of
+   * the ten column children is also 1lh, so -10% per digit lands precisely. A
+   * clipped inline-block takes its baseline from its bottom margin edge, which
+   * is why an `overflow: hidden` wheel could not be aligned at any value of
+   * 1em. The spacer must stay in flow and stay `visibility: hidden` (never
+   * `display: none`) for that reason, even though the width is now explicit. */
+  .ds-rolling-digits {
+    display: inline-block;
+  }
+  .ds-rolling-digits-figure {
+    display: inline-flex;
+    align-items: baseline;
+    /* Load-bearing, not cosmetic: the fixed slot width below is only correct
+     * while every figure shares one advance. */
+    font-variant-numeric: tabular-nums;
+    /* A figure must never wrap. The decimals wrapper is a flex item whose child
+     * is an INLINE role span, so once the decimals are large enough to be
+     * squeezed the inline content breaks across line boxes and they land on
+     * their own line — which is exactly what happened at hero size before this
+     * rule existed. */
+    white-space: nowrap;
+  }
+
+  /* The animated unit. Wheels and separators differ only in resting width.
+   * Width and opacity are separate animations on purpose: opacity is scaled to
+   * a FRACTION of the duration so an arriving glyph — drawn at its full width,
+   * and so overflowing its still-narrow slot — is opaque before it stops
+   * overlapping its neighbour. */
+  .ds-rolling-digits-wheel,
+  .ds-rolling-digits-sep {
+    display: inline-block;
+    flex: 0 0 auto;
+    font-variant-numeric: tabular-nums;
+  }
+  .ds-rolling-digits-wheel {
+    position: relative;
+    width: var(--ui-rolling-digits-digit-width);
+  }
+  .ds-rolling-digits-sep {
+    /* Fixed rather than natural because `width` cannot animate from `auto`.
+     * Overflow stays visible and the glyph is centred, so a token narrower than
+     * the face's comma reads tight, never clipped. */
+    width: var(--ui-rolling-digits-separator-width);
+    text-align: center;
+  }
+  .ds-rolling-digits-wheel[data-entering],
+  .ds-rolling-digits-sep[data-entering] {
+    animation:
+      ds-rolling-digits-in var(--ui-rolling-digits-enter-duration)
+        var(--ui-rolling-digits-ease),
+      ds-rolling-digits-fade-in
+        calc(
+          var(--ui-rolling-digits-enter-duration) *
+            var(--ui-rolling-digits-opacity-ratio)
+        )
+        var(--ui-rolling-digits-ease);
+  }
+  /* Declared after the entering rule so it wins on source order when a wheel
+   * that entered earlier is now leaving — both are single-class selectors.
+   * `forwards` holds the collapsed state for the frame between animationend and
+   * React dropping the node. */
+  .ds-rolling-digits-wheel[data-exiting],
+  .ds-rolling-digits-sep[data-exiting] {
+    animation:
+      ds-rolling-digits-out var(--ui-rolling-digits-exit-duration)
+        var(--ui-rolling-digits-ease) forwards,
+      ds-rolling-digits-fade-out
+        calc(
+          var(--ui-rolling-digits-exit-duration) *
+            var(--ui-rolling-digits-opacity-ratio)
+        )
+        var(--ui-rolling-digits-ease) forwards;
+  }
+
+  /* Sets the wheel's baseline. Never visible; never removed from flow. */
+  .ds-rolling-digits-space {
+    visibility: hidden;
+  }
+  /* Pinned to the slot width rather than stretched to `inset: 0`, so a glyph is
+   * never sliced horizontally while its slot is mid-animation: it sits at its
+   * final position and overflows a narrower slot, with the fade covering the
+   * overlap.
+   *
+   * Then widened 20% and re-centred on the slot. This clip exists to bound the
+   * roll VERTICALLY; its horizontal edges are incidental, and 1ch is a hair
+   * under the true tabular advance (see the token's note), so a flush box would
+   * shave a fraction of a pixel off both side bearings for no benefit. */
+  .ds-rolling-digits-clip {
+    position: absolute;
+    left: calc(var(--ui-rolling-digits-digit-width) * -0.1);
+    top: 0;
+    bottom: 0;
+    width: calc(var(--ui-rolling-digits-digit-width) * 1.2);
+    overflow: hidden;
+    /* aria-hidden, not display:none — selecting the figure would otherwise pick
+     * up all ten glyphs per wheel ("0123456789...") alongside the real value
+     * from the sr-only span. */
+    user-select: none;
+  }
+  .ds-rolling-digits-col {
+    display: block;
+    /* Centred so any drift between 1ch and the face's true tabular advance is
+     * symmetric per wheel instead of accumulating across the figure. */
+    text-align: center;
+    transform: translateY(calc(var(--ds-digit, 0) * -10%));
+    transition: transform var(--ui-rolling-digits-duration)
+      var(--ui-rolling-digits-ease);
+    /* At the 0ms default every delay computes to zero and the figure moves as
+     * one. Raising the token cascades right-to-left, ones place leading. */
+    transition-delay: calc(var(--ds-place, 0) * var(--ui-rolling-digits-stagger));
+  }
+  .ds-rolling-digits-col > span {
+    display: block;
+  }
+
+  /* Sized here, in em of the integer part, rather than by whatever role is
+   * passed as `smallDecimalsComponent` — a role brings a fixed px size, which
+   * cannot stay proportional across TitleText and HeroText. The wrapper
+   * therefore owns the SIZE and the passed role owns family/weight/tracking. */
+  .ds-rolling-digits-decimals {
+    /* Never let the flex layout shrink this below its content; shrinking is
+     * what triggered the wrap described on .ds-rolling-digits-figure. */
+    flex: 0 0 auto;
+    margin-left: var(--ui-rolling-digits-decimals-gap);
+    transform: translateY(calc(-1 * var(--ui-rolling-digits-decimals-rise)));
+  }
+  /* The SIZE goes on the child, never on the wrapper above. `em` resolves
+   * against the element's OWN font-size, so sizing the wrapper would make
+   * `decimals-gap` and `decimals-rise` resolve against the decimals instead of
+   * the integer part — silently destroying the parent-em invariant those two
+   * tokens depend on. Sizing the child leaves the wrapper inheriting the
+   * parent. This also overrides the `text-style-*` font-size the passed role
+   * brings, which is the point. 1ch and the separator width then resolve
+   * against the smaller size, so the decimals' slots scale with it for free. */
+  .ds-rolling-digits-decimals > * {
+    font-size: var(--ui-rolling-digits-decimals-size);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* The roll is suppressed outright — it is pure decoration. Enter and exit
+     * are NOT: they are layout, and the exit animation's `animationend` is what
+     * unmounts a departing wheel. Collapsing them to 1ms keeps that event
+     * firing (`animation: none` would starve it and strand blank slots) while
+     * making the change read as instant. */
+    .ds-rolling-digits-col {
+      transition: none;
+      transition-delay: 0ms;
+    }
+    .ds-rolling-digits-wheel[data-entering],
+    .ds-rolling-digits-sep[data-entering],
+    .ds-rolling-digits-wheel[data-exiting],
+    .ds-rolling-digits-sep[data-exiting] {
+      animation-duration: 1ms;
+    }
+  }
+
+  /* RollChangeText. Real classes rather than arbitrary `animate-[…]` values so
+   * the timing lives in tokens — and so the reduced-motion case can collapse the
+   * duration instead of removing the animation. That distinction is
+   * load-bearing: the exiting node is unmounted by its own `animationend`, and
+   * `animation: none` would starve that event and strand the old content on
+   * screen forever. */
+  .ds-roll-change-out {
+    animation: ds-roll-out var(--ui-roll-change-out-duration)
+      var(--ui-roll-change-out-ease) forwards;
+  }
+  .ds-roll-change-in {
+    animation: ds-roll-in var(--ui-roll-change-in-duration)
+      var(--ui-roll-change-in-ease) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-roll-change-out,
+    .ds-roll-change-in {
+      animation-duration: 1ms;
+    }
+  }
+
+  /* SidebarWithHoverIcon rail. This rule is the icon's entire motion system —
+   * the component sets the two targets and reads back what CSS interpolated.
+   * Hover is the faster of the two because it answers a pointer; the traverse
+   * is a state change and carries more weight.
+   *
+   * Under reduced motion the durations go to zero rather than the transitions
+   * being removed: the component's sampling loop terminates when the values
+   * reach their targets, so a zero duration means it writes the final path once
+   * and stops on the very first frame. */
+  .ds-sidebar-rail {
+    transition:
+      --ds-sidebar-rail-s var(--ui-sidebar-icon-duration)
+        var(--ui-sidebar-icon-ease),
+      --ds-sidebar-rail-h var(--ui-sidebar-icon-hover-duration)
+        var(--ui-sidebar-icon-ease);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-sidebar-rail {
+      transition-duration: 0ms;
+    }
+  }
+
+  /* RevealChangeText — a slot that slides its content out from one edge and
+   * tucks it back under whatever follows. WIDTH is the animated property, not a
+   * transform: the point is that the row around it re-centres and re-flows as
+   * the slot opens and closes, which a transform (no layout effect) cannot do.
+   *
+   * `justify-content` is what picks the edge. Pinning the content's RIGHT edge
+   * (the default) means narrowing the box eats the content from the LEFT — it
+   * tucks under the next element and reveals back out from that same seam.
+   *
+   * The content keeps its natural width while the slot around it is 0 wide
+   * because it is `flex-shrink: 0` and `nowrap`. This is deliberately NOT a
+   * `grid-template-columns: 1fr -> 0fr` slot: that sizes rows fine, but for a
+   * COLUMN in a shrink-to-fit container the `overflow: hidden` item has an
+   * automatic minimum of 0, so `1fr` has no free space to claim and collapses
+   * the content to nothing. */
+  .ds-reveal-change {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    overflow: hidden;
+    width: 0;
+    transition: width var(--ui-reveal-change-out-duration)
+      var(--ui-reveal-change-ease);
+  }
+  .ds-reveal-change[data-direction="right"] {
+    justify-content: flex-start;
+  }
+  /* --ds-reveal-change-width is the measured natural width of the content, set
+   * by the component. `auto` is the pre-measurement fallback (first paint, SSR)
+   * so the slot is never briefly empty; nothing animates on that first render. */
+  .ds-reveal-change[data-open="true"] {
+    width: var(--ds-reveal-change-width, auto);
+    transition-duration: var(--ui-reveal-change-in-duration);
+  }
+  .ds-reveal-change-content {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  /* Reduced motion still needs the transition to RUN, just instantly: the
+   * content swap at the end of a collapse and the `onSettled` callback both
+   * hang off transitionend, and `transition: none` would starve them —
+   * stranding the outgoing content on screen forever. 1ms reads as instant and
+   * still fires. Same trade the rolling text makes. */
+  @media (prefers-reduced-motion: reduce) {
+    .ds-reveal-change,
+    .ds-reveal-change[data-open="true"] {
+      transition-duration: 1ms;
+    }
+  }
+}
+
+/*
+ * Loading spinner keyframes — defined outside @layer so they are globally
+ * reachable from SVG element animations applied via inline style.
+ *
+ * ds-spinner-rotate: continuous 360° spin for the wavy LoadingSpinner SVG
+ * container. The flat variant is now fully rAF-driven and does not use CSS
+ * animation; this keyframe is only referenced by WavySpinner.
+ */
+@keyframes ds-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ds-shimmer {
+  from { background-position: 150% center; }
+  to   { background-position: -50% center; }
+}
+/* --ds-roll-dir (default 1 = downward) flips the travel: RollChangeText sets -1
+ * for upward. The old face exits in the travel direction; the new face enters
+ * from the opposite side. Depth and blur come from --ui-roll-change-*; the
+ * mid-point blur is derived from the same token so the two cannot drift. */
+@keyframes ds-roll-out {
+  to {
+    transform: translateY(calc(var(--ds-roll-dir, 1) * var(--ui-roll-change-depth)));
+    filter: blur(var(--ui-roll-change-blur));
+    opacity: 0;
+  }
+}
+@keyframes ds-roll-in {
+  from {
+    transform: translateY(calc(var(--ds-roll-dir, 1) * -1 * var(--ui-roll-change-depth)));
+    filter: blur(var(--ui-roll-change-blur));
+    opacity: 0;
+  }
+  60%  { filter: blur(calc(var(--ui-roll-change-blur) * 0.375)); }
+  to   { transform: translateY(0); filter: blur(0); opacity: 1; }
+}
+
+/* RollingDigitsText slot enter/exit. Deliberately ONE-SIDED: the missing half of
+ * each pair is taken from the element's own computed style, so the same four
+ * keyframes drive a digit wheel and a grouping comma — two different resting
+ * widths — without either width appearing here. Adding the other half would pin
+ * them to one element type and quietly break the other. */
+@keyframes ds-rolling-digits-in {
+  from { width: 0; }
+}
+@keyframes ds-rolling-digits-out {
+  to { width: 0; }
+}
+@keyframes ds-rolling-digits-fade-in {
+  from { opacity: 0; }
+}
+@keyframes ds-rolling-digits-fade-out {
+  to { opacity: 0; }
+}
+
+/* UnderlineLinkText sweep. First half: hold the right edge and shrink to zero so
+ * the line exits to the right. At the midpoint the (now zero-width) line jumps
+ * its anchor to the left — imperceptible because there is nothing to see — then
+ * the second half grows it back from the left. The 0% frame anchors right while
+ * the resting style anchors left, but at full width both are identical, so the
+ * animation starts without a jump. */
+@keyframes ds-underline-wipe {
+  0%     { background-size: 100% var(--ds-underline-thickness, var(--ui-underline-link-thickness)); background-position-x: 100%; }
+  50%    { background-size: 0% var(--ds-underline-thickness, var(--ui-underline-link-thickness));   background-position-x: 100%; }
+  50.01% { background-size: 0% var(--ds-underline-thickness, var(--ui-underline-link-thickness));   background-position-x: 0%; }
+  100%   { background-size: 100% var(--ds-underline-thickness, var(--ui-underline-link-thickness)); background-position-x: 0%; }
+}

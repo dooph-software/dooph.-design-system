@@ -1,0 +1,443 @@
+AIContextGauge	value	
+AIContextGaugeProps	type	
+AIContextIcon	value	
+AIModelSelectItem	value	
+AIModelSelectItemProps	type	
+AIModelSelectTrigger	value	
+AIModelSelectTriggerProps	type	
+AIModelTooltipContent	value	
+AIModelTooltipContentProps	type	
+AIPlanIcon	value	
+AIPowerIcon	value	
+AIPromptInput	value	
+AIPromptInputProps	type	
+AIPromptInputSubmit	value	
+AIPromptInputSubmitProps	type	
+AIPromptInputTextarea	value	
+AIPromptInputTextareaProps	type	
+AIPromptInputToolbar	value	
+AIPromptInputToolbarEnd	value	
+AIPromptInputToolbarProps	type	
+AIPromptInputToolbarStart	value	
+AISkillIcon	value	
+AISpeedIcon	value	
+AITextPart	value	
+AITextPartProps	type	
+AIThinkingEffortSelector	value	
+AIThinkingEffortSelectorProps	type	
+AIThinkingEffortStep	type	
+AIThinkingIcon	value	
+AIThinkingPart	value	
+AIThinkingPartProps	type	
+AIThinkingPartState	value+type	thinking,thought
+AIToolActionIcon	value	
+AIToolPart	value	
+AIToolPartProps	type	
+AIToolPartState	value+type	active,complete,error
+AIToolPartVariant	value+type	simple,skill
+AIToolReadIcon	value	
+AITurnSummary	value	
+AITurnSummaryProps	type	
+ARROW_SHAPE_PATH	value	
+ArrowDownIcon	value	
+ArrowDownLeftIcon	value	
+ArrowDownRightIcon	value	
+ArrowLeftIcon	value	
+ArrowRightIcon	value	
+ArrowShape	value	
+ArrowUpIcon	value	
+ArrowUpLeftIcon	value	
+ArrowUpRightIcon	value	
+AttachFileIcon	value	
+Avatar	value	
+AvatarProps	type	
+AvatarSize	value+type	standard,small
+BarChartAxesIcon	value	
+BarChartIcon	value	
+BaseIcon	value	
+BaseShape	value	
+BaseText	value	
+BaseTextProps	type	
+BodyText	value	
+BodyTextProps	type	
+BugReportIcon	value	
+Button	value	
+ButtonProps	type	
+ButtonSize	value+type	default,sm,icon,iconSm,iconMicro
+ButtonText	value	
+ButtonTextProps	type	
+ButtonVariant	value+type	primary,secondary,prominent,danger,ghost,text
+CAPSULE_SHAPE_PATH	value	
+CLOVER_SHAPE_PATH	value	
+COOKIE_SHAPE_PATH	value	
+CTAButton	value	
+CTAButtonProps	type	
+CTAButtonSize	value+type	standard,big
+CTAButtonVariant	value+type	primary,secondary
+Calendar	value	
+CalendarCaption	value	
+CalendarCaptionProps	type	
+CalendarDayRenderProps	type	
+CalendarGrid	value	
+CalendarGridProps	type	
+CalendarIcon	value	
+CalendarPreset	type	
+CalendarPresetItem	value	
+CalendarPresetItemProps	type	
+CalendarPresets	value	today,days,months,custom
+CalendarPresetsPanel	value	
+CalendarPresetsPanelProps	type	
+CalendarProps	type	
+CapsuleShape	value	
+ChangelogIcon	value	
+ChatDivider	value	
+ChatDividerProps	type	
+CheckIcon	value	
+Checkbox	value	
+CheckboxChecked	value+type	checked,unchecked,indeterminate
+CheckboxIndicator	value	
+CheckboxProps	type	
+CheckboxVariant	value+type	prominent,primary
+ChevronDownIcon	value	
+ChevronLeftIcon	value	
+ChevronRightIcon	value	
+ChevronUpIcon	value	
+ChevronsDownUpIcon	value	
+ChevronsLeftRightIcon	value	
+ChevronsRightIcon	value	
+ChevronsRightLeftIcon	value	
+ChevronsUpDownIcon	value	
+ClearFilterFunnelIcon	value	
+ClipboardIcon	value	
+CloseCancelIcon	value	
+CloverShape	value	
+CodeDigitInput	value	
+CodeDigitInputProps	type	
+CookieShape	value	
+CopyButton	value	
+CopyButtonProps	type	
+CopyButtonVariant	value+type	ghost,secondary
+CreditCardIcon	value	
+CssTime	type	
+DEFAULT_CALENDAR_PRESETS	value	
+DEFAULT_SPLIT_TRIGGER_PRESETS	value	
+DIAMOND_SHAPE_PATH	value	
+DOUBLE_SHAPE_PATH	value	
+DS_COLOR_TOKENS	value	primary,secondary,prominent,danger,'danger-primary','danger-secondary',text,'text-secondary','text-tertiary','border-primary','border-secondary','surface-primary','surface-secondary','surface-page','prominent-color','prominent-color-alt','prominent-color-ter'
+DarkModeIcon	value	
+DateMatcher	type	
+DatePicker	value	
+DatePickerMode	value+type	singleDay,dateRange
+DatePickerProps	type	
+DatePickerSplitTrigger	value	
+DatePickerSplitTriggerProps	type	
+DatePickerTrigger	value	
+DatePickerTriggerProps	type	
+DateRange	type	
+DiamondShape	value	
+DiscPlatterDBIcon	value	
+DoubleShape	value	
+DownloadIcon	value	
+DropdownCaret	value	
+DropdownCaretProps	type	
+DropdownCaretVariant	value+type	dropdown,typeable
+DropdownIcon	value	
+DropdownMenu	value	
+DropdownMenuContent	value	
+DropdownMenuGroup	value	
+DropdownMenuItem	value	
+DropdownMenuItemVariant	value+type	default,danger
+DropdownMenuLabel	value	
+DropdownMenuMultiSelectItem	value	
+DropdownMenuPlainItem	value	
+DropdownMenuPortal	value	
+DropdownMenuRadioGroup	value	
+DropdownMenuRadioSelectItem	value	
+DropdownMenuSearch	value	
+DropdownMenuSearchProps	type	
+DropdownMenuSection	value	
+DropdownMenuSectionProps	type	
+DropdownMenuSegment	value	
+DropdownMenuSegmentProps	type	
+DropdownMenuSegmentVariant	value+type	divider,labeled
+DropdownMenuSelectType	value+type	single,multi
+DropdownMenuSeparator	value	
+DropdownMenuSub	value	
+DropdownMenuTrigger	value	
+DropdownTrigger	value	
+DropdownTriggerContent	value	
+DropdownTriggerContentProps	type	
+DropdownTriggerProps	type	
+DsColor	type	
+DsColorToken	type	
+ErrorAlternativeIcon	value	
+ErrorIcon	value	
+ExtensionsIcon	value	
+FadeChangeText	value	
+FadeChangeTextProps	type	
+FilterFunnelIcon	value	
+FilterLinesIcon	value	
+FiltersSlidersIcon	value	
+Font	type	
+FontAxes	value	weight,width,slant,italic,opticalSize,grade,roundness,mono
+FontAxesValue	type	
+FontAxis	type	
+FontSize	type	
+FontSizeValue	type	
+FontSizes	value	label,body,heroBody,heroButton,mono,subheading,heading,title,hero
+FontValue	type	
+FontWeight	type	
+FontWeightValue	type	
+FontWeights	value	regular,medium,semibold,bold
+Fonts	value	body,button,heading,label,title,hero,mono
+GraphIcon	value	
+HeadingText	value	
+HeadingTextProps	type	
+HeartFillIcon	value	
+HelpIcon	value	
+HeroBodyText	value	
+HeroBodyTextProps	type	
+HeroButtonText	value	
+HeroButtonTextProps	type	
+HeroText	value	
+HeroTextProps	type	
+HideMoneyIcon	value	
+HotkeyIndicator	value	
+HotkeyIndicatorProps	type	
+IconProps	type	
+IconSize	value+type	sm,rg,md,lg
+InfoIcon	value	
+Input	value	
+InputProps	type	
+InputVariant	value+type	text,number,iconText,iconNumber
+InvoiceIcon	value	
+KeyIcon	value	
+LabelText	value	
+LabelTextProps	type	
+LetterSpacingValue	type	
+LightModeIcon	value	
+LineHeightValue	type	
+LinearProgressIndicator	value	
+LinearProgressIndicatorProps	type	
+LoadingSpinner	value	
+LoadingSpinnerColor	value+type	primary,prominent
+LoadingSpinnerIcon	value	
+LoadingSpinnerProps	type	
+LoadingSpinnerSize	value+type	sm,rg,md,xl
+LoadingSpinnerVariant	value+type	flat,spokes
+LogOutIcon	value	
+ManyUsersIcon	value	
+ManyUsersRoundedIcon	value	
+Modal	value	
+ModalClose	value	
+ModalContent	value	
+ModalDescription	value	
+ModalOverlay	value	
+ModalPortal	value	
+ModalTitle	value	
+ModalTrigger	value	
+MonoText	value	
+MonoTextProps	type	
+MorphRotationShape	value	
+MorphRotationShapeAutoplayTiming	type	
+MorphRotationShapeMode	value+type	autoplay,controlled,embedded
+MorphRotationShapeProps	type	
+MorphRotationShapeStepTiming	type	
+NewChatIcon	value	
+OrganizationIcon	value	
+OutlineButton	value	
+OutlineButtonProps	type	
+OutlineSection	value	
+OutlineSectionProps	type	
+OverviewIcon	value	
+PENTAGON_SHAPE_PATH	value	
+PIXIRCLE_SHAPE_PATH	value	
+PUFF_SHAPE_PATH	value	
+PentagonShape	value	
+PixircleShape	value	
+PlaceholderIcon	value	
+PlusIcon	value	
+Popover	value	
+PopoverAnchor	value	
+PopoverClose	value	
+PopoverContent	value	
+PopoverContentProps	type	
+PopoverPortal	value	
+PopoverTrigger	value	
+ProgressIndicator	value	
+ProgressIndicatorProps	type	
+ProgressIndicatorVariant	type	
+ProgressIndicatorVariants	value	flat,wavy
+PuffShape	value	
+RecentsIcon	value	
+RevealChangeText	value	
+RevealChangeTextProps	type	
+RevealDirection	value+type	left,right
+RoleTextProps	type	
+RollChangeText	value	
+RollChangeTextProps	type	
+RollDirection	value+type	up,down
+RollHoverText	value	
+RollHoverTextProps	type	
+RollingDigitsText	value	
+RollingDigitsTextProps	type	
+SHAPE_MORPH_SPINNER_SHAPES	value	
+SHAPE_VIEWBOX_SIZE	value	
+SQUIRCLE_SHAPE_PATH	value	
+STAR_SHAPE_PATH	value	
+SaveAlternativeIcon	value	
+SaveIcon	value	
+SearchBox	value	
+SearchBoxProps	type	
+SearchIcon	value	
+SegmentedSize	value+type	container,standard,containerIcon,icon
+SegmentedTabItem	value	
+SegmentedTabItemProps	type	
+SegmentedTabSelect	value	
+SegmentedTabSelectProps	type	
+SegmentedVariant	value+type	primary,ghost
+SendIcon	value	
+SettingsBoltIcon	value	
+SettingsGearIcon	value	
+ShapeButton	value	
+ShapeButtonProps	type	
+ShapeButtonVariant	value+type	prominent,primary
+ShapeButtons	value+type	clover,cookie,diamond,puff,squircle
+ShapeClipPath	value	
+ShapeMorphSpinner	value	
+ShapeMorphSpinnerProps	type	
+ShapeProps	type	
+Shapes	value+type	arrow,capsule,clover,cookie,diamond,double,pentagon,pixircle,puff,squircle,star,triple
+Sheet	value	
+SheetClose	value	
+SheetContent	value	
+SheetDescription	value	
+SheetOverlay	value	
+SheetPortal	value	
+SheetSide	value+type	left,right,top,bottom
+SheetTitle	value	
+SheetTrigger	value	
+ShimmerText	value	
+ShimmerTextProps	type	
+ShowMoneyIcon	value	
+SidebarIconSide	value+type	left,right
+SidebarLeftHoverIcon	value	
+SidebarLeftIcon	value	
+SidebarRightHoverIcon	value	
+SidebarRightIcon	value	
+SidebarWithHoverIcon	value	
+SidebarWithHoverIconProps	type	
+SliderContinuous	value	
+SliderLabeled	value	
+SliderLabeledProps	type	
+SliderProps	type	
+SliderStepped	value	
+SliderVariant	value+type	primary,prominent,custom
+SortAscendingIcon	value	
+SortDescendingIcon	value	
+SplitButton	value	
+SplitButtonAction	value	
+SplitButtonActionProps	type	
+SplitButtonProps	type	
+SplitButtonTrigger	value	
+SplitButtonTriggerProps	type	
+SquircleShape	value	
+StarShape	value	
+Sticker	value	
+StickerProps	type	
+StickerSize	value+type	standard,micro
+StickerVariant	value+type	prominent,alternate,secondary,tertiary,danger,custom
+StopAlternativeIcon	value	
+StopFilledIcon	value	
+StopIcon	value	
+SubheadingText	value	
+SubheadingTextProps	type	
+SystemThemeIcon	value	
+TRIPLE_SHAPE_PATH	value	
+TabSize	value+type	default,sm,micro,fill,icon,iconSm,iconMicro
+TabVariant	value+type	ghost,primary,unselected
+Table	value	
+TableCell	value	
+TableHeader	value	
+TableHeaderCell	value	
+TableHeaderCellProps	type	
+TableIcon	value	
+TablePlaceholder	value	
+TableProps	type	
+TableRow	value	
+TableSortDirection	value+type	none,ascend,descend
+Tabs	value	
+TabsContent	value	
+TabsList	value	
+TabsTrigger	value	
+TabsTriggerProps	type	
+TagIcon	value	
+TextDropdownSize	value+type	default,sm
+TextDropdownTrigger	value	
+TextDropdownTriggerProps	type	
+TextLink	value	
+TextLinkProps	type	
+TextStyleProps	type	
+TextVariant	value+type	button,heroButton,heading,subheading,hero,title,body,heroBody,label,mono
+ThreeColumnsIcon	value	
+ThreeDotsIcon	value	
+TitleText	value	
+TitleTextProps	type	
+ToastAction	value	
+ToastClose	value	
+ToastDescription	value	
+ToastDescriptionProps	type	
+ToastProvider	value	
+ToastProviderProps	type	
+ToastRoot	value	
+ToastRootProps	type	
+ToastTitle	value	
+ToastTitleProps	type	
+ToastTypes	value+type	simple,prominent,danger,complex
+ToastViewport	value	
+ToggleSize	value+type	default,sm,icon,iconSm
+ToggleSwitch	value	
+ToggleSwitchItem	value	
+ToggleSwitchItemProps	type	
+ToggleSwitchProps	type	
+ToggleVariant	value+type	primary,ghost,unselected
+Tooltip	value	
+TooltipBody	value	
+TooltipBodyProps	type	
+TooltipContent	value	
+TooltipContentProps	type	
+TooltipProvider	value	
+TooltipTitle	value	
+TooltipTitleProps	type	
+TooltipTrigger	value	
+TooltipTypes	value+type	simple,rich,complex
+Tracking	value	body,label,hero,mono
+TrackingValue	type	
+TripleShape	value	
+TypeableDropdownTrigger	value	
+TypeableDropdownTriggerProps	type	
+UnderlineLinkText	value	
+UnderlineLinkTextProps	type	
+UserIcon	value	
+UserMessageHeader	value	
+UserMessageHeaderProps	type	
+UserRoundedIcon	value	
+VerificationCodeInput	value	
+VerificationCodeInputProps	type	
+WarningIcon	value	
+WavyDivider	value	
+WavyDividerProps	type	
+WavyDividerVariant	value+type	high,low
+buttonVariants	value	
+checkboxVariants	value	
+cn	value	
+formatRangeLabel	value	
+formatSingleLabel	value	
+formatTriggerLabel	value	
+isSameDay	value	
+resolveDsColor	value	
+serializeAxes	value	
+startOfDay	value	
+stickerVariants	value	
+tabTriggerVariants	value	
+useToast	value	

@@ -8,5 +8,3 @@ export const SettingsGearIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default SettingsGearIcon;

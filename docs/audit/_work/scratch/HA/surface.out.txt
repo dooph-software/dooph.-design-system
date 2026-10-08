@@ -1,0 +1,461 @@
+# 443 exports of src/index.ts; dist names 443
+src-not-in-dist: 
+dist-not-in-src: 
+kind function: 8
+kind const: 52
+kind type: 117
+kind component: 245
+kind cva-recipe: 4
+kind CONST_TABLE: 16
+kind hook: 1
+
+# non-component, non-const, non-type VALUE exports (helpers/recipes/hooks/tables)
+NONCOMP | cn | function | src/utils/cn.ts:31 | internal-importers=[src/components/AIChat/AIModelSelect.tsx, src/components/AIChat/AIPromptInput.tsx, src/components/AIChat/AITextPart.tsx, src/components/AIChat/AIThinkingPart.tsx, src/components/AIChat/AIToolPart.tsx, src/components/AIChat/AITurnSummary.tsx, src/components/AIChat/ChatDivider.tsx, src/components/AIChat/UserMessageHeader.tsx, src/components/AnimatedText/FadeChangeText.tsx, src/components/AnimatedText/RevealChangeText.tsx, src/components/AnimatedText/RollChangeText.tsx, src/components/AnimatedText/RollHoverText.tsx, src/components/AnimatedText/RollingDigitsText.tsx, src/components/AnimatedText/ShimmerText.tsx, src/components/AnimatedText/UnderlineLinkText.tsx, src/components/Avatar/Avatar.tsx, src/components/Button/Button.tsx, src/components/Calendar/Calendar.tsx, src/components/Calendar/CalendarCaption.tsx, src/components/Calendar/CalendarGrid.tsx, src/components/Calendar/CalendarPresetsPanel.tsx, src/components/Checkbox/Checkbox.tsx, src/components/CopyButton/CopyButton.tsx, src/components/CTAButton/CTAButton.tsx, src/components/DatePicker/DatePickerSplitTrigger.tsx, src/components/DatePicker/DatePickerTrigger.tsx, src/components/DropdownCaret/DropdownCaret.tsx, src/components/DropdownTrigger/DropdownTrigger.tsx, src/components/HotkeyIndicator/HotkeyIndicator.tsx, src/components/Icons/BaseIcon.tsx, src/components/Input/Input.tsx, src/components/LinearProgressIndicator/LinearProgressIndicator.tsx, src/components/LoadingSpinner/LoadingSpinner.tsx, src/components/Menu/DropdownMenu.tsx, src/components/Menu/DropdownMenuSearch.tsx, src/components/Modal/Modal.tsx, src/components/MorphRotationShape/MorphRotationShape.tsx, src/components/OutlineButton/OutlineButton.tsx, src/components/OutlineSection/OutlineSection.tsx, src/components/Popover/Popover.tsx, src/components/ProgressIndicator/ProgressIndicator.tsx, src/components/SearchBox/SearchBox.tsx, src/components/SegmentedTabSelect/SegmentedTabSelect.tsx, src/components/ShapeButton/ShapeButton.tsx, src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx, src/components/Sheet/Sheet.tsx, src/components/Slider/Slider.tsx, src/components/SplitButton/SplitButton.tsx, src/components/Sticker/Sticker.tsx, src/components/Table/Table.tsx, src/components/Tabs/Tabs.tsx, src/components/Text/BaseText.tsx, src/components/TextLink/TextLink.tsx, src/components/Toast/Toast.tsx, src/components/Toggle/Toggle.tsx, src/components/Tooltip/Tooltip.tsx, src/components/VerificationCode/CodeDigitInput.tsx, src/components/VerificationCode/VerificationCodeInput.tsx, src/components/WavyDivider/WavyDivider.tsx] | story-importers=0 | docs=[skills/dooph-design-system-usage/SKILL.md, README.md] | (...inputs: ClassValue[]) => string
+NONCOMP | resolveDsColor | function | src/utils/color.ts:52 | internal-importers=[src/components/AIChat/AIModelSelect.tsx, src/components/LinearProgressIndicator/LinearProgressIndicator.tsx, src/components/Slider/Slider.tsx, src/components/Sticker/Sticker.tsx] | story-importers=0 | docs=[] | (color: DsColor | undefined, fallback: string) => string
+NONCOMP | buttonVariants | cva-recipe | src/components/Button/Button.tsx:37 | internal-importers=[src/components/Toast/Toast.tsx] | story-importers=0 | docs=[] | (props?: (ConfigVariants<{ variant: { primary: string[]; secondary: string[]; prominent: string[]; danger: string[]; gho
+NONCOMP | stickerVariants | cva-recipe | src/components/Sticker/Sticker.tsx:31 | internal-importers=[] | story-importers=0 | docs=[] | (props?: (ConfigVariants<{ variant: { prominent: string; alternate: string; secondary: string; tertiary: string; danger:
+NONCOMP | checkboxVariants | cva-recipe | src/components/Checkbox/Checkbox.tsx:33 | internal-importers=[] | story-importers=0 | docs=[] | (props?: (ConfigVariants<{ variant: { prominent: string[]; primary: string[]; }; }> & ClassProp) | undefined) => string
+NONCOMP | tabTriggerVariants | cva-recipe | src/components/Tabs/Tabs.tsx:28 | internal-importers=[] | story-importers=0 | docs=[] | (props?: (ConfigVariants<{ variant: { primary: string[]; ghost: string; unselected: string; }; size: { default: string; 
+NONCOMP | serializeAxes | function | src/components/Text/textStyle.ts:37 | internal-importers=[] | story-importers=0 | docs=[] | (axes: Partial<Record<(string & {}) | FontAxis, string | number>>) => string
+NONCOMP | ARROW_SHAPE_PATH | CONST_TABLE | src/components/Shapes/ArrowShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M17.0922 5.94811C16.4447 4.90881 15.7856 3.85509 14.9102 3.02982C14.0347 2.2025 12.9006 1.61802 11.7377 1.69417C10.7166
+NONCOMP | SHAPE_VIEWBOX_SIZE | CONST_TABLE | src/components/Shapes/BaseShape.tsx:15 | internal-importers=[] | story-importers=0 | docs=[] | 24
+NONCOMP | CAPSULE_SHAPE_PATH | CONST_TABLE | src/components/Shapes/CapsuleShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M6.38853 3.02165C10.4174 -1.00722 16.9495 -1.00722 20.9784 3.02165C25.0072 7.05052 25.0072 13.5826 20.9784 17.6114L17.6
+NONCOMP | CLOVER_SHAPE_PATH | CONST_TABLE | src/components/Shapes/CloverShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M2.34639 12C1.35015 10.8096 0.75 9.27309 0.75 7.59575C0.75 3.81494 3.79914 0.75 7.56044 0.75C9.26275 0.75 10.8192 1.377
+NONCOMP | COOKIE_SHAPE_PATH | CONST_TABLE | src/components/Shapes/CookieShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M15.1122 1.24877C19.945 -0.850213 24.8502 4.05494 22.7512 8.88783L22.4042 9.68689C21.7634 11.1624 21.7634 12.8376 22.40
+NONCOMP | DIAMOND_SHAPE_PATH | CONST_TABLE | src/components/Shapes/DiamondShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M18.7936 19.8953C16.741 21.948 15.7146 22.9743 14.5782 23.4661C12.9331 24.178 11.0669 24.178 9.42182 23.4661C8.28535 22
+NONCOMP | DOUBLE_SHAPE_PATH | CONST_TABLE | src/components/Shapes/DoubleShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M0 6.1017C0 2.73182 2.81995 0 6.29853 0H17.7015C21.18 0 24 2.73182 24 6.1017C24 8.88077 22.0821 11.2259 19.4586 11.9628
+NONCOMP | PENTAGON_SHAPE_PATH | CONST_TABLE | src/components/Shapes/PentagonShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M9.3101 0.863758C10.914 -0.28792 13.086 -0.287919 14.6899 0.863759L22.1133 6.19394C23.7172 7.34562 24.3884 9.38702 23.7
+NONCOMP | PIXIRCLE_SHAPE_PATH | CONST_TABLE | src/components/Shapes/PixircleShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M16.8889 0H7.11111V1.55552H3.77778V3.55555H1.77778V7.11111H0V16.8889H1.77778V20.4445H3.77778V22.4444H7.11111V24H16.8889
+NONCOMP | PUFF_SHAPE_PATH | CONST_TABLE | src/components/Shapes/PuffShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M9.39467 1.00318C9.52407 0.896242 9.58874 0.842774 9.64778 0.797639C11.0393 -0.26588 12.9607 -0.26588 14.3522 0.797639C
+NONCOMP | SQUIRCLE_SHAPE_PATH | CONST_TABLE | src/components/Shapes/SquircleShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M24 12.9C24 16.2538 24 17.9307 23.4734 19.2609C22.711 21.1864 21.1864 22.711 19.2609 23.4734C17.9307 24 16.2538 24 12.9
+NONCOMP | STAR_SHAPE_PATH | CONST_TABLE | src/components/Shapes/StarShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M22.4936 12C22.496 12.3077 22.4025 12.6084 22.2261 12.8604C22.0497 13.1124 21.7991 13.3032 21.5093 13.4063L15.5618 15.5
+NONCOMP | TRIPLE_SHAPE_PATH | CONST_TABLE | src/components/Shapes/TripleShape.tsx:3 | internal-importers=[src/components/Shapes/shapePaths.ts] | story-importers=0 | docs=[] | "M19.8281 0C22.1321 8.9526e-05 23.9999 1.86785 24 4.17187C24 5.96748 22.8654 7.49778 21.2742 8.08596C22.8654 8.67408 23.
+NONCOMP | useToast | hook | src/components/Toast/Toast.tsx:317 | internal-importers=[] | story-importers=1 | docs=[] | () => ToastContextValue
+NONCOMP | SHAPE_MORPH_SPINNER_SHAPES | CONST_TABLE | src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx:24 | internal-importers=[] | story-importers=0 | docs=[] | ComponentType<ShapeProps>[]
+NONCOMP | DEFAULT_CALENDAR_PRESETS | CONST_TABLE | src/components/Calendar/constants.ts:118 | internal-importers=[] | story-importers=2 | docs=[skills/dooph-design-system-usage/SKILL.md] | CalendarPreset[]
+NONCOMP | DEFAULT_SPLIT_TRIGGER_PRESETS | CONST_TABLE | src/components/Calendar/constants.ts:128 | internal-importers=[src/components/DatePicker/DatePickerSplitTrigger.tsx] | story-importers=1 | docs=[skills/dooph-design-system-usage/SKILL.md] | CalendarPreset[]
+NONCOMP | isSameDay | function | src/components/Calendar/dateUtils.ts:31 | internal-importers=[src/components/Calendar/CalendarGrid.tsx, src/components/Calendar/CalendarPresetsPanel.tsx, src/components/Calendar/rangeSelection.ts, src/components/DatePicker/DatePickerSplitTrigger.tsx] | story-importers=0 | docs=[] | (a: Date, b: Date) => boolean
+NONCOMP | startOfDay | function | src/components/Calendar/dateUtils.ts:19 | internal-importers=[src/components/Calendar/Calendar.tsx, src/components/Calendar/CalendarPresetsPanel.tsx, src/components/Calendar/constants.ts, src/components/Calendar/rangeSelection.ts, src/components/DatePicker/DatePickerSplitTrigger.tsx] | story-importers=0 | docs=[] | (date: Date) => Date
+NONCOMP | formatRangeLabel | function | src/components/Calendar/dateFormat.ts:42 | internal-importers=[src/components/DatePicker/DatePickerSplitTrigger.tsx, src/components/DatePicker/DatePickerTrigger.tsx] | story-importers=0 | docs=[] | (range: DateRange, now: Date, locale?: string | undefined) => string
+NONCOMP | formatSingleLabel | function | src/components/Calendar/dateFormat.ts:30 | internal-importers=[src/components/DatePicker/DatePickerTrigger.tsx] | story-importers=0 | docs=[] | (date: Date, now: Date, locale?: string | undefined) => string
+NONCOMP | formatTriggerLabel | function | src/components/DatePicker/DatePickerTrigger.tsx:40 | internal-importers=[] | story-importers=0 | docs=[] | (props: DatePickerTriggerProps, today: Date, locale?: string | undefined) => string
+
+# components and whether <Name>Props is exported
+COMP | Button | src/components/Button/Button.tsx:139 | Props-exported | docs=5
+COMP | CTAButton | src/components/CTAButton/CTAButton.tsx:51 | Props-exported | docs=1
+COMP | CopyButton | src/components/CopyButton/CopyButton.tsx:29 | Props-exported | docs=2
+COMP | Avatar | src/components/Avatar/Avatar.tsx:14 | Props-exported | docs=4
+COMP | Sticker | src/components/Sticker/Sticker.tsx:138 | Props-exported | docs=2
+COMP | Checkbox | src/components/Checkbox/Checkbox.tsx:119 | Props-exported | docs=1
+COMP | CheckboxIndicator | src/components/Checkbox/Checkbox.tsx:75 | NO-PROPS-EXPORT | docs=0
+COMP | HotkeyIndicator | src/components/HotkeyIndicator/HotkeyIndicator.tsx:9 | Props-exported | docs=1
+COMP | BaseIcon | src/components/Icons/BaseIcon.tsx:38 | NO-PROPS-EXPORT | docs=1
+COMP | AIContextIcon | src/components/Icons/AIContextIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | AIPlanIcon | src/components/Icons/AIPlanIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | AIPowerIcon | src/components/Icons/AIPowerIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | AISkillIcon | src/components/Icons/AISkillIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | AISpeedIcon | src/components/Icons/AISpeedIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | AIThinkingIcon | src/components/Icons/AIThinkingIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | AIToolActionIcon | src/components/Icons/AIToolActionIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | AIToolReadIcon | src/components/Icons/AIToolReadIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ArrowDownIcon | src/components/Icons/ArrowDownIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ArrowDownLeftIcon | src/components/Icons/ArrowDownLeftIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ArrowDownRightIcon | src/components/Icons/ArrowDownRightIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ArrowLeftIcon | src/components/Icons/ArrowLeftIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ArrowRightIcon | src/components/Icons/ArrowRightIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ArrowUpIcon | src/components/Icons/ArrowUpIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ArrowUpLeftIcon | src/components/Icons/ArrowUpLeftIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ArrowUpRightIcon | src/components/Icons/ArrowUpRightIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | AttachFileIcon | src/components/Icons/AttachFileIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | BarChartAxesIcon | src/components/Icons/BarChartAxesIcon.tsx:3 | NO-PROPS-EXPORT | docs=1
+COMP | BarChartIcon | src/components/Icons/BarChartIcon.tsx:3 | NO-PROPS-EXPORT | docs=1
+COMP | BugReportIcon | src/components/Icons/BugReportIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | CalendarIcon | src/components/Icons/CalendarIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ChangelogIcon | src/components/Icons/ChangelogIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | CheckIcon | src/components/Icons/CheckIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ChevronDownIcon | src/components/Icons/ChevronDownIcon.tsx:3 | NO-PROPS-EXPORT | docs=1
+COMP | ChevronLeftIcon | src/components/Icons/ChevronLeftIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ChevronRightIcon | src/components/Icons/ChevronRightIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ChevronsDownUpIcon | src/components/Icons/ChevronsDownUpIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ChevronsLeftRightIcon | src/components/Icons/ChevronsLeftRightIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ChevronsRightIcon | src/components/Icons/ChevronsRightIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ChevronsRightLeftIcon | src/components/Icons/ChevronsRightLeftIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ChevronsUpDownIcon | src/components/Icons/ChevronsUpDownIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ChevronUpIcon | src/components/Icons/ChevronUpIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ClearFilterFunnelIcon | src/components/Icons/ClearFilterFunnelIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ClipboardIcon | src/components/Icons/ClipboardIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | CloseCancelIcon | src/components/Icons/CloseCancelIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | CreditCardIcon | src/components/Icons/CreditCardIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | DarkModeIcon | src/components/Icons/DarkModeIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | DiscPlatterDBIcon | src/components/Icons/DiscPlatterDBIcon.tsx:3 | NO-PROPS-EXPORT | docs=1
+COMP | DownloadIcon | src/components/Icons/DownloadIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | DropdownIcon | src/components/Icons/DropdownIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ErrorAlternativeIcon | src/components/Icons/ErrorAlternativeIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ErrorIcon | src/components/Icons/ErrorIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ExtensionsIcon | src/components/Icons/ExtensionsIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | FilterFunnelIcon | src/components/Icons/FilterFunnelIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | FilterLinesIcon | src/components/Icons/FilterLinesIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | FiltersSlidersIcon | src/components/Icons/FiltersSlidersIcon.tsx:4 | NO-PROPS-EXPORT | docs=0
+COMP | GraphIcon | src/components/Icons/GraphIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | HeartFillIcon | src/components/Icons/HeartFillIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | HelpIcon | src/components/Icons/HelpIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | HideMoneyIcon | src/components/Icons/HideMoneyIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | InfoIcon | src/components/Icons/InfoIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | InvoiceIcon | src/components/Icons/InvoiceIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | KeyIcon | src/components/Icons/KeyIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | LightModeIcon | src/components/Icons/LightModeIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | LoadingSpinnerIcon | src/components/Icons/LoadingSpinnerIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | LogOutIcon | src/components/Icons/LogOutIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ManyUsersIcon | src/components/Icons/ManyUsersIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ManyUsersRoundedIcon | src/components/Icons/ManyUsersRoundedIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | NewChatIcon | src/components/Icons/NewChatIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | OrganizationIcon | src/components/Icons/OrganizationIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | OverviewIcon | src/components/Icons/OverviewIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | PlaceholderIcon | src/components/Icons/PlaceholderIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | PlusIcon | src/components/Icons/PlusIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | RecentsIcon | src/components/Icons/RecentsIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | SaveAlternativeIcon | src/components/Icons/SaveAlternativeIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | SaveIcon | src/components/Icons/SaveIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | SearchIcon | src/components/Icons/SearchIcon.tsx:3 | NO-PROPS-EXPORT | docs=1
+COMP | SendIcon | src/components/Icons/SendIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | SettingsBoltIcon | src/components/Icons/SettingsBoltIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | SettingsGearIcon | src/components/Icons/SettingsGearIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ShowMoneyIcon | src/components/Icons/ShowMoneyIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | SidebarLeftHoverIcon | src/components/Icons/SidebarLeftHoverIcon.tsx:3 | NO-PROPS-EXPORT | docs=1
+COMP | SidebarLeftIcon | src/components/Icons/SidebarLeftIcon.tsx:3 | NO-PROPS-EXPORT | docs=1
+COMP | SidebarRightHoverIcon | src/components/Icons/SidebarRightHoverIcon.tsx:3 | NO-PROPS-EXPORT | docs=1
+COMP | SidebarRightIcon | src/components/Icons/SidebarRightIcon.tsx:3 | NO-PROPS-EXPORT | docs=1
+COMP | SortAscendingIcon | src/components/Icons/SortAscendingIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | SortDescendingIcon | src/components/Icons/SortDescendingIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | StopAlternativeIcon | src/components/Icons/StopAlternativeIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | StopFilledIcon | src/components/Icons/StopFilledIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | StopIcon | src/components/Icons/StopIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | SystemThemeIcon | src/components/Icons/SystemThemeIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | TableIcon | src/components/Icons/TableIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | TagIcon | src/components/Icons/TagIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ThreeColumnsIcon | src/components/Icons/ThreeColumnsIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | ThreeDotsIcon | src/components/Icons/ThreeDotsIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | UserIcon | src/components/Icons/UserIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | UserRoundedIcon | src/components/Icons/UserRoundedIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | WarningIcon | src/components/Icons/WarningIcon.tsx:3 | NO-PROPS-EXPORT | docs=0
+COMP | SidebarWithHoverIcon | src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx:83 | Props-exported | docs=3
+COMP | Input | src/components/Input/Input.tsx:62 | Props-exported | docs=1
+COMP | Tabs | src/components/Tabs/Tabs.tsx:13 | NO-PROPS-EXPORT | docs=1
+COMP | TabsList | src/components/Tabs/Tabs.tsx:15 | NO-PROPS-EXPORT | docs=1
+COMP | TabsTrigger | src/components/Tabs/Tabs.tsx:38 | Props-exported | docs=1
+COMP | TabsContent | src/components/Tabs/Tabs.tsx:50 | NO-PROPS-EXPORT | docs=1
+COMP | SegmentedTabSelect | src/components/SegmentedTabSelect/SegmentedTabSelect.tsx:48 | Props-exported | docs=1
+COMP | SegmentedTabItem | src/components/SegmentedTabSelect/SegmentedTabSelect.tsx:86 | Props-exported | docs=1
+COMP | FadeChangeText | src/components/AnimatedText/FadeChangeText.tsx:50 | Props-exported | docs=1
+COMP | RevealChangeText | src/components/AnimatedText/RevealChangeText.tsx:121 | Props-exported | docs=1
+COMP | RollChangeText | src/components/AnimatedText/RollChangeText.tsx:46 | Props-exported | docs=3
+COMP | RollHoverText | src/components/AnimatedText/RollHoverText.tsx:31 | Props-exported | docs=3
+COMP | RollingDigitsText | src/components/AnimatedText/RollingDigitsText.tsx:306 | Props-exported | docs=3
+COMP | ShimmerText | src/components/AnimatedText/ShimmerText.tsx:12 | Props-exported | docs=4
+COMP | UnderlineLinkText | src/components/AnimatedText/UnderlineLinkText.tsx:42 | Props-exported | docs=2
+COMP | BaseText | src/components/Text/BaseText.tsx:105 | Props-exported | docs=2
+COMP | BodyText | src/components/Text/BaseText.tsx:141 | Props-exported | docs=1
+COMP | ButtonText | src/components/Text/BaseText.tsx:133 | Props-exported | docs=1
+COMP | HeadingText | src/components/Text/BaseText.tsx:134 | Props-exported | docs=1
+COMP | HeroBodyText | src/components/Text/BaseText.tsx:145 | Props-exported | docs=1
+COMP | HeroButtonText | src/components/Text/BaseText.tsx:149 | Props-exported | docs=1
+COMP | HeroText | src/components/Text/BaseText.tsx:139 | Props-exported | docs=1
+COMP | LabelText | src/components/Text/BaseText.tsx:153 | Props-exported | docs=1
+COMP | MonoText | src/components/Text/BaseText.tsx:158 | Props-exported | docs=3
+COMP | SubheadingText | src/components/Text/BaseText.tsx:135 | Props-exported | docs=2
+COMP | TitleText | src/components/Text/BaseText.tsx:140 | Props-exported | docs=1
+COMP | TextLink | src/components/TextLink/TextLink.tsx:14 | Props-exported | docs=2
+COMP | ToggleSwitch | src/components/Toggle/Toggle.tsx:61 | Props-exported | docs=1
+COMP | ToggleSwitchItem | src/components/Toggle/Toggle.tsx:117 | Props-exported | docs=1
+COMP | DropdownMenu | src/components/Menu/DropdownMenu.tsx:54 | NO-PROPS-EXPORT | docs=3
+COMP | DropdownMenuTrigger | src/components/Menu/DropdownMenu.tsx:74 | NO-PROPS-EXPORT | docs=1
+COMP | DropdownMenuPortal | src/components/Menu/DropdownMenu.tsx:89 | NO-PROPS-EXPORT | docs=0
+COMP | DropdownMenuContent | src/components/Menu/DropdownMenu.tsx:94 | NO-PROPS-EXPORT | docs=1
+COMP | DropdownMenuGroup | src/components/Menu/DropdownMenu.tsx:90 | NO-PROPS-EXPORT | docs=0
+COMP | DropdownMenuSub | src/components/Menu/DropdownMenu.tsx:91 | NO-PROPS-EXPORT | docs=0
+COMP | DropdownMenuRadioGroup | src/components/Menu/DropdownMenu.tsx:92 | NO-PROPS-EXPORT | docs=1
+COMP | DropdownMenuItem | src/components/Menu/DropdownMenu.tsx:202 | NO-PROPS-EXPORT | docs=1
+COMP | DropdownMenuMultiSelectItem | src/components/Menu/DropdownMenu.tsx:296 | NO-PROPS-EXPORT | docs=1
+COMP | DropdownMenuLabel | src/components/Menu/DropdownMenu.tsx:332 | NO-PROPS-EXPORT | docs=1
+COMP | DropdownMenuPlainItem | src/components/Menu/DropdownMenu.tsx:233 | NO-PROPS-EXPORT | docs=1
+COMP | DropdownMenuRadioSelectItem | src/components/Menu/DropdownMenu.tsx:250 | NO-PROPS-EXPORT | docs=1
+COMP | DropdownMenuSeparator | src/components/Menu/DropdownMenu.tsx:348 | NO-PROPS-EXPORT | docs=1
+COMP | DropdownMenuSection | src/components/Menu/DropdownMenu.tsx:390 | Props-exported | docs=3
+COMP | DropdownMenuSegment | src/components/Menu/DropdownMenu.tsx:366 | Props-exported | docs=1
+COMP | DropdownMenuSearch | src/components/Menu/DropdownMenuSearch.tsx:34 | Props-exported | docs=1
+COMP | DropdownTrigger | src/components/DropdownTrigger/DropdownTrigger.tsx:80 | Props-exported | docs=1
+COMP | DropdownTriggerContent | src/components/DropdownTrigger/DropdownTrigger.tsx:41 | Props-exported | docs=1
+COMP | TypeableDropdownTrigger | src/components/DropdownTrigger/DropdownTrigger.tsx:140 | Props-exported | docs=1
+COMP | TextDropdownTrigger | src/components/DropdownTrigger/DropdownTrigger.tsx:344 | Props-exported | docs=1
+COMP | SplitButton | src/components/SplitButton/SplitButton.tsx:80 | Props-exported | docs=1
+COMP | SplitButtonAction | src/components/SplitButton/SplitButton.tsx:13 | Props-exported | docs=1
+COMP | SplitButtonTrigger | src/components/SplitButton/SplitButton.tsx:44 | Props-exported | docs=1
+COMP | OutlineSection | src/components/OutlineSection/OutlineSection.tsx:16 | Props-exported | docs=1
+COMP | OutlineButton | src/components/OutlineButton/OutlineButton.tsx:297 | Props-exported | docs=3
+COMP | ArrowShape | src/components/Shapes/ArrowShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | ShapeClipPath | src/components/Shapes/BaseShape.tsx:22 | NO-PROPS-EXPORT | docs=0
+COMP | BaseShape | src/components/Shapes/BaseShape.tsx:51 | NO-PROPS-EXPORT | docs=0
+COMP | CapsuleShape | src/components/Shapes/CapsuleShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | CloverShape | src/components/Shapes/CloverShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | CookieShape | src/components/Shapes/CookieShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | DiamondShape | src/components/Shapes/DiamondShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | DoubleShape | src/components/Shapes/DoubleShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | PentagonShape | src/components/Shapes/PentagonShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | PixircleShape | src/components/Shapes/PixircleShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | PuffShape | src/components/Shapes/PuffShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | SquircleShape | src/components/Shapes/SquircleShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | StarShape | src/components/Shapes/StarShape.tsx:6 | NO-PROPS-EXPORT | docs=1
+COMP | TripleShape | src/components/Shapes/TripleShape.tsx:6 | NO-PROPS-EXPORT | docs=0
+COMP | ShapeButton | src/components/ShapeButton/ShapeButton.tsx:160 | Props-exported | docs=1
+COMP | MorphRotationShape | src/components/MorphRotationShape/MorphRotationShape.tsx:165 | Props-exported | docs=1
+COMP | DropdownCaret | src/components/DropdownCaret/DropdownCaret.tsx:44 | Props-exported | docs=1
+COMP | Modal | src/components/Modal/Modal.tsx:13 | NO-PROPS-EXPORT | docs=2
+COMP | ModalTrigger | src/components/Modal/Modal.tsx:14 | NO-PROPS-EXPORT | docs=2
+COMP | ModalPortal | src/components/Modal/Modal.tsx:15 | NO-PROPS-EXPORT | docs=0
+COMP | ModalOverlay | src/components/Modal/Modal.tsx:20 | NO-PROPS-EXPORT | docs=2
+COMP | ModalContent | src/components/Modal/Modal.tsx:57 | NO-PROPS-EXPORT | docs=3
+COMP | ModalClose | src/components/Modal/Modal.tsx:16 | NO-PROPS-EXPORT | docs=2
+COMP | ModalTitle | src/components/Modal/Modal.tsx:90 | NO-PROPS-EXPORT | docs=2
+COMP | ModalDescription | src/components/Modal/Modal.tsx:102 | NO-PROPS-EXPORT | docs=2
+COMP | Sheet | src/components/Sheet/Sheet.tsx:15 | NO-PROPS-EXPORT | docs=2
+COMP | SheetClose | src/components/Sheet/Sheet.tsx:18 | NO-PROPS-EXPORT | docs=2
+COMP | SheetContent | src/components/Sheet/Sheet.tsx:120 | NO-PROPS-EXPORT | docs=2
+COMP | SheetDescription | src/components/Sheet/Sheet.tsx:166 | NO-PROPS-EXPORT | docs=2
+COMP | SheetOverlay | src/components/Sheet/Sheet.tsx:28 | NO-PROPS-EXPORT | docs=0
+COMP | SheetPortal | src/components/Sheet/Sheet.tsx:17 | NO-PROPS-EXPORT | docs=0
+COMP | SheetTitle | src/components/Sheet/Sheet.tsx:154 | NO-PROPS-EXPORT | docs=2
+COMP | SheetTrigger | src/components/Sheet/Sheet.tsx:16 | NO-PROPS-EXPORT | docs=2
+COMP | Popover | src/components/Popover/Popover.tsx:11 | NO-PROPS-EXPORT | docs=2
+COMP | PopoverAnchor | src/components/Popover/Popover.tsx:13 | NO-PROPS-EXPORT | docs=1
+COMP | PopoverClose | src/components/Popover/Popover.tsx:15 | NO-PROPS-EXPORT | docs=1
+COMP | PopoverContent | src/components/Popover/Popover.tsx:25 | Props-exported | docs=1
+COMP | PopoverPortal | src/components/Popover/Popover.tsx:14 | NO-PROPS-EXPORT | docs=1
+COMP | PopoverTrigger | src/components/Popover/Popover.tsx:12 | NO-PROPS-EXPORT | docs=1
+COMP | SearchBox | src/components/SearchBox/SearchBox.tsx:22 | Props-exported | docs=2
+COMP | Table | src/components/Table/Table.tsx:22 | Props-exported | docs=1
+COMP | TableHeader | src/components/Table/Table.tsx:45 | NO-PROPS-EXPORT | docs=1
+COMP | TableHeaderCell | src/components/Table/Table.tsx:70 | Props-exported | docs=1
+COMP | TableRow | src/components/Table/Table.tsx:107 | NO-PROPS-EXPORT | docs=1
+COMP | TableCell | src/components/Table/Table.tsx:129 | NO-PROPS-EXPORT | docs=1
+COMP | TablePlaceholder | src/components/Table/Table.tsx:145 | NO-PROPS-EXPORT | docs=1
+COMP | ToastAction | src/components/Toast/Toast.tsx:140 | NO-PROPS-EXPORT | docs=0
+COMP | ToastClose | src/components/Toast/Toast.tsx:158 | NO-PROPS-EXPORT | docs=0
+COMP | ToastDescription | src/components/Toast/Toast.tsx:126 | Props-exported | docs=0
+COMP | ToastProvider | src/components/Toast/Toast.tsx:204 | Props-exported | docs=0
+COMP | ToastRoot | src/components/Toast/Toast.tsx:90 | Props-exported | docs=0
+COMP | ToastTitle | src/components/Toast/Toast.tsx:118 | Props-exported | docs=0
+COMP | ToastViewport | src/components/Toast/Toast.tsx:102 | NO-PROPS-EXPORT | docs=0
+COMP | Tooltip | src/components/Tooltip/Tooltip.tsx:16 | NO-PROPS-EXPORT | docs=3
+COMP | TooltipBody | src/components/Tooltip/Tooltip.tsx:101 | Props-exported | docs=0
+COMP | TooltipContent | src/components/Tooltip/Tooltip.tsx:40 | Props-exported | docs=0
+COMP | TooltipProvider | src/components/Tooltip/Tooltip.tsx:24 | NO-PROPS-EXPORT | docs=0
+COMP | TooltipTitle | src/components/Tooltip/Tooltip.tsx:93 | Props-exported | docs=0
+COMP | TooltipTrigger | src/components/Tooltip/Tooltip.tsx:17 | NO-PROPS-EXPORT | docs=0
+COMP | SliderContinuous | src/components/Slider/Slider.tsx:421 | NO-PROPS-EXPORT | docs=3
+COMP | SliderStepped | src/components/Slider/Slider.tsx:427 | NO-PROPS-EXPORT | docs=3
+COMP | SliderLabeled | src/components/Slider/Slider.tsx:441 | Props-exported | docs=3
+COMP | AITextPart | src/components/AIChat/AITextPart.tsx:29 | Props-exported | docs=0
+COMP | AIToolPart | src/components/AIChat/AIToolPart.tsx:35 | Props-exported | docs=0
+COMP | AIThinkingPart | src/components/AIChat/AIThinkingPart.tsx:60 | Props-exported | docs=0
+COMP | AITurnSummary | src/components/AIChat/AITurnSummary.tsx:32 | Props-exported | docs=0
+COMP | UserMessageHeader | src/components/AIChat/UserMessageHeader.tsx:19 | Props-exported | docs=0
+COMP | ChatDivider | src/components/AIChat/ChatDivider.tsx:22 | Props-exported | docs=0
+COMP | AIContextGauge | src/components/AIChat/AIContextGauge.tsx:38 | Props-exported | docs=0
+COMP | AIPromptInput | src/components/AIChat/AIPromptInput.tsx:87 | Props-exported | docs=0
+COMP | AIPromptInputSubmit | src/components/AIChat/AIPromptInput.tsx:294 | Props-exported | docs=0
+COMP | AIPromptInputTextarea | src/components/AIChat/AIPromptInput.tsx:180 | Props-exported | docs=0
+COMP | AIPromptInputToolbar | src/components/AIChat/AIPromptInput.tsx:241 | Props-exported | docs=0
+COMP | AIPromptInputToolbarEnd | src/components/AIChat/AIPromptInput.tsx:267 | NO-PROPS-EXPORT | docs=0
+COMP | AIPromptInputToolbarStart | src/components/AIChat/AIPromptInput.tsx:254 | NO-PROPS-EXPORT | docs=0
+COMP | AIModelSelectItem | src/components/AIChat/AIModelSelect.tsx:83 | Props-exported | docs=0
+COMP | AIModelSelectTrigger | src/components/AIChat/AIModelSelect.tsx:52 | Props-exported | docs=0
+COMP | AIModelTooltipContent | src/components/AIChat/AIModelSelect.tsx:201 | Props-exported | docs=0
+COMP | AIThinkingEffortSelector | src/components/AIChat/AIModelSelect.tsx:132 | Props-exported | docs=0
+COMP | WavyDivider | src/components/WavyDivider/WavyDivider.tsx:55 | Props-exported | docs=1
+COMP | LoadingSpinner | src/components/LoadingSpinner/LoadingSpinner.tsx:289 | Props-exported | docs=2
+COMP | ShapeMorphSpinner | src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx:47 | Props-exported | docs=1
+COMP | ProgressIndicator | src/components/ProgressIndicator/ProgressIndicator.tsx:277 | Props-exported | docs=2
+COMP | LinearProgressIndicator | src/components/LinearProgressIndicator/LinearProgressIndicator.tsx:36 | Props-exported | docs=3
+COMP | CodeDigitInput | src/components/VerificationCode/CodeDigitInput.tsx:28 | Props-exported | docs=1
+COMP | VerificationCodeInput | src/components/VerificationCode/VerificationCodeInput.tsx:43 | Props-exported | docs=2
+COMP | Calendar | src/components/Calendar/Calendar.tsx:124 | Props-exported | docs=2
+COMP | CalendarGrid | src/components/Calendar/CalendarGrid.tsx:66 | Props-exported | docs=1
+COMP | CalendarCaption | src/components/Calendar/CalendarCaption.tsx:30 | Props-exported | docs=1
+COMP | CalendarPresetItem | src/components/Calendar/CalendarPresetsPanel.tsx:47 | Props-exported | docs=1
+COMP | CalendarPresetsPanel | src/components/Calendar/CalendarPresetsPanel.tsx:15 | Props-exported | docs=1
+COMP | DatePicker | src/components/DatePicker/DatePicker.tsx:53 | Props-exported | docs=2
+COMP | DatePickerTrigger | src/components/DatePicker/DatePickerTrigger.tsx:50 | Props-exported | docs=1
+COMP | DatePickerSplitTrigger | src/components/DatePicker/DatePickerSplitTrigger.tsx:45 | Props-exported | docs=1
+
+# type-only exports (name | file)
+TYPE | DsColor | src/utils/color.ts:44 | docs=0 | importers=4
+TYPE | DsColorToken | src/utils/color.ts:40 | docs=0 | importers=0
+TYPE | ButtonProps | src/components/Button/Button.tsx:114 | docs=1 | importers=0
+TYPE | CTAButtonProps | src/components/CTAButton/CTAButton.tsx:30 | docs=0 | importers=0
+TYPE | CopyButtonProps | src/components/CopyButton/CopyButton.tsx:18 | docs=0 | importers=0
+TYPE | AvatarProps | src/components/Avatar/Avatar.tsx:10 | docs=0 | importers=0
+TYPE | StickerProps | src/components/Sticker/Sticker.tsx:75 | docs=0 | importers=0
+TYPE | CheckboxProps | src/components/Checkbox/Checkbox.tsx:70 | docs=0 | importers=0
+TYPE | HotkeyIndicatorProps | src/components/HotkeyIndicator/HotkeyIndicator.tsx:4 | docs=0 | importers=0
+TYPE | IconProps | src/components/Icons/BaseIcon.tsx:17 | docs=0 | importers=89
+TYPE | SidebarWithHoverIconProps | src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx:56 | docs=0 | importers=0
+TYPE | InputProps | src/components/Input/Input.tsx:51 | docs=0 | importers=0
+TYPE | TabsTriggerProps | src/components/Tabs/Tabs.tsx:33 | docs=0 | importers=1
+TYPE | SegmentedTabSelectProps | src/components/SegmentedTabSelect/SegmentedTabSelect.tsx:30 | docs=0 | importers=0
+TYPE | SegmentedTabItemProps | src/components/SegmentedTabSelect/SegmentedTabSelect.tsx:84 | docs=0 | importers=0
+TYPE | FadeChangeTextProps | src/components/AnimatedText/FadeChangeText.tsx:39 | docs=0 | importers=0
+TYPE | RevealChangeTextProps | src/components/AnimatedText/RevealChangeText.tsx:97 | docs=0 | importers=0
+TYPE | RollChangeTextProps | src/components/AnimatedText/RollChangeText.tsx:35 | docs=0 | importers=0
+TYPE | RollHoverTextProps | src/components/AnimatedText/RollHoverText.tsx:5 | docs=0 | importers=0
+TYPE | RollingDigitsTextProps | src/components/AnimatedText/RollingDigitsText.tsx:76 | docs=0 | importers=0
+TYPE | ShimmerTextProps | src/components/AnimatedText/ShimmerText.tsx:4 | docs=0 | importers=0
+TYPE | UnderlineLinkTextProps | src/components/AnimatedText/UnderlineLinkText.tsx:4 | docs=0 | importers=0
+TYPE | BaseTextProps | src/components/Text/BaseText.tsx:23 | docs=0 | importers=2
+TYPE | BodyTextProps | src/components/Text/BaseText.tsx:166 | docs=0 | importers=0
+TYPE | ButtonTextProps | src/components/Text/BaseText.tsx:160 | docs=0 | importers=0
+TYPE | HeadingTextProps | src/components/Text/BaseText.tsx:161 | docs=0 | importers=0
+TYPE | HeroBodyTextProps | src/components/Text/BaseText.tsx:167 | docs=0 | importers=0
+TYPE | HeroButtonTextProps | src/components/Text/BaseText.tsx:169 | docs=0 | importers=0
+TYPE | HeroTextProps | src/components/Text/BaseText.tsx:164 | docs=0 | importers=0
+TYPE | LabelTextProps | src/components/Text/BaseText.tsx:171 | docs=0 | importers=0
+TYPE | MonoTextProps | src/components/Text/BaseText.tsx:172 | docs=0 | importers=0
+TYPE | RoleTextProps | src/components/Text/BaseText.tsx:113 | docs=0 | importers=0
+TYPE | SubheadingTextProps | src/components/Text/BaseText.tsx:162 | docs=0 | importers=0
+TYPE | TitleTextProps | src/components/Text/BaseText.tsx:165 | docs=0 | importers=0
+TYPE | Font | src/components/Text/constants.ts:41 | docs=1 | importers=0
+TYPE | FontAxesValue | src/components/Text/constants.ts:149 | docs=0 | importers=1
+TYPE | FontAxis | src/components/Text/constants.ts:99 | docs=0 | importers=0
+TYPE | FontSize | src/components/Text/constants.ts:55 | docs=0 | importers=0
+TYPE | FontSizeValue | src/components/Text/constants.ts:141 | docs=0 | importers=1
+TYPE | FontValue | src/components/Text/constants.ts:139 | docs=0 | importers=1
+TYPE | FontWeight | src/components/Text/constants.ts:64 | docs=0 | importers=0
+TYPE | FontWeightValue | src/components/Text/constants.ts:143 | docs=0 | importers=1
+TYPE | LetterSpacingValue | src/components/Text/constants.ts:147 | docs=0 | importers=1
+TYPE | LineHeightValue | src/components/Text/constants.ts:145 | docs=0 | importers=1
+TYPE | TrackingValue | src/components/Text/constants.ts:73 | docs=0 | importers=0
+TYPE | TextStyleProps | src/components/Text/textStyle.ts:43 | docs=0 | importers=1
+TYPE | TextLinkProps | src/components/TextLink/TextLink.tsx:5 | docs=0 | importers=0
+TYPE | ToggleSwitchProps | src/components/Toggle/Toggle.tsx:49 | docs=0 | importers=0
+TYPE | ToggleSwitchItemProps | src/components/Toggle/Toggle.tsx:110 | docs=0 | importers=0
+TYPE | DropdownMenuSearchProps | src/components/Menu/DropdownMenuSearch.tsx:26 | docs=0 | importers=0
+TYPE | DropdownMenuSectionProps | src/components/Menu/DropdownMenu.tsx:380 | docs=0 | importers=0
+TYPE | DropdownMenuSegmentProps | src/components/Menu/DropdownMenu.tsx:360 | docs=0 | importers=0
+TYPE | DropdownTriggerProps | src/components/DropdownTrigger/DropdownTrigger.tsx:29 | docs=0 | importers=0
+TYPE | DropdownTriggerContentProps | src/components/DropdownTrigger/DropdownTrigger.tsx:39 | docs=0 | importers=0
+TYPE | TypeableDropdownTriggerProps | src/components/DropdownTrigger/DropdownTrigger.tsx:120 | docs=0 | importers=0
+TYPE | TextDropdownTriggerProps | src/components/DropdownTrigger/DropdownTrigger.tsx:290 | docs=0 | importers=0
+TYPE | SplitButtonProps | src/components/SplitButton/SplitButton.tsx:71 | docs=0 | importers=0
+TYPE | SplitButtonActionProps | src/components/SplitButton/SplitButton.tsx:9 | docs=0 | importers=0
+TYPE | SplitButtonTriggerProps | src/components/SplitButton/SplitButton.tsx:42 | docs=0 | importers=0
+TYPE | OutlineSectionProps | src/components/OutlineSection/OutlineSection.tsx:4 | docs=0 | importers=0
+TYPE | OutlineButtonProps | src/components/OutlineButton/OutlineButton.tsx:40 | docs=0 | importers=0
+TYPE | ShapeProps | src/components/Shapes/BaseShape.tsx:4 | docs=0 | importers=16
+TYPE | ShapeButtonProps | src/components/ShapeButton/ShapeButton.tsx:86 | docs=0 | importers=0
+TYPE | MorphRotationShapeProps | src/components/MorphRotationShape/MorphRotationShape.tsx:94 | docs=0 | importers=0
+TYPE | CssTime | src/components/MorphRotationShape/timing.ts:2 | docs=0 | importers=0
+TYPE | MorphRotationShapeAutoplayTiming | src/components/MorphRotationShape/timing.ts:11 | docs=0 | importers=2
+TYPE | MorphRotationShapeStepTiming | src/components/MorphRotationShape/timing.ts:4 | docs=0 | importers=1
+TYPE | DropdownCaretProps | src/components/DropdownCaret/DropdownCaret.tsx:39 | docs=0 | importers=0
+TYPE | PopoverContentProps | src/components/Popover/Popover.tsx:17 | docs=0 | importers=0
+TYPE | SearchBoxProps | src/components/SearchBox/SearchBox.tsx:7 | docs=0 | importers=0
+TYPE | TableProps | src/components/Table/Table.tsx:17 | docs=0 | importers=0
+TYPE | TableHeaderCellProps | src/components/Table/Table.tsx:59 | docs=0 | importers=0
+TYPE | ToastDescriptionProps | src/components/Toast/Toast.tsx:125 | docs=0 | importers=0
+TYPE | ToastProviderProps | src/components/Toast/Toast.tsx:197 | docs=0 | importers=0
+TYPE | ToastRootProps | src/components/Toast/Toast.tsx:85 | docs=0 | importers=0
+TYPE | ToastTitleProps | src/components/Toast/Toast.tsx:117 | docs=0 | importers=0
+TYPE | TooltipBodyProps | src/components/Tooltip/Tooltip.tsx:100 | docs=0 | importers=0
+TYPE | TooltipContentProps | src/components/Tooltip/Tooltip.tsx:31 | docs=0 | importers=0
+TYPE | TooltipTitleProps | src/components/Tooltip/Tooltip.tsx:92 | docs=0 | importers=0
+TYPE | SliderProps | src/components/Slider/Slider.tsx:45 | docs=0 | importers=0
+TYPE | SliderLabeledProps | src/components/Slider/Slider.tsx:436 | docs=0 | importers=0
+TYPE | AITextPartProps | src/components/AIChat/AITextPart.tsx:24 | docs=0 | importers=0
+TYPE | AIToolPartProps | src/components/AIChat/AIToolPart.tsx:26 | docs=0 | importers=0
+TYPE | AIThinkingPartProps | src/components/AIChat/AIThinkingPart.tsx:41 | docs=0 | importers=0
+TYPE | AITurnSummaryProps | src/components/AIChat/AITurnSummary.tsx:20 | docs=0 | importers=0
+TYPE | UserMessageHeaderProps | src/components/AIChat/UserMessageHeader.tsx:17 | docs=0 | importers=0
+TYPE | ChatDividerProps | src/components/AIChat/ChatDivider.tsx:20 | docs=0 | importers=0
+TYPE | AIContextGaugeProps | src/components/AIChat/AIContextGauge.tsx:28 | docs=0 | importers=0
+TYPE | AIPromptInputProps | src/components/AIChat/AIPromptInput.tsx:73 | docs=0 | importers=0
+TYPE | AIPromptInputSubmitProps | src/components/AIChat/AIPromptInput.tsx:281 | docs=0 | importers=0
+TYPE | AIPromptInputTextareaProps | src/components/AIChat/AIPromptInput.tsx:170 | docs=0 | importers=0
+TYPE | AIPromptInputToolbarProps | src/components/AIChat/AIPromptInput.tsx:238 | docs=0 | importers=0
+TYPE | AIModelSelectItemProps | src/components/AIChat/AIModelSelect.tsx:77 | docs=0 | importers=0
+TYPE | AIModelSelectTriggerProps | src/components/AIChat/AIModelSelect.tsx:43 | docs=0 | importers=0
+TYPE | AIModelTooltipContentProps | src/components/AIChat/AIModelSelect.tsx:182 | docs=0 | importers=0
+TYPE | AIThinkingEffortSelectorProps | src/components/AIChat/AIModelSelect.tsx:112 | docs=0 | importers=0
+TYPE | AIThinkingEffortStep | src/components/AIChat/AIModelSelect.tsx:107 | docs=0 | importers=0
+TYPE | WavyDividerProps | src/components/WavyDivider/WavyDivider.tsx:36 | docs=0 | importers=0
+TYPE | LoadingSpinnerProps | src/components/LoadingSpinner/LoadingSpinner.tsx:40 | docs=0 | importers=0
+TYPE | ShapeMorphSpinnerProps | src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx:38 | docs=0 | importers=0
+TYPE | ProgressIndicatorProps | src/components/ProgressIndicator/ProgressIndicator.tsx:44 | docs=0 | importers=1
+TYPE | ProgressIndicatorVariant | src/components/ProgressIndicator/constants.ts:18 | docs=0 | importers=1
+TYPE | LinearProgressIndicatorProps | src/components/LinearProgressIndicator/LinearProgressIndicator.tsx:27 | docs=0 | importers=0
+TYPE | CodeDigitInputProps | src/components/VerificationCode/CodeDigitInput.tsx:22 | docs=0 | importers=0
+TYPE | VerificationCodeInputProps | src/components/VerificationCode/VerificationCodeInput.tsx:29 | docs=0 | importers=0
+TYPE | CalendarProps | src/components/Calendar/Calendar.tsx:59 | docs=0 | importers=0
+TYPE | CalendarDayRenderProps | src/components/Calendar/CalendarGrid.tsx:24 | docs=0 | importers=2
+TYPE | CalendarGridProps | src/components/Calendar/CalendarGrid.tsx:36 | docs=0 | importers=0
+TYPE | CalendarCaptionProps | src/components/Calendar/CalendarCaption.tsx:18 | docs=0 | importers=0
+TYPE | CalendarPresetItemProps | src/components/Calendar/CalendarPresetsPanel.tsx:31 | docs=0 | importers=0
+TYPE | CalendarPresetsPanelProps | src/components/Calendar/CalendarPresetsPanel.tsx:10 | docs=0 | importers=0
+TYPE | CalendarPreset | src/components/Calendar/constants.ts:35 | docs=0 | importers=2
+TYPE | DateRange | src/components/Calendar/constants.ts:25 | docs=1 | importers=8
+TYPE | DateMatcher | src/components/Calendar/dateUtils.ts:94 | docs=0 | importers=3
+TYPE | DatePickerProps | src/components/DatePicker/DatePicker.tsx:35 | docs=0 | importers=0
+TYPE | DatePickerTriggerProps | src/components/DatePicker/DatePickerTrigger.tsx:23 | docs=0 | importers=0
+TYPE | DatePickerSplitTriggerProps | src/components/DatePicker/DatePickerSplitTrigger.tsx:24 | docs=0 | importers=0
+
+# consts
+CONST | DS_COLOR_TOKENS | src/utils/color.ts:18 | docs=[]
+CONST | ButtonSize | src/components/Button/constants.ts:18 | docs=[skills/dooph-design-system-theming/references/token-contract.md, skills/dooph-design-system-usage/SKILL.md, skills/dooph-design-system-v3-migration/SKILL.md]
+CONST | ButtonVariant | src/components/Button/constants.ts:8 | docs=[skills/dooph-design-system-theming/references/token-contract.md, skills/dooph-design-system-usage/SKILL.md, skills/dooph-design-system-v3-migration/SKILL.md, skills/dooph-design-system-v5-migration/SKILL.md]
+CONST | CTAButtonSize | src/components/CTAButton/constants.ts:11 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | CTAButtonVariant | src/components/CTAButton/constants.ts:4 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | CopyButtonVariant | src/components/CopyButton/constants.ts:8 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | AvatarSize | src/components/Avatar/Avatar.tsx:4 | docs=[]
+CONST | StickerSize | src/components/Sticker/constants.ts:38 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | StickerVariant | src/components/Sticker/constants.ts:21 | docs=[skills/dooph-design-system-theming/references/token-contract.md, skills/dooph-design-system-usage/SKILL.md]
+CONST | CheckboxChecked | src/components/Checkbox/constants.ts:4 | docs=[]
+CONST | CheckboxVariant | src/components/Checkbox/constants.ts:12 | docs=[]
+CONST | IconSize | src/components/Icons/BaseIcon.tsx:9 | docs=[skills/dooph-design-system-theming/references/token-contract.md]
+CONST | SidebarIconSide | src/components/SidebarWithHoverIcon/constants.ts:8 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | InputVariant | src/components/Input/constants.ts:13 | docs=[]
+CONST | TabSize | src/components/Tabs/constants.ts:8 | docs=[]
+CONST | TabVariant | src/components/Tabs/constants.ts:36 | docs=[]
+CONST | SegmentedSize | src/components/SegmentedTabSelect/constants.ts:26 | docs=[]
+CONST | SegmentedVariant | src/components/SegmentedTabSelect/constants.ts:13 | docs=[]
+CONST | RevealDirection | src/components/AnimatedText/constants.ts:27 | docs=[]
+CONST | RollDirection | src/components/AnimatedText/constants.ts:12 | docs=[]
+CONST | FontAxes | src/components/Text/constants.ts:88 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | Fonts | src/components/Text/constants.ts:32 | docs=[skills/dooph-design-system-theming/references/token-contract.md, skills/dooph-design-system-theming/SKILL.md, skills/dooph-design-system-usage/SKILL.md, skills/dooph-design-system-v3-migration/SKILL.md]
+CONST | FontSizes | src/components/Text/constants.ts:44 | docs=[skills/dooph-design-system-usage/SKILL.md, skills/dooph-design-system-v3-migration/SKILL.md]
+CONST | FontWeights | src/components/Text/constants.ts:58 | docs=[skills/dooph-design-system-theming/references/token-contract.md, skills/dooph-design-system-usage/SKILL.md, skills/dooph-design-system-v3-migration/SKILL.md]
+CONST | TextVariant | src/components/Text/constants.ts:17 | docs=[]
+CONST | Tracking | src/components/Text/constants.ts:67 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | ToggleSize | src/components/Toggle/constants.ts:28 | docs=[]
+CONST | ToggleVariant | src/components/Toggle/constants.ts:16 | docs=[]
+CONST | DropdownMenuSelectType | src/components/Menu/constants.ts:15 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | DropdownMenuItemVariant | src/components/Menu/constants.ts:26 | docs=[]
+CONST | DropdownMenuSegmentVariant | src/components/Menu/constants.ts:37 | docs=[]
+CONST | TextDropdownSize | src/components/DropdownTrigger/constants.ts:8 | docs=[]
+CONST | Shapes | src/components/Shapes/index.ts:15 | docs=[]
+CONST | ShapeButtons | src/components/ShapeButton/constants.ts:14 | docs=[skills/dooph-design-system-usage/SKILL.md, skills/dooph-design-system-v3-migration/SKILL.md]
+CONST | ShapeButtonVariant | src/components/ShapeButton/constants.ts:27 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | MorphRotationShapeMode | src/components/MorphRotationShape/constants.ts:3 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | DropdownCaretVariant | src/components/DropdownCaret/constants.ts:3 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | SheetSide | src/components/Sheet/constants.ts:8 | docs=[skills/dooph-design-system-usage/references/responsive-sheet-modal.md, skills/dooph-design-system-usage/SKILL.md]
+CONST | TableSortDirection | src/components/Table/constants.ts:4 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | ToastTypes | src/components/Toast/constants.ts:4 | docs=[]
+CONST | TooltipTypes | src/components/Tooltip/constants.ts:4 | docs=[]
+CONST | SliderVariant | src/components/Slider/constants.ts:22 | docs=[skills/dooph-design-system-theming/references/token-contract.md, skills/dooph-design-system-usage/SKILL.md]
+CONST | AIThinkingPartState | src/components/AIChat/constants.ts:43 | docs=[]
+CONST | AIToolPartState | src/components/AIChat/constants.ts:28 | docs=[]
+CONST | AIToolPartVariant | src/components/AIChat/constants.ts:14 | docs=[]
+CONST | WavyDividerVariant | src/components/WavyDivider/constants.ts:4 | docs=[]
+CONST | LoadingSpinnerVariant | src/components/LoadingSpinner/constants.ts:4 | docs=[]
+CONST | LoadingSpinnerColor | src/components/LoadingSpinner/constants.ts:16 | docs=[]
+CONST | LoadingSpinnerSize | src/components/LoadingSpinner/constants.ts:23 | docs=[]
+CONST | ProgressIndicatorVariants | src/components/ProgressIndicator/constants.ts:8 | docs=[]
+CONST | CalendarPresets | src/components/Calendar/constants.ts:89 | docs=[skills/dooph-design-system-usage/SKILL.md]
+CONST | DatePickerMode | src/components/Calendar/constants.ts:13 | docs=[skills/dooph-design-system-usage/SKILL.md]

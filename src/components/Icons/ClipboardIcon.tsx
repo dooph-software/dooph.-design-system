@@ -8,5 +8,3 @@ export const ClipboardIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default ClipboardIcon;

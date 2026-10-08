@@ -1,0 +1,21 @@
+Spaghetti scoreboard @ b436647+dirty
+
+    0  Motion timing hardcoded (duration-N, ease-*, cubic-bezier, Nms) outside tokens.css  (target 0)
+   18  Arbitrary px/rem values in classNames ([13px])  (target 0)
+       worst: OutlineButton/OutlineButton.tsx 5, Avatar/Avatar.tsx 2, HotkeyIndicator/HotkeyIndicator.tsx 2
+   36  Tailwind numeric spacing instead of the DS scale (p-2, gap-4…)  (target 0)
+       worst: Toast/Toast.tsx 13, Button/Button.tsx 6, Table/Table.tsx 4
+    5  Raw var(--ui-*) inside className brackets  (target 0)
+       worst: Slider/Slider.tsx 5
+    3  Hand-rolled focus rings (shadow-focus / ring utilities)  (target 0)
+       worst: Checkbox/Checkbox.tsx 2, VerificationCode/CodeDigitInput.tsx 1
+    2  Hand-rolled disabled looks (disabled:opacity, opacity-50, disabled:cursor)  (target 0)
+       worst: Menu/DropdownMenu.tsx 2
+   28  "use client" files (keep as few as possible)
+       worst: AIChat/AIModelSelect.tsx 1, AIChat/AIPromptInput.tsx 1, AIChat/AIThinkingPart.tsx 1
+    5  JS timers/animation loops in components (rAF, setTimeout, setInterval)
+       worst: MorphRotationShape/MorphRotationShape.tsx 2, AnimatedText/useChangeSwap.ts 1, CopyButton/CopyButton.tsx 1
+    0  Value callbacks not named onValueChange (onChange(value)/onSelect)  (target 0)
+    0  Vestigial default exports in component modules  (target 0)
+
+Plan: review 50 · todo 53 · deferred 22 · dropped 4 · blocked 2

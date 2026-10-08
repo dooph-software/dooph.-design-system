@@ -3,7 +3,7 @@
 
 /**
  * Dot-accessible toggle (Figma Toggle Switch) variant and size constants.
- * Usage: <ToggleSwitch variant={ToggleVariant.ghost} size={ToggleSize.iconSm} />
+ * Usage: <ToggleSwitch variant={ToggleVariant.ghost} size={ToggleSize.iconMicro} />
  *
  * primary    — selected option is filled primary
  * ghost      — selected option is ghost-active
@@ -26,9 +26,9 @@ export type ToggleVariant = (typeof ToggleVariant)[keyof typeof ToggleVariant];
  * MICRO icon option (not the 34×34 one).
  */
 export const ToggleSize = {
-  default: "default",
+  standard: "standard",
   sm: "sm",
   icon: "icon",
-  iconSm: "icon-sm",
+  iconMicro: "icon-micro",
 } as const;
 export type ToggleSize = (typeof ToggleSize)[keyof typeof ToggleSize];

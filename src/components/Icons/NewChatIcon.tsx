@@ -8,5 +8,3 @@ export const NewChatIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default NewChatIcon;

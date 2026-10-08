@@ -5,56 +5,41 @@ import {
   forwardRef,
   useMemo,
   type ComponentPropsWithoutRef,
+  type CSSProperties,
   type Ref,
 } from "react";
 import { cn } from "../../utils/cn";
+import { resolveDsColor, type DsColor } from "../../utils/color";
 import {
   getSpinnerGeometry,
   type SpinnerGeometry,
-  type SpinnerSizeKey,
 } from "../LoadingSpinner/spinnerGeometry";
 // Color and Size enums are shared with LoadingSpinner — same const objects.
 import {
   LoadingSpinnerColor,
   LoadingSpinnerSize,
 } from "../LoadingSpinner/constants";
-import {
-  ProgressIndicatorVariants,
-  type ProgressIndicatorVariant,
-} from "./constants";
+import { ProgressIndicatorVariant } from "./constants";
 import {
   createMaterialWaveGeometry,
   getWavyTrackGeometry,
 } from "./waveGeometry";
-
-
-// ── Color resolution ──────────────────────────────────────────────────────────
-
-const COLOR_TOKENS: Record<string, string> = {
-  primary: "var(--ui-color-primary)",
-  prominent: "var(--ui-color-prominent)",
-};
-
-function resolveColor(color: string): string {
-  return COLOR_TOKENS[color] ?? color;
-}
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export type ProgressIndicatorProps = {
   /**
    * Progress value from 0 (empty) to 1 (complete).
-   * Throws in development if the value is outside this range.
+   * Throws if the value is below 0, above 1 or NaN — in every build.
    */
   progress: number;
   variant?: ProgressIndicatorVariant;
   /**
-   * Preset alias or any CSS string (e.g. `"#ff6b6b"`).
+   * A DS colour name (`DS_COLOR_TOKENS` key, e.g. `"primary"`, `"danger"`,
+   * `"text-secondary"`) or any CSS colour (e.g. `"#ff6b6b"`).
    * @default LoadingSpinnerColor.primary
    */
-  color?:
-    | (typeof LoadingSpinnerColor)[keyof typeof LoadingSpinnerColor]
-    | (string & {});
+  color?: DsColor;
   size?: (typeof LoadingSpinnerSize)[keyof typeof LoadingSpinnerSize];
   className?: string;
 } & Omit<ComponentPropsWithoutRef<"svg">, "children" | "className">;
@@ -71,13 +56,26 @@ type InnerSvgProps = ComponentPropsWithoutRef<"svg"> & {
  * Flat determinate progress — discrete arcs (M3 style):
  *
  * At `progress === 0` the track renders as a complete circle — no gaps — to
- * represent the fully-empty state cleanly. For all values above 0, the standard
- * M3 discrete-arc gap formula applies: indicator arc spans `progress × C` from
+ * represent the fully-empty state cleanly. From any value above 0, the standard M3
+ * discrete-arc gap formula applies: indicator arc spans `progress × C` from
  * 12 o'clock; track covers the complementary arc with a `gapLength` gap at each
- * endpoint.
+ * endpoint. The gap is switched by `--ds-pi-gap-on` (0|1, from the TARGET
+ * `progress > 0`) — a discrete, non-transitioned property, so it appears at
+ * once while only the arc scalar animates. Once the track's complement has no
+ * length it is faded out, not unmounted.
  *
- * Both arcs carry a CSS transition (300ms cubic-bezier) so they animate smoothly
- * together whenever `progress` changes.
+ * Motion: the <svg> sets ONE number, `--ds-pi-progress`, inline (plus the
+ * fixed circumference and gap), and `.ds-progress-ring` transitions only that
+ * number (motion scale `slow` on `standard`). Every dash value of both arcs is
+ * a calc() of it in `.ds-progress-ring-indicator` / `-track`, so every frame —
+ * including frames of a transition interrupted by a new `progress` — is one
+ * self-consistent drawing. Transitioning the dash properties themselves (the
+ * earlier `.ds-progress-arc`) let four independent transitions restart from
+ * their own mid-flight values, and the track slid backwards or vanished.
+ *
+ * Both circles are always mounted: a zero-length round-capped dash still
+ * paints a dot, so each arc's stroke-opacity drops to 0 when its length is
+ * ≤ 0 instead of the element being removed and re-added mid-animation.
  */
 function FlatProgressIndicator({
   geo,
@@ -103,26 +101,6 @@ function FlatProgressIndicator({
   } = geo;
   const { className, style, ...rest } = svgProps;
 
-  const activeLength = circumference * progress;
-  const dashOffset = circumference * (1 - progress);
-
-  // At progress === 0: full-circle track, no indicator, no gaps.
-  // For progress > 0: standard M3 discrete-arc formula with gapLength gaps.
-  let trackLength: number;
-  let trackOffset: number;
-  if (progress === 0) {
-    trackLength = circumference;
-    trackOffset = 0;
-  } else {
-    trackLength = Math.max(0, circumference - activeLength - 2 * gapLength);
-    // Correct dashoffset formula: L + G - D where L=trackLength, G=circumference,
-    // D=activeLength+gapLength (track starts one gap after the indicator arc ends).
-    trackOffset = trackLength + circumference - (activeLength + gapLength);
-  }
-
-  const easing = "cubic-bezier(0.4, 0, 0.2, 1)";
-  const transition = `stroke-dasharray 300ms ${easing}, stroke-dashoffset 300ms ${easing}`;
-
   return (
     <svg
       {...rest}
@@ -133,10 +111,24 @@ function FlatProgressIndicator({
       width={diameter}
       height={diameter}
       viewBox={`0 0 ${diameter} ${diameter}`}
-      className={className}
-      style={{ width: cssSize, height: cssSize, ...style }}
+      className={cn("ds-progress-ring", className)}
+      style={
+        {
+          width: cssSize,
+          height: cssSize,
+          // The one animated value, plus the fixed geometry (user units) the
+          // .ds-progress-ring-* calc()s derive both arcs from.
+          "--ds-pi-progress": progress,
+          "--ds-pi-c": circumference,
+          "--ds-pi-gap": gapLength,
+          // Discrete, from the TARGET progress: never transitions, so the end
+          // gaps appear at once instead of growing in over the first 1 %.
+          "--ds-pi-gap-on": progress > 0 ? 1 : 0,
+          ...style,
+        } as CSSProperties
+      }
     >
-      {/* Track arc — full circle at 0, discrete complement of indicator for progress > 0 */}
+      {/* Track arc — full circle at 0, discrete complement of the indicator above 0, faded once it has no length */}
       <circle
         cx={cx}
         cy={cy}
@@ -145,10 +137,8 @@ function FlatProgressIndicator({
         stroke="var(--ui-color-border-primary)"
         strokeWidth={strokeWidth}
         strokeLinecap="round"
-        strokeDasharray={`${trackLength} ${circumference}`}
-        strokeDashoffset={trackOffset}
         transform={`rotate(-90 ${cx} ${cy})`}
-        style={{ transition }}
+        className="ds-progress-ring-track"
       />
       {/* Indicator arc — rotated to start at 12 o'clock */}
       <circle
@@ -159,10 +149,8 @@ function FlatProgressIndicator({
         stroke={strokeColor}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
-        strokeDasharray={circumference}
-        strokeDashoffset={dashOffset}
         transform={`rotate(-90 ${cx} ${cy})`}
-        style={{ transition: `stroke-dashoffset 300ms ${easing}` }}
+        className="ds-progress-ring-indicator"
       />
     </svg>
   );
@@ -266,11 +254,11 @@ function WavyProgressIndicator({
  * Determinate circular progress indicator. Pass `progress` as a value from
  * 0 (empty) to 1 (complete).
  *
- * Throws if `progress` is outside [0, 1] — invalid values are always a bug.
+ * Throws if `progress` is outside [0, 1] or NaN — invalid values are always a bug.
  *
  * ```tsx
  * <ProgressIndicator progress={0.6} />
- * <ProgressIndicator progress={progress} variant={ProgressIndicatorVariants.wavy} />
+ * <ProgressIndicator progress={progress} variant={ProgressIndicatorVariant.wavy} />
  * <ProgressIndicator progress={1} color={LoadingSpinnerColor.prominent} size={LoadingSpinnerSize.md} />
  * ```
  */
@@ -281,7 +269,7 @@ export const ProgressIndicator = forwardRef<
   (
     {
       progress,
-      variant = ProgressIndicatorVariants.flat,
+      variant = ProgressIndicatorVariant.flat,
       color = LoadingSpinnerColor.primary,
       size = LoadingSpinnerSize.rg,
       className,
@@ -289,14 +277,15 @@ export const ProgressIndicator = forwardRef<
     },
     ref,
   ) => {
-    if (progress < 0 || progress > 1) {
+    // Written as a negated range test so NaN (e.g. done / total with total 0) throws too.
+    if (!(progress >= 0 && progress <= 1)) {
       throw new Error(
         `[ProgressIndicator] progress must be a number between 0 and 1, received: ${progress}`,
       );
     }
 
-    const geo = getSpinnerGeometry(size as SpinnerSizeKey);
-    const strokeColor = resolveColor(color);
+    const geo = getSpinnerGeometry(size);
+    const strokeColor = resolveDsColor(color, "var(--ui-color-primary)");
 
     const svgProps: InnerSvgProps = {
       role: "progressbar",
@@ -308,7 +297,7 @@ export const ProgressIndicator = forwardRef<
       ...props,
     };
 
-    if (variant === ProgressIndicatorVariants.wavy) {
+    if (variant === ProgressIndicatorVariant.wavy) {
       return (
         <WavyProgressIndicator
           geo={geo}

@@ -1,0 +1,1 @@
+J=0.60 | src/components/LoadingSpinner/LoadingSpinner.tsx:34 resolveColor (21) ~ src/components/ProgressIndicator/ProgressIndicator.tsx:38 resolveColor (19)

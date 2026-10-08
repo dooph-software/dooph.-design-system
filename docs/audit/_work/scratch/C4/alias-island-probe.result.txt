@@ -1,0 +1,11 @@
+Probe: alias-island-probe.html (shipped :root,.light and .dark blocks from _work/dist-styles.css:2297-2684 inlined;
+<html class="light">, #inner inside <div class="dark">), read in the Browser pane with getComputedStyle(...).getPropertyValue.
+BEFORE: 28/28 alias tokens: island value === light-root value !== html.dark value.
+  e.g. --ui-color-primary-border-hover island #2c2c2c / light #2c2c2c / html.dark #f0f0f0
+       --ui-color-prominent-border-disabled island #e9e9e9 / html.dark #1f1f21
+       --ui-color-danger island #fdfdfd / html.dark #1d1d1f
+       --ui-shadow-focus-primary island 0 0 0 4px rgba(23, 23, 23, 0.25) / html.dark 0 0 0 4px rgba(249, 249, 249, 0.15)
+  controls: --ui-color-primary-disabled (re-declared in .dark) island #222224 = html.dark; --ui-color-secondary island #1d1d1f.
+SIMULATED FIX (inject `.dark { <the 28 alias declarations, :root values> }`):
+  island === html.dark value for 28/28 (3 color-mix rows differ only in serialised whitespace);
+  light root unchanged 28/28; html.dark unchanged 28/28.

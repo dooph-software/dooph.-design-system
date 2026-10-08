@@ -1,12 +1,11 @@
-'use client';
-
 /*
  * LinearProgressIndicator — determinate bar backed by Radix Progress.
  *
  * ## behavior
  * - `value` / `max` clamp into a percentage stored on `--progress-pct`.
- * - Fill width animates when that percentage changes via registered
- *   `@property --progress-pct` (custom properties do not interpolate otherwise).
+ * - When that percentage changes, the fill's `width` and the remainder's
+ *   `left` transition (`ds-progress-fill` / `ds-progress-remainder`; off under
+ *   reduced motion).
  * - `color` accepts a DS token name or any CSS color (same contract as Slider).
  *
  * ## constraints
@@ -25,9 +24,12 @@ import { cn } from '../../utils/cn';
 import { resolveDsColor, type DsColor } from '../../utils/color';
 
 export interface LinearProgressIndicatorProps
-  extends ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
-  /** Filled-bar color. Accepts a DS token name ('primary', 'brand', 'text') or
-   * any CSS color. Defaults to the primary token. */
+  extends Omit<ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>, 'value'> {
+  /** 0…`max`. Determinate only: Radix's `null` (indeterminate) is not supported. */
+  value?: number;
+  /** Filled-bar color. Accepts a `DS_COLOR_TOKENS` name ('primary',
+   * 'prominent', 'text', 'danger-primary', …) or any CSS color. Defaults to
+   * the primary token. */
   color?: DsColor;
 }
 
@@ -52,21 +54,16 @@ const LinearProgressIndicator = forwardRef<
           '--ds-progress-color': resolveDsColor(color, DEFAULT_COLOR),
         } as CSSProperties
       }
-      className={cn('relative h-[4px] w-full', className)}
+      className={cn('relative h-linear-progress w-full', className)}
       {...props}
     >
       <ProgressPrimitive.Indicator
-        className={cn(
-          'absolute inset-y-0 left-0 rounded-full ds-progress-fill',
-          'w-[max(4px,calc(var(--progress-pct)*1%-2px))]',
-          'bg-[var(--ds-progress-color)]',
-        )}
+        className="absolute inset-y-0 left-0 rounded-full ds-progress-fill"
       />
       <div
         aria-hidden
         className={cn(
           'absolute inset-y-0 right-0 rounded-full bg-border-primary ds-progress-remainder',
-          'left-[max(4px,min(100%,calc(var(--progress-pct)*1%+2px)))]',
           'data-[hidden]:hidden',
         )}
         data-hidden={pct >= 100 || undefined}

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "../Button/Button";
 import { ButtonVariant } from "../Button/constants";
 import { BodyText, HeadingText, LabelText } from "../Text";
@@ -28,7 +28,7 @@ export const Filled: Story = {
   args: { defaultValue: "123456" },
 };
 
-export const Error: Story = {
+export const HasError: Story = {
   args: { defaultValue: "123456", hasError: true },
 };
 
@@ -36,12 +36,19 @@ export const Disabled: Story = {
   args: { defaultValue: "123456", disabled: true },
 };
 
+/** Entry is sequential: click any empty cell past the first empty one and focus
+ *  moves back to the first empty cell, so a digit always lands where it shows.
+ *  Backspace on a filled middle cell deletes it and shifts later digits left. */
+export const NonSequentialEntry: Story = {
+  args: { defaultValue: "123" },
+};
+
 export const Controlled: Story = {
   render: () => {
     const [value, setValue] = useState("");
     return (
-      <div className="flex flex-col items-start gap-md p-4">
-        <VerificationCodeInput value={value} onChange={setValue} />
+      <div className="flex flex-col items-start gap-lg p-4">
+        <VerificationCodeInput value={value} onValueChange={setValue} />
         <LabelText className="text-text-secondary">
           Value: {value || "(empty)"}
         </LabelText>
@@ -56,7 +63,7 @@ export const Controlled: Story = {
  * instead. Interactive entry is covered by the group stories above. */
 export const SingleDigitStates: Story = {
   render: () => (
-    <div className="flex items-center gap-md p-4">
+    <div className="flex items-center gap-lg p-4">
       <CodeDigitInput value="" readOnly aria-label="Empty" />
       <CodeDigitInput value="1" readOnly aria-label="Filled" />
       <CodeDigitInput value="1" readOnly hasError aria-label="Error" />
@@ -83,14 +90,14 @@ export const PreRolledSection: Story = {
       return () => window.clearTimeout(id);
     }, []);
     return (
-      <div className="flex w-[360px] flex-col items-start gap-md p-6">
+      <div className="flex w-[360px] flex-col items-start gap-lg p-6">
         <HeadingText>Enter verification code</HeadingText>
         <BodyText className="text-text-secondary">
           We sent a 6-digit code to your email. Enter it below to continue.
         </BodyText>
         <VerificationCodeInput
           value={value}
-          onChange={(next) => {
+          onValueChange={(next) => {
             setHasError(false);
             setValue(next);
           }}

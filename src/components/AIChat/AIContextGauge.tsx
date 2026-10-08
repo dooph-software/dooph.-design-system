@@ -4,9 +4,9 @@
  *
  * ## behavior
  * - Draws `used / budget` on a flat ProgressIndicator. `color` is the open
- *   design value (a LoadingSpinnerColor key or any CSS colour), so warning
- *   tiers are a consumer's call:
- *   `color={ratio > 0.9 ? "var(--ui-color-danger-primary)" : undefined}`.
+ *   design value (a DS colour name — DS_COLOR_TOKENS key — or any CSS
+ *   colour), so warning tiers are a consumer's call:
+ *   `color={ratio > 0.9 ? "danger" : undefined}`.
  *
  * ## constraints
  * - Deliberately NOT clamped. A gauge that quietly pins at full would disagree
@@ -15,15 +15,15 @@
  *   consumer's job; their stream keeps running if this throws inside it.
  * - `budget <= 0` means "no budget known yet" (the state before a first reply)
  *   and draws empty. That is the absence of a ratio, not a clamp: 0/0 is NaN,
- *   which would otherwise slip past the range guard and render garbage.
+ *   which ProgressIndicator's range guard would reject with a throw.
  */
 import { forwardRef } from "react";
 import { LoadingSpinnerSize } from "../LoadingSpinner/constants";
 import {
   ProgressIndicator,
   type ProgressIndicatorProps,
-} from "../ProgressIndicator/ProgressIndicator";
-import { ProgressIndicatorVariants } from "../ProgressIndicator/constants";
+  ProgressIndicatorVariant,
+} from "../ProgressIndicator";
 
 export type AIContextGaugeProps = Omit<
   ProgressIndicatorProps,
@@ -40,7 +40,7 @@ const AIContextGauge = forwardRef<SVGSVGElement, AIContextGaugeProps>(
     <ProgressIndicator
       ref={ref}
       progress={budget > 0 ? used / budget : 0}
-      variant={ProgressIndicatorVariants.flat}
+      variant={ProgressIndicatorVariant.flat}
       size={size}
       {...props}
     />

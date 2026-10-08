@@ -1,0 +1,106 @@
+### U12-F1: Dark-mode `StickerVariant.danger` renders white content on a solid white wash — the label and icon are invisible
+- severity: S1
+- category: inconsistency
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Rendered the Sticker danger class string with the built CSS (docs/audit/_work/dist-styles.css inlined) under `<html class=\"dark\">` in the Browser pane; getComputedStyle → root {color: rgb(255,255,255), backgroundColor: rgb(255,255,255)}, label span color rgb(255,255,255). Prominent control in the same page: color rgb(52,15,217) on color(srgb … / 0.2)."
+- locations:
+  - src/styles/tokens.css:717-718
+  - src/components/Sticker/Sticker.tsx:43
+  - skills/dooph-design-system-theming/references/token-contract.md:109-110
+- evidence: |
+    tokens.css:707  /* Secondary's own opacity variable drops to 60%, but the dark sticker WASH
+    tokens.css:709   * 20% opacity in dark. Danger stops being a composite at all: both the
+    tokens.css:710   * content and the wash are a literal white, not danger-primary/secondary. */
+    tokens.css:717  --ui-color-sticker-danger: #ffffff;
+    tokens.css:718  --ui-color-sticker-bg-danger: #ffffff;
+    Sticker.tsx:43        danger: "bg-sticker-bg-danger text-sticker-danger",
+    token-contract.md:110  … dark danger is a solid `#ffffff`, not a mix
+- impact: Every consumer rendering `<Sticker variant={StickerVariant.danger}>` in dark mode ships an empty white pill: text colour equals background colour (contrast 1:1), and icons inherit `currentColor` (BaseIcon.tsx:60 `stroke: strokeColor ?? color ?? "currentColor"`) so they vanish too. The shipped theming skill documents both values as white, so a consumer agent reading the docs cannot tell it is broken. The Storybook `Danger` story in dark theme would show it immediately, i.e. it was transcribed from Figma without being looked at.
+- recommendation: Decide the intended dark danger pair (e.g. white content on a danger-secondary/danger-primary wash, or keep the light composite) and change one of the two tokens so content ≠ wash; update token-contract.md:109-110 and the tokens.css:707-710 comment to match.
+- breaking: none
+- contract: src/components/Sticker/Sticker.tsx:5-7 "Both are already-resolved tokens (the wash is a color-mix at the sticker opacity)" → consistent (the fix restores the header's claim; see U12-F2)
+- remediation: tbd
+- related: [U12-F2]
+
+
+### U1-F12: In dark mode the danger Sticker paints white content on a solid white wash
+- severity: S2
+- category: inconsistency
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read tokens.css:707-718 and Sticker.tsx:43 (`danger: \"bg-sticker-bg-danger text-sticker-danger\"`); both utilities map to the two tokens below (index.css:198,203). The Figma source the comment cites cannot be checked in-repo — the committed exports predate stickers (U1-F13)."
+- locations:
+  - src/styles/tokens.css:717-718
+  - src/components/Sticker/Sticker.tsx:43
+- evidence: |
+    tokens.css:709-710  Danger stops being a composite at all: both the content and the wash are a literal white, not danger-primary/secondary.
+    tokens.css:717  --ui-color-sticker-danger: #ffffff;
+    tokens.css:718  --ui-color-sticker-bg-danger: #ffffff;
+    Sticker.tsx:43  danger: "bg-sticker-bg-danger text-sticker-danger",
+- impact: A `StickerVariant.danger` rendered under `.dark` has 1:1 contrast — its label and icon are invisible — unless some other paint intervenes (none in the variant string). The same file already documents overriding a Figma export for exactly this reason (tokens.css:45-52, prominent content "black on #340fd9 is 2.2:1 and unreadable"), so "per Figma" is not self-evidently the intent here.
+- recommendation: Verify against the live Figma; if the wash is meant to be white at the shared 20% (like every other variant), express it as a color-mix of `--ui-sticker-bg-opacity`.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U1-F13]
+
+
+### U12-F2: Sticker header and `constants.ts` doc say every wash is a `color-mix` at the sticker opacity; the dark danger wash is an opaque hex and the dark secondary wash ignores its own opacity token
+- severity: S2
+- category: contract-drift
+- rules: [R10.4, R11.2]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Compared the header / JSDoc sentences against tokens.css `.dark` block (lines 707-718) and the rendered values from U12-F1."
+- locations:
+  - src/components/Sticker/Sticker.tsx:5-7
+  - src/components/Sticker/Sticker.tsx:18-20
+  - src/components/Sticker/constants.ts:8-13
+  - src/styles/tokens.css:711-718
+- evidence: |
+    Sticker.tsx:5   * - `variant` maps through `stickerVariants` onto the content colour and the
+    Sticker.tsx:6   *   wash. Both are already-resolved tokens (the wash is a color-mix at the
+    Sticker.tsx:7   *   sticker opacity), so the component does not apply alpha a second time.
+    Sticker.tsx:18  * - Do not bake the wash alpha into a hex. `custom` has to retint an arbitrary
+    Sticker.tsx:19  *   colour, and a consumer overriding the opacity token has to move every
+    Sticker.tsx:20  *   built-in wash that references it.
+    constants.ts:10  * secondary button's active border, and danger washes danger-secondary while
+    constants.ts:11  * its content is danger-primary. The wash alpha is `--ui-sticker-bg-opacity`
+    constants.ts:12  * (20%), except the light secondary wash, which uses
+    tokens.css:718  --ui-color-sticker-bg-danger: #ffffff;
+- impact: The header is the authority an agent reads before editing Sticker; it states an invariant ("the wash is a color-mix at the sticker opacity") that the `.dark` token block breaks, and constants.ts (which ships as JSDoc on `StickerVariant` in dist/index.d.ts) tells consumers danger's wash is danger-secondary at 20% — true only in light mode. A consumer overriding `--ui-sticker-bg-opacity` to soften washes finds dark danger does not move, which is exactly the failure the header's constraint says it prevents.
+- recommendation: Either bring the dark danger tokens back to a `color-mix` at `--ui-sticker-bg-opacity` (fixes U12-F1 and makes the header true), or scope the header/JSDoc sentences to light mode and name the dark exceptions.
+- breaking: none
+- contract: src/components/Sticker/Sticker.tsx:18-20 "Do not bake the wash alpha into a hex … a consumer overriding the opacity token has to move every built-in wash that references it" → consistent (the token file violates the spirit of the constraint; the recommendation honours it)
+- remediation: tbd
+- related: [U12-F1, U12-F3]
+
+
+### U10-F1: `fillColor` does nothing on `PentagonShape` and `PuffShape` — their path hard-codes `fill="currentColor"`
+- severity: S1
+- category: api-design
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "node docs/audit/_work/scratch/U10/ssr-shapes.mjs (run in ../dooph-ds-audit-build against dist/index.cjs): PentagonShape/PuffShape with fillColor='red' emit `<svg style=\"…fill:red…\"><g …><path d=\"…\" fill=\"currentColor\">` while SquircleShape emits a bare `<path>` that inherits red. Browser check (scratch/U10/fill-cascade.html, body color:blue, svg style fill:red): getComputedStyle(path[fill=currentColor]).fill = rgb(0,0,255); bare path = rgb(255,0,0)."
+- locations:
+  - src/components/Shapes/PentagonShape.tsx:19-22
+  - src/components/Shapes/PuffShape.tsx:19-22
+  - src/components/Icons/BaseIcon.tsx:59 (where `fillColor` actually lands)
+- evidence: |
+    PentagonShape.tsx:9   fillColor = "currentColor",
+    PentagonShape.tsx:19-22  <path d={PENTAGON_SHAPE_PATH} fill="currentColor" />
+    PuffShape.tsx:19-22      <path d={PUFF_SHAPE_PATH} fill="currentColor" />
+    BaseIcon.tsx:59          fill: fillColor ?? undefined,   (on the <svg>; a presentation attribute on the child path beats the inherited value)
+    Shapes.stories.tsx:161-168  Colors story passes var(--color-primary)/var(--color-prominent-color-alt) to every shape incl. Pentagon/Puff — those two render text colour instead.
+- impact: A consumer who writes `<PuffShape fillColor={…} />` (the documented prop, codebase skill:140, usage skill) gets the inherited text colour. `PuffShape` is one of the five `ShapeButtons`; any caller relying on `fillColor` there is silently ignored. The other 10 shapes honour the prop, so the defect is invisible until someone picks one of these two.
+- recommendation: Drop the hard-coded `fill` on those two paths (or pass `fill={fillColor}` as Arrow/Clover/Cookie do) so all twelve inherit the same way; see F3 for collapsing the three render bodies.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U10-F3]
+
+

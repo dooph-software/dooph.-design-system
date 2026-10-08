@@ -1,15 +1,17 @@
 "use client";
 
 import {
+  forwardRef,
   useCallback,
   useEffect,
   useRef,
   useState,
+  type HTMLAttributes,
   type KeyboardEvent,
   type ReactNode,
 } from "react";
 import { cn } from "../../utils/cn";
-import { CalendarCaption } from "./CalendarCaption";
+import { CalendarCaption, type CalendarLabels } from "./CalendarCaption";
 import { CalendarGrid, type CalendarDayRenderProps } from "./CalendarGrid";
 import { DatePickerMode, type DateRange } from "./constants";
 import { clampMonthToYearBounds, isYearOutOfBounds } from "./dateFormat";
@@ -17,6 +19,8 @@ import {
   DAYS_IN_WEEK,
   firstEnabledDayOfMonth,
   isDateDisabled,
+  isValidDate,
+  isValidRange,
   startOfDay,
   startOfMonth,
   toDayKey,
@@ -27,7 +31,13 @@ import { previewRange, resolveRangeClick } from "./rangeSelection";
 /** Give up rather than loop forever if every remaining day is disabled. */
 const MAX_NAV_SCAN = 400;
 
-type CalendarSharedProps = {
+// The div's native `onSelect`/`defaultValue` are omitted so they cannot collide
+// with the value props: a pre-v6 `onSelect` stays a type error instead of
+// silently becoming a DOM handler that never receives a date.
+type CalendarSharedProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "onSelect" | "defaultValue" | "children" | "className"
+> & {
   /** Controlled displayed month; omit for uncontrolled navigation. */
   month?: Date;
   onMonthChange?: (month: Date) => void;
@@ -37,6 +47,8 @@ type CalendarSharedProps = {
   /** Slot the day's CONTENT. The button, handlers and ARIA stay with Calendar. */
   renderDay?: (day: CalendarDayRenderProps) => ReactNode;
   locale?: string;
+  /** Accessible names for the month arrows; pair with `locale`. */
+  labels?: CalendarLabels;
   /** Injectable for deterministic stories and tests. */
   today?: Date;
   /** Composed content rendered as a left rail — e.g. CalendarPresetsPanel. */
@@ -46,42 +58,55 @@ type CalendarSharedProps = {
 
 type CalendarSingleProps = CalendarSharedProps & {
   mode: typeof DatePickerMode.singleDay;
-  selected: Date;
-  onSelect: (date: Date) => void;
+  value: Date;
+  onValueChange: (date: Date) => void;
 };
 
 type CalendarRangeProps = CalendarSharedProps & {
   mode: typeof DatePickerMode.dateRange;
-  selected: DateRange;
-  onSelect: (range: DateRange) => void;
+  value: DateRange;
+  onValueChange: (range: DateRange) => void;
 };
 
 export type CalendarProps = CalendarSingleProps | CalendarRangeProps;
 
-function warnOnBadValue(props: CalendarProps): void {
-  if (process.env.NODE_ENV === "production") return;
+/**
+ * A missing or malformed value warns in development and renders NOTHING
+ * (research:576, D-12). It must never reach the date maths in CalendarView,
+ * which would crash with an incidental TypeError instead. An unknown `mode` is
+ * malformed too: it would otherwise run the range branch silently.
+ */
+function hasValidValue(props: CalendarProps): boolean {
+  const value: unknown = props.value;
+  let problem: string | null = null;
 
   if (props.mode === DatePickerMode.singleDay) {
-    if (!(props.selected instanceof Date) || Number.isNaN(props.selected.getTime())) {
-      console.warn(
-        "[dooph] Calendar: `selected` must be a valid Date in single-day mode. " +
-          "A value is required — default to today rather than passing undefined.",
-      );
+    if (!isValidDate(value)) {
+      problem =
+        "`value` must be a valid Date in single-day mode. " +
+        "A value is required — default to today rather than passing undefined.";
     }
-    return;
+  } else if (props.mode === DatePickerMode.dateRange) {
+    if (!isValidRange(value)) {
+      problem =
+        "`value` must be `{ from: Date, to: Date }` in date-range mode. " +
+        "A value is required — there is no empty state.";
+    } else if (startOfDay(value.to).getTime() < startOfDay(value.from).getTime()) {
+      // Reported, not rejected: a reversed range still renders.
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("[dooph] Calendar: `value.to` is before `value.from`.");
+      }
+    }
+  } else {
+    problem =
+      "`mode` must be DatePickerMode.singleDay or DatePickerMode.dateRange, " +
+      `received ${JSON.stringify((props as { mode: unknown }).mode)}.`;
   }
 
-  const range = props.selected;
-  if (!range || !(range.from instanceof Date) || !(range.to instanceof Date)) {
-    console.warn(
-      "[dooph] Calendar: `selected` must be `{ from: Date, to: Date }` in " +
-        "date-range mode. A value is required — there is no empty state.",
-    );
-    return;
+  if (problem !== null && process.env.NODE_ENV !== "production") {
+    console.warn(`[dooph] Calendar: ${problem} Rendering nothing.`);
   }
-  if (startOfDay(range.to).getTime() < startOfDay(range.from).getTime()) {
-    console.warn("[dooph] Calendar: `selected.to` is before `selected.from`.");
-  }
+  return problem === null;
 }
 
 /**
@@ -97,7 +122,7 @@ function warnOnOutOfBoundsValue(
   if (!isYearOutOfBounds(anchorDate, yearBounds)) return;
 
   console.warn(
-    `[dooph] Calendar: \`selected\` is in ${anchorDate.getFullYear()}, outside ` +
+    `[dooph] Calendar: \`value\` is in ${anchorDate.getFullYear()}, outside ` +
       "`yearBounds`. The value is left as-is — bounds constrain the calendar's " +
       "own navigation, not values you supply.",
   );
@@ -121,7 +146,10 @@ function warnOnOutOfBoundsMonth(
   );
 }
 
-function Calendar(props: CalendarProps) {
+const CalendarView = forwardRef<HTMLDivElement, CalendarProps>(function CalendarView(
+  props,
+  ref,
+) {
   const {
     mode,
     month,
@@ -130,23 +158,28 @@ function Calendar(props: CalendarProps) {
     yearBounds,
     renderDay,
     locale,
+    labels,
     today: todayProp,
     children,
     className,
+    onKeyDown,
+    // Read through `props` below so the mode union still narrows them;
+    // named here only to keep them off the root <div>.
+    value: _value,
+    onValueChange: _onValueChange,
+    ...rest
   } = props;
-
-  warnOnBadValue(props);
 
   const today = startOfDay(todayProp ?? new Date());
   const anchorDate =
-    mode === DatePickerMode.singleDay ? props.selected : props.selected.from;
+    mode === DatePickerMode.singleDay ? props.value : props.value.from;
 
   warnOnOutOfBoundsValue(anchorDate, yearBounds);
   warnOnOutOfBoundsMonth(month, yearBounds);
 
   // Explicit yearBounds are hard limits on NAVIGATION. The view month is
   // component-owned state, so clamping it is legitimate — the consumer's
-  // committed value is never rewritten (see warnOnBadValue for that case).
+  // committed value is never rewritten (see warnOnOutOfBoundsValue for that case).
   const [uncontrolledMonth, setUncontrolledMonth] = useState(() =>
     clampMonthToYearBounds(startOfMonth(anchorDate), yearBounds),
   );
@@ -179,8 +212,8 @@ function Calendar(props: CalendarProps) {
   // change is ours — an internal commit must not move the view or the focus.
   const selectionKey =
     mode === DatePickerMode.singleDay
-      ? toDayKey(props.selected)
-      : `${toDayKey(props.selected.from)}|${toDayKey(props.selected.to)}`;
+      ? toDayKey(props.value)
+      : `${toDayKey(props.value.from)}|${toDayKey(props.value.to)}`;
   const committedKey = useRef<string | null>(null);
   const [syncedSelectionKey, setSyncedSelectionKey] = useState(selectionKey);
 
@@ -200,7 +233,7 @@ function Calendar(props: CalendarProps) {
       // preset like "6 Months" ending today, today's month is still on screen
       // and jumping to the start would hide the end the user cares about.
       const rangeEnd =
-        mode === DatePickerMode.singleDay ? props.selected : props.selected.to;
+        mode === DatePickerMode.singleDay ? props.value : props.value.to;
       const showsEndpoint = [anchorDate, rangeEnd].some(
         (endpoint) =>
           endpoint.getFullYear() === viewMonth.getFullYear() &&
@@ -237,8 +270,8 @@ function Calendar(props: CalendarProps) {
 
   const selectedRange: DateRange | null =
     mode === DatePickerMode.singleDay
-      ? { from: props.selected, to: props.selected }
-      : props.selected;
+      ? { from: props.value, to: props.value }
+      : props.value;
 
   const previewedRange =
     pendingAnchor && hoveredDay ? previewRange(pendingAnchor, hoveredDay) : null;
@@ -255,7 +288,7 @@ function Calendar(props: CalendarProps) {
       if (mode === DatePickerMode.singleDay) {
         const committed = startOfDay(date);
         committedKey.current = toDayKey(committed);
-        props.onSelect(committed);
+        props.onValueChange(committed);
         return;
       }
 
@@ -267,7 +300,7 @@ function Calendar(props: CalendarProps) {
       setPendingAnchor(null);
       setHoveredDay(null);
       committedKey.current = `${toDayKey(result.range.from)}|${toDayKey(result.range.to)}`;
-      props.onSelect(result.range);
+      props.onValueChange(result.range);
     },
     [disabled, mode, pendingAnchor, props],
   );
@@ -317,9 +350,14 @@ function Calendar(props: CalendarProps) {
 
   return (
     <div
+      ref={ref}
+      {...rest}
       data-mode={mode}
       className={cn("flex items-stretch", className)}
       onKeyDown={(event) => {
+        // Consumer first; a consumer preventDefault() opts out (Radix's rule).
+        onKeyDown?.(event);
+        if (event.defaultPrevented) return;
         if (event.key === "Escape" && pendingAnchor) {
           // Abandon the pending anchor; the committed value is untouched.
           setPendingAnchor(null);
@@ -328,7 +366,7 @@ function Calendar(props: CalendarProps) {
       }}
     >
       {children}
-      <div className="flex flex-col gap-sm p-rg ds-calendar-panel-w">
+      <div className="flex flex-col gap-rg p-md ds-calendar-panel-w">
         <CalendarCaption
           viewMonth={viewMonth}
           value={anchorDate}
@@ -336,6 +374,7 @@ function Calendar(props: CalendarProps) {
           yearBounds={yearBounds}
           onMonthChange={changeMonth}
           locale={locale}
+          labels={labels}
         />
         <CalendarGrid
           viewMonth={viewMonth}
@@ -357,7 +396,20 @@ function Calendar(props: CalendarProps) {
       </div>
     </div>
   );
-}
+});
+
+/**
+ * Validates before any hook or date maths runs, so the view's hooks are never
+ * skipped conditionally — an invalid value unmounts the view (its month and
+ * focus state reset when a valid value comes back).
+ */
+const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calendar(
+  props,
+  ref,
+) {
+  if (!hasValidValue(props)) return null;
+  return <CalendarView {...props} ref={ref} />;
+});
 
 Calendar.displayName = "Calendar";
 

@@ -17,6 +17,7 @@
 export const TextVariant = {
   button: 'button',
   heroButton: 'heroButton',
+  cta: 'cta',
   heading: 'heading',
   subheading: 'subheading',
   hero: 'hero',
@@ -85,7 +86,7 @@ export type TrackingValue = (typeof Tracking)[keyof typeof Tracking];
  * font-variation-settings OUTRANKS font-weight, so passing wght here silently
  * disables that prop.
  */
-export const FontAxes = {
+export const FontAxis = {
   weight: 'wght',
   width: 'wdth',
   slant: 'slnt',
@@ -96,7 +97,7 @@ export const FontAxes = {
   /** Google Sans Code: 0 = proportional cut, 1 = fixed pitch. */
   mono: 'MONO',
 } as const;
-export type FontAxis = (typeof FontAxes)[keyof typeof FontAxes];
+export type FontAxis = (typeof FontAxis)[keyof typeof FontAxis];
 
 /**
  * Roles that ship a --ui-font-var-* token, mirroring tokens.css.
@@ -111,6 +112,7 @@ export const ROLE_AXIS_TOKEN: Partial<Record<TextVariant, string>> = {
   /* The hero-scale roles share their base role's axes verbatim — that is what
    * makes them the same face at a different size rather than a new voice. */
   heroButton: 'var(--ui-font-var-button)',
+  cta: 'var(--ui-font-var-button)',
   body: 'var(--ui-font-var-body)',
   heroBody: 'var(--ui-font-var-body)',
   heading: 'var(--ui-font-var-heading)',
@@ -122,6 +124,7 @@ export const ROLE_AXIS_TOKEN: Partial<Record<TextVariant, string>> = {
 export const TEXT_VARIANT_CLASS: Record<TextVariant, string> = {
   button: 'text-style-button',
   heroButton: 'text-style-hero-button',
+  cta: 'text-style-cta',
   heading: 'text-style-heading',
   subheading: 'text-style-subheading',
   hero: 'text-style-hero',
@@ -145,7 +148,7 @@ export type FontWeightValue = FontWeight | (string & {}) | number;
 export type LineHeightValue = (string & {}) | number;
 /** `Tracking.*`, any CSS length, or a number (px). */
 export type LetterSpacingValue = TrackingValue | (string & {}) | number;
-/** Axis tag → value, e.g. `{ [FontAxes.grade]: 20, ROND: 100 }`. */
+/** Axis tag → value, e.g. `{ [FontAxis.grade]: 20, ROND: 100 }`. */
 export type FontAxesValue = Partial<
   Record<FontAxis | (string & {}), number | string>
 >;

@@ -1,0 +1,128 @@
+### U8-F2: Toasts closed by Radix (timer, close button, Dismiss, Escape, swipe) unmount instantly so the exit animation never plays; only `dismiss()` animates, via a JS timer that mirrors the CSS exit duration
+- severity: S2
+- category: wrong-layer
+- rules: [R6.6, R6.7]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Traced Radix Toast root (react-toast dist/index.mjs:243-256: controlled `useControllableState({prop: openProp, onChange: onOpenChange})`, `<Presence present={forceMount || open}>`, `onClose: () => setOpen(false)`; :281 swipe end `setOpen(false)`; :532 Close `onClick: … interactiveContext.onClose`). With `open` controlled, setOpen(false) only calls the DS `onOpenChange`, which filters the item out → `ToastRoot` unmounts before Presence sees `present=false`. Exit classes exist in dist-styles.css:1868-1900 (`data-[state=closed]:animate-out`, `slide-out-to-right-2`)."
+- locations:
+  - src/components/Toast/Toast.tsx:225-232
+  - src/components/Toast/Toast.tsx:245-251
+  - src/components/Toast/Toast.tsx:63
+- evidence: |
+    Toast.tsx:63   "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-right-2 data-[state=closed]:duration-150",
+    Toast.tsx:227      prev.map((item) => (item.id === id ? { ...item, open: false } : item)),
+    Toast.tsx:229    setTimeout(() => {
+    Toast.tsx:230      setToasts((prev) => prev.filter((item) => item.id !== id));
+    Toast.tsx:231    }, 200);
+    Toast.tsx:245-248  onOpenChange={(open) => { if (!open) { setToasts((prev) => prev.filter((toastItem) => toastItem.id !== item.id)); } }}
+- impact: Two removal paths behave differently: every user- or timer-driven close (the common case) makes the toast vanish with no fade/slide, while programmatic `dismiss(id)` animates. The 200ms timer is a JS copy of the 150ms CSS exit (`duration-150`); retuning the CSS exit above 200ms (or adding a motion token per R6.1) silently truncates the animation again. The `data-[state=closed]:*` classes are effectively dead for the provider path.
+- recommendation: Use one removal path: have `onOpenChange(false)` set `open: false` exactly like `dismiss`, and drop items only after Radix/Presence has finished (e.g. on the root's `animationend` for the closed state, or by keeping closed items and pruning lazily) — no timer mirroring a CSS duration.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U8-F1, U8-F3]
+
+### U8-F4: `ModalContent` and `SheetContent` always portal with no `portal` / `portalProps` escape hatch, unlike `TooltipContent` / `DropdownMenuContent` / `PopoverContent`; `ToastViewport` is never portalled — three portal behaviours across overlays
+- severity: S2
+- category: inconsistency
+- rules: [R2.9]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg `portal\\b|portalProps|Portal` src/components --glob '*.tsx' → portal/portalProps on DropdownMenu.tsx:103-118,177-184, Popover.tsx:21-36,60-61, Tooltip.tsx:36-37,49-50,79-86; none on Modal/Sheet content; Toast.tsx has no Portal import"
+- locations:
+  - src/components/Modal/Modal.tsx:57-85
+  - src/components/Sheet/Sheet.tsx:120-149
+  - src/components/Toast/Toast.tsx:102-115
+  - src/components/Toast/Toast.tsx:312
+- evidence: |
+    Modal.tsx:59   ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+    Modal.tsx:61     withOverlay?: boolean;
+    Modal.tsx:64   <ModalPortal>
+    Modal.tsx:65     {withOverlay && <ModalOverlay />}
+    Sheet.tsx:138  <SheetPortal>
+    Tooltip.tsx:36   portal?: boolean;  /  Tooltip.tsx:37   portalProps?: ComponentPropsWithoutRef<typeof TooltipPrimitive.Portal>;
+- impact: Arch Rule 2 (SKILL.md:167) says overlay content "defaults to portalled … Always expose an escape hatch". A consumer cannot pass `container` (shadow roots, iframes, a themed `.light`/`.dark` wrapper) or `forceMount` to the Dialog portal without abandoning `ModalContent`/`SheetContent` entirely — and there is no unstyled content part to fall back on. The theming skill's advice to "Decorate the portalled content (or portal container)" (skills/dooph-design-system-theming/SKILL.md:147-149) therefore cannot be followed for Modal/Sheet's container, and the internally rendered overlay accepts no className (the `withOverlay` bool is the only knob). ToastViewport renders `fixed` wherever `ToastProvider` sits, so a transformed/`overflow` ancestor mis-positions it. Next agent copying "the Modal.tsx pattern" (arch SKILL.md:193) copies the non-compliant one.
+- recommendation: Give `ModalContent`/`SheetContent` the same `portal = true` + `portalProps` pair as `TooltipContent` (keep `withOverlay`, and consider an `overlayProps`/`overlayClassName` pass-through); decide explicitly whether `ToastViewport` follows the rule and state it.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+### U8-F7: Modal and Sheet duplicate their Overlay, Title, Description and portal/overlay Content shell by copy-paste, kept in sync only by comments
+- severity: S3
+- category: duplication
+- rules: []
+- scope: internal
+- confidence: plausible
+- verified_by: "side-by-side read: ModalTitle (Modal.tsx:90-100) vs SheetTitle (Sheet.tsx:154-164) and ModalDescription (102-112) vs SheetDescription (166-176) are token-identical apart from quote style; ModalOverlay (20-37) vs SheetOverlay (28-45) differ only in `duration-200/150` vs `duration-300/200`; Content shells (Modal.tsx:63-85 / Sheet.tsx:128-148) share portal + `withOverlay` + `bg-modal-surface border-solid border-border-popovers shadow-menu overflow-hidden focus-visible:outline-none`"
+- locations:
+  - src/components/Modal/Modal.tsx:20-37
+  - src/components/Modal/Modal.tsx:63-112
+  - src/components/Sheet/Sheet.tsx:22-45
+  - src/components/Sheet/Sheet.tsx:60-61
+  - src/components/Sheet/Sheet.tsx:128-176
+- evidence: |
+    Modal.tsx:96   className={cn('text-style-heading text-text', className)}
+    Sheet.tsx:160  className={cn("text-style-heading text-text", className)}
+    Modal.tsx:108  className={cn('text-style-body text-text-secondary', className)}
+    Sheet.tsx:172  className={cn("text-style-body text-text-secondary", className)}
+    Sheet.tsx:23   * Shares the backdrop token + fade behavior with `ModalOverlay`
+    Sheet.tsx:60   * Uses the same surface/border/shadow tokens as `ModalContent`; the border
+- impact: Four parts (~70 lines) exist twice; the "one family" guarantee (Sheet.tsx:23-26, 60-61) is a comment, so a change to the modal surface, title role or backdrop has to be remembered in two files. Any fix to U8-F4 (portal escape hatch) or U8-F3 (motion tokens) must also be applied twice.
+- recommendation: Have Sheet reuse Modal's Title/Description/Overlay implementation (re-export with Sheet display names, or an internal shared module both files import), parameterising only the overlay motion and the panel geometry.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U8-F3, U8-F4]
+
+### U8-F8: Per-variant text colour of Toast title/description is decided by JS ternaries in `ToastProvider`'s render template, not by the exported parts — composing `ToastRoot variant=prominent` + `ToastDescription` renders grey-on-blue; the root's `group` class is unused
+- severity: S3
+- category: wrong-layer
+- rules: [R2.2, R3.1]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg `group-` src/components/Toast/Toast.tsx → no matches (only the bare `group` at :58); ToastDescription base class `text-text-secondary` (Toast.tsx:132) overrides the root's inherited `text-prominent-fg` (Toast.tsx:72)"
+- locations:
+  - src/components/Toast/Toast.tsx:58
+  - src/components/Toast/Toast.tsx:72
+  - src/components/Toast/Toast.tsx:132
+  - src/components/Toast/Toast.tsx:283-304
+- evidence: |
+    Toast.tsx:58   "group pointer-events-auto relative flex w-full overflow-hidden rounded-normal shadow-menu",
+    Toast.tsx:72   "ds-toast-width-simple … bg-prominent py-2 pl-4 pr-2 text-prominent-fg",
+    Toast.tsx:132  className={cn("text-text-secondary", className)}
+    Toast.tsx:286    item.variant === ToastTypes.prominent
+    Toast.tsx:287      ? "text-prominent-fg"
+    Toast.tsx:288      : "text-text",
+- impact: `ToastRoot`, `ToastTitle`, `ToastDescription`, `ToastClose` are exported for custom composition (the `toast()` API only accepts string title/description), but the prominent-variant legibility fix lives only inside the provider's private template, so a consumer composing the parts gets `--ui-color-text-secondary` (#4a4a4a) description text on the #340fd9 prominent surface. Variant styling is split between cva (root) and JS ternaries (children), and the `group` hook that would let CSS do it is vestigial.
+- recommendation: Move the child colour decision into CSS keyed on the root (e.g. a `data-variant` attribute on `ToastRoot` + `group-data-[variant=prominent]:` on Title/Description, or root-level colour inheritance), and delete the ternaries — or drop `group` if not used.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U8-F5]
+
+### U8-F11: The imperative `toast()` API hard-codes the simple toast's close label as English `"Close"` (only the complex toast's label is configurable) and its options type is not exported
+- severity: S3
+- category: api-design
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "tsc --noEmit -p docs/audit/_work/scratch/U8/tsconfig.json (probe.tsx against built dist d.ts) → `error TS2305: Module '\"@dooph-software/design-system\"' has no exported member 'ToastOptions'`; built Toast.d.ts declares `type ToastOptions` without exporting it"
+- locations:
+  - src/components/Toast/Toast.tsx:25-36
+  - src/components/Toast/Toast.tsx:267
+  - src/components/Toast/Toast.tsx:307
+  - src/components/Toast/index.ts:12-17
+- evidence: |
+    Toast.tsx:25   type ToastOptions = {
+    Toast.tsx:35     dismissLabel?: string;
+    Toast.tsx:267                  {item.dismissLabel ?? "Dismiss"}
+    Toast.tsx:307                <ToastClose aria-label="Close" />
+- impact: Non-English apps cannot localise the accessible name of the close button on simple/prominent/danger toasts (screen readers announce "Close"), while the complex toast's visible label is localisable via `dismissLabel` — two labels, one configurable. Consumers wrapping `toast()` (e.g. `notify(opts: ToastOptions)`) must reconstruct the type via `Parameters<ReturnType<typeof useToast>["toast"]>[0]`.
+- recommendation: Add a `closeLabel` (or reuse `dismissLabel` for the icon's `aria-label`) and export the options type from the Toast index.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+

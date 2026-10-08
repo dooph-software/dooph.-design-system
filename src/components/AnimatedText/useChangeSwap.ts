@@ -10,15 +10,15 @@
  *   `changeKey` never animate.
  * - Returns `exiting` (the outgoing node + its key + `onAnimationEnd`, or null)
  *   and `entering` (the incoming node's key, whether it is animating, and its
- *   `onAnimationEnd`). The wrapper renders both in one grid cell and spreads
- *   these onto its two spans.
+ *   `onAnimationEnd`). `ChangeSwapShell` renders both in one grid cell and
+ *   spreads these onto its two spans; the wrappers pass only their class pair.
  *
  * ## constraints
  * - This file holds no duration, no timer, no `requestAnimationFrame` and no
  *   `transitionend`. Each half is retired by its OWN `animationend`; an earlier
  *   RollChangeText ran a `setTimeout(300)` mirroring the CSS, which is the mirror
  *   that desyncs the moment either side is retuned. Timing lives in each
- *   wrapper's `--ui-*-change-*` tokens (architecture Rule 6).
+ *   wrapper's CSS classes, on the motion scale (architecture Rule 6).
  * - The swap is reconciled during RENDER, never in an effect. An effect runs
  *   after paint, so the browser painted one frame of the new content at rest
  *   before the animations yanked it back to their `from` pose — that frame read

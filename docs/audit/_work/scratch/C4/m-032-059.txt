@@ -1,0 +1,190 @@
+### U2-F3: `utils/color.ts` is a name→var lookup table (the design R1.4 rejects), and three components carry private copies of the same lookup
+- severity: S2
+- category: duplication
+- rules: [R1.4, R1.1]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg -n 'COLOR_TOKENS|resolveColor|resolveDsColor' src --glob '!*.stories.tsx'"
+- locations:
+  - src/utils/color.ts:18-58
+  - src/components/LoadingSpinner/LoadingSpinner.tsx:28-36
+  - src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx:33,67
+  - src/components/ProgressIndicator/ProgressIndicator.tsx:32-40
+  - .agents/skills/dooph-ds-architecture/SKILL.md:63-77
+- evidence: |
+    arch:63   Those props take a const of `var(--ui-*)` **strings** instead of keys:
+    arch:72   - The value IS the var reference, so resolution is a no-op and a consumer's token
+    arch:73     override still applies. No lookup table to silently mis-map.
+    arch:77   `DS_COLOR_TOKENS` via the `color` prop (`Slider*`, `LinearProgressIndicator`).
+    color.ts:8    color="text"                 -> a DS token name, resolved to its CSS var
+    color.ts:13   token name ("txt") becomes an invalid CSS color and the declaration is simply
+    color.ts:57   return DS_COLOR_TOKENS[color as DsColorToken] ?? color;
+    LoadingSpinner.tsx:28  const COLOR_TOKENS: Record<LoadingSpinnerColor, string> = {
+    LoadingSpinner.tsx:35    return COLOR_TOKENS[color as LoadingSpinnerColor] ?? color;
+    ShapeMorphSpinner.tsx:67  color: COLOR_TOKENS[color as LoadingSpinnerColor] ?? color,
+    ProgressIndicator.tsx:33-39  const COLOR_TOKENS: Record<string, string> = { primary: "var(--ui-color-primary)", prominent: "var(--ui-color-prominent)", }; … return COLOR_TOKENS[color] ?? color;
+- impact: R1.4 names `DS_COLOR_TOKENS` as its example, yet the `color` API is keyed by token NAME: consumers write `color="text"` (a string literal, which R1.1 bans) and the component maps it. That is the lookup table R1.4 says the pattern avoids, and the file's own header admits the failure: a typo'd name becomes an invalid colour and the declaration is dropped silently. Loading indicators use a second vocabulary (`LoadingSpinnerColor` = `"primary"|"prominent"` keys, not var strings) resolved by three copy-pasted `COLOR_TOKENS` maps whose entries duplicate two of `DS_COLOR_TOKENS`. A token rename (e.g. the unreleased brand→prominent sweep) has to be made in 4 places, and the same prop name `color` accepts different name sets depending on the component.
+- recommendation: Make one decision and record it. Either reshape the colour const to R1.4's form (`X.primary === 'var(--ui-color-primary)'`, resolution a no-op) and use it for every `color` prop, or amend R1.4 to sanction name keys. Either way, delete the three private `COLOR_TOKENS`/`resolveColor` copies in favour of the shared util.
+- breaking: minor
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U9-F7: Two competing colour-prop mechanisms — three private copies of a name-to-var lookup table keyed by `LoadingSpinnerColor` (the "lookup table" form R1.4 rejects) alongside `DS_COLOR_TOKENS`/`resolveDsColor`, which implements R1.4 for LinearProgressIndicator/Slider
+- severity: S2
+- category: duplication
+- rules: [R1.4]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read src/utils/color.ts 1-58; grep COLOR_TOKENS in scope → 3 private definitions."
+- locations:
+  - src/components/LoadingSpinner/LoadingSpinner.tsx:28-36
+  - src/components/ProgressIndicator/ProgressIndicator.tsx:33-40
+  - src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx:33-36
+  - src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx:67
+  - src/components/LoadingSpinner/constants.ts:16-21
+  - src/utils/color.ts:18-58
+- evidence: |
+    constants.ts:17  primary: "primary",        <- key-valued, not a var() string
+    LS.tsx:28   const COLOR_TOKENS: Record<LoadingSpinnerColor, string> = {
+    PI.tsx:33   const COLOR_TOKENS: Record<string, string> = {
+    SMS.tsx:67  color: COLOR_TOKENS[color as LoadingSpinnerColor] ?? color,
+    color.ts:18 export const DS_COLOR_TOKENS = { primary: 'var(--ui-color-primary)', ... (18 keys incl. 'text-secondary')
+    arch:74     ... resolution is a no-op ... No lookup table to silently mis-map.
+- impact: Same prop name, same family, different vocabulary: `<LinearProgressIndicator color="text-secondary">` works, `<ProgressIndicator color="text-secondary">` emits `stroke="text-secondary"` (invalid → no arc, silently). The three copies already differ in typing (one `Record<string,string>`, two keyed). The shipped usage skill (skills/dooph-design-system-usage/SKILL.md:365) calls Slider*/LinearProgressIndicator "the one sanctioned place for a non-token color" while LoadingSpinner, ProgressIndicator and ShapeMorphSpinner also take raw colours.
+- recommendation: One mechanism: make `LoadingSpinnerColor` an R1.4 var-string const (or route the three through `resolveDsColor`) and delete the three private tables.
+- breaking: minor
+- contract: LPI.tsx header "`color` accepts a DS token name or any CSS color (same contract as Slider)" → consistent
+- remediation: tbd
+- related: [U9-F8]
+
+
+### U11-F2: The family has two `color` vocabularies — AIContextGauge accepts only `primary`/`prominent`, while the three AIModelSelect parts accept the 17 `DsColor` names — so `color="danger"` works on a model item but paints an invalid stroke on the gauge
+- severity: S3
+- category: inconsistency
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Traced AIContextGauge → ProgressIndicator's private resolver and AIModelSelect → utils/color resolveDsColor"
+- locations:
+  - src/components/AIChat/AIContextGauge.tsx:28-31
+  - src/components/ProgressIndicator/ProgressIndicator.tsx:33-40
+  - src/components/ProgressIndicator/ProgressIndicator.tsx:252
+  - src/components/AIChat/AIModelSelect.tsx:80,123,193
+  - src/utils/color.ts:18-23
+- evidence: |
+    AIContextGauge.tsx:28  export type AIContextGaugeProps = Omit<
+    AIContextGauge.tsx:29    ProgressIndicatorProps,
+    ProgressIndicator.tsx:33  const COLOR_TOKENS: Record<string, string> = {
+    ProgressIndicator.tsx:34    primary: "var(--ui-color-primary)",
+    ProgressIndicator.tsx:35    prominent: "var(--ui-color-prominent)",
+    ProgressIndicator.tsx:39    return COLOR_TOKENS[color] ?? color;
+    AIModelSelect.tsx:80    color?: DsColor;
+    color.ts:22    danger: 'var(--ui-color-danger-primary)',
+- impact: A consumer building the warning tier the gauge header invites (`AIContextGauge.tsx:7-9`) naturally writes `color="danger"`, since that token name works on `AIModelSelectItem`, `AIThinkingEffortSelector` and `AIModelTooltipContent` in the same family. TypeScript accepts it because the type is `(string & {})`. At runtime the SVG gets `stroke="danger"`, an invalid paint, so the arc renders with no stroke and no error.
+- recommendation: Resolve the gauge's `color` through the same `resolveDsColor` vocabulary as the rest of the family. The root cause is ProgressIndicator's private resolver, which duplicates `utils/color`.
+- breaking: none
+- contract: src/components/AIChat/AIContextGauge.tsx "`color` is the open design value (a LoadingSpinnerColor key or any CSS colour)" → consistent (widening is additive)
+- remediation: tbd
+- related: [ProgressIndicator/LoadingSpinner unit — duplicate colour resolver]
+
+
+### U9-F5: Flat ProgressIndicator paints a stray track-coloured dot in the gap near completion — the track formula is duplicated, and only the wavy copy (`getWavyTrackGeometry`) was fixed for the zero-length round-cap dash
+- severity: S1
+- category: duplication
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Scratch repro docs/audit/_work/scratch/U9/flatdot.html replicates getSpinnerGeometry('md') + PI.tsx:106-121 verbatim; rasterised each SVG in the Browser pane and counted pure track-colour (#e0e0e0) pixels at 200px render: p=0.8 (tl=6.22) 960px; p=0.88 (tl=0) 258px; p=0.9 (tl=0) 250px; p=0.92 (tl=0) 104px; p=1 0px. A zero-length dash with round caps renders a dot (the same fact li:201-202 states)."
+- locations:
+  - src/components/ProgressIndicator/ProgressIndicator.tsx:109-121
+  - src/components/ProgressIndicator/ProgressIndicator.tsx:140-152
+  - src/components/ProgressIndicator/waveGeometry.ts:130-155
+- evidence: |
+    PI.tsx:117  trackLength = Math.max(0, circumference - activeLength - 2 * gapLength);
+    PI.tsx:120  trackOffset = trackLength + circumference - (activeLength + gapLength);
+    PI.tsx:147  strokeLinecap="round"
+    PI.tsx:148  strokeDasharray={`${trackLength} ${circumference}`}   <- "0 C" still paints a round dot
+    WG.ts:131-133  A zero-length round-capped SVG dash still renders a dot, so the complete state must omit the track
+    WG.ts:149  if (length === 0) return null;
+- impact: Every determinate flat ProgressIndicator passes through the band where `trackLength` clamps to 0 but the dash still paints: a track-coloured dot appears in the gap between the arc's head and 12 o'clock (from the geometry: md p≈0.87-0.93, sm ≈0.82-0.91, xl ≈0.90-0.95). At p=1 it hides under an opaque indicator but shows through a translucent custom `color`. The formula exists twice (flat inline, wavy helper) and the fix landed in one copy only.
+- recommendation: Have the flat variant use `getWavyTrackGeometry` (renamed to something variant-neutral) and omit the track `<circle>` when it returns null — removes the duplicate and the bug together.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U10-F6: `HeartFillIcon`'s geometry is drawn on a 16-unit grid inside BaseIcon's 24-unit viewBox, so it renders ~58% size in the top-left of its box
+- severity: S2
+- category: inconsistency
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "node docs/audit/_work/scratch/U10/icons-bbox.mjs (SSR every exported *Icon at size 48 → scratch/U10/icons-bbox.html) then in the browser: union getBBox() per svg. HeartFillIcon = x 1..15, y 2.5..14.5 (centre 8,8.5). Every other icon's geometry is centred on 12,12 (e.g. ChevronDown 6..18 × 9..15, CloseCancel 6..18 × 6..18, ThreeDots 4..20 × 11..13)."
+- locations:
+  - src/components/Icons/HeartFillIcon.tsx:5-6
+  - src/components/Icons/BaseIcon.tsx:50
+- evidence: |
+    BaseIcon.tsx:50       viewBox="0 0 24 24"
+    HeartFillIcon.tsx:6   d="M15 6.375c0 4.375-6.487 7.916-6.763 8.063a.5.5 0 0 1-.474 0C7.487 14.291 1 10.75 1 6.375A3.879 3.879 0 0 1 4.875 2.5c1.291 0 2.42.555 3.125 1.493C8.705 3.055 9.834 2.5 11.125 2.5A3.879 3.879 0 0 1 15 6.375Z"
+    (all coordinates within 1..15 — a 16px-grid glyph)
+- impact: A consumer rendering `<HeartFillIcon size={IconSize.md} />` next to any other icon gets a visibly smaller heart pushed up and left. No story renders it (Icons.stories.tsx imports 16 icons, not this one), so nothing surfaces the defect.
+- recommendation: Re-export the path on the 24-unit grid (or scale it by 1.5 about the centre) like every other leaf.
+- breaking: minor
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U1-F2: `.dark` re-declares six tokens with the identical `:root` value
+- severity: S2
+- category: rule-violation
+- rules: [R5.3]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "node docs/audit/_work/scratch/U1/tokens.mjs → section '.dark value identical to :root value (R5.3)' lists exactly these six (scratch/U1/tokens-summary.txt). No dark-only tokens exist."
+- locations:
+  - src/styles/tokens.css:647-648
+  - src/styles/tokens.css:720-723
+- evidence: |
+    tokens.css:31   --ui-color-primary-disabled: var(--ui-color-secondary-disabled);
+    tokens.css:647  --ui-color-primary-disabled: var(--ui-color-secondary-disabled);
+    tokens.css:648  --ui-color-primary-border-disabled: var(--ui-color-secondary-border-disabled);
+    tokens.css:451  --ui-size-checkbox: 18px;        tokens.css:720  --ui-size-checkbox: 18px;
+    tokens.css:541  --ui-radius-checkbox: 6px;       tokens.css:721  --ui-radius-checkbox: 6px;
+    tokens.css:542-543  --ui-radius-avatar: 8px / --ui-radius-avatar-sm: 6px    tokens.css:722-723  (same values)
+- impact: Beyond the stated rule, the duplicates are a consumer trap: a consumer who overrides `--ui-size-checkbox` or `--ui-radius-avatar` on `:root` only (token-contract.md:5 says define light values on `:root`, dark values in `.dark`) loses the override in dark mode, because the package's `.dark` rule re-pins the default on the same element. Same for `--ui-color-primary-disabled`, whose own comment (tokens.css:29-30) says the name exists "so consumers can still override primary-disabled alone".
+- recommendation: Delete the six `.dark` lines; the two aliases already resolve per mode and the four sizes are mode-invariant.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U12-F8: `.dark` re-declares `--ui-radius-avatar` / `--ui-radius-avatar-sm` with the same values as `:root` (as does the adjacent checkbox pair)
+- severity: S3
+- category: rule-violation
+- rules: [R5.3]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg -n \"ui-radius-avatar|ui-size-checkbox|ui-radius-checkbox\" src/styles/tokens.css → :root 451/541/542/543 and .dark 720-723, identical values."
+- locations:
+  - src/styles/tokens.css:720-723
+  - src/styles/tokens.css:542-543
+- evidence: |
+    tokens.css:542  --ui-radius-avatar: 8px;
+    tokens.css:543  --ui-radius-avatar-sm: 6px;
+    tokens.css:720  --ui-size-checkbox: 18px;
+    tokens.css:721  --ui-radius-checkbox: 6px;
+    tokens.css:722  --ui-radius-avatar: 8px;
+    tokens.css:723  --ui-radius-avatar-sm: 6px;
+- impact: A consumer who overrides `--ui-radius-avatar` on `:root` (the documented override point) sees it ignored in dark mode because `.dark` (equal specificity, later in source) re-pins 8px — mode-invariant overrides silently become light-only. Exactly the case R5.3 exists to prevent.
+- recommendation: Delete the four no-change lines from `.dark` (checkbox pair belongs to the Checkbox unit; listed here because it is the same block).
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+

@@ -7,5 +7,3 @@ export const ExtensionsIcon = (props: IconProps) => {
         </BaseIcon>
     );
 };
-
-export default ExtensionsIcon;

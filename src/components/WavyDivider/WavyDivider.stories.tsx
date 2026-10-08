@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { WavyDivider } from "./WavyDivider";
 import { WavyDividerVariant } from "./constants";
+import { BodyText, LabelText } from "../Text";
 
 const meta = {
   title: "Bits & Pieces/WavyDivider",
@@ -39,22 +40,31 @@ export const Low: Story = {
   },
 };
 
+/** Contradicts strokeWeight (default 2). */
+export const HeavyStroke: Story = {
+  args: {
+    variant: WavyDividerVariant.high,
+    strokeWeight: 4,
+    className: "text-border",
+  },
+};
+
 export const BothVariants: Story = {
   render: () => (
     <div className="flex w-80 flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <span className="text-style-label text-text-secondary">
+        <LabelText className="text-text-secondary">
           High frequency
-        </span>
+        </LabelText>
         <WavyDivider
           variant={WavyDividerVariant.high}
           className="text-border"
         />
       </div>
       <div className="flex flex-col gap-2">
-        <span className="text-style-label text-text-secondary">
+        <LabelText className="text-text-secondary">
           Low frequency
-        </span>
+        </LabelText>
         <WavyDivider variant={WavyDividerVariant.low} className="text-border" />
       </div>
     </div>
@@ -78,13 +88,13 @@ export const Variants: Story = {
 export const InContext: Story = {
   render: () => (
     <div className="flex w-80 flex-col gap-4 rounded-normal border border-border-primary bg-surface-primary p-5">
-      <p className="text-style-body text-text">
+      <BodyText as="p" className="text-text">
         Above the divider — some content goes here.
-      </p>
+      </BodyText>
       <WavyDivider variant={WavyDividerVariant.high} className="text-border" />
-      <p className="text-style-body text-text-secondary">
+      <BodyText as="p" className="text-text-secondary">
         Below the divider — more content follows.
-      </p>
+      </BodyText>
     </div>
   ),
 };

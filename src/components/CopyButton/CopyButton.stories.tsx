@@ -1,7 +1,8 @@
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CopyButton } from "./CopyButton";
 import { CopyButtonVariant } from "./constants";
+import { BodyText, MonoText } from "../Text";
 
 const meta = {
   title: "Buttons/CopyButton",
@@ -15,6 +16,7 @@ const meta = {
     },
     value: { control: "text" },
   },
+  args: { value: "npm install @dooph-software/design-system" },
 } satisfies Meta<typeof CopyButton>;
 
 export default meta;
@@ -27,16 +29,16 @@ type Story = StoryObj<typeof meta>;
  * button is clicked again before the revert fires — the timer resets.
  */
 export const Ghost: Story = {
-  args: { variant: CopyButtonVariant.ghost, value: "npm install @dooph-software/design-system" },
+  args: { variant: CopyButtonVariant.ghost },
 };
 
 export const Secondary: Story = {
-  args: { variant: CopyButtonVariant.secondary, value: "npm install @dooph-software/design-system" },
+  args: { variant: CopyButtonVariant.secondary },
 };
 
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex items-center gap-4 p-4">
+    <div className="flex items-center gap-lg p-lg">
       <CopyButton variant={CopyButtonVariant.ghost} value="ghost-value" />
       <CopyButton variant={CopyButtonVariant.secondary} value="secondary-value" />
     </div>
@@ -58,18 +60,18 @@ export const CopiedValueFeedback: Story = {
       const snippet = "npx create-dooph-app@latest";
 
       return (
-        <div className="flex flex-col items-start gap-3 p-4">
-          <div className="flex items-center gap-2 rounded-tight border border-solid border-secondary-border bg-secondary px-3 py-2">
-            <code className="text-style-body">{snippet}</code>
+        <div className="flex flex-col items-start gap-md p-lg">
+          <div className="flex items-center gap-sm rounded-tight border border-solid border-secondary-border bg-secondary px-md py-sm">
+            <MonoText as="code">{snippet}</MonoText>
             <CopyButton
               variant={CopyButtonVariant.ghost}
               value={snippet}
               onCopied={setLastCopied}
             />
           </div>
-          <p className="text-style-body">
+          <BodyText as="p">
             {lastCopied ? `Copied: "${lastCopied}"` : "Nothing copied yet."}
-          </p>
+          </BodyText>
         </div>
       );
     }

@@ -1,0 +1,1024 @@
+U1	456	src/styles/tokens.css	5-6		TRUE	tokens.css:5-6
+U1	457	src/styles/tokens.css	10-11		TRUE	tokens.css:10-11
+U1	458	src/styles/tokens.css	45-47		TRUE	tokens.css:45-47
+U1	459	src/styles/tokens.css	73-75,105-106		TRUE	tokens.css:73-75 / 105-106
+U1	460	src/styles/tokens.css	150-151		TRUE	tokens.css:150-151
+U1	461	src/styles/tokens.css	205-207		FALSE	tokens.css:205-207
+U1	462	src/styles/tokens.css	403-405		TRUE	tokens.css:403-405
+U1	463	src/styles/tokens.css	531-535		STALE	tokens.css:531-535
+U1	464	src/styles/tokens.css	707-710		TRUE	tokens.css:707-710
+U1	465	src/styles/theme.css	4		TRUE	theme.css:4
+U1	466	src/styles/theme.css	13-17		TRUE	theme.css:13-17
+U1	467	scripts/sync-theme.mjs	5		STALE	sync-theme.mjs:5
+U1	468	scripts/sync-theme.mjs	8		FALSE	sync-theme.mjs:8
+U1	469	scripts/sync-theme.mjs	13		FALSE	sync-theme.mjs:13
+U1	470	scripts/sync-theme.mjs	61,145,157,163		FALSE	sync-theme.mjs:61, :145, :157, :163
+U1	471	scripts/copy-theme.mjs	4-6		TRUE	copy-theme.mjs:4-6
+U1	472	src/styles/index.css	215-221		TRUE	index.css:215-221
+U1	473	src/styles/index.css	935-941		FALSE	index.css:935-941
+U1	474	src/styles/index.css	936-937		TRUE	index.css:936-937
+U1	475	src/styles/index.css	16	src/styles/dooph-component-tokens.css:126-127	FALSE	index.css:16 / dooph-component-tokens.css:126-127
+U1	476	src/styles/dooph-component-tokens.css	115		FALSE	dooph-component-tokens.css:115
+U1	477	src/styles/dooph-component-tokens.css	12		FALSE	dooph-component-tokens.css:12
+U1	478	src/styles/dooph-component-tokens.css	542-549		TRUE	dooph-component-tokens.css:542-549
+U1	479	.agents/skills/dooph-ds-codebase/SKILL.md	9		TRUE	codebase:9
+U1	480	.agents/skills/dooph-ds-codebase/SKILL.md	10		TRUE	codebase:10
+U1	481	.agents/skills/dooph-ds-codebase/SKILL.md	11		TRUE	codebase:11
+U1	482	.agents/skills/dooph-ds-codebase/SKILL.md	12		TRUE	codebase:12
+U1	483	.agents/skills/dooph-ds-codebase/SKILL.md	13		TRUE	codebase:13
+U1	484	.agents/skills/dooph-ds-codebase/SKILL.md	34		STALE	codebase:34
+U1	485	.agents/skills/dooph-ds-codebase/SKILL.md	35		TRUE	codebase:35
+U1	486	.agents/skills/dooph-ds-codebase/SKILL.md	36		TRUE	codebase:36
+U1	487	.agents/skills/dooph-ds-codebase/SKILL.md	37		TRUE	codebase:37
+U1	488	.agents/skills/dooph-ds-codebase/SKILL.md	112		TRUE	codebase:112
+U1	489	.agents/skills/dooph-ds-codebase/SKILL.md	451		TRUE	codebase:451
+U1	490	.agents/skills/dooph-ds-codebase/SKILL.md	451		UNVERIFIABLE	codebase:451
+U1	491	.agents/skills/dooph-ds-codebase/SKILL.md	455		TRUE	codebase:455
+U1	492	.agents/skills/dooph-ds-codebase/SKILL.md	456		TRUE	codebase:456
+U1	493	.agents/skills/dooph-ds-codebase/SKILL.md	457		TRUE	codebase:457
+U1	494	.agents/skills/dooph-ds-codebase/SKILL.md	457		TRUE	codebase:457
+U1	495	.agents/skills/dooph-ds-codebase/SKILL.md	458		TRUE	codebase:458
+U1	496	.agents/skills/dooph-ds-codebase/SKILL.md	459-463		STALE	codebase:459-463
+U1	497	.agents/skills/dooph-ds-codebase/SKILL.md	459-460		FALSE	codebase:459-460
+U1	498	.agents/skills/dooph-ds-codebase/SKILL.md	464-472		TRUE	codebase:464-472
+U1	499	.agents/skills/dooph-ds-codebase/SKILL.md	473-477		TRUE	codebase:473-477
+U1	500	.agents/skills/dooph-ds-codebase/SKILL.md	481-488		TRUE	codebase:481-488
+U1	501	.agents/skills/dooph-ds-codebase/SKILL.md	489-490		TRUE	codebase:489-490
+U1	502	.agents/skills/dooph-ds-codebase/SKILL.md	491-497		TRUE	codebase:491-497
+U1	503	.agents/skills/dooph-ds-codebase/SKILL.md	492	.agents/skills/dooph-ds-architecture/SKILL.md:252	TRUE	codebase:492 vs arch:252
+U1	504	.agents/skills/dooph-ds-codebase/SKILL.md	499		TRUE	codebase:499
+U1	505	.agents/skills/dooph-ds-codebase/SKILL.md	500		TRUE	codebase:500
+U1	506	.agents/skills/dooph-ds-codebase/SKILL.md	500		FALSE	codebase:500
+U1	507	.agents/skills/dooph-ds-codebase/SKILL.md	501-503		TRUE	codebase:501-503
+U1	508	.agents/skills/dooph-ds-codebase/SKILL.md	504		TRUE	codebase:504
+U1	509	.agents/skills/dooph-ds-codebase/SKILL.md	505		TRUE	codebase:505
+U1	510	.agents/skills/dooph-ds-codebase/SKILL.md	498		UNVERIFIABLE	codebase:498
+U1	511	.agents/skills/dooph-ds-codebase/SKILL.md	511-515		TRUE	codebase:511-515
+U1	512	.agents/skills/dooph-ds-codebase/SKILL.md	517		TRUE	codebase:517
+U1	513	.agents/skills/dooph-ds-codebase/SKILL.md	521		TRUE	codebase:521
+U1	514	.agents/skills/dooph-ds-codebase/SKILL.md	525-529		TRUE	codebase:525-529
+U1	515	.agents/skills/dooph-ds-codebase/SKILL.md	530		TRUE	codebase:530
+U1	516	.agents/skills/dooph-ds-codebase/SKILL.md	531		STALE	codebase:531
+U1	517	.agents/skills/dooph-ds-codebase/SKILL.md	532-533		TRUE	codebase:532-533
+U1	518	.agents/skills/dooph-ds-codebase/SKILL.md	534-535		TRUE	codebase:534-535
+U1	519	.agents/skills/dooph-ds-codebase/SKILL.md	536		TRUE	codebase:536
+U1	520	.agents/skills/dooph-ds-codebase/SKILL.md	537		TRUE	codebase:537
+U1	521	.agents/skills/dooph-ds-codebase/SKILL.md	538-539		TRUE	codebase:538-539
+U1	522	.agents/skills/dooph-ds-codebase/SKILL.md	540		TRUE	codebase:540
+U1	523	.agents/skills/dooph-ds-codebase/SKILL.md	541		TRUE	codebase:541
+U1	524	.agents/skills/dooph-ds-codebase/SKILL.md	542		FALSE	codebase:542
+U1	525	.agents/skills/dooph-ds-codebase/SKILL.md	542		FALSE	codebase:542
+U1	526	.agents/skills/dooph-ds-codebase/SKILL.md	542		TRUE	codebase:542
+U1	527	.agents/skills/dooph-ds-codebase/SKILL.md	542		TRUE	codebase:542
+U1	528	.agents/skills/dooph-ds-codebase/SKILL.md	543		TRUE	codebase:543
+U1	529	.agents/skills/dooph-ds-codebase/SKILL.md	547		FALSE	codebase:547
+U1	530	.agents/skills/dooph-ds-codebase/SKILL.md	549		TRUE	codebase:549
+U1	531	.agents/skills/dooph-ds-codebase/SKILL.md	551		TRUE	codebase:551
+U1	532	.agents/skills/dooph-ds-codebase/SKILL.md	553		TRUE	codebase:553
+U1	533	.agents/skills/dooph-ds-codebase/SKILL.md	557		TRUE	codebase:557
+U1	534	.agents/skills/dooph-ds-codebase/SKILL.md	557		TRUE	codebase:557
+U1	535	.agents/skills/dooph-ds-codebase/SKILL.md	559-567		TRUE	codebase:559-567
+U1	536	.agents/skills/dooph-ds-codebase/SKILL.md	569-571		TRUE	codebase:569-571
+U1	537	.agents/skills/dooph-ds-codebase/SKILL.md	573-577		TRUE	codebase:573-577
+U1	538	.agents/skills/dooph-ds-codebase/SKILL.md	581		TRUE	codebase:581
+U1	539	.agents/skills/dooph-ds-loading-indicators/SKILL.md	220		TRUE	li:220
+U1	540	.agents/skills/dooph-ds-loading-indicators/SKILL.md	222-228		TRUE	li:222-228
+U1	541	.agents/skills/dooph-ds-architecture/SKILL.md	247		TRUE	arch:247
+U1	542	.agents/skills/dooph-ds-architecture/SKILL.md	251		TRUE	arch:251
+U1	543	.agents/skills/dooph-ds-architecture/SKILL.md	252		TRUE	arch:252
+U1	544	.agents/skills/dooph-ds-architecture/SKILL.md	253		TRUE	arch:253
+U1	545	.agents/skills/dooph-ds-architecture/SKILL.md	254		TRUE	arch:254
+U1	546	.agents/skills/dooph-ds-architecture/SKILL.md	258		TRUE	arch:258
+U1	547	.agents/skills/dooph-ds-architecture/SKILL.md	317-321		STALE	arch:317-321
+U10	535	src/components/MorphRotationShape/MorphRotationShape.tsx	6-8		TRUE	src/components/MorphRotationShape/MorphRotationShape.tsx:6-8
+U10	536	src/components/MorphRotationShape/MorphRotationShape.tsx	9-12		TRUE	MorphRotationShape.tsx:9-12
+U10	537	src/components/MorphRotationShape/MorphRotationShape.tsx	13-16		TRUE	MorphRotationShape.tsx:13-16
+U10	538	src/components/MorphRotationShape/MorphRotationShape.tsx	17-21		TRUE	MorphRotationShape.tsx:17-21
+U10	539	src/components/MorphRotationShape/MorphRotationShape.tsx	22-26		TRUE	MorphRotationShape.tsx:22-26
+U10	540	src/components/MorphRotationShape/MorphRotationShape.tsx	27-28		TRUE	MorphRotationShape.tsx:27-28
+U10	541	src/components/MorphRotationShape/MorphRotationShape.tsx	29-30		TRUE	MorphRotationShape.tsx:29-30
+U10	542	src/components/MorphRotationShape/MorphRotationShape.tsx	33-37		TRUE	MorphRotationShape.tsx:33-37
+U10	543	src/components/MorphRotationShape/MorphRotationShape.tsx	38-40		TRUE	MorphRotationShape.tsx:38-40
+U10	544	src/components/MorphRotationShape/MorphRotationShape.tsx	41-44		TRUE	MorphRotationShape.tsx:41-44
+U10	545	src/components/MorphRotationShape/MorphRotationShape.tsx	45-48		TRUE	MorphRotationShape.tsx:45-48
+U10	546	src/components/MorphRotationShape/MorphRotationShape.tsx	49		TRUE	MorphRotationShape.tsx:49
+U10	547	src/components/MorphRotationShape/MorphRotationShape.tsx	50-51		TRUE	MorphRotationShape.tsx:50-51
+U10	548	src/components/MorphRotationShape/MorphRotationShape.tsx	52		TRUE	MorphRotationShape.tsx:52
+U10	549	src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx	6-8		TRUE	src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx:6-8
+U10	550	src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx	9-13		TRUE	SidebarWithHoverIcon.tsx:9-13
+U10	551	src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx	14-16		TRUE	SidebarWithHoverIcon.tsx:14-16
+U10	552	src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx	19-23		TRUE	SidebarWithHoverIcon.tsx:19-23
+U10	553	src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx	24-26		TRUE	SidebarWithHoverIcon.tsx:24-26
+U10	554	src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx	27-30		TRUE	SidebarWithHoverIcon.tsx:27-30
+U10	555	src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx	31-32		STALE	SidebarWithHoverIcon.tsx:31-32
+U10	556	src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx	35-38		TRUE	SidebarWithHoverIcon.tsx:35-38
+U10	557	src/components/MorphRotationShape/engine/svgPath.ts	5-7		TRUE	src/components/MorphRotationShape/engine/svgPath.ts:5-7
+U10	558	src/components/MorphRotationShape/engine/svgPath.ts	8-9		TRUE	svgPath.ts:8-9
+U10	559	src/components/MorphRotationShape/engine/svgPath.ts	12-14		TRUE	svgPath.ts:12-14
+U10	560	src/components/MorphRotationShape/engine/svgPath.ts	15-19		TRUE	svgPath.ts:15-19
+U10	561	src/components/MorphRotationShape/engine/svgPath.ts	20		TRUE	svgPath.ts:20
+U10	562	src/components/MorphRotationShape/engine/cubic.ts	2-4		TRUE	engine/cubic.ts:2-4 (same in morph.ts, polygon.ts, utils.ts :2-4)
+U10	563	src/components/MorphRotationShape/engine/cubic.ts	7-9		FALSE	engine/cubic.ts:7-9 (×4 files)
+U10	564	.agents/skills/dooph-ds-codebase/SKILL.md	71		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:71
+U10	565	.agents/skills/dooph-ds-codebase/SKILL.md	73-74		TRUE	codebase SKILL.md:73-74
+U10	566	.agents/skills/dooph-ds-codebase/SKILL.md	140		TRUE	codebase SKILL.md:140
+U10	567	.agents/skills/dooph-ds-codebase/SKILL.md	140		FALSE	codebase SKILL.md:140
+U10	568	.agents/skills/dooph-ds-codebase/SKILL.md	140		TRUE	codebase SKILL.md:140
+U10	569	.agents/skills/dooph-ds-codebase/SKILL.md	140		TRUE	codebase SKILL.md:140
+U10	570	.agents/skills/dooph-ds-codebase/SKILL.md	142		TRUE	codebase SKILL.md:142
+U10	571	.agents/skills/dooph-ds-codebase/SKILL.md	398		TRUE	codebase SKILL.md:398
+U10	572	.agents/skills/dooph-ds-codebase/SKILL.md	398		FALSE	codebase SKILL.md:398
+U10	573	.agents/skills/dooph-ds-codebase/SKILL.md	398		TRUE	codebase SKILL.md:398
+U10	574	.agents/skills/dooph-ds-codebase/SKILL.md	400		TRUE	codebase SKILL.md:400
+U10	575	.agents/skills/dooph-ds-codebase/SKILL.md	400-402		TRUE	codebase SKILL.md:400-402
+U10	576	.agents/skills/dooph-ds-codebase/SKILL.md	403-405		TRUE	codebase SKILL.md:403-405
+U10	577	.agents/skills/dooph-ds-codebase/SKILL.md	409-410		TRUE	codebase SKILL.md:409-410
+U10	578	.agents/skills/dooph-ds-codebase/SKILL.md	417-422		TRUE	codebase SKILL.md:417-422
+U10	579	.agents/skills/dooph-ds-codebase/SKILL.md	423-426		TRUE	codebase SKILL.md:423-426
+U10	580	.agents/skills/dooph-ds-codebase/SKILL.md	427-429		TRUE	codebase SKILL.md:427-429
+U10	581	.agents/skills/dooph-ds-codebase/SKILL.md	430-432		TRUE	codebase SKILL.md:430-432
+U10	582	.agents/skills/dooph-ds-codebase/SKILL.md	433-435		FALSE	codebase SKILL.md:433-435
+U10	583	.agents/skills/dooph-ds-codebase/SKILL.md	573		TRUE	codebase SKILL.md:573
+U10	584	.agents/skills/dooph-ds-codebase/SKILL.md	574-575		TRUE	codebase SKILL.md:574-575
+U10	585	.agents/skills/dooph-ds-codebase/SKILL.md	630-633		TRUE	codebase SKILL.md:630-633
+U10	586	.agents/skills/dooph-ds-codebase/SKILL.md	638-641		FALSE	codebase SKILL.md:638-641
+U10	587	.agents/skills/dooph-ds-loading-indicators/SKILL.md	252-254		TRUE	.agents/skills/dooph-ds-loading-indicators/SKILL.md:252-254
+U10	588	.agents/skills/dooph-ds-loading-indicators/SKILL.md	255-258		TRUE	loading-indicators SKILL.md:255-258
+U10	589	.agents/skills/dooph-ds-loading-indicators/SKILL.md	259-262		TRUE	loading-indicators SKILL.md:259-262
+U10	590	.agents/skills/dooph-ds-loading-indicators/SKILL.md	263-267		TRUE	loading-indicators SKILL.md:263-267
+U10	591	.agents/skills/dooph-ds-loading-indicators/SKILL.md	268-271		TRUE	loading-indicators SKILL.md:268-271
+U10	592	.agents/skills/dooph-ds-loading-indicators/SKILL.md	272-276		TRUE	loading-indicators SKILL.md:272-276
+U10	593	.agents/skills/dooph-ds-architecture/SKILL.md	317-321		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:317-321
+U10	594	.agents/skills/dooph-ds-architecture/SKILL.md	336-347		TRUE	architecture SKILL.md:336-347
+U10	595	CHANGELOG.md	13		TRUE	CHANGELOG.md:13
+U10	596	CHANGELOG.md	15		TRUE	CHANGELOG.md:15
+U10	597	CHANGELOG.md	16		TRUE	CHANGELOG.md:16
+U10	598	CHANGELOG.md	18		TRUE	CHANGELOG.md:18
+U10	599	skills/dooph-design-system-usage/SKILL.md	191		TRUE	skills/dooph-design-system-usage/SKILL.md:191
+U10	600	skills/dooph-design-system-usage/SKILL.md	202-206		TRUE	usage SKILL.md:202-206
+U10	601	skills/dooph-design-system-usage/SKILL.md	210		TRUE	usage SKILL.md:210
+U10	602	skills/dooph-design-system-theming/references/token-contract.md	87		FALSE	skills/dooph-design-system-theming/references/token-contract.md:87
+U10	603	scripts/shapeMorphSpring.mjs	14		UNVERIFIABLE	scripts/shapeMorphSpring.mjs:14
+U10	604	src/styles/index.css	756-764		TRUE	src/styles/index.css:756-764
+U10	605	src/styles/index.css	786-788		TRUE	src/styles/index.css:786-788
+U11	439	src/components/AIChat/AIContextGauge.tsx	6-7		TRUE	AIContextGauge.tsx:6-7
+U11	440	src/components/AIChat/AIContextGauge.tsx	7-8		TRUE	AIContextGauge.tsx:7-8
+U11	441	src/components/AIChat/AIContextGauge.tsx	12-14		TRUE	AIContextGauge.tsx:12-14
+U11	442	src/components/AIChat/AIContextGauge.tsx	15		UNVERIFIABLE	AIContextGauge.tsx:15
+U11	443	src/components/AIChat/AIContextGauge.tsx	16-18		TRUE	AIContextGauge.tsx:16-18
+U11	444	src/components/AIChat/AITextPart.tsx	5-7		TRUE	AITextPart.tsx:5-7
+U11	445	src/components/AIChat/AITextPart.tsx	8-9		TRUE	AITextPart.tsx:8-9
+U11	446	src/components/AIChat/AITextPart.tsx	12-13		TRUE	AITextPart.tsx:12-13
+U11	447	src/components/AIChat/AITextPart.tsx	14-15		TRUE	AITextPart.tsx:14-15
+U11	448	src/components/AIChat/AITextPart.tsx	18-19		TRUE	AITextPart.tsx:18-19
+U11	449	src/components/AIChat/AIThinkingPart.tsx	5-7		TRUE	AIThinkingPart.tsx:5-7
+U11	450	src/components/AIChat/AIThinkingPart.tsx	8-10		TRUE	AIThinkingPart.tsx:8-10
+U11	451	src/components/AIChat/AIThinkingPart.tsx	11		TRUE	AIThinkingPart.tsx:11
+U11	452	src/components/AIChat/AIThinkingPart.tsx	12-13		TRUE	AIThinkingPart.tsx:12-13
+U11	453	src/components/AIChat/AIThinkingPart.tsx	16-17		TRUE	AIThinkingPart.tsx:16-17
+U11	454	src/components/AIChat/AIThinkingPart.tsx	18-20		TRUE	AIThinkingPart.tsx:18-20
+U11	455	src/components/AIChat/AIThinkingPart.tsx	21-22		TRUE	AIThinkingPart.tsx:21-22
+U11	456	src/components/AIChat/AIThinkingPart.tsx	179-180		TRUE	AIThinkingPart.tsx:179-180 (comment)
+U11	457	src/components/AIChat/AIToolPart.tsx	5-7		TRUE	AIToolPart.tsx:5-7
+U11	458	src/components/AIChat/AIToolPart.tsx	8-9		TRUE	AIToolPart.tsx:8-9
+U11	459	src/components/AIChat/AIToolPart.tsx	10-11		TRUE	AIToolPart.tsx:10-11
+U11	460	src/components/AIChat/AIToolPart.tsx	14-17		TRUE	AIToolPart.tsx:14-17
+U11	461	src/components/AIChat/AIToolPart.tsx	18-19		TRUE	AIToolPart.tsx:18-19
+U11	462	src/components/AIChat/AITurnSummary.tsx	5-7		TRUE	AITurnSummary.tsx:5-7
+U11	463	src/components/AIChat/AITurnSummary.tsx	10-11		TRUE	AITurnSummary.tsx:10-11
+U11	464	src/components/AIChat/AITurnSummary.tsx	52-53		TRUE	AITurnSummary.tsx:52-53 (comment)
+U11	465	src/components/AIChat/ChatDivider.tsx	6-7		TRUE	ChatDivider.tsx:6-7
+U11	466	src/components/AIChat/ChatDivider.tsx	8-9		TRUE	ChatDivider.tsx:8-9
+U11	467	src/components/AIChat/ChatDivider.tsx	12-13		TRUE	ChatDivider.tsx:12-13
+U11	468	src/components/AIChat/UserMessageHeader.tsx	5		TRUE	UserMessageHeader.tsx:5
+U11	469	src/components/AIChat/UserMessageHeader.tsx	8		TRUE	UserMessageHeader.tsx:8
+U11	470	src/components/AIChat/AIPromptInput.tsx	5-8		TRUE	AIPromptInput.tsx:5-8
+U11	471	src/components/AIChat/AIPromptInput.tsx	9-10		TRUE	AIPromptInput.tsx:9-10
+U11	472	src/components/AIChat/AIPromptInput.tsx	11-13		TRUE	AIPromptInput.tsx:11-13
+U11	473	src/components/AIChat/AIPromptInput.tsx	14-15		TRUE	AIPromptInput.tsx:14-15
+U11	474	src/components/AIChat/AIPromptInput.tsx	16-19		TRUE	AIPromptInput.tsx:16-19
+U11	475	src/components/AIChat/AIPromptInput.tsx	22-24		TRUE	AIPromptInput.tsx:22-24
+U11	476	src/components/AIChat/AIPromptInput.tsx	25-27		TRUE	AIPromptInput.tsx:25-27
+U11	477	src/components/AIChat/AIModelSelect.tsx	12-13		TRUE	AIModelSelect.tsx:12-13
+U11	478	src/components/AIChat/AIModelSelect.tsx	14-15		FALSE	AIModelSelect.tsx:14-15
+U11	479	src/components/AIChat/AIModelSelect.tsx	16-18		TRUE	AIModelSelect.tsx:16-18
+U11	480	src/components/AIChat/AIModelSelect.tsx	127-131		TRUE	AIModelSelect.tsx:127-131 (JSDoc)
+U11	481	src/components/AIChat/AIModelSelect.tsx	196-199		TRUE	AIModelSelect.tsx:196-199 (JSDoc)
+U11	482	src/components/AIChat/constants.ts	1-2		TRUE	constants.ts:1-2
+U11	483	src/components/AIChat/constants.ts	7-11		TRUE	constants.ts:7-11
+U11	484	src/components/AIChat/constants.ts	22-24		TRUE	constants.ts:22-24
+U11	485	src/components/AIChat/AIChatStreaming.stories.tsx	4		TRUE	AIChatStreaming.stories.tsx:4
+U11	486	src/components/AIChat/AIChatStreaming.stories.tsx	15-16		TRUE	AIChatStreaming.stories.tsx:15-16
+U11	487	src/components/AIChat/AIChatStreaming.stories.tsx	19-20		TRUE	AIChatStreaming.stories.tsx:19-20
+U11	488	src/styles/tokens.css	173-178		FALSE	tokens.css:173-178
+U11	489	src/styles/tokens.css	205-207		FALSE	tokens.css:205-207
+U11	490	src/styles/dooph-component-tokens.css	413-418		TRUE	dooph-component-tokens.css:413-418
+U11	491	src/styles/dooph-component-tokens.css	438-440		TRUE	dooph-component-tokens.css:438-440
+U11	492	src/styles/dooph-component-tokens.css	477-487		TRUE	dooph-component-tokens.css:477-487
+U11	493	src/styles/dooph-component-tokens.css	494-504		TRUE	dooph-component-tokens.css:494-504
+U11	494	src/styles/dooph-component-tokens.css	541-549		TRUE	dooph-component-tokens.css:541-549
+U11	495	.agents/skills/dooph-ds-codebase/SKILL.md			OMISSION	.agents/skills/dooph-ds-codebase/SKILL.md
+U11	496	skills/dooph-design-system-usage/SKILL.md			OMISSION	skills/dooph-design-system-usage/SKILL.md
+U11	497	CHANGELOG.md			OMISSION	CHANGELOG.md
+U12	524	src/components/Sticker/Sticker.tsx	5-6		TRUE	src/components/Sticker/Sticker.tsx:5-6
+U12	525	src/components/Sticker/Sticker.tsx	6-7		FALSE	src/components/Sticker/Sticker.tsx:6-7
+U12	526	src/components/Sticker/Sticker.tsx	7		TRUE	src/components/Sticker/Sticker.tsx:7
+U12	527	src/components/Sticker/Sticker.tsx	8		TRUE	src/components/Sticker/Sticker.tsx:8
+U12	528	src/components/Sticker/Sticker.tsx	8-9		TRUE	src/components/Sticker/Sticker.tsx:8-9
+U12	529	src/components/Sticker/Sticker.tsx	9		TRUE	src/components/Sticker/Sticker.tsx:9
+U12	530	src/components/Sticker/Sticker.tsx	10-12		TRUE	src/components/Sticker/Sticker.tsx:10-12
+U12	531	src/components/Sticker/Sticker.tsx	13-15		TRUE	src/components/Sticker/Sticker.tsx:13-15
+U12	532	src/components/Sticker/Sticker.tsx	18-20		FALSE	src/components/Sticker/Sticker.tsx:18-20
+U12	533	src/components/Sticker/Sticker.tsx	21		TRUE	src/components/Sticker/Sticker.tsx:21
+U12	534	src/components/Sticker/Sticker.tsx	22-23		TRUE	src/components/Sticker/Sticker.tsx:22-23
+U12	535	src/components/Sticker/constants.ts	1-2		TRUE	src/components/Sticker/constants.ts:1-2
+U12	536	src/components/Sticker/constants.ts	9-11		FALSE	src/components/Sticker/constants.ts:9-11
+U12	537	src/components/Sticker/constants.ts	11-13		FALSE	src/components/Sticker/constants.ts:11-13
+U12	538	src/components/Sticker/constants.ts	15-19		TRUE	src/components/Sticker/constants.ts:15-19
+U12	539	src/components/Sticker/constants.ts	35		TRUE	src/components/Sticker/constants.ts:35
+U12	540	src/components/Sticker/constants.ts	36		TRUE	src/components/Sticker/constants.ts:36
+U12	541	src/components/Table/Table.tsx	1-3		TRUE	src/components/Table/Table.tsx:1-3
+U12	542	src/components/Table/constants.ts	1-2		TRUE	src/components/Table/constants.ts:1-2
+U12	543	src/components/OutlineSection/OutlineSection.tsx	7		TRUE	src/components/OutlineSection/OutlineSection.tsx:7
+U12	544	src/components/OutlineSection/OutlineSection.tsx	8		FALSE	src/components/OutlineSection/OutlineSection.tsx:8
+U12	545	src/components/OutlineSection/OutlineSection.tsx	8		TRUE	src/components/OutlineSection/OutlineSection.tsx:8
+U12	546	.agents/skills/dooph-ds-codebase/SKILL.md	442		FALSE	.agents/skills/dooph-ds-codebase/SKILL.md:442
+U12	547	.agents/skills/dooph-ds-codebase/SKILL.md	443		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:443
+U12	548	.agents/skills/dooph-ds-codebase/SKILL.md	458		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:458
+U12	549	.agents/skills/dooph-ds-codebase/SKILL.md	630-631		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:630-631
+U12	550	.agents/skills/dooph-ds-codebase/SKILL.md	637-641		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:637-641
+U12	551	.agents/skills/dooph-ds-architecture/SKILL.md	236		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:236
+U12	552	skills/dooph-design-system-usage/SKILL.md	154		TRUE	skills/dooph-design-system-usage/SKILL.md:154
+U12	553	skills/dooph-design-system-usage/SKILL.md	155-157		TRUE	skills/dooph-design-system-usage/SKILL.md:155-157
+U12	554	skills/dooph-design-system-usage/SKILL.md	157-158		TRUE	skills/dooph-design-system-usage/SKILL.md:157-158
+U12	555	skills/dooph-design-system-usage/SKILL.md	158-159		TRUE	skills/dooph-design-system-usage/SKILL.md:158-159
+U12	556	skills/dooph-design-system-usage/SKILL.md	159-160		TRUE	skills/dooph-design-system-usage/SKILL.md:159-160
+U12	557	skills/dooph-design-system-usage/SKILL.md	161-162		TRUE	skills/dooph-design-system-usage/SKILL.md:161-162
+U12	558	skills/dooph-design-system-usage/SKILL.md	162-163		TRUE	skills/dooph-design-system-usage/SKILL.md:162-163
+U12	559	skills/dooph-design-system-theming/references/token-contract.md	109-110		TRUE	skills/dooph-design-system-theming/references/token-contract.md:109-110
+U12	560	skills/dooph-design-system-theming/references/token-contract.md	112		TRUE	skills/dooph-design-system-theming/references/token-contract.md:112
+U13	394	skills/dooph-design-system-usage/SKILL.md	10		TRUE	usage:10
+U13	395	skills/dooph-design-system-usage/SKILL.md	21		TRUE	usage:21
+U13	396	skills/dooph-design-system-usage/SKILL.md	26-28		TRUE	usage:26-28
+U13	397	skills/dooph-design-system-usage/SKILL.md	110-112		TRUE	usage:110-112
+U13	398	skills/dooph-design-system-usage/SKILL.md	112		TRUE	usage:112
+U13	399	skills/dooph-design-system-usage/SKILL.md	113		TRUE	usage:113
+U13	400	skills/dooph-design-system-usage/SKILL.md	114-115		TRUE	usage:114-115
+U13	401	skills/dooph-design-system-usage/SKILL.md	115-116		TRUE	usage:115-116
+U13	402	skills/dooph-design-system-usage/SKILL.md	117-119		TRUE	usage:117-119
+U13	403	skills/dooph-design-system-usage/SKILL.md	120		TRUE	usage:120
+U13	404	skills/dooph-design-system-usage/SKILL.md	121-126		TRUE	usage:121-126
+U13	405	skills/dooph-design-system-usage/SKILL.md	127		TRUE	usage:127
+U13	406	skills/dooph-design-system-usage/SKILL.md	127-129		TRUE	usage:127-129
+U13	407	skills/dooph-design-system-usage/SKILL.md	130-133		TRUE	usage:130-133
+U13	408	skills/dooph-design-system-usage/SKILL.md	134-135		TRUE	usage:134-135
+U13	409	skills/dooph-design-system-usage/SKILL.md	135-140		TRUE	usage:135-140
+U13	410	skills/dooph-design-system-usage/SKILL.md	141		TRUE	usage:141
+U13	411	skills/dooph-design-system-usage/SKILL.md	142-143		TRUE	usage:142-143
+U13	412	skills/dooph-design-system-usage/SKILL.md	144-150		TRUE	usage:144-150
+U13	413	skills/dooph-design-system-usage/SKILL.md	154-160		TRUE	usage:154-160
+U13	414	skills/dooph-design-system-usage/SKILL.md	161-163		TRUE	usage:161-163
+U13	415	skills/dooph-design-system-usage/SKILL.md	164-173		TRUE	usage:164-173
+U13	416	skills/dooph-design-system-usage/SKILL.md	174-175		TRUE	usage:174-175
+U13	417	skills/dooph-design-system-usage/SKILL.md	176-178		TRUE	usage:176-178
+U13	418	skills/dooph-design-system-usage/SKILL.md	183		TRUE	usage:183
+U13	419	skills/dooph-design-system-usage/SKILL.md	185-187		TRUE	usage:185-187
+U13	420	skills/dooph-design-system-usage/SKILL.md	191		TRUE	usage:191
+U13	421	skills/dooph-design-system-usage/SKILL.md	198-199		TRUE	usage:198-199
+U13	422	skills/dooph-design-system-usage/SKILL.md	202-203		TRUE	usage:202-203
+U13	423	skills/dooph-design-system-usage/SKILL.md	209		TRUE	usage:209
+U13	424	skills/dooph-design-system-usage/SKILL.md	210		TRUE	usage:210
+U13	425	skills/dooph-design-system-usage/SKILL.md	211		TRUE	usage:211
+U13	426	skills/dooph-design-system-usage/SKILL.md	212		TRUE	usage:212
+U13	427	skills/dooph-design-system-usage/SKILL.md	221-227		TRUE	usage:221-227
+U13	428	skills/dooph-design-system-usage/SKILL.md	228-229		TRUE	usage:228-229
+U13	429	skills/dooph-design-system-usage/SKILL.md	230-232		TRUE	usage:230-232
+U13	430	skills/dooph-design-system-usage/SKILL.md	237-240		TRUE	usage:237-240
+U13	431	skills/dooph-design-system-usage/SKILL.md	242-245		TRUE	usage:242-245
+U13	432	skills/dooph-design-system-usage/SKILL.md	247-248		TRUE	usage:247-248
+U13	433	skills/dooph-design-system-usage/SKILL.md	254-260		FALSE	usage:254-260
+U13	434	skills/dooph-design-system-usage/SKILL.md	262-272		TRUE	usage:262-272
+U13	435	skills/dooph-design-system-usage/SKILL.md	287-289		TRUE	usage:287-289
+U13	436	skills/dooph-design-system-usage/SKILL.md	291-294		TRUE	usage:291-294
+U13	437	skills/dooph-design-system-usage/SKILL.md	320-322		FALSE	usage:320-322
+U13	438	skills/dooph-design-system-usage/SKILL.md	325-337		FALSE	usage:325-337
+U13	439	skills/dooph-design-system-usage/SKILL.md	351-361		TRUE	usage:351-361
+U13	440	skills/dooph-design-system-usage/SKILL.md	373-375		TRUE	usage:373-375
+U13	441	skills/dooph-design-system-usage/SKILL.md	380-382		UNVERIFIABLE	usage:380-382
+U13	446	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	14		TRUE	rsm:14
+U13	447	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	15,17		TRUE	rsm:15,17
+U13	448	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	16		TRUE	rsm:16
+U13	449	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	29-103		TRUE	rsm:29-103
+U13	454	skills/dooph-design-system-theming/SKILL.md	16-17		STALE	theming:16-17
+U13	455	skills/dooph-design-system-theming/SKILL.md	25-28		TRUE	theming:25-28
+U13	456	skills/dooph-design-system-theming/SKILL.md	45-46		FALSE	theming:45-46
+U13	457	skills/dooph-design-system-theming/SKILL.md	54-56		TRUE	theming:54-56
+U13	458	skills/dooph-design-system-theming/SKILL.md	83-85		TRUE	theming:83-85
+U13	459	skills/dooph-design-system-theming/SKILL.md	117		TRUE	theming:117
+U13	460	skills/dooph-design-system-theming/SKILL.md	125-129		TRUE	theming:125-129
+U13	461	skills/dooph-design-system-theming/SKILL.md	138-139		TRUE	theming:138-139
+U13	462	skills/dooph-design-system-theming/SKILL.md	140		TRUE	theming:140
+U13	463	skills/dooph-design-system-theming/SKILL.md	160-163		TRUE	theming:160-163
+U13	464	skills/dooph-design-system-theming/SKILL.md	176-177		FALSE	theming:176-177
+U13	465	skills/dooph-design-system-theming/SKILL.md	185-187		TRUE	theming:185-187
+U13	466	skills/dooph-design-system-theming/SKILL.md	188-192		TRUE	theming:188-192
+U13	467	skills/dooph-design-system-theming/SKILL.md	193-197		TRUE	theming:193-197
+U13	468	skills/dooph-design-system-theming/SKILL.md	198-202		TRUE	theming:198-202
+U13	469	skills/dooph-design-system-theming/SKILL.md	203-205		STALE	theming:203-205
+U13	470	skills/dooph-design-system-theming/SKILL.md	206-209		TRUE	theming:206-209
+U13	471	skills/dooph-design-system-theming/SKILL.md	210-212		TRUE	theming:210-212
+U13	472	skills/dooph-design-system-theming/SKILL.md	221-222		FALSE	theming:221-222
+U13	477	skills/dooph-design-system-theming/references/token-contract.md	5		TRUE	tc:5
+U13	478	skills/dooph-design-system-theming/references/token-contract.md	15-23		TRUE	tc:15-23
+U13	479	skills/dooph-design-system-theming/references/token-contract.md	17,19,21,23,41-43,56,59-60,88		FALSE	tc:17,19,21,23,41-43,56,59-60,88
+U13	480	skills/dooph-design-system-theming/references/token-contract.md	18		TRUE	tc:18
+U13	481	skills/dooph-design-system-theming/references/token-contract.md	19		TRUE	tc:19
+U13	482	skills/dooph-design-system-theming/references/token-contract.md	29-32		TRUE	tc:29-32
+U13	483	skills/dooph-design-system-theming/references/token-contract.md	41		TRUE	tc:41
+U13	484	skills/dooph-design-system-theming/references/token-contract.md	43		TRUE	tc:43
+U13	485	skills/dooph-design-system-theming/references/token-contract.md	56		FALSE	tc:56
+U13	486	skills/dooph-design-system-theming/references/token-contract.md	59-60		TRUE	tc:59-60
+U13	487	skills/dooph-design-system-theming/references/token-contract.md	66		STALE	tc:66
+U13	488	skills/dooph-design-system-theming/references/token-contract.md	68		TRUE	tc:68
+U13	489	skills/dooph-design-system-theming/references/token-contract.md	73		TRUE	tc:73
+U13	490	skills/dooph-design-system-theming/references/token-contract.md	75		TRUE	tc:75
+U13	491	skills/dooph-design-system-theming/references/token-contract.md	77		TRUE	tc:77
+U13	492	skills/dooph-design-system-theming/references/token-contract.md	85		TRUE	tc:85
+U13	493	skills/dooph-design-system-theming/references/token-contract.md	87		FALSE	tc:87
+U13	494	skills/dooph-design-system-theming/references/token-contract.md	88		TRUE	tc:88
+U13	495	skills/dooph-design-system-theming/references/token-contract.md	96-98		FALSE	tc:96-98
+U13	496	skills/dooph-design-system-theming/references/token-contract.md	109-113		TRUE	tc:109-113
+U13	497	skills/dooph-design-system-theming/references/token-contract.md	117-128		TRUE	tc:117-128
+U13	498	skills/dooph-design-system-theming/references/token-contract.md	137-138		TRUE	tc:137-138
+U13	499	skills/dooph-design-system-theming/references/token-contract.md	146-148		TRUE	tc:146-148
+U13	500	skills/dooph-design-system-theming/references/token-contract.md	152-157		TRUE	tc:152-157
+U13	501	skills/dooph-design-system-theming/references/token-contract.md	160-166		TRUE	tc:160-166
+U13	502	skills/dooph-design-system-theming/references/token-contract.md	192		TRUE	tc:192
+U13	503	skills/dooph-design-system-theming/references/token-contract.md	194-195		UNVERIFIABLE	tc:194-195
+U13	504	skills/dooph-design-system-theming/references/token-contract.md	207-209		TRUE	tc:207-209
+U13	505	skills/dooph-design-system-theming/references/token-contract.md	210		FALSE	tc:210
+U13	506	skills/dooph-design-system-theming/references/token-contract.md	212		TRUE	tc:212
+U13	507	skills/dooph-design-system-theming/references/token-contract.md	228		TRUE	tc:228
+U13	512	skills/dooph-design-system-v3-migration/SKILL.md	84-100		TRUE	v3:84-100
+U13	513	skills/dooph-design-system-v3-migration/SKILL.md	113-118		TRUE	v3:113-118
+U13	514	skills/dooph-design-system-v3-migration/SKILL.md	121-123		TRUE	v3:121-123
+U13	515	skills/dooph-design-system-v3-migration/SKILL.md	125-132		FALSE	v3:125-132
+U13	516	skills/dooph-design-system-v3-migration/SKILL.md	138-147		TRUE	v3:138-147
+U13	517	skills/dooph-design-system-v3-migration/SKILL.md	153-154		FALSE	v3:153-154
+U13	518	skills/dooph-design-system-v3-migration/SKILL.md	163-172		TRUE	v3:163-172
+U13	519	skills/dooph-design-system-v3-migration/SKILL.md	186-187		TRUE	v3:186-187
+U13	520	skills/dooph-design-system-v3-migration/SKILL.md	197-198		STALE	v3:197-198
+U13	521	skills/dooph-design-system-v3-migration/SKILL.md	220-224		TRUE	v3:220-224
+U13	522	skills/dooph-design-system-v3-migration/SKILL.md	223		FALSE	v3:223
+U13	523	skills/dooph-design-system-v3-migration/SKILL.md	225-226		TRUE	v3:225-226
+U13	524	skills/dooph-design-system-v3-migration/SKILL.md	237,254		FALSE	v3:237,254
+U13	529	skills/dooph-design-system-v5-migration/SKILL.md	10-15		UNVERIFIABLE	v5:10-15
+U13	530	skills/dooph-design-system-v5-migration/SKILL.md	17-22		FALSE	v5:17-22
+U13	531	skills/dooph-design-system-v5-migration/SKILL.md	30-31		TRUE	v5:30-31
+U13	532	skills/dooph-design-system-v5-migration/SKILL.md	30		FALSE	v5:30
+U13	533	skills/dooph-design-system-v5-migration/SKILL.md	37-38		TRUE	v5:37-38
+U13	534	skills/dooph-design-system-v5-migration/SKILL.md	50-53		FALSE	v5:50-53
+U13	535	skills/dooph-design-system-v5-migration/SKILL.md	62-67		TRUE	v5:62-67
+U13	536	skills/dooph-design-system-v5-migration/SKILL.md	75-77		TRUE	v5:75-77
+U13	537	skills/dooph-design-system-v5-migration/SKILL.md	86-87		TRUE	v5:86-87
+U13	538	skills/dooph-design-system-v5-migration/SKILL.md	95-97		TRUE	v5:95-97
+U13	539	skills/dooph-design-system-v5-migration/SKILL.md	100-101		TRUE	v5:100-101
+U13	540	skills/dooph-design-system-v5-migration/codemod.mjs	15-19,44,124-126		FALSE	codemod:15-19,44,124-126
+U13	545	README.md	7		TRUE	README:7
+U13	546	README.md	14		TRUE	README:14
+U13	547	README.md	20,55		TRUE	README:20,55
+U13	548	README.md	24-25		TRUE	README:24-25
+U13	549	README.md	30-48		TRUE	README:30-48
+U13	550	README.md	58		TRUE	README:58
+U13	551	README.md	62-71		TRUE	README:62-71
+U13	552	README.md	95		STALE	README:95
+U13	553	README.md	180		FALSE	README:180
+U13	554	README.md	185		FALSE	README:185
+U13	555	README.md	189-191		TRUE	README:189-191
+U13	556	README.md	208		FALSE	README:208
+U13	557	README.md			OTHER	README (item 7)
+U13	558	README.md			OTHER	README (item 7)
+U13	563	CHANGELOG.md	3-6		FALSE	CHANGELOG:3-6
+U13	564	CHANGELOG.md	13-18		TRUE	CHANGELOG:13-18
+U13	565	CHANGELOG.md	21		TRUE	CHANGELOG:21
+U13	566	CONTRIBUTING.md	4		UNVERIFIABLE	CONTRIBUTING:4
+U13	567	CONTRIBUTING.md	7		FALSE	CONTRIBUTING:7
+U13	568	SECURITY.md	5		UNVERIFIABLE	SECURITY:5
+U13	569	SECURITY.md	12		FALSE	SECURITY:12
+U13	570	THIRD_PARTY_NOTICES.md	10-42		UNVERIFIABLE	NOTICES:10-42
+U13	571	THIRD_PARTY_NOTICES.md	48-63		FALSE	NOTICES:48-63
+U13	572	THIRD_PARTY_NOTICES.md	67-85		TRUE	NOTICES:67-85
+U13	573	LICENSE.txt	1-3		TRUE	LICENSE.txt:1-3
+U14	593	.agents/skills/dooph-ds-codebase/SKILL.md	8		TRUE	:8
+U14	594	.agents/skills/dooph-ds-codebase/SKILL.md	9		TRUE	:9
+U14	595	.agents/skills/dooph-ds-codebase/SKILL.md	10		TRUE	:10
+U14	596	.agents/skills/dooph-ds-codebase/SKILL.md	11		TRUE	:11
+U14	597	.agents/skills/dooph-ds-codebase/SKILL.md	12		TRUE	:12
+U14	598	.agents/skills/dooph-ds-codebase/SKILL.md	13		TRUE	:13
+U14	599	.agents/skills/dooph-ds-codebase/SKILL.md	15-17		TRUE	:15-17
+U14	600	.agents/skills/dooph-ds-codebase/SKILL.md	27		TRUE	:27
+U14	601	.agents/skills/dooph-ds-codebase/SKILL.md	28		TRUE	:28
+U14	602	.agents/skills/dooph-ds-codebase/SKILL.md	29-32		STALE	:29-32
+U14	603	.agents/skills/dooph-ds-codebase/SKILL.md	34		TRUE	:34
+U14	604	.agents/skills/dooph-ds-codebase/SKILL.md	35		TRUE	:35
+U14	605	.agents/skills/dooph-ds-codebase/SKILL.md	36		TRUE	:36
+U14	606	.agents/skills/dooph-ds-codebase/SKILL.md	37		TRUE	:37
+U14	607	.agents/skills/dooph-ds-codebase/SKILL.md	38-86		FALSE	:38-86
+U14	608	.agents/skills/dooph-ds-codebase/SKILL.md	88		TRUE	:88
+U14	609	.agents/skills/dooph-ds-codebase/SKILL.md	89		TRUE	:89
+U14	610	.agents/skills/dooph-ds-codebase/SKILL.md	90		TRUE	:90
+U14	611	.agents/skills/dooph-ds-codebase/SKILL.md	91		TRUE	:91
+U14	612	.agents/skills/dooph-ds-codebase/SKILL.md	92-95		TRUE	:92-95
+U14	613	.agents/skills/dooph-ds-codebase/SKILL.md	96-102		STALE	:96-102
+U14	614	.agents/skills/dooph-ds-codebase/SKILL.md	103-107		STALE	:103-107
+U14	615	.agents/skills/dooph-ds-codebase/SKILL.md	108		TRUE	:108
+U14	616	.agents/skills/dooph-ds-codebase/SKILL.md	109-112		STALE	:109-112
+U14	617	.agents/skills/dooph-ds-codebase/SKILL.md	110-112		TRUE	:110-112
+U14	618	.agents/skills/dooph-ds-codebase/SKILL.md	435		FALSE	:435
+U14	619	.agents/skills/dooph-ds-codebase/SKILL.md	588-592		STALE	:588-592 (adjacent, not owned)
+U14	620	.agents/skills/dooph-ds-codebase/SKILL.md	596		TRUE	:596
+U14	621	.agents/skills/dooph-ds-codebase/SKILL.md	599		TRUE	:599
+U14	622	.agents/skills/dooph-ds-codebase/SKILL.md	605-606		TRUE	:605-606
+U14	623	.agents/skills/dooph-ds-codebase/SKILL.md	612-613		TRUE	:612-613
+U14	624	.agents/skills/dooph-ds-codebase/SKILL.md	618		FALSE	:618
+U14	625	.agents/skills/dooph-ds-codebase/SKILL.md	653-656		STALE	:653-656
+U14	626	.agents/skills/dooph-ds-codebase/SKILL.md	656-658		OTHER	:656-658
+U14	627	.agents/skills/dooph-ds-codebase/SKILL.md	660		TRUE	:660
+U14	628	.agents/skills/dooph-ds-codebase/SKILL.md	661		FALSE	:661
+U14	629	.agents/skills/dooph-ds-codebase/SKILL.md	665		TRUE	:665
+U14	630	.agents/skills/dooph-ds-codebase/SKILL.md	676-677		TRUE	:676-677
+U14	635	.agents/skills/dooph-ds-architecture/SKILL.md	18-27		TRUE	:18-27
+U14	636	.agents/skills/dooph-ds-architecture/SKILL.md	32		FALSE	:32
+U14	637	.agents/skills/dooph-ds-architecture/SKILL.md	32,84		FALSE	:32, :84
+U14	638	.agents/skills/dooph-ds-architecture/SKILL.md	36-55		TRUE	:36-55
+U14	639	.agents/skills/dooph-ds-architecture/SKILL.md	77-78		STALE	:77-78
+U14	640	.agents/skills/dooph-ds-architecture/SKILL.md	101-104		TRUE	:101-104
+U14	641	.agents/skills/dooph-ds-architecture/SKILL.md	122		FALSE	:122
+U14	642	.agents/skills/dooph-ds-architecture/SKILL.md	193		TRUE	:193
+U14	643	.agents/skills/dooph-ds-architecture/SKILL.md	234-235		TRUE	:234-235
+U14	644	.agents/skills/dooph-ds-architecture/SKILL.md	251		TRUE	:251
+U14	645	.agents/skills/dooph-ds-architecture/SKILL.md	252		TRUE	:252
+U14	646	.agents/skills/dooph-ds-architecture/SKILL.md	253		TRUE	:253
+U14	647	.agents/skills/dooph-ds-architecture/SKILL.md	275-276		TRUE	:275-276
+U14	648	.agents/skills/dooph-ds-architecture/SKILL.md	318-321		STALE	:318-321
+U14	653	.agents/skills/dooph-ds-contribution/SKILL.md	16		UNVERIFIABLE	:16
+U14	654	.agents/skills/dooph-ds-contribution/SKILL.md	17		STALE	:17
+U14	655	.agents/skills/dooph-ds-contribution/SKILL.md	29-34,70		OTHER	:29-34 vs :70
+U14	656	.agents/skills/dooph-ds-contribution/SKILL.md	56		OTHER	:56
+U14	657	.agents/skills/dooph-ds-contribution/SKILL.md	65		FALSE	:65
+U14	658	.agents/skills/dooph-ds-contribution/SKILL.md	78		OTHER	:78
+U14	659	.agents/skills/dooph-ds-contribution/SKILL.md	85		TRUE	:85
+U14	660	.agents/skills/dooph-ds-contribution/SKILL.md	96,108		TRUE	:96, :108
+U14	661	.agents/skills/dooph-ds-contribution/SKILL.md	100		OTHER	:100
+U14	662	.agents/skills/dooph-ds-contribution/SKILL.md	110		FALSE	:110
+U14	663	.agents/skills/dooph-ds-contribution/SKILL.md	148-150		TRUE	:148-150
+U14	664	.agents/skills/dooph-ds-contribution/SKILL.md	151		FALSE	:151
+U14	665	.agents/skills/dooph-ds-contribution/SKILL.md	152		TRUE	:152
+U14	666	.agents/skills/dooph-ds-contribution/SKILL.md	164-165		TRUE	:164-165
+U14	671	.agents/skills/dooph-ds-loading-indicators/SKILL.md	3		STALE	:3
+U14	672	.agents/skills/dooph-ds-loading-indicators/SKILL.md	25		FALSE	:25
+U14	673	.agents/skills/dooph-ds-loading-indicators/SKILL.md	30-35		TRUE	:30-35
+U14	674	.agents/skills/dooph-ds-loading-indicators/SKILL.md	51-53		FALSE	:51-53
+U14	675	.agents/skills/dooph-ds-loading-indicators/SKILL.md	256-257		TRUE	:256-257
+U14	680	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	8-9		TRUE	:8-9
+U14	681	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	17,311		UNVERIFIABLE	:17, :311
+U14	682	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	44-46		FALSE	:44-46
+U14	683	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	46,289-290		TRUE	:46, :289-290
+U14	684	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	56-61		TRUE	:56-61
+U14	685	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	78-82		TRUE	:78-82
+U14	686	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	126-127,136		TRUE	:126-127, :136
+U14	687	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	242,253-255,259,261-263		TRUE	:242, :253-255, :259, :261-263
+U14	688	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	302		TRUE	:302
+U14	689	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	306-307		TRUE	:306-307
+U14	694	.agents/skills/file-header-contracts/SKILL.md	24		TRUE	fhc :24
+U14	695	.agents/skills/file-header-contracts/SKILL.md	137-154		FALSE	fhc :137-154
+U14	696	.agents/skills/file-header-contracts/references/agents-md-snippet.md	12-27,63-69		TRUE	agents-md-snippet.md:12-27, 63-69
+U14	697	.agents/skills/file-header-contracts/references/evaluation.md			UNVERIFIABLE	evaluation.md (all)
+U14	698	.agents/skills/file-header-contracts/references/human-approval-hook.md			OTHER	human-approval-hook.md
+U14	699	AGENTS.md	3-4		TRUE	AGENTS.md:3-4
+U14	704	skills-lock.json	4-9,22-27		TRUE	:4-9, :22-27
+U14	705	skills-lock.json	10-15		FALSE	:10-15
+U14	706	skills-lock.json	16-21		TRUE	:16-21
+U14	707	skills-lock.json	8,14,20,26		UNVERIFIABLE	:8, :14, :20, :26
+U14	712	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	5		STALE	docs/superpowers/specs/…digits-sidebar-mono-design.md:5
+U14	713	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	179-181		TRUE	same :179-181
+U14	714	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	44		STALE	same :44
+U14	715	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	146		TRUE	same :146
+U14	716	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	139-140		TRUE	same :139-140
+U14	717	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	236-239		TRUE	same :236-239
+U14	718	.claude/research/2026-08-27-date-picker-foundation-research.md	5		STALE	.claude/research/…:5
+U14	719	.claude/research/2026-08-27-date-picker-foundation-research.md	300,310		STALE	same :300, :310
+U14	720	executor-prompt-oss-publication.md	25-30		FALSE	executor-prompt:25-30
+U14	721	executor-prompt-oss-publication.md	56-73		OTHER	executor-prompt:56-73
+U14	722	executor-prompt-oss-publication.md	38		STALE	executor-prompt:38
+U14	723	2026-09-20-visx-charts-design.md	125-127		FALSE	2026-09-20-visx-charts-design.md:125-127
+U14	724	2026-09-20-visx-charts-design.md	659		OTHER	same :659
+U2	498	.agents/skills/dooph-ds-codebase/SKILL.md	9		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:9
+U2	499	.agents/skills/dooph-ds-codebase/SKILL.md	10		TRUE	codebase:10
+U2	500	.agents/skills/dooph-ds-codebase/SKILL.md	11		TRUE	codebase:11
+U2	501	.agents/skills/dooph-ds-codebase/SKILL.md	12		TRUE	codebase:12
+U2	502	.agents/skills/dooph-ds-codebase/SKILL.md	13		TRUE	codebase:13
+U2	503	.agents/skills/dooph-ds-codebase/SKILL.md	24		TRUE	codebase:24
+U2	504	.agents/skills/dooph-ds-codebase/SKILL.md	25		TRUE	codebase:25
+U2	505	.agents/skills/dooph-ds-codebase/SKILL.md	26-29		STALE	codebase:26-29
+U2	506	.agents/skills/dooph-ds-codebase/SKILL.md	88		TRUE	codebase:88
+U2	507	.agents/skills/dooph-ds-codebase/SKILL.md	89		TRUE	codebase:89
+U2	508	.agents/skills/dooph-ds-codebase/SKILL.md	90		TRUE	codebase:90
+U2	509	.agents/skills/dooph-ds-codebase/SKILL.md	91-95		TRUE	codebase:91-95
+U2	510	.agents/skills/dooph-ds-codebase/SKILL.md	96-102		STALE	codebase:96-102
+U2	511	.agents/skills/dooph-ds-codebase/SKILL.md	103-107		UNVERIFIABLE	codebase:103-107
+U2	512	.agents/skills/dooph-ds-codebase/SKILL.md	108		TRUE	codebase:108
+U2	513	.agents/skills/dooph-ds-codebase/SKILL.md	109-113		STALE	codebase:109-113
+U2	514	.agents/skills/dooph-ds-codebase/SKILL.md	110		FALSE	codebase:110
+U2	515	.agents/skills/dooph-ds-codebase/SKILL.md	588-591		FALSE	codebase:588-591
+U2	516	.agents/skills/dooph-ds-codebase/SKILL.md	593		TRUE	codebase:593
+U2	517	.agents/skills/dooph-ds-codebase/SKILL.md	594		TRUE	codebase:594
+U2	518	.agents/skills/dooph-ds-codebase/SKILL.md	595		TRUE	codebase:595
+U2	519	.agents/skills/dooph-ds-codebase/SKILL.md	597-598		TRUE	codebase:597-598
+U2	520	.agents/skills/dooph-ds-codebase/SKILL.md	602-603		TRUE	codebase:602-603
+U2	521	.agents/skills/dooph-ds-codebase/SKILL.md	619		FALSE	codebase:619
+U2	522	.agents/skills/dooph-ds-codebase/SKILL.md	623-626		FALSE	codebase:623-626
+U2	523	.agents/skills/dooph-ds-codebase/SKILL.md	628-631		FALSE	codebase:628-631
+U2	524	.agents/skills/dooph-ds-codebase/SKILL.md	631-634		TRUE	codebase:631-634
+U2	525	.agents/skills/dooph-ds-codebase/SKILL.md	634-636		TRUE	codebase:634-636
+U2	526	.agents/skills/dooph-ds-codebase/SKILL.md	636-637		FALSE	codebase:636-637
+U2	527	.agents/skills/dooph-ds-codebase/SKILL.md	639-641		TRUE	codebase:639-641
+U2	528	.agents/skills/dooph-ds-codebase/SKILL.md	641-642		FALSE	codebase:641-642
+U2	529	.agents/skills/dooph-ds-codebase/SKILL.md	646-647		TRUE	codebase:646-647
+U2	530	.agents/skills/dooph-ds-contribution/SKILL.md	85-87		TRUE	.agents/skills/dooph-ds-contribution/SKILL.md:85-87
+U2	531	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md	301-304		TRUE	.agents/skills/dooph-ds-writing-version-migrations/SKILL.md:301-304
+U2	532	README.md	14		TRUE	README.md:14
+U2	533	README.md	20,55		TRUE	README.md:20,55
+U2	534	README.md	25		TRUE	README.md:25
+U2	535	README.md	30-33		FALSE	README.md:30-33
+U2	536	README.md	44		FALSE	README.md:44
+U2	537	README.md	45-47		TRUE	README.md:45-47
+U2	538	README.md	58		TRUE	README.md:58
+U2	539	README.md	150-151,190-191		TRUE	README.md:150-151,190-191
+U2	540	tsup.config.ts	7-11		TRUE	tsup.config.ts:7-11
+U2	541	tsup.config.ts	26-32		FALSE	tsup.config.ts:26-32
+U2	542	tsup.config.ts	36-38		TRUE	tsup.config.ts:36-38
+U2	543	tsup.config.ts	40-45		TRUE	tsup.config.ts:40-45
+U2	544	tsup.config.ts	49-53		UNVERIFIABLE	tsup.config.ts:49-53
+U2	545	scripts/add-use-client.mjs	11-12		FALSE	scripts/add-use-client.mjs:11-12
+U2	546	scripts/add-use-client.mjs	16-17		TRUE	scripts/add-use-client.mjs:16-17
+U2	547	scripts/generate-shape-morph-ease.mjs	1-4		TRUE	scripts/generate-shape-morph-ease.mjs:1-4
+U2	548	scripts/shapeMorphSpring.mjs	1-5		TRUE	scripts/shapeMorphSpring.mjs:1-5
+U2	549	scripts/generate-icon-exports.mjs	22-36		TRUE	scripts/generate-icon-exports.mjs:22-36 (contrib R9.21, codebase 403-405)
+U2	550	bin/init.mjs	10-18		TRUE	bin/init.mjs:10-18
+U2	551	src/utils/color.ts	1-2		STALE	src/utils/color.ts:1-2
+U2	552	src/utils/color.ts	4-5		TRUE	src/utils/color.ts:4-5
+U2	553	src/utils/cn.ts	4-13		FALSE	src/utils/cn.ts:4-13
+U2	554	.storybook/preview-head.html	2-3		TRUE	.storybook/preview-head.html:2-3
+U2	555	.storybook/preview-head.html	14-15		TRUE	.storybook/preview-head.html:14-15 + R4.7
+U2	556	.storybook/preview.ts	33-38		TRUE	.storybook/preview.ts:33-38
+U2	557	.storybook/main.ts	9-10		TRUE	.storybook/main.ts:9-10
+U2	558	.github/workflows/release-package.yml	45		FALSE	.github/workflows/release-package.yml:45
+U2	559	.github/workflows/release-package.yml	43		FALSE	.github/workflows/release-package.yml:43
+U2	560	package.json	3		TRUE	package.json:3 vs tags
+U3	421	src/components/AnimatedText/FadeChangeText.tsx	6-7		TRUE	FadeChangeText.tsx:6-7
+U3	422	src/components/AnimatedText/FadeChangeText.tsx	8-10		TRUE	FadeChangeText.tsx:8-10
+U3	423	src/components/AnimatedText/FadeChangeText.tsx	13-14		TRUE	FadeChangeText.tsx:13-14
+U3	424	src/components/AnimatedText/FadeChangeText.tsx	15-18		TRUE	FadeChangeText.tsx:15-18
+U3	425	src/components/AnimatedText/FadeChangeText.tsx	19-23		TRUE	FadeChangeText.tsx:19-23
+U3	426	src/components/AnimatedText/FadeChangeText.tsx	24-26		TRUE	FadeChangeText.tsx:24-26
+U3	427	src/components/AnimatedText/FadeChangeText.tsx	24-26		FALSE	FadeChangeText.tsx:24-26
+U3	428	src/components/AnimatedText/RollChangeText.tsx	6-10		TRUE	RollChangeText.tsx:6-10
+U3	429	src/components/AnimatedText/RollChangeText.tsx	13-14		TRUE	RollChangeText.tsx:13-14
+U3	430	src/components/AnimatedText/RollChangeText.tsx	15-18		TRUE	RollChangeText.tsx:15-18
+U3	431	src/components/AnimatedText/RollChangeText.tsx	19-22		TRUE	RollChangeText.tsx:19-22
+U3	432	src/components/AnimatedText/RollChangeText.tsx	19-21		FALSE	RollChangeText.tsx:19-21
+U3	433	src/components/AnimatedText/RevealChangeText.tsx	6-8		TRUE	RevealChangeText.tsx:6-8
+U3	434	src/components/AnimatedText/RevealChangeText.tsx	9-11		TRUE	RevealChangeText.tsx:9-11
+U3	435	src/components/AnimatedText/RevealChangeText.tsx	12		TRUE	RevealChangeText.tsx:12
+U3	436	src/components/AnimatedText/RevealChangeText.tsx	15-18		TRUE	RevealChangeText.tsx:15-18
+U3	437	src/components/AnimatedText/RevealChangeText.tsx	19-22		TRUE	RevealChangeText.tsx:19-22
+U3	438	src/components/AnimatedText/RevealChangeText.tsx	23-28		TRUE	RevealChangeText.tsx:23-28
+U3	439	src/components/AnimatedText/RevealChangeText.tsx	23-25		FALSE	RevealChangeText.tsx:23-25
+U3	440	src/components/AnimatedText/RevealChangeText.tsx	29-31		TRUE	RevealChangeText.tsx:29-31
+U3	441	src/components/AnimatedText/useChangeSwap.ts	8-10		TRUE	useChangeSwap.ts:8-10
+U3	442	src/components/AnimatedText/useChangeSwap.ts	11-14		TRUE	useChangeSwap.ts:11-14
+U3	443	src/components/AnimatedText/useChangeSwap.ts	17-21		TRUE	useChangeSwap.ts:17-21
+U3	444	src/components/AnimatedText/useChangeSwap.ts	22-26		TRUE	useChangeSwap.ts:22-26
+U3	445	src/components/AnimatedText/useChangeSwap.ts	27-30		TRUE	useChangeSwap.ts:27-30
+U3	446	src/components/AnimatedText/useChangeSwap.ts	31-34		TRUE	useChangeSwap.ts:31-34
+U3	447	src/components/AnimatedText/useChangeSwap.ts	35-37		TRUE	useChangeSwap.ts:35-37
+U3	448	src/components/AnimatedText/RollingDigitsText.tsx	5-7		TRUE	RollingDigitsText.tsx:5-7
+U3	449	src/components/AnimatedText/RollingDigitsText.tsx	8-12		TRUE	RollingDigitsText.tsx:8-12
+U3	450	src/components/AnimatedText/RollingDigitsText.tsx	13-14		TRUE	RollingDigitsText.tsx:13-14
+U3	451	src/components/AnimatedText/RollingDigitsText.tsx	15-17		TRUE	RollingDigitsText.tsx:15-17
+U3	452	src/components/AnimatedText/RollingDigitsText.tsx	20		TRUE	RollingDigitsText.tsx:20
+U3	453	src/components/AnimatedText/RollingDigitsText.tsx	21-24		TRUE	RollingDigitsText.tsx:21-24
+U3	454	src/components/AnimatedText/RollingDigitsText.tsx	25-26		TRUE	RollingDigitsText.tsx:25-26
+U3	455	src/components/AnimatedText/RollingDigitsText.tsx	27-28		TRUE	RollingDigitsText.tsx:27-28
+U3	456	src/components/AnimatedText/RollingDigitsText.tsx	31-36		TRUE	RollingDigitsText.tsx:31-36
+U3	457	src/components/AnimatedText/RollingDigitsText.tsx	37-40		TRUE	RollingDigitsText.tsx:37-40
+U3	458	src/components/AnimatedText/rollingDigitsModel.ts	5-8		TRUE	rollingDigitsModel.ts:5-8
+U3	459	src/components/AnimatedText/rollingDigitsModel.ts	9-13		TRUE	rollingDigitsModel.ts:9-13
+U3	460	src/components/AnimatedText/rollingDigitsModel.ts	15-16		TRUE	rollingDigitsModel.ts:15-16
+U3	461	src/components/AnimatedText/rollingDigitsModel.ts	19-21		TRUE	rollingDigitsModel.ts:19-21
+U3	462	src/components/AnimatedText/rollingDigitsModel.ts	24-28		TRUE	rollingDigitsModel.ts:24-28
+U3	463	.agents/skills/dooph-ds-codebase/SKILL.md	39-47		TRUE	codebase SKILL.md:39-47
+U3	464	.agents/skills/dooph-ds-codebase/SKILL.md	79		FALSE	codebase SKILL.md:79
+U3	465	.agents/skills/dooph-ds-codebase/SKILL.md	79-80		TRUE	codebase SKILL.md:79-80
+U3	466	.agents/skills/dooph-ds-codebase/SKILL.md	81,314		TRUE	codebase SKILL.md:81 / :314
+U3	467	.agents/skills/dooph-ds-codebase/SKILL.md	320		TRUE	codebase SKILL.md:320
+U3	468	.agents/skills/dooph-ds-codebase/SKILL.md	321		TRUE	codebase SKILL.md:321
+U3	469	.agents/skills/dooph-ds-codebase/SKILL.md	322		TRUE	codebase SKILL.md:322
+U3	470	.agents/skills/dooph-ds-codebase/SKILL.md	323		TRUE	codebase SKILL.md:323
+U3	471	.agents/skills/dooph-ds-codebase/SKILL.md	326-330		TRUE	codebase SKILL.md:326-330
+U3	472	.agents/skills/dooph-ds-codebase/SKILL.md	332-334		TRUE	codebase SKILL.md:332-334
+U3	473	.agents/skills/dooph-ds-codebase/SKILL.md	336-337		TRUE	codebase SKILL.md:336-337
+U3	474	.agents/skills/dooph-ds-codebase/SKILL.md	341		TRUE	codebase SKILL.md:341
+U3	475	.agents/skills/dooph-ds-codebase/SKILL.md	342		TRUE	codebase SKILL.md:342
+U3	476	.agents/skills/dooph-ds-codebase/SKILL.md	343		TRUE	codebase SKILL.md:343
+U3	477	.agents/skills/dooph-ds-codebase/SKILL.md	344		TRUE	codebase SKILL.md:344
+U3	478	.agents/skills/dooph-ds-codebase/SKILL.md	345		TRUE	codebase SKILL.md:345
+U3	479	.agents/skills/dooph-ds-codebase/SKILL.md	347		TRUE	codebase SKILL.md:347
+U3	480	.agents/skills/dooph-ds-codebase/SKILL.md	350-352		TRUE	codebase SKILL.md:350-352
+U3	481	.agents/skills/dooph-ds-codebase/SKILL.md	356-361		TRUE	codebase SKILL.md:356-361
+U3	482	.agents/skills/dooph-ds-codebase/SKILL.md	367-375		TRUE	codebase SKILL.md:367-375
+U3	483	.agents/skills/dooph-ds-codebase/SKILL.md	376-385		TRUE	codebase SKILL.md:376-385
+U3	484	.agents/skills/dooph-ds-codebase/SKILL.md	387-394		TRUE	codebase SKILL.md:387-394
+U3	485	.agents/skills/dooph-ds-codebase/SKILL.md	547		FALSE	codebase SKILL.md:547
+U3	486	.agents/skills/dooph-ds-codebase/SKILL.md	547		TRUE	codebase SKILL.md:547
+U3	487	.agents/skills/dooph-ds-codebase/SKILL.md	549		STALE	codebase SKILL.md:549
+U3	488	.agents/skills/dooph-ds-codebase/SKILL.md	551		TRUE	codebase SKILL.md:551
+U3	489	.agents/skills/dooph-ds-codebase/SKILL.md	553		TRUE	codebase SKILL.md:553
+U3	490	.agents/skills/dooph-ds-codebase/SKILL.md	555		TRUE	codebase SKILL.md:555
+U3	491	.agents/skills/dooph-ds-codebase/SKILL.md	557		TRUE	codebase SKILL.md:557
+U3	492	.agents/skills/dooph-ds-codebase/SKILL.md	557		TRUE	codebase SKILL.md:557
+U3	493	.agents/skills/dooph-ds-codebase/SKILL.md	559-567		TRUE	codebase SKILL.md:559-567
+U3	494	.agents/skills/dooph-ds-codebase/SKILL.md	569-571		TRUE	codebase SKILL.md:569-571
+U3	495	.agents/skills/dooph-ds-architecture/SKILL.md	65-69		TRUE	arch SKILL.md:65-69
+U3	496	.agents/skills/dooph-ds-architecture/SKILL.md	72-75		TRUE	arch SKILL.md:72-75
+U3	497	.agents/skills/dooph-ds-architecture/SKILL.md	77-78		TRUE	arch SKILL.md:77-78
+U3	498	.agents/skills/dooph-ds-architecture/SKILL.md	111-115		TRUE	arch SKILL.md:111-115
+U3	499	.agents/skills/dooph-ds-architecture/SKILL.md	119		TRUE	arch SKILL.md:119
+U3	500	.agents/skills/dooph-ds-architecture/SKILL.md	120		FALSE	arch SKILL.md:120
+U3	501	.agents/skills/dooph-ds-architecture/SKILL.md	121		TRUE	arch SKILL.md:121
+U3	502	.agents/skills/dooph-ds-architecture/SKILL.md	251		TRUE	arch SKILL.md:251
+U3	503	.agents/skills/dooph-ds-architecture/SKILL.md	252		TRUE	arch SKILL.md:252
+U3	504	.agents/skills/dooph-ds-architecture/SKILL.md	253		TRUE	arch SKILL.md:253
+U3	505	.agents/skills/dooph-ds-architecture/SKILL.md	253		FALSE	arch SKILL.md:253
+U3	506	.agents/skills/dooph-ds-architecture/SKILL.md	254		TRUE	arch SKILL.md:254
+U3	507	.agents/skills/dooph-ds-architecture/SKILL.md	258-262		TRUE	arch SKILL.md:258-262
+U3	508	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	5		STALE	spec 2026-08-31:5
+U3	509	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	196-197		TRUE	spec :196-197
+U3	510	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	202		STALE	spec :202
+U3	511	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	203-205		TRUE	spec :203-205
+U3	512	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	208-212		TRUE	spec :208-212
+U3	513	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	214-215		TRUE	spec :214-215
+U3	514	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	226-230		TRUE	spec :226-230
+U3	515	docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md	44,51-52,82-85		STALE	spec :44, :51-52, :82-85
+U4	580	src/components/Button/Button.tsx	5-6		TRUE	src/components/Button/Button.tsx:5-6
+U4	581	src/components/Button/Button.tsx	6		TRUE	src/components/Button/Button.tsx:6
+U4	582	src/components/Button/Button.tsx	7-9		TRUE	src/components/Button/Button.tsx:7-9
+U4	583	src/components/Button/Button.tsx	12-18		TRUE	src/components/Button/Button.tsx:12-18
+U4	584	src/components/Button/Button.tsx	19-20		TRUE	src/components/Button/Button.tsx:19-20
+U4	585	src/components/Button/Button.tsx	21		TRUE	src/components/Button/Button.tsx:21
+U4	586	src/components/ShapeButton/ShapeButton.tsx	5		TRUE	src/components/ShapeButton/ShapeButton.tsx:5
+U4	587	src/components/ShapeButton/ShapeButton.tsx	6-8		TRUE	src/components/ShapeButton/ShapeButton.tsx:6-8
+U4	588	src/components/ShapeButton/ShapeButton.tsx	9-10		TRUE	src/components/ShapeButton/ShapeButton.tsx:9-10
+U4	589	src/components/ShapeButton/ShapeButton.tsx	13-16		TRUE	src/components/ShapeButton/ShapeButton.tsx:13-16
+U4	590	.agents/skills/dooph-ds-codebase/SKILL.md	123		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:123
+U4	591	.agents/skills/dooph-ds-codebase/SKILL.md	124-126		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:124-126
+U4	592	.agents/skills/dooph-ds-codebase/SKILL.md	127		FALSE	.agents/skills/dooph-ds-codebase/SKILL.md:127
+U4	593	.agents/skills/dooph-ds-codebase/SKILL.md	128		FALSE	.agents/skills/dooph-ds-codebase/SKILL.md:128
+U4	594	.agents/skills/dooph-ds-codebase/SKILL.md	129		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:129
+U4	595	.agents/skills/dooph-ds-codebase/SKILL.md	129		FALSE	.agents/skills/dooph-ds-codebase/SKILL.md:129
+U4	596	.agents/skills/dooph-ds-codebase/SKILL.md	130		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:130
+U4	597	.agents/skills/dooph-ds-codebase/SKILL.md	132-135		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:132-135
+U4	598	.agents/skills/dooph-ds-codebase/SKILL.md	135-136		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:135-136
+U4	599	.agents/skills/dooph-ds-codebase/SKILL.md	138		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:138
+U4	600	.agents/skills/dooph-ds-codebase/SKILL.md	138		UNVERIFIABLE	.agents/skills/dooph-ds-codebase/SKILL.md:138
+U4	601	.agents/skills/dooph-ds-codebase/SKILL.md	138		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:138
+U4	602	.agents/skills/dooph-ds-codebase/SKILL.md	140		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:140
+U4	603	.agents/skills/dooph-ds-codebase/SKILL.md	142		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:142
+U4	604	.agents/skills/dooph-ds-codebase/SKILL.md	142		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:142
+U4	605	.agents/skills/dooph-ds-architecture/SKILL.md	18-27		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:18-27
+U4	606	.agents/skills/dooph-ds-architecture/SKILL.md	38-39		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:38-39
+U4	607	.agents/skills/dooph-ds-architecture/SKILL.md	47-48		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:47-48
+U4	608	.agents/skills/dooph-ds-architecture/SKILL.md	53		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:53
+U4	609	.agents/skills/dooph-ds-architecture/SKILL.md	221		FALSE	.agents/skills/dooph-ds-architecture/SKILL.md:221
+U4	610	.agents/skills/dooph-ds-architecture/SKILL.md	225-228		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:225-228
+U4	611	.agents/skills/dooph-ds-architecture/SKILL.md	234		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:234
+U4	612	.agents/skills/dooph-ds-contribution/SKILL.md	65		TRUE	.agents/skills/dooph-ds-contribution/SKILL.md:65
+U4	613	skills/dooph-design-system-usage/SKILL.md	20,74		TRUE	skills/dooph-design-system-usage/SKILL.md:20,74
+U4	614	skills/dooph-design-system-usage/SKILL.md	110-112		TRUE	skills/dooph-design-system-usage/SKILL.md:110-112
+U4	615	skills/dooph-design-system-usage/SKILL.md	112		TRUE	skills/dooph-design-system-usage/SKILL.md:112
+U4	616	skills/dooph-design-system-usage/SKILL.md	113		TRUE	skills/dooph-design-system-usage/SKILL.md:113
+U4	617	skills/dooph-design-system-usage/SKILL.md	114-115		TRUE	skills/dooph-design-system-usage/SKILL.md:114-115
+U4	618	skills/dooph-design-system-usage/SKILL.md	115-116		TRUE	skills/dooph-design-system-usage/SKILL.md:115-116
+U4	619	skills/dooph-design-system-usage/SKILL.md	117-119		TRUE	skills/dooph-design-system-usage/SKILL.md:117-119
+U4	620	skills/dooph-design-system-usage/SKILL.md	352-360		TRUE	skills/dooph-design-system-usage/SKILL.md:352-360
+U4	621	skills/dooph-design-system-usage/SKILL.md	380-382		TRUE	skills/dooph-design-system-usage/SKILL.md:380-382
+U4	622	src/components/OutlineButton/OutlineButton.tsx	24		FALSE	src/components/OutlineButton/OutlineButton.tsx:24
+U4	623	src/components/OutlineButton/OutlineButton.tsx	28-32,53-58		TRUE	src/components/OutlineButton/OutlineButton.tsx:28-32,53-58
+U4	624	src/components/OutlineButton/OutlineButton.tsx	217,223		STALE	src/components/OutlineButton/OutlineButton.tsx:217,223
+U4	625	src/components/CopyButton/CopyButton.stories.tsx	24-27,50-52		TRUE	src/components/CopyButton/CopyButton.stories.tsx:24-27,50-52
+U5	410	src/components/Menu/DropdownMenu.tsx	5-6		TRUE	DM:5-6
+U5	411	src/components/Menu/DropdownMenu.tsx	9-10		TRUE	DM:9-10
+U5	412	src/components/Menu/DropdownMenu.tsx	11		TRUE	DM:11
+U5	413	src/components/Menu/DropdownMenu.tsx	12-15		TRUE	DM:12-15
+U5	414	src/components/Menu/DropdownMenu.tsx	16		TRUE	DM:16
+U5	415	src/components/Menu/DropdownMenu.tsx	19		TRUE	DM:19
+U5	416	src/components/Menu/DropdownMenu.tsx	20		TRUE	DM:20
+U5	417	src/components/Menu/DropdownMenu.tsx	290-292		TRUE	DM:290-292
+U5	418	src/components/Menu/DropdownMenuSearch.tsx	5-6		TRUE	DropdownMenuSearch.tsx:5-6
+U5	419	src/components/Menu/DropdownMenuSearch.tsx	7		TRUE	DropdownMenuSearch.tsx:7
+U5	420	src/components/Menu/DropdownMenuSearch.tsx	7-8		TRUE	DropdownMenuSearch.tsx:7-8
+U5	421	src/components/Menu/DropdownMenuSearch.tsx	11		TRUE	DropdownMenuSearch.tsx:11
+U5	422	src/components/Menu/DropdownMenuSearch.tsx	12-13		TRUE	DropdownMenuSearch.tsx:12-13
+U5	423	src/components/DropdownCaret/DropdownCaret.tsx	5		TRUE	DropdownCaret.tsx:5
+U5	424	src/components/DropdownCaret/DropdownCaret.tsx	5-7		TRUE	DropdownCaret.tsx:5-7
+U5	425	src/components/DropdownCaret/DropdownCaret.tsx	7-8		TRUE	DropdownCaret.tsx:7-8
+U5	426	src/components/DropdownCaret/DropdownCaret.tsx	9-12		TRUE	DropdownCaret.tsx:9-12
+U5	427	src/components/DropdownCaret/DropdownCaret.tsx	13-15		TRUE	DropdownCaret.tsx:13-15
+U5	428	src/components/DropdownCaret/DropdownCaret.tsx	18-20		TRUE	DropdownCaret.tsx:18-20
+U5	429	src/components/DropdownCaret/DropdownCaret.tsx	21-22		TRUE	DropdownCaret.tsx:21-22
+U5	430	src/components/DropdownCaret/DropdownCaret.tsx	23		TRUE	DropdownCaret.tsx:23
+U5	431	.agents/skills/dooph-ds-codebase/SKILL.md	208		TRUE	codebase SKILL.md:208
+U5	432	.agents/skills/dooph-ds-codebase/SKILL.md	209		TRUE	codebase SKILL.md:209
+U5	433	.agents/skills/dooph-ds-codebase/SKILL.md	210		TRUE	codebase SKILL.md:210
+U5	434	.agents/skills/dooph-ds-codebase/SKILL.md	211		TRUE	codebase SKILL.md:211
+U5	435	.agents/skills/dooph-ds-codebase/SKILL.md	212		TRUE	codebase SKILL.md:212
+U5	436	.agents/skills/dooph-ds-codebase/SKILL.md	213		TRUE	codebase SKILL.md:213
+U5	437	.agents/skills/dooph-ds-codebase/SKILL.md	214		TRUE	codebase SKILL.md:214
+U5	438	.agents/skills/dooph-ds-codebase/SKILL.md	215-216		TRUE	codebase SKILL.md:215-216
+U5	439	.agents/skills/dooph-ds-codebase/SKILL.md	217		TRUE	codebase SKILL.md:217
+U5	440	.agents/skills/dooph-ds-codebase/SKILL.md	218		TRUE	codebase SKILL.md:218
+U5	441	.agents/skills/dooph-ds-codebase/SKILL.md	219		TRUE	codebase SKILL.md:219
+U5	442	.agents/skills/dooph-ds-codebase/SKILL.md	220		FALSE	codebase SKILL.md:220
+U5	443	.agents/skills/dooph-ds-codebase/SKILL.md	221		TRUE	codebase SKILL.md:221
+U5	444	.agents/skills/dooph-ds-codebase/SKILL.md	222		FALSE	codebase SKILL.md:222
+U5	445	.agents/skills/dooph-ds-codebase/SKILL.md	223		TRUE	codebase SKILL.md:223
+U5	446	.agents/skills/dooph-ds-codebase/SKILL.md	223		UNVERIFIABLE	codebase SKILL.md:223
+U5	447	.agents/skills/dooph-ds-codebase/SKILL.md	206-207		FALSE	codebase SKILL.md:206-207
+U5	448	.agents/skills/dooph-ds-codebase/SKILL.md	441		TRUE	codebase SKILL.md:441
+U5	449	.agents/skills/dooph-ds-codebase/SKILL.md	457		TRUE	codebase SKILL.md:457
+U5	450	.agents/skills/dooph-ds-codebase/SKILL.md	457		TRUE	codebase SKILL.md:457
+U5	451	.agents/skills/dooph-ds-codebase/SKILL.md	457		TRUE	codebase SKILL.md:457
+U5	452	.agents/skills/dooph-ds-codebase/SKILL.md	457		TRUE	codebase SKILL.md:457
+U5	453	.agents/skills/dooph-ds-codebase/SKILL.md	533		TRUE	codebase SKILL.md:533
+U5	454	.agents/skills/dooph-ds-codebase/SKILL.md	534		TRUE	codebase SKILL.md:534
+U5	455	.agents/skills/dooph-ds-codebase/SKILL.md	535		TRUE	codebase SKILL.md:535
+U5	456	.agents/skills/dooph-ds-codebase/SKILL.md	149		TRUE	codebase SKILL.md:149
+U5	457	.agents/skills/dooph-ds-architecture/SKILL.md	158		TRUE	arch SKILL.md:158
+U5	458	.agents/skills/dooph-ds-architecture/SKILL.md	159		TRUE	arch SKILL.md:159
+U5	459	.agents/skills/dooph-ds-architecture/SKILL.md	160		TRUE	arch SKILL.md:160
+U5	460	.agents/skills/dooph-ds-architecture/SKILL.md	161		TRUE	arch SKILL.md:161
+U5	461	.agents/skills/dooph-ds-architecture/SKILL.md	162		TRUE	arch SKILL.md:162
+U5	462	.agents/skills/dooph-ds-architecture/SKILL.md	163		TRUE	arch SKILL.md:163
+U5	463	.agents/skills/dooph-ds-architecture/SKILL.md	167-182		TRUE	arch SKILL.md:167-182
+U5	464	.agents/skills/dooph-ds-architecture/SKILL.md	221		FALSE	arch SKILL.md:221
+U5	465	.agents/skills/dooph-ds-loading-indicators/SKILL.md	277-278		TRUE	li SKILL.md:277-278
+U5	466	.agents/skills/dooph-ds-loading-indicators/SKILL.md	278-280		TRUE	li SKILL.md:278-280
+U5	467	.agents/skills/dooph-ds-loading-indicators/SKILL.md	280-281		TRUE	li SKILL.md:280-281
+U5	468	.agents/skills/dooph-ds-loading-indicators/SKILL.md	282-283		TRUE	li SKILL.md:282-283
+U5	469	CHANGELOG.md	21		TRUE	CHANGELOG.md:21
+U5	470	skills/dooph-design-system-usage/SKILL.md	130-140		TRUE	usage SKILL.md:130-140
+U5	471	skills/dooph-design-system-usage/SKILL.md	134-135		TRUE	usage SKILL.md:134-135
+U5	472	skills/dooph-design-system-usage/SKILL.md	141		TRUE	usage SKILL.md:141
+U5	473	skills/dooph-design-system-usage/SKILL.md	211		TRUE	usage SKILL.md:211
+U5	474	skills/dooph-design-system-usage/SKILL.md	373-375		TRUE	usage SKILL.md:373-375
+U5	475	skills/dooph-design-system-usage/SKILL.md	376-377		TRUE	usage SKILL.md:376-377
+U6	802	src/components/Toggle/Toggle.tsx	4-5		TRUE	src/components/Toggle/Toggle.tsx:4-5
+U6	803	src/components/Toggle/Toggle.tsx	5		UNVERIFIABLE	src/components/Toggle/Toggle.tsx:5
+U6	804	src/components/Toggle/Toggle.tsx	8-11		TRUE	src/components/Toggle/Toggle.tsx:8-11
+U6	805	src/components/Toggle/Toggle.tsx	12-13		TRUE	src/components/Toggle/Toggle.tsx:12-13
+U6	806	src/components/Toggle/Toggle.tsx	16-17		TRUE	src/components/Toggle/Toggle.tsx:16-17
+U6	807	src/components/Toggle/toggleOption.ts	2-3		TRUE	src/components/Toggle/toggleOption.ts:2-3
+U6	808	src/components/Toggle/toggleOption.ts	6-7		TRUE	src/components/Toggle/toggleOption.ts:6-7
+U6	809	src/components/Toggle/toggleOption.ts	8-12		TRUE	src/components/Toggle/toggleOption.ts:8-12
+U6	810	src/components/Toggle/toggleOption.ts	13-15		TRUE	src/components/Toggle/toggleOption.ts:13-15
+U6	811	src/components/Toggle/toggleOption.ts	16		TRUE	src/components/Toggle/toggleOption.ts:16
+U6	812	src/components/Toggle/toggleOption.ts	19-20		TRUE	src/components/Toggle/toggleOption.ts:19-20
+U6	813	src/components/Toggle/toggleOption.ts	21		TRUE	src/components/Toggle/toggleOption.ts:21
+U6	814	src/components/Checkbox/Checkbox.tsx	2		FALSE	src/components/Checkbox/Checkbox.tsx:2
+U6	815	src/components/Checkbox/Checkbox.tsx	5		FALSE	src/components/Checkbox/Checkbox.tsx:5
+U6	816	src/components/Checkbox/Checkbox.tsx	6		FALSE	src/components/Checkbox/Checkbox.tsx:6
+U6	817	src/components/Checkbox/Checkbox.tsx	7-9		TRUE	src/components/Checkbox/Checkbox.tsx:7-9
+U6	818	src/components/Checkbox/Checkbox.tsx	9-10		TRUE	src/components/Checkbox/Checkbox.tsx:9-10
+U6	819	src/components/Checkbox/Checkbox.tsx	13-14		TRUE	src/components/Checkbox/Checkbox.tsx:13-14
+U6	820	src/components/Checkbox/Checkbox.tsx	15-16		TRUE	src/components/Checkbox/Checkbox.tsx:15-16
+U6	821	src/components/Input/Input.tsx	5-9		TRUE	src/components/Input/Input.tsx:5-9
+U6	822	src/components/Input/Input.tsx	10-12		TRUE	src/components/Input/Input.tsx:10-12
+U6	823	src/components/Input/Input.tsx	12		TRUE	src/components/Input/Input.tsx:12
+U6	824	src/components/Input/Input.tsx	13		TRUE	src/components/Input/Input.tsx:13
+U6	825	src/components/Input/Input.tsx	16-20		TRUE	src/components/Input/Input.tsx:16-20
+U6	826	src/components/Input/Input.tsx	21-24		TRUE	src/components/Input/Input.tsx:21-24
+U6	827	src/components/Input/Input.tsx	25-27		TRUE	src/components/Input/Input.tsx:25-27
+U6	828	src/components/Input/Input.tsx	28-31		FALSE	src/components/Input/Input.tsx:28-31
+U6	829	src/components/VerificationCode/VerificationCodeInput.tsx	5-6		TRUE	src/components/VerificationCode/VerificationCodeInput.tsx:5-6
+U6	830	src/components/VerificationCode/VerificationCodeInput.tsx	7		TRUE	src/components/VerificationCode/VerificationCodeInput.tsx:7
+U6	831	src/components/VerificationCode/VerificationCodeInput.tsx	8		TRUE	src/components/VerificationCode/VerificationCodeInput.tsx:8
+U6	832	src/components/VerificationCode/VerificationCodeInput.tsx	11		TRUE	src/components/VerificationCode/VerificationCodeInput.tsx:11
+U6	833	src/components/VerificationCode/VerificationCodeInput.tsx	12-13		TRUE	src/components/VerificationCode/VerificationCodeInput.tsx:12-13
+U6	834	src/components/VerificationCode/CodeDigitInput.tsx	5		TRUE	src/components/VerificationCode/CodeDigitInput.tsx:5
+U6	835	src/components/VerificationCode/CodeDigitInput.tsx	6-7		TRUE	src/components/VerificationCode/CodeDigitInput.tsx:6-7
+U6	836	src/components/VerificationCode/CodeDigitInput.tsx	8		TRUE	src/components/VerificationCode/CodeDigitInput.tsx:8
+U6	837	src/components/VerificationCode/CodeDigitInput.tsx	8-9		FALSE	src/components/VerificationCode/CodeDigitInput.tsx:8-9
+U6	838	src/components/VerificationCode/CodeDigitInput.tsx	9		STALE	src/components/VerificationCode/CodeDigitInput.tsx:9
+U6	839	src/components/VerificationCode/CodeDigitInput.tsx	12		UNVERIFIABLE	src/components/VerificationCode/CodeDigitInput.tsx:12
+U6	840	src/components/VerificationCode/CodeDigitInput.tsx	13		TRUE	src/components/VerificationCode/CodeDigitInput.tsx:13
+U6	841	.agents/skills/dooph-ds-codebase/SKILL.md	148		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:148
+U6	842	.agents/skills/dooph-ds-codebase/SKILL.md	150-151		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:150-151
+U6	843	.agents/skills/dooph-ds-codebase/SKILL.md	152		STALE	.agents/skills/dooph-ds-codebase/SKILL.md:152
+U6	844	.agents/skills/dooph-ds-codebase/SKILL.md	153-154		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:153-154
+U6	845	.agents/skills/dooph-ds-codebase/SKILL.md	156-160		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:156-160
+U6	846	.agents/skills/dooph-ds-codebase/SKILL.md	162-164		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:162-164
+U6	847	.agents/skills/dooph-ds-codebase/SKILL.md	195-200		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:195-200
+U6	848	.agents/skills/dooph-ds-codebase/SKILL.md	202		FALSE	.agents/skills/dooph-ds-codebase/SKILL.md:202
+U6	849	.agents/skills/dooph-ds-codebase/SKILL.md	202		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:202
+U6	850	.agents/skills/dooph-ds-codebase/SKILL.md	202		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:202
+U6	851	.agents/skills/dooph-ds-codebase/SKILL.md	248-250		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:248-250
+U6	852	.agents/skills/dooph-ds-codebase/SKILL.md	252-257		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:252-257
+U6	853	.agents/skills/dooph-ds-codebase/SKILL.md	259-266		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:259-266
+U6	854	.agents/skills/dooph-ds-codebase/SKILL.md	267-268		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:267-268
+U6	855	.agents/skills/dooph-ds-codebase/SKILL.md	272-275		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:272-275
+U6	856	.agents/skills/dooph-ds-codebase/SKILL.md	279-281		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:279-281
+U6	857	.agents/skills/dooph-ds-codebase/SKILL.md	283-285		FALSE	.agents/skills/dooph-ds-codebase/SKILL.md:283-285
+U6	858	.agents/skills/dooph-ds-codebase/SKILL.md	288-291		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:288-291
+U6	859	.agents/skills/dooph-ds-codebase/SKILL.md	292-293		UNVERIFIABLE	.agents/skills/dooph-ds-codebase/SKILL.md:292-293
+U6	860	.agents/skills/dooph-ds-codebase/SKILL.md	294-297		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:294-297
+U6	861	.agents/skills/dooph-ds-codebase/SKILL.md	298-300		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:298-300
+U6	862	.agents/skills/dooph-ds-codebase/SKILL.md	536		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:536
+U6	863	.agents/skills/dooph-ds-codebase/SKILL.md	541		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:541
+U6	864	.agents/skills/dooph-ds-codebase/SKILL.md	542		STALE	.agents/skills/dooph-ds-codebase/SKILL.md:542
+U6	865	.agents/skills/dooph-ds-codebase/SKILL.md	542		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:542
+U6	866	.agents/skills/dooph-ds-codebase/SKILL.md	542		STALE	.agents/skills/dooph-ds-codebase/SKILL.md:542
+U6	867	.agents/skills/dooph-ds-codebase/SKILL.md	542		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:542
+U6	868	.agents/skills/dooph-ds-codebase/SKILL.md	630-632		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:630-632
+U6	869	.agents/skills/dooph-ds-codebase/SKILL.md	635-636		FALSE	.agents/skills/dooph-ds-codebase/SKILL.md:635-636
+U6	870	.agents/skills/dooph-ds-architecture/SKILL.md	40-47		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:40-47
+U6	871	.agents/skills/dooph-ds-architecture/SKILL.md	50		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:50
+U6	872	.agents/skills/dooph-ds-architecture/SKILL.md	52		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:52
+U6	873	.agents/skills/dooph-ds-architecture/SKILL.md	88-100		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:88-100
+U6	874	.agents/skills/dooph-ds-architecture/SKILL.md	101-107		FALSE	.agents/skills/dooph-ds-architecture/SKILL.md:101-107
+U6	875	skills/dooph-design-system-usage/SKILL.md	120-129		TRUE	skills/dooph-design-system-usage/SKILL.md:120-129
+U6	876	skills/dooph-design-system-usage/SKILL.md	142-143		TRUE	skills/dooph-design-system-usage/SKILL.md:142-143
+U6	877	skills/dooph-design-system-usage/SKILL.md	365-369		TRUE	skills/dooph-design-system-usage/SKILL.md:365-369
+U7	440	.agents/skills/dooph-ds-codebase/SKILL.md	13		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:13
+U7	441	.agents/skills/dooph-ds-codebase/SKILL.md	51-52		TRUE	codebase:51-52
+U7	442	.agents/skills/dooph-ds-codebase/SKILL.md	55		TRUE	codebase:55
+U7	443	.agents/skills/dooph-ds-codebase/SKILL.md	66		TRUE	codebase:66
+U7	444	.agents/skills/dooph-ds-codebase/SKILL.md	170		TRUE	codebase:170
+U7	445	.agents/skills/dooph-ds-codebase/SKILL.md	170		TRUE	codebase:170
+U7	446	.agents/skills/dooph-ds-codebase/SKILL.md	170		TRUE	codebase:170
+U7	447	.agents/skills/dooph-ds-codebase/SKILL.md	171		TRUE	codebase:171
+U7	448	.agents/skills/dooph-ds-codebase/SKILL.md	172		TRUE	codebase:172
+U7	449	.agents/skills/dooph-ds-codebase/SKILL.md	173		TRUE	codebase:173
+U7	450	.agents/skills/dooph-ds-codebase/SKILL.md	174		TRUE	codebase:174
+U7	451	.agents/skills/dooph-ds-codebase/SKILL.md	175		TRUE	codebase:175
+U7	452	.agents/skills/dooph-ds-codebase/SKILL.md	177-181		TRUE	codebase:177-181
+U7	453	.agents/skills/dooph-ds-codebase/SKILL.md	183-185		TRUE	codebase:183-185
+U7	454	.agents/skills/dooph-ds-codebase/SKILL.md	185-186		TRUE	codebase:185-186
+U7	455	.agents/skills/dooph-ds-codebase/SKILL.md	186-189		TRUE	codebase:186-189
+U7	456	.agents/skills/dooph-ds-codebase/SKILL.md	260		TRUE	codebase:260
+U7	457	.agents/skills/dooph-ds-codebase/SKILL.md	622-623		FALSE	codebase:622-623
+U7	458	.agents/skills/dooph-ds-codebase/SKILL.md	630-631		TRUE	codebase:630-631
+U7	459	.agents/skills/dooph-ds-codebase/SKILL.md	638-640		TRUE	codebase:638-640
+U7	460	.agents/skills/dooph-ds-architecture/SKILL.md	101-107		FALSE	.agents/skills/dooph-ds-architecture/SKILL.md:101-107
+U7	461	.agents/skills/dooph-ds-architecture/SKILL.md	122		FALSE	arch:122
+U7	462	skills/dooph-design-system-usage/SKILL.md	148-150		TRUE	skills/dooph-design-system-usage/SKILL.md:148-150
+U7	463	skills/dooph-design-system-usage/SKILL.md	164-166		TRUE	usage:164-166
+U7	464	skills/dooph-design-system-usage/SKILL.md	167		TRUE	usage:167
+U7	465	skills/dooph-design-system-usage/SKILL.md	167-170		TRUE	usage:167-170
+U7	466	skills/dooph-design-system-usage/SKILL.md	171-173		TRUE	usage:171-173
+U7	467	skills/dooph-design-system-v5-migration/SKILL.md	95		UNVERIFIABLE	skills/dooph-design-system-v5-migration/SKILL.md:95
+U7	468	.claude/research/2026-08-27-date-picker-foundation-research.md	576		FALSE	.claude/research/2026-08-27-date-picker-foundation-research.md:576
+U7	469	.claude/research/2026-08-27-date-picker-foundation-research.md	314		STALE	research:314
+U7	470	.claude/research/2026-08-27-date-picker-foundation-research.md	42,310		STALE	research:42,310
+U7	471	src/components/Calendar/dateUtils.ts	9		FALSE	src/components/Calendar/dateUtils.ts:9
+U7	472	src/components/Calendar/rangeSelection.ts	3		TRUE	src/components/Calendar/rangeSelection.ts:3
+U7	473	src/components/Calendar/constants.ts	1-2		TRUE	src/components/Calendar/constants.ts:1-2
+U7	474	src/components/Menu/DropdownMenu.tsx	191-194		FALSE	src/components/Menu/DropdownMenu.tsx:191-194
+U8	474	.agents/skills/dooph-ds-codebase/SKILL.md	229		TRUE	.agents/skills/dooph-ds-codebase/SKILL.md:229
+U8	475	.agents/skills/dooph-ds-codebase/SKILL.md	230		TRUE	codebase SKILL.md:230
+U8	476	.agents/skills/dooph-ds-codebase/SKILL.md	231		TRUE	codebase SKILL.md:231
+U8	477	.agents/skills/dooph-ds-codebase/SKILL.md	232		TRUE	codebase SKILL.md:232
+U8	478	.agents/skills/dooph-ds-codebase/SKILL.md	233		TRUE	codebase SKILL.md:233
+U8	479	.agents/skills/dooph-ds-codebase/SKILL.md	234		TRUE	codebase SKILL.md:234
+U8	480	.agents/skills/dooph-ds-codebase/SKILL.md	235		TRUE	codebase SKILL.md:235
+U8	481	.agents/skills/dooph-ds-codebase/SKILL.md	236		TRUE	codebase SKILL.md:236
+U8	482	.agents/skills/dooph-ds-codebase/SKILL.md	237		TRUE	codebase SKILL.md:237
+U8	483	.agents/skills/dooph-ds-codebase/SKILL.md	237		TRUE	codebase SKILL.md:237
+U8	484	.agents/skills/dooph-ds-codebase/SKILL.md	237		UNVERIFIABLE	codebase SKILL.md:237
+U8	485	.agents/skills/dooph-ds-codebase/SKILL.md	237		TRUE	codebase SKILL.md:237
+U8	486	.agents/skills/dooph-ds-codebase/SKILL.md	237		TRUE	codebase SKILL.md:237
+U8	487	.agents/skills/dooph-ds-codebase/SKILL.md	239		TRUE	codebase SKILL.md:239
+U8	488	.agents/skills/dooph-ds-codebase/SKILL.md	240		TRUE	codebase SKILL.md:240
+U8	489	.agents/skills/dooph-ds-codebase/SKILL.md	241		TRUE	codebase SKILL.md:241
+U8	490	.agents/skills/dooph-ds-codebase/SKILL.md	242		TRUE	codebase SKILL.md:242
+U8	491	.agents/skills/dooph-ds-codebase/SKILL.md	242		TRUE	codebase SKILL.md:242
+U8	492	.agents/skills/dooph-ds-codebase/SKILL.md	227-242		TRUE	codebase SKILL.md:227-242 (table as a whole)
+U8	493	.agents/skills/dooph-ds-codebase/SKILL.md	455		TRUE	codebase SKILL.md:455
+U8	494	.agents/skills/dooph-ds-codebase/SKILL.md	456		TRUE	codebase SKILL.md:456
+U8	495	.agents/skills/dooph-ds-codebase/SKILL.md	456		STALE	codebase SKILL.md:456
+U8	496	.agents/skills/dooph-ds-codebase/SKILL.md	457		TRUE	codebase SKILL.md:457
+U8	497	.agents/skills/dooph-ds-codebase/SKILL.md	459-460		FALSE	codebase SKILL.md:459-460
+U8	498	.agents/skills/dooph-ds-codebase/SKILL.md	538		TRUE	codebase SKILL.md:538
+U8	499	.agents/skills/dooph-ds-codebase/SKILL.md	539		TRUE	codebase SKILL.md:539
+U8	500	.agents/skills/dooph-ds-architecture/SKILL.md	49		TRUE	.agents/skills/dooph-ds-architecture/SKILL.md:49
+U8	501	.agents/skills/dooph-ds-architecture/SKILL.md	122		TRUE	arch SKILL.md:122
+U8	502	.agents/skills/dooph-ds-architecture/SKILL.md	167		FALSE	arch SKILL.md:167
+U8	503	.agents/skills/dooph-ds-architecture/SKILL.md	193		TRUE	arch SKILL.md:193
+U8	504	.agents/skills/dooph-ds-architecture/SKILL.md	298		TRUE	arch SKILL.md:298
+U8	505	skills/dooph-design-system-usage/SKILL.md	144-150		TRUE	skills/dooph-design-system-usage/SKILL.md:144-150
+U8	506	skills/dooph-design-system-usage/SKILL.md	151-153		TRUE	usage SKILL.md:151-153
+U8	507	skills/dooph-design-system-usage/SKILL.md	207		TRUE	usage SKILL.md:207
+U8	508	skills/dooph-design-system-usage/SKILL.md	370-372		TRUE	usage SKILL.md:370-372
+U8	509	skills/dooph-design-system-usage/SKILL.md	378		TRUE	usage SKILL.md:378
+U8	510	skills/dooph-design-system-theming/SKILL.md	147-149		FALSE	skills/dooph-design-system-theming/SKILL.md:147-149
+U8	511	skills/dooph-design-system-theming/SKILL.md	185-187		TRUE	theming SKILL.md:185-187
+U8	512	skills/dooph-design-system-theming/SKILL.md	188-192		TRUE	theming SKILL.md:188-192
+U8	513	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	7-8		TRUE	skills/dooph-design-system-usage/references/responsive-sheet-modal.md:7-8
+U8	514	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	14		TRUE	responsive-sheet-modal.md:14
+U8	515	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	15,17		TRUE	responsive-sheet-modal.md:15,17
+U8	516	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	16		TRUE	responsive-sheet-modal.md:16
+U8	517	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	18-19		TRUE	responsive-sheet-modal.md:18-19
+U8	518	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	21-23		TRUE	responsive-sheet-modal.md:21-23
+U8	519	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	29-103		TRUE	responsive-sheet-modal.md:29-103
+U8	520	skills/dooph-design-system-usage/references/responsive-sheet-modal.md	109-111		TRUE	responsive-sheet-modal.md:109-111
+U8	521	src/components/Sheet/Sheet.tsx	23-26		TRUE	src/components/Sheet/Sheet.tsx:23-26
+U8	522	src/components/Sheet/Sheet.tsx	50-53		TRUE	Sheet.tsx:50-53
+U8	523	src/components/Sheet/Sheet.tsx	56-58		TRUE	Sheet.tsx:56-58
+U8	524	src/components/Sheet/Sheet.tsx	60-61		TRUE	Sheet.tsx:60-61
+U8	525	src/components/Sheet/Sheet.tsx	63-65		FALSE	Sheet.tsx:63-65
+U8	526	src/components/Modal/Modal.tsx	41-42		TRUE	src/components/Modal/Modal.tsx:41-42
+U8	527	src/components/Sheet/constants.ts	1-2	src/components/Tooltip/constants.ts:1-2 src/components/Toast/constants.ts:1-2	TRUE	Sheet/constants.ts:1-2, Tooltip/constants.ts:1-2, Toast/constants.ts:1-2
+U8	528	src/components/Tooltip/Tooltip.tsx	12-13	src/components/Toast/Toast.tsx:21-22	TRUE	Tooltip.tsx:12-13; Toast.tsx:21-22
+U9	516	.agents/skills/dooph-ds-loading-indicators/SKILL.md	8		STALE	li:8
+U9	517	.agents/skills/dooph-ds-loading-indicators/SKILL.md	8		TRUE	li:8
+U9	518	.agents/skills/dooph-ds-loading-indicators/SKILL.md	16		TRUE	li:16
+U9	519	.agents/skills/dooph-ds-loading-indicators/SKILL.md	17		TRUE	li:17
+U9	520	.agents/skills/dooph-ds-loading-indicators/SKILL.md	18		TRUE	li:18
+U9	521	.agents/skills/dooph-ds-loading-indicators/SKILL.md	19		TRUE	li:19
+U9	522	.agents/skills/dooph-ds-loading-indicators/SKILL.md	21		FALSE	li:21
+U9	523	.agents/skills/dooph-ds-loading-indicators/SKILL.md	24-27		TRUE	li:24-27
+U9	524	.agents/skills/dooph-ds-loading-indicators/SKILL.md	30-31		TRUE	li:30-31
+U9	525	.agents/skills/dooph-ds-loading-indicators/SKILL.md	32-35		TRUE	li:32-35
+U9	526	.agents/skills/dooph-ds-loading-indicators/SKILL.md	35-37		TRUE	li:35-37
+U9	527	.agents/skills/dooph-ds-loading-indicators/SKILL.md	37-38		TRUE	li:37-38
+U9	528	.agents/skills/dooph-ds-loading-indicators/SKILL.md	44-49		TRUE	li:44-49
+U9	529	.agents/skills/dooph-ds-loading-indicators/SKILL.md	51		STALE	li:51
+U9	530	.agents/skills/dooph-ds-loading-indicators/SKILL.md	53		FALSE	li:53
+U9	531	.agents/skills/dooph-ds-loading-indicators/SKILL.md	55		TRUE	li:55
+U9	532	.agents/skills/dooph-ds-loading-indicators/SKILL.md	59-62		TRUE	li:59-62
+U9	533	.agents/skills/dooph-ds-loading-indicators/SKILL.md	68		TRUE	li:68
+U9	534	.agents/skills/dooph-ds-loading-indicators/SKILL.md	70		TRUE	li:70
+U9	535	.agents/skills/dooph-ds-loading-indicators/SKILL.md	77-78,86-90		TRUE	li:77-78, 86-90
+U9	536	.agents/skills/dooph-ds-loading-indicators/SKILL.md	93		TRUE	li:93
+U9	537	.agents/skills/dooph-ds-loading-indicators/SKILL.md	94		FALSE	li:94
+U9	538	.agents/skills/dooph-ds-loading-indicators/SKILL.md	104-109		TRUE	li:104-109
+U9	539	.agents/skills/dooph-ds-loading-indicators/SKILL.md	110-114		TRUE	li:110-114
+U9	540	.agents/skills/dooph-ds-loading-indicators/SKILL.md	115-116		TRUE	li:115-116
+U9	541	.agents/skills/dooph-ds-loading-indicators/SKILL.md	122-130		TRUE	li:122-130
+U9	542	.agents/skills/dooph-ds-loading-indicators/SKILL.md	138		TRUE	li:138
+U9	543	.agents/skills/dooph-ds-loading-indicators/SKILL.md	141		UNVERIFIABLE	li:141
+U9	544	.agents/skills/dooph-ds-loading-indicators/SKILL.md	143-152		TRUE	li:143-152
+U9	545	.agents/skills/dooph-ds-loading-indicators/SKILL.md	157-171		TRUE	li:157-171
+U9	546	.agents/skills/dooph-ds-loading-indicators/SKILL.md	174		TRUE	li:174
+U9	547	.agents/skills/dooph-ds-loading-indicators/SKILL.md	176		TRUE	li:176
+U9	548	.agents/skills/dooph-ds-loading-indicators/SKILL.md	184		TRUE	li:184
+U9	549	.agents/skills/dooph-ds-loading-indicators/SKILL.md	186-190		TRUE	li:186-190
+U9	550	.agents/skills/dooph-ds-loading-indicators/SKILL.md	192		STALE	li:192
+U9	551	.agents/skills/dooph-ds-loading-indicators/SKILL.md	193		FALSE	li:193
+U9	552	.agents/skills/dooph-ds-loading-indicators/SKILL.md	197-202		TRUE	li:197-202
+U9	553	.agents/skills/dooph-ds-loading-indicators/SKILL.md	209-211		TRUE	li:209-211
+U9	554	.agents/skills/dooph-ds-loading-indicators/SKILL.md	214		TRUE	li:214
+U9	555	.agents/skills/dooph-ds-loading-indicators/SKILL.md	220		STALE	li:220
+U9	556	.agents/skills/dooph-ds-loading-indicators/SKILL.md	222-228		TRUE	li:222-228
+U9	557	.agents/skills/dooph-ds-loading-indicators/SKILL.md	234-242		TRUE	li:234-242
+U9	558	.claude/skills/dooph-ds-loading-indicators/SKILL.md	25		FALSE	.claude mirror:25
+U9	559	.claude/skills/dooph-ds-loading-indicators/SKILL.md	30		FALSE	.claude mirror:30
+U9	560	.claude/skills/dooph-ds-loading-indicators/SKILL.md	202		FALSE	.claude mirror:202
+U9	561	.claude/skills/dooph-ds-loading-indicators/SKILL.md			FALSE	.claude mirror (inherited)
+U9	562	.agents/skills/dooph-ds-codebase/SKILL.md	306		FALSE	cb:306
+U9	563	.agents/skills/dooph-ds-codebase/SKILL.md	306		TRUE	cb:306
+U9	564	.agents/skills/dooph-ds-codebase/SKILL.md	306		TRUE	cb:306
+U9	565	.agents/skills/dooph-ds-codebase/SKILL.md	306		TRUE	cb:306
+U9	566	.agents/skills/dooph-ds-codebase/SKILL.md	307		STALE	cb:307
+U9	567	.agents/skills/dooph-ds-codebase/SKILL.md	308		TRUE	cb:308
+U9	568	.agents/skills/dooph-ds-codebase/SKILL.md	473-476		TRUE	cb:473-476
+U9	569	.agents/skills/dooph-ds-codebase/SKILL.md	476-477		TRUE	cb:476-477
+U9	570	.agents/skills/dooph-ds-codebase/SKILL.md	477-480		UNVERIFIABLE	cb:477-480
+U9	571	.agents/skills/dooph-ds-codebase/SKILL.md	630-634		TRUE	cb:630-634
+U9	572	.agents/skills/dooph-ds-codebase/SKILL.md	635-636		FALSE	cb:635-636
+U9	573	.agents/skills/dooph-ds-codebase/SKILL.md	644-646		FALSE	cb:644-646
+U9	574	src/components/LinearProgressIndicator/LinearProgressIndicator.tsx	4		TRUE	LPI.tsx:4
+U9	575	src/components/LinearProgressIndicator/LinearProgressIndicator.tsx	7		TRUE	LPI.tsx:7
+U9	576	src/components/LinearProgressIndicator/LinearProgressIndicator.tsx	8-9		FALSE	LPI.tsx:8-9
+U9	577	src/components/LinearProgressIndicator/LinearProgressIndicator.tsx	10		TRUE	LPI.tsx:10
+U9	578	src/components/LinearProgressIndicator/LinearProgressIndicator.tsx	13		TRUE	LPI.tsx:13
+U9	579	src/components/LinearProgressIndicator/LinearProgressIndicator.tsx	14		TRUE	LPI.tsx:14
+U9	580	src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx	2-4		TRUE	SMS.tsx:2-4
+U9	581	src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx	4-5		TRUE	SMS.tsx:4-5
+U9	582	src/components/LoadingSpinner/spinnerGeometry.ts	4-11		TRUE	SG.ts:4-11
+U9	583	src/components/LoadingSpinner/spinnerGeometry.ts	49-51		FALSE	SG.ts:49-51
+U9	584	src/components/LoadingSpinner/spinnerGeometry.ts	68-69		TRUE	SG.ts:68-69
+U9	585	src/components/ProgressIndicator/constants.ts	12-14		FALSE	constants.ts (PI):12-14
+U9	586	src/components/ProgressIndicator/ProgressIndicator.tsx	47		FALSE	PI.tsx:47
+U9	587	src/components/ProgressIndicator/ProgressIndicator.tsx	79-80		TRUE	PI.tsx:79-80
+U9	588	src/components/ProgressIndicator/waveGeometry.test.ts	3-5		FALSE	test.ts:3-5

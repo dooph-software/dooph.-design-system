@@ -14,25 +14,30 @@ import { TabSize } from "../Tabs";
 import { ButtonText } from "../Text";
 import {
   DEFAULT_SPLIT_TRIGGER_PRESETS,
-  formatRangeLabel,
-  isSameDay,
-  startOfDay,
   type CalendarPreset,
   type DateRange,
 } from "../Calendar";
+// Internal helpers: imported from their modules, not the public Calendar barrel.
+import { formatRangeLabel } from "../Calendar/dateFormat";
+import { isSameDay, startOfDay } from "../Calendar/dateUtils";
 
+// `onSelect` stays omitted although the callback is now `onValueChange`: a
+// pre-v6 `onSelect` must stay a type error, not silently become the root div's
+// native DOM handler that never receives a range.
 export type DatePickerSplitTriggerProps = Omit<
   ComponentPropsWithoutRef<"div">,
   "onSelect"
 > & {
   value: DateRange;
   /** Inline shortcuts. Defaults to the three from the Figma spec. */
-  presets?: CalendarPreset[];
-  onSelect: (range: DateRange) => void;
+  presets?: readonly CalendarPreset[];
+  onValueChange: (range: DateRange) => void;
   today?: Date;
   locale?: string;
   disabled?: boolean;
-  /** Props forwarded to the INTERNAL left trigger. Ignored when `trigger` is set. */
+  /** Props forwarded to the INTERNAL left trigger. Ignored when `trigger` is set.
+   *  `className` is merged after the seam classes; `disabled` here can only add
+   *  to the component's `disabled` (which also disables the presets). */
   triggerProps?: ComponentPropsWithoutRef<"button">;
   /**
    * Replaces the internal left trigger — e.g. a `PopoverTrigger asChild`
@@ -51,7 +56,7 @@ const DatePickerSplitTrigger = forwardRef<
       className,
       value,
       presets = DEFAULT_SPLIT_TRIGGER_PRESETS,
-      onSelect,
+      onValueChange,
       today,
       locale,
       disabled,
@@ -63,12 +68,22 @@ const DatePickerSplitTrigger = forwardRef<
   ) => {
     const now = startOfDay(today ?? new Date());
 
+    // Consumer trigger props spread first; the seam classes and the
+    // component-level `disabled` are merged in after, so neither can be undone.
+    const {
+      className: triggerClassName,
+      disabled: triggerDisabled,
+      ...restTriggerProps
+    } = triggerProps ?? {};
+
     // Active state stays derived from the live range rather than stored, so the
     // calendar remains the single source of truth. Radix Tabs treats "" as
     // "nothing selected", which is exactly the case where the range matches no
     // preset.
     const activePresetId =
       presets.find((preset) => {
+        // An invalid value matches no preset; Calendar warns about it.
+        if (!(value?.from instanceof Date) || !(value?.to instanceof Date)) return false;
         const presetRange = preset.getRange(now);
         return (
           isSameDay(value.from, presetRange.from) &&
@@ -78,7 +93,7 @@ const DatePickerSplitTrigger = forwardRef<
 
     const handlePresetChange = (id: string) => {
       const preset = presets.find((candidate) => candidate.id === id);
-      if (preset) onSelect(preset.getRange(now));
+      if (preset) onValueChange(preset.getRange(now));
     };
 
     return (
@@ -97,9 +112,9 @@ const DatePickerSplitTrigger = forwardRef<
           </div>
         ) : (
           <DropdownTrigger
-            disabled={disabled}
-            className="rounded-r-none border-r-0"
-            {...triggerProps}
+            {...restTriggerProps}
+            disabled={disabled || triggerDisabled}
+            className={cn("rounded-r-none border-r-0", triggerClassName)}
           >
             <DropdownTriggerContent className="items-center">
               <CalendarIcon size={IconSize.rg} />

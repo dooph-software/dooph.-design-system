@@ -1,0 +1,68 @@
+src\styles\index.css:535:   * previous version's double-requestAnimationFrame reveal be deleted outright.
+src\styles\index.css:606:   * `forwards` holds the collapsed state for the frame between animationend and
+src\styles\index.css:687:     * are NOT: they are layout, and the exit animation's `animationend` is what
+src\styles\index.css:706:   * load-bearing: each node is retired by its own `animationend`, and
+src\styles\index.css:738:   * because `animationend` is what retires each half. */
+src\styles\index.css:910:   * hang off transitionend, and `transition: none` would starve them —
+src\styles\tokens.css:241:   * The exiting node is unmounted by its own `animationend`, so nothing in the
+src\styles\tokens.css:243:   * setTimeout, which is precisely the mirror that desyncs the moment either
+src\components\Menu\DropdownMenu.tsx:131:    // to devtools, a screenshot tool, or another OS window. Those are the only
+src\components\Menu\DropdownMenu.tsx:136:      if (!dismissOnFocusLoss && !document.hasFocus()) {
+src\components\Menu\DropdownMenu.tsx:144:      if (!dismissOnFocusLoss && (!target || !document.contains(target))) {
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:21: *   `closest("button, a, [role=button]")` and bound six handlers to a node it
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:31: * - One `getComputedStyle` pair per frame per icon. Fine for a toggle; do not
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:110:      const cs = getComputedStyle(path);
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:120:      rafRef.current = requestAnimationFrame(frame);
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:123:    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:127:      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+src\components\LoadingSpinner\LoadingSpinner.tsx:100: * via `requestAnimationFrame` + direct `setAttribute`. Using `<path>` with
+src\components\LoadingSpinner\LoadingSpinner.tsx:129:    const startTime = performance.now();
+src\components\LoadingSpinner\LoadingSpinner.tsx:176:      frameId = requestAnimationFrame(animate);
+src\components\LoadingSpinner\LoadingSpinner.tsx:179:    frameId = requestAnimationFrame(animate);
+src\components\LoadingSpinner\LoadingSpinner.tsx:180:    return () => cancelAnimationFrame(frameId);
+src\components\Calendar\Calendar.tsx:35:  /** Bounds for the year dropdown; defaults to a past-weighted window. */
+src\components\CopyButton\CopyButton.tsx:42:    const timer = useRef<ReturnType<typeof setTimeout>>(null);
+src\components\CopyButton\CopyButton.tsx:45:        if (timer.current) clearTimeout(timer.current);
+src\components\CopyButton\CopyButton.tsx:58:            if (timer.current) clearTimeout(timer.current);
+src\components\CopyButton\CopyButton.tsx:59:            timer.current = setTimeout(() => setCopied(false), REVERT_MS);
+src\components\Toast\Toast.tsx:54:const createToastId = () => `toast-${Date.now()}-${toastId++}`;
+src\components\Toast\Toast.tsx:229:    setTimeout(() => {
+src\components\MorphRotationShape\MorphRotationShape.tsx:52: * - One getComputedStyle per frame per animating instance.
+src\components\MorphRotationShape\MorphRotationShape.tsx:275:      const cs = getComputedStyle(span);
+src\components\MorphRotationShape\MorphRotationShape.tsx:295:      engine.raf = requestAnimationFrame(sample);
+src\components\MorphRotationShape\MorphRotationShape.tsx:297:    engine.raf = requestAnimationFrame(sample);
+src\components\MorphRotationShape\MorphRotationShape.tsx:317:    span.addEventListener("transitionrun", onTransitionRun);
+src\components\MorphRotationShape\MorphRotationShape.tsx:319:      span.addEventListener("animationstart", onClock);
+src\components\MorphRotationShape\MorphRotationShape.tsx:320:      span.addEventListener("animationiteration", onClock);
+src\components\MorphRotationShape\MorphRotationShape.tsx:325:      span.removeEventListener("transitionrun", onTransitionRun);
+src\components\MorphRotationShape\MorphRotationShape.tsx:326:      span.removeEventListener("animationstart", onClock);
+src\components\MorphRotationShape\MorphRotationShape.tsx:327:      span.removeEventListener("animationiteration", onClock);
+src\components\MorphRotationShape\MorphRotationShape.tsx:328:      if (engine.raf) cancelAnimationFrame(engine.raf);
+src\components\AnimatedText\useChangeSwap.ts:11: * - Returns `exiting` (the outgoing node + its key + `onAnimationEnd`, or null)
+src\components\AnimatedText\useChangeSwap.ts:13: *   `onAnimationEnd`). The wrapper renders both in one grid cell and spreads
+src\components\AnimatedText\useChangeSwap.ts:17: * - This file holds no duration, no timer, no `requestAnimationFrame` and no
+src\components\AnimatedText\useChangeSwap.ts:18: *   `transitionend`. Each half is retired by its OWN `animationend`; an earlier
+src\components\AnimatedText\useChangeSwap.ts:19: *   RollChangeText ran a `setTimeout(300)` mirroring the CSS, which is the mirror
+src\components\AnimatedText\useChangeSwap.ts:34: *   `animationend` strip it mid-flight and snap the arriving content to rest.
+src\components\AnimatedText\useChangeSwap.ts:35: * - `onAnimationEnd` ignores events bubbling from descendants
+src\components\AnimatedText\useChangeSwap.ts:66:    onAnimationEnd: AnimationEndHandler;
+src\components\AnimatedText\useChangeSwap.ts:73:    onAnimationEnd: AnimationEndHandler | undefined;
+src\components\AnimatedText\useChangeSwap.ts:153:            onAnimationEnd: onExitEnd,
+src\components\AnimatedText\useChangeSwap.ts:158:      onAnimationEnd: state.entering != null ? onEnterEnd : undefined,
+src\components\AnimatedText\RollChangeText.tsx:77:            onAnimationEnd={exiting.onAnimationEnd}
+src\components\AnimatedText\RollChangeText.tsx:90:          onAnimationEnd={entering.onAnimationEnd}
+src\components\AnimatedText\RollingDigitsText.tsx:34: * - There is no timer, no requestAnimationFrame and no transitionend in this
+src\components\AnimatedText\RollingDigitsText.tsx:36: *   animation, which needs no scheduling; exit is a single `animationend`.
+src\components\AnimatedText\RollingDigitsText.tsx:129:       * it. Guarded on the target because the roll's own transitionend and any
+src\components\AnimatedText\RollingDigitsText.tsx:132:      onAnimationEnd={(e) => {
+src\components\AnimatedText\RevealChangeText.tsx:27: *   `transitionend`, which `transition: none` would never fire — stranding the
+src\components\AnimatedText\RevealChangeText.tsx:129:      onTransitionEnd,
+src\components\AnimatedText\RevealChangeText.tsx:153:         * Otherwise collapse first; the transitionend below swaps the content
+src\components\AnimatedText\RevealChangeText.tsx:170:     * transitionend handler, which fires long after the effect has run. */
+src\components\AnimatedText\RevealChangeText.tsx:193:     * the ResizeObserver then covers font loading and resizes for free. */
+src\components\AnimatedText\RevealChangeText.tsx:201:      if (typeof ResizeObserver === "undefined") return;
+src\components\AnimatedText\RevealChangeText.tsx:202:      const observer = new ResizeObserver(read);
+src\components\AnimatedText\RevealChangeText.tsx:208:      onTransitionEnd?.(event);
+src\components\AnimatedText\RevealChangeText.tsx:240:        onTransitionEnd={handleTransitionEnd}
+src\components\AnimatedText\FadeChangeText.tsx:81:            onAnimationEnd={exiting.onAnimationEnd}
+src\components\AnimatedText\FadeChangeText.tsx:92:          onAnimationEnd={entering.onAnimationEnd}

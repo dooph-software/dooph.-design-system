@@ -12,5 +12,3 @@ export const HelpIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default HelpIcon;

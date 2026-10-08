@@ -1,0 +1,245 @@
+diff --git a/scripts/add-use-client.mjs b/scripts/add-use-client.mjs
+index 99bfadf..179cf34 100644
+--- a/scripts/add-use-client.mjs
++++ b/scripts/add-use-client.mjs
+@@ -8,8 +8,9 @@
+ // Running here — after tsup has flushed the real files to disk — is reliable.
+ //
+ // How it decides which outputs to stamp:
+-// 1. Scan src/ for modules whose first lines carry a "use client" directive
+-//    (the source of truth — kept in lockstep with the component files).
++// 1. Scan src/ for modules whose directive prologue (after any header comment,
++//    which R11.9 puts first) carries "use client". A "use client" line anywhere
++//    else fails the build.
+ // 2. Read tsup's emitted metafiles (dist/metafile-esm.json + metafile-cjs.json),
+ //    which map every output chunk to the exact input modules bundled into it.
+ // 3. Any output whose inputs include a client source gets the directive prepended
+@@ -33,22 +34,45 @@ const DIRECTIVE = 'use client';
+ 
+ const toPosix = (p) => p.split(path.sep).join('/');
+ 
+-/** True if a source file declares the directive within its prologue. */
++/** String-literal statements at the top of a module (its directive prologue),
++ *  after a BOM, whitespace and comments — the same rule a JS parser applies. */
++function prologueDirectives(contents) {
++  const src = contents.replace(/^﻿/, '');
++  const found = [];
++  let i = 0;
++  for (;;) {
++    const ws = /\s*/y;
++    ws.lastIndex = i;
++    ws.exec(src);
++    i = ws.lastIndex;
++    if (src.startsWith('//', i)) {
++      const nl = src.indexOf('\n', i);
++      i = nl === -1 ? src.length : nl + 1;
++      continue;
++    }
++    if (src.startsWith('/*', i)) {
++      const end = src.indexOf('*/', i + 2);
++      if (end === -1) return found;
++      i = end + 2;
++      continue;
++    }
++    const lit = /(["'])([^"'\\\n]*)\1[ \t]*;?/y;
++    lit.lastIndex = i;
++    const m = lit.exec(src);
++    if (!m) return found;
++    found.push(m[2]);
++    i = lit.lastIndex;
++  }
++}
++
++/** True if a source file declares the directive in its prologue. */
+ function hasDirective(contents) {
+-  // Inspect the first handful of non-empty lines; the directive must precede
+-  // imports, but allow a leading BOM/comment-free blank prologue.
+-  const lines = contents.split('\n').slice(0, 5);
+-  return lines.some((line) => {
+-    const t = line.trim();
+-    return (
+-      t === `"${DIRECTIVE}";` ||
+-      t === `'${DIRECTIVE}';` ||
+-      t === `"${DIRECTIVE}"` ||
+-      t === `'${DIRECTIVE}'`
+-    );
+-  });
++  return prologueDirectives(contents).includes(DIRECTIVE);
+ }
+ 
++/** A `"use client"` line anywhere in the file (used to catch misplaced directives). */
++const DIRECTIVE_LINE = /^\s*(["'])use client\1;?\s*$/m;
++
+ /** Recursively collect client source modules, keyed as posix paths relative to cwd. */
+ function collectClientSources(dir, acc) {
+   for (const entry of readdirSync(dir)) {
+@@ -56,8 +80,13 @@ function collectClientSources(dir, acc) {
+     if (statSync(full).isDirectory()) {
+       collectClientSources(full, acc);
+     } else if (/\.(ts|tsx|js|jsx)$/.test(entry)) {
+-      if (hasDirective(readFileSync(full, 'utf8'))) {
++      const contents = readFileSync(full, 'utf8');
++      if (hasDirective(contents)) {
+         acc.add(toPosix(path.relative(cwd, full)));
++      } else if (DIRECTIVE_LINE.test(contents)) {
++        throw new Error(
++          `[add-use-client] ${toPosix(path.relative(cwd, full))} has a "use client" line outside its directive prologue (only comments may precede it).`,
++        );
+       }
+     }
+   }
+diff --git a/src/components/AIChat/AIModelSelect.tsx b/src/components/AIChat/AIModelSelect.tsx
+index 6ac37a6..522721e 100644
+--- a/src/components/AIChat/AIModelSelect.tsx
++++ b/src/components/AIChat/AIModelSelect.tsx
+@@ -17,6 +17,8 @@
+  *   DropdownMenuRadioSelectItem: wrap items in DropdownMenuRadioGroup and the
+  *   selected fill, check and aria-checked all come from the menu itself.
+  */
++"use client";
++
+ import {
+   forwardRef,
+   type ComponentPropsWithoutRef,
+diff --git a/src/components/Button/Button.tsx b/src/components/Button/Button.tsx
+index 7bbcde0..f9315c7 100644
+--- a/src/components/Button/Button.tsx
++++ b/src/components/Button/Button.tsx
+@@ -20,8 +20,6 @@
+  *   token family (`--ui-color-brand-*`). Neither spelling survives.
+  * - Keep `ButtonVariant.prominent` in the API even if icon stories omit it.
+  */
+-"use client";
+-
+ import { Slot } from "@radix-ui/react-slot";
+ import { cva, type VariantProps } from "class-variance-authority";
+ import {
+diff --git a/src/components/Checkbox/Checkbox.tsx b/src/components/Checkbox/Checkbox.tsx
+index b638255..4c478b5 100644
+--- a/src/components/Checkbox/Checkbox.tsx
++++ b/src/components/Checkbox/Checkbox.tsx
+@@ -15,8 +15,6 @@
+  * - Indicator SVGs stay decorative (`aria-hidden`); do not replace with
+  *   interactive children unless composing via the `children` escape hatch.
+  */
+-"use client";
+-
+ import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+ import { cva, type VariantProps } from "class-variance-authority";
+ import {
+diff --git a/src/components/DatePicker/DatePickerTrigger.tsx b/src/components/DatePicker/DatePickerTrigger.tsx
+index 1c207f6..e5f8281 100644
+--- a/src/components/DatePicker/DatePickerTrigger.tsx
++++ b/src/components/DatePicker/DatePickerTrigger.tsx
+@@ -1,5 +1,3 @@
+-"use client";
+-
+ import { forwardRef, type ComponentPropsWithoutRef } from "react";
+ import { cn } from "../../utils/cn";
+ import { DropdownTrigger, DropdownTriggerContent } from "../DropdownTrigger";
+diff --git a/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx b/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
+index 61a8e76..b90b283 100644
+--- a/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
++++ b/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
+@@ -1,5 +1,3 @@
+-'use client';
+-
+ /*
+  * LinearProgressIndicator — determinate bar backed by Radix Progress.
+  *
+diff --git a/src/components/Modal/Modal.tsx b/src/components/Modal/Modal.tsx
+index 58ee63b..0d80be8 100644
+--- a/src/components/Modal/Modal.tsx
++++ b/src/components/Modal/Modal.tsx
+@@ -1,5 +1,3 @@
+-"use client";
+-
+ import {
+   forwardRef,
+   type ComponentPropsWithoutRef,
+diff --git a/src/components/Popover/Popover.tsx b/src/components/Popover/Popover.tsx
+index 450608e..0cf3245 100644
+--- a/src/components/Popover/Popover.tsx
++++ b/src/components/Popover/Popover.tsx
+@@ -1,5 +1,3 @@
+-"use client";
+-
+ import * as PopoverPrimitive from "@radix-ui/react-popover";
+ import {
+   forwardRef,
+diff --git a/src/components/SearchBox/SearchBox.tsx b/src/components/SearchBox/SearchBox.tsx
+index 2093d21..e1782fa 100644
+--- a/src/components/SearchBox/SearchBox.tsx
++++ b/src/components/SearchBox/SearchBox.tsx
+@@ -1,5 +1,3 @@
+-"use client";
+-
+ import { forwardRef, type InputHTMLAttributes } from 'react';
+ import { cn } from '../../utils/cn';
+ import { HotkeyIndicator } from '../HotkeyIndicator/HotkeyIndicator';
+diff --git a/src/components/ShapeButton/ShapeButton.tsx b/src/components/ShapeButton/ShapeButton.tsx
+index d37ecb6..2ee6695 100644
+--- a/src/components/ShapeButton/ShapeButton.tsx
++++ b/src/components/ShapeButton/ShapeButton.tsx
+@@ -15,8 +15,6 @@
+  *   `Shapes/` exports, never a re-drawn copy of it. Figma's ShapeButton
+  *   variants embed their own flattened SVGs; those are not the source of truth.
+  */
+-"use client";
+-
+ import { Slot } from "@radix-ui/react-slot";
+ import {
+   forwardRef,
+diff --git a/src/components/Sheet/Sheet.tsx b/src/components/Sheet/Sheet.tsx
+index 82d8f29..3b11f30 100644
+--- a/src/components/Sheet/Sheet.tsx
++++ b/src/components/Sheet/Sheet.tsx
+@@ -1,5 +1,3 @@
+-"use client";
+-
+ import * as DialogPrimitive from "@radix-ui/react-dialog";
+ import { cva, type VariantProps } from "class-variance-authority";
+ import {
+diff --git a/src/components/SplitButton/SplitButton.tsx b/src/components/SplitButton/SplitButton.tsx
+index 40d9c96..ea0ebf0 100644
+--- a/src/components/SplitButton/SplitButton.tsx
++++ b/src/components/SplitButton/SplitButton.tsx
+@@ -1,5 +1,3 @@
+-"use client";
+-
+ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+ import { cn } from "../../utils/cn";
+ import { ChevronDownIcon } from "../Icons";
+diff --git a/src/components/Tabs/Tabs.tsx b/src/components/Tabs/Tabs.tsx
+index 6f24917..36c3652 100644
+--- a/src/components/Tabs/Tabs.tsx
++++ b/src/components/Tabs/Tabs.tsx
+@@ -1,5 +1,3 @@
+-"use client";
+-
+ import * as TabsPrimitive from "@radix-ui/react-tabs";
+ import { type VariantProps } from "class-variance-authority";
+ import {
+diff --git a/src/components/Tooltip/Tooltip.tsx b/src/components/Tooltip/Tooltip.tsx
+index c8006ad..59a2a69 100644
+--- a/src/components/Tooltip/Tooltip.tsx
++++ b/src/components/Tooltip/Tooltip.tsx
+@@ -1,5 +1,3 @@
+-"use client";
+-
+ import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+ import {
+   forwardRef,
+diff --git a/src/components/VerificationCode/CodeDigitInput.tsx b/src/components/VerificationCode/CodeDigitInput.tsx
+index dc37330..c828711 100644
+--- a/src/components/VerificationCode/CodeDigitInput.tsx
++++ b/src/components/VerificationCode/CodeDigitInput.tsx
+@@ -12,8 +12,6 @@
+  * - Prefer composing through VerificationCodeInput for multi-digit flows.
+  * - Do not hardcode Host Grotesk here; body role + size/weight props own it.
+  */
+-"use client";
+-
+ import { forwardRef, type InputHTMLAttributes } from "react";
+ import { cn } from "../../utils/cn";
+ import { BaseText } from "../Text/BaseText";

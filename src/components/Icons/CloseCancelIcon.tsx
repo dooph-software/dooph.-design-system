@@ -8,5 +8,3 @@ export const CloseCancelIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default CloseCancelIcon;

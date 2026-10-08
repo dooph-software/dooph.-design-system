@@ -9,5 +9,3 @@ export const FilterLinesIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default FilterLinesIcon;

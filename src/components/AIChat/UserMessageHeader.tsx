@@ -1,15 +1,11 @@
 /*
- * UserMessageHeader — the user's prompt, heading its turn (Figma 854:1337).
- *
- * ## behavior
- * - A surface card; `children` flows straight into it.
- *
- * ## constraints
- * - NOT sticky. Pinning a turn's header, and having the next turn push it away,
- *   only works because of how the consumer structures turns inside their own
- *   scroll container — layout the package neither designs nor owns. Consumers
- *   wrap it: `<div className="sticky top-0">`. Clamping long prompts
- *   (`line-clamp-*`) is likewise a `className` decision.
+ * UserMessageHeader — the user's prompt, heading its turn (Figma 854:1337): a
+ * surface card that `children` flows straight into. It is NOT sticky: pinning a
+ * turn's header and having the next turn push it away depends on how the
+ * consumer structures turns inside their own scroll container, which the
+ * package neither designs nor owns. Consumers wrap it
+ * (`<div className="sticky top-0">`); clamping long prompts (`line-clamp-*`) is
+ * likewise a `className` decision.
  */
 import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
@@ -21,7 +17,7 @@ const UserMessageHeader = forwardRef<HTMLDivElement, UserMessageHeaderProps>(
     <div
       ref={ref}
       className={cn(
-        "w-full min-w-0 rounded-tight border border-solid border-border-primary bg-surface-primary p-rg shadow-standard text-style-body text-text wrap-break-word",
+        "w-full min-w-0 rounded-tight border border-solid border-border-primary bg-surface-primary p-md shadow-standard text-style-body text-text wrap-break-word",
         className,
       )}
       {...props}

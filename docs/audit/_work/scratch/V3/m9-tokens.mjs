@@ -1,0 +1,21 @@
+import fs from 'node:fs';
+const R = 'C:/Users/stick/Github/dooph/dooph-Design-System/';
+const css = fs.readFileSync(R + 'src/styles/tokens.css', 'utf8');
+const doc = fs.readFileSync(R + 'skills/dooph-design-system-theming/references/token-contract.md', 'utf8');
+const skill = fs.readFileSync(R + 'skills/dooph-design-system-theming/SKILL.md', 'utf8');
+const toks = [...new Set([...css.matchAll(/^\s*(--ui-[a-z0-9-]+)\s*:/gm)].map(m => m[1]))];
+const lit = (t, text) => new RegExp('(?<![a-z0-9-])' + t.replace(/[-]/g, '\-') + '(?![a-z0-9-])').test(text);
+const docLit = toks.filter(t => lit(t, doc));
+const notLit = toks.filter(t => !lit(t, doc));
+// family wildcards in the doc: `--ui-foo-*`
+const fams = [...new Set([...doc.matchAll(/(--ui-[a-z0-9-]+)-\*/g)].map(m => m[1] + '-'))];
+const byFam = notLit.filter(t => fams.some(f => t.startsWith(f)));
+const rest = notLit.filter(t => !fams.some(f => t.startsWith(f)));
+console.log('tokens.css unique --ui-*:', toks.length);
+console.log('literally named in token-contract.md:', docLit.length);
+console.log('not literally named:', notLit.length);
+console.log('doc family wildcards:', fams.join(' '));
+console.log('covered by a family wildcard:', byFam.length, byFam.join(' '));
+console.log('remaining (need shorthand check):', rest.length);
+console.log(rest.join('\n'));
+console.log('--- also in theming SKILL.md (literal) among remaining:', rest.filter(t => lit(t, skill)).join(' ') || 'none');

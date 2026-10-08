@@ -1,0 +1,1 @@
+{"files":504,"counts":{"findings":298,"claims-checked":5,"provenance-only":66,"reviewed-clean":62,"pattern-verified":64,"generated-verified":9},"missing":0}

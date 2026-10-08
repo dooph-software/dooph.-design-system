@@ -14,5 +14,3 @@ export const LoadingSpinnerIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default LoadingSpinnerIcon;

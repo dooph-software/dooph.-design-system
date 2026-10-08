@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
-import { BodyText, ButtonText } from "../Text/BaseText";
+import { BodyText } from "../Text/BaseText";
 import {
   Table,
   TableCell,
@@ -37,7 +37,7 @@ const SortableHeader = () => {
   return (
     <Table
       columns={COLUMNS}
-      className="h-[420px] border border-border-primary rounded-soft"
+      className="h-[420px]"
     >
       <TableHeader>
         <TableHeaderCell
@@ -46,18 +46,10 @@ const SortableHeader = () => {
         >
           Name
         </TableHeaderCell>
-        <TableHeaderCell>
-          <ButtonText>Status</ButtonText>
-        </TableHeaderCell>
-        <TableHeaderCell>
-          <ButtonText>Role</ButtonText>
-        </TableHeaderCell>
-        <TableHeaderCell>
-          <ButtonText>Email</ButtonText>
-        </TableHeaderCell>
-        <TableHeaderCell>
-          <ButtonText>Joined</ButtonText>
-        </TableHeaderCell>
+        <TableHeaderCell>Status</TableHeaderCell>
+        <TableHeaderCell>Role</TableHeaderCell>
+        <TableHeaderCell>Email</TableHeaderCell>
+        <TableHeaderCell>Joined</TableHeaderCell>
       </TableHeader>
 
       <TableRow>
@@ -80,10 +72,8 @@ const SortableHeader = () => {
 
       <TableRow>
         <TableCell>
-          <div>
-            <BodyText>Bob Chen</BodyText>
-            <BodyText className="text-text-secondary">Engineering</BodyText>
-          </div>
+          <BodyText>Bob Chen</BodyText>
+          <BodyText className="text-text-secondary">Engineering</BodyText>
         </TableCell>
         <TableCell>
           <BodyText>Invited</BodyText>
@@ -101,10 +91,8 @@ const SortableHeader = () => {
 
       <TableRow>
         <TableCell>
-          <div>
-            <BodyText>Carol Wu</BodyText>
-            <BodyText className="text-text-secondary">Design</BodyText>
-          </div>
+          <BodyText>Carol Wu</BodyText>
+          <BodyText className="text-text-secondary">Design</BodyText>
         </TableCell>
         <TableCell>
           <BodyText>Active</BodyText>
@@ -139,15 +127,9 @@ export const Header: Story = {
   render: () => (
     <Table columns="1fr 1fr 1fr">
       <TableHeader>
-        <TableHeaderCell>
-          <BodyText>Column A</BodyText>
-        </TableHeaderCell>
-        <TableHeaderCell>
-          <BodyText>Column B</BodyText>
-        </TableHeaderCell>
-        <TableHeaderCell>
-          <BodyText>Column C</BodyText>
-        </TableHeaderCell>
+        <TableHeaderCell>Column A</TableHeaderCell>
+        <TableHeaderCell>Column B</TableHeaderCell>
+        <TableHeaderCell>Column C</TableHeaderCell>
       </TableHeader>
     </Table>
   ),
@@ -190,12 +172,8 @@ export const Rows: Story = {
   render: () => (
     <Table columns="1fr 1fr">
       <TableHeader>
-        <TableHeaderCell>
-          <ButtonText>Name</ButtonText>
-        </TableHeaderCell>
-        <TableHeaderCell>
-          <ButtonText>Value</ButtonText>
-        </TableHeaderCell>
+        <TableHeaderCell>Name</TableHeaderCell>
+        <TableHeaderCell>Value</TableHeaderCell>
       </TableHeader>
       <TableRow>
         <TableCell>
@@ -232,39 +210,27 @@ export const CellStackedContent: Story = {
   render: () => (
     <Table columns="1fr 1fr">
       <TableHeader>
-        <TableHeaderCell>
-          <BodyText>Person</BodyText>
-        </TableHeaderCell>
-        <TableHeaderCell>
-          <BodyText>Contact</BodyText>
-        </TableHeaderCell>
+        <TableHeaderCell>Person</TableHeaderCell>
+        <TableHeaderCell>Contact</TableHeaderCell>
       </TableHeader>
       <TableRow>
         <TableCell>
-          <div>
-            <BodyText>Dana Lee</BodyText>
-            <BodyText className="text-text-secondary">Product</BodyText>
-          </div>
+          <BodyText>Dana Lee</BodyText>
+          <BodyText className="text-text-secondary">Product</BodyText>
         </TableCell>
         <TableCell>
-          <div>
-            <BodyText>dana@example.com</BodyText>
-            <BodyText className="text-text-secondary">+1 555-0123</BodyText>
-          </div>
+          <BodyText>dana@example.com</BodyText>
+          <BodyText className="text-text-secondary">+1 555-0123</BodyText>
         </TableCell>
       </TableRow>
       <TableRow>
         <TableCell>
-          <div>
-            <BodyText>Evan Ruiz</BodyText>
-            <BodyText className="text-text-secondary">Engineering</BodyText>
-          </div>
+          <BodyText>Evan Ruiz</BodyText>
+          <BodyText className="text-text-secondary">Engineering</BodyText>
         </TableCell>
         <TableCell>
-          <div>
-            <BodyText>evan@example.com</BodyText>
-            <BodyText className="text-text-secondary">+1 555-0456</BodyText>
-          </div>
+          <BodyText>evan@example.com</BodyText>
+          <BodyText className="text-text-secondary">+1 555-0456</BodyText>
         </TableCell>
       </TableRow>
     </Table>
@@ -278,16 +244,49 @@ export const Placeholder: Story = {
   render: () => (
     <Table columns="1fr 1fr" className="h-[300px]">
       <TableHeader>
-        <TableHeaderCell>
-          <BodyText>Name</BodyText>
-        </TableHeaderCell>
-        <TableHeaderCell>
-          <BodyText>Status</BodyText>
-        </TableHeaderCell>
+        <TableHeaderCell>Name</TableHeaderCell>
+        <TableHeaderCell>Status</TableHeaderCell>
       </TableHeader>
       <TablePlaceholder>
         <BodyText className="text-text-tertiary">No results found</BodyText>
       </TablePlaceholder>
+    </Table>
+  ),
+};
+
+/** Contradicts the default row height (auto) through rowHeight, which sets --table-row-height. */
+export const RowsCustomHeight: Story = {
+  args: { columns: "1fr 1fr" },
+  render: () => (
+    <Table columns="1fr 1fr" rowHeight="var(--ui-height-button)">
+      <TableHeader>
+        <TableHeaderCell>Name</TableHeaderCell>
+        <TableHeaderCell>Value</TableHeaderCell>
+      </TableHeader>
+      <TableRow>
+        <TableCell>
+          <BodyText>Row one</BodyText>
+        </TableCell>
+        <TableCell>
+          <BodyText>100</BodyText>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>
+          <BodyText>Row two</BodyText>
+        </TableCell>
+        <TableCell>
+          <BodyText>200</BodyText>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>
+          <BodyText>Row three</BodyText>
+        </TableCell>
+        <TableCell>
+          <BodyText>300</BodyText>
+        </TableCell>
+      </TableRow>
     </Table>
   ),
 };

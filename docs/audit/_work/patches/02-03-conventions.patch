@@ -1,0 +1,1479 @@
+diff --git a/src/components/AIChat/AIContextGauge.tsx b/src/components/AIChat/AIContextGauge.tsx
+index 9af53e6..7ebf132 100644
+--- a/src/components/AIChat/AIContextGauge.tsx
++++ b/src/components/AIChat/AIContextGauge.tsx
+@@ -4,9 +4,9 @@
+  *
+  * ## behavior
+  * - Draws `used / budget` on a flat ProgressIndicator. `color` is the open
+- *   design value (a LoadingSpinnerColor key or any CSS colour), so warning
+- *   tiers are a consumer's call:
+- *   `color={ratio > 0.9 ? "var(--ui-color-danger-primary)" : undefined}`.
++ *   design value (a DS colour name — DS_COLOR_TOKENS key — or any CSS
++ *   colour), so warning tiers are a consumer's call:
++ *   `color={ratio > 0.9 ? "danger" : undefined}`.
+  *
+  * ## constraints
+  * - Deliberately NOT clamped. A gauge that quietly pins at full would disagree
+@@ -15,7 +15,7 @@
+  *   consumer's job; their stream keeps running if this throws inside it.
+  * - `budget <= 0` means "no budget known yet" (the state before a first reply)
+  *   and draws empty. That is the absence of a ratio, not a clamp: 0/0 is NaN,
+- *   which would otherwise slip past the range guard and render garbage.
++ *   which ProgressIndicator's range guard would reject with a throw.
+  */
+ import { forwardRef } from "react";
+ import { LoadingSpinnerSize } from "../LoadingSpinner/constants";
+@@ -23,7 +23,7 @@ import {
+   ProgressIndicator,
+   type ProgressIndicatorProps,
+ } from "../ProgressIndicator/ProgressIndicator";
+-import { ProgressIndicatorVariants } from "../ProgressIndicator/constants";
++import { ProgressIndicatorVariant } from "../ProgressIndicator/constants";
+ 
+ export type AIContextGaugeProps = Omit<
+   ProgressIndicatorProps,
+@@ -40,7 +40,7 @@ const AIContextGauge = forwardRef<SVGSVGElement, AIContextGaugeProps>(
+     <ProgressIndicator
+       ref={ref}
+       progress={budget > 0 ? used / budget : 0}
+-      variant={ProgressIndicatorVariants.flat}
++      variant={ProgressIndicatorVariant.flat}
+       size={size}
+       {...props}
+     />
+diff --git a/src/components/Calendar/Calendar.stories.tsx b/src/components/Calendar/Calendar.stories.tsx
+index 2713129..5685ac1 100644
+--- a/src/components/Calendar/Calendar.stories.tsx
++++ b/src/components/Calendar/Calendar.stories.tsx
+@@ -27,8 +27,8 @@ export const SingleDay: Story = {
+     return (
+       <Calendar
+         mode={DatePickerMode.singleDay}
+-        selected={selected}
+-        onSelect={setSelected}
++        value={selected}
++        onValueChange={setSelected}
+         today={TODAY}
+       />
+     );
+@@ -44,8 +44,8 @@ export const DateRangeMode: Story = {
+     return (
+       <Calendar
+         mode={DatePickerMode.dateRange}
+-        selected={selected}
+-        onSelect={setSelected}
++        value={selected}
++        onValueChange={setSelected}
+         today={TODAY}
+       />
+     );
+@@ -60,8 +60,8 @@ export const WithPresets: Story = {
+     return (
+       <Calendar
+         mode={DatePickerMode.dateRange}
+-        selected={selected}
+-        onSelect={setSelected}
++        value={selected}
++        onValueChange={setSelected}
+         today={TODAY}
+       >
+         <CalendarPresetsPanel>
+@@ -69,9 +69,9 @@ export const WithPresets: Story = {
+             <CalendarPresetItem
+               key={preset.id}
+               preset={preset}
+-              selected={selected}
++              value={selected}
+               today={TODAY}
+-              onSelect={setSelected}
++              onValueChange={setSelected}
+             />
+           ))}
+         </CalendarPresetsPanel>
+@@ -86,8 +86,8 @@ export const DisabledFutureDates: Story = {
+     return (
+       <Calendar
+         mode={DatePickerMode.singleDay}
+-        selected={selected}
+-        onSelect={setSelected}
++        value={selected}
++        onValueChange={setSelected}
+         today={TODAY}
+         disabled={{ after: TODAY }}
+       />
+@@ -101,8 +101,8 @@ export const CustomRenderDay: Story = {
+     return (
+       <Calendar
+         mode={DatePickerMode.singleDay}
+-        selected={selected}
+-        onSelect={setSelected}
++        value={selected}
++        onValueChange={setSelected}
+         today={TODAY}
+         renderDay={({ date }) => (
+           <div className="flex flex-col items-center">
+@@ -132,8 +132,8 @@ export const EdgeMonths: Story = {
+           <Calendar
+             key={month.toISOString()}
+             mode={DatePickerMode.singleDay}
+-            selected={month}
+-            onSelect={() => {}}
++            value={month}
++            onValueChange={() => {}}
+             month={month}
+             today={TODAY}
+           />
+@@ -149,11 +149,62 @@ export const YearBounds: Story = {
+     return (
+       <Calendar
+         mode={DatePickerMode.singleDay}
+-        selected={selected}
+-        onSelect={setSelected}
++        value={selected}
++        onValueChange={setSelected}
+         today={TODAY}
+         yearBounds={{ from: new Date(2026, 0, 1), to: new Date(2026, 11, 31) }}
+       />
+     );
+   },
+ };
++
++/**
++ * An invalid single-day `value` (here `Invalid Date`) warns in development and
++ * renders NOTHING — it never crashes.
++ */
++export const InvalidSingleDayValueRendersNothing: Story = {
++  render: () => (
++    <div className="flex flex-col gap-rg">
++      <BodyText>The calendar below received an Invalid Date and renders nothing.</BodyText>
++      <Calendar
++        mode={DatePickerMode.singleDay}
++        value={new Date("not a date")}
++        onValueChange={() => {}}
++        today={TODAY}
++      />
++    </div>
++  ),
++};
++
++/**
++ * An invalid range `value` (here an Invalid Date as `from`) warns in
++ * development and renders NOTHING — it never crashes.
++ */
++export const InvalidRangeValueRendersNothing: Story = {
++  render: () => (
++    <div className="flex flex-col gap-rg">
++      <BodyText>The calendar below received a range with an invalid end and renders nothing.</BodyText>
++      <Calendar
++        mode={DatePickerMode.dateRange}
++        value={{ from: new Date(NaN), to: TODAY }}
++        onValueChange={() => {}}
++        today={TODAY}
++      />
++    </div>
++  ),
++};
++
++/** A `mode` other than the two DatePickerMode values warns and renders nothing. */
++export const UnknownModeRendersNothing: Story = {
++  render: () => (
++    <div className="flex flex-col gap-rg">
++      <BodyText>The calendar below received an unknown mode and renders nothing.</BodyText>
++      <Calendar
++        mode={"week" as unknown as typeof DatePickerMode.singleDay}
++        value={TODAY}
++        onValueChange={() => {}}
++        today={TODAY}
++      />
++    </div>
++  ),
++};
+diff --git a/src/components/Calendar/Calendar.tsx b/src/components/Calendar/Calendar.tsx
+index 1bb6913..858f564 100644
+--- a/src/components/Calendar/Calendar.tsx
++++ b/src/components/Calendar/Calendar.tsx
+@@ -17,6 +17,8 @@ import {
+   DAYS_IN_WEEK,
+   firstEnabledDayOfMonth,
+   isDateDisabled,
++  isValidDate,
++  isValidRange,
+   startOfDay,
+   startOfMonth,
+   toDayKey,
+@@ -46,42 +48,55 @@ type CalendarSharedProps = {
+ 
+ type CalendarSingleProps = CalendarSharedProps & {
+   mode: typeof DatePickerMode.singleDay;
+-  selected: Date;
+-  onSelect: (date: Date) => void;
++  value: Date;
++  onValueChange: (date: Date) => void;
+ };
+ 
+ type CalendarRangeProps = CalendarSharedProps & {
+   mode: typeof DatePickerMode.dateRange;
+-  selected: DateRange;
+-  onSelect: (range: DateRange) => void;
++  value: DateRange;
++  onValueChange: (range: DateRange) => void;
+ };
+ 
+ export type CalendarProps = CalendarSingleProps | CalendarRangeProps;
+ 
+-function warnOnBadValue(props: CalendarProps): void {
+-  if (process.env.NODE_ENV === "production") return;
++/**
++ * A missing or malformed value warns in development and renders NOTHING
++ * (research:576, D-12). It must never reach the date maths in CalendarView,
++ * which would crash with an incidental TypeError instead. An unknown `mode` is
++ * malformed too: it would otherwise run the range branch silently.
++ */
++function hasValidValue(props: CalendarProps): boolean {
++  const value: unknown = props.value;
++  let problem: string | null = null;
+ 
+   if (props.mode === DatePickerMode.singleDay) {
+-    if (!(props.selected instanceof Date) || Number.isNaN(props.selected.getTime())) {
+-      console.warn(
+-        "[dooph] Calendar: `selected` must be a valid Date in single-day mode. " +
+-          "A value is required — default to today rather than passing undefined.",
+-      );
++    if (!isValidDate(value)) {
++      problem =
++        "`value` must be a valid Date in single-day mode. " +
++        "A value is required — default to today rather than passing undefined.";
+     }
+-    return;
++  } else if (props.mode === DatePickerMode.dateRange) {
++    if (!isValidRange(value)) {
++      problem =
++        "`value` must be `{ from: Date, to: Date }` in date-range mode. " +
++        "A value is required — there is no empty state.";
++    } else if (startOfDay(value.to).getTime() < startOfDay(value.from).getTime()) {
++      // Reported, not rejected: a reversed range still renders.
++      if (process.env.NODE_ENV !== "production") {
++        console.warn("[dooph] Calendar: `value.to` is before `value.from`.");
++      }
++    }
++  } else {
++    problem =
++      "`mode` must be DatePickerMode.singleDay or DatePickerMode.dateRange, " +
++      `received ${JSON.stringify((props as { mode: unknown }).mode)}.`;
+   }
+ 
+-  const range = props.selected;
+-  if (!range || !(range.from instanceof Date) || !(range.to instanceof Date)) {
+-    console.warn(
+-      "[dooph] Calendar: `selected` must be `{ from: Date, to: Date }` in " +
+-        "date-range mode. A value is required — there is no empty state.",
+-    );
+-    return;
+-  }
+-  if (startOfDay(range.to).getTime() < startOfDay(range.from).getTime()) {
+-    console.warn("[dooph] Calendar: `selected.to` is before `selected.from`.");
++  if (problem !== null && process.env.NODE_ENV !== "production") {
++    console.warn(`[dooph] Calendar: ${problem} Rendering nothing.`);
+   }
++  return problem === null;
+ }
+ 
+ /**
+@@ -97,7 +112,7 @@ function warnOnOutOfBoundsValue(
+   if (!isYearOutOfBounds(anchorDate, yearBounds)) return;
+ 
+   console.warn(
+-    `[dooph] Calendar: \`selected\` is in ${anchorDate.getFullYear()}, outside ` +
++    `[dooph] Calendar: \`value\` is in ${anchorDate.getFullYear()}, outside ` +
+       "`yearBounds`. The value is left as-is — bounds constrain the calendar's " +
+       "own navigation, not values you supply.",
+   );
+@@ -121,7 +136,7 @@ function warnOnOutOfBoundsMonth(
+   );
+ }
+ 
+-function Calendar(props: CalendarProps) {
++function CalendarView(props: CalendarProps) {
+   const {
+     mode,
+     month,
+@@ -135,18 +150,16 @@ function Calendar(props: CalendarProps) {
+     className,
+   } = props;
+ 
+-  warnOnBadValue(props);
+-
+   const today = startOfDay(todayProp ?? new Date());
+   const anchorDate =
+-    mode === DatePickerMode.singleDay ? props.selected : props.selected.from;
++    mode === DatePickerMode.singleDay ? props.value : props.value.from;
+ 
+   warnOnOutOfBoundsValue(anchorDate, yearBounds);
+   warnOnOutOfBoundsMonth(month, yearBounds);
+ 
+   // Explicit yearBounds are hard limits on NAVIGATION. The view month is
+   // component-owned state, so clamping it is legitimate — the consumer's
+-  // committed value is never rewritten (see warnOnBadValue for that case).
++  // committed value is never rewritten (see warnOnOutOfBoundsValue for that case).
+   const [uncontrolledMonth, setUncontrolledMonth] = useState(() =>
+     clampMonthToYearBounds(startOfMonth(anchorDate), yearBounds),
+   );
+@@ -179,8 +192,8 @@ function Calendar(props: CalendarProps) {
+   // change is ours — an internal commit must not move the view or the focus.
+   const selectionKey =
+     mode === DatePickerMode.singleDay
+-      ? toDayKey(props.selected)
+-      : `${toDayKey(props.selected.from)}|${toDayKey(props.selected.to)}`;
++      ? toDayKey(props.value)
++      : `${toDayKey(props.value.from)}|${toDayKey(props.value.to)}`;
+   const committedKey = useRef<string | null>(null);
+   const [syncedSelectionKey, setSyncedSelectionKey] = useState(selectionKey);
+ 
+@@ -200,7 +213,7 @@ function Calendar(props: CalendarProps) {
+       // preset like "6 Months" ending today, today's month is still on screen
+       // and jumping to the start would hide the end the user cares about.
+       const rangeEnd =
+-        mode === DatePickerMode.singleDay ? props.selected : props.selected.to;
++        mode === DatePickerMode.singleDay ? props.value : props.value.to;
+       const showsEndpoint = [anchorDate, rangeEnd].some(
+         (endpoint) =>
+           endpoint.getFullYear() === viewMonth.getFullYear() &&
+@@ -237,8 +250,8 @@ function Calendar(props: CalendarProps) {
+ 
+   const selectedRange: DateRange | null =
+     mode === DatePickerMode.singleDay
+-      ? { from: props.selected, to: props.selected }
+-      : props.selected;
++      ? { from: props.value, to: props.value }
++      : props.value;
+ 
+   const previewedRange =
+     pendingAnchor && hoveredDay ? previewRange(pendingAnchor, hoveredDay) : null;
+@@ -255,7 +268,7 @@ function Calendar(props: CalendarProps) {
+       if (mode === DatePickerMode.singleDay) {
+         const committed = startOfDay(date);
+         committedKey.current = toDayKey(committed);
+-        props.onSelect(committed);
++        props.onValueChange(committed);
+         return;
+       }
+ 
+@@ -267,7 +280,7 @@ function Calendar(props: CalendarProps) {
+       setPendingAnchor(null);
+       setHoveredDay(null);
+       committedKey.current = `${toDayKey(result.range.from)}|${toDayKey(result.range.to)}`;
+-      props.onSelect(result.range);
++      props.onValueChange(result.range);
+     },
+     [disabled, mode, pendingAnchor, props],
+   );
+@@ -359,6 +372,16 @@ function Calendar(props: CalendarProps) {
+   );
+ }
+ 
++/**
++ * Validates before any hook or date maths runs, so the view's hooks are never
++ * skipped conditionally — an invalid value unmounts the view (its month and
++ * focus state reset when a valid value comes back).
++ */
++function Calendar(props: CalendarProps) {
++  if (!hasValidValue(props)) return null;
++  return <CalendarView {...props} />;
++}
++
+ Calendar.displayName = "Calendar";
+ 
+ export { Calendar };
+diff --git a/src/components/Calendar/CalendarPresetsPanel.tsx b/src/components/Calendar/CalendarPresetsPanel.tsx
+index 5711d4c..c01cafa 100644
+--- a/src/components/Calendar/CalendarPresetsPanel.tsx
++++ b/src/components/Calendar/CalendarPresetsPanel.tsx
+@@ -28,15 +28,19 @@ const CalendarPresetsPanel = forwardRef<HTMLDivElement, CalendarPresetsPanelProp
+ );
+ CalendarPresetsPanel.displayName = "CalendarPresetsPanel";
+ 
++// `value` is omitted because the native button attribute would collide with
++// the range. `onSelect` stays omitted so a pre-v6 `onSelect` is a type error
++// rather than a silently-attached native DOM handler.
+ export type CalendarPresetItemProps = Omit<
+   ComponentPropsWithoutRef<"button">,
+-  "onSelect" | "children"
++  "value" | "onSelect" | "children"
+ > & {
+   preset: CalendarPreset;
+   /** The live committed range, used to derive the active state. */
+-  selected?: DateRange | null;
++  value?: DateRange | null;
+   today?: Date;
+-  onSelect: (range: DateRange) => void;
++  /** Called with this preset's range when the item is clicked. */
++  onValueChange: (range: DateRange) => void;
+ };
+ 
+ /**
+@@ -45,13 +49,13 @@ export type CalendarPresetItemProps = Omit<
+  * `getRange`, so the calendar stays the single source of truth.
+  */
+ const CalendarPresetItem = forwardRef<HTMLButtonElement, CalendarPresetItemProps>(
+-  ({ className, preset, selected, today, onSelect, onClick, ...props }, ref) => {
++  ({ className, preset, value, today, onValueChange, onClick, ...props }, ref) => {
+     const now = startOfDay(today ?? new Date());
+     const presetRange = preset.getRange(now);
+     const isActive =
+-      !!selected &&
+-      isSameDay(selected.from, presetRange.from) &&
+-      isSameDay(selected.to, presetRange.to);
++      !!value &&
++      isSameDay(value.from, presetRange.from) &&
++      isSameDay(value.to, presetRange.to);
+ 
+     return (
+       <button
+@@ -62,7 +66,7 @@ const CalendarPresetItem = forwardRef<HTMLButtonElement, CalendarPresetItemProps
+           // Compose rather than let a consumer `onClick` silently replace
+           // preset selection: theirs runs first, selection always follows.
+           onClick?.(event);
+-          onSelect(preset.getRange(now));
++          onValueChange(preset.getRange(now));
+         }}
+         className={cn(
+           menuItemClassName,
+diff --git a/src/components/Calendar/dateFormat.ts b/src/components/Calendar/dateFormat.ts
+index 3ba550a..d95083a 100644
+--- a/src/components/Calendar/dateFormat.ts
++++ b/src/components/Calendar/dateFormat.ts
+@@ -2,6 +2,7 @@
+ // Everything goes through Intl; the package ships no formatting dependency.
+ 
+ import type { DateRange } from "./constants";
++import { isValidDate, isValidRange } from "./dateUtils";
+ 
+ const YEARS_BACK = 10;
+ const YEARS_FORWARD = 1;
+@@ -27,14 +28,17 @@ function format(date: Date, locale: string | undefined, withYear: boolean): stri
+   }).format(date);
+ }
+ 
++/* An invalid value labels as "" so a trigger never crashes; Calendar warns and renders nothing for the same value. */
+ export function formatSingleLabel(
+   date: Date,
+   now: Date,
+   locale?: string,
+ ): string {
++  if (!isValidDate(date)) return "";
+   return format(date, locale, date.getFullYear() !== now.getFullYear());
+ }
+ 
++/* An invalid value labels as "" so a trigger never crashes; Calendar warns and renders nothing for the same value. */
+ /**
+  * The year appears when the range is not entirely within the current year —
+  * and it appears on BOTH endpoints or neither, never on one.
+@@ -44,6 +48,7 @@ export function formatRangeLabel(
+   now: Date,
+   locale?: string,
+ ): string {
++  if (!isValidRange(range)) return "";
+   const currentYear = now.getFullYear();
+   const withYear =
+     range.from.getFullYear() !== currentYear ||
+diff --git a/src/components/Calendar/dateUtils.ts b/src/components/Calendar/dateUtils.ts
+index 97e6d88..5ba217d 100644
+--- a/src/components/Calendar/dateUtils.ts
++++ b/src/components/Calendar/dateUtils.ts
+@@ -8,6 +8,8 @@
+ //      `t + 86400000` land on 01:00, not the next midnight. Always construct.
+ //   3. Never compare with `getTime()` — compare y/m/d, or compare day keys.
+ 
++import type { DateRange } from "./constants";
++
+ /** Sunday. Fixed by design; the calendar does not expose a week-start prop. */
+ export const WEEK_STARTS_ON = 0;
+ export const DAYS_IN_WEEK = 7;
+@@ -15,6 +17,17 @@ export const DAYS_IN_WEEK = 7;
+ export const WEEKS_IN_GRID = 6;
+ export const CELLS_IN_GRID = WEEKS_IN_GRID * DAYS_IN_WEEK;
+ 
++/** A Date holding a real time — not `undefined`, not `new Date("nope")`. */
++export function isValidDate(value: unknown): value is Date {
++  return value instanceof Date && !Number.isNaN(value.getTime());
++}
++
++/** `{ from, to }` with both ends valid Dates. Order is not checked here. */
++export function isValidRange(value: unknown): value is DateRange {
++  const range = value as Partial<DateRange> | null | undefined;
++  return !!range && isValidDate(range.from) && isValidDate(range.to);
++}
++
+ /** Midnight on the same local calendar day. */
+ export function startOfDay(date: Date): Date {
+   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+diff --git a/src/components/Calendar/index.ts b/src/components/Calendar/index.ts
+index 52a352a..7d4d586 100644
+--- a/src/components/Calendar/index.ts
++++ b/src/components/Calendar/index.ts
+@@ -17,6 +17,3 @@ export {
+ } from "./constants";
+ export type { CalendarPreset, DateRange } from "./constants";
+ export type { DateMatcher } from "./dateUtils";
+-// Re-exported for sibling components (DatePickerSplitTrigger) so nothing deep-imports.
+-export { isSameDay, startOfDay } from "./dateUtils";
+-export { formatRangeLabel, formatSingleLabel } from "./dateFormat";
+diff --git a/src/components/Calendar/rangeSelection.ts b/src/components/Calendar/rangeSelection.ts
+index 3a4d320..41b911e 100644
+--- a/src/components/Calendar/rangeSelection.ts
++++ b/src/components/Calendar/rangeSelection.ts
+@@ -15,7 +15,7 @@ export type RangeClickResult =
+   | { kind: "commit"; range: DateRange };
+ 
+ /**
+- * `onChange` must fire only for a "commit" result. A "pending" result leaves
++ * `onValueChange` must fire only for a "commit" result. A "pending" result leaves
+  * the consumer's committed value untouched, so an incomplete range is never
+  * emitted and never rendered.
+  */
+diff --git a/src/components/Checkbox/index.ts b/src/components/Checkbox/index.ts
+index 1366f1a..04a1a15 100644
+--- a/src/components/Checkbox/index.ts
++++ b/src/components/Checkbox/index.ts
+@@ -1,3 +1,3 @@
+-export { Checkbox, CheckboxIndicator, checkboxVariants } from './Checkbox';
++export { Checkbox, CheckboxIndicator } from './Checkbox';
+ export { CheckboxChecked, CheckboxVariant } from './constants';
+ export type { CheckboxProps } from './Checkbox';
+diff --git a/src/components/DatePicker/DatePicker.stories.tsx b/src/components/DatePicker/DatePicker.stories.tsx
+index 11b43c0..8f9b244 100644
+--- a/src/components/DatePicker/DatePicker.stories.tsx
++++ b/src/components/DatePicker/DatePicker.stories.tsx
+@@ -28,7 +28,7 @@ export const SingleDay: Story = {
+       <DatePicker
+         mode={DatePickerMode.singleDay}
+         value={value}
+-        onChange={setValue}
++        onValueChange={setValue}
+         today={TODAY}
+       />
+     );
+@@ -45,7 +45,7 @@ export const DateRangeMode: Story = {
+       <DatePicker
+         mode={DatePickerMode.dateRange}
+         value={value}
+-        onChange={setValue}
++        onValueChange={setValue}
+         today={TODAY}
+       />
+     );
+@@ -61,7 +61,7 @@ export const WithPresetsPanel: Story = {
+       <DatePicker
+         mode={DatePickerMode.dateRange}
+         value={value}
+-        onChange={setValue}
++        onValueChange={setValue}
+         today={TODAY}
+       >
+         <CalendarPresetsPanel>
+@@ -69,9 +69,9 @@ export const WithPresetsPanel: Story = {
+             <CalendarPresetItem
+               key={preset.id}
+               preset={preset}
+-              selected={value}
++              value={value}
+               today={TODAY}
+-              onSelect={setValue}
++              onValueChange={setValue}
+             />
+           ))}
+         </CalendarPresetsPanel>
+@@ -89,7 +89,7 @@ export const SplitTrigger: Story = {
+       <DatePicker
+         mode={DatePickerMode.dateRange}
+         value={value}
+-        onChange={setValue}
++        onValueChange={setValue}
+         splitPresets={DEFAULT_SPLIT_TRIGGER_PRESETS}
+         today={TODAY}
+       />
+@@ -107,7 +107,7 @@ export const CrossingAYearBoundary: Story = {
+       <DatePicker
+         mode={DatePickerMode.dateRange}
+         value={value}
+-        onChange={setValue}
++        onValueChange={setValue}
+         today={TODAY}
+       />
+     );
+@@ -120,14 +120,14 @@ export const DisabledTrigger: Story = {
+       <DatePicker
+         mode={DatePickerMode.singleDay}
+         value={new Date(2026, 4, 14)}
+-        onChange={() => {}}
++        onValueChange={() => {}}
+         triggerDisabled
+         today={TODAY}
+       />
+       <DatePicker
+         mode={DatePickerMode.dateRange}
+         value={{ from: new Date(2026, 4, 14), to: new Date(2026, 5, 14) }}
+-        onChange={() => {}}
++        onValueChange={() => {}}
+         splitPresets={DEFAULT_SPLIT_TRIGGER_PRESETS}
+         triggerDisabled
+         today={TODAY}
+@@ -135,3 +135,27 @@ export const DisabledTrigger: Story = {
+     </div>
+   ),
+ };
++
++/**
++ * An invalid `value` gives the triggers an empty label instead of crashing.
++ * Opening the panel shows no calendar: Calendar warns and renders nothing.
++ */
++export const InvalidValueEmptyLabel: Story = {
++  render: () => (
++    <div className="flex flex-col gap-rg">
++      <DatePicker
++        mode={DatePickerMode.singleDay}
++        value={new Date("not a date")}
++        onValueChange={() => {}}
++        today={TODAY}
++      />
++      <DatePicker
++        mode={DatePickerMode.dateRange}
++        value={{ from: new Date(NaN), to: TODAY }}
++        onValueChange={() => {}}
++        splitPresets={DEFAULT_SPLIT_TRIGGER_PRESETS}
++        today={TODAY}
++      />
++    </div>
++  ),
++};
+diff --git a/src/components/DatePicker/DatePicker.tsx b/src/components/DatePicker/DatePicker.tsx
+index 34506ca..29915ca 100644
+--- a/src/components/DatePicker/DatePicker.tsx
++++ b/src/components/DatePicker/DatePicker.tsx
+@@ -37,14 +37,14 @@ export type DatePickerProps = DatePickerSharedProps &
+     | {
+         mode: typeof DatePickerMode.singleDay;
+         value: Date;
+-        onChange: (date: Date) => void;
++        onValueChange: (date: Date) => void;
+         /** Not available in single-day mode. */
+         splitPresets?: never;
+       }
+     | {
+         mode: typeof DatePickerMode.dateRange;
+         value: DateRange;
+-        onChange: (range: DateRange) => void;
++        onValueChange: (range: DateRange) => void;
+         /** Render the split trigger with these inline preset shortcuts. */
+         splitPresets?: Parameters<typeof DatePickerSplitTrigger>[0]["presets"];
+       }
+@@ -83,7 +83,7 @@ function DatePicker(props: DatePickerProps) {
+         <DatePickerSplitTrigger
+           value={props.value}
+           presets={props.splitPresets}
+-          onSelect={props.onChange}
++          onValueChange={props.onValueChange}
+           today={today}
+           locale={locale}
+           disabled={triggerDisabled}
+@@ -131,8 +131,8 @@ function DatePicker(props: DatePickerProps) {
+         {mode === DatePickerMode.singleDay ? (
+           <Calendar
+             mode={DatePickerMode.singleDay}
+-            selected={props.value}
+-            onSelect={props.onChange}
++            value={props.value}
++            onValueChange={props.onValueChange}
+             disabled={disabled}
+             today={today}
+             locale={locale}
+@@ -146,8 +146,8 @@ function DatePicker(props: DatePickerProps) {
+         ) : (
+           <Calendar
+             mode={DatePickerMode.dateRange}
+-            selected={props.value}
+-            onSelect={props.onChange}
++            value={props.value}
++            onValueChange={props.onValueChange}
+             disabled={disabled}
+             today={today}
+             locale={locale}
+diff --git a/src/components/DatePicker/DatePickerSplitTrigger.tsx b/src/components/DatePicker/DatePickerSplitTrigger.tsx
+index 9bb172c..6b477cf 100644
+--- a/src/components/DatePicker/DatePickerSplitTrigger.tsx
++++ b/src/components/DatePicker/DatePickerSplitTrigger.tsx
+@@ -14,13 +14,16 @@ import { TabSize } from "../Tabs";
+ import { ButtonText } from "../Text";
+ import {
+   DEFAULT_SPLIT_TRIGGER_PRESETS,
+-  formatRangeLabel,
+-  isSameDay,
+-  startOfDay,
+   type CalendarPreset,
+   type DateRange,
+ } from "../Calendar";
++// Internal helpers: imported from their modules, not the public Calendar barrel.
++import { formatRangeLabel } from "../Calendar/dateFormat";
++import { isSameDay, startOfDay } from "../Calendar/dateUtils";
+ 
++// `onSelect` stays omitted although the callback is now `onValueChange`: a
++// pre-v6 `onSelect` must stay a type error, not silently become the root div's
++// native DOM handler that never receives a range.
+ export type DatePickerSplitTriggerProps = Omit<
+   ComponentPropsWithoutRef<"div">,
+   "onSelect"
+@@ -28,7 +31,7 @@ export type DatePickerSplitTriggerProps = Omit<
+   value: DateRange;
+   /** Inline shortcuts. Defaults to the three from the Figma spec. */
+   presets?: CalendarPreset[];
+-  onSelect: (range: DateRange) => void;
++  onValueChange: (range: DateRange) => void;
+   today?: Date;
+   locale?: string;
+   disabled?: boolean;
+@@ -51,7 +54,7 @@ const DatePickerSplitTrigger = forwardRef<
+       className,
+       value,
+       presets = DEFAULT_SPLIT_TRIGGER_PRESETS,
+-      onSelect,
++      onValueChange,
+       today,
+       locale,
+       disabled,
+@@ -69,6 +72,8 @@ const DatePickerSplitTrigger = forwardRef<
+     // preset.
+     const activePresetId =
+       presets.find((preset) => {
++        // An invalid value matches no preset; Calendar warns about it.
++        if (!(value?.from instanceof Date) || !(value?.to instanceof Date)) return false;
+         const presetRange = preset.getRange(now);
+         return (
+           isSameDay(value.from, presetRange.from) &&
+@@ -78,7 +83,7 @@ const DatePickerSplitTrigger = forwardRef<
+ 
+     const handlePresetChange = (id: string) => {
+       const preset = presets.find((candidate) => candidate.id === id);
+-      if (preset) onSelect(preset.getRange(now));
++      if (preset) onValueChange(preset.getRange(now));
+     };
+ 
+     return (
+diff --git a/src/components/DatePicker/DatePickerTrigger.tsx b/src/components/DatePicker/DatePickerTrigger.tsx
+index 77f9611..1c207f6 100644
+--- a/src/components/DatePicker/DatePickerTrigger.tsx
++++ b/src/components/DatePicker/DatePickerTrigger.tsx
+@@ -5,12 +5,9 @@ import { cn } from "../../utils/cn";
+ import { DropdownTrigger, DropdownTriggerContent } from "../DropdownTrigger";
+ import { CalendarIcon, IconSize } from "../Icons";
+ import { ButtonText } from "../Text";
+-import {
+-  DatePickerMode,
+-  formatRangeLabel,
+-  formatSingleLabel,
+-  type DateRange,
+-} from "../Calendar";
++import { DatePickerMode, type DateRange } from "../Calendar";
++// Internal helpers: imported from their module, not the public Calendar barrel.
++import { formatRangeLabel, formatSingleLabel } from "../Calendar/dateFormat";
+ 
+ type DatePickerTriggerSharedProps = Omit<
+   ComponentPropsWithoutRef<"button">,
+diff --git a/src/components/DatePicker/index.ts b/src/components/DatePicker/index.ts
+index cb8cb85..1422385 100644
+--- a/src/components/DatePicker/index.ts
++++ b/src/components/DatePicker/index.ts
+@@ -1,6 +1,6 @@
+ export { DatePicker } from "./DatePicker";
+ export type { DatePickerProps } from "./DatePicker";
+-export { DatePickerTrigger, formatTriggerLabel } from "./DatePickerTrigger";
++export { DatePickerTrigger } from "./DatePickerTrigger";
+ export type { DatePickerTriggerProps } from "./DatePickerTrigger";
+ export { DatePickerSplitTrigger } from "./DatePickerSplitTrigger";
+ export type { DatePickerSplitTriggerProps } from "./DatePickerSplitTrigger";
+diff --git a/src/components/Input/Input.tsx b/src/components/Input/Input.tsx
+index 0aaecc2..cf3d265 100644
+--- a/src/components/Input/Input.tsx
++++ b/src/components/Input/Input.tsx
+@@ -9,7 +9,7 @@
+  *   prop, and `ref`, always land on the `<input>`.
+  * - Number variants use the mono role, pad 12px both sides, centre their
+  *   content, never shrink below one button height (a square) and grow with the
+- *   value. The icon variants require `icon`.
++ *   value. The icon variants require an `icon` element.
+  * - Clicking the wrapper's chrome (padding, icon) focuses the input.
+  *
+  * ## constraints
+@@ -25,7 +25,8 @@
+  * - `InputVariant.text` without `icon` stays a bare `<input>`: existing
+  *   consumers style and measure that element directly, and wrapping it would
+  *   move their `className` onto a different node.
+- * - An icon variant without `icon` throws. The props union is the real guard;
++ * - An icon variant without an `icon` element (null, false, "" included)
++ *   throws. The props union is the real guard (`icon` is a `ReactElement`);
+  *   the throw covers JavaScript consumers and runtime-computed variants —
+  *   rendering a variant with an empty icon slot would silently misreport what
+  *   was asked for (same rule as SliderVariant.custom).
+@@ -34,12 +35,13 @@
+ 
+ import {
+   forwardRef,
++  isValidElement,
+   useRef,
+   useState,
+   type ChangeEvent,
+   type InputHTMLAttributes,
+   type PointerEvent,
+-  type ReactNode,
++  type ReactElement,
+ } from "react";
+ import { cn } from "../../utils/cn";
+ import { InputVariant } from "./constants";
+@@ -56,7 +58,7 @@ export type InputProps =
+   | (InputBaseProps & {
+       variant: typeof InputVariant.iconText | typeof InputVariant.iconNumber;
+       /** Leading icon, e.g. <PencilIcon />. Sized by the icon itself (14px default). */
+-      icon: ReactNode;
++      icon: ReactElement;
+     });
+ 
+ const Input = forwardRef<HTMLInputElement, InputProps>(
+@@ -96,9 +98,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+       onChange?.(event);
+     };
+ 
+-    if (hasIcon && icon == null) {
++    if (hasIcon && !isValidElement(icon)) {
+       throw new Error(
+-        `Input: variant "${variant}" requires an \`icon\` prop.`,
++        `[Input] variant "${variant}" requires an \`icon\` element, e.g. icon={<PencilIcon />}.`,
+       );
+     }
+ 
+diff --git a/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx b/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
+index be81b96..61a8e76 100644
+--- a/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
++++ b/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
+@@ -26,7 +26,7 @@ import { resolveDsColor, type DsColor } from '../../utils/color';
+ 
+ export interface LinearProgressIndicatorProps
+   extends ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
+-  /** Filled-bar color. Accepts a DS token name ('primary', 'brand', 'text') or
++  /** Filled-bar color. Accepts a DS token name ('primary', 'prominent', 'text') or
+    * any CSS color. Defaults to the primary token. */
+   color?: DsColor;
+ }
+diff --git a/src/components/LoadingSpinner/LoadingSpinner.tsx b/src/components/LoadingSpinner/LoadingSpinner.tsx
+index e1e0b1c..00d894d 100644
+--- a/src/components/LoadingSpinner/LoadingSpinner.tsx
++++ b/src/components/LoadingSpinner/LoadingSpinner.tsx
+@@ -8,6 +8,7 @@ import {
+   type Ref,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { resolveDsColor, type DsColor } from "../../utils/color";
+ import {
+   LoadingSpinnerColor,
+   LoadingSpinnerSize,
+@@ -23,27 +24,16 @@ import {
+   type SpinnerSizeKey,
+ } from "./spinnerGeometry";
+ 
+-// ── Color resolution ──────────────────────────────────────────────────────────
+-
+-const COLOR_TOKENS: Record<LoadingSpinnerColor, string> = {
+-  primary: "var(--ui-color-primary)",
+-  prominent: "var(--ui-color-prominent)",
+-};
+-
+-/** Preset color aliases resolve to design tokens; arbitrary strings pass through. */
+-function resolveColor(color: string): string {
+-  return COLOR_TOKENS[color as LoadingSpinnerColor] ?? color;
+-}
+-
+ // ── Types ─────────────────────────────────────────────────────────────────────
+ 
+ export type LoadingSpinnerProps = {
+   variant?: LoadingSpinnerVariant;
+   /**
+-   * Preset color alias or any CSS string (e.g. `"#ff6b6b"`).
++   * A DS colour name (`DS_COLOR_TOKENS` key, e.g. `"primary"`, `"danger"`,
++   * `"text-secondary"`) or any CSS colour (e.g. `"#ff6b6b"`).
+    * @default LoadingSpinnerColor.primary
+    */
+-  color?: LoadingSpinnerColor | (string & {});
++  color?: DsColor;
+   size?: LoadingSpinnerSize;
+   className?: string;
+ } & Omit<ComponentPropsWithoutRef<"svg">, "children" | "className">;
+@@ -298,7 +288,7 @@ export const LoadingSpinner = forwardRef<SVGSVGElement, LoadingSpinnerProps>(
+     ref,
+   ) => {
+     const geo = getSpinnerGeometry(size as SpinnerSizeKey);
+-    const strokeColor = resolveColor(color);
++    const strokeColor = resolveDsColor(color, "var(--ui-color-primary)");
+ 
+     const svgProps: InnerSvgProps = {
+       role: "status",
+diff --git a/src/components/OutlineButton/OutlineButton.stories.tsx b/src/components/OutlineButton/OutlineButton.stories.tsx
+index 805521e..59d8731 100644
+--- a/src/components/OutlineButton/OutlineButton.stories.tsx
++++ b/src/components/OutlineButton/OutlineButton.stories.tsx
+@@ -28,7 +28,7 @@ const meta = {
+   argTypes: {
+     disabled: { control: "boolean" },
+     glowing: { control: "boolean" },
+-    inverseTheme: { control: "boolean" },
++    themeInverse: { control: "boolean" },
+     glowColor1: { control: "color" },
+     glowColor2: { control: "color" },
+   },
+@@ -56,10 +56,10 @@ export const Disabled: Story = {
+   args: { children: "Find anything", disabled: true },
+ };
+ 
+-/** inverseTheme swaps the inner surface from secondary tokens to primary tokens. */
+-export const InverseTheme: Story = {
++/** themeInverse swaps the inner surface from secondary tokens to primary tokens. */
++export const ThemeInverse: Story = {
+   render: () => (
+-    <OutlineButton inverseTheme>
++    <OutlineButton themeInverse>
+       <SearchIcon />
+       Find anything
+     </OutlineButton>
+diff --git a/src/components/OutlineButton/OutlineButton.tsx b/src/components/OutlineButton/OutlineButton.tsx
+index e9f590c..4e1b275 100644
+--- a/src/components/OutlineButton/OutlineButton.tsx
++++ b/src/components/OutlineButton/OutlineButton.tsx
+@@ -21,9 +21,9 @@ type OutlineButtonOwnProps = {
+   /**
+    * Swaps the inner button surface from secondary tokens to primary tokens —
+    * useful when OutlineButton sits on a background where the secondary surface
+-   * would blend in. Mirrors the `themeInverse` pattern on Tooltip.
++   * would blend in. Same flag as Tooltip's `themeInverse`.
+    */
+-  inverseTheme?: boolean;
++  themeInverse?: boolean;
+   /**
+    * When true the accent glow is always visible, regardless of hover state.
+    * The orbs use their original bottom-anchored positions (no cursor tracking).
+@@ -74,7 +74,7 @@ const OutlineButtonBase = forwardRef<
+     {
+       className,
+       asChild = false,
+-      inverseTheme = false,
++      themeInverse = false,
+       glowing = false,
+       glowColor1,
+       glowColor2,
+@@ -146,7 +146,7 @@ const OutlineButtonBase = forwardRef<
+           "inline-flex flex-col items-center justify-center",
+           "border border-solid border-border-primary rounded-[28px]",
+           "ds-p-ui-sm",
+-          inverseTheme && "border-primary",
++          themeInverse && "border-primary",
+           className,
+         )}
+       >
+@@ -162,7 +162,7 @@ const OutlineButtonBase = forwardRef<
+             "ds-motion-state",
+             "ds-focus-visible-ring",
+             "ds-disabled-state",
+-            inverseTheme
++            themeInverse
+               ? "bg-primary border-primary text-primary-fg"
+               : "bg-secondary border-border-primary text-secondary-fg",
+           )}
+diff --git a/src/components/ProgressIndicator/ProgressIndicator.stories.tsx b/src/components/ProgressIndicator/ProgressIndicator.stories.tsx
+index 5042bd7..22576a4 100644
+--- a/src/components/ProgressIndicator/ProgressIndicator.stories.tsx
++++ b/src/components/ProgressIndicator/ProgressIndicator.stories.tsx
+@@ -5,7 +5,7 @@ import {
+   LoadingSpinnerSize,
+ } from "../LoadingSpinner/constants";
+ import { ProgressIndicator } from "./ProgressIndicator";
+-import { ProgressIndicatorVariants } from "./constants";
++import { ProgressIndicatorVariant } from "./constants";
+ 
+ const meta = {
+   title: "Progress/ProgressIndicator",
+@@ -16,7 +16,7 @@ const meta = {
+     progress: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
+     variant: {
+       control: "select",
+-      options: Object.values(ProgressIndicatorVariants),
++      options: Object.values(ProgressIndicatorVariant),
+     },
+     color: {
+       control: "select",
+@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>;
+ export const Default: Story = {
+   args: {
+     progress: 0.6,
+-    variant: ProgressIndicatorVariants.flat,
++    variant: ProgressIndicatorVariant.flat,
+     color: LoadingSpinnerColor.primary,
+     size: LoadingSpinnerSize.rg,
+   },
+@@ -56,7 +56,7 @@ export const Complete: Story = {
+ export const WavyVariant: Story = {
+   args: {
+     progress: 0.6,
+-    variant: ProgressIndicatorVariants.wavy,
++    variant: ProgressIndicatorVariant.wavy,
+     size: LoadingSpinnerSize.md,
+   },
+ };
+@@ -92,7 +92,7 @@ export const WavyProgressSteps: Story = {
+         <ProgressIndicator
+           key={p}
+           progress={p}
+-          variant={ProgressIndicatorVariants.wavy}
++          variant={ProgressIndicatorVariant.wavy}
+           size={LoadingSpinnerSize.xl}
+         />
+       ))}
+@@ -112,7 +112,7 @@ export const Interactive: Story = {
+           <ProgressIndicator progress={value} size={LoadingSpinnerSize.md} />
+           <ProgressIndicator
+             progress={value}
+-            variant={ProgressIndicatorVariants.wavy}
++            variant={ProgressIndicatorVariant.wavy}
+             size={LoadingSpinnerSize.md}
+           />
+         </div>
+diff --git a/src/components/ProgressIndicator/ProgressIndicator.tsx b/src/components/ProgressIndicator/ProgressIndicator.tsx
+index 12fc307..2663f68 100644
+--- a/src/components/ProgressIndicator/ProgressIndicator.tsx
++++ b/src/components/ProgressIndicator/ProgressIndicator.tsx
+@@ -8,6 +8,7 @@ import {
+   type Ref,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { resolveDsColor, type DsColor } from "../../utils/color";
+ import {
+   getSpinnerGeometry,
+   type SpinnerGeometry,
+@@ -18,27 +19,12 @@ import {
+   LoadingSpinnerColor,
+   LoadingSpinnerSize,
+ } from "../LoadingSpinner/constants";
+-import {
+-  ProgressIndicatorVariants,
+-  type ProgressIndicatorVariant,
+-} from "./constants";
++import { ProgressIndicatorVariant } from "./constants";
+ import {
+   createMaterialWaveGeometry,
+   getWavyTrackGeometry,
+ } from "./waveGeometry";
+ 
+-
+-// ── Color resolution ──────────────────────────────────────────────────────────
+-
+-const COLOR_TOKENS: Record<string, string> = {
+-  primary: "var(--ui-color-primary)",
+-  prominent: "var(--ui-color-prominent)",
+-};
+-
+-function resolveColor(color: string): string {
+-  return COLOR_TOKENS[color] ?? color;
+-}
+-
+ // ── Types ─────────────────────────────────────────────────────────────────────
+ 
+ export type ProgressIndicatorProps = {
+@@ -49,12 +35,11 @@ export type ProgressIndicatorProps = {
+   progress: number;
+   variant?: ProgressIndicatorVariant;
+   /**
+-   * Preset alias or any CSS string (e.g. `"#ff6b6b"`).
++   * A DS colour name (`DS_COLOR_TOKENS` key, e.g. `"primary"`, `"danger"`,
++   * `"text-secondary"`) or any CSS colour (e.g. `"#ff6b6b"`).
+    * @default LoadingSpinnerColor.primary
+    */
+-  color?:
+-    | (typeof LoadingSpinnerColor)[keyof typeof LoadingSpinnerColor]
+-    | (string & {});
++  color?: DsColor;
+   size?: (typeof LoadingSpinnerSize)[keyof typeof LoadingSpinnerSize];
+   className?: string;
+ } & Omit<ComponentPropsWithoutRef<"svg">, "children" | "className">;
+@@ -264,11 +249,11 @@ function WavyProgressIndicator({
+  * Determinate circular progress indicator. Pass `progress` as a value from
+  * 0 (empty) to 1 (complete).
+  *
+- * Throws if `progress` is outside [0, 1] — invalid values are always a bug.
++ * Throws if `progress` is outside [0, 1] or NaN — invalid values are always a bug.
+  *
+  * ```tsx
+  * <ProgressIndicator progress={0.6} />
+- * <ProgressIndicator progress={progress} variant={ProgressIndicatorVariants.wavy} />
++ * <ProgressIndicator progress={progress} variant={ProgressIndicatorVariant.wavy} />
+  * <ProgressIndicator progress={1} color={LoadingSpinnerColor.prominent} size={LoadingSpinnerSize.md} />
+  * ```
+  */
+@@ -279,7 +264,7 @@ export const ProgressIndicator = forwardRef<
+   (
+     {
+       progress,
+-      variant = ProgressIndicatorVariants.flat,
++      variant = ProgressIndicatorVariant.flat,
+       color = LoadingSpinnerColor.primary,
+       size = LoadingSpinnerSize.rg,
+       className,
+@@ -287,14 +272,15 @@ export const ProgressIndicator = forwardRef<
+     },
+     ref,
+   ) => {
+-    if (progress < 0 || progress > 1) {
++    // Written as a negated range test so NaN (e.g. done / total with total 0) throws too.
++    if (!(progress >= 0 && progress <= 1)) {
+       throw new Error(
+         `[ProgressIndicator] progress must be a number between 0 and 1, received: ${progress}`,
+       );
+     }
+ 
+     const geo = getSpinnerGeometry(size as SpinnerSizeKey);
+-    const strokeColor = resolveColor(color);
++    const strokeColor = resolveDsColor(color, "var(--ui-color-primary)");
+ 
+     const svgProps: InnerSvgProps = {
+       role: "progressbar",
+@@ -306,7 +292,7 @@ export const ProgressIndicator = forwardRef<
+       ...props,
+     };
+ 
+-    if (variant === ProgressIndicatorVariants.wavy) {
++    if (variant === ProgressIndicatorVariant.wavy) {
+       return (
+         <WavyProgressIndicator
+           geo={geo}
+diff --git a/src/components/ProgressIndicator/constants.ts b/src/components/ProgressIndicator/constants.ts
+index 532d7c1..4dcca32 100644
+--- a/src/components/ProgressIndicator/constants.ts
++++ b/src/components/ProgressIndicator/constants.ts
+@@ -5,7 +5,7 @@
+ // copies. They are exported from LoadingSpinner/constants.ts, and the package
+ // barrel surfaces them, so there is no re-export here.
+ 
+-export const ProgressIndicatorVariants = {
++export const ProgressIndicatorVariant = {
+   /** Smooth circular arc — discrete arcs with M3 gap behaviour and CSS transitions. */
+   flat: "flat",
+   /**
+@@ -16,4 +16,4 @@ export const ProgressIndicatorVariants = {
+   wavy: "wavy",
+ } as const;
+ export type ProgressIndicatorVariant =
+-  (typeof ProgressIndicatorVariants)[keyof typeof ProgressIndicatorVariants];
++  (typeof ProgressIndicatorVariant)[keyof typeof ProgressIndicatorVariant];
+diff --git a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
+index 1191e81..7e3143b 100644
+--- a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
++++ b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
+@@ -1,11 +1,13 @@
+ /*
+  * ShapeMorphSpinner — the indeterminate loader: MorphRotationShape in
+  * `autoplay` mode with role="progressbar", the spinner size scale, and the
+- * spinner colour aliases. Sizes render from --ui-size-spinner-* (never a JS
+- * size table), so overriding those tokens resizes it.
++ * shared DS colour names (resolveDsColor). Sizes render from
++ * --ui-size-spinner-* (never a JS size table), so overriding those tokens
++ * resizes it.
+  */
+ import type { ComponentPropsWithoutRef, ComponentType } from "react";
+ import { cn } from "../../utils/cn";
++import { resolveDsColor, type DsColor } from "../../utils/color";
+ import { LoadingSpinnerColor, LoadingSpinnerSize } from "../LoadingSpinner/constants";
+ import { MorphRotationShape } from "../MorphRotationShape/MorphRotationShape";
+ import { MorphRotationShapeMode } from "../MorphRotationShape/constants";
+@@ -30,15 +32,10 @@ export const SHAPE_MORPH_SPINNER_SHAPES: ComponentType<ShapeProps>[] = [
+   CapsuleShape,
+ ];
+ 
+-const COLOR_TOKENS: Record<LoadingSpinnerColor, string> = {
+-  primary: "var(--ui-color-primary)",
+-  prominent: "var(--ui-color-prominent)",
+-};
+-
+ export type ShapeMorphSpinnerProps = Omit<ComponentPropsWithoutRef<"span">, "children" | "color"> & {
+   size?: LoadingSpinnerSize;
+-  /** Preset alias or any CSS colour. */
+-  color?: LoadingSpinnerColor | (string & {});
++  /** A DS colour name (DS_COLOR_TOKENS key) or any CSS colour. */
++  color?: DsColor;
+   /** DS shape components, at least two. */
+   shapes?: ComponentType<ShapeProps>[];
+   timing?: MorphRotationShapeAutoplayTiming;
+@@ -64,7 +61,7 @@ export const ShapeMorphSpinner = ({
+     style={{
+       width: `var(--ui-size-spinner-${size})`,
+       height: `var(--ui-size-spinner-${size})`,
+-      color: COLOR_TOKENS[color as LoadingSpinnerColor] ?? color,
++      color: resolveDsColor(color, "var(--ui-color-primary)"),
+       ...style,
+     }}
+     {...rest}
+diff --git a/src/components/Sticker/index.ts b/src/components/Sticker/index.ts
+index e2e7531..ac47968 100644
+--- a/src/components/Sticker/index.ts
++++ b/src/components/Sticker/index.ts
+@@ -1,3 +1,3 @@
+-export { Sticker, stickerVariants } from "./Sticker";
++export { Sticker } from "./Sticker";
+ export type { StickerProps } from "./Sticker";
+ export { StickerSize, StickerVariant } from "./constants";
+diff --git a/src/components/Text/BaseText.stories.tsx b/src/components/Text/BaseText.stories.tsx
+index 1fff96e..b80f433 100644
+--- a/src/components/Text/BaseText.stories.tsx
++++ b/src/components/Text/BaseText.stories.tsx
+@@ -14,7 +14,7 @@ import {
+   TitleText,
+ } from './BaseText';
+ import {
+-  FontAxes,
++  FontAxis,
+   FontSizes,
+   FontWeights,
+   Fonts,
+@@ -331,44 +331,44 @@ export const VariableAxes: Story = {
+         <BodyText fontSize={28}>{SAMPLE}</BodyText>
+       </Row>
+       <Row label="grade 0">
+-        <BodyText fontSize={28} axes={{ [FontAxes.grade]: 0 }}>
++        <BodyText fontSize={28} axes={{ [FontAxis.grade]: 0 }}>
+           {SAMPLE}
+         </BodyText>
+       </Row>
+       <Row label="grade 100">
+-        <BodyText fontSize={28} axes={{ [FontAxes.grade]: 100 }}>
++        <BodyText fontSize={28} axes={{ [FontAxis.grade]: 100 }}>
+           {SAMPLE}
+         </BodyText>
+       </Row>
+       <Row label="roundness 0">
+-        <BodyText fontSize={28} axes={{ [FontAxes.roundness]: 0 }}>
++        <BodyText fontSize={28} axes={{ [FontAxis.roundness]: 0 }}>
+           {SAMPLE}
+         </BodyText>
+       </Row>
+       <Row label="roundness 100">
+-        <BodyText fontSize={28} axes={{ [FontAxes.roundness]: 100 }}>
++        <BodyText fontSize={28} axes={{ [FontAxis.roundness]: 100 }}>
+           {SAMPLE}
+         </BodyText>
+       </Row>
+       <Row label="width 25">
+-        <BodyText fontSize={28} axes={{ [FontAxes.width]: 25 }}>
++        <BodyText fontSize={28} axes={{ [FontAxis.width]: 25 }}>
+           {SAMPLE}
+         </BodyText>
+       </Row>
+       <Row label="width 151">
+-        <BodyText fontSize={28} axes={{ [FontAxes.width]: 151 }}>
++        <BodyText fontSize={28} axes={{ [FontAxis.width]: 151 }}>
+           {SAMPLE}
+         </BodyText>
+       </Row>
+       <Row label="slant -10">
+-        <BodyText fontSize={28} axes={{ [FontAxes.slant]: -10 }}>
++        <BodyText fontSize={28} axes={{ [FontAxis.slant]: -10 }}>
+           {SAMPLE}
+         </BodyText>
+       </Row>
+       <Row label="grade 100 + width 60">
+         <BodyText
+           fontSize={28}
+-          axes={{ [FontAxes.grade]: 100, [FontAxes.width]: 60 }}
++          axes={{ [FontAxis.grade]: 100, [FontAxis.width]: 60 }}
+         >
+           {SAMPLE}
+         </BodyText>
+@@ -376,7 +376,7 @@ export const VariableAxes: Story = {
+       <Row label="label role — no such axes">
+         <LabelText
+           fontSize={28}
+-          axes={{ [FontAxes.grade]: 100, [FontAxes.roundness]: 0 }}
++          axes={{ [FontAxis.grade]: 100, [FontAxis.roundness]: 0 }}
+         >
+           {SAMPLE}
+         </LabelText>
+diff --git a/src/components/Text/BaseText.tsx b/src/components/Text/BaseText.tsx
+index 72903c5..23b30c1 100644
+--- a/src/components/Text/BaseText.tsx
++++ b/src/components/Text/BaseText.tsx
+@@ -56,7 +56,7 @@ type PolymorphicTextComponent<TOwnProps> = <
+  *
+  *   <BaseText font={Fonts.body} fontWeight={FontWeights.regular} />
+  *   <BodyText fontSize={16} fontWeight={450} lineHeight={1.6} />
+- *   <BodyText axes={{ [FontAxes.grade]: 40 }} />
++ *   <BodyText axes={{ [FontAxis.grade]: 40 }} />
+  */
+ const BaseTextBase = forwardRef<HTMLElement, BaseTextProps<ElementType>>(
+   (
+diff --git a/src/components/Text/constants.ts b/src/components/Text/constants.ts
+index 939aa9c..157ff3e 100644
+--- a/src/components/Text/constants.ts
++++ b/src/components/Text/constants.ts
+@@ -85,7 +85,7 @@ export type TrackingValue = (typeof Tracking)[keyof typeof Tracking];
+  * font-variation-settings OUTRANKS font-weight, so passing wght here silently
+  * disables that prop.
+  */
+-export const FontAxes = {
++export const FontAxis = {
+   weight: 'wght',
+   width: 'wdth',
+   slant: 'slnt',
+@@ -96,7 +96,7 @@ export const FontAxes = {
+   /** Google Sans Code: 0 = proportional cut, 1 = fixed pitch. */
+   mono: 'MONO',
+ } as const;
+-export type FontAxis = (typeof FontAxes)[keyof typeof FontAxes];
++export type FontAxis = (typeof FontAxis)[keyof typeof FontAxis];
+ 
+ /**
+  * Roles that ship a --ui-font-var-* token, mirroring tokens.css.
+@@ -145,7 +145,7 @@ export type FontWeightValue = FontWeight | (string & {}) | number;
+ export type LineHeightValue = (string & {}) | number;
+ /** `Tracking.*`, any CSS length, or a number (px). */
+ export type LetterSpacingValue = TrackingValue | (string & {}) | number;
+-/** Axis tag → value, e.g. `{ [FontAxes.grade]: 20, ROND: 100 }`. */
++/** Axis tag → value, e.g. `{ [FontAxis.grade]: 20, ROND: 100 }`. */
+ export type FontAxesValue = Partial<
+   Record<FontAxis | (string & {}), number | string>
+ >;
+diff --git a/src/components/Text/index.ts b/src/components/Text/index.ts
+index 6756847..2a6f52b 100644
+--- a/src/components/Text/index.ts
++++ b/src/components/Text/index.ts
+@@ -26,7 +26,7 @@ export type {
+   TitleTextProps,
+ } from "./BaseText";
+ export {
+-  FontAxes,
++  FontAxis,
+   Fonts,
+   FontSizes,
+   FontWeights,
+@@ -36,7 +36,6 @@ export {
+ export type {
+   Font,
+   FontAxesValue,
+-  FontAxis,
+   FontSize,
+   FontSizeValue,
+   FontValue,
+@@ -46,5 +45,4 @@ export type {
+   LineHeightValue,
+   TrackingValue,
+ } from "./constants";
+-export { serializeAxes } from "./textStyle";
+ export type { TextStyleProps } from "./textStyle";
+diff --git a/src/components/VerificationCode/VerificationCode.stories.tsx b/src/components/VerificationCode/VerificationCode.stories.tsx
+index 7c90429..38c98b9 100644
+--- a/src/components/VerificationCode/VerificationCode.stories.tsx
++++ b/src/components/VerificationCode/VerificationCode.stories.tsx
+@@ -41,7 +41,7 @@ export const Controlled: Story = {
+     const [value, setValue] = useState("");
+     return (
+       <div className="flex flex-col items-start gap-lg p-4">
+-        <VerificationCodeInput value={value} onChange={setValue} />
++        <VerificationCodeInput value={value} onValueChange={setValue} />
+         <LabelText className="text-text-secondary">
+           Value: {value || "(empty)"}
+         </LabelText>
+@@ -90,7 +90,7 @@ export const PreRolledSection: Story = {
+         </BodyText>
+         <VerificationCodeInput
+           value={value}
+-          onChange={(next) => {
++          onValueChange={(next) => {
+             setHasError(false);
+             setValue(next);
+           }}
+diff --git a/src/components/VerificationCode/VerificationCodeInput.tsx b/src/components/VerificationCode/VerificationCodeInput.tsx
+index 6410dba..03e1e61 100644
+--- a/src/components/VerificationCode/VerificationCodeInput.tsx
++++ b/src/components/VerificationCode/VerificationCodeInput.tsx
+@@ -3,7 +3,7 @@
+  *
+  * ## behavior
+  * - Renders `length` (default 6) CodeDigitInput cells. Controlled via `value` +
+- *   `onChange`, or uncontrolled via `defaultValue`.
++ *   `onValueChange`, or uncontrolled via `defaultValue`.
+  * - Digits only; auto-advance, backspace to previous, arrow navigation, paste.
+  * - `hasError` paints every cell with error-primary; `disabled` disables all.
+  *
+@@ -31,7 +31,7 @@ export interface VerificationCodeInputProps
+   length?: number;
+   value?: string;
+   defaultValue?: string;
+-  onChange?: (value: string) => void;
++  onValueChange?: (value: string) => void;
+   hasError?: boolean;
+   disabled?: boolean;
+   autoFocus?: boolean;
+@@ -50,7 +50,7 @@ const VerificationCodeInput = forwardRef<
+       length = 6,
+       value: valueProp,
+       defaultValue = "",
+-      onChange,
++      onValueChange,
+       hasError = false,
+       disabled = false,
+       autoFocus = false,
+@@ -72,9 +72,9 @@ const VerificationCodeInput = forwardRef<
+       (next: string) => {
+         const clipped = onlyDigits(next).slice(0, length);
+         if (!isControlled) setInternal(clipped);
+-        onChange?.(clipped);
++        onValueChange?.(clipped);
+       },
+-      [isControlled, length, onChange],
++      [isControlled, length, onValueChange],
+     );
+ 
+     const focusAt = (index: number) => {
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index a934be1..2982d8d 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -171,11 +171,6 @@
+     outline-color: var(--ui-color-focus-ring-danger);
+   }
+ 
+-  .ds-focus-ring {
+-    outline: 4px solid var(--ui-color-focus-ring-prominent);
+-    outline-offset: 0;
+-  }
+-
+   /* Open-state ring for popover/menu triggers. The state lives in the SELECTOR,
+    * not in a Tailwind variant: `data-[state=open]:ds-focus-ring` composes a
+    * variant with a package class, which emits no rule at all. */
+@@ -444,9 +439,6 @@
+   .ds-pr-ui-rg {
+     padding-right: var(--ui-spacing-rg);
+   }
+-  .ds-my-ui-sm {
+-    margin-block: var(--ui-spacing-sm);
+-  }
+ 
+   /*
+    * CopyButton — stacked clipboard/check icons swap via [data-copied].
+diff --git a/src/utils/color.ts b/src/utils/color.ts
+index aea5608..e8111cf 100644
+--- a/src/utils/color.ts
++++ b/src/utils/color.ts
+@@ -1,5 +1,8 @@
+-/* Shared color resolution for components that take a free-form `color` prop
+- * (Slider, LinearProgressIndicator).
++/* Shared color resolution for every component `color` prop that accepts DS
++ * colour names — the one name lookup in the package (Slider*,
++ * LinearProgressIndicator, Sticker, AIModelSelect, LoadingSpinner,
++ * ProgressIndicator / AIContextGauge, ShapeMorphSpinner). A component-private
++ * name→var table is a bug: names must mean the same thing everywhere.
+  *
+  * Deliberately server-safe (no "use client") so the token map can be read from
+  * RSC code, the same reason the dot-accessible enums live in constants modules.

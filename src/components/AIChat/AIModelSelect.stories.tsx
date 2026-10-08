@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -16,6 +16,7 @@ import {
   AIModelTooltipContent,
   AIThinkingEffortSelector,
 } from "./AIModelSelect";
+import { BodyText } from "../Text";
 
 /* A STORY-ONLY catalogue. The package ships no models, providers or effort
  * levels — this is the shape a consumer maps their own catalogue into. */
@@ -180,7 +181,7 @@ export const ThinkingEffort: Story = {
   render: function Render() {
     const [effort, setEffort] = useState("medium");
     return (
-      <div className="flex w-[234px] flex-col gap-md">
+      <div className="flex w-[234px] flex-col gap-lg">
         <AIThinkingEffortSelector
           label="Thinking"
           labels={{ start: "Faster", end: "Smarter" }}
@@ -208,9 +209,32 @@ export const ModelTooltip: Story = {
       <div className="flex h-[200px] items-start">
         <Tooltip open>
           <TooltipTrigger asChild>
-            <span className="text-style-body text-text">Claude Sonnet 5</span>
+            <BodyText className="text-text">Claude Sonnet 5</BodyText>
           </TooltipTrigger>
           <AIModelTooltipContent
+            side="bottom"
+            title="Claude Sonnet 5"
+            description="Dependable, straightforward and quick. Best for daily tasks and quick responses"
+            capability={30}
+            color="var(--ui-color-ai-anthropic)"
+          />
+        </Tooltip>
+      </div>
+    </TooltipProvider>
+  ),
+};
+
+/** Contradicts themeInverse (false here, flipping Tooltip's own true default). */
+export const ModelTooltipInverse: Story = {
+  render: () => (
+    <TooltipProvider>
+      <div className="flex h-[200px] items-start">
+        <Tooltip open>
+          <TooltipTrigger asChild>
+            <BodyText className="text-text">Claude Sonnet 5</BodyText>
+          </TooltipTrigger>
+          <AIModelTooltipContent
+            themeInverse
             side="bottom"
             title="Claude Sonnet 5"
             description="Dependable, straightforward and quick. Best for daily tasks and quick responses"

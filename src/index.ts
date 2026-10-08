@@ -34,19 +34,16 @@ export * from './components/Tooltip';
 export * from './components/Slider';
 export * from './components/AIChat';
 
-export * from './components/WavyDivider/WavyDivider';
-export * from './components/WavyDivider/constants';
-export * from './components/LoadingSpinner/LoadingSpinner';
-export * from './components/LoadingSpinner/constants';
+export * from './components/WavyDivider';
+export * from './components/LoadingSpinner';
 export * from './components/ShapeMorphSpinner';
-export * from './components/ProgressIndicator/ProgressIndicator';
-export * from './components/ProgressIndicator/constants';
+export * from './components/ProgressIndicator';
 export * from './components/LinearProgressIndicator';
 export * from './components/VerificationCode';
 export * from './components/Calendar';
 export * from './components/DatePicker';
 
 // Utilities
-export { cn } from './utils/cn';
+export { cn, DS_TW_MERGE_CONFIG } from './utils/cn';
 export { DS_COLOR_TOKENS, resolveDsColor } from './utils/color';
 export type { DsColor, DsColorToken } from './utils/color';

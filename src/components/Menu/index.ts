@@ -5,6 +5,8 @@ export {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
   DropdownMenuItem,
   DropdownMenuMultiSelectItem,
@@ -23,6 +25,9 @@ export {
   DropdownMenuSegmentVariant,
 } from './constants';
 export type {
+  DropdownMenuProps,
+  DropdownMenuContentProps,
+  DropdownMenuItemProps,
   DropdownMenuSectionProps,
   DropdownMenuSegmentProps,
 } from './DropdownMenu';

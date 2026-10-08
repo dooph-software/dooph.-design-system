@@ -18,27 +18,30 @@ import { ButtonSize, ButtonVariant, buttonVariants } from "../Button";
 import { BaseText, TextVariant, type BaseTextProps } from "../Text";
 import { CloseCancelIcon } from "../Icons";
 
-// ToastTypes (+ its type) lives in ./constants (server-safe), re-exported via
+// ToastVariant (+ its type) lives in ./constants (server-safe), re-exported via
 // index.ts; imported here for internal variant resolution.
-import { ToastTypes } from "./constants";
+import { ToastVariant } from "./constants";
 
-type ToastOptions = {
+export type ToastOptions = {
   title?: string;
   description?: string;
-  variant?: ToastTypes;
+  variant?: ToastVariant;
   duration?: number;
   action?: {
     label: string;
     altText?: string;
     onClick: () => void;
   };
+  /** Visible label of the complex toast's dismiss button. Default "Dismiss". */
   dismissLabel?: string;
+  /** Accessible name of the other variants' close (X) button. Default "Close". */
+  closeLabel?: string;
 };
 
 type ToastItem = ToastOptions & {
   id: string;
   open: boolean;
-  variant: ToastTypes;
+  variant: ToastVariant;
 };
 
 type ToastFn = (options: ToastOptions) => string;
@@ -57,34 +60,35 @@ const toastRootVariants = cva(
   [
     "group pointer-events-auto relative flex w-full overflow-hidden rounded-normal shadow-menu",
     "data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)]",
-    "data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-transform",
+    "data-[swipe=cancel]:translate-x-0",
     "data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)]",
-    "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-right-2 data-[state=open]:duration-150",
-    "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-right-2 data-[state=closed]:duration-150",
-    "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
+    "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-right-2",
+    "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-right-2",
+    // Enter/exit timing AND the swipe-cancel spring-back both come from here.
+    "ds-motion-overlay",
   ],
   {
     variants: {
       variant: {
         simple:
-          "ds-toast-width-simple flex-row items-center gap-xxl border border-solid border-border-popovers bg-modal-surface py-2 pl-4 pr-2 text-text",
+          "ds-toast-width-simple flex-row items-center gap-xxxl border border-solid border-border-popovers bg-modal-surface py-sm pl-lg pr-sm text-text",
         prominent:
-          "ds-toast-width-simple flex-row items-center gap-xxl border border-solid border-prominent bg-prominent py-2 pl-4 pr-2 text-prominent-fg",
+          "ds-toast-width-simple flex-row items-center gap-xxxl border border-solid border-prominent bg-prominent py-sm pl-lg pr-sm text-prominent-fg",
         danger:
-          "ds-toast-width-simple flex-row items-center gap-xxl bg-danger-secondary py-2 pl-4 pr-2 text-text",
+          "ds-toast-width-simple flex-row items-center gap-xxxl bg-danger-secondary py-sm pl-lg pr-sm text-text",
         complex:
-          "ds-toast-width-complex flex-col gap-md border border-solid border-border-popovers bg-modal-surface pb-3 pl-[14px] pr-3 pt-[14px] text-text",
+          "ds-toast-width-complex flex-col gap-lg border border-solid border-border-popovers bg-modal-surface pb-md pl-toast-inset pr-md pt-toast-inset text-text",
       },
     },
     defaultVariants: {
-      variant: "simple",
+      variant: ToastVariant.simple,
     },
   },
 );
 
 export interface ToastRootProps
   extends ComponentPropsWithoutRef<typeof ToastPrimitive.Root> {
-  variant?: ToastTypes;
+  variant?: ToastVariant;
 }
 
 const ToastRoot = forwardRef<
@@ -93,6 +97,9 @@ const ToastRoot = forwardRef<
 >(({ className, variant, ...props }, ref) => (
   <ToastPrimitive.Root
     ref={ref}
+    // The parts key their per-variant text colour off this (the root's `group`
+    // class), so a custom-composed toast matches the provider's template.
+    data-variant={variant ?? ToastVariant.simple}
     className={cn(toastRootVariants({ variant }), className)}
     {...props}
   />
@@ -106,7 +113,7 @@ const ToastViewport = forwardRef<
   <ToastPrimitive.Viewport
     ref={ref}
     className={cn(
-      "ds-toast-viewport fixed bottom-md right-md z-60 m-0 flex list-none flex-col items-end gap-xs p-0 outline-none",
+      "ds-toast-viewport fixed bottom-lg right-lg z-60 m-0 flex list-none flex-col items-end gap-sm p-0 outline-none",
       className,
     )}
     {...props}
@@ -129,7 +136,10 @@ const ToastDescription = forwardRef<HTMLElement, ToastDescriptionProps>(
       <BaseText
         ref={ref}
         variant={TextVariant.body}
-        className={cn("text-text-secondary", className)}
+        className={cn(
+          "text-text-secondary group-data-[variant=prominent]:text-prominent-fg",
+          className,
+        )}
         {...props}
       />
     </ToastPrimitive.Description>
@@ -166,7 +176,10 @@ const ToastClose = forwardRef<
         variant: ButtonVariant.ghost,
         size: ButtonSize.iconSm,
       }),
-      "shrink-0 text-current hover:text-current active:text-current",
+      // The ghost variant's own guarded selector, so cn() drops its
+      // hover/active text colour and this one wins (a bare hover:text-current
+      // loses on specificity and the icon vanished on the prominent toast).
+      "shrink-0 text-current [&:not(:disabled):not([aria-disabled=true])]:hover:text-current [&:not(:disabled):not([aria-disabled=true])]:active:text-current",
       className,
     )}
     {...props}
@@ -199,11 +212,18 @@ export interface ToastProviderProps extends ComponentPropsWithoutRef<
 > {
   children: ReactNode;
   viewportProps?: ComponentPropsWithoutRef<typeof ToastPrimitive.Viewport>;
+  /**
+   * Auto-dismiss delay in ms for every toast this provider renders. A
+   * `toast({ duration })` overrides it for that toast; pass `Infinity` to keep
+   * one open. Default 4000.
+   */
+  duration?: number;
 }
 
 function ToastProvider({
   children,
   viewportProps,
+  duration = 4000,
   ...props
 }: ToastProviderProps) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -216,41 +236,56 @@ function ToastProvider({
         ...options,
         id,
         open: true,
-        variant: options.variant ?? ToastTypes.simple,
+        variant: options.variant ?? ToastVariant.simple,
       },
     ]);
     return id;
   }, []);
 
+  // Closing only flips `open`; the item leaves state when its own exit
+  // animation ends (onAnimationEnd below), so the CSS owns the exit timing.
   const dismiss = useCallback((id: string) => {
     setToasts((prev) =>
       prev.map((item) => (item.id === id ? { ...item, open: false } : item)),
     );
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((item) => item.id !== id));
-    }, 200);
   }, []);
 
   const value = useMemo(() => ({ toast, dismiss }), [toast, dismiss]);
 
   return (
-    <ToastPrimitive.Provider swipeDirection="right" {...props}>
+    <ToastPrimitive.Provider
+      swipeDirection="right"
+      duration={duration}
+      {...props}
+    >
       <ToastContext.Provider value={value}>{children}</ToastContext.Provider>
       {toasts.map((item) => (
         <ToastRoot
           key={item.id}
           open={item.open}
-          duration={item.duration ?? 4000}
+          duration={item.duration}
           variant={item.variant}
           onOpenChange={(open) => {
-            if (!open) {
+            if (!open) dismiss(item.id);
+          }}
+          onAnimationEnd={(event) => {
+            // Prune only on this toast's own exit animation. Radix Presence
+            // keeps the <li> mounted until the data-[state=closed] animation
+            // ends, so the CSS is the only source of the exit timing. Under
+            // reduced motion the scale collapses to a near-zero duration (see
+            // the reduce block in tokens.css), which still dispatches
+            // animationend.
+            if (
+              event.target === event.currentTarget &&
+              event.currentTarget.dataset.state === "closed"
+            ) {
               setToasts((prev) =>
                 prev.filter((toastItem) => toastItem.id !== item.id),
               );
             }
           }}
         >
-          {item.variant === ToastTypes.complex ? (
+          {item.variant === ToastVariant.complex ? (
             <>
               <div className="flex w-full items-center justify-center pr-xxs">
                 <ToastTitle className="min-w-0 flex-1 wrap-break-word text-text">
@@ -280,31 +315,17 @@ function ToastProvider({
             <>
               <div className="min-w-0 flex-1">
                 {item.title && (
-                  <ToastTitle
-                    className={cn(
-                      "block wrap-break-word",
-                      item.variant === ToastTypes.prominent
-                        ? "text-prominent-fg"
-                        : "text-text",
-                    )}
-                  >
+                  <ToastTitle className="block wrap-break-word">
                     {item.title}
                   </ToastTitle>
                 )}
                 {item.description && (
-                  <ToastDescription
-                    className={cn(
-                      "block wrap-break-word",
-                      item.variant === ToastTypes.prominent
-                        ? "text-prominent-fg"
-                        : "text-text-secondary",
-                    )}
-                  >
+                  <ToastDescription className="block wrap-break-word">
                     {item.description}
                   </ToastDescription>
                 )}
               </div>
-              <ToastClose aria-label="Close" />
+              <ToastClose aria-label={item.closeLabel ?? "Close"} />
             </>
           )}
         </ToastRoot>

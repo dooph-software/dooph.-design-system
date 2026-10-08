@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { GraphIcon, InvoiceIcon, TableIcon } from '../Icons';
 import { SegmentedTabItem, SegmentedTabSelect } from './SegmentedTabSelect';
 import { SegmentedSize, SegmentedVariant } from './constants';
+import { TabSize, TabVariant } from '../Tabs/constants';
 
 const meta = {
   title: 'Navigation/SegmentedTabSelect',
@@ -28,7 +29,7 @@ const variants = [SegmentedVariant.primary, SegmentedVariant.ghost] as const;
 /** Figma Tab Select (827:2784) — text sizes. */
 export const TextSizes: Story = {
   render: () => (
-    <div className="flex flex-col gap-md">
+    <div className="flex flex-col gap-lg">
       {variants.map((variant) =>
         [SegmentedSize.container, SegmentedSize.standard].map((size) => (
           <SegmentedTabSelect key={`${variant}-${size}`} defaultValue="funding" variant={variant} size={size} data-testid={`${variant}-${size}`}>
@@ -43,9 +44,9 @@ export const TextSizes: Story = {
 };
 
 /** Icon sizes — containerIcon uses 28px micro icon items. */
-export const IconSizes: Story = {
+export const IconOnlySizes: Story = {
   render: () => (
-    <div className="flex flex-col gap-md">
+    <div className="flex flex-col gap-lg">
       {variants.map((variant) =>
         [SegmentedSize.containerIcon, SegmentedSize.icon].map((size) => (
           <SegmentedTabSelect key={`${variant}-${size}`} defaultValue="table" variant={variant} size={size} data-testid={`${variant}-${size}`}>
@@ -56,5 +57,24 @@ export const IconSizes: Story = {
         )),
       )}
     </div>
+  ),
+};
+
+/** Items contradict the inherited variant and size. */
+export const ItemOverrides: Story = {
+  render: () => (
+    <SegmentedTabSelect
+      defaultValue="funding"
+      variant={SegmentedVariant.primary}
+      size={SegmentedSize.standard}
+    >
+      <SegmentedTabItem value="funding">Funding</SegmentedTabItem>
+      <SegmentedTabItem value="all" variant={TabVariant.unselected}>
+        All
+      </SegmentedTabItem>
+      <SegmentedTabItem value="tx" size={TabSize.sm}>
+        Transactions
+      </SegmentedTabItem>
+    </SegmentedTabSelect>
   ),
 };

@@ -6,7 +6,7 @@
  * Usage: <TextDropdownTrigger size={TextDropdownSize.sm} />
  */
 export const TextDropdownSize = {
-  default: "default",
+  standard: "standard",
   sm: "sm",
 } as const;
 export type TextDropdownSize =

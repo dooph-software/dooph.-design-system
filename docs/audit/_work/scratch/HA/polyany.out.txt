@@ -1,0 +1,7 @@
+src/components/Button/Button.tsx:125 | any-bindings=4/5 | className, variant, size, asChild
+src/components/CopyButton/CopyButton.tsx:30 | any-bindings=5/6 | value, variant, onCopied, onClick, className
+src/components/DropdownTrigger/DropdownTrigger.tsx:52 | any-bindings=3/4 | className, children, asChild
+src/components/DropdownTrigger/DropdownTrigger.tsx:304 | any-bindings=4/5 | className, children, size, asChild
+src/components/OutlineButton/OutlineButton.tsx:73 | any-bindings=7/8 | className, asChild, inverseTheme, glowing, glowColor1, glowColor2, children
+src/components/ShapeButton/ShapeButton.tsx:105 | any-bindings=5/6 | className, shape, variant, asChild, children
+src/components/Text/BaseText.tsx:62 | any-bindings=12/13 | variant, Tag, unstyled, className, style, font, fontSize, fontWeight, lineHeight, letterSpacing, axes, tabular

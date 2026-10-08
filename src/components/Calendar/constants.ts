@@ -115,7 +115,7 @@ export const CalendarPresets = {
 } as const;
 
 /** The six presets in the Figma panel rail, in design order. */
-export const DEFAULT_CALENDAR_PRESETS: CalendarPreset[] = [
+export const DEFAULT_CALENDAR_PRESETS: readonly CalendarPreset[] = [
   CalendarPresets.days.three,
   CalendarPresets.days.seven,
   CalendarPresets.days.fourteen,
@@ -125,7 +125,7 @@ export const DEFAULT_CALENDAR_PRESETS: CalendarPreset[] = [
 ];
 
 /** The three inline presets in the Figma split trigger, in design order. */
-export const DEFAULT_SPLIT_TRIGGER_PRESETS: CalendarPreset[] = [
+export const DEFAULT_SPLIT_TRIGGER_PRESETS: readonly CalendarPreset[] = [
   CalendarPresets.days.seven,
   CalendarPresets.days.thirty,
   CalendarPresets.months.three,

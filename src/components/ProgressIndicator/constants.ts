@@ -5,15 +5,16 @@
 // copies. They are exported from LoadingSpinner/constants.ts, and the package
 // barrel surfaces them, so there is no re-export here.
 
-export const ProgressIndicatorVariants = {
+export const ProgressIndicatorVariant = {
   /** Smooth circular arc — discrete arcs with M3 gap behaviour and CSS transitions. */
   flat: "flat",
   /**
-   * Polar sine-wave arc — indicator follows a wavy path generated from `progress`.
-   * CSS path transitions are not applied (point count changes); drive `progress`
-   * gradually from a spring/animation loop for smooth motion.
+   * Material 3 wavy arc — one stable rounded-star path for the whole circle,
+   * revealed up to `progress` by a normalized stroke dash. The dash is not
+   * transitioned, so drive `progress` gradually (e.g. from a spring loop) for
+   * smooth motion.
    */
   wavy: "wavy",
 } as const;
 export type ProgressIndicatorVariant =
-  (typeof ProgressIndicatorVariants)[keyof typeof ProgressIndicatorVariants];
+  (typeof ProgressIndicatorVariant)[keyof typeof ProgressIndicatorVariant];

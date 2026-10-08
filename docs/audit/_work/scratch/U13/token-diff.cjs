@@ -1,0 +1,14 @@
+const parse = require("./tokens.cjs");
+const a = parse("v530/src/styles/tokens.css"), b = parse("head/src/styles/tokens.css");
+const la = new Set(Object.keys(a.light)), lb = new Set(Object.keys(b.light));
+const removed = [...la].filter((k) => !lb.has(k));
+const added = [...lb].filter((k) => !la.has(k));
+console.log("REMOVED (" + removed.length + "):"); for (const k of removed) console.log("  " + k + " = " + a.light[k] + (a.dark[k] ? " | dark " + a.dark[k] : ""));
+console.log("ADDED (" + added.length + "):"); console.log("  " + added.join(" "));
+console.log("VALUE CHANGED (light, same name):");
+for (const k of la) if (lb.has(k) && a.light[k] !== b.light[k]) console.log("  " + k + ": " + a.light[k] + "  ->  " + b.light[k]);
+console.log("VALUE CHANGED (dark, same name):");
+const da = new Set(Object.keys(a.dark)), db = new Set(Object.keys(b.dark));
+for (const k of new Set([...da, ...db])) if (la.has(k) && lb.has(k) && a.dark[k] !== b.dark[k]) console.log("  " + k + ": " + (a.dark[k] ?? "(none)") + "  ->  " + (b.dark[k] ?? "(none)"));
+console.log("HEAD .dark tokens identical to :root (mode-invariant redeclared):");
+for (const k of db) if (b.light[k] === b.dark[k]) console.log("  " + k + " = " + b.dark[k]);

@@ -1,0 +1,13 @@
+probe.tsx(7,101): error TS7006: Parameter 'v' implicitly has an 'any' type.
+probe.tsx(8,107): error TS7006: Parameter 'e' implicitly has an 'any' type.
+probe.tsx(16,1): error TS2578: Unused '@ts-expect-error' directive.
+probe.tsx(18,1): error TS2578: Unused '@ts-expect-error' directive.
+probe.tsx(20,1): error TS2578: Unused '@ts-expect-error' directive.
+probe.tsx(22,1): error TS2578: Unused '@ts-expect-error' directive.
+probe.tsx(24,1): error TS2578: Unused '@ts-expect-error' directive.
+probe.tsx(26,1): error TS2578: Unused '@ts-expect-error' directive.
+probe.tsx(28,1): error TS2578: Unused '@ts-expect-error' directive.
+probe.tsx(63,1): error TS2578: Unused '@ts-expect-error' directive.
+probe.tsx(67,1): error TS2578: Unused '@ts-expect-error' directive.
+probe.tsx(76,1): error TS2578: Unused '@ts-expect-error' directive.
+probe.tsx(78,1): error TS2578: Unused '@ts-expect-error' directive.

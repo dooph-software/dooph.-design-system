@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Button } from "../Button";
 import { ButtonSize, ButtonVariant } from "../Button/constants";
@@ -68,7 +68,7 @@ function SidebarToggle({
  * outward direction is interpolated rather than branched on. */
 export const Toggle: Story = {
   render: () => (
-    <div className="flex flex-col items-center gap-md p-4">
+    <div className="flex flex-col items-center gap-lg p-4">
       <SidebarToggle />
       <BodyText className="max-w-[42ch] text-center text-text-secondary">
         Hover to pull the rail into a chevron pointing where the panel will go.

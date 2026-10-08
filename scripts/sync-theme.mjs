@@ -2,20 +2,29 @@
  * sync-theme.mjs
  *
  * Single source of truth: tokens.css
- * Generated output:       the @theme inline { } block inside index.css
+ * Generated output:       the @theme inline { } block inside index.css,
+ *                         src/styles/theme.css (consumer Tailwind preset), and
+ *                         src/utils/twMergeTheme.ts (tailwind-merge lists for cn)
  *
  * Run manually:  node scripts/sync-theme.mjs
- * Wired into:    npm run prebuild  (see package.json)
+ * Wired into:    npm run sync-tokens (which npm run build and build:watch run
+ *                first; see package.json)
  *
  * HOW IT WORKS
  * ─────────────
- * 1. Parse tokens.css and extract every --ui-* variable name from :root { }
- * 2. Map each name to a Tailwind theme token using the rules in TOKEN_MAP
+ * 1. Parse tokens.css and extract every --ui-* variable name from the first
+ *    :root / :root,.light { } block (the light palette, inside
+ *    @layer ds.tokens). Later :root blocks — the expression tokens — and the
+ *    ds.expression preset are deliberately not read: none is a theme key.
+ * 2. Map each name to a Tailwind theme token (toThemeEntry: prefix rules +
+ *    ALIASES; EXCLUDED names and names no rule matches are skipped)
  * 3. Replace the @theme inline { } block in index.css between the auto-gen markers
+ * 4. Write the same entries to theme.css, and derive the twMergeTheme.ts lists
  *
  * HOW TO ADD A NEW TOKEN
  * ──────────────────────
- * 1. Add --ui-color-foo (or --ui-shadow-foo etc.) to tokens.css (light + dark)
+ * 1. Add --ui-color-foo (or --ui-shadow-foo etc.) to tokens.css :root (add a
+ *    .dark override only when the value differs)
  * 2. Run `node scripts/sync-theme.mjs`  — done.
  *
  * If the automatic name derivation is wrong (e.g. you want --color-bar instead of
@@ -31,6 +40,8 @@ const TOKENS_PATH = resolve(__dirname, "../src/styles/tokens.css");
 const INDEX_PATH = resolve(__dirname, "../src/styles/index.css");
 // Standalone Tailwind preset shipped to consumers (see § theme.css below).
 const THEME_PRESET_PATH = resolve(__dirname, "../src/styles/theme.css");
+// tailwind-merge lists read by src/utils/cn.ts (see § twMergeTheme.ts below).
+const TW_MERGE_THEME_PATH = resolve(__dirname, "../src/utils/twMergeTheme.ts");
 
 const GEN_START = "/* __GENERATED_THEME_START__ */";
 const GEN_END = "/* __GENERATED_THEME_END__ */";
@@ -56,9 +67,12 @@ const ALIASES = {
   "ui-prominent-color-ter": "color-prominent-color-ter",
 };
 
-// ── Tokens excluded from @theme (used only as raw var() refs or in @layer) ───
+// ── Tokens excluded from @theme ───────────────────────────────────────────────
+// Only an entry a prefix rule in toThemeEntry would otherwise map has an effect;
+// the rest record raw-var()-only tokens. A token no rule matches is skipped
+// whether it is listed or not.
 const EXCLUDED = new Set([
-  // Font variation axes and weights — used in @layer utilities .text-style-*
+  // Font variation axes and weights — used in @layer components .text-style-*
   "ui-font-var-button",
   "ui-font-var-body",
   "ui-font-var-heading",
@@ -71,6 +85,7 @@ const EXCLUDED = new Set([
   "ui-weight-title",
   "ui-weight-hero",
   "ui-weight-mono",
+  "ui-weight-cta",
   "ui-weight-regular",
   "ui-weight-medium",
   "ui-weight-semibold",
@@ -88,7 +103,15 @@ const EXCLUDED = new Set([
   // Button heights — exposed via custom @layer utilities (.h-button etc.)
   "ui-height-button",
   "ui-height-button-sm",
+  "ui-height-button-medium",
+  // Focus-ring widths: raw var() inside the ds-focus-* helpers, never a utility
+  "ui-focus-ring-width",
+  "ui-focus-ring-width-sm",
+  "ui-height-button-big",
   "ui-height-button-micro",
+  // Medium / big button padding — exposed via ds-px-button-* helpers
+  "ui-spacing-button-medium-x",
+  "ui-spacing-button-big-x",
   "ui-height-slider-track",
   "ui-slider-track-gap",
   "ui-width-slider-handle",
@@ -102,18 +125,55 @@ const EXCLUDED = new Set([
   // Checkbox / code digit — exposed via custom @layer utilities
   "ui-size-checkbox",
   "ui-size-code-digit",
-  // Roll-on-change motion — raw var() in keyframes / @layer utilities only
-  "ui-roll-change-out-duration",
-  "ui-roll-change-in-duration",
-  "ui-roll-change-out-ease",
-  "ui-roll-change-in-ease",
+  // Component sizes — exposed via custom @layer utilities (.size-avatar,
+  // .h-menu-label …) or ds-* helpers, never a Tailwind theme key
+  "ui-size-checkbox-icon",
+  "ui-size-avatar",
+  "ui-size-avatar-sm",
+  "ui-size-shape-button",
+  "ui-size-kbd",
+  "ui-height-menu-label",
+  "ui-height-text-trigger",
+  "ui-height-linear-progress",
+  // OutlineButton box + glow orbs — raw var() inside the ds-* helpers only
+  "ui-height-outline-button",
+  "ui-min-w-outline-button",
+  "ui-outline-button-orb-1-opacity",
+  "ui-outline-button-orb-2-opacity",
+  "ui-outline-button-orb-1-blur",
+  "ui-outline-button-orb-2-blur",
+  "ui-outline-button-orb-1-hover-blur",
+  "ui-outline-button-orb-2-hover-blur",
+  "ui-outline-button-orb-1-width",
+  "ui-outline-button-orb-1-height",
+  "ui-outline-button-orb-2-width",
+  "ui-outline-button-orb-2-height",
+  "ui-outline-button-orb-1-bottom",
+  "ui-outline-button-orb-1-left",
+  "ui-outline-button-orb-2-bottom",
+  "ui-outline-button-orb-2-right",
+  // Motion scale — raw var() inside the ds-motion-* helpers and CSS helpers
+  // only. Never a Tailwind theme key: components must not reach the scale
+  // through duration-N / ease-* utilities.
+  "ui-motion-duration-fast",
+  "ui-motion-duration-base",
+  "ui-motion-duration-slow",
+  "ui-motion-duration-slower",
+  "ui-motion-duration-slowest",
+  "ui-motion-ease-standard",
+  "ui-motion-ease-enter",
+  "ui-motion-ease-exit",
+  "ui-motion-ease-linear",
+  // Loop cycle times — raw var() in @layer utilities only
+  "ui-shimmer-duration",
+  "ui-spinner-duration",
+  "ui-spinner-rotate-duration",
+  "ui-spinner-spokes-duration",
+  // Roll-on-change depth/blur — raw var() in keyframes only
   "ui-roll-change-depth",
   "ui-roll-change-blur",
-  // Fade-roll-on-change motion — raw var() in keyframes / @layer utilities only
-  "ui-fade-change-out-duration",
-  "ui-fade-change-in-duration",
-  "ui-fade-change-out-ease",
-  "ui-fade-change-in-ease",
+  "ui-roll-change-breathe",
+  // Fade-roll-on-change depth — raw var() in keyframes only
   "ui-fade-change-depth",
   // Shape morph motion — raw var() in @layer utilities / keyframes only
   "ui-shape-morph-duration",
@@ -121,46 +181,45 @@ const EXCLUDED = new Set([
   "ui-shape-morph-interval",
   "ui-shape-morph-passive-spin-duration",
   "ui-shape-morph-nudge",
-  "ui-shape-morph-nudge-duration",
-  "ui-shape-morph-nudge-ease",
-  // Rolling digits motion / decimals offset — raw var() in @layer utilities only
-  "ui-rolling-digits-duration",
+  // Expression tokens — raw var() inside .ds-expr-* helpers only, never a
+  // utility (see the expression block at the end of tokens.css)
+  "ui-caret-shape-scale",
+  "ui-caret-nudge",
+  // Rolling digits stagger / geometry — raw var() in @layer utilities only
   "ui-rolling-digits-stagger",
-  "ui-rolling-digits-enter-duration",
-  "ui-rolling-digits-exit-duration",
   "ui-rolling-digits-opacity-ratio",
-  "ui-rolling-digits-ease",
   "ui-rolling-digits-digit-width",
   "ui-rolling-digits-separator-width",
   "ui-rolling-digits-decimals-rise",
   "ui-rolling-digits-decimals-gap",
   "ui-rolling-digits-decimals-size",
-  // Sidebar rail icon motion — raw var() in @layer utilities only
-  "ui-sidebar-icon-duration",
-  "ui-sidebar-icon-hover-duration",
-  "ui-sidebar-icon-ease",
   // Tooltip widths — exposed via ds-* helpers
   "ui-width-tooltip-rich",
   "ui-min-w-tooltip-complex",
-  // Menu widths — used as raw var() only
+  // Menu widths — read by the custom .min-w-menu utility and the ds-min-w-*
+  // helpers, never a theme key
   "ui-min-w-menu",
   "ui-min-w-menu-complex",
   "ui-min-w-search-box",
   // CTAButton geometry — exposed via ds-* helpers
   "ui-size-cta-chip-standard",
   "ui-size-cta-chip-big",
-  "ui-size-cta-icon",
+  "ui-size-cta-shape-standard",
+  "ui-size-cta-shape-big",
+  "ui-size-cta-icon-standard",
+  "ui-size-cta-icon-big",
   "ui-min-w-cta-content-standard",
   "ui-min-w-cta-content-big",
-  "ui-min-w-cta-pill-big",
+  "ui-spacing-cta-content-standard",
   "ui-spacing-cta-content-big",
-  // Opacity — used as var() in arbitrary Tailwind values
+  // Opacity — read by ds-* helpers and index.css rules, not utilities
   "ui-opacity-disabled",
   // Sticker washes — raw var() inside the sticker bg color-mix and the
   // custom variant's inline background. Not a utility.
   "ui-sticker-bg-opacity",
   "ui-sticker-bg-opacity-secondary",
-  // Focus ring colors — only used inside shadow values
+  // Focus ring colors — used inside shadow values and by the ds-focus-* outline
+  // helpers
   "ui-color-focus-ring-prominent",
   "ui-color-focus-ring-primary",
   "ui-color-focus-ring-danger",
@@ -303,6 +362,77 @@ const themePreset = [
 ].join("\n");
 
 writeFileSync(THEME_PRESET_PATH, themePreset, "utf8");
+
+// ── Emit the tailwind-merge lists: src/utils/twMergeTheme.ts ──────────────────
+// cn() (src/utils/cn.ts) must know every DS class name, or tailwind-merge
+// misfiles it: an unknown `text-style-hero-body` or `text-body` is read as a
+// text COLOUR and erased by `text-text`, and an unknown `rounded-tight` or
+// `p-md` never conflicts with `rounded-full` / `p-lg`. The hand-kept list in
+// cn.ts drifted twice, so every list is derived here from the CSS that defines
+// the classes:
+//   theme scales  ← the @theme entries above (tokens.css)
+//   text-style-*  ← the `.text-style-<role>` rules in index.css
+//   h-/size-/…    ← the custom `.h-*` / `.size-*` / `.min-w-*` … rules in index.css
+const TW_MERGE_SCALES = ["text", "radius", "spacing", "shadow"];
+const twMergeTheme = Object.fromEntries(TW_MERGE_SCALES.map((s) => [s, []]));
+for (const line of [...entries, ...COMPUTED]) {
+  const m = line.match(
+    /^--(text|radius|spacing|shadow)-([a-z0-9]+(?:-[a-z0-9]+)*):/,
+  );
+  if (m && !twMergeTheme[m[1]].includes(m[2])) twMergeTheme[m[1]].push(m[2]);
+}
+
+// Hand-written part of index.css only: drop the generated block and comments
+// (comments mention `.text-style-*` as prose).
+const handCss = indexCss
+  .replace(new RegExp(`${escapeRegex(GEN_START)}[\\s\\S]*?${escapeRegex(GEN_END)}`), "")
+  .replace(/\/\*[\s\S]*?\*\//g, "");
+
+const textStyleRoles = [];
+for (const m of handCss.matchAll(
+  /^\s*\.text-style-([a-z0-9]+(?:-[a-z0-9]+)*)\s*\{/gm,
+)) {
+  if (!textStyleRoles.includes(m[1])) textStyleRoles.push(m[1]);
+}
+
+const SIZE_GROUPS = ["h", "w", "size", "min-h", "min-w", "max-h", "max-w"];
+const sizeUtilities = Object.fromEntries(SIZE_GROUPS.map((g) => [g, []]));
+for (const m of handCss.matchAll(
+  /^\s*\.(min-h|min-w|max-h|max-w|size|h|w)-([a-z0-9]+(?:-[a-z0-9]+)*)\s*\{/gm,
+)) {
+  if (!sizeUtilities[m[1]].includes(m[2])) sizeUtilities[m[1]].push(m[2]);
+}
+
+// An empty list here means a regex stopped matching, not that the DS has no
+// roles — fail loudly rather than ship a cn() that forgets them all.
+for (const [name, list] of [
+  ["text-style roles (index.css)", textStyleRoles],
+  ["custom h-* utilities (index.css)", sizeUtilities.h],
+  ...TW_MERGE_SCALES.map((s) => [`--${s}-* theme entries`, twMergeTheme[s]]),
+]) {
+  if (list.length === 0)
+    throw new Error(`sync-theme: found no ${name} for twMergeTheme.ts`);
+}
+
+const recordType = (keys) =>
+  `Readonly<Record<${keys.map((k) => JSON.stringify(k)).join(" | ")}, readonly string[]>>`;
+const twMergeThemeTs = [
+  "// AUTO-GENERATED by scripts/sync-theme.mjs. Do not edit by hand.",
+  "// Run `npm run sync-tokens` after changing tokens.css or the .text-style-* /",
+  "// .h-* / .size-* / .min-w-* … rules in index.css. Read by src/utils/cn.ts.",
+  "",
+  "/** DS theme scales (tailwind-merge theme keys), from the same tokens as the @theme block. */",
+  `export const DS_TW_MERGE_THEME: ${recordType(TW_MERGE_SCALES)} = ${JSON.stringify(twMergeTheme, null, 2)};`,
+  "",
+  "/** Every `.text-style-<role>` class defined in index.css. */",
+  `export const DS_TEXT_STYLE_ROLES: readonly string[] = ${JSON.stringify(textStyleRoles, null, 2)};`,
+  "",
+  "/** Custom sizing utilities defined in index.css @layer utilities, by tailwind-merge class group. */",
+  `export const DS_SIZE_UTILITIES: ${recordType(SIZE_GROUPS)} = ${JSON.stringify(sizeUtilities, null, 2)};`,
+  "",
+].join("\n");
+
+writeFileSync(TW_MERGE_THEME_PATH, twMergeThemeTs, "utf8");
 console.log(
-  `✓  @theme inline regenerated — ${entries.length} tokens mapped (index.css + theme.css).`,
+  `✓  @theme inline regenerated — ${entries.length} tokens mapped (index.css + theme.css + utils/twMergeTheme.ts).`,
 );

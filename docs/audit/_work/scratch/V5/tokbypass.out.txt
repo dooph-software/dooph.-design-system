@@ -1,0 +1,86 @@
+ARBITRARY literal-bearing 39
+src/components/Avatar/Avatar.tsx:23  size-[38px]
+src/components/Avatar/Avatar.tsx:24  size-[22px]
+src/components/DropdownTrigger/DropdownTrigger.tsx:325  h-[30px]
+src/components/HotkeyIndicator/HotkeyIndicator.tsx:21  min-w-[23px]
+src/components/HotkeyIndicator/HotkeyIndicator.tsx:21  min-h-[23px]
+src/components/LinearProgressIndicator/LinearProgressIndicator.tsx:55  h-[4px]
+src/components/Menu/DropdownMenu.tsx:339  h-[30px]
+src/components/OutlineButton/OutlineButton.tsx:147  rounded-[28px]
+src/components/OutlineButton/OutlineButton.tsx:159  h-[54px]
+src/components/OutlineButton/OutlineButton.tsx:159  min-w-[160px]
+src/components/OutlineButton/OutlineButton.tsx:185  bottom-[-18px]
+src/components/OutlineButton/OutlineButton.tsx:185  left-[4%]
+src/components/OutlineButton/OutlineButton.tsx:185  w-[62%]
+src/components/OutlineButton/OutlineButton.tsx:185  h-[72%]
+src/components/OutlineButton/OutlineButton.tsx:199  bottom-[-14px]
+src/components/OutlineButton/OutlineButton.tsx:199  right-[6%]
+src/components/OutlineButton/OutlineButton.tsx:199  w-[48%]
+src/components/OutlineButton/OutlineButton.tsx:199  h-[64%]
+src/components/OutlineButton/OutlineButton.tsx:243  w-[62%]
+src/components/OutlineButton/OutlineButton.tsx:243  h-[72%]
+src/components/OutlineButton/OutlineButton.tsx:244  opacity-[0.38]
+src/components/OutlineButton/OutlineButton.tsx:264  w-[48%]
+src/components/OutlineButton/OutlineButton.tsx:264  h-[64%]
+src/components/OutlineButton/OutlineButton.tsx:265  opacity-[0.22]
+src/components/OutlineSection/OutlineSection.tsx:22  rounded-[28px]
+src/components/ShapeButton/ShapeButton.tsx:125  size-[46px]
+src/components/Sheet/Sheet.tsx:82  slide-in-from-left-[20%]
+src/components/Sheet/Sheet.tsx:82  slide-out-to-left-[20%]
+src/components/Sheet/Sheet.tsx:86  slide-in-from-right-[20%]
+src/components/Sheet/Sheet.tsx:86  slide-out-to-right-[20%]
+src/components/Sheet/Sheet.tsx:90  slide-in-from-top-[20%]
+src/components/Sheet/Sheet.tsx:90  slide-out-to-top-[20%]
+src/components/Sheet/Sheet.tsx:94  slide-in-from-bottom-[20%]
+src/components/Sheet/Sheet.tsx:94  slide-out-to-bottom-[20%]
+src/components/Slider/Slider.tsx:398  size-[6px]
+src/components/SplitButton/SplitButton.tsx:33  size-[14px]
+src/components/Toast/Toast.tsx:76  pl-[14px]
+src/components/Toast/Toast.tsx:76  pt-[14px]
+src/components/VerificationCode/CodeDigitInput.tsx:85  text-[18px]
+
+NUMERIC SCALE total 99 non-zero 37 files 14
+src/components/AIChat/ChatDivider.tsx:28  h-3  (3)
+src/components/Button/Button.tsx:39  gap-2  (2)
+src/components/Button/Button.tsx:85  px-3  (3)
+src/components/Button/Button.tsx:86  px-3  (3)
+src/components/Checkbox/Checkbox.tsx:81  size-2.5  (2.5)
+src/components/Checkbox/Checkbox.tsx:90  size-2.5  (2.5)
+src/components/Checkbox/Checkbox.tsx:106  size-2.5  (2.5)
+src/components/DropdownTrigger/DropdownTrigger.tsx:59  min-w-40  (40)
+src/components/DropdownTrigger/DropdownTrigger.tsx:194  min-w-40  (40)
+src/components/HotkeyIndicator/HotkeyIndicator.tsx:11  gap-1  (1)
+src/components/Menu/DropdownMenuSearch.tsx:77  h-6  (6)
+src/components/Menu/DropdownMenuSearch.tsx:77  min-h-6  (6)
+src/components/OutlineButton/OutlineButton.tsx:158  gap-2  (2)
+src/components/OutlineButton/OutlineButton.tsx:159  px-3  (3)
+src/components/OutlineButton/OutlineButton.tsx:286  gap-2  (2)
+src/components/SearchBox/SearchBox.tsx:27  gap-2  (2)
+src/components/Sheet/Sheet.tsx:81  max-w-96  (96)
+src/components/Sheet/Sheet.tsx:85  max-w-96  (96)
+src/components/SplitButton/SplitButton.tsx:19  pl-4  (4)
+src/components/SplitButton/SplitButton.tsx:19  pr-4  (4)
+src/components/Table/Table.tsx:82  gap-1  (1)
+src/components/Table/Table.tsx:134  px-4  (4)
+src/components/Table/Table.tsx:134  py-3  (3)
+src/components/Table/Table.tsx:151  py-8  (8)
+src/components/Tabs/Tabs.tsx:21  gap-1  (1)
+src/components/Toast/Toast.tsx:70  py-2  (2)
+src/components/Toast/Toast.tsx:70  pl-4  (4)
+src/components/Toast/Toast.tsx:70  pr-2  (2)
+src/components/Toast/Toast.tsx:72  py-2  (2)
+src/components/Toast/Toast.tsx:72  pl-4  (4)
+src/components/Toast/Toast.tsx:72  pr-2  (2)
+src/components/Toast/Toast.tsx:74  py-2  (2)
+src/components/Toast/Toast.tsx:74  pl-4  (4)
+src/components/Toast/Toast.tsx:74  pr-2  (2)
+src/components/Toast/Toast.tsx:76  pb-3  (3)
+src/components/Toast/Toast.tsx:76  pr-3  (3)
+src/components/Tooltip/Tooltip.tsx:70  px-3  (3)
+
+RAW var(--ui-*) in class strings 5
+src/components/Slider/Slider.tsx:344  h-[var(--ui-height-slider-handle)]
+src/components/Slider/Slider.tsx:368  w-[max(0px,calc(var(--slider-pct)/100*(100%-var(--ui-width-slider-handle))-var(--ui-slider-track-gap)+var(--ds-slider-pad)))]
+src/components/Slider/Slider.tsx:380  left-[min(100%,calc(var(--slider-pct)/100*(100%-var(--ui-width-slider-handle))+var(--ui-width-slider-handle)+var(--ui-slider-track-gap)))]
+src/components/Slider/Slider.tsx:408  h-[var(--ui-height-slider-handle)]
+src/components/Slider/Slider.tsx:408  w-[var(--ui-width-slider-handle)]

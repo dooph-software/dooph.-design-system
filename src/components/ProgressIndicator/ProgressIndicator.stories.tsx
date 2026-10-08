@@ -1,11 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import {
   LoadingSpinnerColor,
   LoadingSpinnerSize,
 } from "../LoadingSpinner/constants";
 import { ProgressIndicator } from "./ProgressIndicator";
-import { ProgressIndicatorVariants } from "./constants";
+import { ProgressIndicatorVariant } from "./constants";
+import { SliderContinuous } from "../Slider";
+import { LabelText } from "../Text";
 
 const meta = {
   title: "Progress/ProgressIndicator",
@@ -16,7 +18,7 @@ const meta = {
     progress: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
     variant: {
       control: "select",
-      options: Object.values(ProgressIndicatorVariants),
+      options: Object.values(ProgressIndicatorVariant),
     },
     color: {
       control: "select",
@@ -35,7 +37,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     progress: 0.6,
-    variant: ProgressIndicatorVariants.flat,
+    variant: ProgressIndicatorVariant.flat,
     color: LoadingSpinnerColor.primary,
     size: LoadingSpinnerSize.rg,
   },
@@ -56,7 +58,7 @@ export const Complete: Story = {
 export const WavyVariant: Story = {
   args: {
     progress: 0.6,
-    variant: ProgressIndicatorVariants.wavy,
+    variant: ProgressIndicatorVariant.wavy,
     size: LoadingSpinnerSize.md,
   },
 };
@@ -92,7 +94,7 @@ export const WavyProgressSteps: Story = {
         <ProgressIndicator
           key={p}
           progress={p}
-          variant={ProgressIndicatorVariants.wavy}
+          variant={ProgressIndicatorVariant.wavy}
           size={LoadingSpinnerSize.xl}
         />
       ))}
@@ -112,23 +114,31 @@ export const Interactive: Story = {
           <ProgressIndicator progress={value} size={LoadingSpinnerSize.md} />
           <ProgressIndicator
             progress={value}
-            variant={ProgressIndicatorVariants.wavy}
+            variant={ProgressIndicatorVariant.wavy}
             size={LoadingSpinnerSize.md}
           />
         </div>
-        <input
-          type="range"
+        <SliderContinuous
+          className="w-48"
           min={0}
           max={1}
           step={0.01}
-          value={value}
-          onChange={(e) => setValue(Number(e.target.value))}
-          className="w-48"
+          value={[value]}
+          onValueChange={([v]) => setValue(v)}
         />
-        <span className="text-style-label text-text-secondary">
+        <LabelText className="text-text-secondary">
           {Math.round(value * 100)} %
-        </span>
+        </LabelText>
       </div>
     );
+  },
+};
+
+/** Contradicts the default colour (primary). */
+export const Prominent: Story = {
+  args: {
+    progress: 0.6,
+    color: LoadingSpinnerColor.prominent,
+    size: LoadingSpinnerSize.md,
   },
 };

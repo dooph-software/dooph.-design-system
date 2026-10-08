@@ -1,0 +1,9 @@
+@import "C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/tailwindcss/index.css";
+@import "C:/Users/stick/Github/dooph/dooph-ds-audit-build/dist/theme.css";
+@source "./content.html";
+@theme inline {
+  --max-width-xs: var(--container-xs); --max-width-sm: var(--container-sm); --max-width-md: var(--container-md); --max-width-lg: var(--container-lg); --max-width-xl: var(--container-xl);
+  --width-xs: var(--container-xs); --width-sm: var(--container-sm); --width-md: var(--container-md); --width-lg: var(--container-lg); --width-xl: var(--container-xl);
+  --min-width-xs: var(--container-xs); --min-width-sm: var(--container-sm); --min-width-md: var(--container-md); --min-width-lg: var(--container-lg); --min-width-xl: var(--container-xl);
+  --flex-basis-xs: var(--container-xs); --flex-basis-sm: var(--container-sm); --flex-basis-md: var(--container-md); --flex-basis-lg: var(--container-lg); --flex-basis-xl: var(--container-xl);
+}

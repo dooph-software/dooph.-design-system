@@ -6,6 +6,7 @@
  *   npx @dooph-software/design-system init-skills
  *   -- or --
  *   node node_modules/@dooph-software/design-system/bin/init.mjs
+ *   npx @dooph-software/design-system init-skills --yes   (no prompts: install into every directory)
  *
  * What it does:
  *   1. Asks which agent skill directories to populate
@@ -37,9 +38,36 @@ const cyan = (s) => (NO_COLOR ? s : `\x1b[36m${s}\x1b[0m`);
 const yellow = (s) => (NO_COLOR ? s : `\x1b[33m${s}\x1b[0m`);
 
 // ── Readline prompt ───────────────────────────────────────────────────────────
+// Answers are queued from 'line' events (piped input can arrive before the next
+// prompt is asked) and every pending prompt settles on 'close', so a run with
+// no terminal never exits mid-prompt with nothing copied. EOF = the default.
+const ASSUME_YES = process.argv.slice(2).some((a) => a === "--yes" || a === "-y");
 const rl = createInterface({ input: process.stdin, output: process.stdout });
-const ask = (q) =>
-  new Promise((res) => rl.question(q, (ans) => res(ans.trim())));
+const queued = [];
+const waiting = [];
+let stdinClosed = false;
+rl.on("line", (line) => {
+  const next = waiting.shift();
+  if (next) next(line.trim());
+  else queued.push(line.trim());
+});
+rl.on("close", () => {
+  stdinClosed = true;
+  while (waiting.length) waiting.shift()("");
+});
+const ask = (q) => {
+  process.stdout.write(q);
+  if (ASSUME_YES) {
+    process.stdout.write("y (--yes)\n");
+    return Promise.resolve("y");
+  }
+  if (queued.length) return Promise.resolve(queued.shift());
+  if (stdinClosed) {
+    process.stdout.write(dim("(no input — using the default)") + "\n");
+    return Promise.resolve("");
+  }
+  return new Promise((res) => waiting.push(res));
+};
 
 /**
  * Skill destination directories.

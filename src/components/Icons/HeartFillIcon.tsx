@@ -1,10 +1,10 @@
 import { BaseIcon, type IconProps } from './BaseIcon';
 
-export const HeartFillIcon = ({ color, ...props }: IconProps) => (
-  <BaseIcon {...props} color={color}>
+export const HeartFillIcon = (props: IconProps) => (
+  <BaseIcon {...props}>
     <path
-      d="M15 6.375c0 4.375-6.487 7.916-6.763 8.063a.5.5 0 0 1-.474 0C7.487 14.291 1 10.75 1 6.375A3.879 3.879 0 0 1 4.875 2.5c1.291 0 2.42.555 3.125 1.493C8.705 3.055 9.834 2.5 11.125 2.5A3.879 3.879 0 0 1 15 6.375Z"
-      fill={color ?? 'currentColor'}
+      d="M22.5 9.5625c0 6.5625-9.7305 11.874-10.1445 12.0945a.75.75 0 0 1-.711 0C11.2305 21.4365 1.5 16.125 1.5 9.5625A5.8185 5.8185 0 0 1 7.3125 3.75c1.9365 0 3.63.8325 4.6875 2.2395C13.0575 4.5825 14.751 3.75 16.6875 3.75A5.8185 5.8185 0 0 1 22.5 9.5625Z"
+      fill="currentColor"
       stroke="none"
     />
   </BaseIcon>

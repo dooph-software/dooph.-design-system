@@ -7,5 +7,3 @@ export const CheckIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default CheckIcon;

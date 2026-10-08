@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { BaseIcon, IconProps, IconSizes } from "./BaseIcon";
+import { BaseIcon, IconProps, IconSize } from "./BaseIcon";
 import { BugReportIcon } from "./BugReportIcon";
-import CheckIcon from "./CheckIcon";
+import { CheckIcon } from "./CheckIcon";
 import { ChevronDownIcon } from "./ChevronDownIcon";
 import { CloseCancelIcon } from "./CloseCancelIcon";
 import { DarkModeIcon } from "./DarkModeIcon";
 import { DropdownIcon } from "./DropdownIcon";
 import { ExtensionsIcon } from "./ExtensionsIcon";
+import { HeartFillIcon } from "./HeartFillIcon";
 import { LightModeIcon } from "./LightModeIcon";
 import { NewChatIcon } from "./NewChatIcon";
 import { RecentsIcon } from "./RecentsIcon";
@@ -14,8 +15,13 @@ import { SearchIcon } from "./SearchIcon";
 import { SendIcon } from "./SendIcon";
 import { SettingsBoltIcon } from "./SettingsBoltIcon";
 import { SettingsGearIcon } from "./SettingsGearIcon";
+import { SidebarLeftHoverIcon } from "./SidebarLeftHoverIcon";
 import { SidebarLeftIcon } from "./SidebarLeftIcon";
+import { SidebarRightHoverIcon } from "./SidebarRightHoverIcon";
 import { SidebarRightIcon } from "./SidebarRightIcon";
+import { StopFilledIcon } from "./StopFilledIcon";
+import { TagIcon } from "./TagIcon";
+import { LabelText } from "../Text";
 
 const meta = {
   component: BaseIcon,
@@ -47,16 +53,8 @@ const IconCell = ({
       width: 80,
     }}
   >
-    <Icon size={IconSizes.rg} />
-    <span
-      style={{
-        fontSize: 11,
-        textAlign: "center",
-        color: "var(--color-text-secondary)",
-      }}
-    >
-      {label}
-    </span>
+    <Icon size={IconSize.rg} />
+    <LabelText className="text-center text-text-secondary">{label}</LabelText>
   </div>
 );
 
@@ -104,19 +102,19 @@ export const SidebarIcons: Story = {
     >
       <IconCell
         icon={(props) => <SidebarLeftIcon {...props} />}
-        label="LeftSidebar Closed"
+        label="SidebarLeft"
       />
       <IconCell
-        icon={(props) => <SidebarLeftIcon {...props} />}
-        label="LeftSidebar Open"
-      />
-      <IconCell
-        icon={(props) => <SidebarRightIcon {...props} />}
-        label="RightSidebar Closed"
+        icon={(props) => <SidebarLeftHoverIcon {...props} />}
+        label="SidebarLeftHover"
       />
       <IconCell
         icon={(props) => <SidebarRightIcon {...props} />}
-        label="RightSidebar Open"
+        label="SidebarRight"
+      />
+      <IconCell
+        icon={(props) => <SidebarRightHoverIcon {...props} />}
+        label="SidebarRightHover"
       />
     </div>
   ),
@@ -158,6 +156,7 @@ export const SettingsIcons: Story = {
         label="BugReport"
       />
       <IconCell icon={(props) => <CheckIcon {...props} />} label="Check" />
+      <IconCell icon={(props) => <HeartFillIcon {...props} />} label="HeartFill" />
     </div>
   ),
 };
@@ -166,7 +165,7 @@ export const Sizes: Story = {
   name: "Icon Sizes",
   render: () => (
     <div style={{ display: "flex", gap: "1.5rem", alignItems: "end" }}>
-      {(Object.entries(IconSizes) as [keyof typeof IconSizes, IconSizes][]).map(
+      {(Object.entries(IconSize) as [keyof typeof IconSize, IconSize][]).map(
         ([name, size]) => (
           <div
             key={name}
@@ -190,16 +189,31 @@ export const Colors: Story = {
   name: "Icon Colors",
   render: () => (
     <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
-      <LightModeIcon size={IconSizes.md} color="var(--color-text)" />
+      <LightModeIcon size={IconSize.md} color="var(--color-text)" />
       <LightModeIcon
-        size={IconSizes.md}
+        size={IconSize.md}
         color="var(--color-text-secondary)"
       />
       <LightModeIcon
-        size={IconSizes.md}
+        size={IconSize.md}
         color="var(--color-text-tertiary)"
       />
-      <LightModeIcon size={IconSizes.md} color="var(--color-prominent-color)" />
+      <LightModeIcon size={IconSize.md} color="var(--color-prominent-color)" />
+      <HeartFillIcon size={IconSize.md} color="var(--color-prominent-color)" />
+      <StopFilledIcon size={IconSize.md} color="var(--color-prominent-color)" />
+      <TagIcon size={IconSize.md} color="var(--color-prominent-color)" />
     </div>
   ),
+};
+
+/** Renders the args, so the size, strokeWidth and colour controls do something.
+ * Contradicts the default stroke width (--ui-icon-stroke-width) and colours. */
+export const Playground: Story = {
+  args: {
+    size: IconSize.md,
+    strokeWidth: 3,
+    strokeColor: "var(--ui-color-prominent)",
+    fillColor: "var(--ui-color-surface-secondary)",
+    children: <path d="M6 18h6a3 3 0 0 0 3 -3v-10l-4 4m8 0l-4 -4" />,
+  },
 };

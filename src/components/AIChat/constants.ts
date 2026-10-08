@@ -38,6 +38,10 @@ export type AIToolPartState =
  * label shimmers and any transcript streams inline, always visible. `thought`
  * is settled — a transcript collapses behind a disclosure.
  *
+ * Figma labels this property `Variant`, but it is a lifecycle phase, so the
+ * prop is `state` — the same split as AIToolPart (`state` = lifecycle,
+ * `variant` = kind of work).
+ *
  * Usage: <AIThinkingPart state={AIThinkingPartState.thinking} />
  */
 export const AIThinkingPartState = {

@@ -1,0 +1,41 @@
+src\components\VerificationCode\VerificationCodeInput.tsx:82:      el?.focus();
+src\components\VerificationCode\VerificationCodeInput.tsx:83:      el?.select();
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:115:      path.setAttribute("d", railPath(s, h));
+src\components\OutlineButton\OutlineButton.tsx:108:        const { left, top, width, height } = el.getBoundingClientRect();
+src\components\OutlineButton\OutlineButton.tsx:110:        el.style.setProperty(
+src\components\OutlineButton\OutlineButton.tsx:114:        el.style.setProperty(
+src\components\OutlineButton\OutlineButton.tsx:118:        el.style.setProperty("--bw", `${width}px`);
+src\components\OutlineButton\OutlineButton.tsx:119:        el.style.setProperty("--bh", `${height}px`);
+src\components\OutlineButton\OutlineButton.tsx:129:      el.style.setProperty("--gx", "0.5");
+src\components\OutlineButton\OutlineButton.tsx:130:      el.style.setProperty("--gy", "0.5");
+src\components\AIChat\AIPromptInput.tsx:19: *   height = scrollHeight and lets min/max-height bound it.
+src\components\AIChat\AIPromptInput.tsx:150:              textareaRef.current?.focus();
+src\components\AIChat\AIPromptInput.tsx:192:    el.style.height = "auto";
+src\components\AIChat\AIPromptInput.tsx:196:    if (el.scrollHeight > 0) el.style.height = `${el.scrollHeight}px`;
+src\components\MorphRotationShape\MorphRotationShape.tsx:251:    pathRef.current?.setAttribute("d", toPathD(cubics, 100));
+src\components\MorphRotationShape\MorphRotationShape.tsx:252:    gRef.current?.setAttribute("transform", frameTransform(cubics, angle, loaderScale));
+src\components\MorphRotationShape\MorphRotationShape.tsx:314:      span.style.setProperty("--ds-shape-morph-target", String(engine.autoTarget));
+src\components\AnimatedText\RevealChangeText.tsx:199:      const read = () => setWidth(el.getBoundingClientRect().width);
+src\components\Calendar\Calendar.tsx:233:      focusedButtonRef.current?.focus();
+src\components\LoadingSpinner\LoadingSpinner.tsx:152:        activeRef.current.setAttribute(
+src\components\LoadingSpinner\LoadingSpinner.tsx:161:          trackRef.current.setAttribute(
+src\components\LoadingSpinner\LoadingSpinner.tsx:172:          trackRef.current.setAttribute("d", "");
+src\components\Menu\DropdownMenu.tsx:102:    onOpenAutoFocus?: (event: Event) => void;
+src\components\Menu\DropdownMenu.tsx:113:      onFocusOutside,
+src\components\Menu\DropdownMenu.tsx:114:      onInteractOutside,
+src\components\Menu\DropdownMenu.tsx:115:      onOpenAutoFocus,
+src\components\Menu\DropdownMenu.tsx:124:      ? onOpenAutoFocus
+src\components\Menu\DropdownMenu.tsx:127:          onOpenAutoFocus?.(event);
+src\components\Menu\DropdownMenu.tsx:134:    const handleFocusOutside: typeof onFocusOutside = (event) => {
+src\components\Menu\DropdownMenu.tsx:135:      onFocusOutside?.(event);
+src\components\Menu\DropdownMenu.tsx:136:      if (!dismissOnFocusLoss && !document.hasFocus()) {
+src\components\Menu\DropdownMenu.tsx:141:    const handleInteractOutside: typeof onInteractOutside = (event) => {
+src\components\Menu\DropdownMenu.tsx:142:      onInteractOutside?.(event);
+src\components\Menu\DropdownMenu.tsx:144:      if (!dismissOnFocusLoss && (!target || !document.contains(target))) {
+src\components\Menu\DropdownMenu.tsx:153:        onFocusOutside={handleFocusOutside}
+src\components\Menu\DropdownMenu.tsx:154:        onInteractOutside={handleInteractOutside}
+src\components\Menu\DropdownMenu.tsx:157:              onOpenAutoFocus: handleOpenAutoFocus,
+src\components\DropdownTrigger\DropdownTrigger.tsx:86: * open while typing. When the menu opens, content onOpenAutoFocus steals focus; pair
+src\components\DropdownTrigger\DropdownTrigger.tsx:219:              inputElRef.current.focus();
+src\components\DropdownTrigger\DropdownTrigger.tsx:228:            inputElRef.current?.focus();
+src\components\Input\Input.tsx:146:      inputEl.current?.focus();

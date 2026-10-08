@@ -1,0 +1,49 @@
+src/styles/index.css:370 | .ds-shimmer-text | background: linear-gradient(
+src/styles/index.css:380 | .ds-shimmer-text | animation: ds-shimmer 2s linear infinite;
+src/styles/index.css:422 | .ds-roll-hover-in | transform var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+src/styles/index.css:423 | .ds-roll-hover-in | filter var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+src/styles/index.css:424 | .ds-roll-hover-in | opacity var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1);
+src/styles/index.css:494 | .ds-underline-link | background-image: linear-gradient(currentColor, currentColor);
+src/styles/index.css:507 | .ds-underline-link[data-active="true"] | var(--ui-underline-link-ease) both;
+src/styles/index.css:596 | .ds-rolling-digits-sep[data-entering] | var(--ui-rolling-digits-ease),
+src/styles/index.css:602 | .ds-rolling-digits-sep[data-entering] | var(--ui-rolling-digits-ease);
+src/styles/index.css:612 | .ds-rolling-digits-sep[data-exiting] | var(--ui-rolling-digits-ease) forwards,
+src/styles/index.css:618 | .ds-rolling-digits-sep[data-exiting] | var(--ui-rolling-digits-ease) forwards;
+src/styles/index.css:653 | .ds-rolling-digits-col | var(--ui-rolling-digits-ease);
+src/styles/index.css:693 | .ds-rolling-digits-col | transition-delay: 0ms;
+src/styles/index.css:699 | .ds-rolling-digits-sep[data-exiting] | animation-duration: 1ms;
+src/styles/index.css:719 | .ds-roll-change-out | var(--ui-roll-change-out-ease) forwards;
+src/styles/index.css:724 | .ds-roll-change-in | var(--ui-roll-change-in-ease) both;
+src/styles/index.css:730 | .ds-roll-change-in | animation-duration: 1ms;
+src/styles/index.css:741 | .ds-fade-change-out | var(--ui-fade-change-out-ease) forwards;
+src/styles/index.css:746 | .ds-fade-change-in | var(--ui-fade-change-in-ease) both;
+src/styles/index.css:752 | .ds-fade-change-in | animation-duration: 1ms;
+src/styles/index.css:768 | .ds-sidebar-rail | var(--ui-sidebar-icon-ease),
+src/styles/index.css:770 | .ds-sidebar-rail | var(--ui-sidebar-icon-ease);
+src/styles/index.css:774 | .ds-sidebar-rail | transition-duration: 0ms;
+src/styles/index.css:793 | .ds-shape-morph | --ds-shape-morph-step var(--ui-shape-morph-duration) var(--ui-shape-morph-ease),
+src/styles/index.css:795 | .ds-shape-morph | var(--ui-shape-morph-nudge-ease);
+src/styles/index.css:798 | .ds-shape-morph[data-mode="autoplay"] | animation: ds-shape-morph-clock var(--ui-shape-morph-interval) linear infinite;
+src/styles/index.css:804 | .ds-shape-morph-passive-spin | linear infinite;
+src/styles/index.css:808 | .ds-shape-morph | transition-duration: 1ms;
+src/styles/index.css:823 | .ds-dropdown-caret | transition: color var(--ui-shape-morph-nudge-duration) var(--ui-shape-morph-nudge-ease);
+src/styles/index.css:832 | .ds-dropdown-caret-chevron | rotate var(--ui-shape-morph-duration) var(--ui-shape-morph-ease),
+src/styles/index.css:833 | .ds-dropdown-caret-chevron | color var(--ui-shape-morph-nudge-duration) var(--ui-shape-morph-nudge-ease);
+src/styles/index.css:863 | .ds-dropdown-caret-chevron | transition-duration: 1ms;
+src/styles/index.css:889 | .ds-reveal-change | var(--ui-reveal-change-ease);
+src/styles/index.css:916 | .ds-reveal-change[data-open="true"] | transition-duration: 1ms;
+src/styles/dooph-component-tokens.css:43 | .ds-shape-button-shadow | color 150ms,
+src/styles/dooph-component-tokens.css:44 | .ds-shape-button-shadow | filter 150ms;
+src/styles/dooph-component-tokens.css:129 | .ds-progress-fill | transition: width 300ms ease-out;
+src/styles/dooph-component-tokens.css:132 | .ds-progress-remainder | transition: left 300ms ease-out;
+src/styles/dooph-component-tokens.css:169 | .ds-slider-glide .ds-slider-part | transition-duration: 180ms;
+src/styles/dooph-component-tokens.css:170 | .ds-slider-glide .ds-slider-part | transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+src/styles/dooph-component-tokens.css:373 | .ds-copy-icon-check | opacity 120ms ease-out,
+src/styles/dooph-component-tokens.css:374 | .ds-copy-icon-check | transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
+src/styles/dooph-component-tokens.css:422 | .ds-chat-reveal | var(--ui-chat-reveal-ease);
+src/styles/dooph-component-tokens.css:431 | .ds-chat-lift | transition: color var(--ui-chat-reveal-duration) var(--ui-chat-reveal-ease);
+src/styles/dooph-component-tokens.css:445 | .ds-chat-chevron | var(--ui-chat-disclosure-ease),
+src/styles/dooph-component-tokens.css:446 | .ds-chat-chevron | opacity var(--ui-chat-reveal-duration) var(--ui-chat-reveal-ease);
+src/styles/dooph-component-tokens.css:462 | .ds-chat-disclosure | var(--ui-chat-disclosure-ease),
+src/styles/dooph-component-tokens.css:464 | .ds-chat-disclosure | var(--ui-chat-disclosure-ease);
+src/styles/dooph-component-tokens.css:491 | .ds-chat-prose[data-streaming-animation] li | var(--ui-chat-stream-ease) both;

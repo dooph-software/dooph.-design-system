@@ -1,0 +1,10 @@
+top-level blocks: :root, .light @18 | .dark @642
+:root decls 259, .dark decls 58
+IDENTICAL in .dark (6):
+  --ui-color-primary-disabled: var(--ui-color-secondary-disabled)   (:root:31  .dark:647)
+  --ui-color-primary-border-disabled: var(--ui-color-secondary-border-disabled)   (:root:32  .dark:648)
+  --ui-size-checkbox: 18px   (:root:451  .dark:720)
+  --ui-radius-checkbox: 6px   (:root:541  .dark:721)
+  --ui-radius-avatar: 8px   (:root:542  .dark:722)
+  --ui-radius-avatar-sm: 6px   (:root:543  .dark:723)
+dark-only (0): 

@@ -1,0 +1,128 @@
+### U11-F3: AIThinkingPart's root `data-state` means the phase in two render branches and the disclosure open state in the third
+- severity: S3
+- category: api-design
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read AIThinkingPart.tsx: all three return branches; CSS consumer at dooph-component-tokens.css:424-436"
+- locations:
+  - src/components/AIChat/AIThinkingPart.tsx:101
+  - src/components/AIChat/AIThinkingPart.tsx:141
+  - src/components/AIChat/AIThinkingPart.tsx:154-159
+  - src/styles/dooph-component-tokens.css:426
+- evidence: |
+    AIThinkingPart.tsx:101          data-state={state}            // "thinking"
+    AIThinkingPart.tsx:141          data-state={state}            // "thought", no transcript
+    AIThinkingPart.tsx:154    const openState = open ? "open" : "closed";
+    AIThinkingPart.tsx:159        data-state={openState}          // "thought" WITH transcript
+    dooph-component-tokens.css:426  .ds-chat-reveal-root[data-state="open"] .ds-chat-reveal {
+- impact: A consumer styling settled rows with `data-[state=thought]:…` (the value AIToolPart's `data-state` convention and the prop name lead them to expect) silently misses every thought row that has a transcript. Those rows report `open`/`closed` instead. The header documents neither vocabulary. An agent that "normalises" the attribute to the phase breaks the `[data-state="open"]` reveal rule.
+- recommendation: Give the phase and the disclosure state separate attributes (for example `data-state` for the phase and `data-open` for the disclosure, with the CSS selector updated to match), or document the dual meaning in the header.
+- breaking: minor
+- contract: n/a
+- remediation: tbd
+- related: []
+
+### U11-F6: AIThinkingEffortSelector silently coerces an unknown `value` to the first step, so the slider and label disagree with the value the consumer holds
+- severity: S3
+- category: api-design
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read AIModelSelect.tsx:140-173"
+- locations:
+  - src/components/AIChat/AIModelSelect.tsx:140-144
+  - src/components/AIChat/AIContextGauge.tsx:12-15
+- evidence: |
+    AIModelSelect.tsx:140    const index = Math.max(
+    AIModelSelect.tsx:141      0,
+    AIModelSelect.tsx:142      steps.findIndex((step) => step.value === value),
+    AIModelSelect.tsx:143    );
+    AIContextGauge.tsx:12  * - Deliberately NOT clamped. A gauge that quietly pins at full would disagree
+    AIContextGauge.tsx:13  *   with the numbers the consumer holds, ...
+- impact: Model selectors switch between models whose effort lists differ, and the story's model catalogue is shaped exactly for this. When `value` ("medium") is missing from the new model's `steps`, the selector draws step 0 ("Low") while the app keeps sending "medium" to its API. No error surfaces. This is the exact silent disagreement the family's own gauge contract rejects.
+- recommendation: Make a missing `value` visible: throw in development (as the gauge's ProgressIndicator does), or render no selected step. Document the chosen behaviour.
+- breaking: minor
+- contract: n/a
+- remediation: tbd
+- related: [U11-F2]
+
+### U11-F7: Ref merging is hand-rolled four ways across the DS, and AIPromptInputTextarea's copy is unmemoized, so a consumer callback ref is detached and re-attached on every keystroke
+- severity: S3
+- category: duplication
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "`rg -n \"composeRefs|mergeRefs|useComposedRefs|assignRef|\\.current = node\" src --glob '!*.stories.tsx'` → 4 implementations; read each"
+- locations:
+  - src/components/AIChat/AIPromptInput.tsx:175-178
+  - src/components/AIChat/AIPromptInput.tsx:201-204
+  - src/components/Input/Input.tsx:84-88
+  - src/components/OutlineButton/OutlineButton.tsx:91-102
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:173-186
+- evidence: |
+    AIPromptInput.tsx:175  function assignRef<T>(ref: Ref<T> | undefined, node: T | null) {
+    AIPromptInput.tsx:201        ref={(node) => {          // new function identity every render
+    AIPromptInput.tsx:203          assignRef(ref, node);
+    Input.tsx:84     const setRefs = (node: HTMLInputElement | null) => {   // also unmemoized
+    OutlineButton.tsx:91     const composedRef = useCallback(                  // memoized
+    DropdownTrigger.tsx:173     const setInputRef = useCallback(                 // memoized
+- impact: React calls a changed ref callback with `null` and then the node. The textarea re-renders on every keystroke (`value` comes from context), so a consumer's callback ref is invoked twice per keystroke. The header's intended hotkey integration (`:22-24` "the textarea forwards its ref for exactly that") would register and unregister per keypress if written as a callback ref. There are four parallel helpers, two memoized and two not.
+- recommendation: Add one shared ref-composition helper (memoized, like OutlineButton's) and use it in all four places. This removes 3 duplicates.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+### U11-F8: Under reduced motion, the chat shimmer re-base is lost: ShimmerText falls back to `color: inherit`, so live tool and thinking labels paint the ambient text colour, not the chat tones tokens.css promises
+- severity: S3
+- category: inconsistency
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read ShimmerText CSS (index.css:369-388), chat re-base (dooph-component-tokens.css:403-410), and the root classes of both parts (no text colour; `.text-style-body` at index.css:233-241 sets no colour)"
+- locations:
+  - src/styles/index.css:382-387
+  - src/styles/dooph-component-tokens.css:403-410
+  - src/styles/tokens.css:175-177
+  - src/components/AIChat/AIToolPart.tsx:57,64
+  - src/components/AIChat/AIThinkingPart.tsx:103,109
+- evidence: |
+    index.css:382    @media (prefers-reduced-motion: reduce) {
+    index.css:383      .ds-shimmer-text {
+    index.css:386        color: inherit;
+    dooph-component-tokens.css:404    --ui-shimmer-base: var(--ui-chat-tool-shimmer-base);
+    tokens.css:176   * working tool row reads at full ghost-active weight, the thinking row at the
+    AIToolPart.tsx:57  "flex w-full min-w-0 select-none items-center gap-sm px-xs py-xxs text-style-body",
+- impact: With `prefers-reduced-motion`, an active tool row and a live "Thinking" label take whatever colour the consumer's container has (usually `--ui-color-text`). That is brighter than the settled `text-ghost-fg` rows around them, which inverts the hierarchy Figma draws. The re-base classes only redirect the gradient variables, which the reduced-motion rule discards.
+- recommendation: Have the chat re-base classes also carry a static `color` from their `*-shimmer-base` token for the reduced-motion case, in chat CSS rather than in ShimmerText.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+### U11-F13: Chat parts hard-code sibling internals: ChatDivider re-states WavyDivider's 12px band as `h-3`, and AIThinkingPart forces `h-auto!`/`border-0` over Button's classes because `cn` doesn't recognise `h-button` as a height
+- severity: S4
+- category: coupling
+- rules: []
+- scope: internal
+- confidence: plausible
+- verified_by: "`node -e` in dooph-ds-audit-build with dist/utils/cn.cjs: cn('h-button px-3','h-auto') → \"h-button px-3 h-auto\" (both kept), cn('border border-solid','border-0') → \"border-solid border-0\". WavyDivider.tsx:15 `const HEIGHT = 12;` is already applied as the svg `height` attr."
+- locations:
+  - src/components/AIChat/ChatDivider.tsx:28
+  - src/components/WavyDivider/WavyDivider.tsx:15
+  - src/components/AIChat/AIThinkingPart.tsx:172-175
+  - src/utils/cn.ts:14-29
+- evidence: |
+    ChatDivider.tsx:28        className="h-3 min-w-0 flex-1 text-border-primary"
+    WavyDivider.tsx:15   const HEIGHT = 12;
+    AIThinkingPart.tsx:172          // `h-auto!`: the row hugs its text like every other part. Button's
+    AIThinkingPart.tsx:173          // `h-button` is a package utility tailwind-merge cannot recognise as
+    AIThinkingPart.tsx:175          className="h-auto! w-full justify-start gap-sm border-0 px-xs py-xxs"
+- impact: If WavyDivider's band changes, ChatDivider clips or stretches the wave. The `cn` gap (only `text-style-*` is registered in `extendTailwindMerge`) means every consumer overriding a Button's `h-button`/`h-button-sm` via className gets both classes, with the winner decided by stylesheet order. AIThinkingPart papers over it locally with `!important`.
+- recommendation: Drop `h-3` (WavyDivider already sizes itself). Register the package height utilities (`h-button*`, `size-button*`) in `cn`'s tailwind-merge config so a plain `h-auto` overrides them.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+

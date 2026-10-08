@@ -1,0 +1,1039 @@
+diff --git a/scripts/sync-theme.mjs b/scripts/sync-theme.mjs
+index 6170da0..ba7445e 100644
+--- a/scripts/sync-theme.mjs
++++ b/scripts/sync-theme.mjs
+@@ -169,6 +169,7 @@ const EXCLUDED = new Set([
+   // Roll-on-change depth/blur — raw var() in keyframes only
+   "ui-roll-change-depth",
+   "ui-roll-change-blur",
++  "ui-roll-change-breathe",
+   // Fade-roll-on-change depth — raw var() in keyframes only
+   "ui-fade-change-depth",
+   // Shape morph motion — raw var() in @layer utilities / keyframes only
+diff --git a/src/components/AIChat/AIThinkingPart.tsx b/src/components/AIChat/AIThinkingPart.tsx
+index 12b045b..f5befad 100644
+--- a/src/components/AIChat/AIThinkingPart.tsx
++++ b/src/components/AIChat/AIThinkingPart.tsx
+@@ -6,7 +6,8 @@
+  *   `ds-chat-thinking-shimmer`) and a transcript, if given, streams inline and
+  *   is always visible — there is nothing to toggle while it is live.
+  * - `thought` with a transcript: the row becomes a disclosure. The chevron is
+- *   revealed on hover and stays while open; the transcript collapses with a
++ *   revealed on hover and stays while open; the settled label and meta rest at
++ *   text-secondary and the label lifts to text-primary on hover; the transcript collapses with a
+  *   grid-rows transition timed by the motion scale (`--ui-motion-*`).
+  * - `thought` without a transcript: a plain settled row.
+  * - Open state is controllable (`open` / `onOpenChange`) or uncontrolled
+@@ -95,7 +96,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+     const hasMeta = meta != null && meta !== false;
+ 
+     const metaNode = hasMeta ? (
+-      <span className="min-w-0 truncate whitespace-nowrap text-style-body text-ghost-fg">
++      <span className="min-w-0 truncate whitespace-nowrap text-style-body text-text-secondary">
+         {meta}
+       </span>
+     ) : null;
+@@ -133,7 +134,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+     const labelNode = (
+       <span
+         className={cn(
+-          "shrink-0 whitespace-nowrap text-style-body text-ghost-fg",
++          "shrink-0 whitespace-nowrap text-style-body text-text-secondary",
+           hasTranscript && "ds-chat-lift",
+         )}
+       >
+diff --git a/src/components/AIChat/AIToolPart.tsx b/src/components/AIChat/AIToolPart.tsx
+index 17fafa3..af4fce7 100644
+--- a/src/components/AIChat/AIToolPart.tsx
++++ b/src/components/AIChat/AIToolPart.tsx
+@@ -3,8 +3,9 @@
+  *
+  * ## behavior
+  * - `state` picks the tone: `active` shimmers the label via ShimmerText (re-based
+- *   onto the tool pair by `ds-chat-tool-shimmer`), `complete` rests at ghost
+- *   weight, `error` paints the label danger.
++ *   onto the tool pair by `ds-chat-tool-shimmer`), `complete` rests at
++ *   text-secondary and lifts to text-primary under row hover, `error` paints the
++ *   label danger.
+  * - `meta` (timing, token count, a failure reason) stays visible while active
+  *   and is revealed on hover once settled.
+  * - The root carries `data-state` (AIToolPartState) and `data-variant`; the
+@@ -71,7 +72,7 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
+           <span
+             className={cn(
+               "shrink-0 whitespace-nowrap",
+-              "text-ghost-fg group-data-[state=error]/tool:text-danger-primary",
++              "text-text-secondary group-data-[state=error]/tool:text-danger-primary",
+               state === AIToolPartState.complete && !isSkill && "ds-chat-lift",
+             )}
+           >
+@@ -81,7 +82,7 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
+         {showMeta ? (
+           <span
+             className={cn(
+-              "min-w-0 truncate text-text-tertiary",
++              "min-w-0 truncate text-text-secondary",
+               !isActive && "ds-chat-reveal",
+             )}
+           >
+diff --git a/src/components/AIChat/AITurnSummary.tsx b/src/components/AIChat/AITurnSummary.tsx
+index 519c023..a4b3b5c 100644
+--- a/src/components/AIChat/AITurnSummary.tsx
++++ b/src/components/AIChat/AITurnSummary.tsx
+@@ -2,8 +2,9 @@
+  * AITurnSummary — the closing row of a settled assistant turn (Figma 761:1368).
+  *
+  * ## behavior
+- * - `label` rests at ghost weight ("Worked for 1m 22s"), `meta` at tertiary
+- *   ("12k tokens"). With `copyValue`, a ghost CopyButton is revealed on hover
++ * - `label` rests at text-secondary ("Worked for 1m 22s") and lifts to
++ *   text-primary on hover, `meta` stays text-secondary ("12k tokens").
++ *   With `copyValue`, a ghost CopyButton is revealed on hover
+  *   (Figma Variant2) and on keyboard focus.
+  * - Meant for a settled turn; when to render it is the consumer's call, since
+  *   only they know when their stream has finished.
+@@ -40,10 +41,10 @@ const AITurnSummary = forwardRef<HTMLDivElement, AITurnSummaryProps>(
+       {...props}
+     >
+       {label != null && label !== false ? (
+-        <span className="shrink-0 whitespace-nowrap text-ghost-fg">{label}</span>
++        <span className="ds-chat-lift shrink-0 whitespace-nowrap text-text-secondary">{label}</span>
+       ) : null}
+       {meta != null && meta !== false ? (
+-        <span className="min-w-0 truncate text-text-tertiary">{meta}</span>
++        <span className="min-w-0 truncate text-text-secondary">{meta}</span>
+       ) : null}
+       {copyValue !== undefined ? (
+         <CopyButton
+diff --git a/src/components/AIChat/ChatDivider.tsx b/src/components/AIChat/ChatDivider.tsx
+index 60402f3..fb48b77 100644
+--- a/src/components/AIChat/ChatDivider.tsx
++++ b/src/components/AIChat/ChatDivider.tsx
+@@ -31,7 +31,7 @@ const ChatDivider = forwardRef<HTMLDivElement, ChatDividerProps>(
+         {...props}
+       >
+         {rule}
+-        <span className="shrink-0 whitespace-nowrap text-style-body text-text-tertiary">
++        <span className="shrink-0 whitespace-nowrap text-style-body text-text-secondary">
+           {children}
+         </span>
+         {rule}
+diff --git a/src/components/AnimatedText/ChangeSwapShell.tsx b/src/components/AnimatedText/ChangeSwapShell.tsx
+index 06f9d25..aeb7624 100644
+--- a/src/components/AnimatedText/ChangeSwapShell.tsx
++++ b/src/components/AnimatedText/ChangeSwapShell.tsx
+@@ -5,7 +5,8 @@
+  * index; each wrapper passes only its out/in class pair.
+  *
+  * ## behavior
+- * - Renders an `inline-grid overflow-hidden` root carrying `--ds-roll-dir`
++ * - Renders an `inline-grid` root with the soft vertical mask `ds-change-swap`
++ *   (index.css) in place of a hard `overflow: hidden` clip, carrying `--ds-roll-dir`
+  *   (`-1` for `up`, `1` for `down`, the default) ahead of the consumer's
+  *   `style`, and the consumer's `className` last.
+  * - While a change is in flight the outgoing copy sits in the same grid cell,
+@@ -19,6 +20,10 @@
+  * - The entering span's `onAnimationEnd` is not optional: it drops the in-class
+  *   once the animation lands, so `will-change` does not strand a compositor
+  *   layer on every settled node.
++ * - `ds-change-swap` must stay on the root and must not gain `overflow: hidden`
++ *   back: a hard clip slices the glyph and its blur halo mid-roll. Its padding
++ *   and negative margin are equal and opposite, so the root's outer size does
++ *   not change; keep them as a pair.
+  * - The shell owns structure only. It holds no class that animates and no
+  *   duration; each wrapper's look (classes, keyframes, motion-scale timing)
+  *   stays in that wrapper and index.css. Two wrappers once copied this shell
+@@ -64,7 +69,7 @@ export const ChangeSwapShell = forwardRef<HTMLSpanElement, ChangeSwapShellProps>
+     return (
+       <span
+         ref={ref}
+-        className={cn("inline-grid overflow-hidden", className)}
++        className={cn("ds-change-swap inline-grid", className)}
+         style={
+           {
+             "--ds-roll-dir": direction === RollDirection.up ? -1 : 1,
+diff --git a/src/components/AnimatedText/RollChangeText.tsx b/src/components/AnimatedText/RollChangeText.tsx
+index 414b6ca..7b6c560 100644
+--- a/src/components/AnimatedText/RollChangeText.tsx
++++ b/src/components/AnimatedText/RollChangeText.tsx
+@@ -8,6 +8,9 @@
+  * - `direction` picks the travel: `down` (default) settles the new content in
+  *   from above, `up` rises it in from below. It is one signed custom property,
+  *   so both keyframes flip from a single value.
++ * - The roll is clipped by a soft vertical mask (`ds-change-swap`), not a hard
++ *   edge, with em-based blur and travel, so a glyph fades at the box edge
++ *   rather than being sliced. The box's outer size is unchanged by it.
+  *
+  * ## constraints
+  * - A wrapper, not a BaseText prop: it has to be able to wrap icons and
+@@ -19,7 +22,7 @@
+  *   in `ChangeSwapShell` for the same reason. This file owns only the roll's
+  *   look: its class pair.
+  * - Nothing here may hold a duration. Timing and easing come from the motion
+- *   scale (`--ui-motion-*`), depth and blur from `--ui-roll-change-*`, all read
++ *   scale (`--ui-motion-*`), depth, blur and clip breathing room from `--ui-roll-change-*`, all read
+  *   by `.ds-roll-change-*` in index.css; reduced motion is the scale's global
+  *   collapse in tokens.css. Out (`base`) is deliberately shorter than in
+  *   (`slow`), which is why the two halves retire independently.
+diff --git a/src/components/CTAButton/CTAButton.tsx b/src/components/CTAButton/CTAButton.tsx
+index 1629624..015f3d3 100644
+--- a/src/components/CTAButton/CTAButton.tsx
++++ b/src/components/CTAButton/CTAButton.tsx
+@@ -9,7 +9,8 @@
+  *   draws it in the secondary-button bg, a secondary CTA in the primary-button
+  *   bg. The icon on it takes that button's content colour.
+  * - Both sizes hug their content: 16px pill padding, a 60px label → mark gap,
+- *   the label in `.text-style-cta` (button role, semibold, 24 / 28px).
++ *   the label in `CTAText` (`.text-style-cta`: button role, semibold,
++ *   24 / 28px).
+  *
+  * ## constraints
+  * - The shape is chosen by `size`, never by a prop and never animated. That is
+@@ -32,7 +33,7 @@ import {
+ import { cn } from "../../utils/cn";
+ import { RollHoverText } from "../AnimatedText";
+ import { EightLeafCloverShape, PuffShape } from "../Shapes";
+-import { BaseText } from "../Text";
++import { CTAText } from "../Text";
+ import { CTAButtonSize, CTAButtonVariant } from "./constants";
+ 
+ const SIZES = {
+@@ -156,13 +157,12 @@ const CTAButtonBase = forwardRef<HTMLElement, CTAButtonProps>(
+         )}
+       >
+         <span className={cn("flex items-center", s.content)}>
+-          <BaseText
+-            unstyled
++          <CTAText
+             fontSize={s.fontSize}
+-            className={cn("text-style-cta min-w-px flex-1", paint.label)}
++            className={cn("min-w-px flex-1", paint.label)}
+           >
+             <RollHoverText>{text}</RollHoverText>
+-          </BaseText>
++          </CTAText>
+ 
+           <span
+             className={cn(
+diff --git a/src/components/Input/Input.stories.tsx b/src/components/Input/Input.stories.tsx
+index a341f27..3c4b21b 100644
+--- a/src/components/Input/Input.stories.tsx
++++ b/src/components/Input/Input.stories.tsx
+@@ -1,5 +1,5 @@
+ import type { Meta, StoryObj } from '@storybook/react-vite';
+-import { useEffect, useRef } from 'react';
++import { useEffect, useRef, useState } from 'react';
+ import { Input } from './Input';
+ import { InputVariant } from './constants';
+ import { TagIcon, UserIcon } from '../Icons';
+@@ -52,11 +52,11 @@ export const AllStates: Story = {
+ 
+ /**
+  * Figma `Input` — the four variants across placeholder / filled / disabled /
+- * error. Number variants hug their value and never go below a square.
++ * error. Number variants are fixed width by default, like the text variants.
+  */
+ export const Variants: Story = {
+   render: () => (
+-    <div className="grid grid-cols-[160px_auto_160px_auto] items-center gap-4 p-4">
++    <div className="grid grid-cols-[160px_160px_160px_160px] items-center gap-4 p-4">
+       <Input placeholder="Username" data-testid="v-text" />
+       <Input variant={InputVariant.number} placeholder="123.45" data-testid="v-number" />
+       <Input variant={InputVariant.iconText} icon={<UserIcon />} placeholder="Username" data-testid="v-icon-text" />
+@@ -80,13 +80,51 @@ export const Variants: Story = {
+   ),
+ };
+ 
+-/** Number variant: a single digit is a square; the field grows as you type. */
+-export const NumberGrows: Story = {
++/** Number variants are fixed width by default: they fill the container, content left-aligned. */
++export const NumberFixedWidth: Story = {
+   render: () => (
+-    <div className="flex items-center gap-4 p-4">
++    <div className="flex w-60 flex-col gap-4 p-4">
+       <Input variant={InputVariant.number} defaultValue="1" data-testid="n-short" />
+       <Input variant={InputVariant.number} defaultValue="1,240,000.00" data-testid="n-long" />
+       <Input variant={InputVariant.iconNumber} icon={<TagIcon />} defaultValue="7" />
++      <Input variant={InputVariant.number} className="w-32" defaultValue="42" />
++    </div>
++  ),
++};
++
++/** `autoWidth` opts back in to hugging: a single digit is a square; the field grows as you type. */
++export const NumberAutoWidth: Story = {
++  render: () => (
++    <div className="flex items-center gap-4 p-4">
++      <Input variant={InputVariant.number} autoWidth defaultValue="1" data-testid="n-short" />
++      <Input variant={InputVariant.number} autoWidth defaultValue="1,240,000.00" data-testid="n-long" />
++      <Input variant={InputVariant.iconNumber} autoWidth icon={<TagIcon />} defaultValue="7" />
+     </div>
+   ),
+ };
++
++/**
++ * `format`: shown formatted with Intl.NumberFormat while blurred, raw while
++ * focused. Type or paste without separators; `onValueChange` gets the raw string.
++ */
++function FormattedNumbers() {
++  const [raw, setRaw] = useState('1234567.89');
++  return (
++    <div className="flex w-60 flex-col gap-4 p-4">
++      <Input variant={InputVariant.number} format locale="en-US" defaultValue="1234567" data-testid="f-en" />
++      <Input variant={InputVariant.number} format locale="de-DE" defaultValue="1234567.5" data-testid="f-de" />
++      <Input
++        variant={InputVariant.iconNumber}
++        icon={<TagIcon />}
++        format={{ style: 'currency', currency: 'EUR' }}
++        locale="de-DE"
++        value={raw}
++        onValueChange={setRaw}
++        data-testid="f-currency"
++      />
++      <div className="text-style-mono">raw: {raw}</div>
++    </div>
++  );
++}
++
++export const NumberFormatted: Story = { render: () => <FormattedNumbers /> };
+diff --git a/src/components/Input/Input.tsx b/src/components/Input/Input.tsx
+index 7bd627c..215f47a 100644
+--- a/src/components/Input/Input.tsx
++++ b/src/components/Input/Input.tsx
+@@ -7,23 +7,49 @@
+  *   (border, background, hover, `focus-within` ring) around a transparent
+  *   `<input>`. `className` always lands on the chrome element; every other
+  *   prop, and `ref`, always land on the `<input>`.
+- * - Number variants use the mono role, pad 12px both sides, centre their
+- *   content, never shrink below one button height (a square) and grow with the
+- *   value. The icon variants require an `icon` element.
++ * - Number variants use the mono role, pad 12px both sides, never shrink below
++ *   one button height (a square) and set `inputMode="decimal"` (a consumer's
++ *   own `inputMode` wins). By default they are FIXED width like the text
++ *   variant — they fill their container or take a consumer width — and
++ *   left-align their content, icon included. The opt-in `autoWidth` prop makes
++ *   them hug the value instead and centre their content. The icon variants
++ *   require an `icon` element.
++ * - `format` (number variants only, default off) formats the value for
++ *   display with `Intl.NumberFormat` — `true` or an options object, in `locale`
++ *   (default: the runtime's). Format on blur: while the field is focused it
++ *   shows the raw value, and it shows the formatted one otherwise. The raw
++ *   value is a plain numeric string with "." as the decimal point. Users never
++ *   type separators: grouping separators and whitespace are stripped from typed
++ *   or pasted text, and the locale's decimal separator is read as the decimal
++ *   point (the focused field shows that separator, the raw value does not).
++ *   Text that is not a plain number is shown as typed, never reformatted.
++ * - `onValueChange(value)` fires on every change with the raw string — the
++ *   input's own value, or the stripped numeric string when `format` is on.
++ *   `onChange` keeps native semantics and always still runs; with `format` on,
++ *   its `event.target.value` is the displayed text, so read `onValueChange`.
++ *   `value` / `defaultValue` are raw values in both modes.
+  * - `hasError` paints the danger chrome and sets `aria-invalid` on the
+  *   `<input>` (a consumer's own `aria-invalid` wins).
+  * - Clicking the wrapper's chrome (padding, icon) focuses the input.
+  *
+  * ## constraints
+- * - The number variants HUG their value through a hidden mirror span that
+- *   shares a grid cell with the input. A native `<input>` sizes from its `size`
+- *   attribute, never its value, so neither flex nor `width: auto` can make it
+- *   hug; `field-sizing: content` is not in Safari or Firefox. Deleting the
+- *   "invisible" span collapses the field to the browser's ~20ch default.
+- * - The mirror follows the value the component can see: `value` when
++ * - ONLY `autoWidth` number variants HUG their value, through a hidden mirror
++ *   span that shares a grid cell with the input. A native `<input>` sizes from
++ *   its `size` attribute, never its value, so neither flex nor `width: auto`
++ *   can make it hug; `field-sizing: content` is not in Safari or Firefox.
++ *   Deleting the "invisible" span collapses an `autoWidth` field to the
++ *   browser's ~20ch default. Without `autoWidth` there is no mirror span and
++ *   the field must not hug: dashboards must not shift layout under typing.
++ * - The mirror follows the text the field displays: the formatted value when
++ *   `format` is on and the field is blurred, else the raw value — `value` when
+  *   controlled, its own state (fed by `onChange`) when not. Writing
+  *   `input.value` imperatively through the ref bypasses it — set `value`
+  *   instead. The consumer's `onChange` always still runs.
++ * - With `format` on the `<input>` is always controlled by this component (the
++ *   displayed text differs from the raw value), so the DOM `value` is the
++ *   display text and `defaultValue` is never passed down. Raw state stays
++ *   `value` or the component's own state, never the display text, or blur
++ *   would re-parse formatted text.
+  * - `InputVariant.text` without `icon` stays a bare `<input>`: existing
+  *   consumers style and measure that element directly, and wrapping it would
+  *   move their `className` onto a different node.
+@@ -38,9 +64,11 @@
+ import {
+   forwardRef,
+   isValidElement,
++  useMemo,
+   useRef,
+   useState,
+   type ChangeEvent,
++  type FocusEvent,
+   type InputHTMLAttributes,
+   type PointerEvent,
+   type ReactElement,
+@@ -51,8 +79,35 @@ import { InputVariant } from "./constants";
+ 
+ type InputBaseProps = InputHTMLAttributes<HTMLInputElement> & {
+   hasError?: boolean;
++  /** Number variants: hug the value instead of filling the container. Default off. */
++  autoWidth?: boolean;
++  /**
++   * Number variants: show the value formatted with `Intl.NumberFormat` while the
++   * field is not focused (raw while focused). `true` keeps every fraction digit;
++   * pass options to control them. Default off.
++   */
++  format?: boolean | Intl.NumberFormatOptions;
++  /** BCP 47 locale for `format`. Pass it for SSR-stable output. Default: the runtime's. */
++  locale?: string;
++  /** Fires on every change with the raw string (separators stripped when `format` is on). */
++  onValueChange?: (value: string) => void;
+ };
+ 
++type NumberSeparators = { group: string; decimal: string };
++
++const NUMBER_PATTERN = /^-?\d+(\.\d+)?$/;
++const WHITESPACE = /[\s  ]/g;
++const escapeRegExp = (text: string) =>
++  text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
++
++/** Reads what the user typed or pasted as a raw numeric string ("." decimal). */
++function parseDisplay(text: string, { group, decimal }: NumberSeparators) {
++  let raw = text.replace(WHITESPACE, "");
++  if (group) raw = raw.replace(new RegExp(escapeRegExp(group), "g"), "");
++  if (decimal !== ".") raw = raw.replace(decimal, ".");
++  return raw;
++}
++
+ export type InputProps =
+   | (InputBaseProps & {
+       variant?: typeof InputVariant.text | typeof InputVariant.number;
+@@ -74,6 +129,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+       value,
+       defaultValue,
+       onChange,
++      onValueChange,
++      onFocus,
++      onBlur,
++      autoWidth,
++      format,
++      locale,
+       placeholder,
+       disabled,
+       ...props
+@@ -92,10 +153,61 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+     const [uncontrolledValue, setUncontrolledValue] = useState(() =>
+       String(defaultValue ?? ""),
+     );
++
++    // Format on blur — see the header. Off unless asked, and number variants only.
++    const formatOn = isNumber && !!format;
++    const formatKey = typeof format === "object" ? JSON.stringify(format) : !!format;
++    const formatting = useMemo(() => {
++      if (!formatOn) return null;
++      const options: Intl.NumberFormatOptions =
++        typeof format === "object" ? format : { maximumFractionDigits: 20 };
++      const parts = new Intl.NumberFormat(locale, {
++        minimumFractionDigits: 1,
++        useGrouping: true,
++      }).formatToParts(11111.1);
++      return {
++        formatter: new Intl.NumberFormat(locale, options),
++        separators: {
++          group: parts.find((part) => part.type === "group")?.value ?? "",
++          decimal: parts.find((part) => part.type === "decimal")?.value ?? ".",
++        },
++      };
++      // formatKey stands in for `format`: an inline options object changes identity every render.
++      // eslint-disable-next-line react-hooks/exhaustive-deps
++    }, [formatOn, formatKey, locale]);
++    const [focused, setFocused] = useState(false);
++
+     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+-      if (!isControlled) setUncontrolledValue(event.target.value);
++      const raw = formatting
++        ? parseDisplay(event.target.value, formatting.separators)
++        : event.target.value;
++      if (!isControlled) setUncontrolledValue(raw);
+       onChange?.(event);
++      onValueChange?.(raw);
++    };
++    const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
++      if (formatting) setFocused(true);
++      onFocus?.(event);
+     };
++    const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
++      if (formatting) setFocused(false);
++      onBlur?.(event);
++    };
++
++    const rawValue = isControlled ? String(value) : uncontrolledValue;
++    let displayValue: string | undefined;
++    if (formatting) {
++      if (focused) {
++        displayValue =
++          formatting.separators.decimal === "."
++            ? rawValue
++            : rawValue.replace(".", formatting.separators.decimal);
++      } else {
++        displayValue = NUMBER_PATTERN.test(rawValue)
++          ? formatting.formatter.format(rawValue as unknown as number)
++          : rawValue;
++      }
++    }
+ 
+     if (hasIcon && !isValidElement(icon)) {
+       throw new Error(
+@@ -107,11 +219,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+       // Before ...props, so a consumer's explicit aria-invalid still wins
+       // (the CodeDigitInput order).
+       "aria-invalid": hasError || undefined,
++      ...(isNumber && { inputMode: "decimal" as const }),
+       ...props,
+       ref: setRefs,
+-      value,
+-      defaultValue,
++      // With `format` the input is always controlled by the display text — see the header.
++      value: formatting ? displayValue : value,
++      defaultValue: formatting ? undefined : defaultValue,
+       onChange: handleChange,
++      onFocus: handleFocus,
++      onBlur: handleBlur,
+       placeholder,
+       disabled,
+     };
+@@ -153,8 +269,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+       inputEl.current?.focus();
+     };
+ 
+-    const mirrorText =
+-      (isControlled ? String(value) : uncontrolledValue) || placeholder || "";
++    const hugs = isNumber && !!autoWidth;
++    const mirrorText = (displayValue ?? rawValue) || placeholder || "";
+ 
+     return (
+       <div
+@@ -163,9 +279,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+         className={cn(
+           "h-button items-center rounded-tight border border-solid border-border-primary bg-secondary",
+           "ds-motion-state ds-focus-within-ring",
+-          isNumber
++          hugs
+             ? "inline-flex min-w-button justify-center ds-pl-ui-md ds-pr-ui-md"
+-            : "flex w-full ds-pl-ui-md ds-pr-ui-rg",
++            : isNumber
++              ? "flex w-full min-w-button ds-pl-ui-md ds-pr-ui-md"
++              : "flex w-full ds-pl-ui-md ds-pr-ui-rg",
+           hasIcon && (isNumber ? "gap-xxs" : "gap-sm"),
+           "cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-secondary-disabled",
+           // The error border wins over the disabled one here, as it did when
+@@ -190,7 +308,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+             {icon}
+           </span>
+         )}
+-        {isNumber ? (
++        {hugs ? (
+           <span className="inline-grid min-w-0">
+             {/* Sizes the cell to the value — see the header. */}
+             <span
+diff --git a/src/components/Input/constants.ts b/src/components/Input/constants.ts
+index fe1d3bc..0121c79 100644
+--- a/src/components/Input/constants.ts
++++ b/src/components/Input/constants.ts
+@@ -6,7 +6,8 @@
+  * Usage: <Input variant={InputVariant.iconNumber} icon={<HashIcon />} />
+  *
+  * text       — body text, fills its container (the default)
+- * number     — mono figures; hugs its value, never narrower than a square
++ * number     — mono figures, left-aligned; fills its container like `text`
++ *              (never narrower than a square). `autoWidth` hugs the value.
+  * iconText   — `text` with a leading icon (requires `icon`)
+  * iconNumber — `number` with a leading icon (requires `icon`)
+  */
+diff --git a/src/components/ProgressIndicator/ProgressIndicator.tsx b/src/components/ProgressIndicator/ProgressIndicator.tsx
+index 1eb0172..51c3586 100644
+--- a/src/components/ProgressIndicator/ProgressIndicator.tsx
++++ b/src/components/ProgressIndicator/ProgressIndicator.tsx
+@@ -5,6 +5,7 @@ import {
+   forwardRef,
+   useMemo,
+   type ComponentPropsWithoutRef,
++  type CSSProperties,
+   type Ref,
+ } from "react";
+ import { cn } from "../../utils/cn";
+@@ -55,15 +56,25 @@ type InnerSvgProps = ComponentPropsWithoutRef<"svg"> & {
+  * Flat determinate progress — discrete arcs (M3 style):
+  *
+  * At `progress === 0` the track renders as a complete circle — no gaps — to
+- * represent the fully-empty state cleanly. For all values above 0, the standard
+- * M3 discrete-arc gap formula applies: indicator arc spans `progress × C` from
++ * represent the fully-empty state cleanly. From 1 % up, the standard M3
++ * discrete-arc gap formula applies: indicator arc spans `progress × C` from
+  * 12 o'clock; track covers the complementary arc with a `gapLength` gap at each
+- * endpoint. Once that complement has no length the track is omitted (shared
+- * with the wavy variant via `getWavyTrackGeometry`).
++ * endpoint. Between 0 and 1 % the gaps ramp in linearly, so the drawing is
++ * continuous in `progress` (it has to be — it is animated). Once the track's
++ * complement has no length it is faded out, not unmounted.
+  *
+- * Both arcs carry `.ds-progress-arc` (the motion scale's `slow` step on the
+- * `standard` curve) so they animate smoothly together whenever `progress`
+- * changes.
++ * Motion: the <svg> sets ONE number, `--ds-pi-progress`, inline (plus the
++ * fixed circumference and gap), and `.ds-progress-ring` transitions only that
++ * number (motion scale `slow` on `standard`). Every dash value of both arcs is
++ * a calc() of it in `.ds-progress-ring-indicator` / `-track`, so every frame —
++ * including frames of a transition interrupted by a new `progress` — is one
++ * self-consistent drawing. Transitioning the dash properties themselves (the
++ * earlier `.ds-progress-arc`) let four independent transitions restart from
++ * their own mid-flight values, and the track slid backwards or vanished.
++ *
++ * Both circles are always mounted: a zero-length round-capped dash still
++ * paints a dot, so each arc's stroke-opacity drops to 0 when its length is
++ * ≤ 0 instead of the element being removed and re-added mid-animation.
+  */
+ function FlatProgressIndicator({
+   geo,
+@@ -89,13 +100,6 @@ function FlatProgressIndicator({
+   } = geo;
+   const { className, style, ...rest } = svgProps;
+ 
+-  const dashOffset = circumference * (1 - progress);
+-
+-  // Same remainder track as the wavy variant: full circle at 0, the M3
+-  // discrete complement above 0, and null once it has no length — a
+-  // zero-length round-capped dash still paints a dot, so the track is omitted.
+-  const track = getWavyTrackGeometry(progress, circumference, gapLength);
+-
+   return (
+     <svg
+       {...rest}
+@@ -106,25 +110,32 @@ function FlatProgressIndicator({
+       width={diameter}
+       height={diameter}
+       viewBox={`0 0 ${diameter} ${diameter}`}
+-      className={className}
+-      style={{ width: cssSize, height: cssSize, ...style }}
++      className={cn("ds-progress-ring", className)}
++      style={
++        {
++          width: cssSize,
++          height: cssSize,
++          // The one animated value, plus the fixed geometry (user units) the
++          // .ds-progress-ring-* calc()s derive both arcs from.
++          "--ds-pi-progress": progress,
++          "--ds-pi-c": circumference,
++          "--ds-pi-gap": gapLength,
++          ...style,
++        } as CSSProperties
++      }
+     >
+-      {/* Track arc — full circle at 0, discrete complement of the indicator above 0, omitted once it has no length */}
+-      {track && (
+-        <circle
+-          cx={cx}
+-          cy={cy}
+-          r={trackRadius}
+-          fill="none"
+-          stroke="var(--ui-color-border-primary)"
+-          strokeWidth={strokeWidth}
+-          strokeLinecap="round"
+-          strokeDasharray={`${track.length} ${circumference}`}
+-          strokeDashoffset={track.offset}
+-          transform={`rotate(-90 ${cx} ${cy})`}
+-          className="ds-progress-arc"
+-        />
+-      )}
++      {/* Track arc — full circle at 0, discrete complement of the indicator above 0, faded once it has no length */}
++      <circle
++        cx={cx}
++        cy={cy}
++        r={trackRadius}
++        fill="none"
++        stroke="var(--ui-color-border-primary)"
++        strokeWidth={strokeWidth}
++        strokeLinecap="round"
++        transform={`rotate(-90 ${cx} ${cy})`}
++        className="ds-progress-ring-track"
++      />
+       {/* Indicator arc — rotated to start at 12 o'clock */}
+       <circle
+         cx={cx}
+@@ -134,10 +145,8 @@ function FlatProgressIndicator({
+         stroke={strokeColor}
+         strokeWidth={strokeWidth}
+         strokeLinecap="round"
+-        strokeDasharray={circumference}
+-        strokeDashoffset={dashOffset}
+         transform={`rotate(-90 ${cx} ${cy})`}
+-        className="ds-progress-arc"
++        className="ds-progress-ring-indicator"
+       />
+     </svg>
+   );
+diff --git a/src/components/ProgressIndicator/waveGeometry.ts b/src/components/ProgressIndicator/waveGeometry.ts
+index ac141dd..78215fd 100644
+--- a/src/components/ProgressIndicator/waveGeometry.ts
++++ b/src/components/ProgressIndicator/waveGeometry.ts
+@@ -131,14 +131,14 @@ function splitCubicAtHalf(
+  * Returns the smooth circular remainder track, or `null` when no track should
+  * be painted. A zero-length round-capped SVG dash still renders a dot, so the
+  * complete state must omit the track rather than relying on a `0` dash.
+- * Shared by the flat and wavy ProgressIndicator variants.
++ * Used by the wavy ProgressIndicator variant (not transitioned). The flat
++ * variant draws the same track in CSS from one animated number — see
++ * `.ds-progress-ring-track` in dooph-component-tokens.css; keep the two in
++ * step (they agree at 0 and from 1 % up; flat ramps its gaps in below 1 %).
+  *
+- * `offset` is the NEGATIVE start position (−(active + gap)), not an
+- * equivalent positive wrap of it. The flat variant transitions dasharray and
+- * dashoffset, and only this form is continuous with the full circle at 0
+- * (offset 0): a positive wrap (length + C − start) sends the offset from
+- * ≈2C to 0 on the way back to 0, and the interpolated track dash runs
+- * backwards round the circle and flashes.
++ * `offset` is the NEGATIVE start position (−(active + gap)), the same form
++ * the flat CSS uses: it stays continuous with the full circle at 0 (offset 0),
++ * where a positive wrap (length + C − start) would jump by ≈2C.
+  */
+ export function getWavyTrackGeometry(
+   progress: number,
+diff --git a/src/components/Text/BaseText.stories.tsx b/src/components/Text/BaseText.stories.tsx
+index f6d258d..3350efe 100644
+--- a/src/components/Text/BaseText.stories.tsx
++++ b/src/components/Text/BaseText.stories.tsx
+@@ -4,6 +4,7 @@ import {
+   BaseText,
+   BodyText,
+   ButtonText,
++  CTAText,
+   HeadingText,
+   HeroBodyText,
+   HeroButtonText,
+@@ -123,6 +124,9 @@ export const Roles: Story = {
+       <Row label="HeroButtonText">
+         <HeroButtonText>{SAMPLE}</HeroButtonText>
+       </Row>
++      <Row label="CTAText">
++        <CTAText>{SAMPLE}</CTAText>
++      </Row>
+       <Row label="LabelText">
+         <LabelText>{SAMPLE}</LabelText>
+       </Row>
+diff --git a/src/components/Text/BaseText.tsx b/src/components/Text/BaseText.tsx
+index b7cab6a..d6239a1 100644
+--- a/src/components/Text/BaseText.tsx
++++ b/src/components/Text/BaseText.tsx
+@@ -159,6 +159,9 @@ export const HeroButtonText = createRoleText(
+   TextVariant.heroButton,
+   "HeroButtonText",
+ );
++/* Marketing CTA label: the button role at semibold, 24px (`.text-style-cta`).
++ * The big CTA lifts it to 28px by passing `fontSize={var(--ui-text-cta-big)}`. */
++export const CTAText = createRoleText(TextVariant.cta, "CTAText");
+ export const LabelText = createRoleText(TextVariant.label, "LabelText");
+ /* Button's size and weight in the mono family — the two roles' size and weight
+  * tokens alias each other, so mono sits at the same optical scale beside a
+@@ -175,6 +178,7 @@ export type TitleTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+ export type BodyTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+ export type HeroBodyTextProps<T extends ElementType = "span"> =
+   RoleTextProps<T>;
++export type CTATextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+ export type HeroButtonTextProps<T extends ElementType = "span"> =
+   RoleTextProps<T>;
+ export type LabelTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+diff --git a/src/components/Text/constants.ts b/src/components/Text/constants.ts
+index 157ff3e..fa021ed 100644
+--- a/src/components/Text/constants.ts
++++ b/src/components/Text/constants.ts
+@@ -17,6 +17,7 @@
+ export const TextVariant = {
+   button: 'button',
+   heroButton: 'heroButton',
++  cta: 'cta',
+   heading: 'heading',
+   subheading: 'subheading',
+   hero: 'hero',
+@@ -111,6 +112,7 @@ export const ROLE_AXIS_TOKEN: Partial<Record<TextVariant, string>> = {
+   /* The hero-scale roles share their base role's axes verbatim — that is what
+    * makes them the same face at a different size rather than a new voice. */
+   heroButton: 'var(--ui-font-var-button)',
++  cta: 'var(--ui-font-var-button)',
+   body: 'var(--ui-font-var-body)',
+   heroBody: 'var(--ui-font-var-body)',
+   heading: 'var(--ui-font-var-heading)',
+@@ -122,6 +124,7 @@ export const ROLE_AXIS_TOKEN: Partial<Record<TextVariant, string>> = {
+ export const TEXT_VARIANT_CLASS: Record<TextVariant, string> = {
+   button: 'text-style-button',
+   heroButton: 'text-style-hero-button',
++  cta: 'text-style-cta',
+   heading: 'text-style-heading',
+   subheading: 'text-style-subheading',
+   hero: 'text-style-hero',
+diff --git a/src/components/Text/index.ts b/src/components/Text/index.ts
+index 2a6f52b..c13190a 100644
+--- a/src/components/Text/index.ts
++++ b/src/components/Text/index.ts
+@@ -2,6 +2,7 @@ export {
+   BaseText,
+   BodyText,
+   ButtonText,
++  CTAText,
+   HeadingText,
+   HeroBodyText,
+   HeroButtonText,
+@@ -15,6 +16,7 @@ export type {
+   BaseTextProps,
+   BodyTextProps,
+   ButtonTextProps,
++  CTATextProps,
+   HeadingTextProps,
+   HeroBodyTextProps,
+   HeroButtonTextProps,
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index cd0104f..f014585 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -18,6 +18,16 @@
+   initial-value: 0;
+ }
+ 
++/* ProgressIndicator (flat) — the ONE animated value of the ring: progress
++ * 0–1, set inline on the <svg>. Registered as a <number> so it interpolates;
++ * .ds-progress-ring transitions it and both arcs derive every dash value from
++ * it (see .ds-progress-ring-* below). */
++@property --ds-pi-progress {
++  syntax: "<number>";
++  inherits: true;
++  initial-value: 0;
++}
++
+ @layer utilities {
+   /*
+    * Motion helpers — the only way a component's className reaches the motion
+@@ -247,13 +257,38 @@
+     transition: left var(--ui-motion-duration-slow)
+       var(--ui-motion-ease-standard);
+   }
+-  /* Circular progress (ProgressIndicator, flat variant) — both arcs re-dash
+-   * together whenever `progress` changes. A class rather than inline style so
+-   * the timing stays on the scale and the reduced-motion block reaches it. */
+-  .ds-progress-arc {
+-    transition-property: stroke-dasharray, stroke-dashoffset;
+-    transition-duration: var(--ui-motion-duration-slow);
+-    transition-timing-function: var(--ui-motion-ease-standard);
++  /* Circular progress (ProgressIndicator, flat variant). The <svg> sets
++   * --ds-pi-progress (0–1), --ds-pi-c (circumference) and --ds-pi-gap (the M3
++   * gap, round-cap allowance included) inline, all in user units. ONLY
++   * --ds-pi-progress transitions; every dash value of both arcs is a calc() of
++   * it, so each frame is one consistent drawing. Do not transition the dash
++   * properties themselves: four independent transitions restart from their
++   * own mid-flight values when interrupted, and the track's length and offset
++   * disagree — it slides backwards or its length hits 0 and it vanishes.
++   *
++   * Track (complement of the indicator, a gap clear of each end):
++   *   gap   = --ds-pi-gap ramped in over the first 1 % (0 at 0 → full circle,
++   *           continuous; full gap from 1 % up, identical to the static M3 form)
++   *   start = C·p + gap   → dashoffset −start
++   *   len   = C·(1 − p) − 2·gap → dasharray "len C"
++   * A zero-length round-capped dash still paints a dot, so each arc's
++   * stroke-opacity drops to 0 when its length is ≤ 0 (the elements stay
++   * mounted; nothing remounts mid-animation). */
++  .ds-progress-ring {
++    transition: --ds-pi-progress var(--ui-motion-duration-slow)
++      var(--ui-motion-ease-standard);
++  }
++  .ds-progress-ring-indicator {
++    stroke-dasharray: calc(var(--ds-pi-c) * 1px);
++    stroke-dashoffset: calc(var(--ds-pi-c) * (1 - var(--ds-pi-progress)) * 1px);
++    stroke-opacity: clamp(0, var(--ds-pi-c) * var(--ds-pi-progress) * 1000, 1);
++  }
++  .ds-progress-ring-track {
++    --ds-pi-gap-now: calc(var(--ds-pi-gap) * clamp(0, var(--ds-pi-progress) * 100, 1));
++    --ds-pi-track-len: calc(var(--ds-pi-c) * (1 - var(--ds-pi-progress)) - 2 * var(--ds-pi-gap-now));
++    stroke-dasharray: max(0px, var(--ds-pi-track-len) * 1px) calc(var(--ds-pi-c) * 1px);
++    stroke-dashoffset: calc((var(--ds-pi-c) * var(--ds-pi-progress) + var(--ds-pi-gap-now)) * -1px);
++    stroke-opacity: clamp(0, var(--ds-pi-track-len) * 1000, 1);
+   }
+   /* Stepped slider dots. The active/inactive split is a plain attribute
+    * selector rather than a Tailwind `data-[active]:` variant — variants only
+@@ -275,14 +310,20 @@
+ 
+   /* The step a slider's `highlightedStep` picks: same width and paint, drawn
+    * tall. Plain attribute selector for the same reason as [data-active]. */
++  /* Only the highlighted dot fades its colour. The other dots switch paint
++   * instantly on purpose: a fast drag sweeps many of them at once, and staggered
++   * fades read as lag. A single dot cannot lag, so it may ease. */
+   .ds-slider-dot[data-highlighted] {
+     height: var(--ui-height-slider-step-tall);
++    transition-property: height, background-color;
+   }
+ 
+-  /* During a drag the tall step marks the value the drag started from; at the
+-   * inactive dot paint it is easy to miss, so it takes the slider colour until
+-   * release. On the filled side the active-dot paint already contrasts. */
+-  [data-dragging] .ds-slider-dot[data-highlighted]:not([data-active]) {
++  /* During a drag the tall step marks the value the drag started from, so it
++   * takes the solid slider colour on BOTH sides of the thumb until release.
++   * On the filled side it still reads: the fill is the same colour at
++   * --ds-slider-track-opacity (50-70%), the dot is opaque. Outranks the
++   * [data-active] paint by specificity, so no JS or grouping change is needed. */
++  [data-dragging] .ds-slider-dot[data-highlighted] {
+     background-color: var(--ds-slider-color, var(--ui-color-primary));
+   }
+ 
+@@ -584,27 +625,32 @@
+   /*
+    * CopyButton — stacked clipboard/check icons swap via [data-copied].
+    * Both icons share the same grid cell (parent has `grid place-items-center`)
+-   * so the swap is a cross-fade + scale instead of a layout shift.
++   * so the swap is a zoom swap, not a layout shift: the outgoing icon scales
++   * 1 -> 0.6 and fades out (exit curve); the incoming one scales 0.6 -> 1 and
++   * fades in (enter curve). A transition is read from the state being entered,
++   * so the visible state carries the enter timing and the hidden state the
++   * exit timing. Duration is --ui-motion-duration-fast on both.
+    */
+   .ds-copy-icon-clipboard,
+   .ds-copy-icon-check {
+     grid-area: 1 / 1;
+     display: inline-flex;
++  }
++  .ds-copy-icon-clipboard,
++  [data-copied] .ds-copy-icon-check {
++    opacity: 1;
++    transform: scale(1);
+     transition:
+-      opacity var(--ui-motion-duration-fast) var(--ui-motion-ease-standard),
++      opacity var(--ui-motion-duration-fast) var(--ui-motion-ease-enter),
+       transform var(--ui-motion-duration-fast) var(--ui-motion-ease-enter);
+   }
+-  [data-copied] .ds-copy-icon-clipboard {
+-    opacity: 0;
+-    transform: scale(0.6);
+-  }
++  [data-copied] .ds-copy-icon-clipboard,
+   .ds-copy-icon-check {
+     opacity: 0;
+-    transform: scale(0.5);
+-  }
+-  [data-copied] .ds-copy-icon-check {
+-    opacity: 1;
+-    transform: scale(1);
++    transform: scale(0.6);
++    transition:
++      opacity var(--ui-motion-duration-fast) var(--ui-motion-ease-exit),
++      transform var(--ui-motion-duration-fast) var(--ui-motion-ease-exit);
+   }
+ 
+   /*
+@@ -656,7 +702,8 @@
+   .ds-chat-reveal-root[data-state="open"] .ds-chat-reveal {
+     opacity: 1;
+   }
+-  /* A settled label lifts from ghost to ghost-active under the same hover. */
++  /* A settled label (resting at text-secondary) lifts to text-primary under the
++   * same hover. */
+   .ds-chat-lift {
+     transition: color var(--ui-motion-duration-fast)
+       var(--ui-motion-ease-standard);
+@@ -664,7 +711,7 @@
+   .ds-chat-reveal-root:hover .ds-chat-lift,
+   .ds-chat-reveal-root:focus-within .ds-chat-lift,
+   .ds-chat-reveal-root[data-state="open"] .ds-chat-lift {
+-    color: var(--ui-color-ghost-foreground-active);
++    color: var(--ui-color-text);
+   }
+   /* The thinking disclosure chevron: down while closed, up while open.
+    * DropdownIcon's own path points up. Both opacity (ds-chat-reveal) and
+diff --git a/src/styles/index.css b/src/styles/index.css
+index 931122a..3841e28 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -768,6 +768,26 @@
+    * the roll used to hitch. Both classes are removed the moment their animation
+    * ends (the out node unmounts, the in node drops the class), so neither
+    * strands a layer on settled content. */
++  /* The soft clip shared by RollChangeText and FadeChangeText (ChangeSwapShell).
++   * A vertical mask fades the rolling face out at the top and bottom instead of
++   * the old hard `overflow: hidden` slicing glyphs and their blur halo. The box
++   * gets --ui-roll-change-breathe of padding top and bottom, cancelled by an
++   * equal negative margin: its margin box (and so its outer size and baseline
++   * position in the line) is exactly what it was without either. The fade
++   * zones are exactly that breathing room (em stops, not a percentage): the
++   * resting line sits wholly in the opaque middle at any line-height, where an
++   * 18% stop would dim tall glyphs at a tight leading. The mask also clips to
++   * the border box, so nothing paints outside it. */
++  .ds-change-swap {
++    padding-block: var(--ui-roll-change-breathe);
++    margin-block: calc(var(--ui-roll-change-breathe) * -1);
++    mask-image: linear-gradient(
++      transparent,
++      #000 var(--ui-roll-change-breathe),
++      #000 calc(100% - var(--ui-roll-change-breathe)),
++      transparent
++    );
++  }
+   .ds-roll-change-out {
+     animation: ds-roll-out var(--ui-motion-duration-base)
+       var(--ui-motion-ease-exit) forwards;
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index 5215bd0..114b8fa 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -224,7 +224,8 @@
+    *
+    * The two shimmer pairs RE-BASE ShimmerText rather than restyling it: a
+    * working tool row reads at full ghost-active weight, the thinking row at the
+-   * quieter ghost weight (Figma 761:1330 / 761:1346). The highlight keeps the
++   * quieter text-secondary weight, the colour a settled thinking label rests at
++   * (Figma 761:1330 / 761:1346). The highlight keeps the
+    * package's own base-at-35% formula so a consumer retuning either base keeps
+    * the sheen in proportion. */
+   --ui-chat-tool-shimmer-base: var(--ui-color-ghost-foreground-active);
+@@ -233,15 +234,16 @@
+     var(--ui-color-ghost-foreground-active) 35%,
+     transparent
+   );
+-  --ui-chat-thinking-shimmer-base: var(--ui-color-ghost-foreground);
++  --ui-chat-thinking-shimmer-base: var(--ui-color-text-secondary);
+   --ui-chat-thinking-shimmer-highlight: color-mix(
+     in srgb,
+-    var(--ui-color-ghost-foreground) 35%,
++    var(--ui-color-text-secondary) 35%,
+     transparent
+   );
+   /* `streamingAnimation`: each block of prose rises out of a blur as it
+    * arrives. `blur` is px on purpose — a lens effect, not a typographic
+-   * measure (the same call as --ui-roll-change-blur). Its timing, like the
++   * measure (the roll's blur, --ui-roll-change-blur, is em because it must
++   * stay inside a clip box that scales with the type). Its timing, like the
+    * hover reveal's and the transcript disclosure's, is on the motion scale. */
+   --ui-chat-stream-blur: 3px;
+   --ui-chat-stream-rise: 4px;
+@@ -279,17 +281,22 @@
+    * halves one shared ease flattens that read.
+    *
+    * `depth` is in em so the travel scales with the type, like the hover roll's.
+-   * `blur` is in px on purpose: it is a lens effect, not a typographic measure,
+-   * and scaling it with font size makes large text look smeared rather than
+-   * fast. The in-animation's mid-point blur is derived from this token, not a
+-   * second one, so the two stay in proportion.
++   * `blur` is in em too (~0.1em, 1.6px at 16px): a fixed 4px halo outgrew small
++   * type and was sliced at the clip edge mid-roll. The in-animation's mid-point
++   * blur is derived from this token, not a second one, so the two stay in
++   * proportion.
++   *
++   * `breathe` is the vertical room the clip box gets above and below the line
++   * (padding, cancelled by an equal negative margin so layout does not move)
++   * so the soft mask fades the blur halo instead of cutting it.
+    *
+    * The exiting node is unmounted by its own `animationend`, so nothing in the
+    * component mirrors the out duration. It used to be duplicated as a JS
+    * setTimeout, which is precisely the mirror that desyncs the moment either
+    * side is retuned. */
+-  --ui-roll-change-depth: 0.9em;
+-  --ui-roll-change-blur: 4px;
++  --ui-roll-change-depth: 0.55em;
++  --ui-roll-change-blur: 0.1em;
++  --ui-roll-change-breathe: 0.15em;
+ 
+   /* Fade-roll on change (FadeChangeText) — the roll above without the blur:
+    * travel + opacity only, on the same motion-scale timing. The depth ALIASES

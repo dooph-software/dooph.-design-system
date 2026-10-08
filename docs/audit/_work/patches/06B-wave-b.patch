@@ -1,0 +1,2080 @@
+diff --git a/src/components/AIChat/AIModelSelect.tsx b/src/components/AIChat/AIModelSelect.tsx
+index 522721e..77c6d30 100644
+--- a/src/components/AIChat/AIModelSelect.tsx
++++ b/src/components/AIChat/AIModelSelect.tsx
+@@ -3,6 +3,7 @@
+  * (Figma 761:3079). There is no sealed "ModelSelect": the menu is
+  * DropdownMenu + these parts + whatever else the consumer adds ("Edit models").
+  *
++ * ## behavior
+  *   AIModelSelectTrigger     Figma 761:2502 — model name + effort + chevron
+  *   AIModelSelectItem        Figma 761:2073 — Auto / Model / Model Selected
+  *   AIThinkingEffortSelector Figma 761:2088 — "Thinking <step>" + stepped slider
+@@ -12,10 +13,15 @@
+  * - No model catalogue, provider enum or reasoning levels live here. Every
+  *   label, colour and step list is data the consumer passes in.
+  * - Provider colour is an open design value (`color`: DS token name or any CSS
+- *   colour), written as a custom property the CSS reads — never a class.
++ *   colour), written as a custom property the CSS reads — never a class: a class
++ *   cannot carry an arbitrary consumer colour.
+  * - Selection is a radio choice, so AIModelSelectItem IS a
+  *   DropdownMenuRadioSelectItem: wrap items in DropdownMenuRadioGroup and the
+  *   selected fill, check and aria-checked all come from the menu itself.
++ * - AIThinkingEffortSelector THROWS when `value` is not one of `steps`. A
++ *   selector that quietly drew step 0 would disagree with the effort the
++ *   consumer sends, the same reason AIContextGauge is not clamped. Mapping an
++ *   effort across a model switch whose steps differ is the consumer's job.
+  */
+ "use client";
+ 
+@@ -111,7 +117,11 @@ export interface AIThinkingEffortStep {
+   label: string;
+ }
+ 
+-export interface AIThinkingEffortSelectorProps {
++export interface AIThinkingEffortSelectorProps
++  extends Omit<
++    ComponentPropsWithoutRef<"div">,
++    "children" | "color" | "onChange" | "defaultValue"
++  > {
+   /** Ordered from least to most effort. */
+   steps: readonly AIThinkingEffortStep[];
+   /** The `value` of the current step. */
+@@ -123,7 +133,6 @@ export interface AIThinkingEffortSelectorProps {
+   labels: { start: string; end: string };
+   /** Slider paint: a DS token name or any CSS colour (e.g. the provider's). */
+   color?: DsColor;
+-  className?: string;
+ }
+ 
+ /**
+@@ -136,17 +145,33 @@ const AIThinkingEffortSelector = forwardRef<
+   AIThinkingEffortSelectorProps
+ >(
+   (
+-    { steps, value, onValueChange, label, labels, color, className },
++    {
++      steps,
++      value,
++      onValueChange,
++      label,
++      labels,
++      color,
++      className,
++      ...props
++    },
+     ref,
+   ) => {
+-    const index = Math.max(
+-      0,
+-      steps.findIndex((step) => step.value === value),
+-    );
++    const found = steps.findIndex((step) => step.value === value);
++    if (steps.length > 0 && found === -1) {
++      throw new Error(
++        `[AIThinkingEffortSelector] value "${value}" is not one of steps: ${steps
++          .map((step) => step.value)
++          .join(", ")}`,
++      );
++    }
++    // Only an empty `steps` reaches here with -1: no step label, a 0..0 slider.
++    const index = Math.max(0, found);
+     const current = steps[index];
+ 
+     return (
+       <div
++        {...props}
+         ref={ref}
+         className={cn("flex w-full min-w-0 flex-col gap-md p-sm", className)}
+       >
+@@ -211,6 +236,7 @@ const AIModelTooltipContent = forwardRef<
+       capability,
+       color,
+       className,
++      style,
+       themeInverse = false,
+       ...props
+     },
+@@ -221,13 +247,19 @@ const AIModelTooltipContent = forwardRef<
+       variant={TooltipVariant.complex}
+       themeInverse={themeInverse}
+       className={cn("ds-width-chat-model-tooltip", className)}
++      style={
++        {
++          ...style,
++          ...(color
++            ? { "--ds-chat-model-color": resolveDsColor(color, "") }
++            : {}),
++        } as CSSProperties
++      }
+       {...props}
+     >
+       <div className="flex w-full flex-col gap-md px-md pt-rg pb-lg">
+         <div className="flex w-full flex-col gap-sm">
+-          <ButtonText
+-            style={color ? { color: resolveDsColor(color, "") } : undefined}
+-          >
++          <ButtonText className="ds-chat-model-name">
+             {title}
+           </ButtonText>
+           <TooltipBody className="text-text">{description}</TooltipBody>
+diff --git a/src/components/AIChat/AIPromptInput.tsx b/src/components/AIChat/AIPromptInput.tsx
+index 4c3292a..27ff066 100644
+--- a/src/components/AIChat/AIPromptInput.tsx
++++ b/src/components/AIChat/AIPromptInput.tsx
+@@ -36,6 +36,7 @@ import {
+   useLayoutEffect,
+   useRef,
+   useState,
++  type ComponentPropsWithoutRef,
+   type FormHTMLAttributes,
+   type HTMLAttributes,
+   type KeyboardEvent,
+@@ -278,39 +279,56 @@ AIPromptInputToolbarEnd.displayName = "AIPromptInputToolbarEnd";
+ 
+ // ── Submit ────────────────────────────────────────────────────────────────────
+ 
+-export interface AIPromptInputSubmitProps {
++export interface AIPromptInputSubmitProps
++  extends Omit<
++    ComponentPropsWithoutRef<"button">,
++    "children" | "type" | "disabled" | "aria-label"
++  > {
+   /** Accessible name while sending is possible — the consumer's copy. */
+   sendLabel?: string;
+   /** Accessible name while responding — the consumer's copy. */
+   stopLabel?: string;
+-  className?: string;
+ }
+ 
+ /**
+  * Send when idle, stop while responding. Ghost and disabled while the prompt is
+  * empty (Figma Empty); prominent once there is something to send (Filled) or
+- * something to stop (Active).
++ * something to stop (Active). Other button props pass through; a consumer
++ * `onClick` runs before `onStop`, and `event.preventDefault()` in it cancels
++ * the stop.
+  */
+ const AIPromptInputSubmit = forwardRef<
+   HTMLButtonElement,
+   AIPromptInputSubmitProps
+ >(
+   (
+-    { sendLabel = "Send message", stopLabel = "Stop response", className },
++    {
++      sendLabel = "Send message",
++      stopLabel = "Stop response",
++      className,
++      onClick,
++      ...props
++    },
+     ref,
+   ) => {
+     const { isEmpty, responding, disabled, onStop } =
+       usePromptInput("AIPromptInputSubmit");
+ 
++    // The consumer's props spread FIRST, so type, variant, size, disabled and
++    // the accessible name the part owns always win.
+     if (responding && onStop) {
+       return (
+         <Button
++          {...props}
+           ref={ref}
+           type="button"
+           variant={ButtonVariant.prominent}
+           size={ButtonSize.iconSm}
+           aria-label={stopLabel}
+-          onClick={onStop}
++          onClick={(event) => {
++            onClick?.(event);
++            if (!event.defaultPrevented) onStop();
++          }}
+           className={cn("shrink-0", className)}
+         >
+           <StopFilledIcon size={IconSize.md} />
+@@ -321,12 +339,14 @@ const AIPromptInputSubmit = forwardRef<
+     const blocked = isEmpty || responding || disabled;
+     return (
+       <Button
++        {...props}
+         ref={ref}
+         type="submit"
+         variant={blocked ? ButtonVariant.ghost : ButtonVariant.prominent}
+         size={ButtonSize.iconSm}
+         disabled={blocked}
+         aria-label={sendLabel}
++        onClick={onClick}
+         className={cn("shrink-0", className)}
+       >
+         <ArrowUpIcon size={IconSize.md} />
+diff --git a/src/components/AIChat/AIThinkingPart.tsx b/src/components/AIChat/AIThinkingPart.tsx
+index 5272526..12b045b 100644
+--- a/src/components/AIChat/AIThinkingPart.tsx
++++ b/src/components/AIChat/AIThinkingPart.tsx
+@@ -11,6 +11,14 @@
+  * - `thought` without a transcript: a plain settled row.
+  * - Open state is controllable (`open` / `onOpenChange`) or uncontrolled
+  *   (`defaultOpen`). It is the only state this component owns.
++ * - Transcript colour is inherited by `ds-chat-prose`: tertiary while live,
++ *   secondary once opened, as Figma draws them.
++ * - Root attributes: `data-phase` is always the `AIThinkingPartState`.
++ *   `data-state` is the phase on the `thinking` row and on a `thought` row
++ *   without a transcript, but the disclosure state (`open` / `closed`) on an
++ *   expandable `thought` row, where the `[data-state="open"]` reveal and lift
++ *   rules in dooph-component-tokens.css read it. Style on `data-phase` to
++ *   target a phase; do not change what `data-state` holds.
+  *
+  * ## constraints
+  * - A transcript is "available" exactly when `children` is given. Providers that
+@@ -18,8 +26,6 @@
+  * - `label` and `meta` are the consumer's copy ("Thinking", "Thought for 26s",
+  *   "3s • 743 tokens"). No timer lives here — the consumer ticks elapsed time,
+  *   so it can start counting whenever it chooses.
+- * - Transcript colour is inherited by `ds-chat-prose`: tertiary while live,
+- *   secondary once opened, as Figma draws them.
+  */
+ "use client";
+ 
+@@ -99,6 +105,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+         <div
+           ref={ref}
+           data-state={state}
++          data-phase={state}
+           className={cn(
+             "flex w-full min-w-0 flex-col gap-rg px-sm py-xxs",
+             className,
+@@ -139,6 +146,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+         <div
+           ref={ref}
+           data-state={state}
++          data-phase={state}
+           className={cn(
+             "flex w-full min-w-0 select-none items-center gap-rg px-sm py-xxs",
+             className,
+@@ -157,6 +165,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+       <div
+         ref={ref}
+         data-state={openState}
++        data-phase={state}
+         className={cn(
+           "ds-chat-reveal-root flex w-full min-w-0 flex-col",
+           className,
+@@ -169,10 +178,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+           aria-expanded={open}
+           aria-controls={transcriptId}
+           onClick={() => setOpen(!open)}
+-          // `h-auto!`: the row hugs its text like every other part. Button's
+-          // `h-button` is a package utility tailwind-merge cannot recognise as
+-          // a height, so a plain `h-auto` would not replace it.
+-          className="h-auto! w-full justify-start gap-rg border-0 px-sm py-xxs"
++          className="h-auto w-full justify-start gap-rg border-0 px-sm py-xxs"
+         >
+           {labelNode}
+           {metaNode}
+diff --git a/src/components/AIChat/AIToolPart.tsx b/src/components/AIChat/AIToolPart.tsx
+index f2c1011..fa76526 100644
+--- a/src/components/AIChat/AIToolPart.tsx
++++ b/src/components/AIChat/AIToolPart.tsx
+@@ -15,8 +15,9 @@
+  *   ReactNode. The component formats nothing and measures nothing — it holds no
+  *   timer. Elapsed time is ticked by the consumer and passed in as `meta`, so it
+  *   starts whenever THEY decide, not on mount.
+- * - `state` is AIToolPartState, never an AI SDK state string. Mapping one onto
+- *   the other is the consumer's one line of glue.
++ * - `state` is AIToolPartState, never an AI SDK state string: taking the SDK's
++ *   strings would tie the package to one SDK's vocabulary and version. Mapping one
++ *   onto the other is the consumer's one line of glue.
+  */
+ import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+ import { cn } from "../../utils/cn";
+diff --git a/src/components/AIChat/AITurnSummary.tsx b/src/components/AIChat/AITurnSummary.tsx
+index 8b3bea0..519c023 100644
+--- a/src/components/AIChat/AITurnSummary.tsx
++++ b/src/components/AIChat/AITurnSummary.tsx
+@@ -5,12 +5,12 @@
+  * - `label` rests at ghost weight ("Worked for 1m 22s"), `meta` at tertiary
+  *   ("12k tokens"). With `copyValue`, a ghost CopyButton is revealed on hover
+  *   (Figma Variant2) and on keyboard focus.
++ * - Meant for a settled turn; when to render it is the consumer's call, since
++ *   only they know when their stream has finished.
+  *
+  * ## constraints
+  * - Durations and counts arrive formatted. The component never reads a clock
+  *   or a usage object; what "worked for" measures is the consumer's decision.
+- * - Render it only once a turn has settled — that rule is the consumer's to
+- *   apply, since only they know when their stream has finished.
+  */
+ import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+ import { cn } from "../../utils/cn";
+diff --git a/src/components/AIChat/ChatDivider.tsx b/src/components/AIChat/ChatDivider.tsx
+index f7c3b51..1a4ffb4 100644
+--- a/src/components/AIChat/ChatDivider.tsx
++++ b/src/components/AIChat/ChatDivider.tsx
+@@ -1,16 +1,10 @@
+ /*
+  * ChatDivider — a centred label between wavy rules (Figma 761:2496 Model Switch
+- * Divider, 761:1453 Chat Date Divider).
+- *
+- * ## behavior
+- * - One component for both Figma dividers: they share every value but the
+- *   text. `children` is the label — "Today", or "Switched to <b>Opus 5</b> Low".
+- * - The rules take the leftover width so the label stays centred at any width;
+- *   Figma pins them at 120px only because its frame is a fixed 418px.
+- *
+- * ## constraints
+- * - Deciding WHEN to draw one (a day boundary, a model change) is the
+- *   consumer's: it depends on their message metadata.
++ * Divider, 761:1453 Chat Date Divider). One component serves both Figma
++ * dividers; they share every value but the text, and `children` is the label.
++ * The rules take the leftover width so the label stays centred at any width
++ * (Figma pins them at 120px only because its frame is a fixed 418px). When to
++ * draw one — a day boundary, a model change — is the consumer's decision.
+  */
+ import { forwardRef, type HTMLAttributes } from "react";
+ import { cn } from "../../utils/cn";
+@@ -25,7 +19,7 @@ const ChatDivider = forwardRef<HTMLDivElement, ChatDividerProps>(
+       <WavyDivider
+         variant={WavyDividerVariant.high}
+         aria-hidden
+-        className="h-3 min-w-0 flex-1 text-border-primary"
++        className="min-w-0 flex-1 text-border-primary"
+       />
+     );
+     return (
+diff --git a/src/components/AIChat/UserMessageHeader.tsx b/src/components/AIChat/UserMessageHeader.tsx
+index 1d92592..8dfba34 100644
+--- a/src/components/AIChat/UserMessageHeader.tsx
++++ b/src/components/AIChat/UserMessageHeader.tsx
+@@ -1,15 +1,11 @@
+ /*
+- * UserMessageHeader — the user's prompt, heading its turn (Figma 854:1337).
+- *
+- * ## behavior
+- * - A surface card; `children` flows straight into it.
+- *
+- * ## constraints
+- * - NOT sticky. Pinning a turn's header, and having the next turn push it away,
+- *   only works because of how the consumer structures turns inside their own
+- *   scroll container — layout the package neither designs nor owns. Consumers
+- *   wrap it: `<div className="sticky top-0">`. Clamping long prompts
+- *   (`line-clamp-*`) is likewise a `className` decision.
++ * UserMessageHeader — the user's prompt, heading its turn (Figma 854:1337): a
++ * surface card that `children` flows straight into. It is NOT sticky: pinning a
++ * turn's header and having the next turn push it away depends on how the
++ * consumer structures turns inside their own scroll container, which the
++ * package neither designs nor owns. Consumers wrap it
++ * (`<div className="sticky top-0">`); clamping long prompts (`line-clamp-*`) is
++ * likewise a `className` decision.
+  */
+ import { forwardRef, type HTMLAttributes } from "react";
+ import { cn } from "../../utils/cn";
+diff --git a/src/components/AnimatedText/RollingDigitsText.tsx b/src/components/AnimatedText/RollingDigitsText.tsx
+index 02ffe5e..87f00ed 100644
+--- a/src/components/AnimatedText/RollingDigitsText.tsx
++++ b/src/components/AnimatedText/RollingDigitsText.tsx
+@@ -26,20 +26,15 @@
+  *   text. No 3D, no blur; that treatment belongs to RollHoverText.
+  * - `smallDecimalsComponent` is required when `smallDecimals` is true —
+  *   enforced by the discriminated union below, never by a runtime throw.
+- *
+- * ## updating
+- * - Motion lives in CSS and in tokens: timing and easing on the motion scale
+- *   (`--ui-motion-*`), stagger and fade ratio in `--ui-rolling-digits-*`.
+- *   Nothing here may hold a duration: an earlier version mirrored the CSS
+- *   timings in JS constants to stage the fade against the roll, and the mirror
+- *   desynced.
+- * - There is no timer, no requestAnimationFrame and no transitionend in this
+- *   file, and adding one is almost always the wrong fix. Entry is a mount
++ * - No duration in this file: motion lives in CSS, timing and easing on the
++ *   motion scale (`--ui-motion-*`), stagger and fade ratio in the
++ *   `--ui-rolling-digits-*` tokens. A JS copy of a CSS duration desyncs from it
++ *   and the fade overruns the roll.
++ * - No timer, requestAnimationFrame or transitionend here. Entry is a mount
+  *   animation, which needs no scheduling; exit is a single `animationend`.
+- * - The reconcile runs in the RENDER phase (React's documented "adjusting state
+- *   when props change"). Do not move it into an effect — that reintroduces a
+- *   frame of lag between the value and the wheels, which is what forced the old
+- *   `hasCents` union hack.
++ * - The reconcile runs in the RENDER phase (React's "adjusting state when props
++ *   change"). Moving it into an effect adds a frame of lag between the value
++ *   and the wheels.
+  */
+ "use client";
+ 
+diff --git a/src/components/CTAButton/CTAButton.tsx b/src/components/CTAButton/CTAButton.tsx
+index b57b81f..1fac5db 100644
+--- a/src/components/CTAButton/CTAButton.tsx
++++ b/src/components/CTAButton/CTAButton.tsx
+@@ -24,6 +24,7 @@ import {
+   forwardRef,
+   isValidElement,
+   type AnchorHTMLAttributes,
++  type ForwardedRef,
+   type ReactElement,
+   type ReactNode,
+ } from "react";
+@@ -91,7 +92,7 @@ export interface CTAButtonProps
+  * Padded-outline marketing CTA. The outline ring is primary-only; hover response
+  * is label-only via RollHoverText on an ancestor `.group`. Radii stay fully round.
+  */
+-const CTAButton = forwardRef<HTMLAnchorElement, CTAButtonProps>(
++const CTAButton = forwardRef<HTMLElement, CTAButtonProps>(
+   (
+     {
+       text,
+@@ -184,7 +185,12 @@ const CTAButton = forwardRef<HTMLAnchorElement, CTAButtonProps>(
+     }
+ 
+     return (
+-      <a ref={ref} className={rootClassName} {...props}>
++      /* this branch always renders an <a>; the HTMLElement ref type is for asChild */
++      <a
++        ref={ref as ForwardedRef<HTMLAnchorElement>}
++        className={rootClassName}
++        {...props}
++      >
+         {content}
+       </a>
+     );
+diff --git a/src/components/Checkbox/Checkbox.tsx b/src/components/Checkbox/Checkbox.tsx
+index 4c478b5..aabe2f5 100644
+--- a/src/components/Checkbox/Checkbox.tsx
++++ b/src/components/Checkbox/Checkbox.tsx
+@@ -1,9 +1,10 @@
+ /*
+- * Checkbox — Radix checkbox with brand/primary checked fills.
++ * Checkbox — Radix checkbox with prominent/primary checked fills.
+  *
+  * ## behavior
+- * - Unchecked hover/active use secondary surface tokens.
+- * - Checked/indeterminate fill follows `CheckboxVariant` (brand | primary).
++ * - Unchecked hover/active use secondary surface tokens; a checked or
++ *   indeterminate box keeps its fill while pressed.
++ * - Checked/indeterminate fill follows `CheckboxVariant` (prominent | primary).
+  * - Disabled unchecked paints secondary-disabled; disabled checked/indeterminate
+  *   paints primary-disabled bg/border with secondary-fg checkmark (theme-
+  *   matching, not inverse white). Active/focus rings are gated off while
+@@ -34,8 +35,9 @@ const checkboxVariants = cva(
+     "rounded-checkbox border border-solid border-border-primary bg-transparent text-primary-fg",
+     "cursor-pointer select-none ds-motion-state",
+     "data-[state=unchecked]:hover:bg-secondary-hover data-[state=unchecked]:hover:border-border-primary data-[state=unchecked]:hover:shadow-button-secondary",
+-    // active bg stays at hover color intentionally — never while disabled
+-    "[&:not([data-disabled])]:active:bg-secondary-hover",
++    // press darkens only an unchecked box, like hover — never while disabled.
++    // A checked box keeps its fill so the on-fill check stays legible.
++    "data-[state=unchecked]:[&:not([data-disabled])]:active:bg-secondary-hover",
+     "focus-visible:border-input-border-focus ds-focus-visible-ring",
+     "data-[disabled]:focus-visible:border-secondary-border-disabled",
+     "data-[disabled]:data-[state=unchecked]:bg-secondary-disabled data-[disabled]:data-[state=unchecked]:border-secondary-border-disabled",
+@@ -49,7 +51,7 @@ const checkboxVariants = cva(
+         prominent: [
+           "data-[state=checked]:bg-prominent data-[state=checked]:border-prominent data-[state=checked]:text-prominent-fg",
+           "data-[state=indeterminate]:bg-prominent data-[state=indeterminate]:border-prominent data-[state=indeterminate]:text-prominent-fg",
+-          // active border matches typeabletrigger hover, not brand
++          // active border matches the typeable trigger's hover border
+           "[&:not([data-disabled])]:active:border-input-border-hover [&:not([data-disabled])]:active:shadow-focus-prominent",
+         ],
+         primary: [
+diff --git a/src/components/CopyButton/CopyButton.tsx b/src/components/CopyButton/CopyButton.tsx
+index 345b3c2..5e045cc 100644
+--- a/src/components/CopyButton/CopyButton.tsx
++++ b/src/components/CopyButton/CopyButton.tsx
+@@ -23,7 +23,7 @@ export interface CopyButtonProps
+   onCopied?: (value: string) => void;
+ }
+ 
+-const CopyButton = forwardRef<HTMLElement, CopyButtonProps>(
++const CopyButton = forwardRef<HTMLButtonElement, CopyButtonProps>(
+   (
+     {
+       value,
+@@ -66,7 +66,7 @@ const CopyButton = forwardRef<HTMLElement, CopyButtonProps>(
+       variant === CopyButtonVariant.ghost ? IconSize.rg : IconSize.md;
+     return (
+       <Button
+-        ref={ref as React.Ref<HTMLButtonElement>}
++        ref={ref}
+         variant={
+           variant === CopyButtonVariant.ghost
+             ? ButtonVariant.ghost
+diff --git a/src/components/DropdownCaret/DropdownCaret.tsx b/src/components/DropdownCaret/DropdownCaret.tsx
+index 72f4e08..3cb9aeb 100644
+--- a/src/components/DropdownCaret/DropdownCaret.tsx
++++ b/src/components/DropdownCaret/DropdownCaret.tsx
+@@ -19,8 +19,10 @@
+  *   square spans the trigger's full outer height, as in Figma (where borders
+  *   are inside the frame). A host without a 1px border will misalign.
+  * - Colours live in the .ds-dropdown-caret CSS, including the deliberate
+- *   non-obvious token choices; do not move them into props or classes here.
+- * - No state props and no listeners (Rule 7): hosts drive it through CSS only.
++ *   non-obvious token choices; do not move them into props or classes here —
++ *   a prop or class bypasses the CSS's light/dark token choices.
++ * - No state props and no listeners (Rule 7): hosts drive it through CSS only
++ *   — a listener on the host breaks when the host is a consumer's custom trigger.
+  */
+ import type { ComponentType } from "react";
+ import { cn } from "../../utils/cn";
+diff --git a/src/components/DropdownTrigger/DropdownTrigger.tsx b/src/components/DropdownTrigger/DropdownTrigger.tsx
+index 8beeea4..8e64802 100644
+--- a/src/components/DropdownTrigger/DropdownTrigger.tsx
++++ b/src/components/DropdownTrigger/DropdownTrigger.tsx
+@@ -168,7 +168,7 @@ const TypeableDropdownTrigger = forwardRef<
+       onKeyDown,
+       "data-state": dataState,
+       "data-select-type": dataSelectType,
+-      ...triggerProps
++      ...rest
+     },
+     ref,
+   ) => {
+@@ -189,6 +189,9 @@ const TypeableDropdownTrigger = forwardRef<
+       [inputRef],
+     );
+ 
++    // Radix Trigger's Slot merges type="button"; a <div> has no type.
++    const { type: _slotType, ...triggerProps } = rest as typeof rest & { type?: string };
++
+     return (
+       <div
+         ref={ref}
+diff --git a/src/components/HotkeyIndicator/HotkeyIndicator.stories.tsx b/src/components/HotkeyIndicator/HotkeyIndicator.stories.tsx
+index 649119e..0e93c57 100644
+--- a/src/components/HotkeyIndicator/HotkeyIndicator.stories.tsx
++++ b/src/components/HotkeyIndicator/HotkeyIndicator.stories.tsx
+@@ -1,5 +1,6 @@
+ import type { Meta, StoryObj } from '@storybook/react';
+ import { HotkeyIndicator } from './HotkeyIndicator';
++import { HotkeyIndicatorVariant } from './constants';
+ 
+ const meta = {
+   title: 'Bits & Pieces/HotkeyIndicator',
+@@ -18,6 +19,7 @@ export const Single: Story = { args: { keys: ['⌘'] } };
+ export const Multiple: Story = { args: { keys: ['⌘', 'K'] } };
+ export const Pressed: Story = { args: { keys: ['Esc'], pressed: true } };
+ export const LongCombo: Story = { args: { keys: ['⌘', '⇧', 'P'] } };
++export const Menu: Story = { args: { keys: ['Esc'], variant: HotkeyIndicatorVariant.menu } };
+ 
+ export const AllStates: Story = {
+   args: { keys: [] },
+diff --git a/src/components/HotkeyIndicator/HotkeyIndicator.tsx b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+index 89331b0..6035eb5 100644
+--- a/src/components/HotkeyIndicator/HotkeyIndicator.tsx
++++ b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+@@ -1,12 +1,21 @@
+ import { type HTMLAttributes } from 'react';
+ import { cn } from '../../utils/cn';
++import { HotkeyIndicatorVariant } from './constants';
+ 
+ export interface HotkeyIndicatorProps extends HTMLAttributes<HTMLSpanElement> {
+   keys: string[];
+   pressed?: boolean;
++  /** `menu` is the chip on a menu row; `pressed` applies to both. */
++  variant?: HotkeyIndicatorVariant;
+ }
+ 
+-function HotkeyIndicator({ keys, pressed = false, className, ...props }: HotkeyIndicatorProps) {
++function HotkeyIndicator({
++  keys,
++  pressed = false,
++  variant = HotkeyIndicatorVariant.default,
++  className,
++  ...props
++}: HotkeyIndicatorProps) {
+   return (
+     <span className={cn('inline-flex items-center gap-1', className)} {...props}>
+       {keys.map((key, i) => (
+@@ -14,14 +23,19 @@ function HotkeyIndicator({ keys, pressed = false, className, ...props }: HotkeyI
+           key={i}
+           className={cn(
+             'inline-flex items-center justify-center',
+-            'rounded-tight border border-border-primary',
+-            'text-style-label text-ghost-fg',
++            'rounded-tight border',
++            'text-style-label',
+             'ds-motion-state',
+             'ds-px-ui-sm ds-py-ui-xxs',
+             keys.length === 1 && 'min-w-[23px] min-h-[23px]',
++            variant === HotkeyIndicatorVariant.menu
++              ? 'h-6 min-h-6 text-text-tertiary'
++              : 'text-ghost-fg',
+             pressed
+               ? 'bg-ghost-active border-border-primary'
+-              : 'bg-surface-page border-border-primary'
++              : variant === HotkeyIndicatorVariant.menu
++                ? 'bg-secondary-hover border-secondary-border-hover'
++                : 'bg-surface-page border-border-primary'
+           )}
+         >
+           {key}
+diff --git a/src/components/HotkeyIndicator/constants.ts b/src/components/HotkeyIndicator/constants.ts
+new file mode 100644
+index 0000000..0e37a78
+--- /dev/null
++++ b/src/components/HotkeyIndicator/constants.ts
+@@ -0,0 +1,15 @@
++// Server-safe constants — no client APIs, intentionally NO "use client" directive
++// so this dot-accessible enum can be read from React Server Components.
++
++/**
++ * Dot-accessible HotkeyIndicator variant constant.
++ * `default` sits on the page surface; `menu` is the chip on a menu row
++ * (DropdownMenuSearch).
++ * Usage: <HotkeyIndicator keys={["Esc"]} variant={HotkeyIndicatorVariant.menu} />
++ */
++export const HotkeyIndicatorVariant = {
++  default: "default",
++  menu: "menu",
++} as const;
++export type HotkeyIndicatorVariant =
++  (typeof HotkeyIndicatorVariant)[keyof typeof HotkeyIndicatorVariant];
+diff --git a/src/components/HotkeyIndicator/index.ts b/src/components/HotkeyIndicator/index.ts
+index 6a4127a..26a2c88 100644
+--- a/src/components/HotkeyIndicator/index.ts
++++ b/src/components/HotkeyIndicator/index.ts
+@@ -1,2 +1,3 @@
+ export { HotkeyIndicator } from './HotkeyIndicator';
+ export type { HotkeyIndicatorProps } from './HotkeyIndicator';
++export { HotkeyIndicatorVariant } from './constants';
+diff --git a/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx b/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx
+index 022ab0b..4162993 100644
+--- a/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx
++++ b/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx
+@@ -50,7 +50,7 @@ export const Colors: Story = {
+   },
+   render: () => (
+     <div className="flex w-96 flex-col gap-4">
+-      {(['primary', 'brand', 'text', 'error-primary'] as const).map((c) => (
++      {(['primary', 'prominent', 'text', 'danger-primary'] as const).map((c) => (
+         <div key={c} className="flex flex-col gap-1">
+           <LabelText className="text-text-tertiary">{c}</LabelText>
+           <LinearProgressIndicator color={c} value={60} max={100} />
+@@ -87,7 +87,7 @@ export const AnimatedDemo: Story = {
+         </div>
+         <div className="flex w-96 flex-col gap-2">
+           <div className="flex items-center justify-between">
+-            <LabelText>Brand - Animated</LabelText>
++            <LabelText>Prominent - Animated</LabelText>
+             <LabelText className="text-text-tertiary">{value}%</LabelText>
+           </div>
+           <LinearProgressIndicator color="prominent" value={value} max={100} />
+diff --git a/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx b/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
+index b90b283..ab426f8 100644
+--- a/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
++++ b/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
+@@ -3,8 +3,9 @@
+  *
+  * ## behavior
+  * - `value` / `max` clamp into a percentage stored on `--progress-pct`.
+- * - Fill width animates when that percentage changes via registered
+- *   `@property --progress-pct` (custom properties do not interpolate otherwise).
++ * - When that percentage changes, the fill's `width` and the remainder's
++ *   `left` transition (`ds-progress-fill` / `ds-progress-remainder`; off under
++ *   reduced motion).
+  * - `color` accepts a DS token name or any CSS color (same contract as Slider).
+  *
+  * ## constraints
+@@ -23,9 +24,12 @@ import { cn } from '../../utils/cn';
+ import { resolveDsColor, type DsColor } from '../../utils/color';
+ 
+ export interface LinearProgressIndicatorProps
+-  extends ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
+-  /** Filled-bar color. Accepts a DS token name ('primary', 'prominent', 'text') or
+-   * any CSS color. Defaults to the primary token. */
++  extends Omit<ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>, 'value'> {
++  /** 0…`max`. Determinate only: Radix's `null` (indeterminate) is not supported. */
++  value?: number;
++  /** Filled-bar color. Accepts a `DS_COLOR_TOKENS` name ('primary',
++   * 'prominent', 'text', 'danger-primary', …) or any CSS color. Defaults to
++   * the primary token. */
+   color?: DsColor;
+ }
+ 
+diff --git a/src/components/Menu/DropdownMenu.stories.tsx b/src/components/Menu/DropdownMenu.stories.tsx
+index b47b25b..d960490 100644
+--- a/src/components/Menu/DropdownMenu.stories.tsx
++++ b/src/components/Menu/DropdownMenu.stories.tsx
+@@ -13,6 +13,9 @@ import {
+   DropdownMenuSection,
+   DropdownMenuSegment,
+   DropdownMenuSeparator,
++  DropdownMenuSub,
++  DropdownMenuSubContent,
++  DropdownMenuSubTrigger,
+ } from './DropdownMenu';
+ import { DropdownMenuSearch } from './DropdownMenuSearch';
+ import {
+@@ -218,10 +221,10 @@ export const SectionWidthOverride: Story = {
+   render: () => (
+     <DropdownMenu>
+       <DropdownMenuTrigger asChild>
+-        <Button variant={ButtonVariant.secondary}>Width 324</Button>
++        <Button variant={ButtonVariant.secondary}>Width 280</Button>
+       </DropdownMenuTrigger>
+       <DropdownMenuContent matchTriggerWidth={false}>
+-        <DropdownMenuSection width={324} data-testid="wide-section">
++        <DropdownMenuSection width={280} data-testid="wide-section">
+           <DropdownMenuItem>Rename</DropdownMenuItem>
+         </DropdownMenuSection>
+       </DropdownMenuContent>
+@@ -404,7 +407,7 @@ export const ComplexWithoutSearch: Story = {
+         <DropdownTrigger>Recent chats</DropdownTrigger>
+       </DropdownMenuTrigger>
+       <DropdownMenuContent matchTriggerWidth={false}>
+-        <DropdownMenuSection width={324}>
++        <DropdownMenuSection width="var(--ui-min-w-menu-complex)">
+           <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
+           <DropdownMenuItem>
+             <div className="flex flex-col gap-[2px]">
+@@ -424,6 +427,7 @@ export const ComplexWithoutSearch: Story = {
+   ),
+ };
+ 
++/** Pointer-first composition: `DropdownMenuSearch` is not keyboard-reachable inside the menu (see its JSDoc) — ship a keyboard path alongside it. */
+ export const ComplexWithSearch: Story = {
+   render: () => (
+     <DropdownMenu>
+@@ -433,7 +437,7 @@ export const ComplexWithSearch: Story = {
+       <DropdownMenuContent matchTriggerWidth={false} focusOnOpen={false}>
+         <DropdownMenuSearch />
+         <DropdownMenuSeparator />
+-        <DropdownMenuSection width={324}>
++        <DropdownMenuSection width="var(--ui-min-w-menu-complex)">
+           <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
+           <DropdownMenuItem>
+             <div className="flex flex-col gap-[2px]">
+@@ -459,3 +463,28 @@ export const ComplexWithSearch: Story = {
+     </DropdownMenu>
+   ),
+ };
++
++export const Submenu: Story = {
++  render: () => (
++    <DropdownMenu>
++      <DropdownMenuTrigger asChild>
++        <DropdownTrigger>Open menu</DropdownTrigger>
++      </DropdownMenuTrigger>
++      <DropdownMenuContent>
++        <DropdownMenuSection>
++          <DropdownMenuItem>New file</DropdownMenuItem>
++          <DropdownMenuSub>
++            <DropdownMenuSubTrigger>Open recent</DropdownMenuSubTrigger>
++            <DropdownMenuSubContent>
++              <DropdownMenuSection>
++                <DropdownMenuItem>dashboard.fig</DropdownMenuItem>
++                <DropdownMenuItem>roadmap.fig</DropdownMenuItem>
++              </DropdownMenuSection>
++            </DropdownMenuSubContent>
++          </DropdownMenuSub>
++          <DropdownMenuItem>Save</DropdownMenuItem>
++        </DropdownMenuSection>
++      </DropdownMenuContent>
++    </DropdownMenu>
++  ),
++};
+diff --git a/src/components/Menu/DropdownMenu.tsx b/src/components/Menu/DropdownMenu.tsx
+index 9421d3b..29ebcf8 100644
+--- a/src/components/Menu/DropdownMenu.tsx
++++ b/src/components/Menu/DropdownMenu.tsx
+@@ -11,13 +11,27 @@
+  * - Items hold the 160px width floor; sections and the panel hug.
+  * - Items use ghost button surfaces (`ghost-hover` / `ghost-active`). Content
+  *   is always `ghost-fg-active` (primary), never the faded `ghost-fg` rest
+- *   tone — except `DropdownMenuItemVariant.danger`, which paints
++ *   tone. `DropdownMenuItemVariant.danger` is the one exception: it paints
+  *   danger-primary on hover and active.
+  * - Default `modal={false}`; portals on by default with an escape hatch.
++ * - `DropdownMenuSub` + `DropdownMenuSubTrigger` + `DropdownMenuSubContent`
++ *   build a submenu: the trigger is a menu item with a trailing chevron, the
++ *   sub panel shares the root panel's chrome and portals by default too.
+  *
+  * ## constraints
+- * - Do not hardcode a search field into `DropdownMenuContent`.
+- * - Style open/disabled/highlighted via Radix data attributes only.
++ * - Do not hardcode a search field into `DropdownMenuContent` — every menu
++ *   would carry a search row and lose free-form composition.
++ * - Style open/disabled/highlighted via Radix data attributes only — a
++ *   JS-toggled class drifts from Radix's state (keyboard highlight and
++ *   pointer hover disagree).
++ * - `focusOnOpen={false}` and `onOpenAutoFocus` reach Radix's PRIVATE
++ *   `onOpenAutoFocus` (react-menu `MenuContentImplPrivateProps`, 2.1.24)
++ *   through the cast at the Content spread; the public Content type does not
++ *   have it, so passing it directly does not compile. On every
++ *   @radix-ui/react-dropdown-menu bump, `rg -n onOpenAutoFocus
++ *   node_modules/@radix-ui/react-menu/dist/index.mjs` must still show it
++ *   spread into FocusScope's onMountAutoFocus, or TypeableDropdownTrigger
++ *   loses focus to the panel on open.
+  */
+ 
+ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+@@ -28,11 +42,13 @@ import {
+   type ComponentPropsWithoutRef,
+   type ComponentRef,
+   type HTMLAttributes,
++  type ReactNode,
+ } from "react";
+ import { cn } from "../../utils/cn";
+ import { Checkbox } from "../Checkbox/Checkbox";
+ import { CheckboxVariant } from "../Checkbox/constants";
+ import { CheckIcon } from "../Icons/CheckIcon";
++import { ChevronRightIcon, IconSize } from "../Icons";
+ // DropdownMenuSelectType / DropdownMenuItemVariant live in ./constants — kept
+ // server-safe (no "use client") so RSC code can read the enum values.
+ import {
+@@ -50,15 +66,17 @@ const DropdownMenuPresentationContext = createContext<{
+   selectType: DropdownMenuSelectType;
+ }>({ selectType: DropdownMenuSelectType.single });
+ 
++export type DropdownMenuProps = ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> & {
++  /** Selection mode for the whole menu. Default single. */
++  selectType?: DropdownMenuSelectType;
++};
++
+ /** Non-modal by default so page UI stays interactable while a menu is open. Pass modal={true} for dialog-like focus trapping. */
+ function DropdownMenuRoot({
+   modal = false,
+   selectType = DropdownMenuSelectType.single,
+   ...props
+-}: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root> & {
+-  /** Selection mode for the whole menu. Default single. */
+-  selectType?: DropdownMenuSelectType;
+-}) {
++}: DropdownMenuProps) {
+   return (
+     <DropdownMenuPresentationContext.Provider value={{ selectType }}>
+       <DropdownMenuPrimitive.Root modal={modal} {...props} />
+@@ -91,18 +109,32 @@ const DropdownMenuGroup = DropdownMenuPrimitive.Group;
+ const DropdownMenuSub = DropdownMenuPrimitive.Sub;
+ const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
+ 
++/** Panel chrome shared by DropdownMenuContent and DropdownMenuSubContent. */
++const menuPanelClassName = [
++  "z-50 flex flex-col gap-sm overflow-hidden rounded-normal border border-solid border-border-popovers bg-modal-surface",
++  "ds-py-ui-sm",
++  "shadow-menu",
++  "ds-radix-dropdown-content-origin",
++  "data-[state=open]:animate-in data-[state=open]:fade-in-0",
++  "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-1.5",
++  "ds-motion-overlay",
++];
++
++export type DropdownMenuContentProps = ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & {
++  /** When true, the menu closes when focus leaves the browser window (devtools, screenshot tools, alt-tab). Default false. */
++  dismissOnFocusLoss?: boolean;
++  /** When false, menu open does not move focus into the panel (required for TypeableDropdownTrigger). Default true. */
++  focusOnOpen?: boolean;
++  matchTriggerWidth?: boolean;
++  /** Radix-private prop, passed through by cast — see ## constraints. */
++  onOpenAutoFocus?: (event: Event) => void;
++  portal?: boolean;
++  portalProps?: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>;
++};
++
+ const DropdownMenuContent = forwardRef<
+   ComponentRef<typeof DropdownMenuPrimitive.Content>,
+-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> & {
+-    /** When true, the menu closes when focus leaves the browser window (devtools, screenshot tools, alt-tab). Default false. */
+-    dismissOnFocusLoss?: boolean;
+-    /** When false, menu open does not move focus into the panel (required for TypeableDropdownTrigger). Default true. */
+-    focusOnOpen?: boolean;
+-    matchTriggerWidth?: boolean;
+-    onOpenAutoFocus?: (event: Event) => void;
+-    portal?: boolean;
+-    portalProps?: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>;
+-  }
++  DropdownMenuContentProps
+ >(
+   (
+     {
+@@ -158,16 +190,10 @@ const DropdownMenuContent = forwardRef<
+             } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>)
+           : {})}
+         className={cn(
+-          "z-50 flex flex-col gap-sm overflow-hidden rounded-normal border border-solid border-border-popovers bg-modal-surface",
+-          "ds-py-ui-sm",
+-          "shadow-menu",
+-          "ds-radix-dropdown-content-origin",
++          menuPanelClassName,
+           // Items carry the 160px floor and the panel hugs them; matching the
+           // trigger only ever widens it.
+           matchTriggerWidth && "ds-radix-dropdown-match-trigger-width",
+-          "data-[state=open]:animate-in data-[state=open]:fade-in-0",
+-          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-1.5",
+-          "ds-motion-overlay",
+           className,
+         )}
+         {...props}
+@@ -199,11 +225,59 @@ export const menuItemClassName =
+ /** Dropdown items also hold the menu's 160px floor; sections and the panel hug them. */
+ const itemBase = cn(menuItemClassName, "ds-min-w-menu");
+ 
++/** Opens a DropdownMenuSub. Menu Item geometry, with the item's open fill while its submenu is open and a trailing chevron. */
++const DropdownMenuSubTrigger = forwardRef<
++  ComponentRef<typeof DropdownMenuPrimitive.SubTrigger>,
++  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger>
++>(({ className, children, ...props }, ref) => (
++  <DropdownMenuPrimitive.SubTrigger
++    ref={ref}
++    className={cn(itemBase, "data-[state=open]:bg-ghost-active", className)}
++    {...props}
++  >
++    <span className="flex flex-1 items-center gap-rg">{children}</span>
++    <span className="flex shrink-0" aria-hidden>
++      <ChevronRightIcon size={IconSize.rg} />
++    </span>
++  </DropdownMenuPrimitive.SubTrigger>
++));
++DropdownMenuSubTrigger.displayName = "DropdownMenuSubTrigger";
++
++/** The submenu panel. Same chrome as DropdownMenuContent; portals by default. */
++const DropdownMenuSubContent = forwardRef<
++  ComponentRef<typeof DropdownMenuPrimitive.SubContent>,
++  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent> & {
++    portal?: boolean;
++    portalProps?: ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Portal>;
++  }
++>(({ className, portal = true, portalProps, ...props }, ref) => {
++  const content = (
++    <DropdownMenuPrimitive.SubContent
++      ref={ref}
++      className={cn(menuPanelClassName, className)}
++      {...props}
++    />
++  );
++
++  if (!portal) {
++    return content;
++  }
++
++  return (
++    <DropdownMenuPrimitive.Portal {...portalProps}>
++      {content}
++    </DropdownMenuPrimitive.Portal>
++  );
++});
++DropdownMenuSubContent.displayName = "DropdownMenuSubContent";
++
++export type DropdownMenuItemProps = ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
++  variant?: DropdownMenuItemVariant;
++};
++
+ const DropdownMenuItem = forwardRef<
+   ComponentRef<typeof DropdownMenuPrimitive.Item>,
+-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+-    variant?: DropdownMenuItemVariant;
+-  }
++  DropdownMenuItemProps
+ >(({ className, variant = DropdownMenuItemVariant.default, ...props }, ref) => (
+   <DropdownMenuPrimitive.Item
+     ref={ref}
+@@ -360,6 +434,8 @@ DropdownMenuSeparator.displayName = "DropdownMenuSeparator";
+ export interface DropdownMenuSegmentProps extends HTMLAttributes<HTMLDivElement> {
+   /** divider (default) or labeled — a labeled segment shows `children` as its label. */
+   variant?: DropdownMenuSegmentVariant;
++  /** Rendered only when `variant` is `labeled`; the divider ignores it. */
++  children?: ReactNode;
+ }
+ 
+ /** Figma Menu Segment — place directly in DropdownMenuContent, between sections. */
+@@ -414,5 +490,7 @@ export {
+   DropdownMenuSegment,
+   DropdownMenuSeparator,
+   DropdownMenuSub,
++  DropdownMenuSubContent,
++  DropdownMenuSubTrigger,
+   DropdownMenuTrigger,
+ };
+diff --git a/src/components/Menu/DropdownMenuSearch.tsx b/src/components/Menu/DropdownMenuSearch.tsx
+index 50763d4..b4f72cf 100644
+--- a/src/components/Menu/DropdownMenuSearch.tsx
++++ b/src/components/Menu/DropdownMenuSearch.tsx
+@@ -3,14 +3,22 @@
+  *
+  * ## behavior
+  * - Renders icon + native input + optional Esc hotkey; no bordered chrome
+- *   (unlike SearchBox). Compose above a separator inside DropdownMenuContent.
++ *   (unlike its twin SearchBox — apply row fixes to both). Compose above a
++ *   separator inside DropdownMenuContent.
+  * - Forwards ref to the input. Stops keydown propagation so Radix typeahead
+  *   does not steal keystrokes while typing.
++ * - Not keyboard-reachable inside DropdownMenuContent: Radix prevents Tab
++ *   there and moves focus only among its own items, and this input stops
++ *   keydown propagation, so ArrowDown never reaches the menu. As with
++ *   DropdownMenuPlainItem, consumers must give keyboard users another path —
++ *   filter from the trigger (TypeableDropdownTrigger) or search outside the menu.
+  *
+  * ## constraints
+- * - Do not mount this inside DropdownMenuContent by default — consumers opt in.
++ * - Do not mount this inside DropdownMenuContent by default — consumers opt
++ *   in; a menu that never asked for search would grow one.
+  * - Keep typography on the input via `text-style-button`; do not introduce bare
+- *   labeled HTML text nodes for the placeholder (placeholder attr is fine).
++ *   labeled HTML text nodes for the placeholder (placeholder attr is fine) —
++ *   a bare text node escapes the text-style system.
+  */
+ "use client";
+ 
+@@ -21,6 +29,7 @@ import {
+ } from "react";
+ import { cn } from "../../utils/cn";
+ import { HotkeyIndicator } from "../HotkeyIndicator/HotkeyIndicator";
++import { HotkeyIndicatorVariant } from "../HotkeyIndicator/constants";
+ import { SearchIcon, IconSize } from "../Icons";
+ 
+ export interface DropdownMenuSearchProps
+@@ -31,12 +40,21 @@ export interface DropdownMenuSearchProps
+   showShortcut?: boolean;
+ }
+ 
++/**
++ * Slim search row for complex dropdown compositions (opt-in; place above a
++ * separator inside DropdownMenuContent).
++ *
++ * Keyboard limit: inside a Radix menu this input cannot be reached with Tab
++ * or the arrow keys, and ArrowDown from it does not move into the items.
++ * Provide a keyboard path too — filter from the trigger
++ * (`TypeableDropdownTrigger`) or put the search outside the menu.
++ */
+ const DropdownMenuSearch = forwardRef<HTMLInputElement, DropdownMenuSearchProps>(
+   (
+     {
+       className,
+       shortcut = ["Esc"],
+-      showShortcut = true,
++      showShortcut = !!shortcut,
+       placeholder = "Search",
+       onKeyDown,
+       ...props
+@@ -74,7 +92,8 @@ const DropdownMenuSearch = forwardRef<HTMLInputElement, DropdownMenuSearchProps>
+         {showShortcut && shortcut.length > 0 ? (
+           <HotkeyIndicator
+             keys={shortcut}
+-            className="shrink-0 [&_kbd]:h-6 [&_kbd]:min-h-6 [&_kbd]:bg-secondary-hover [&_kbd]:border-secondary-border-hover [&_kbd]:text-text-tertiary"
++            variant={HotkeyIndicatorVariant.menu}
++            className="shrink-0"
+           />
+         ) : null}
+       </div>
+diff --git a/src/components/Menu/index.ts b/src/components/Menu/index.ts
+index 8fb5047..3eda935 100644
+--- a/src/components/Menu/index.ts
++++ b/src/components/Menu/index.ts
+@@ -5,6 +5,8 @@ export {
+   DropdownMenuContent,
+   DropdownMenuGroup,
+   DropdownMenuSub,
++  DropdownMenuSubContent,
++  DropdownMenuSubTrigger,
+   DropdownMenuRadioGroup,
+   DropdownMenuItem,
+   DropdownMenuMultiSelectItem,
+@@ -23,6 +25,9 @@ export {
+   DropdownMenuSegmentVariant,
+ } from './constants';
+ export type {
++  DropdownMenuProps,
++  DropdownMenuContentProps,
++  DropdownMenuItemProps,
+   DropdownMenuSectionProps,
+   DropdownMenuSegmentProps,
+ } from './DropdownMenu';
+diff --git a/src/components/Modal/Modal.stories.tsx b/src/components/Modal/Modal.stories.tsx
+index 96beb37..26d3ce9 100644
+--- a/src/components/Modal/Modal.stories.tsx
++++ b/src/components/Modal/Modal.stories.tsx
+@@ -139,3 +139,27 @@ export const NoOverlay: Story = {
+     </Modal>
+   ),
+ };
++
++function ModalInContainerDemo() {
++  const [container, setContainer] = useState<HTMLDivElement | null>(null);
++  return (
++    <div className="flex flex-col items-center gap-md">
++      <Modal>
++        <ModalTrigger asChild>
++          <Button variant={ButtonVariant.primary}>Open into the frame</Button>
++        </ModalTrigger>
++        <ModalContent portalProps={{ container }} aria-describedby={undefined}>
++          <div className="p-xl">
++            <ModalTitle>Portalled into a local container</ModalTitle>
++          </div>
++        </ModalContent>
++      </Modal>
++      <div ref={setContainer} data-testid="modal-container" />
++    </div>
++  );
++}
++
++/** `portalProps={{ container }}` mounts the overlay and panel into a chosen element instead of `document.body`. `portal={false}` renders them in place. */
++export const CustomContainer: Story = {
++  render: () => <ModalInContainerDemo />,
++};
+diff --git a/src/components/Modal/Modal.tsx b/src/components/Modal/Modal.tsx
+index 0d80be8..cf4a792 100644
+--- a/src/components/Modal/Modal.tsx
++++ b/src/components/Modal/Modal.tsx
+@@ -5,6 +5,12 @@ import {
+ } from 'react';
+ import * as DialogPrimitive from '@radix-ui/react-dialog';
+ import { cn } from '../../utils/cn';
++import {
++  DialogShellContent,
++  DialogShellDescription,
++  DialogShellOverlay,
++  DialogShellTitle,
++} from './dialogShell';
+ 
+ /* ── Root / Trigger / Portal / Close (thin pass-throughs) ─────────── */
+ 
+@@ -19,11 +25,9 @@ const ModalOverlay = forwardRef<
+   ComponentRef<typeof DialogPrimitive.Overlay>,
+   ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+ >(({ className, ...props }, ref) => (
+-  <DialogPrimitive.Overlay
++  <DialogShellOverlay
+     ref={ref}
+     className={cn(
+-      'fixed inset-0 z-50',
+-      'bg-modal-backdrop',
+       'data-[state=open]:animate-in data-[state=open]:fade-in-0',
+       'data-[state=closed]:animate-out data-[state=closed]:fade-out-0',
+       'ds-motion-overlay-dialog',
+@@ -36,6 +40,16 @@ ModalOverlay.displayName = 'ModalOverlay';
+ 
+ /* ── Content (the modal panel itself) ──────────────────────────────── */
+ 
++export interface ModalContentProps
++  extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
++  /** When true, renders the overlay behind the modal. Defaults to true. */
++  withOverlay?: boolean;
++  /** Render through a portal (the default) or in place. */
++  portal?: boolean;
++  /** Props for the portal, e.g. `container` or `forceMount`. */
++  portalProps?: ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>;
++}
++
+ /**
+  * Raw modal primitive — no internal padding or flex layout.
+  * Compose content directly inside:
+@@ -54,32 +68,22 @@ ModalOverlay.displayName = 'ModalOverlay';
+  */
+ const ModalContent = forwardRef<
+   ComponentRef<typeof DialogPrimitive.Content>,
+-  ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+-    /** When true, renders the overlay behind the modal. Defaults to true. */
+-    withOverlay?: boolean;
+-  }
+->(({ className, children, withOverlay = true, ...props }, ref) => (
+-  <ModalPortal>
+-    {withOverlay && <ModalOverlay />}
+-    <DialogPrimitive.Content
+-      ref={ref}
+-      className={cn(
+-        'fixed left-1/2 top-1/2 z-50',
+-        '-translate-x-1/2 -translate-y-1/2',
+-        'bg-modal-surface border border-solid border-border-popovers',
+-        'rounded-soft overflow-hidden',
+-        'shadow-menu',
+-        'focus-visible:outline-none',
+-        'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+-        'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+-        'ds-motion-overlay-dialog',
+-        className
+-      )}
+-      {...props}
+-    >
+-      {children}
+-    </DialogPrimitive.Content>
+-  </ModalPortal>
++  ModalContentProps
++>(({ className, withOverlay = true, ...props }, ref) => (
++  <DialogShellContent
++    ref={ref}
++    overlay={withOverlay ? <ModalOverlay /> : null}
++    className={cn(
++      'fixed left-1/2 top-1/2 z-50',
++      '-translate-x-1/2 -translate-y-1/2',
++      'border rounded-soft',
++      'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
++      'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
++      'ds-motion-overlay-dialog',
++      className
++    )}
++    {...props}
++  />
+ ));
+ ModalContent.displayName = 'ModalContent';
+ 
+@@ -88,25 +92,13 @@ ModalContent.displayName = 'ModalContent';
+ const ModalTitle = forwardRef<
+   ComponentRef<typeof DialogPrimitive.Title>,
+   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+->(({ className, ...props }, ref) => (
+-  <DialogPrimitive.Title
+-    ref={ref}
+-    className={cn('text-style-heading text-text', className)}
+-    {...props}
+-  />
+-));
++>((props, ref) => <DialogShellTitle ref={ref} {...props} />);
+ ModalTitle.displayName = 'ModalTitle';
+ 
+ const ModalDescription = forwardRef<
+   ComponentRef<typeof DialogPrimitive.Description>,
+   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+->(({ className, ...props }, ref) => (
+-  <DialogPrimitive.Description
+-    ref={ref}
+-    className={cn('text-style-body text-text-secondary', className)}
+-    {...props}
+-  />
+-));
++>((props, ref) => <DialogShellDescription ref={ref} {...props} />);
+ ModalDescription.displayName = 'ModalDescription';
+ 
+ export {
+diff --git a/src/components/Modal/dialogShell.tsx b/src/components/Modal/dialogShell.tsx
+new file mode 100644
+index 0000000..7e261b1
+--- /dev/null
++++ b/src/components/Modal/dialogShell.tsx
+@@ -0,0 +1,108 @@
++/*
++ * Internal dialog shell shared by Modal and Sheet. Not exported from
++ * Modal/index.ts or src/index.ts: the public parts in Modal.tsx and
++ * Sheet.tsx wrap these and pass only what differs (overlay motion, panel
++ * geometry and motion, which overlay to render).
++ */
++import * as DialogPrimitive from "@radix-ui/react-dialog";
++import {
++  forwardRef,
++  type ComponentPropsWithoutRef,
++  type ComponentRef,
++  type ReactNode,
++} from "react";
++import { cn } from "../../utils/cn";
++
++/** Backdrop base; the caller's className carries its open/close motion. */
++export const DialogShellOverlay = forwardRef<
++  ComponentRef<typeof DialogPrimitive.Overlay>,
++  ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
++>(({ className, ...props }, ref) => (
++  <DialogPrimitive.Overlay
++    ref={ref}
++    className={cn("fixed inset-0 z-50", "bg-modal-backdrop", className)}
++    {...props}
++  />
++));
++DialogShellOverlay.displayName = "DialogShellOverlay";
++
++export const DialogShellTitle = forwardRef<
++  ComponentRef<typeof DialogPrimitive.Title>,
++  ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
++>(({ className, ...props }, ref) => (
++  <DialogPrimitive.Title
++    ref={ref}
++    className={cn("text-style-heading text-text", className)}
++    {...props}
++  />
++));
++DialogShellTitle.displayName = "DialogShellTitle";
++
++export const DialogShellDescription = forwardRef<
++  ComponentRef<typeof DialogPrimitive.Description>,
++  ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
++>(({ className, ...props }, ref) => (
++  <DialogPrimitive.Description
++    ref={ref}
++    className={cn("text-style-body text-text-secondary", className)}
++    {...props}
++  />
++));
++DialogShellDescription.displayName = "DialogShellDescription";
++
++export interface DialogShellContentProps
++  extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
++  /** The caller's overlay element, or null for none. */
++  overlay: ReactNode;
++  /** Render through a portal (the default) or in place. */
++  portal?: boolean;
++  /** Props for the portal, e.g. `container` or `forceMount`. */
++  portalProps?: ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>;
++}
++
++/**
++ * Panel surface shared by ModalContent and SheetContent. The overlay and the
++ * panel go to the portal as two children, never one Fragment: Radix
++ * DialogPortal wraps each child in Presence, which clones it with a ref.
++ */
++export const DialogShellContent = forwardRef<
++  ComponentRef<typeof DialogPrimitive.Content>,
++  DialogShellContentProps
++>(
++  (
++    { overlay, portal = true, portalProps, className, children, ...props },
++    ref,
++  ) => {
++    const panel = (
++      <DialogPrimitive.Content
++        ref={ref}
++        className={cn(
++          "bg-modal-surface border-solid border-border-popovers",
++          "shadow-menu overflow-hidden",
++          "focus-visible:outline-none",
++          className,
++        )}
++        {...props}
++      >
++        {children}
++      </DialogPrimitive.Content>
++    );
++
++    if (!portal) {
++      return (
++        <>
++          {overlay}
++          {panel}
++        </>
++      );
++    }
++
++    return (
++      <DialogPrimitive.Portal {...portalProps}>
++        {overlay}
++        {panel}
++      </DialogPrimitive.Portal>
++    );
++  },
++);
++DialogShellContent.displayName = "DialogShellContent";
+diff --git a/src/components/SearchBox/SearchBox.tsx b/src/components/SearchBox/SearchBox.tsx
+index e1782fa..7c6b81d 100644
+--- a/src/components/SearchBox/SearchBox.tsx
++++ b/src/components/SearchBox/SearchBox.tsx
+@@ -1,6 +1,7 @@
+ import { forwardRef, type InputHTMLAttributes } from 'react';
+ import { cn } from '../../utils/cn';
+ import { HotkeyIndicator } from '../HotkeyIndicator/HotkeyIndicator';
++import { IconSize, SearchIcon } from '../Icons';
+ 
+ export interface SearchBoxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+   /** Keyboard shortcut keys displayed on the right. E.g. ['⌘', 'K'] or ['Ctrl', 'k']. */
+@@ -13,6 +14,7 @@ export interface SearchBoxProps extends Omit<InputHTMLAttributes<HTMLInputElemen
+  * A search input field styled per the design system.
+  * Larger corner radius (rounded-soft) and leading search icon distinguish it from Input.
+  * Accepts an optional keyboard shortcut indicator on the trailing edge.
++ * Twin of `DropdownMenuSearch` (same icon + input + hotkey row, no menu): apply row fixes to both.
+  *
+  * @example
+  * <SearchBox placeholder="Search..." shortcut={['⌘', 'K']} />
+@@ -33,31 +35,8 @@ const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
+           className
+         )}
+       >
+-        {/* Search icon */}
+-        <svg
+-          width="16"
+-          height="16"
+-          viewBox="0 0 16 16"
+-          fill="none"
+-          aria-hidden
+-          focusable="false"
+-          className="shrink-0 text-text-tertiary"
+-        >
+-          <circle
+-            cx="7"
+-            cy="7"
+-            r="4.25"
+-            stroke="currentColor"
+-            strokeWidth="1.5"
+-            strokeLinecap="round"
+-          />
+-          <path
+-            d="M10.5 10.5L13 13"
+-            stroke="currentColor"
+-            strokeWidth="1.5"
+-            strokeLinecap="round"
+-          />
+-        </svg>
++        {/* Search icon — the DS glyph, the same one DropdownMenuSearch draws */}
++        <SearchIcon size={IconSize.md} className="shrink-0 text-text-tertiary" />
+ 
+         {/* Native input */}
+         <input
+diff --git a/src/components/Sheet/Sheet.stories.tsx b/src/components/Sheet/Sheet.stories.tsx
+index 5b60677..a280e79 100644
+--- a/src/components/Sheet/Sheet.stories.tsx
++++ b/src/components/Sheet/Sheet.stories.tsx
+@@ -163,3 +163,31 @@ export const CustomWidth: Story = {
+     </Sheet>
+   ),
+ };
++
++function SheetInContainerDemo() {
++  const [container, setContainer] = useState<HTMLDivElement | null>(null);
++  return (
++    <div className="flex flex-col items-center gap-md">
++      <Sheet>
++        <SheetTrigger asChild>
++          <Button variant={ButtonVariant.primary}>Open into the frame</Button>
++        </SheetTrigger>
++        <SheetContent
++          side={SheetSide.right}
++          portalProps={{ container }}
++          aria-describedby={undefined}
++        >
++          <div className="p-xl">
++            <SheetTitle>Portalled into a local container</SheetTitle>
++          </div>
++        </SheetContent>
++      </Sheet>
++      <div ref={setContainer} data-testid="sheet-container" />
++    </div>
++  );
++}
++
++/** `portalProps={{ container }}` mounts the overlay and panel into a chosen element instead of `document.body`. `portal={false}` renders them in place. */
++export const CustomContainer: Story = {
++  render: () => <SheetInContainerDemo />,
++};
+diff --git a/src/components/Sheet/Sheet.tsx b/src/components/Sheet/Sheet.tsx
+index 3b11f30..39f0263 100644
+--- a/src/components/Sheet/Sheet.tsx
++++ b/src/components/Sheet/Sheet.tsx
+@@ -6,6 +6,12 @@ import {
+   type ComponentRef,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import {
++  DialogShellContent,
++  DialogShellDescription,
++  DialogShellOverlay,
++  DialogShellTitle,
++} from "../Modal/dialogShell";
+ import { SheetSide } from "./constants";
+ 
+ /* ── Root / Trigger / Portal / Close (thin pass-throughs) ─────────── */
+@@ -18,20 +24,17 @@ const SheetClose = DialogPrimitive.Close;
+ /* ── Overlay (full-screen backdrop) ────────────────────────────────── */
+ 
+ /**
+- * Shares the backdrop token + fade behavior with `ModalOverlay`
+- * (bg-modal-backdrop, fade-in on open, fade-out on close) so sheets and
+- * modals feel like one family. Durations match the panel slide so the
+- * backdrop and panel arrive together.
++ * Backdrop: the shared dialog shell's base (`dialogShell.tsx`, which
++ * `ModalOverlay` also uses), plus a fade on `ds-motion-overlay-sheet` so the
++ * backdrop and the panel slide arrive together.
+  */
+ const SheetOverlay = forwardRef<
+   ComponentRef<typeof DialogPrimitive.Overlay>,
+   ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+ >(({ className, ...props }, ref) => (
+-  <DialogPrimitive.Overlay
++  <DialogShellOverlay
+     ref={ref}
+     className={cn(
+-      "fixed inset-0 z-50",
+-      "bg-modal-backdrop",
+       "data-[state=open]:animate-in data-[state=open]:fade-in-0",
+       "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+       "ds-motion-overlay-sheet",
+@@ -55,8 +58,8 @@ SheetOverlay.displayName = "SheetOverlay";
+  * Tailwind v4 the unsuffixed `slide-*` resolves to the 0.25rem translate
+  * DEFAULT, not the plugin's 100%.
+  *
+- * Uses the same surface/border/shadow tokens as `ModalContent`; the border
+- * sits only on the panel's inner edge.
++ * Takes the shared dialog surface (`dialogShell.tsx`) that `ModalContent`
++ * also uses; the border sits only on the panel's inner edge.
+  *
+  * Default cross-axis size (width for left/right, height for top/bottom) is a
+  * sensible starting point and is fully overridable via `className`
+@@ -65,9 +68,6 @@ SheetOverlay.displayName = "SheetOverlay";
+ const sheetVariants = cva(
+   cn(
+     "fixed z-50",
+-    "bg-modal-surface border-solid border-border-popovers",
+-    "shadow-menu overflow-hidden",
+-    "focus-visible:outline-none",
+     "data-[state=open]:animate-in data-[state=open]:fade-in-0",
+     "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+     "ds-motion-overlay-sheet",
+@@ -99,6 +99,17 @@ const sheetVariants = cva(
+   },
+ );
+ 
++export interface SheetContentProps
++  extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
++    VariantProps<typeof sheetVariants> {
++  /** When true, renders the overlay behind the sheet. Defaults to true. */
++  withOverlay?: boolean;
++  /** Render through a portal (the default) or in place. */
++  portal?: boolean;
++  /** Props for the portal, e.g. `container` or `forceMount`. */
++  portalProps?: ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>;
++}
++
+ /**
+  * Raw sheet primitive — no internal padding or flex layout, mirroring
+  * `ModalContent`. Compose content directly inside:
+@@ -117,32 +128,18 @@ const sheetVariants = cva(
+  */
+ const SheetContent = forwardRef<
+   ComponentRef<typeof DialogPrimitive.Content>,
+-  ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
+-    VariantProps<typeof sheetVariants> & {
+-      /** When true, renders the overlay behind the sheet. Defaults to true. */
+-      withOverlay?: boolean;
+-    }
++  SheetContentProps
+ >(
+   (
+-    {
+-      className,
+-      children,
+-      side = SheetSide.right,
+-      withOverlay = true,
+-      ...props
+-    },
++    { className, side = SheetSide.right, withOverlay = true, ...props },
+     ref,
+   ) => (
+-    <SheetPortal>
+-      {withOverlay && <SheetOverlay />}
+-      <DialogPrimitive.Content
+-        ref={ref}
+-        className={cn(sheetVariants({ side }), className)}
+-        {...props}
+-      >
+-        {children}
+-      </DialogPrimitive.Content>
+-    </SheetPortal>
++    <DialogShellContent
++      ref={ref}
++      overlay={withOverlay ? <SheetOverlay /> : null}
++      className={cn(sheetVariants({ side }), className)}
++      {...props}
++    />
+   ),
+ );
+ SheetContent.displayName = "SheetContent";
+@@ -152,25 +149,13 @@ SheetContent.displayName = "SheetContent";
+ const SheetTitle = forwardRef<
+   ComponentRef<typeof DialogPrimitive.Title>,
+   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+->(({ className, ...props }, ref) => (
+-  <DialogPrimitive.Title
+-    ref={ref}
+-    className={cn("text-style-heading text-text", className)}
+-    {...props}
+-  />
+-));
++>((props, ref) => <DialogShellTitle ref={ref} {...props} />);
+ SheetTitle.displayName = "SheetTitle";
+ 
+ const SheetDescription = forwardRef<
+   ComponentRef<typeof DialogPrimitive.Description>,
+   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+->(({ className, ...props }, ref) => (
+-  <DialogPrimitive.Description
+-    ref={ref}
+-    className={cn("text-style-body text-text-secondary", className)}
+-    {...props}
+-  />
+-));
++>((props, ref) => <DialogShellDescription ref={ref} {...props} />);
+ SheetDescription.displayName = "SheetDescription";
+ 
+ export {
+diff --git a/src/components/Slider/Slider.stories.tsx b/src/components/Slider/Slider.stories.tsx
+index 83d5de0..5becb92 100644
+--- a/src/components/Slider/Slider.stories.tsx
++++ b/src/components/Slider/Slider.stories.tsx
+@@ -205,13 +205,13 @@ export const Colors: Story = {
+     docs: {
+       description: {
+         story:
+-          '`color` takes a DS token name or any CSS color. The handle renders it solid and the active track renders it at 45%.',
++          '`color` takes a DS token name or any CSS color. The handle renders it solid; the active track tints it at the variant\'s track opacity (`--ui-slider-track-primary-active-opacity`: 50% light, 60% dark).',
+       },
+     },
+   },
+   render: () => (
+     <div className="flex w-64 flex-col gap-4">
+-      {(['primary', 'brand', 'text', 'error-primary'] as const).map((c) => (
++      {(['primary', 'prominent', 'text', 'danger-primary'] as const).map((c) => (
+         <div key={c} className="flex items-center gap-3">
+           <LabelText className="w-16 text-text-tertiary">{c}</LabelText>
+           <SliderContinuous color={c} defaultValue={[60]} />
+@@ -288,6 +288,27 @@ export const ControlledStepped: Story = {
+   },
+ };
+ 
++export const ExtraValuesPassThrough: Story = {
++  name: 'Extra values pass through',
++  parameters: {
++    docs: {
++      description: {
++        story:
++          'The sliders are single-thumb: only `value[0]` is drawn and edited. Further values in the array come back unchanged — press ArrowRight or drag, and the readout keeps its second value.',
++      },
++    },
++  },
++  render: () => {
++    const [value, setValue] = useState([1, 3]);
++    return (
++      <div className="flex w-64 items-center gap-md">
++        <SliderStepped min={0} max={4} step={1} value={value} onValueChange={setValue} />
++        <LabelText className="w-12 text-text-tertiary">{JSON.stringify(value)}</LabelText>
++      </div>
++    );
++  },
++};
++
+ export const HighlightedStep: Story = {
+   name: 'Highlighted step',
+   parameters: {
+@@ -429,7 +450,7 @@ export const KeyboardInteraction: Story = {
+     docs: {
+       description: {
+         story:
+-          'Focus the handle (Tab) then use Left/Right (or Up/Down) to move by one step; Home/End jump to min/max. The continuous slider gets this from Radix. The stepped slider handles it itself, because Radix is driven at a much finer step there to keep dragging smooth — so a key press must still move exactly one dot.',
++          'Focus the handle (Tab) then use Left/Right (or Up/Down) to move by one step; PageUp/PageDown and Shift+Arrow move 10 steps (clamped to the ends); Home/End jump to min/max. The continuous slider gets this from Radix. The stepped slider handles it itself, mirroring Radix\'s keys, because Radix is driven at a much finer step there to keep dragging smooth — so a key press must still move whole dots.',
+       },
+     },
+   },
+diff --git a/src/components/Slider/Slider.tsx b/src/components/Slider/Slider.tsx
+index 83ec529..09119f9 100644
+--- a/src/components/Slider/Slider.tsx
++++ b/src/components/Slider/Slider.tsx
+@@ -42,6 +42,8 @@ type SliderPaintProps =
+       stepColor?: DsColor;
+     };
+ 
++/** Single thumb. Only `value[0]` / `defaultValue[0]` is drawn and edited; any
++ *  further values are passed back unchanged in `onValueChange` / `onValueCommit`. */
+ export type SliderProps = RootProps & SliderPaintProps;
+ 
+ /* Props that only mean something where step dots are drawn. Kept off
+@@ -190,32 +192,43 @@ const SliderBase = forwardRef<
+       [onValueChange, settled],
+     );
+ 
++    /* Single thumb: Radix is handed only value[0] (Root `value` below), so its
++     * callbacks carry one value. Re-attach the consumer's extra values so an
++     * `[a, b]` state comes back as `[a', b]`, never truncated, moved or
++     * re-sorted by Radix's closest-thumb logic. Extras pass through as given —
++     * not snapped — so a value off the step grid stays the consumer's. */
++    const withExtras = useCallback(
++      (first: number) => [first, ...settled.slice(1)],
++      [settled],
++    );
++
+     const handleValueChange = useCallback(
+       (next: number[]) => {
+         if (!showSteps) {
+-          setInternal(next);
+-          onValueChange?.(next);
++          const merged = withExtras(next[0] ?? min);
++          setInternal(merged);
++          onValueChange?.(merged);
+           return;
+         }
+         setDrag(next);
+-        publish(next.map(snap));
++        publish(withExtras(snap(next[0] ?? min)));
+       },
+-      [onValueChange, publish, showSteps, snap],
++      [min, onValueChange, publish, showSteps, snap, withExtras],
+     );
+ 
+     const handleValueCommit = useCallback(
+       (next: number[]) => {
+         setDragging(false);
+         if (!showSteps) {
+-          onValueCommit?.(next);
++          onValueCommit?.(withExtras(next[0] ?? min));
+           return;
+         }
+-        const snapped = next.map(snap);
++        const snapped = withExtras(snap(next[0] ?? min));
+         setDrag(null);
+         publish(snapped);
+         onValueCommit?.(snapped);
+       },
+-      [onValueCommit, publish, showSteps, snap],
++      [min, onValueCommit, publish, showSteps, snap, withExtras],
+     );
+ 
+     /* Radix only commits when the value actually changed, so a press-and-release
+@@ -233,25 +246,31 @@ const SliderBase = forwardRef<
+       /* The fine drag step would otherwise make an arrow press move a hundredth
+        * of a dot, so stepped keyboard interaction is handled here instead.
+        * Left/Right follow the visual direction; Up/Down are always increase or
+-       * decrease, matching Radix. */
++       * decrease, matching Radix. PageUp/PageDown and Shift+Arrow move 10 dots,
++       * mirroring Radix's own multiplier (`isSkipKey ? 10 : 1`), so both slider
++       * variants answer the same keys the same way. */
+       const flip = (dir === 'rtl' ? -1 : 1) * (inverted ? -1 : 1);
+       const from = snap(display[0] ?? min);
++      const isPageKey = event.key === 'PageUp' || event.key === 'PageDown';
++      const isSkipKey =
++        isPageKey || (event.shiftKey && event.key.startsWith('Arrow'));
++      const big = step * (isSkipKey ? 10 : 1);
+       let next: number;
+ 
+       switch (event.key) {
+         case 'ArrowLeft':
+-          next = from - step * flip;
++          next = from - big * flip;
+           break;
+         case 'ArrowRight':
+-          next = from + step * flip;
++          next = from + big * flip;
+           break;
+         case 'ArrowDown':
+         case 'PageDown':
+-          next = from - step;
++          next = from - big;
+           break;
+         case 'ArrowUp':
+         case 'PageUp':
+-          next = from + step;
++          next = from + big;
+           break;
+         case 'Home':
+           next = min;
+@@ -264,7 +283,7 @@ const SliderBase = forwardRef<
+       }
+ 
+       event.preventDefault(); // stops Radix moving by the fine drag step
+-      const committed = [snap(Math.min(max, Math.max(min, next)))];
++      const committed = withExtras(snap(Math.min(max, Math.max(min, next))));
+       setDrag(null);
+       publish(committed);
+       onValueCommit?.(committed);
+@@ -331,7 +350,7 @@ const SliderBase = forwardRef<
+           min={min}
+           max={max}
+           step={showSteps ? step / DRAG_SUBDIVISIONS : step}
+-          value={display}
++          value={[display[0] ?? min]}
+           onValueChange={handleValueChange}
+           onValueCommit={handleValueCommit}
+           onKeyDown={handleKeyDown}
+diff --git a/src/components/Table/Table.stories.tsx b/src/components/Table/Table.stories.tsx
+index 962b2b8..4b491f2 100644
+--- a/src/components/Table/Table.stories.tsx
++++ b/src/components/Table/Table.stories.tsx
+@@ -1,6 +1,6 @@
+ import type { Meta, StoryObj } from "@storybook/react";
+ import { useState } from "react";
+-import { BodyText, ButtonText } from "../Text/BaseText";
++import { BodyText } from "../Text/BaseText";
+ import {
+   Table,
+   TableCell,
+@@ -46,18 +46,10 @@ const SortableHeader = () => {
+         >
+           Name
+         </TableHeaderCell>
+-        <TableHeaderCell>
+-          <ButtonText>Status</ButtonText>
+-        </TableHeaderCell>
+-        <TableHeaderCell>
+-          <ButtonText>Role</ButtonText>
+-        </TableHeaderCell>
+-        <TableHeaderCell>
+-          <ButtonText>Email</ButtonText>
+-        </TableHeaderCell>
+-        <TableHeaderCell>
+-          <ButtonText>Joined</ButtonText>
+-        </TableHeaderCell>
++        <TableHeaderCell>Status</TableHeaderCell>
++        <TableHeaderCell>Role</TableHeaderCell>
++        <TableHeaderCell>Email</TableHeaderCell>
++        <TableHeaderCell>Joined</TableHeaderCell>
+       </TableHeader>
+ 
+       <TableRow>
+@@ -139,15 +131,9 @@ export const Header: Story = {
+   render: () => (
+     <Table columns="1fr 1fr 1fr">
+       <TableHeader>
+-        <TableHeaderCell>
+-          <BodyText>Column A</BodyText>
+-        </TableHeaderCell>
+-        <TableHeaderCell>
+-          <BodyText>Column B</BodyText>
+-        </TableHeaderCell>
+-        <TableHeaderCell>
+-          <BodyText>Column C</BodyText>
+-        </TableHeaderCell>
++        <TableHeaderCell>Column A</TableHeaderCell>
++        <TableHeaderCell>Column B</TableHeaderCell>
++        <TableHeaderCell>Column C</TableHeaderCell>
+       </TableHeader>
+     </Table>
+   ),
+@@ -190,12 +176,8 @@ export const Rows: Story = {
+   render: () => (
+     <Table columns="1fr 1fr">
+       <TableHeader>
+-        <TableHeaderCell>
+-          <ButtonText>Name</ButtonText>
+-        </TableHeaderCell>
+-        <TableHeaderCell>
+-          <ButtonText>Value</ButtonText>
+-        </TableHeaderCell>
++        <TableHeaderCell>Name</TableHeaderCell>
++        <TableHeaderCell>Value</TableHeaderCell>
+       </TableHeader>
+       <TableRow>
+         <TableCell>
+@@ -232,12 +214,8 @@ export const CellStackedContent: Story = {
+   render: () => (
+     <Table columns="1fr 1fr">
+       <TableHeader>
+-        <TableHeaderCell>
+-          <BodyText>Person</BodyText>
+-        </TableHeaderCell>
+-        <TableHeaderCell>
+-          <BodyText>Contact</BodyText>
+-        </TableHeaderCell>
++        <TableHeaderCell>Person</TableHeaderCell>
++        <TableHeaderCell>Contact</TableHeaderCell>
+       </TableHeader>
+       <TableRow>
+         <TableCell>
+@@ -278,12 +256,8 @@ export const Placeholder: Story = {
+   render: () => (
+     <Table columns="1fr 1fr" className="h-[300px]">
+       <TableHeader>
+-        <TableHeaderCell>
+-          <BodyText>Name</BodyText>
+-        </TableHeaderCell>
+-        <TableHeaderCell>
+-          <BodyText>Status</BodyText>
+-        </TableHeaderCell>
++        <TableHeaderCell>Name</TableHeaderCell>
++        <TableHeaderCell>Status</TableHeaderCell>
+       </TableHeader>
+       <TablePlaceholder>
+         <BodyText className="text-text-tertiary">No results found</BodyText>
+diff --git a/src/components/Table/Table.tsx b/src/components/Table/Table.tsx
+index 0529a01..47840bd 100644
+--- a/src/components/Table/Table.tsx
++++ b/src/components/Table/Table.tsx
+@@ -1,9 +1,9 @@
+ // No "use client": no hooks, and onSort is a consumer-supplied passthrough.
+ // Neutral module — it renders in either graph. It may import client components
+ // (Button); that is normal composition, not a client boundary for this file.
+-import { forwardRef, type HTMLAttributes } from "react";
++import { forwardRef, type CSSProperties, type HTMLAttributes } from "react";
+ import { cn } from "../../utils/cn";
+-import { Button } from "../Button/Button";
++import { Button, type ButtonProps } from "../Button/Button";
+ import { ButtonSize, ButtonVariant } from "../Button/constants";
+ import { ChevronDownIcon } from "../Icons/ChevronDownIcon";
+ import { ChevronsUpDownIcon } from "../Icons/ChevronsUpDownIcon";
+@@ -23,6 +23,7 @@ const Table = forwardRef<HTMLDivElement, TableProps>(
+   ({ className, columns, rowHeight, style, ...props }, ref) => (
+     <div
+       ref={ref}
++      role="table"
+       className={cn(
+         "flex flex-col w-full border border-border-primary rounded-normal",
+         className,
+@@ -32,7 +33,7 @@ const Table = forwardRef<HTMLDivElement, TableProps>(
+           "--table-cols": columns,
+           ...(rowHeight ? { "--table-row-height": rowHeight } : {}),
+           ...style,
+-        } as React.CSSProperties
++        } as CSSProperties
+       }
+       {...props}
+     />
+@@ -43,11 +44,12 @@ Table.displayName = "Table";
+ /* ── TableHeader ───────────────────────────────────────────────────────── */
+ 
+ const TableHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+-  ({ className, ...props }, ref) => (
++  ({ className, style, ...props }, ref) => (
+     <div
+       ref={ref}
++      role="row"
+       className={cn("grid border-b border-border-primary py-sm px-xxs", className)}
+-      style={{ gridTemplateColumns: "var(--table-cols)" }}
++      style={{ gridTemplateColumns: "var(--table-cols)", ...style }}
+       {...props}
+     />
+   ),
+@@ -59,8 +61,22 @@ TableHeader.displayName = "TableHeader";
+ export interface TableHeaderCellProps extends HTMLAttributes<HTMLDivElement> {
+   sortDirection?: TableSortDirection;
+   onSort?: () => void;
++  /** Props for the sort button (sortable headers only): `aria-*`, `id`,
++   *  `onKeyDown`, `className`, … The click is always `onSort`, and the
++   *  header owns the button's `variant`/`size`. */
++  buttonProps?: Omit<
++    ButtonProps,
++    "children" | "onClick" | "asChild" | "variant" | "size"
++  >;
+ }
+ 
++/* TableSortDirection values are not ARIA tokens; this is the translation. */
++const ARIA_SORT = {
++  [TableSortDirection.none]: "none",
++  [TableSortDirection.ascend]: "ascending",
++  [TableSortDirection.descend]: "descending",
++} as const;
++
+ const SortIcon = ({ direction }: { direction: TableSortDirection }) => {
+   if (direction === TableSortDirection.ascend) return <ChevronUpIcon />;
+   if (direction === TableSortDirection.descend) return <ChevronDownIcon />;
+@@ -68,18 +84,24 @@ const SortIcon = ({ direction }: { direction: TableSortDirection }) => {
+ };
+ 
+ const TableHeaderCell = forwardRef<HTMLDivElement, TableHeaderCellProps>(
+-  ({ className, sortDirection, onSort, children, ...props }, ref) => {
++  ({ className, sortDirection, onSort, buttonProps, children, ...props }, ref) => {
+     if (sortDirection !== undefined) {
+       return (
+         <div
+           ref={ref}
++          role="columnheader"
++          aria-sort={ARIA_SORT[sortDirection]}
+           className={cn("flex items-center", className)}
+           {...props}
+         >
+           <Button
+             variant={ButtonVariant.text}
+             size={ButtonSize.standard}
+-            className="w-full justify-start gap-1 text-text-primary"
++            {...buttonProps}
++            className={cn(
++              "w-full justify-start gap-1 text-text",
++              buttonProps?.className,
++            )}
+             onClick={onSort}
+           >
+             <ButtonText>{children}</ButtonText>
+@@ -92,10 +114,11 @@ const TableHeaderCell = forwardRef<HTMLDivElement, TableHeaderCellProps>(
+     return (
+       <div
+         ref={ref}
++        role="columnheader"
+         className={cn("flex items-center px-md py-sm", className)}
+         {...props}
+       >
+-        {children}
++        <ButtonText>{children}</ButtonText>
+       </div>
+     );
+   },
+@@ -105,9 +128,10 @@ TableHeaderCell.displayName = "TableHeaderCell";
+ /* ── TableRow ──────────────────────────────────────────────────────────── */
+ 
+ const TableRow = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+-  ({ className, ...props }, ref) => (
++  ({ className, style, ...props }, ref) => (
+     <div
+       ref={ref}
++      role="row"
+       className={cn(
+         "grid border-b border-border-primary",
+         "not-last:border-b",
+@@ -117,6 +141,7 @@ const TableRow = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+       style={{
+         gridTemplateColumns: "var(--table-cols)",
+         height: "var(--table-row-height, auto)",
++        ...style,
+       }}
+       {...props}
+     />
+@@ -130,6 +155,7 @@ const TableCell = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+   ({ className, ...props }, ref) => (
+     <div
+       ref={ref}
++      role="cell"
+       className={cn(
+         "flex flex-col justify-center overflow-hidden px-4 py-3",
+         className,
+@@ -145,12 +171,18 @@ TableCell.displayName = "TableCell";
+ const TablePlaceholder = forwardRef<
+   HTMLDivElement,
+   HTMLAttributes<HTMLDivElement>
+->(({ className, ...props }, ref) => (
++>(({ className, children, ...props }, ref) => (
+   <div
+     ref={ref}
++    role="row"
+     className={cn("flex flex-1 items-center justify-center py-8", className)}
+     {...props}
+-  />
++  >
++    {/* A row must own cells; `contents` keeps the flex centring unchanged. */}
++    <div role="cell" className="contents">
++      {children}
++    </div>
++  </div>
+ ));
+ TablePlaceholder.displayName = "TablePlaceholder";
+ 
+diff --git a/src/components/VerificationCode/CodeDigitInput.tsx b/src/components/VerificationCode/CodeDigitInput.tsx
+index c828711..fb0e803 100644
+--- a/src/components/VerificationCode/CodeDigitInput.tsx
++++ b/src/components/VerificationCode/CodeDigitInput.tsx
+@@ -5,8 +5,8 @@
+  * - 46px (`size-code-digit`), `rounded-tight`, secondary surface/border.
+  * - Digit glyph is always `BaseText` at 18px / medium (body role) — never
+  *   SubheadingText and never a raw HTML text node.
+- * - `hasError` paints error-primary border + text; `disabled` uses secondary
+- *   disabled tokens + `ds-disabled-state`; focus uses brand focus ring.
++ * - `hasError` paints danger-primary border + text; `disabled` uses secondary
++ *   disabled tokens + `ds-disabled-state`; focus uses the prominent focus ring.
+  *
+  * ## constraints
+  * - Prefer composing through VerificationCodeInput for multi-digit flows.
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index 5896014..7836870 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -510,6 +510,22 @@
+     --ui-shimmer-base: var(--ui-chat-thinking-shimmer-base);
+     --ui-shimmer-highlight: var(--ui-chat-thinking-shimmer-highlight);
+   }
++  /*
++   * Reduced motion: ShimmerText drops its gradient and falls back to
++   * `color: inherit` (index.css), which would discard the re-based tone. Paint
++   * each live chat label in its own base colour instead. Two classes are
++   * required: this file is imported (index.css) ahead of index.css's own
++   * `.ds-shimmer-text` rules in the same layer, so a one-class selector would
++   * lose to `color: inherit` on source order.
++   */
++  @media (prefers-reduced-motion: reduce) {
++    .ds-shimmer-text.ds-chat-tool-shimmer {
++      color: var(--ui-chat-tool-shimmer-base);
++    }
++    .ds-shimmer-text.ds-chat-thinking-shimmer {
++      color: var(--ui-chat-thinking-shimmer-base);
++    }
++  }
+ 
+   /*
+    * Hover reveal for a settled row's secondary content (meta, copy, chevron).
+@@ -617,6 +633,13 @@
+     flex-shrink: 0;
+   }
+ 
++  /* AIModelTooltipContent's model name. The provider colour arrives as
++   * --ds-chat-model-color (set on the tooltip root); without it,
++   * currentColor on `color` inherits, which is the untinted look. */
++  .ds-chat-model-name {
++    color: var(--ds-chat-model-color, currentColor);
++  }
++
+   .ds-width-chat-model-tooltip {
+     width: var(--ui-width-chat-model-tooltip);
+   }

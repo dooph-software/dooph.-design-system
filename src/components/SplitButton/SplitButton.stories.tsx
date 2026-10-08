@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   SplitButton,
   SplitButtonAction,
+  SplitButtonGroup,
   SplitButtonTrigger,
 } from "./SplitButton";
 import {
@@ -11,15 +12,17 @@ import {
   DropdownMenuItem,
   DropdownMenuSection,
 } from "../Menu/DropdownMenu";
+import { IconSize, PlusIcon } from "../Icons";
 
 const meta = {
   title: "Buttons/SplitButton",
+  component: SplitButton,
   parameters: { layout: "centered" },
   tags: ["autodocs"],
-} satisfies Meta;
+} satisfies Meta<typeof SplitButton>;
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => <SplitButton>Save</SplitButton>,
@@ -28,16 +31,7 @@ export const Default: Story = {
 export const WithIcon: Story = {
   render: () => (
     <SplitButton
-      icon={
-        <svg viewBox="0 0 14 14" fill="none" width="14" height="14">
-          <path
-            d="M7 2v10M2 7h10"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
-      }
+      icon={<PlusIcon size={IconSize.rg} />}
     >
       New file
     </SplitButton>
@@ -51,12 +45,12 @@ export const Disabled: Story = {
 export const WithDropdown: Story = {
   render: () => (
     <DropdownMenu>
-      <div className="inline-flex">
+      <SplitButtonGroup>
         <SplitButtonAction>Save</SplitButtonAction>
         <DropdownMenuTrigger asChild>
-          <SplitButtonTrigger />
+          <SplitButtonTrigger aria-label="More save options" />
         </DropdownMenuTrigger>
-      </div>
+      </SplitButtonGroup>
       <DropdownMenuContent>
         <DropdownMenuSection>
           <DropdownMenuItem>New file</DropdownMenuItem>

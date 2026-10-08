@@ -1,0 +1,155 @@
+| .agent/skills/dooph-ds-architecture | - | provenance-only (git symlink 120000 → ../../.agents/skills/…; on-disk SYMLINKD) | U14-F5 |
+| .agent/skills/dooph-ds-codebase | - | provenance-only (git symlink 120000 → ../../.agents/skills/…; on-disk SYMLINKD) | U14-F5 |
+| .agent/skills/dooph-ds-contribution | - | provenance-only (git symlink 120000 → ../../.agents/skills/…; on-disk SYMLINKD) | U14-F5 |
+| .agents/skills/dooph-ds-architecture/SKILL.md | TBD | TBD | TBD |
+| .agents/skills/dooph-ds-codebase/SKILL.md | TBD | TBD | TBD |
+| .agents/skills/dooph-ds-contribution/SKILL.md | TBD | TBD | TBD |
+| .agents/skills/dooph-ds-loading-indicators/SKILL.md | TBD | TBD | TBD |
+| .agents/skills/dooph-ds-writing-version-migrations/SKILL.md | TBD | TBD | TBD |
+| .agents/skills/file-header-contracts/SKILL.md | TBD | TBD | TBD |
+| .agents/skills/file-header-contracts/references/agents-md-snippet.md | TBD | TBD | TBD |
+| .agents/skills/file-header-contracts/references/evaluation.md | TBD | TBD | TBD |
+| .agents/skills/file-header-contracts/references/human-approval-hook.md | TBD | TBD | TBD |
+| .agents/skills/radix-ui-design-system/SKILL.md | 1-12, 140-215, 330-345, 530-575, 700-720 + greps | findings (provenance + banned-pattern grep) | U14-F14 |
+| .agents/skills/radix-ui-design-system/examples/README.md | - | provenance-only | - |
+| .agents/skills/radix-ui-design-system/examples/dialog-example.tsx | grep | findings (banned-pattern grep) | U14-F14 |
+| .agents/skills/radix-ui-design-system/examples/dropdown-example.tsx | grep | findings (banned-pattern grep) | U14-F14 |
+| .agents/skills/radix-ui-design-system/templates/component-template.tsx.template | 1-148 = all | findings | U14-F14 |
+| .agents/skills/skill-creator/LICENSE.txt | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/SKILL.md | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/agents/analyzer.md | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/agents/comparator.md | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/agents/grader.md | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/assets/eval_review.html | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/eval-viewer/generate_review.py | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/eval-viewer/viewer.html | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/references/schemas.md | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/scripts/__init__.py | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/scripts/aggregate_benchmark.py | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/scripts/generate_report.py | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/scripts/improve_description.py | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/scripts/package_skill.py | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/scripts/quick_validate.py | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/scripts/run_eval.py | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/scripts/run_loop.py | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/skill-creator/scripts/utils.py | grep | provenance-only (anthropics/skills, Apache-2.0; grep ElementRef/forceMount/stopPropagation → 0) | - |
+| .agents/skills/using-airbnb-visx-lib/SKILL.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/annotation.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/axis.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/bounds.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/brush.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/chord.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/clip-path.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/curve.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/delaunay.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/drag.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/event.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/geo.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/glyph.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/gradient.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/grid.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/group.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/heatmap.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/hierarchy.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/legend.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/marker.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/mock-data.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/network.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/pattern.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/point.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/react-spring.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/responsive.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/sankey.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/scale.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/shape.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/stats.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/text.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/threshold.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/tooltip.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/vendor.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/visx.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/voronoi.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/wordcloud.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/xychart.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/packages/zoom.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/recipes/01-mental-model-and-decision.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/recipes/02-building-from-primitives.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/recipes/03-xychart-path.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .agents/skills/using-airbnb-visx-lib/references/recipes/04-v4-rules-and-peers.md | grep | provenance-only (dooph-software/dooph-skills; hex literals in generic API examples, no repo template) | - |
+| .claude/research/2026-08-27-date-picker-foundation-research.md | TBD | TBD | TBD |
+| .claude/skills/dooph-ds-architecture | - | provenance-only (git symlink 120000; plain file in fresh clone) | U14-F5 |
+| .claude/skills/dooph-ds-codebase | - | provenance-only (git symlink 120000; plain file in fresh clone) | U14-F5 |
+| .claude/skills/dooph-ds-contribution | - | provenance-only (git symlink 120000; plain file in fresh clone) | U14-F5 |
+| .claude/skills/dooph-ds-loading-indicators/SKILL.md | 1-274 = all (diff) | findings (diffed vs canonical: 12+/4-) | U14-F1, U14-F3, U14-F9 |
+| .claude/skills/dooph-ds-writing-version-migrations | - | provenance-only (git symlink 120000; plain file in fresh clone) | U14-F5 |
+| .claude/skills/file-header-contracts/SKILL.md | blob compare | provenance-only (blob-identical to canonical; tracked copy behind a local absolute JUNCTION) | U14-F2, U14-F5 |
+| .claude/skills/file-header-contracts/references/agents-md-snippet.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/file-header-contracts/references/evaluation.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/file-header-contracts/references/human-approval-hook.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/LICENSE.txt | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/SKILL.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/agents/analyzer.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/agents/comparator.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/agents/grader.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/assets/eval_review.html | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/eval-viewer/generate_review.py | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/eval-viewer/viewer.html | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/references/schemas.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/scripts/__init__.py | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/scripts/aggregate_benchmark.py | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/scripts/generate_report.py | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/scripts/improve_description.py | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/scripts/package_skill.py | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/scripts/quick_validate.py | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/scripts/run_eval.py | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/scripts/run_loop.py | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/skill-creator/scripts/utils.py | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/SKILL.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/annotation.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/axis.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/bounds.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/brush.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/chord.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/clip-path.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/curve.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/delaunay.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/drag.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/event.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/geo.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/glyph.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/gradient.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/grid.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/group.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/heatmap.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/hierarchy.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/legend.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/marker.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/mock-data.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/network.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/pattern.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/point.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/react-spring.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/responsive.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/sankey.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/scale.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/shape.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/stats.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/text.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/threshold.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/tooltip.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/vendor.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/visx.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/voronoi.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/wordcloud.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/xychart.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/packages/zoom.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/recipes/01-mental-model-and-decision.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/recipes/02-building-from-primitives.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/recipes/03-xychart-path.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| .claude/skills/using-airbnb-visx-lib/references/recipes/04-v4-rules-and-peers.md | blob compare | provenance-only (blob-identical to canonical) | U14-F5 |
+| 2026-09-20-visx-charts-design.md | TBD | TBD | TBD |
+| 2026-09-20-visx-charts-figma-checklist.md | TBD | TBD | TBD |
+| AGENTS.md | TBD | TBD | TBD |
+| docs/superpowers/specs/2026-08-31-digits-sidebar-mono-design.md | TBD | TBD | TBD |
+| executor-prompt-oss-publication.md | TBD | TBD | TBD |
+| skills-lock.json | TBD | TBD | TBD |

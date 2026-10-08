@@ -6,11 +6,20 @@
  *   `ds-chat-thinking-shimmer`) and a transcript, if given, streams inline and
  *   is always visible — there is nothing to toggle while it is live.
  * - `thought` with a transcript: the row becomes a disclosure. The chevron is
- *   revealed on hover and stays while open; the transcript collapses with a
- *   grid-rows transition timed by `--ui-chat-disclosure-*`.
+ *   revealed on hover and stays while open; the settled label and meta rest at
+ *   text-secondary and the label lifts to text-primary on hover; the transcript collapses with a
+ *   grid-rows transition timed by the motion scale (`--ui-motion-*`).
  * - `thought` without a transcript: a plain settled row.
  * - Open state is controllable (`open` / `onOpenChange`) or uncontrolled
  *   (`defaultOpen`). It is the only state this component owns.
+ * - Transcript colour is inherited by `ds-chat-prose`: tertiary while live,
+ *   secondary once opened, as Figma draws them.
+ * - Root attributes: `data-phase` is always the `AIThinkingPartState`.
+ *   `data-state` is the phase on the `thinking` row and on a `thought` row
+ *   without a transcript, but the disclosure state (`open` / `closed`) on an
+ *   expandable `thought` row, where the `[data-state="open"]` reveal and lift
+ *   rules in dooph-component-tokens.css read it. Style on `data-phase` to
+ *   target a phase; do not change what `data-state` holds.
  *
  * ## constraints
  * - A transcript is "available" exactly when `children` is given. Providers that
@@ -18,8 +27,6 @@
  * - `label` and `meta` are the consumer's copy ("Thinking", "Thought for 26s",
  *   "3s • 743 tokens"). No timer lives here — the consumer ticks elapsed time,
  *   so it can start counting whenever it chooses.
- * - Transcript colour is inherited by `ds-chat-prose`: tertiary while live,
- *   secondary once opened, as Figma draws them.
  */
 "use client";
 
@@ -89,7 +96,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
     const hasMeta = meta != null && meta !== false;
 
     const metaNode = hasMeta ? (
-      <span className="min-w-0 truncate whitespace-nowrap text-style-body text-ghost-fg">
+      <span className="min-w-0 truncate whitespace-nowrap text-style-body text-text-secondary">
         {meta}
       </span>
     ) : null;
@@ -99,13 +106,14 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
         <div
           ref={ref}
           data-state={state}
+          data-phase={state}
           className={cn(
-            "flex w-full min-w-0 flex-col gap-sm px-xs py-xxs",
+            "flex w-full min-w-0 flex-col gap-rg px-sm py-xxs",
             className,
           )}
           {...props}
         >
-          <div className="flex min-w-0 select-none items-center gap-sm">
+          <div className="flex min-w-0 select-none items-center gap-rg">
             <ShimmerText className="ds-chat-thinking-shimmer shrink-0 whitespace-nowrap text-style-body">
               {label}
             </ShimmerText>
@@ -114,7 +122,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
           {hasTranscript ? (
             <div
               data-streaming-animation={streamingAnimation || undefined}
-              className="ds-chat-prose min-w-0 pl-xs text-style-body text-text-tertiary wrap-break-word"
+              className="ds-chat-prose min-w-0 pl-sm text-style-body text-text-tertiary wrap-break-word"
             >
               {children}
             </div>
@@ -126,7 +134,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
     const labelNode = (
       <span
         className={cn(
-          "shrink-0 whitespace-nowrap text-style-body text-ghost-fg",
+          "shrink-0 whitespace-nowrap text-style-body text-text-secondary",
           hasTranscript && "ds-chat-lift",
         )}
       >
@@ -139,8 +147,9 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
         <div
           ref={ref}
           data-state={state}
+          data-phase={state}
           className={cn(
-            "flex w-full min-w-0 select-none items-center gap-sm px-xs py-xxs",
+            "flex w-full min-w-0 select-none items-center gap-rg px-sm py-xxs",
             className,
           )}
           {...props}
@@ -157,6 +166,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
       <div
         ref={ref}
         data-state={openState}
+        data-phase={state}
         className={cn(
           "ds-chat-reveal-root flex w-full min-w-0 flex-col",
           className,
@@ -169,15 +179,12 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
           aria-expanded={open}
           aria-controls={transcriptId}
           onClick={() => setOpen(!open)}
-          // `h-auto!`: the row hugs its text like every other part. Button's
-          // `h-button` is a package utility tailwind-merge cannot recognise as
-          // a height, so a plain `h-auto` would not replace it.
-          className="h-auto! w-full justify-start gap-sm border-0 px-xs py-xxs"
+          className="h-auto w-full justify-start gap-rg border-0 px-sm py-xxs"
         >
           {labelNode}
           {metaNode}
           {/* Down while closed, up while open — ds-chat-chevron rotates on the
-              button's data-state, timed by --ui-chat-disclosure-*. */}
+              button's data-state, timed by the motion scale. */}
           <DropdownIcon
             size={IconSize.rg}
             aria-hidden
@@ -191,9 +198,9 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
           className="ds-chat-disclosure"
         >
           <div>
-            {/* px-xs matches the row's own inset; pl-xs indents the transcript
+            {/* px-sm matches the row's own inset; pl-sm indents the transcript
                 under the label, as the live variant does. */}
-            <div className="ds-chat-prose mx-xs min-w-0 pb-xxs pl-xs pt-sm text-style-body text-text-secondary wrap-break-word">
+            <div className="ds-chat-prose mx-sm min-w-0 pb-xxs pl-sm pt-rg text-style-body text-text-secondary wrap-break-word">
               {children}
             </div>
           </div>

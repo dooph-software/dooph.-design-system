@@ -1,13 +1,51 @@
-"use client";
-
-import {
-  forwardRef,
-  useEffect,
-  useRef,
-  type ComponentPropsWithoutRef,
-  type Ref,
-} from "react";
+/*
+ * LoadingSpinner — indeterminate circular loading indicator in three looks:
+ * `flat` (M3 arc and track), `spokes` (eight-spoke icon) and `star` (the
+ * StarShape outline).
+ *
+ * ## behavior
+ * - Every variant is animated by CSS: the .ds-spinner-* helpers in index.css,
+ *   on the --ui-spinner-* tokens. This file renders once and writes geometry
+ *   only (SVG attributes plus numeric custom properties on the <svg>).
+ * - flat: Material's circular indeterminate animation, an active arc plus a
+ *   grey track arc drawn as two dashes on one path. The arc group turns at a
+ *   constant rate (one turn per --ui-spinner-rotate-duration) while, once per
+ *   --ui-spinner-duration, the arc grows from SPINNER_MIN_SWEEP (a dot) to
+ *   SPINNER_MAX_SWEEP of a turn, then its tail chases its held head round
+ *   until it is a dot again. The track is the complement, one stroke width
+ *   of visual gap clear of each end.
+ * - spokes / star: a constant linear turn of an inner group, one turn per
+ *   --ui-spinner-spokes-duration scaled by the size's spinTimeScale.
+ * - star: STAR_SHAPE_PATH filled with `color`, scaled to ShapeMorphSpinner's
+ *   shape-to-box ratio (STAR_FIT_SCALE), so it stays inside the box at any
+ *   angle.
+ * - Every variant renders role="progressbar" (indeterminate: no
+ *   aria-valuenow) with aria-label "Loading"; a consumer's props override both.
+ * - Reduced motion: flat holds a static frame (longest arc, tail at
+ *   12 o'clock); spokes and star stand still.
+ * - `color` goes through resolveDsColor. The track is always
+ *   --ui-color-border-primary, never the indicator colour.
+ *
+ * ## constraints
+ * - No duration, easing, timer or animation loop in this file (Rule 6). The
+ *   clock is the --ui-spinner-* tokens; the sweep range and the per-size
+ *   factor are geometry and reach CSS as plain numbers.
+ * - The flat arcs share one OPEN path that runs TWO laps of the circle from
+ *   one gap before 12 o'clock. The arc's tail travels almost a full turn per
+ *   cycle and the track runs on past the arc's tail, so on a one-lap path or
+ *   a <circle> a dash would cross the path's seam: it is cut in two and its
+ *   round caps flash. Do not shorten it to one lap or swap it for a <circle>;
+ *   the CSS keeps both dashes strictly inside the two laps.
+ * - 1 − SPINNER_MAX_SWEEP − 2 × gapLength / circumference must stay above 0 at
+ *   every size. At 0 the track's dash has zero length, and a round cap still
+ *   paints a zero-length dash as a dot.
+ * - No "use client": nothing here needs the client. Adding a hook, a timer or
+ *   a listener makes this module client-only again.
+ */
+import { forwardRef, type ComponentPropsWithoutRef, type CSSProperties, type Ref } from "react";
 import { cn } from "../../utils/cn";
+import { resolveDsColor, type DsColor } from "../../utils/color";
+import { STAR_SHAPE_PATH } from "../Shapes/StarShape";
 import {
   LoadingSpinnerColor,
   LoadingSpinnerSize,
@@ -15,35 +53,24 @@ import {
 } from "./constants";
 import {
   getSpinnerGeometry,
-  SPINNER_ANIM_DURATION,
   SPINNER_MAX_SWEEP,
   SPINNER_MIN_SWEEP,
   SPINNER_START_ANGLE,
+  STAR_FIT_TRANSFORM,
+  STAR_VIEWBOX,
   type SpinnerGeometry,
-  type SpinnerSizeKey,
 } from "./spinnerGeometry";
-
-// ── Color resolution ──────────────────────────────────────────────────────────
-
-const COLOR_TOKENS: Record<LoadingSpinnerColor, string> = {
-  primary: "var(--ui-color-primary)",
-  prominent: "var(--ui-color-prominent)",
-};
-
-/** Preset color aliases resolve to design tokens; arbitrary strings pass through. */
-function resolveColor(color: string): string {
-  return COLOR_TOKENS[color as LoadingSpinnerColor] ?? color;
-}
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 export type LoadingSpinnerProps = {
   variant?: LoadingSpinnerVariant;
   /**
-   * Preset color alias or any CSS string (e.g. `"#ff6b6b"`).
+   * A DS colour name (`DS_COLOR_TOKENS` key, e.g. `"primary"`, `"danger"`,
+   * `"text-secondary"`) or any CSS colour (e.g. `"#ff6b6b"`).
    * @default LoadingSpinnerColor.primary
    */
-  color?: LoadingSpinnerColor | (string & {});
+  color?: DsColor;
   size?: LoadingSpinnerSize;
   className?: string;
 } & Omit<ComponentPropsWithoutRef<"svg">, "children" | "className">;
@@ -54,131 +81,71 @@ type InnerSvgProps = ComponentPropsWithoutRef<"svg"> & {
   ref?: Ref<SVGSVGElement>;
 };
 
-// ── Internal: flat arc path helper ───────────────────────────────────────────
+type VariantProps = {
+  geo: SpinnerGeometry;
+  color: string;
+  svgProps: InnerSvgProps;
+};
+
+/** Numeric custom properties for the .ds-spinner-* helpers (never px-suffixed by React). */
+type SpinnerVars = Record<`--ds-spinner-${string}`, number>;
+
+// ── Internal: flat arc path ──────────────────────────────────────────────────
 
 /**
- * Returns an SVG clockwise arc `M…A…` path string.
- *
- * @param startAngle - Start angle in radians (0 = 3 o'clock, −π/2 = 12 o'clock).
- * @param sweepAngle - Arc span in radians, must be positive.
- *
- * Returns an empty string when `sweepAngle ≤ 0`.
- * Clamps to just under 2π: at exactly 2π the start/end points are identical
- * and the SVG `A` command draws nothing.
- *
- * WHY THIS APPROACH:
- * Using `<path>` + explicit arc coordinates entirely avoids the rendering
- * artefact that occurs with `<circle>` + `strokeDashoffset` when the dash
- * position crosses the circle element's path endpoint (12 o'clock after the
- * rotate(-90) transform). At that point SVG clips the dash at the path end
- * instead of wrapping, producing a spurious visual contraction + flash with
- * round linecaps. Direct arc coordinates have no such seam.
+ * Two full clockwise laps of a circle as one OPEN path (four half arcs, no
+ * `Z`), starting `startAngle` radians round from 3 o'clock. Both flat arcs are
+ * dashes on it; the second lap is what keeps them clear of the path's end.
  */
-function flatArcPath(
+function twoLapCirclePathFrom(
   cx: number,
   cy: number,
   r: number,
   startAngle: number,
-  sweepAngle: number,
 ): string {
-  if (sweepAngle <= 0) return "";
-  const sweep = Math.min(sweepAngle, 2 * Math.PI - 0.0001);
-  const endAngle = startAngle + sweep;
-  const x1 = cx + r * Math.cos(startAngle);
-  const y1 = cy + r * Math.sin(startAngle);
-  const x2 = cx + r * Math.cos(endAngle);
-  const y2 = cy + r * Math.sin(endAngle);
-  return `M ${x1} ${y1} A ${r} ${r} 0 ${sweep > Math.PI ? 1 : 0} 1 ${x2} ${y2}`;
+  const x0 = cx + r * Math.cos(startAngle);
+  const y0 = cy + r * Math.sin(startAngle);
+  const x1 = 2 * cx - x0;
+  const y1 = 2 * cy - y0;
+  const lap = `A ${r} ${r} 0 0 1 ${x1} ${y1} A ${r} ${r} 0 0 1 ${x0} ${y0}`;
+  return `M ${x0} ${y0} ${lap} ${lap}`;
 }
 
 // ── Internal: flat spinner ────────────────────────────────────────────────────
 
 /**
- * Flat indeterminate spinner — rAF-driven, path-based discrete arcs (M3 style):
- *
- * Both arcs are `<path>` elements whose `d` attribute is replaced each frame
- * via `requestAnimationFrame` + direct `setAttribute`. Using `<path>` with
- * explicit SVG arc coordinates (not `<circle>` + dashoffset) avoids the clip
- * artefact that occurs when a dashed stroke crosses the circle path's seam.
- *
- * Animation model:
- * - Arc length oscillates between SPINNER_MIN_SWEEP and SPINNER_MAX_SWEEP of
- *   a full rotation via cosine easing over SPINNER_ANIM_DURATION ms.
- * - Arc head (leading edge) advances at 2 full rotations per cycle; tail
- *   trails sweepAngle behind. The arc therefore compacts from the back.
- * - Track arc covers the complementary arc: (2π − sweepAngle − 2×gapAngle).
- *   With round linecaps the visual gap ≈ strokeWidth (M3 spec).
+ * Flat indeterminate spinner (Material circular indeterminate). The <g> turns
+ * and the two dashes move along the path, all in CSS; see .ds-spinner-flat in
+ * index.css for the dash maths.
  */
-function FlatSpinner({
-  geo,
-  strokeColor,
-  svgProps,
-}: {
-  geo: SpinnerGeometry;
-  strokeColor: string;
-  svgProps: InnerSvgProps;
-}) {
-  const { diameter, cssSize, strokeWidth, cx, cy, trackRadius, gapLength } =
-    geo;
+function FlatSpinner({ geo, color, svgProps }: VariantProps) {
+  const {
+    diameter,
+    cssSize,
+    strokeWidth,
+    cx,
+    cy,
+    trackRadius,
+    circumference,
+    gapLength,
+  } = geo;
   const { className, style, ...rest } = svgProps;
 
-  const activeRef = useRef<SVGPathElement>(null);
-  const trackRef = useRef<SVGPathElement>(null);
-
-  useEffect(() => {
-    const startTime = performance.now();
-    let frameId: number;
-    const twoPi = 2 * Math.PI;
-    // Gap in radians: gapLength (arc-length) ÷ radius = subtended angle.
-    const gapAngle = gapLength / trackRadius;
-
-    function animate(now: number) {
-      const elapsed = now - startTime;
-      const phase = (elapsed % SPINNER_ANIM_DURATION) / SPINNER_ANIM_DURATION;
-
-      // Cosine easing: 0→1→0 over one cycle.
-      const easedPhase = (1 - Math.cos(phase * twoPi)) / 2;
-      const sweepAngle =
-        (SPINNER_MIN_SWEEP +
-          (SPINNER_MAX_SWEEP - SPINNER_MIN_SWEEP) * easedPhase) *
-        twoPi;
-
-      // Head advances at 2 full rotations per cycle; tail = head − sweepAngle.
-      const arcEndAngle =
-        SPINNER_START_ANGLE + (elapsed / SPINNER_ANIM_DURATION) * 2 * twoPi;
-      const arcStartAngle = arcEndAngle - sweepAngle;
-
-      if (activeRef.current) {
-        activeRef.current.setAttribute(
-          "d",
-          flatArcPath(cx, cy, trackRadius, arcStartAngle, sweepAngle),
-        );
-      }
-
-      if (trackRef.current) {
-        const trackSweepAngle = twoPi - sweepAngle - 2 * gapAngle;
-        if (trackSweepAngle > 0) {
-          trackRef.current.setAttribute(
-            "d",
-            flatArcPath(
-              cx,
-              cy,
-              trackRadius,
-              arcEndAngle + gapAngle,
-              trackSweepAngle,
-            ),
-          );
-        } else {
-          trackRef.current.setAttribute("d", "");
-        }
-      }
-
-      frameId = requestAnimationFrame(animate);
-    }
-
-    frameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frameId);
-  }, [cx, cy, trackRadius, gapLength]);
+  // Gap in radians: gapLength (arc length) ÷ radius = subtended angle. The path
+  // starts one gap before 12 o'clock, so the arc's tail, which the CSS places
+  // one gap along the path, starts the cycle at 12 o'clock.
+  const d = twoLapCirclePathFrom(
+    cx,
+    cy,
+    trackRadius,
+    SPINNER_START_ANGLE - gapLength / trackRadius,
+  );
+  const vars: SpinnerVars = {
+    "--ds-spinner-c": circumference,
+    "--ds-spinner-gap": gapLength / circumference,
+    "--ds-spinner-sweep-min": SPINNER_MIN_SWEEP,
+    "--ds-spinner-sweep-max": SPINNER_MAX_SWEEP,
+  };
 
   return (
     <svg
@@ -190,25 +157,29 @@ function FlatSpinner({
       width={diameter}
       height={diameter}
       viewBox={`0 0 ${diameter} ${diameter}`}
-      className={className}
-      style={{ width: cssSize, height: cssSize, ...style }}
+      className={cn("ds-spinner-flat", className)}
+      style={{ width: cssSize, height: cssSize, ...vars, ...style } as CSSProperties}
     >
-      {/* Track arc — discrete complement of active arc, driven by rAF */}
-      <path
-        ref={trackRef}
-        fill="none"
-        stroke="var(--ui-color-border-primary)"
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-      />
-      {/* Active indicator arc — driven by rAF */}
-      <path
-        ref={activeRef}
-        fill="none"
-        stroke={strokeColor}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-      />
+      <g className="ds-spinner-flat-turn">
+        {/* Track arc — the complement of the active arc */}
+        <path
+          className="ds-spinner-flat-arc ds-spinner-flat-track"
+          d={d}
+          fill="none"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          style={{ stroke: "var(--ui-color-border-primary)" }}
+        />
+        {/* Active indicator arc */}
+        <path
+          className="ds-spinner-flat-arc ds-spinner-flat-indicator"
+          d={d}
+          fill="none"
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          style={{ stroke: color }}
+        />
+      </g>
     </svg>
   );
 }
@@ -216,25 +187,13 @@ function FlatSpinner({
 // ── Internal: spokes spinner ─────────────────────────────────────────────────
 
 /**
- * Spokes (icon) spinner — the eight-spoke LoadingSpinnerIcon paths rendered
- * inside an SVG sized to match the spinner's diameter, rotating at a constant
- * linear rate via `ds-spinner-rotate`.
- *
- * Unlike the flat arc variant there is no arc animation — the entire SVG
- * simply spins. This is the lightest-weight variant: no rAF loop, no path
- * recomputation, pure CSS animation.
+ * Spokes (icon) spinner — the eight-spoke LoadingSpinnerIcon paths, turning at
+ * a constant linear rate via .ds-spinner-spin.
  */
-function SpokesSpinner({
-  geo,
-  strokeColor,
-  svgProps,
-}: {
-  geo: SpinnerGeometry;
-  strokeColor: string;
-  svgProps: InnerSvgProps;
-}) {
-  const { diameter, cssSize, spokesDuration } = geo;
+function SpokesSpinner({ geo, color, svgProps }: VariantProps) {
+  const { diameter, cssSize, spinTimeScale } = geo;
   const { className, style, ...rest } = svgProps;
+  const vars: SpinnerVars = { "--ds-spinner-time-scale": spinTimeScale };
 
   return (
     <svg
@@ -242,8 +201,7 @@ function SpokesSpinner({
       xmlns="http://www.w3.org/2000/svg"
       /* Attribute = intrinsic size before CSS lands; the token below overrides
        * it, since an SVG attribute cannot resolve var(). This variant is drawn
-       * in a fixed 24-unit space, so it already scaled — only the rendered size
-       * was pinned to the JS table. */
+       * in a fixed 24-unit space, so it scales with the rendered size. */
       width={diameter}
       height={diameter}
       viewBox="0 0 24 24"
@@ -255,22 +213,52 @@ function SpokesSpinner({
         {
           width: cssSize,
           height: cssSize,
-          stroke: strokeColor,
+          stroke: color,
           strokeWidth: "var(--ui-icon-stroke-width)",
-          animation: `ds-spinner-rotate ${spokesDuration}ms linear infinite`,
-          transformOrigin: "center",
+          ...vars,
           ...style,
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
-      <path d="M12 2v4" />
-      <path d="m16.2 7.8 2.9-2.9" />
-      <path d="M18 12h4" />
-      <path d="m16.2 16.2 2.9 2.9" />
-      <path d="M12 18v4" />
-      <path d="m4.9 19.1 2.9-2.9" />
-      <path d="M2 12h4" />
-      <path d="m4.9 4.9 2.9 2.9" />
+      <g className="ds-spinner-spin">
+        <path d="M12 2v4" />
+        <path d="m16.2 7.8 2.9-2.9" />
+        <path d="M18 12h4" />
+        <path d="m16.2 16.2 2.9 2.9" />
+        <path d="M12 18v4" />
+        <path d="m4.9 19.1 2.9-2.9" />
+        <path d="M2 12h4" />
+        <path d="m4.9 4.9 2.9 2.9" />
+      </g>
+    </svg>
+  );
+}
+
+// ── Internal: star spinner ───────────────────────────────────────────────────
+
+/**
+ * Star spinner — the StarShape outline, filled, turning at a constant linear
+ * rate via .ds-spinner-spin. Same turn rate as the spokes.
+ */
+function StarSpinner({ geo, color, svgProps }: VariantProps) {
+  const { diameter, cssSize, spinTimeScale } = geo;
+  const { className, style, ...rest } = svgProps;
+  const vars: SpinnerVars = { "--ds-spinner-time-scale": spinTimeScale };
+
+  return (
+    <svg
+      {...rest}
+      xmlns="http://www.w3.org/2000/svg"
+      /* Attribute = intrinsic size before CSS lands; the token overrides it. */
+      width={diameter}
+      height={diameter}
+      viewBox={`0 0 ${STAR_VIEWBOX} ${STAR_VIEWBOX}`}
+      className={cn(className)}
+      style={{ width: cssSize, height: cssSize, ...vars, ...style } as CSSProperties}
+    >
+      <g className="ds-spinner-spin">
+        <path d={STAR_SHAPE_PATH} transform={STAR_FIT_TRANSFORM} style={{ fill: color }} />
+      </g>
     </svg>
   );
 }
@@ -283,6 +271,7 @@ function SpokesSpinner({
  * ```tsx
  * <LoadingSpinner />
  * <LoadingSpinner variant={LoadingSpinnerVariant.spokes} color={LoadingSpinnerColor.prominent} />
+ * <LoadingSpinner variant={LoadingSpinnerVariant.star} size={LoadingSpinnerSize.md} />
  * <LoadingSpinner size={LoadingSpinnerSize.md} color="#a3c2d1" />
  * ```
  */
@@ -297,11 +286,12 @@ export const LoadingSpinner = forwardRef<SVGSVGElement, LoadingSpinnerProps>(
     },
     ref,
   ) => {
-    const geo = getSpinnerGeometry(size as SpinnerSizeKey);
-    const strokeColor = resolveColor(color);
+    const geo = getSpinnerGeometry(size);
+    const resolvedColor = resolveDsColor(color, "var(--ui-color-primary)");
 
     const svgProps: InnerSvgProps = {
-      role: "status",
+      // Indeterminate progressbar: no aria-valuenow (ARIA 1.2).
+      role: "progressbar",
       "aria-label": "Loading",
       className: cn(className),
       ref,
@@ -309,18 +299,12 @@ export const LoadingSpinner = forwardRef<SVGSVGElement, LoadingSpinnerProps>(
     };
 
     if (variant === LoadingSpinnerVariant.spokes) {
-      return (
-        <SpokesSpinner
-          geo={geo}
-          strokeColor={strokeColor}
-          svgProps={svgProps}
-        />
-      );
+      return <SpokesSpinner geo={geo} color={resolvedColor} svgProps={svgProps} />;
     }
-
-    return (
-      <FlatSpinner geo={geo} strokeColor={strokeColor} svgProps={svgProps} />
-    );
+    if (variant === LoadingSpinnerVariant.star) {
+      return <StarSpinner geo={geo} color={resolvedColor} svgProps={svgProps} />;
+    }
+    return <FlatSpinner geo={geo} color={resolvedColor} svgProps={svgProps} />;
   },
 );
 LoadingSpinner.displayName = "LoadingSpinner";

@@ -9,5 +9,3 @@ export const DiscPlatterDBIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default DiscPlatterDBIcon;

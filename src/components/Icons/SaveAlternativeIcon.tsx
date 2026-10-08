@@ -9,5 +9,3 @@ export const SaveAlternativeIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default SaveAlternativeIcon;

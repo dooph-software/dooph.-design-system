@@ -8,5 +8,3 @@ export const PlusIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default PlusIcon;

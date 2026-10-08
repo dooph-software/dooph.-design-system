@@ -1,23 +1,17 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useEffect, useRef, useState } from "react";
 import { Button, ButtonVariant } from "../Button";
-import { ChevronDownIcon } from "../Icons";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../Menu";
 import {
   CloverShape,
   CookieShape,
   PentagonShape,
   PixircleShape,
   PuffShape,
+  Shapes,
   SquircleShape,
 } from "../Shapes";
 import { ButtonText } from "../Text";
-import { MorphRotationShape } from "./MorphRotationShape";
+import { MorphRotationShape, type MorphRotationShapeProps } from "./MorphRotationShape";
 import { MorphRotationShapeMode } from "./constants";
 
 const meta = {
@@ -27,7 +21,7 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-function ControlledDemo({ shapes, restingAngle }: { shapes: typeof CloverShape[]; restingAngle?: number }) {
+function ControlledDemo({ shapes, restingAngle }: { shapes: MorphRotationShapeProps["shapes"]; restingAngle?: number }) {
   const [index, setIndex] = useState(0);
   const [landed, setLanded] = useState(0);
   return (
@@ -70,37 +64,12 @@ export const RestingAngle: Story = {
   render: () => <ControlledDemo shapes={[CloverShape, PentagonShape, PixircleShape]} restingAngle={0} />,
 };
 
-/**
- * Figma 874:1682 / 874:1723 — a caret frame in a dropdown trigger. The trigger
- * passes no props: Radix sets data-state=open and CSS moves the target.
- * 31px frame, 2.5px inset = the ~9% spill budget around a 26px shape.
- */
-export const EmbeddedDropdownCaret: Story = {
-  render: () => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant={ButtonVariant.secondary} className="group">
-          <ButtonText>Users</ButtonText>
-          <span className="relative inline-flex size-[31px] items-center justify-center">
-            <MorphRotationShape
-              mode={MorphRotationShapeMode.embedded}
-              shapes={[CloverShape, PuffShape]}
-              className="absolute inset-[2.5px] text-primary transition-colors group-data-[state=open]:text-prominent group-data-[state=open]:[--ds-shape-morph-target:1]"
-            />
-            <span className="relative text-primary-fg transition-transform group-data-[state=open]:rotate-180">
-              <ChevronDownIcon size={14} />
-            </span>
-          </span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem>
-          <ButtonText>Everyone</ButtonText>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  ),
+/** `Shapes` keys instead of components: the serialisable form a Server Component can pass. */
+export const ShapeKeys: Story = {
+  render: () => <ControlledDemo shapes={[Shapes.clover, Shapes.puff, Shapes.squircle]} />,
 };
+
+/* Embedded mode inside a trigger: see Menus/DropdownCaret, the shipped embedding. */
 
 /** Contradicts the token defaults on purpose: a slow, linear step. */
 export const TimingOverride: Story = {
@@ -115,3 +84,33 @@ export const TimingOverride: Story = {
     </span>
   ),
 };
+
+/** A consumer ref must reach the span WITHOUT displacing the component's own:
+ *  the status shows the span's tag, and every click still lands a step. */
+function ForwardedRefDemo() {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [index, setIndex] = useState(0);
+  const [landed, setLanded] = useState(0);
+  const [tag, setTag] = useState("–");
+  useEffect(() => setTag(ref.current?.tagName ?? "null"), []);
+  return (
+    <div className="flex flex-col items-center gap-lg">
+      <span className="relative block size-[120px] text-primary">
+        <MorphRotationShape
+          ref={ref}
+          mode={MorphRotationShapeMode.controlled}
+          shapes={[CloverShape, PuffShape]}
+          activeIndex={index}
+          onStepComplete={() => setLanded((n) => n + 1)}
+          className="absolute inset-[11px]"
+        />
+      </span>
+      <Button variant={ButtonVariant.secondary} onClick={() => setIndex((i) => i + 1)}>
+        <ButtonText>Next shape</ButtonText>
+      </Button>
+      <ButtonText>ref: {tag} · landed: {landed}</ButtonText>
+    </div>
+  );
+}
+
+export const ForwardedRef: Story = { render: () => <ForwardedRefDemo /> };

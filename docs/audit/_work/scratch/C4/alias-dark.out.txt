@@ -1,0 +1,41 @@
+:root decls 259, .dark decls 58, dark-changed 52
+alias tokens depending on a dark-changed token, NOT re-declared in .dark: 28
+token|root line|root value|depends on (chain)|island (light) value|dark value
+--ui-color-primary-border|23|var(--ui-color-primary)|--ui-color-primary|#171717|#f9f9f9
+--ui-color-primary-border-hover|25|var(--ui-color-primary-hover)|--ui-color-primary-hover|#2c2c2c|#f0f0f0
+--ui-color-primary-border-active|27|var(--ui-color-primary-active)|--ui-color-primary-active|#3d3d3d|#cdcdcd
+--ui-color-prominent-disabled|61|var(--ui-color-secondary-disabled)|--ui-color-secondary-disabled|#f5f5f5|#222224
+--ui-color-prominent-border-disabled|62|var(--ui-color-secondary-border-disabled)|--ui-color-secondary-border-disabled|#e9e9e9|#1f1f21
+--ui-color-danger|76|var(--ui-color-secondary)|--ui-color-secondary|#fdfdfd|#1d1d1f
+--ui-color-danger-border|77|var(--ui-color-secondary-border)|--ui-color-secondary-border|#e2e3e4|#303235
+--ui-color-danger-foreground-active|83|var(--ui-color-secondary-foreground)|--ui-color-secondary-foreground|#161616|#ffffff
+--ui-color-danger-disabled|84|var(--ui-color-secondary-disabled)|--ui-color-secondary-disabled|#f5f5f5|#222224
+--ui-color-danger-border-disabled|85|var(--ui-color-secondary-border-disabled)|--ui-color-secondary-border-disabled|#e9e9e9|#1f1f21
+--ui-color-selection|107|var(--ui-color-primary)|--ui-color-primary|#171717|#f9f9f9
+--ui-color-selection-foreground|108|var(--ui-color-primary-foreground)|--ui-color-primary-foreground|#ffffff|#000000
+--ui-color-tooltip-inverse-surface|115|var(--ui-color-primary)|--ui-color-primary|#171717|#f9f9f9
+--ui-color-tooltip-inverse-text|116|var(--ui-color-primary-foreground)|--ui-color-primary-foreground|#ffffff|#000000
+--ui-color-tooltip-inverse-border|117|var(--ui-color-primary)|--ui-color-primary|#171717|#f9f9f9
+--ui-color-tooltip-matching-surface|118|var(--ui-color-secondary)|--ui-color-secondary|#fdfdfd|#1d1d1f
+--ui-color-tooltip-matching-text|119|var(--ui-color-secondary-foreground)|--ui-color-secondary-foreground|#161616|#ffffff
+--ui-color-tooltip-matching-border|120|var(--ui-color-border-primary)|--ui-color-border-primary|#dddddd|#333437
+--ui-shimmer-base|166|var(--ui-color-text-tertiary)|--ui-color-text-tertiary|#606060|#717171
+--ui-shimmer-highlight|167|color-mix(in srgb, var(--ui-color-text-tertiary) 35%, transparent)|--ui-color-text-tertiary|color-mix(in srgb, #606060 35%, transparent)|color-mix(in srgb, #717171 35%, transparent)
+--ui-chat-tool-shimmer-base|180|var(--ui-color-ghost-foreground-active)|--ui-color-ghost-foreground-active|#161616|#ffffff
+--ui-chat-tool-shimmer-highlight|181|color-mix(in srgb, var(--ui-color-ghost-foreground-active) 35%, transparent)|--ui-color-ghost-foreground-active|color-mix(in srgb, #161616 35%, transparent)|color-mix(in srgb, #ffffff 35%, transparent)
+--ui-chat-thinking-shimmer-base|186|var(--ui-color-ghost-foreground)|--ui-color-ghost-foreground|#4a4a4a|#afafaf
+--ui-chat-thinking-shimmer-highlight|187|color-mix(in srgb, var(--ui-color-ghost-foreground) 35%, transparent)|--ui-color-ghost-foreground|color-mix(in srgb, #4a4a4a 35%, transparent)|color-mix(in srgb, #afafaf 35%, transparent)
+--ui-color-slider-step-inactive|509|var(--ui-color-secondary-border)|--ui-color-secondary-border|#e2e3e4|#303235
+--ui-shadow-focus-prominent|557|0 0 0 4px var(--ui-color-focus-ring-prominent)|--ui-color-focus-ring-prominent|0 0 0 4px rgba(36, 6, 172, 0.35)|0 0 0 4px rgba(52, 15, 217, 0.15)
+--ui-shadow-focus-primary|558|0 0 0 4px var(--ui-color-focus-ring-primary)|--ui-color-focus-ring-primary|0 0 0 4px rgba(23, 23, 23, 0.25)|0 0 0 4px rgba(249, 249, 249, 0.15)
+--ui-color-sticker-secondary|597|var(--ui-color-text-tertiary)|--ui-color-text-tertiary|#606060|#717171
+
+alias lines re-declared identically in .dark: 2
+--ui-color-primary-disabled|root 31|dark 647|var(--ui-color-secondary-disabled)|via --ui-color-secondary-disabled
+--ui-color-primary-border-disabled|root 32|dark 648|var(--ui-color-secondary-border-disabled)|via --ui-color-secondary-border-disabled
+
+literal lines re-declared identically in .dark: 4
+--ui-size-checkbox|root 451|dark 720|18px
+--ui-radius-checkbox|root 541|dark 721|6px
+--ui-radius-avatar|root 542|dark 722|8px
+--ui-radius-avatar-sm|root 543|dark 723|6px

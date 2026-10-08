@@ -1,6 +1,6 @@
 "use client";
 
-import { Slot } from "@radix-ui/react-slot";
+import { Slot, Slottable } from "@radix-ui/react-slot";
 import {
   forwardRef,
   useCallback,
@@ -9,11 +9,10 @@ import {
   type ComponentPropsWithRef,
   type ElementType,
   type ForwardedRef,
-  type MutableRefObject,
   type ReactElement,
-  type RefCallback,
 } from "react";
 import { cn } from "../../utils/cn";
+import { useComposedRefs } from "../../utils/composeRefs";
 
 type OutlineButtonOwnProps = {
   asChild?: boolean;
@@ -21,9 +20,9 @@ type OutlineButtonOwnProps = {
   /**
    * Swaps the inner button surface from secondary tokens to primary tokens —
    * useful when OutlineButton sits on a background where the secondary surface
-   * would blend in. Mirrors the `themeInverse` pattern on Tooltip.
+   * would blend in. Same flag as Tooltip's `themeInverse`.
    */
-  inverseTheme?: boolean;
+  themeInverse?: boolean;
   /**
    * When true the accent glow is always visible, regardless of hover state.
    * The orbs use their original bottom-anchored positions (no cursor tracking).
@@ -47,6 +46,8 @@ type OutlineButtonComponent = <TElement extends ElementType = "button">(
   },
 ) => ReactElement | null;
 
+/* Typed at the default element so the render body's bindings keep their
+ * types; only the exported cast is polymorphic. */
 /**
  * An outlined pill-shaped button with an inner elevated surface.
  *
@@ -57,6 +58,9 @@ type OutlineButtonComponent = <TElement extends ElementType = "button">(
  * stay visible without any hover condition — useful for a persistent "lit" state
  * driven by application logic.
  *
+ * `className` styles the outer pill frame `<div>`; `ref`, `style`, handlers and
+ * every other prop go to the inner button (the slotted element under `asChild`).
+ *
  * @example
  * <OutlineButton><SearchIcon /> Find anything</OutlineButton>
  *
@@ -66,19 +70,18 @@ type OutlineButtonComponent = <TElement extends ElementType = "button">(
  *   Find anything
  * </OutlineButton>
  */
-const OutlineButtonBase = forwardRef<
-  HTMLElement,
-  OutlineButtonProps<ElementType>
->(
+const OutlineButtonBase = forwardRef<HTMLElement, OutlineButtonProps<"button">>(
   (
     {
       className,
       asChild = false,
-      inverseTheme = false,
+      themeInverse = false,
       glowing = false,
       glowColor1,
       glowColor2,
       children,
+      onMouseMove,
+      onMouseLeave,
       ...props
     },
     ref,
@@ -88,20 +91,13 @@ const OutlineButtonBase = forwardRef<
     // Internal ref for direct DOM mutations — keeps cursor tracking out of React state.
     const innerElRef = useRef<HTMLElement | null>(null);
 
-    const composedRef = useCallback(
-      (node: HTMLElement | null) => {
-        innerElRef.current = node;
-        if (typeof ref === "function") {
-          (ref as RefCallback<HTMLElement>)(node);
-        } else if (ref) {
-          (ref as MutableRefObject<HTMLElement | null>).current = node;
-        }
-      },
-      [ref],
-    );
+    const composedRef = useComposedRefs<HTMLElement>(innerElRef, ref);
 
+    // The consumer's mouse handlers are destructured out of `props` and run
+    // first here; left in `...props` they would replace the glow tracking.
     const handleMouseMove = useCallback(
-      (event: React.MouseEvent<HTMLElement>) => {
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        onMouseMove?.(event);
         if (glowing) return; // controlled mode — no cursor tracking needed
         const el = innerElRef.current;
         if (!el) return;
@@ -118,17 +114,21 @@ const OutlineButtonBase = forwardRef<
         el.style.setProperty("--bw", `${width}px`);
         el.style.setProperty("--bh", `${height}px`);
       },
-      [glowing],
+      [glowing, onMouseMove],
     );
 
-    const handleMouseLeave = useCallback(() => {
-      if (glowing) return;
-      const el = innerElRef.current;
-      if (!el) return;
-      // Reset to center so orbs drift back smoothly via CSS transition
-      el.style.setProperty("--gx", "0.5");
-      el.style.setProperty("--gy", "0.5");
-    }, [glowing]);
+    const handleMouseLeave = useCallback(
+      (event: React.MouseEvent<HTMLButtonElement>) => {
+        onMouseLeave?.(event);
+        if (glowing) return;
+        const el = innerElRef.current;
+        if (!el) return;
+        // Reset to center so orbs drift back smoothly via CSS transition
+        el.style.setProperty("--gx", "0.5");
+        el.style.setProperty("--gy", "0.5");
+      },
+      [glowing, onMouseLeave],
+    );
 
     const color1 = glowColor1 ?? "var(--ui-prominent-color-alt)";
     const color2 = glowColor2 ?? "var(--ui-prominent-color-alt)";
@@ -144,9 +144,9 @@ const OutlineButtonBase = forwardRef<
       <div
         className={cn(
           "inline-flex flex-col items-center justify-center",
-          "border border-solid border-border-primary rounded-[28px]",
-          "ds-p-ui-xs",
-          inverseTheme && "border-primary",
+          "border border-solid border-border-primary rounded-outline-frame",
+          "ds-p-ui-sm",
+          themeInverse && "border-primary",
           className,
         )}
       >
@@ -155,14 +155,14 @@ const OutlineButtonBase = forwardRef<
           ref={composedRef as ForwardedRef<HTMLElement>}
           className={cn(
             "group relative overflow-hidden",
-            "inline-flex items-center justify-center gap-2",
-            "h-[54px] min-w-[160px] px-3",
+            "inline-flex items-center justify-center gap-sm",
+            "ds-size-outline-button px-md",
             "border border-solid rounded-soft shadow-button",
             "text-style-button cursor-pointer select-none",
-            "transition-all duration-150 ease-out",
+            "ds-motion-state",
             "ds-focus-visible-ring",
             "ds-disabled-state",
-            inverseTheme
+            themeInverse
               ? "bg-primary border-primary text-primary-fg"
               : "bg-secondary border-border-primary text-secondary-fg",
           )}
@@ -174,37 +174,31 @@ const OutlineButtonBase = forwardRef<
             /*
              * Controlled mode — bottom-anchored, always lit.
              * Orbs sit at the bottom of the frame exactly as they did before cursor
-             * tracking was introduced. Opacity is set inline so it can be transitioned
-             * if `glowing` flips at runtime.
+             * tracking was introduced. Placement, opacity and blur come from
+             * the ds-outline-button-glow-* classes (--ui-outline-button-*);
+             * only the consumer's colour is inline. The ds-outline-orb-* class
+             * transitions opacity if `glowing` flips at runtime.
              */
             <>
               <span
                 aria-hidden
                 className={cn(
                   "pointer-events-none absolute rounded-full",
-                  "bottom-[-18px] left-[4%] w-[62%] h-[72%]",
+                  "ds-outline-button-glow-1",
+                  "ds-outline-orb-1",
                   disabledGlowClass,
                 )}
-                style={{
-                  background: color1,
-                  filter: "blur(18px)",
-                  opacity: 0.38,
-                  transition: "opacity 0.36s ease-out",
-                }}
+                style={{ background: color1 }}
               />
               <span
                 aria-hidden
                 className={cn(
                   "pointer-events-none absolute rounded-full",
-                  "bottom-[-14px] right-[6%] w-[48%] h-[64%]",
+                  "ds-outline-button-glow-2",
+                  "ds-outline-orb-2",
                   disabledGlowClass,
                 )}
-                style={{
-                  background: color2,
-                  filter: "blur(24px)",
-                  opacity: 0.22,
-                  transition: "opacity 0.42s ease-out",
-                }}
+                style={{ background: color2 }}
               />
             </>
           ) : (
@@ -212,19 +206,11 @@ const OutlineButtonBase = forwardRef<
              * Hover / cursor-tracking mode — "gutter rolling."
              *
              * Each orb is anchored at left:0, top:0 and translated so its CENTER
-             * sits exactly at the cursor position inside the button:
-             *
-             *   translateX = gx * bw − 50%  (−50% centers the orb on that point)
-             *
-             * When the cursor is at any wall (gx=0 or gx=1), the orb center is ON
-             * the wall — half the orb is clipped outside, the other half blooms in
-             * from the edge. This is the "gutter" effect.
-             *
-             * Orb 2 tracks the diagonally opposite point (1−gx, 1−gy) so the two
-             * colors always sit on opposite sides of the button, making them visually
-             * distinct even when different glowColor props are supplied.
-             *
-             * overflow-hidden on the parent clips both orbs cleanly.
+             * sits at a point derived from the cursor position (--gx/--gy, 0–1)
+             * inside the button — the exact mapping is in the comment below. Near
+             * a wall part of an orb is clipped outside and the rest blooms in from
+             * the edge (the "gutter" effect). overflow-hidden on the parent clips
+             * both orbs cleanly.
              */
             <>
               {/*
@@ -240,52 +226,54 @@ const OutlineButtonBase = forwardRef<
               <span
                 aria-hidden
                 className={cn(
-                  "pointer-events-none absolute rounded-full w-[62%] h-[72%]",
-                  "opacity-0 group-hover:opacity-[0.38]",
+                  "pointer-events-none absolute rounded-full",
+                  "ds-outline-button-trail-1",
+                  "ds-outline-orb-1",
                   disabledGlowClass,
                 )}
                 style={{
                   background: color1,
-                  filter: "blur(20px)",
                   left: 0,
                   top: 0,
                   transform:
                     "translate(" +
-                    "calc((var(--gx, 0.5) * 0.4 + 0.25) * var(--bw, 160px) - 50%)," +
-                    "calc(var(--gy, 0.5) * var(--bh, 54px) - 50%)" +
+                    "calc((var(--gx, 0.5) * 0.4 + 0.25) * var(--bw, var(--ui-min-w-outline-button)) - 50%)," +
+                    "calc(var(--gy, 0.5) * var(--bh, var(--ui-height-outline-button)) - 50%)" +
                     ")",
-                  transition:
-                    "opacity 0.36s ease-out, transform 0.16s ease-out",
                 }}
               />
               <span
                 aria-hidden
                 className={cn(
-                  "pointer-events-none absolute rounded-full w-[48%] h-[64%]",
-                  "opacity-0 group-hover:opacity-[0.22]",
+                  "pointer-events-none absolute rounded-full",
+                  "ds-outline-button-trail-2",
+                  "ds-outline-orb-2",
                   disabledGlowClass,
                 )}
                 style={{
                   background: color2,
-                  filter: "blur(26px)",
                   left: 0,
                   top: 0,
                   transform:
                     "translate(" +
-                    "calc((var(--gx, 0.5) * 0.4 + 0.55) * var(--bw, 160px) - 50%)," +
-                    "calc(var(--gy, 0.5) * var(--bh, 54px) - 50%)" +
+                    "calc((var(--gx, 0.5) * 0.4 + 0.55) * var(--bw, var(--ui-min-w-outline-button)) - 50%)," +
+                    "calc(var(--gy, 0.5) * var(--bh, var(--ui-height-outline-button)) - 50%)" +
                     ")",
-                  transition:
-                    "opacity 0.42s ease-out, transform 0.22s ease-out",
                 }}
               />
             </>
           )}
 
-          {/* Content sits above the blur layer */}
-          <span className="relative z-10 inline-flex items-center gap-2">
-            {children}
-          </span>
+          {/* Content sits above the blur layer. Slottable marks the asChild
+           * target, and the span wraps that element's own children, so the
+           * label still layers above the orbs when slotted. */}
+          <Slottable child={children}>
+            {(child) => (
+              <span className="relative z-10 inline-flex items-center gap-sm">
+                {child}
+              </span>
+            )}
+          </Slottable>
         </Comp>
       </div>
     );

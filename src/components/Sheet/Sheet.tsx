@@ -1,13 +1,17 @@
-"use client";
-
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
   type ComponentRef,
 } from "react";
 import { cn } from "../../utils/cn";
+import {
+  DialogShellContent,
+  DialogShellDescription,
+  DialogShellOverlay,
+  DialogShellTitle,
+} from "../Modal/dialogShell";
 import { SheetSide } from "./constants";
 
 /* ── Root / Trigger / Portal / Close (thin pass-throughs) ─────────── */
@@ -20,23 +24,20 @@ const SheetClose = DialogPrimitive.Close;
 /* ── Overlay (full-screen backdrop) ────────────────────────────────── */
 
 /**
- * Shares the backdrop token + fade behavior with `ModalOverlay`
- * (bg-modal-backdrop, fade-in on open, fade-out on close) so sheets and
- * modals feel like one family. Durations match the panel slide so the
- * backdrop and panel arrive together.
+ * Backdrop: the shared dialog shell's base (`dialogShell.tsx`, which
+ * `ModalOverlay` also uses), plus a fade on `ds-motion-overlay-sheet` so the
+ * backdrop and the panel slide arrive together.
  */
 const SheetOverlay = forwardRef<
   ComponentRef<typeof DialogPrimitive.Overlay>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
+  <DialogShellOverlay
     ref={ref}
     className={cn(
-      "fixed inset-0 z-50",
-      "bg-modal-backdrop",
-      "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-300",
-      "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:duration-200",
-      "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
+      "data-[state=open]:animate-in data-[state=open]:fade-in-0",
+      "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+      "ds-motion-overlay-sheet",
       className,
     )}
     {...props}
@@ -49,30 +50,27 @@ SheetOverlay.displayName = "SheetOverlay";
 /**
  * Per-side geometry + push animation. Like DropdownMenu, the panel shows only
  * the settle tail of the movement: it enters from a 20% offset (already 80%
- * of the way in) while fading in — 300ms on a long-deceleration curve — and
- * exits 20% back out while fading, 200ms accelerating.
+ * of the way in) while fading in — the scale's `slow` step on the
+ * long-deceleration `enter` curve — and exits 20% back out while fading,
+ * `base` on the accelerating `exit` curve. Both come from
+ * `ds-motion-overlay-sheet`, which the backdrop shares.
  * The slide distance must be an explicit value (`slide-*-[20%]`) — under
  * Tailwind v4 the unsuffixed `slide-*` resolves to the 0.25rem translate
- * DEFAULT, not the plugin's 100%. The timing function is set as an arbitrary property because
- * `animation-timing-function` has no unambiguous utility (core `ease-*`
- * targets transitions).
+ * DEFAULT, not the plugin's 100%.
  *
- * Uses the same surface/border/shadow tokens as `ModalContent`; the border
- * sits only on the panel's inner edge.
+ * Takes the shared dialog surface (`dialogShell.tsx`) that `ModalContent`
+ * also uses; the border sits only on the panel's inner edge.
  *
- * Default cross-axis size (width for left/right, height for top/bottom) is a
- * sensible starting point and is fully overridable via `className`
- * (tailwind-merge lets consumer widths/heights win).
+ * Default cross-axis size: left/right sheets are `w-3/4 max-w-96`, so a
+ * consumer width needs a `max-w-*` override too (e.g. `max-w-none` next to the
+ * width); top/bottom sheets size to their content (no default height).
  */
 const sheetVariants = cva(
   cn(
     "fixed z-50",
-    "bg-modal-surface border-solid border-border-popovers",
-    "shadow-menu overflow-hidden",
-    "focus-visible:outline-none",
-    "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-300 data-[state=open]:[animation-timing-function:cubic-bezier(0.32,0.72,0,1)]",
-    "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:duration-200 data-[state=closed]:[animation-timing-function:cubic-bezier(0.4,0,1,1)]",
-    "motion-reduce:data-[state=open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
+    "data-[state=open]:animate-in data-[state=open]:fade-in-0",
+    "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+    "ds-motion-overlay-sheet",
   ),
   {
     variants: {
@@ -101,6 +99,20 @@ const sheetVariants = cva(
   },
 );
 
+/* `side` is typed from the `SheetSide` const, not cva's `VariantProps`: that
+ * admits `null`, which cva reads as "no variant" (an unpositioned sheet). */
+export interface SheetContentProps
+  extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
+  /** Edge the sheet slides in from. Defaults to `right`. */
+  side?: SheetSide;
+  /** When true, renders the overlay behind the sheet. Defaults to true. */
+  withOverlay?: boolean;
+  /** Render through a portal (the default) or in place. */
+  portal?: boolean;
+  /** Props for the portal, e.g. `container` or `forceMount`. */
+  portalProps?: ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>;
+}
+
 /**
  * Raw sheet primitive — no internal padding or flex layout, mirroring
  * `ModalContent`. Compose content directly inside:
@@ -110,7 +122,7 @@ const sheetVariants = cva(
  *   <SheetTrigger asChild><Button>Open</Button></SheetTrigger>
  *   <SheetContent side={SheetSide.right} aria-label="Filters">
  *     <SheetTitle className="sr-only">Filters</SheetTitle>
- *     <div className="p-6">Your custom content here.</div>
+ *     <div className="p-lg">Your custom content here.</div>
  *   </SheetContent>
  * </Sheet>
  *
@@ -119,32 +131,18 @@ const sheetVariants = cva(
  */
 const SheetContent = forwardRef<
   ComponentRef<typeof DialogPrimitive.Content>,
-  ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
-    VariantProps<typeof sheetVariants> & {
-      /** When true, renders the overlay behind the sheet. Defaults to true. */
-      withOverlay?: boolean;
-    }
+  SheetContentProps
 >(
   (
-    {
-      className,
-      children,
-      side = SheetSide.right,
-      withOverlay = true,
-      ...props
-    },
+    { className, side = SheetSide.right, withOverlay = true, ...props },
     ref,
   ) => (
-    <SheetPortal>
-      {withOverlay && <SheetOverlay />}
-      <DialogPrimitive.Content
-        ref={ref}
-        className={cn(sheetVariants({ side }), className)}
-        {...props}
-      >
-        {children}
-      </DialogPrimitive.Content>
-    </SheetPortal>
+    <DialogShellContent
+      ref={ref}
+      overlay={withOverlay ? <SheetOverlay /> : null}
+      className={cn(sheetVariants({ side }), className)}
+      {...props}
+    />
   ),
 );
 SheetContent.displayName = "SheetContent";
@@ -154,25 +152,13 @@ SheetContent.displayName = "SheetContent";
 const SheetTitle = forwardRef<
   ComponentRef<typeof DialogPrimitive.Title>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title
-    ref={ref}
-    className={cn("text-style-heading text-text", className)}
-    {...props}
-  />
-));
+>((props, ref) => <DialogShellTitle ref={ref} {...props} />);
 SheetTitle.displayName = "SheetTitle";
 
 const SheetDescription = forwardRef<
   ComponentRef<typeof DialogPrimitive.Description>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description
-    ref={ref}
-    className={cn("text-style-body text-text-secondary", className)}
-    {...props}
-  />
-));
+>((props, ref) => <DialogShellDescription ref={ref} {...props} />);
 SheetDescription.displayName = "SheetDescription";
 
 export {

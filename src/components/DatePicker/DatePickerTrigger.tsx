@@ -1,16 +1,11 @@
-"use client";
-
 import { forwardRef, type ComponentPropsWithoutRef } from "react";
 import { cn } from "../../utils/cn";
 import { DropdownTrigger, DropdownTriggerContent } from "../DropdownTrigger";
 import { CalendarIcon, IconSize } from "../Icons";
 import { ButtonText } from "../Text";
-import {
-  DatePickerMode,
-  formatRangeLabel,
-  formatSingleLabel,
-  type DateRange,
-} from "../Calendar";
+import { DatePickerMode, type DateRange } from "../Calendar";
+// Internal helpers: imported from their module, not the public Calendar barrel.
+import { formatRangeLabel, formatSingleLabel } from "../Calendar/dateFormat";
 
 type DatePickerTriggerSharedProps = Omit<
   ComponentPropsWithoutRef<"button">,
@@ -62,8 +57,8 @@ const DatePickerTrigger = forwardRef<HTMLButtonElement, DatePickerTriggerProps>(
         className={cn(
           // Radix's Popover.Trigger stamps data-state on this button, so the
           // trigger carries the focused border + ring while the panel is open.
-          // The ring uses ds-focus-ring-on-open, which carries the state in its
-          // own selector — a `data-[state=open]:ds-focus-ring` variant would
+          // The ring uses ds-focus-ring-on-open, which carries the open state in
+          // its own selector: a Tailwind state variant on a ds-* helper would
           // silently emit no rule at all.
           "data-[state=open]:border-input-border-focus ds-focus-ring-on-open",
           className,

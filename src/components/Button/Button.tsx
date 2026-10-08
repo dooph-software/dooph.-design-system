@@ -7,8 +7,25 @@
  * - Disabled styling paints each variant's own explicit disabled bg/border
  *   tokens (primary, prominent and danger all alias secondary-disabled by
  *   default) plus `ds-disabled-state` opacity — not opacity alone.
+ * - `medium` (46px) and `big` (54px) are pills (`rounded-full`) with their own
+ *   off-scale padding tokens (`ds-px-button-medium` / `-big`) and the hero
+ *   button text role (16px). Every other size is `rounded-tight` with the
+ *   14px button role. Per-variant shadows are the same at every labelled size.
  *
  * ## constraints
+ * - The pill sizes exist for `prominent`, `primary` and `secondary` only, and
+ *   that is enforced in the TYPE (`ButtonVariantSizeProps`), so
+ *   `variant="danger" size="big"` fails to compile. Danger, ghost and text are
+ *   excluded by design, and there is no icon-only pill. Do not widen
+ *   `ButtonOwnProps` back to plain `VariantProps` — the restriction would
+ *   silently disappear.
+ * - `variant` / `size` are typed from the `ButtonVariant` / `ButtonSize` consts
+ *   (./constants), never from cva's `VariantProps`: that admits `null`, which
+ *   cva reads as "no variant", so `variant={null}` would compile and render a
+ *   colourless, unsized button.
+ * - `text-style-hero-button` must stay registered in `cn`'s `text-style`
+ *   group (src/utils/cn.ts). Unregistered, twMerge reads it as a text COLOUR
+ *   and drops the variant's `text-*-fg`, so medium/big labels lose their colour.
  * - The `danger` variant paints the `--ui-color-danger-*` STATE family
  *   (bg-danger / border-danger-border / text-danger-fg / ...), not the raw
  *   `--ui-color-danger-primary`/`-secondary` palette. Those two are still the
@@ -18,12 +35,12 @@
  *   tokens.
  * - `prominent` was called `brand` before 5.4, in both the variant key and the
  *   token family (`--ui-color-brand-*`). Neither spelling survives.
- * - Keep `ButtonVariant.prominent` in the API even if icon stories omit it.
+ * - Keep `ButtonVariant.prominent` in the API although the icon-size stories
+ *   omit it — the stories are not the inventory, and dropping the key breaks
+ *   every consumer's prominent call to action.
  */
-"use client";
-
 import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
@@ -33,12 +50,13 @@ import {
   type ReactElement,
 } from "react";
 import { cn } from "../../utils/cn";
+import type { ButtonSize, ButtonVariant } from "./constants";
 
 const buttonVariants = cva(
   [
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap",
-    "border border-solid rounded-tight",
-    "transition-all duration-150 ease-out cursor-pointer select-none",
+    "inline-flex items-center justify-center gap-sm whitespace-nowrap",
+    "border border-solid",
+    "ds-motion-state cursor-pointer select-none",
     "ds-focus-visible-ring",
     "ds-disabled-state",
     "text-style-button",
@@ -81,12 +99,18 @@ const buttonVariants = cva(
           "[&:not(:disabled):not([aria-disabled=true])]:active:text-ghost-fg-active",
         ],
       },
+      // Radius lives per size, not in the base: twMerge does not treat
+      // `rounded-tight` and `rounded-full` as one group, so a base radius would
+      // survive next to the pill one and win or lose on stylesheet order.
       size: {
-        default: "h-button px-3",
-        sm: "h-button-sm px-3",
-        icon: "size-button p-0",
-        "icon-sm": "size-button-sm p-0",
-        "icon-micro": "size-button-micro p-0",
+        big: "h-button-big ds-px-button-big rounded-full text-style-hero-button",
+        medium:
+          "h-button-medium ds-px-button-medium rounded-full text-style-hero-button",
+        standard: "h-button px-md rounded-tight",
+        sm: "h-button-sm px-md rounded-tight",
+        icon: "size-button p-0 rounded-tight",
+        "icon-sm": "size-button-sm p-0 rounded-tight",
+        "icon-micro": "size-button-micro p-0 rounded-tight",
       },
     },
     compoundVariants: [
@@ -99,7 +123,7 @@ const buttonVariants = cva(
     ],
     defaultVariants: {
       variant: "secondary",
-      size: "default",
+      size: "standard",
     },
   },
 );
@@ -107,7 +131,28 @@ const buttonVariants = cva(
 // ButtonVariant / ButtonSize (+ their types) live in ./constants — kept server-safe
 // (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
 
-type ButtonOwnProps = VariantProps<typeof buttonVariants> & {
+type ButtonPillSize = Extract<ButtonSize, "medium" | "big">;
+type ButtonPillVariant = Extract<
+  ButtonVariant,
+  "prominent" | "primary" | "secondary"
+>;
+
+/**
+ * `variant` × `size`, with the pill sizes (`medium`, `big`) reachable only from
+ * `prominent`, `primary` and `secondary` (omitted `variant` = `secondary`).
+ * `danger`, `ghost` and `text` get every other size.
+ */
+type ButtonVariantSizeProps =
+  | {
+      variant?: ButtonPillVariant;
+      size?: ButtonSize;
+    }
+  | {
+      variant: Exclude<ButtonVariant, ButtonPillVariant>;
+      size?: Exclude<ButtonSize, ButtonPillSize>;
+    };
+
+type ButtonOwnProps = ButtonVariantSizeProps & {
   asChild?: boolean;
 };
 
@@ -121,7 +166,9 @@ type ButtonComponent = <TElement extends ElementType = "button">(
   },
 ) => ReactElement | null;
 
-const ButtonBase = forwardRef<HTMLElement, ButtonProps<ElementType>>(
+/* The render function is typed at the default element so its bindings keep
+ * their types; only the exported cast below is polymorphic. */
+const ButtonBase = forwardRef<HTMLElement, ButtonProps<"button">>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = (asChild ? Slot : "button") as ElementType;
     return (

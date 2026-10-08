@@ -9,5 +9,3 @@ export const OverviewIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default OverviewIcon;

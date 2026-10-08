@@ -1,0 +1,51 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "jsx": "react-jsx",
+    "strict": true,
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "noUnusedLocals": false,
+    "typeRoots": [
+      "C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types"
+    ],
+    "types": [
+      "react",
+      "react-dom"
+    ],
+    "paths": {
+      "react": [
+        "C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types/react/index.d.ts"
+      ],
+      "react/*": [
+        "C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types/react/*"
+      ],
+      "clsx": [
+        "C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/clsx"
+      ],
+      "tailwind-merge": [
+        "C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/tailwind-merge"
+      ],
+      "class-variance-authority": [
+        "C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/class-variance-authority"
+      ],
+      "@radix-ui/react-slot": [
+        "C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@radix-ui/react-slot"
+      ],
+      "@storybook/react": [
+        "C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@storybook/react"
+      ],
+      "@storybook/*": [
+        "C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@storybook/*"
+      ]
+    }
+  }
+}

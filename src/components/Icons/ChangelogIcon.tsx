@@ -8,5 +8,3 @@ export const ChangelogIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default ChangelogIcon;

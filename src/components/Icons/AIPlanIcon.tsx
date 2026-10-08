@@ -12,5 +12,3 @@ export const AIPlanIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default AIPlanIcon;

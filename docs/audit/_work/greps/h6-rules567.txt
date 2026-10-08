@@ -1,0 +1,35 @@
+src\styles\tokens.css:241:   * The exiting node is unmounted by its own `animationend`, so nothing in the
+src\styles\tokens.css:243:   * setTimeout, which is precisely the mirror that desyncs the moment either
+src\styles\index.css:535:   * previous version's double-requestAnimationFrame reveal be deleted outright.
+src\styles\index.css:606:   * `forwards` holds the collapsed state for the frame between animationend and
+src\styles\index.css:687:     * are NOT: they are layout, and the exit animation's `animationend` is what
+src\styles\index.css:706:   * load-bearing: each node is retired by its own `animationend`, and
+src\styles\index.css:738:   * because `animationend` is what retires each half. */
+src\styles\index.css:910:   * hang off transitionend, and `transition: none` would starve them —
+src\components\AnimatedText\useChangeSwap.ts:17: * - This file holds no duration, no timer, no `requestAnimationFrame` and no
+src\components\AnimatedText\useChangeSwap.ts:18: *   `transitionend`. Each half is retired by its OWN `animationend`; an earlier
+src\components\AnimatedText\useChangeSwap.ts:19: *   RollChangeText ran a `setTimeout(300)` mirroring the CSS, which is the mirror
+src\components\AnimatedText\useChangeSwap.ts:34: *   `animationend` strip it mid-flight and snap the arriving content to rest.
+src\components\AnimatedText\RollingDigitsText.tsx:34: * - There is no timer, no requestAnimationFrame and no transitionend in this
+src\components\AnimatedText\RollingDigitsText.tsx:36: *   animation, which needs no scheduling; exit is a single `animationend`.
+src\components\AnimatedText\RollingDigitsText.tsx:129:       * it. Guarded on the target because the roll's own transitionend and any
+src\components\AnimatedText\RevealChangeText.tsx:27: *   `transitionend`, which `transition: none` would never fire — stranding the
+src\components\AnimatedText\RevealChangeText.tsx:153:         * Otherwise collapse first; the transitionend below swaps the content
+src\components\AnimatedText\RevealChangeText.tsx:170:     * transitionend handler, which fires long after the effect has run. */
+src\components\AnimatedText\RevealChangeText.tsx:193:     * the ResizeObserver then covers font loading and resizes for free. */
+src\components\AnimatedText\RevealChangeText.tsx:201:      if (typeof ResizeObserver === "undefined") return;
+src\components\AnimatedText\RevealChangeText.tsx:202:      const observer = new ResizeObserver(read);
+src\components\CopyButton\CopyButton.tsx:42:    const timer = useRef<ReturnType<typeof setTimeout>>(null);
+src\components\CopyButton\CopyButton.tsx:59:            timer.current = setTimeout(() => setCopied(false), REVERT_MS);
+src\components\LoadingSpinner\LoadingSpinner.tsx:100: * via `requestAnimationFrame` + direct `setAttribute`. Using `<path>` with
+src\components\LoadingSpinner\LoadingSpinner.tsx:176:      frameId = requestAnimationFrame(animate);
+src\components\LoadingSpinner\LoadingSpinner.tsx:179:    frameId = requestAnimationFrame(animate);
+src\components\LoadingSpinner\LoadingSpinner.tsx:180:    return () => cancelAnimationFrame(frameId);
+src\components\MorphRotationShape\MorphRotationShape.tsx:295:      engine.raf = requestAnimationFrame(sample);
+src\components\MorphRotationShape\MorphRotationShape.tsx:297:    engine.raf = requestAnimationFrame(sample);
+src\components\MorphRotationShape\MorphRotationShape.tsx:328:      if (engine.raf) cancelAnimationFrame(engine.raf);
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:21: *   `closest("button, a, [role=button]")` and bound six handlers to a node it
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:120:      rafRef.current = requestAnimationFrame(frame);
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:123:    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:127:      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+src\components\Toast\Toast.tsx:229:    setTimeout(() => {

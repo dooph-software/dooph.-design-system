@@ -1,0 +1,104 @@
+
+## Colors - Interactables  modes=Light/Dark  vars=47
+  secondaryButton/color-content-secondaryButton:hover&active | Light=#161616→Text/primaryText | Dark=#ffffff→Text/darkMode/primaryText
+  secondaryButton/color-content-secondaryButton | Light=#161616→Text/primaryText | Dark=#ffffff→Text/darkMode/primaryText
+  secondaryButton/border-secondaryButton:active | Light=#e2e3e4 | Dark=#3a3b3f
+  secondaryButton/bg-secondaryButton | Light=#fdfdfd | Dark=#1d1d1f
+  secondaryButton/border-secondaryButton:hover | Light=#e2e3e4 | Dark=#313235
+  secondaryButton/bg-secondaryButton:active | Light=#e3e3e3 | Dark=#313235
+  secondaryButton/border-secondaryButton | Light=#e2e3e4 | Dark=#303235
+  secondaryButton/bg-secondaryButton:hover | Light=#efefef | Dark=#2b2b2d
+  brandButton/border-brandButton:active | Light=#323d41 | Dark=#323d41
+  brandButton/bg-brandButton | Light=#4f666d | Dark=#5a6f75
+  brandButton/bg-brandButton:active | Light=#323d41 | Dark=#323d41
+  brandButton/bg-brandButton:hover | Light=#45555b | Dark=#45555b
+  brandButton/border-brandButton | Light=#4f666d | Dark=#5a6f75
+  brandButton/border-brandButton:hover | Light=#45555b | Dark=#45555b
+  brandButton/color-content-brandButton:hover&active | Light=#ffffff→Text/invertedText | Dark=#ffffff→Text/darkMode/invertedText
+  brandButton/color-content-brandButton | Light=#ffffff→Text/invertedText | Dark=#ffffff→Text/darkMode/invertedText
+  ghostButton/bg-ghostButton | Light=#000000@0 | Dark=#ffffff@0
+  ghostButton/bg-ghostButton:hover | Light=#000000@0.04 | Dark=#ffffff@0.04
+  ghostButton/bg-ghostButton:active | Light=#000000@0.08 | Dark=#ffffff@0.08
+  secondaryButton/bg-secondaryButton:disabled | Light=#f5f5f5 | Dark=#222224
+  secondaryButton/border-secondaryButton:disabled | Light=#e9e9e9 | Dark=#1f1f21
+  brandButton/bg-brandButton:disabled | Light=#5a6f75@0.75 | Dark=#5a6f75@0.75
+  brandButton/border-brandButton:disabled | Light=#5a6f75@0 | Dark=#5a6f75@0
+  ghostButton/color-content-ghostButton | Light=#4a4a4a→Text/secondaryText | Dark=#ffffff→Text/darkMode/secondaryText
+  ghostButton/color-content-ghostButton:hover&active | Light=#161616→Text/primaryText | Dark=#ffffff→Text/darkMode/primaryText
+  dropdown/border-typeableTrigger:hover | Light=#b4b4b4 | Dark=#3a3b3f
+  dropdown/border-typeableTrigger:focus | Light=#4f666d→brandButton/border-brandButton | Dark=#4f666d→brandButton/border-brandButton
+  primaryButton/bg-primaryButton | Light=#171717 | Dark=#f9f9f9
+  primaryButton/border-primaryButton | Light=#171717 | Dark=#f9f9f9
+  primaryButton/bg-primaryButton:hover | Light=#2c2c2c | Dark=#f0f0f0
+  primaryButton/border-primaryButton:hover | Light=#2c2c2c | Dark=#f0f0f0
+  primaryButton/bg-primaryButton:active | Light=#3d3d3d | Dark=#cdcdcd
+  primaryButton/border-primaryButton:active | Light=#3d3d3d | Dark=#cdcdcd
+  primaryButton/color-content-primaryButton | Light=#ffffff→Text/invertedText | Dark=#ffffff→Text/darkMode/invertedText
+  primaryButton/color-content-primaryButton:hover&active | Light=#ffffff→Text/invertedText | Dark=#ffffff→Text/darkMode/invertedText
+  primaryButton/bg-primaryButton:disabled | Light=#5c5c5c | Dark=#d8d8d8
+  primaryButton/border-primaryButton:disabled | Light=#5c5c5c | Dark=#d8d8d8
+  dangerButton/border-dangerButton:disabled | Light=#ef9b9b | Dark=#bd5547
+  dangerButton/color-content-dangerButton:hover&active | Light=#161616→Text/primaryText | Dark=#ffffff→Text/darkMode/invertedText
+  dangerButton/color-content-dangerButton | Light=#161616→Text/primaryText | Dark=#ffffff→Text/darkMode/invertedText
+  dangerButton/bg-dangerButton:active | Light=#c92c2c | Dark=#e2432f
+  dangerButton/bg-dangerButton:disabled | Light=#ef9b9b | Dark=#9c655e
+  dangerButton/border-dangerButton:hover | Light=#db3838 | Dark=#dd2f18
+  dangerButton/bg-dangerButton:hover | Light=#db3838 | Dark=#e5614f
+  dangerButton/border-dangerButton | Light=#e93b3b | Dark=#d82a13
+  dangerButton/border-dangerButton:active | Light=#c92c2c | Dark=#b12814
+  dangerButton/bg-dangerButton | Light=#e93b3b | Dark=#e66f5f
+
+## Colors - Statics  modes=Light/Dark  vars=27
+  Text/secondaryText | Light=#4a4a4a | Dark=#ffffff
+  Text/primaryText | Light=#161616 | Dark=#ffffff
+  logoColor | Light=#46565c | Dark=#46565c
+  Text/tertiaryText | Light=#606060 | Dark=#ffffff
+  shadowBlackStrong | Light=#383838@0.15 | Dark=#0b0b0b@0.85
+  shadowBlackStandard | Light=#383838@0.1 | Dark=#0b0b0b@0.65
+  Surfaces/pageBackground | Light=#fdfeff | Dark=#161719
+  Surfaces/surfacePrimary | Light=#ffffff | Dark=#26282b
+  Surfaces/surfaceSecondary | Light=#f9fbfb | Dark=#34373b
+  border/borderStandard | Light=#dfe3e5 | Dark=#ffffff
+  border/borderSecondary | Light=#c9d2d9 | Dark=#ffffff
+  logoAltColor | Light=#a1aaa5 | Dark=#a1aaa5
+  shadowSelected | Light=#46565c@0.35 | Dark=#46565c@0.15
+  Text/darkMode/secondaryText | Light=#ffffff | Dark=#afafaf
+  Text/darkMode/primaryText | Light=#ffffff | Dark=#ffffff
+  Text/darkMode/tertiaryText | Light=#ffffff | Dark=#717171
+  opacity:disabled | Light=60 | Dark=50
+  Text/darkMode/invertedText | Light=#ffffff | Dark=#000000
+  Text/invertedText | Light=#ffffff | Dark=#ffffff
+  Surfaces/darkMode/pageBackground | Light=#ffffff | Dark=#131c1d
+  Surfaces/darkMode/surfacePrimary | Light=#ffffff | Dark=#000000
+  Surfaces/darkMode/surfaceSecondary | Light=#ffffff | Dark=#242425
+  border/darkMode/borderStandard | Light=#ffffff | Dark=#333437
+  border/darkMode/borderSecondary | Light=#ffffff | Dark=#393a40
+  Modals/surfaceModal | Light=#fcfcfc | Dark=#212124
+  Modals/borderModal | Light=#ebebeb | Dark=#36363b
+  Modals/modalBackdrop | Light=#000000@0.35 | Dark=#000000@0.7
+
+## Corner Radii  modes=Mode 1  vars=3
+  tight | Mode 1=12
+  standard | Mode 1=18
+  soft | Mode 1=20
+
+## Icons  modes=Mode 1  vars=4
+  strokewidth | Mode 1=1.5
+  iconStandard | Mode 1=14
+  iconMedium | Mode 1=16
+  iconTiny | Mode 1=12
+
+## Sizing/Spacing  modes=Mode 1  vars=13
+  xxs | Mode 1=4
+  xs | Mode 1=8
+  sm | Mode 1=10
+  rg | Mode 1=12
+  md | Mode 1=16
+  lg | Mode 1=20
+  buttonSizes/buttonHeight | Mode 1=38
+  buttonSizes/smallButtonHeight | Mode 1=34
+  dropdownWidths/complexPopoverMenuItemMinWidth | Mode 1=324
+  dropdownWidths/standardMenuItemMinWidth | Mode 1=160
+  dropdownWidths/actionMenuItemMinWidth | Mode 1=144
+  xl | Mode 1=28
+  xxl | Mode 1=40

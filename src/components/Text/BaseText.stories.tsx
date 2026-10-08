@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   BaseText,
   BodyText,
   ButtonText,
+  CTAText,
   HeadingText,
   HeroBodyText,
   HeroButtonText,
@@ -14,7 +15,7 @@ import {
   TitleText,
 } from './BaseText';
 import {
-  FontAxes,
+  FontAxis,
   FontSizes,
   FontWeights,
   Fonts,
@@ -53,7 +54,7 @@ type Story = StoryObj<typeof meta>;
 /* ── helpers ─────────────────────────────────────────────────────────── */
 
 const Row = ({ label, children }: { label: string; children: ReactNode }) => (
-  <div className="flex items-baseline gap-md border-b border-border-primary py-sm">
+  <div className="flex items-baseline gap-lg border-b border-border-primary py-rg">
     <LabelText className="w-[14rem] shrink-0 text-text-tertiary">
       {label}
     </LabelText>
@@ -70,12 +71,12 @@ const Section = ({
   note?: string;
   children: ReactNode;
 }) => (
-  <section className="flex flex-col gap-xs pb-xl">
+  <section className="flex flex-col gap-sm pb-xxl">
     <HeadingText className="text-text">{title}</HeadingText>
     {note ? (
       <BodyText className="max-w-[48rem] text-text-secondary">{note}</BodyText>
     ) : null}
-    <div className="pt-xs">{children}</div>
+    <div className="pt-sm">{children}</div>
   </section>
 );
 
@@ -123,6 +124,9 @@ export const Roles: Story = {
       <Row label="HeroButtonText">
         <HeroButtonText>{SAMPLE}</HeroButtonText>
       </Row>
+      <Row label="CTAText">
+        <CTAText>{SAMPLE}</CTAText>
+      </Row>
       <Row label="LabelText">
         <LabelText>{SAMPLE}</LabelText>
       </Row>
@@ -158,7 +162,7 @@ export const Mono: Story = {
       <Row label="font={Fonts.mono} on BodyText">
         <BodyText font={Fonts.mono}>{MONO_SAMPLE}</BodyText>
       </Row>
-      <Row label="MonoText fontSize={20} fontWeight={700}">
+      <Row label="MonoText fontSize={20} fontWeight={FontWeights.bold}">
         <MonoText fontSize={20} fontWeight={FontWeights.bold}>
           {MONO_SAMPLE}
         </MonoText>
@@ -331,44 +335,44 @@ export const VariableAxes: Story = {
         <BodyText fontSize={28}>{SAMPLE}</BodyText>
       </Row>
       <Row label="grade 0">
-        <BodyText fontSize={28} axes={{ [FontAxes.grade]: 0 }}>
+        <BodyText fontSize={28} axes={{ [FontAxis.grade]: 0 }}>
           {SAMPLE}
         </BodyText>
       </Row>
       <Row label="grade 100">
-        <BodyText fontSize={28} axes={{ [FontAxes.grade]: 100 }}>
+        <BodyText fontSize={28} axes={{ [FontAxis.grade]: 100 }}>
           {SAMPLE}
         </BodyText>
       </Row>
       <Row label="roundness 0">
-        <BodyText fontSize={28} axes={{ [FontAxes.roundness]: 0 }}>
+        <BodyText fontSize={28} axes={{ [FontAxis.roundness]: 0 }}>
           {SAMPLE}
         </BodyText>
       </Row>
       <Row label="roundness 100">
-        <BodyText fontSize={28} axes={{ [FontAxes.roundness]: 100 }}>
+        <BodyText fontSize={28} axes={{ [FontAxis.roundness]: 100 }}>
           {SAMPLE}
         </BodyText>
       </Row>
       <Row label="width 25">
-        <BodyText fontSize={28} axes={{ [FontAxes.width]: 25 }}>
+        <BodyText fontSize={28} axes={{ [FontAxis.width]: 25 }}>
           {SAMPLE}
         </BodyText>
       </Row>
       <Row label="width 151">
-        <BodyText fontSize={28} axes={{ [FontAxes.width]: 151 }}>
+        <BodyText fontSize={28} axes={{ [FontAxis.width]: 151 }}>
           {SAMPLE}
         </BodyText>
       </Row>
       <Row label="slant -10">
-        <BodyText fontSize={28} axes={{ [FontAxes.slant]: -10 }}>
+        <BodyText fontSize={28} axes={{ [FontAxis.slant]: -10 }}>
           {SAMPLE}
         </BodyText>
       </Row>
       <Row label="grade 100 + width 60">
         <BodyText
           fontSize={28}
-          axes={{ [FontAxes.grade]: 100, [FontAxes.width]: 60 }}
+          axes={{ [FontAxis.grade]: 100, [FontAxis.width]: 60 }}
         >
           {SAMPLE}
         </BodyText>
@@ -376,7 +380,7 @@ export const VariableAxes: Story = {
       <Row label="label role — no such axes">
         <LabelText
           fontSize={28}
-          axes={{ [FontAxes.grade]: 100, [FontAxes.roundness]: 0 }}
+          axes={{ [FontAxis.grade]: 100, [FontAxis.roundness]: 0 }}
         >
           {SAMPLE}
         </LabelText>

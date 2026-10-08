@@ -15,8 +15,16 @@ export const ButtonVariant = {
 } as const;
 export type ButtonVariant = (typeof ButtonVariant)[keyof typeof ButtonVariant];
 
+/**
+ * `medium` (46px) and `big` (54px) are pill-shaped, use the hero button text
+ * role (16px), and exist for `prominent`, `primary` and `secondary` only —
+ * `<Button variant="danger" size="big">` does not compile. No icon-only
+ * counterparts.
+ */
 export const ButtonSize = {
-  default: "default",
+  big: "big",
+  medium: "medium",
+  standard: "standard",
   sm: "sm",
   icon: "icon",
   iconSm: "icon-sm",

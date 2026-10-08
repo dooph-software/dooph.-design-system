@@ -1,0 +1,2968 @@
+diff --git a/.github/workflows/release-package.yml b/.github/workflows/release-package.yml
+index 2821917..b87fe00 100644
+--- a/.github/workflows/release-package.yml
++++ b/.github/workflows/release-package.yml
+@@ -32,17 +32,13 @@ jobs:
+       - name: Install dependencies
+         run: npm ci
+ 
+-      - name: Build
+-        run: npm run build
+-
+       # ── Preferred: npm Trusted Publishing (OIDC, no long-lived token) ──────────
+       # Provenance attestation is generated automatically.
+       # Requires one-time setup on npmjs.com before the first automated publish:
+       #   npmjs.com → @dooph-software/design-system → Settings → Trusted publishers
+       #   → Add publisher → GitHub Actions
+-      #   → Org: dooph-software  Repo: dooph-Design-System  Workflow: release-package.yml
++      #   → Org: dooph-software  Repo: dooph.-Design-System  Workflow: release-package.yml
+       # The package must already exist on npm before trusted publishing can be configured.
+-      # For the very first publish, use the TOKEN FALLBACK below, then switch here.
+       - name: Publish to npm (OIDC)
+         run: npm publish --access public
+       # No NODE_AUTH_TOKEN needed — npm CLI detects the OIDC environment automatically.
+diff --git a/.storybook/preview-head.html b/.storybook/preview-head.html
+index 7eec9d3..7f82675 100644
+--- a/.storybook/preview-head.html
++++ b/.storybook/preview-head.html
+@@ -7,7 +7,7 @@
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link
+-  href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Host+Grotesk:wght@400..800&family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
++  href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Host+Grotesk:wght@400..800&display=swap"
+   rel="stylesheet"
+ />
+ <!--
+diff --git a/THIRD_PARTY_NOTICES.md b/THIRD_PARTY_NOTICES.md
+index f574047..f94e7b8 100644
+--- a/THIRD_PARTY_NOTICES.md
++++ b/THIRD_PARTY_NOTICES.md
+@@ -53,6 +53,9 @@ Each is used under its stated open-source license.
+ | @radix-ui/react-checkbox | MIT | https://github.com/radix-ui/primitives |
+ | @radix-ui/react-dialog | MIT | https://github.com/radix-ui/primitives |
+ | @radix-ui/react-dropdown-menu | MIT | https://github.com/radix-ui/primitives |
++| @radix-ui/react-popover | MIT | https://github.com/radix-ui/primitives |
++| @radix-ui/react-progress | MIT | https://github.com/radix-ui/primitives |
++| @radix-ui/react-slider | MIT | https://github.com/radix-ui/primitives |
+ | @radix-ui/react-slot | MIT | https://github.com/radix-ui/primitives |
+ | @radix-ui/react-tabs | MIT | https://github.com/radix-ui/primitives |
+ | @radix-ui/react-toast | MIT | https://github.com/radix-ui/primitives |
+@@ -77,9 +80,250 @@ and `scripts/shapeMorphSpring.mjs` port further androidx sources
+ - **License:** MIT
+ - **Copyright:** Copyright (c) 2026 Thereallo
+ - **Source:** https://github.com/Thereallo1026/shape-morph (commit f4d2697)
++- **License text** (verbatim from https://github.com/Thereallo1026/shape-morph/blob/f4d2697/LICENSE):
++
++```text
++MIT License
++
++Copyright (c) 2026 Thereallo
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
++```
+ 
+ ### Android Jetpack (androidx) — graphics-shapes, Compose animation-core, Compose Material 3
+ - **License:** Apache 2.0
+ - **Copyright:** The Android Open Source Project
+ - **Source:** https://github.com/androidx/androidx
+-- **License text:** https://www.apache.org/licenses/LICENSE-2.0
+\ No newline at end of file
++- **License text:** reproduced in full under [Apache License 2.0](#apache-license-20) below.
++- **NOTICE:** androidx publishes no NOTICE file for these sources (none at the
++  repository root, `graphics/graphics-shapes`, `compose/animation/animation-core`
++  or `compose/material3/material3`; checked 2026-10-03), so there are no
++  attribution lines to carry under Apache 2.0 §4(d).
++
++---
++
++## Apache License 2.0
++
++Verbatim from https://www.apache.org/licenses/LICENSE-2.0.txt. It covers the
++Material Symbols icons and the androidx-derived sources listed above.
++
++```text
++
++                                 Apache License
++                           Version 2.0, January 2004
++                        http://www.apache.org/licenses/
++
++   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
++
++   1. Definitions.
++
++      "License" shall mean the terms and conditions for use, reproduction,
++      and distribution as defined by Sections 1 through 9 of this document.
++
++      "Licensor" shall mean the copyright owner or entity authorized by
++      the copyright owner that is granting the License.
++
++      "Legal Entity" shall mean the union of the acting entity and all
++      other entities that control, are controlled by, or are under common
++      control with that entity. For the purposes of this definition,
++      "control" means (i) the power, direct or indirect, to cause the
++      direction or management of such entity, whether by contract or
++      otherwise, or (ii) ownership of fifty percent (50%) or more of the
++      outstanding shares, or (iii) beneficial ownership of such entity.
++
++      "You" (or "Your") shall mean an individual or Legal Entity
++      exercising permissions granted by this License.
++
++      "Source" form shall mean the preferred form for making modifications,
++      including but not limited to software source code, documentation
++      source, and configuration files.
++
++      "Object" form shall mean any form resulting from mechanical
++      transformation or translation of a Source form, including but
++      not limited to compiled object code, generated documentation,
++      and conversions to other media types.
++
++      "Work" shall mean the work of authorship, whether in Source or
++      Object form, made available under the License, as indicated by a
++      copyright notice that is included in or attached to the work
++      (an example is provided in the Appendix below).
++
++      "Derivative Works" shall mean any work, whether in Source or Object
++      form, that is based on (or derived from) the Work and for which the
++      editorial revisions, annotations, elaborations, or other modifications
++      represent, as a whole, an original work of authorship. For the purposes
++      of this License, Derivative Works shall not include works that remain
++      separable from, or merely link (or bind by name) to the interfaces of,
++      the Work and Derivative Works thereof.
++
++      "Contribution" shall mean any work of authorship, including
++      the original version of the Work and any modifications or additions
++      to that Work or Derivative Works thereof, that is intentionally
++      submitted to Licensor for inclusion in the Work by the copyright owner
++      or by an individual or Legal Entity authorized to submit on behalf of
++      the copyright owner. For the purposes of this definition, "submitted"
++      means any form of electronic, verbal, or written communication sent
++      to the Licensor or its representatives, including but not limited to
++      communication on electronic mailing lists, source code control systems,
++      and issue tracking systems that are managed by, or on behalf of, the
++      Licensor for the purpose of discussing and improving the Work, but
++      excluding communication that is conspicuously marked or otherwise
++      designated in writing by the copyright owner as "Not a Contribution."
++
++      "Contributor" shall mean Licensor and any individual or Legal Entity
++      on behalf of whom a Contribution has been received by Licensor and
++      subsequently incorporated within the Work.
++
++   2. Grant of Copyright License. Subject to the terms and conditions of
++      this License, each Contributor hereby grants to You a perpetual,
++      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
++      copyright license to reproduce, prepare Derivative Works of,
++      publicly display, publicly perform, sublicense, and distribute the
++      Work and such Derivative Works in Source or Object form.
++
++   3. Grant of Patent License. Subject to the terms and conditions of
++      this License, each Contributor hereby grants to You a perpetual,
++      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
++      (except as stated in this section) patent license to make, have made,
++      use, offer to sell, sell, import, and otherwise transfer the Work,
++      where such license applies only to those patent claims licensable
++      by such Contributor that are necessarily infringed by their
++      Contribution(s) alone or by combination of their Contribution(s)
++      with the Work to which such Contribution(s) was submitted. If You
++      institute patent litigation against any entity (including a
++      cross-claim or counterclaim in a lawsuit) alleging that the Work
++      or a Contribution incorporated within the Work constitutes direct
++      or contributory patent infringement, then any patent licenses
++      granted to You under this License for that Work shall terminate
++      as of the date such litigation is filed.
++
++   4. Redistribution. You may reproduce and distribute copies of the
++      Work or Derivative Works thereof in any medium, with or without
++      modifications, and in Source or Object form, provided that You
++      meet the following conditions:
++
++      (a) You must give any other recipients of the Work or
++          Derivative Works a copy of this License; and
++
++      (b) You must cause any modified files to carry prominent notices
++          stating that You changed the files; and
++
++      (c) You must retain, in the Source form of any Derivative Works
++          that You distribute, all copyright, patent, trademark, and
++          attribution notices from the Source form of the Work,
++          excluding those notices that do not pertain to any part of
++          the Derivative Works; and
++
++      (d) If the Work includes a "NOTICE" text file as part of its
++          distribution, then any Derivative Works that You distribute must
++          include a readable copy of the attribution notices contained
++          within such NOTICE file, excluding those notices that do not
++          pertain to any part of the Derivative Works, in at least one
++          of the following places: within a NOTICE text file distributed
++          as part of the Derivative Works; within the Source form or
++          documentation, if provided along with the Derivative Works; or,
++          within a display generated by the Derivative Works, if and
++          wherever such third-party notices normally appear. The contents
++          of the NOTICE file are for informational purposes only and
++          do not modify the License. You may add Your own attribution
++          notices within Derivative Works that You distribute, alongside
++          or as an addendum to the NOTICE text from the Work, provided
++          that such additional attribution notices cannot be construed
++          as modifying the License.
++
++      You may add Your own copyright statement to Your modifications and
++      may provide additional or different license terms and conditions
++      for use, reproduction, or distribution of Your modifications, or
++      for any such Derivative Works as a whole, provided Your use,
++      reproduction, and distribution of the Work otherwise complies with
++      the conditions stated in this License.
++
++   5. Submission of Contributions. Unless You explicitly state otherwise,
++      any Contribution intentionally submitted for inclusion in the Work
++      by You to the Licensor shall be under the terms and conditions of
++      this License, without any additional terms or conditions.
++      Notwithstanding the above, nothing herein shall supersede or modify
++      the terms of any separate license agreement you may have executed
++      with Licensor regarding such Contributions.
++
++   6. Trademarks. This License does not grant permission to use the trade
++      names, trademarks, service marks, or product names of the Licensor,
++      except as required for reasonable and customary use in describing the
++      origin of the Work and reproducing the content of the NOTICE file.
++
++   7. Disclaimer of Warranty. Unless required by applicable law or
++      agreed to in writing, Licensor provides the Work (and each
++      Contributor provides its Contributions) on an "AS IS" BASIS,
++      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
++      implied, including, without limitation, any warranties or conditions
++      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
++      PARTICULAR PURPOSE. You are solely responsible for determining the
++      appropriateness of using or redistributing the Work and assume any
++      risks associated with Your exercise of permissions under this License.
++
++   8. Limitation of Liability. In no event and under no legal theory,
++      whether in tort (including negligence), contract, or otherwise,
++      unless required by applicable law (such as deliberate and grossly
++      negligent acts) or agreed to in writing, shall any Contributor be
++      liable to You for damages, including any direct, indirect, special,
++      incidental, or consequential damages of any character arising as a
++      result of this License or out of the use or inability to use the
++      Work (including but not limited to damages for loss of goodwill,
++      work stoppage, computer failure or malfunction, or any and all
++      other commercial damages or losses), even if such Contributor
++      has been advised of the possibility of such damages.
++
++   9. Accepting Warranty or Additional Liability. While redistributing
++      the Work or Derivative Works thereof, You may choose to offer,
++      and charge a fee for, acceptance of support, warranty, indemnity,
++      or other liability obligations and/or rights consistent with this
++      License. However, in accepting such obligations, You may act only
++      on Your own behalf and on Your sole responsibility, not on behalf
++      of any other Contributor, and only if You agree to indemnify,
++      defend, and hold each Contributor harmless for any liability
++      incurred by, or claims asserted against, such Contributor by reason
++      of your accepting any such warranty or additional liability.
++
++   END OF TERMS AND CONDITIONS
++
++   APPENDIX: How to apply the Apache License to your work.
++
++      To apply the Apache License to your work, attach the following
++      boilerplate notice, with the fields enclosed by brackets "[]"
++      replaced with your own identifying information. (Don't include
++      the brackets!)  The text should be enclosed in the appropriate
++      comment syntax for the file format. We also recommend that a
++      file or class name and description of purpose be included on the
++      same "printed page" as the copyright notice for easier
++      identification within third-party archives.
++
++   Copyright [yyyy] [name of copyright owner]
++
++   Licensed under the Apache License, Version 2.0 (the "License");
++   you may not use this file except in compliance with the License.
++   You may obtain a copy of the License at
++
++       http://www.apache.org/licenses/LICENSE-2.0
++
++   Unless required by applicable law or agreed to in writing, software
++   distributed under the License is distributed on an "AS IS" BASIS,
++   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++   See the License for the specific language governing permissions and
++   limitations under the License.
++```
+diff --git a/bin/init.mjs b/bin/init.mjs
+index c831bec..714fac4 100644
+--- a/bin/init.mjs
++++ b/bin/init.mjs
+@@ -6,6 +6,7 @@
+  *   npx @dooph-software/design-system init-skills
+  *   -- or --
+  *   node node_modules/@dooph-software/design-system/bin/init.mjs
++ *   npx @dooph-software/design-system init-skills --yes   (no prompts: install into every directory)
+  *
+  * What it does:
+  *   1. Asks which agent skill directories to populate
+@@ -37,9 +38,36 @@ const cyan = (s) => (NO_COLOR ? s : `\x1b[36m${s}\x1b[0m`);
+ const yellow = (s) => (NO_COLOR ? s : `\x1b[33m${s}\x1b[0m`);
+ 
+ // ── Readline prompt ───────────────────────────────────────────────────────────
++// Answers are queued from 'line' events (piped input can arrive before the next
++// prompt is asked) and every pending prompt settles on 'close', so a run with
++// no terminal never exits mid-prompt with nothing copied. EOF = the default.
++const ASSUME_YES = process.argv.slice(2).some((a) => a === "--yes" || a === "-y");
+ const rl = createInterface({ input: process.stdin, output: process.stdout });
+-const ask = (q) =>
+-  new Promise((res) => rl.question(q, (ans) => res(ans.trim())));
++const queued = [];
++const waiting = [];
++let stdinClosed = false;
++rl.on("line", (line) => {
++  const next = waiting.shift();
++  if (next) next(line.trim());
++  else queued.push(line.trim());
++});
++rl.on("close", () => {
++  stdinClosed = true;
++  while (waiting.length) waiting.shift()("");
++});
++const ask = (q) => {
++  process.stdout.write(q);
++  if (ASSUME_YES) {
++    process.stdout.write("y (--yes)\n");
++    return Promise.resolve("y");
++  }
++  if (queued.length) return Promise.resolve(queued.shift());
++  if (stdinClosed) {
++    process.stdout.write(dim("(no input — using the default)") + "\n");
++    return Promise.resolve("");
++  }
++  return new Promise((res) => waiting.push(res));
++};
+ 
+ /**
+  * Skill destination directories.
+diff --git a/package.json b/package.json
+index 0894de3..8b0506a 100644
+--- a/package.json
++++ b/package.json
+@@ -34,8 +34,16 @@
+   ],
+   "files": [
+     "dist",
++    "!dist/components/**/*.js",
++    "!dist/components/**/*.cjs",
++    "!dist/components/**/*.map",
++    "!dist/utils/**/*.js",
++    "!dist/utils/**/*.cjs",
++    "!dist/utils/**/*.map",
++    "!dist/**/*.cjs.map",
+     "skills",
+-    "bin"
++    "bin",
++    "THIRD_PARTY_NOTICES.md"
+   ],
+   "scripts": {
+     "generate-icon-exports": "node scripts/generate-icon-exports.mjs",
+@@ -45,10 +53,9 @@
+     "prep-release:minor": "npm version minor && npm run build && git push --follow-tags",
+     "sync-tokens": "node scripts/sync-theme.mjs",
+     "build:js": "node --max-old-space-size=8192 node_modules/tsup/dist/cli-default.js",
+-    "build:css": "tailwindcss -i src/styles/index.css -o dist/styles.css && npm run copy-theme",
+-    "copy-theme": "node scripts/copy-theme.mjs",
++    "build:css": "node scripts/emit-css.mjs",
+     "build": "npm run generate-icon-exports && npm run generate-shape-morph-ease && npm run sync-tokens && npm run build:js",
+-    "build:watch": "tsup --watch",
++    "build:watch": "npm run generate-icon-exports && npm run generate-shape-morph-ease && npm run sync-tokens && node --max-old-space-size=8192 node_modules/tsup/dist/cli-default.js --watch",
+     "storybook": "storybook dev -p 6006",
+     "build-storybook": "storybook build",
+     "lint": "tsc --noEmit",
+diff --git a/scripts/add-use-client.mjs b/scripts/add-use-client.mjs
+index 179cf34..dd6c4b2 100644
+--- a/scripts/add-use-client.mjs
++++ b/scripts/add-use-client.mjs
+@@ -15,7 +15,8 @@
+ //    which map every output chunk to the exact input modules bundled into it.
+ // 3. Any output whose inputs include a client source gets the directive prepended
+ //    as its very first line (before imports/requires). Pure modules (cn, types,
+-//    icons, BaseText, Shapes) never match, so they stay server-safe.
++//    icons, BaseText, Shapes) never match, so they stay server-safe. The paired
++//    `.map` is shifted down one generated line so stack traces stay aligned.
+ 
+ import {
+   existsSync,
+@@ -135,6 +136,14 @@ function run() {
+       const contents = readFileSync(full, 'utf8');
+       if (alreadyStamped(contents)) continue;
+       writeFileSync(full, `"${DIRECTIVE}";\n${contents}`);
++      // The directive adds one line at the top; shift the paired source map by one
++      // generated line (a leading ';' in `mappings`) so stack traces stay aligned.
++      const mapPath = `${full}.map`;
++      if (existsSync(mapPath)) {
++        const map = JSON.parse(readFileSync(mapPath, 'utf8'));
++        map.mappings = `;${map.mappings}`;
++        writeFileSync(mapPath, JSON.stringify(map));
++      }
+       stamped.add(toPosix(outPath));
+     }
+   }
+diff --git a/scripts/copy-theme.mjs b/scripts/copy-theme.mjs
+deleted file mode 100644
+index f5ee1b1..0000000
+--- a/scripts/copy-theme.mjs
++++ /dev/null
+@@ -1,24 +0,0 @@
+-/**
+- * copy-theme.mjs
+- *
+- * Copies the generated Tailwind preset (src/styles/theme.css) into dist/ so it
+- * can be published and imported by consumers as
+- * `@dooph-software/design-system/theme.css`.
+- *
+- * Unlike styles.css, theme.css is NOT compiled by Tailwind here — it ships as
+- * raw `@theme inline { … }` source that the CONSUMER's own Tailwind build reads.
+- * So this is a plain file copy, not a build step.
+- */
+-
+-import { copyFileSync, mkdirSync } from "fs";
+-import { dirname, resolve } from "path";
+-import { fileURLToPath } from "url";
+-
+-const __dirname = dirname(fileURLToPath(import.meta.url));
+-const SRC = resolve(__dirname, "../src/styles/theme.css");
+-const DIST_DIR = resolve(__dirname, "../dist");
+-const DEST = resolve(DIST_DIR, "theme.css");
+-
+-mkdirSync(DIST_DIR, { recursive: true });
+-copyFileSync(SRC, DEST);
+-console.log("✓  dist/theme.css copied.");
+diff --git a/scripts/emit-css.mjs b/scripts/emit-css.mjs
+new file mode 100644
+index 0000000..01dc237
+--- /dev/null
++++ b/scripts/emit-css.mjs
+@@ -0,0 +1,21 @@
++/**
++ * emit-css.mjs — the one CSS emit step. Called by tsup's onSuccess (every build)
++ * and by `npm run build:css` (CSS-only iterations), so both produce the same files.
++ *
++ * 1. Compiles src/styles/index.css with the Tailwind CLI → dist/styles.css.
++ * 2. Copies the generated preset src/styles/theme.css → dist/theme.css. It ships as
++ *    raw `@theme inline` source that the CONSUMER's Tailwind compiles, so it is copied,
++ *    not compiled. Kept in sync with index.css by scripts/sync-theme.mjs.
++ */
++import { execSync } from "child_process";
++import { copyFileSync, mkdirSync } from "fs";
++import { dirname, resolve } from "path";
++import { fileURLToPath } from "url";
++
++const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
++const DIST_DIR = resolve(ROOT, "dist");
++
++mkdirSync(DIST_DIR, { recursive: true });
++execSync("npx tailwindcss -i src/styles/index.css -o dist/styles.css", { stdio: "inherit", cwd: ROOT });
++copyFileSync(resolve(ROOT, "src/styles/theme.css"), resolve(DIST_DIR, "theme.css"));
++console.log("✓  dist/styles.css compiled, dist/theme.css copied.");
+diff --git a/scripts/generate-icon-exports.mjs b/scripts/generate-icon-exports.mjs
+index 7c12394..6a439c7 100644
+--- a/scripts/generate-icon-exports.mjs
++++ b/scripts/generate-icon-exports.mjs
+@@ -36,7 +36,7 @@ if (invalidIcons.length > 0) {
+ }
+ 
+ const contents = `${[
+-  '// This file is generated by scripts/generate-icon-exports.mjs.',
++  '// AUTO-GENERATED by scripts/generate-icon-exports.mjs. Do not edit by hand.',
+   '// Run `npm run generate-icon-exports` after adding or removing icon files.',
+   'export { BaseIcon, IconSizes as IconSize } from "./BaseIcon";',
+   'export type { IconProps } from "./BaseIcon";',
+diff --git a/scripts/sync-theme.mjs b/scripts/sync-theme.mjs
+index cc05b29..83439f0 100644
+--- a/scripts/sync-theme.mjs
++++ b/scripts/sync-theme.mjs
+@@ -112,6 +112,33 @@ const EXCLUDED = new Set([
+   // Checkbox / code digit — exposed via custom @layer utilities
+   "ui-size-checkbox",
+   "ui-size-code-digit",
++  // Component sizes — exposed via custom @layer utilities (.size-avatar,
++  // .h-menu-label …) or ds-* helpers, never a Tailwind theme key
++  "ui-size-checkbox-icon",
++  "ui-size-avatar",
++  "ui-size-avatar-sm",
++  "ui-size-shape-button",
++  "ui-size-kbd",
++  "ui-height-menu-label",
++  "ui-height-text-trigger",
++  "ui-height-linear-progress",
++  // OutlineButton box + glow orbs — raw var() inside the ds-* helpers only
++  "ui-height-outline-button",
++  "ui-min-w-outline-button",
++  "ui-outline-button-orb-1-opacity",
++  "ui-outline-button-orb-2-opacity",
++  "ui-outline-button-orb-1-blur",
++  "ui-outline-button-orb-2-blur",
++  "ui-outline-button-orb-1-hover-blur",
++  "ui-outline-button-orb-2-hover-blur",
++  "ui-outline-button-orb-1-width",
++  "ui-outline-button-orb-1-height",
++  "ui-outline-button-orb-2-width",
++  "ui-outline-button-orb-2-height",
++  "ui-outline-button-orb-1-bottom",
++  "ui-outline-button-orb-1-left",
++  "ui-outline-button-orb-2-bottom",
++  "ui-outline-button-orb-2-right",
+   // Motion scale — raw var() inside the ds-motion-* helpers and CSS helpers
+   // only. Never a Tailwind theme key: components must not reach the scale
+   // through duration-N / ease-* utilities.
+diff --git a/src/components/AnimatedText/ChangeSwapShell.tsx b/src/components/AnimatedText/ChangeSwapShell.tsx
+new file mode 100644
+index 0000000..06f9d25
+--- /dev/null
++++ b/src/components/AnimatedText/ChangeSwapShell.tsx
+@@ -0,0 +1,99 @@
++/*
++ * ChangeSwapShell — the internal render shell behind RollChangeText and
++ * FadeChangeText: one grid cell holding the keyed, aria-hidden exiting copy and
++ * the entering copy, wired to `useChangeSwap`. Not re-exported from the folder
++ * index; each wrapper passes only its out/in class pair.
++ *
++ * ## behavior
++ * - Renders an `inline-grid overflow-hidden` root carrying `--ds-roll-dir`
++ *   (`-1` for `up`, `1` for `down`, the default) ahead of the consumer's
++ *   `style`, and the consumer's `className` last.
++ * - While a change is in flight the outgoing copy sits in the same grid cell,
++ *   `aria-hidden`, with `outClassName`; the incoming copy carries `inClassName`
++ *   only until its own animation ends.
++ *
++ * ## constraints
++ * - Keep both `key`s and both `onAnimationEnd`s exactly as wired: they are how
++ *   `useChangeSwap` restarts and retires each half (see its constraints). Do not
++ *   merge the two spans' handlers or drop either key.
++ * - The entering span's `onAnimationEnd` is not optional: it drops the in-class
++ *   once the animation lands, so `will-change` does not strand a compositor
++ *   layer on every settled node.
++ * - The shell owns structure only. It holds no class that animates and no
++ *   duration; each wrapper's look (classes, keyframes, motion-scale timing)
++ *   stays in that wrapper and index.css. Two wrappers once copied this shell
++ *   line for line and drifted; do not re-inline it into either.
++ */
++"use client";
++import {
++  forwardRef,
++  type CSSProperties,
++  type HTMLAttributes,
++  type ReactNode,
++} from "react";
++import { cn } from "../../utils/cn";
++import { RollDirection } from "./constants";
++import { useChangeSwap } from "./useChangeSwap";
++
++export interface ChangeSwapShellProps extends HTMLAttributes<HTMLSpanElement> {
++  changeKey?: string | number;
++  direction?: RollDirection;
++  children: ReactNode;
++  /** The wrapper's exit animation class (on the outgoing copy). */
++  outClassName: string;
++  /** The wrapper's entry animation class (on the incoming copy while it animates). */
++  inClassName: string;
++}
++
++export const ChangeSwapShell = forwardRef<HTMLSpanElement, ChangeSwapShellProps>(
++  (
++    {
++      changeKey,
++      children,
++      className,
++      direction = RollDirection.down,
++      style,
++      outClassName,
++      inClassName,
++      ...props
++    },
++    ref,
++  ) => {
++    const { exiting, entering } = useChangeSwap(changeKey, children);
++
++    return (
++      <span
++        ref={ref}
++        className={cn("inline-grid overflow-hidden", className)}
++        style={
++          {
++            "--ds-roll-dir": direction === RollDirection.up ? -1 : 1,
++            ...style,
++          } as CSSProperties
++        }
++        {...props}
++      >
++        {exiting != null && (
++          <span
++            key={exiting.key}
++            aria-hidden
++            className={cn("[grid-area:1/1]", outClassName)}
++            onAnimationEnd={exiting.onAnimationEnd}
++          >
++            {exiting.node}
++          </span>
++        )}
++        <span
++          key={entering.key}
++          className={cn("[grid-area:1/1]", entering.animating && inClassName)}
++          /* Drops the in-class once the animation lands, so `will-change` does
++           * not strand a compositor layer on every settled node. */
++          onAnimationEnd={entering.onAnimationEnd}
++        >
++          {children}
++        </span>
++      </span>
++    );
++  },
++);
++ChangeSwapShell.displayName = "ChangeSwapShell";
+diff --git a/src/components/AnimatedText/FadeChangeText.tsx b/src/components/AnimatedText/FadeChangeText.tsx
+index f158fb8..8305346 100644
+--- a/src/components/AnimatedText/FadeChangeText.tsx
++++ b/src/components/AnimatedText/FadeChangeText.tsx
+@@ -11,7 +11,8 @@
+  *
+  * ## constraints
+  * - The swap engine lives in `useChangeSwap`, shared with RollChangeText. Do
+- *   not re-inline it here; this file owns only the look.
++ *   not re-inline it here; the render shell lives in `ChangeSwapShell`; this
++ *   file owns only the look: its class pair.
+  * - No blur, ever. `ds-fade-change-*` animate transform and opacity only, and
+  *   `will-change` is scoped to those two — a crisp, sharp-edged roll is the
+  *   whole reason this exists beside RollChangeText. Anyone wanting blur uses
+@@ -27,16 +28,9 @@
+  *   `.ds-fade-change-*` in index.css; reduced motion is the scale's global
+  *   collapse in tokens.css.
+  */
+-"use client";
+-import {
+-  forwardRef,
+-  type CSSProperties,
+-  type HTMLAttributes,
+-  type ReactNode,
+-} from "react";
+-import { cn } from "../../utils/cn";
++import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
++import { ChangeSwapShell } from "./ChangeSwapShell";
+ import { RollDirection } from "./constants";
+-import { useChangeSwap } from "./useChangeSwap";
+ 
+ export interface FadeChangeTextProps extends HTMLAttributes<HTMLSpanElement> {
+   /** Marks a content change. Defaults to children when children is a string/number. */
+@@ -50,54 +44,14 @@ export interface FadeChangeTextProps extends HTMLAttributes<HTMLSpanElement> {
+  * <FadeChangeText changeKey={status}><LabelText>{status}</LabelText></FadeChangeText>
+  */
+ const FadeChangeText = forwardRef<HTMLSpanElement, FadeChangeTextProps>(
+-  (
+-    {
+-      changeKey,
+-      children,
+-      className,
+-      direction = RollDirection.down,
+-      style,
+-      ...props
+-    },
+-    ref,
+-  ) => {
+-    const { exiting, entering } = useChangeSwap(changeKey, children);
+-
+-    return (
+-      <span
+-        ref={ref}
+-        className={cn("inline-grid overflow-hidden", className)}
+-        style={
+-          {
+-            "--ds-roll-dir": direction === RollDirection.up ? -1 : 1,
+-            ...style,
+-          } as CSSProperties
+-        }
+-        {...props}
+-      >
+-        {exiting != null && (
+-          <span
+-            key={exiting.key}
+-            aria-hidden
+-            className="[grid-area:1/1] ds-fade-change-out"
+-            onAnimationEnd={exiting.onAnimationEnd}
+-          >
+-            {exiting.node}
+-          </span>
+-        )}
+-        <span
+-          key={entering.key}
+-          className={cn(
+-            "[grid-area:1/1]",
+-            entering.animating && "ds-fade-change-in",
+-          )}
+-          onAnimationEnd={entering.onAnimationEnd}
+-        >
+-          {children}
+-        </span>
+-      </span>
+-    );
+-  },
++  (props, ref) => (
++    <ChangeSwapShell
++      ref={ref}
++      {...props}
++      outClassName="ds-fade-change-out"
++      inClassName="ds-fade-change-in"
++    />
++  ),
+ );
+ FadeChangeText.displayName = "FadeChangeText";
+ export { FadeChangeText };
+diff --git a/src/components/AnimatedText/RollChangeText.tsx b/src/components/AnimatedText/RollChangeText.tsx
+index dd203e7..414b6ca 100644
+--- a/src/components/AnimatedText/RollChangeText.tsx
++++ b/src/components/AnimatedText/RollChangeText.tsx
+@@ -15,23 +15,18 @@
+  * - The swap engine lives in `useChangeSwap` and is shared with
+  *   FadeChangeText. Do not re-inline it here: its render-phase reconcile, keyed
+  *   exit and independent in/out retirement each fixed a shipped bug, and two
+- *   copies drift. This file owns only the roll's look.
++ *   copies drift. The render shell (grid cell, keyed exit, entry span) lives
++ *   in `ChangeSwapShell` for the same reason. This file owns only the roll's
++ *   look: its class pair.
+  * - Nothing here may hold a duration. Timing and easing come from the motion
+  *   scale (`--ui-motion-*`), depth and blur from `--ui-roll-change-*`, all read
+  *   by `.ds-roll-change-*` in index.css; reduced motion is the scale's global
+  *   collapse in tokens.css. Out (`base`) is deliberately shorter than in
+  *   (`slow`), which is why the two halves retire independently.
+  */
+-"use client";
+-import {
+-  forwardRef,
+-  type CSSProperties,
+-  type HTMLAttributes,
+-  type ReactNode,
+-} from "react";
+-import { cn } from "../../utils/cn";
++import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
++import { ChangeSwapShell } from "./ChangeSwapShell";
+ import { RollDirection } from "./constants";
+-import { useChangeSwap } from "./useChangeSwap";
+ 
+ export interface RollChangeTextProps extends HTMLAttributes<HTMLSpanElement> {
+   /** Marks a content change. Defaults to children when children is a string/number. */
+@@ -45,56 +40,14 @@ export interface RollChangeTextProps extends HTMLAttributes<HTMLSpanElement> {
+  * <RollChangeText changeKey={model.id}><BodyText>{model.name}</BodyText></RollChangeText>
+  */
+ const RollChangeText = forwardRef<HTMLSpanElement, RollChangeTextProps>(
+-  (
+-    {
+-      changeKey,
+-      children,
+-      className,
+-      direction = RollDirection.down,
+-      style,
+-      ...props
+-    },
+-    ref,
+-  ) => {
+-    const { exiting, entering } = useChangeSwap(changeKey, children);
+-
+-    return (
+-      <span
+-        ref={ref}
+-        className={cn("inline-grid overflow-hidden", className)}
+-        style={
+-          {
+-            "--ds-roll-dir": direction === RollDirection.up ? -1 : 1,
+-            ...style,
+-          } as CSSProperties
+-        }
+-        {...props}
+-      >
+-        {exiting != null && (
+-          <span
+-            key={exiting.key}
+-            aria-hidden
+-            className="[grid-area:1/1] ds-roll-change-out"
+-            onAnimationEnd={exiting.onAnimationEnd}
+-          >
+-            {exiting.node}
+-          </span>
+-        )}
+-        <span
+-          key={entering.key}
+-          className={cn(
+-            "[grid-area:1/1]",
+-            entering.animating && "ds-roll-change-in",
+-          )}
+-          /* Drops the class once the roll lands, so `will-change` does not
+-           * strand a compositor layer on every settled node. */
+-          onAnimationEnd={entering.onAnimationEnd}
+-        >
+-          {children}
+-        </span>
+-      </span>
+-    );
+-  },
++  (props, ref) => (
++    <ChangeSwapShell
++      ref={ref}
++      {...props}
++      outClassName="ds-roll-change-out"
++      inClassName="ds-roll-change-in"
++    />
++  ),
+ );
+ RollChangeText.displayName = "RollChangeText";
+ export { RollChangeText };
+diff --git a/src/components/AnimatedText/RollHoverText.tsx b/src/components/AnimatedText/RollHoverText.tsx
+index 98a8ee6..1c9d5e6 100644
+--- a/src/components/AnimatedText/RollHoverText.tsx
++++ b/src/components/AnimatedText/RollHoverText.tsx
+@@ -48,7 +48,6 @@ const RollHoverText = forwardRef<HTMLSpanElement, RollHoverTextProps>(
+     return (
+       <span
+         ref={ref}
+-        aria-label={children}
+         data-active={active ? "true" : undefined}
+         className={cn("ds-roll-hover", className)}
+         style={
+@@ -59,6 +58,10 @@ const RollHoverText = forwardRef<HTMLSpanElement, RollHoverTextProps>(
+         }
+         {...props}
+       >
++        {/* Every glyph below renders twice and is aria-hidden, so the readable
++         * text is this copy — a name on the role-less root would be dropped by
++         * screen readers in reading mode. Same pattern as RollingDigitsText. */}
++        <span className="sr-only">{children}</span>
+         {children.split(/(\s+)/).map((segment, segmentIndex) => {
+           if (segment === "") return null;
+           if (/^\s+$/.test(segment)) {
+diff --git a/src/components/AnimatedText/useChangeSwap.ts b/src/components/AnimatedText/useChangeSwap.ts
+index 95c3883..0ffb6ee 100644
+--- a/src/components/AnimatedText/useChangeSwap.ts
++++ b/src/components/AnimatedText/useChangeSwap.ts
+@@ -10,8 +10,8 @@
+  *   `changeKey` never animate.
+  * - Returns `exiting` (the outgoing node + its key + `onAnimationEnd`, or null)
+  *   and `entering` (the incoming node's key, whether it is animating, and its
+- *   `onAnimationEnd`). The wrapper renders both in one grid cell and spreads
+- *   these onto its two spans.
++ *   `onAnimationEnd`). `ChangeSwapShell` renders both in one grid cell and
++ *   spreads these onto its two spans; the wrappers pass only their class pair.
+  *
+  * ## constraints
+  * - This file holds no duration, no timer, no `requestAnimationFrame` and no
+diff --git a/src/components/Avatar/Avatar.tsx b/src/components/Avatar/Avatar.tsx
+index 54449e2..16375fd 100644
+--- a/src/components/Avatar/Avatar.tsx
++++ b/src/components/Avatar/Avatar.tsx
+@@ -20,8 +20,8 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
+           "inline-flex shrink-0 items-center justify-center",
+           "bg-surface-secondary border border-solid border-border-secondary",
+           "text-prominent-color *:size-full *:object-contain",
+-          size === AvatarSize.standard && "size-[38px] rounded-avatar p-sm",
+-          size === AvatarSize.sm && "size-[22px] rounded-avatar-sm p-xxs",
++          size === AvatarSize.standard && "size-avatar rounded-avatar p-sm",
++          size === AvatarSize.sm && "size-avatar-sm rounded-avatar-sm p-xxs",
+           className,
+         )}
+         {...props}
+diff --git a/src/components/Button/Button.tsx b/src/components/Button/Button.tsx
+index 71abb55..6ed92db 100644
+--- a/src/components/Button/Button.tsx
++++ b/src/components/Button/Button.tsx
+@@ -47,7 +47,7 @@ import { cn } from "../../utils/cn";
+ 
+ const buttonVariants = cva(
+   [
+-    "inline-flex items-center justify-center gap-2 whitespace-nowrap",
++    "inline-flex items-center justify-center gap-sm whitespace-nowrap",
+     "border border-solid",
+     "ds-motion-state cursor-pointer select-none",
+     "ds-focus-visible-ring",
+@@ -99,8 +99,8 @@ const buttonVariants = cva(
+         big: "h-button-big ds-px-button-big rounded-full text-style-hero-button",
+         medium:
+           "h-button-medium ds-px-button-medium rounded-full text-style-hero-button",
+-        standard: "h-button px-3 rounded-tight",
+-        sm: "h-button-sm px-3 rounded-tight",
++        standard: "h-button px-md rounded-tight",
++        sm: "h-button-sm px-md rounded-tight",
+         icon: "size-button p-0 rounded-tight",
+         "icon-sm": "size-button-sm p-0 rounded-tight",
+         "icon-micro": "size-button-micro p-0 rounded-tight",
+diff --git a/src/components/Calendar/Calendar.tsx b/src/components/Calendar/Calendar.tsx
+index 858f564..3741a57 100644
+--- a/src/components/Calendar/Calendar.tsx
++++ b/src/components/Calendar/Calendar.tsx
+@@ -1,15 +1,17 @@
+ "use client";
+ 
+ import {
++  forwardRef,
+   useCallback,
+   useEffect,
+   useRef,
+   useState,
++  type HTMLAttributes,
+   type KeyboardEvent,
+   type ReactNode,
+ } from "react";
+ import { cn } from "../../utils/cn";
+-import { CalendarCaption } from "./CalendarCaption";
++import { CalendarCaption, type CalendarLabels } from "./CalendarCaption";
+ import { CalendarGrid, type CalendarDayRenderProps } from "./CalendarGrid";
+ import { DatePickerMode, type DateRange } from "./constants";
+ import { clampMonthToYearBounds, isYearOutOfBounds } from "./dateFormat";
+@@ -29,7 +31,13 @@ import { previewRange, resolveRangeClick } from "./rangeSelection";
+ /** Give up rather than loop forever if every remaining day is disabled. */
+ const MAX_NAV_SCAN = 400;
+ 
+-type CalendarSharedProps = {
++// The div's native `onSelect`/`defaultValue` are omitted so they cannot collide
++// with the value props: a pre-v6 `onSelect` stays a type error instead of
++// silently becoming a DOM handler that never receives a date.
++type CalendarSharedProps = Omit<
++  HTMLAttributes<HTMLDivElement>,
++  "onSelect" | "defaultValue" | "children" | "className"
++> & {
+   /** Controlled displayed month; omit for uncontrolled navigation. */
+   month?: Date;
+   onMonthChange?: (month: Date) => void;
+@@ -39,6 +47,8 @@ type CalendarSharedProps = {
+   /** Slot the day's CONTENT. The button, handlers and ARIA stay with Calendar. */
+   renderDay?: (day: CalendarDayRenderProps) => ReactNode;
+   locale?: string;
++  /** Accessible names for the month arrows; pair with `locale`. */
++  labels?: CalendarLabels;
+   /** Injectable for deterministic stories and tests. */
+   today?: Date;
+   /** Composed content rendered as a left rail — e.g. CalendarPresetsPanel. */
+@@ -136,7 +146,10 @@ function warnOnOutOfBoundsMonth(
+   );
+ }
+ 
+-function CalendarView(props: CalendarProps) {
++const CalendarView = forwardRef<HTMLDivElement, CalendarProps>(function CalendarView(
++  props,
++  ref,
++) {
+   const {
+     mode,
+     month,
+@@ -145,9 +158,16 @@ function CalendarView(props: CalendarProps) {
+     yearBounds,
+     renderDay,
+     locale,
++    labels,
+     today: todayProp,
+     children,
+     className,
++    onKeyDown,
++    // Read through `props` below so the mode union still narrows them;
++    // named here only to keep them off the root <div>.
++    value: _value,
++    onValueChange: _onValueChange,
++    ...rest
+   } = props;
+ 
+   const today = startOfDay(todayProp ?? new Date());
+@@ -330,9 +350,14 @@ function CalendarView(props: CalendarProps) {
+ 
+   return (
+     <div
++      ref={ref}
++      {...rest}
+       data-mode={mode}
+       className={cn("flex items-stretch", className)}
+       onKeyDown={(event) => {
++        // Consumer first; a consumer preventDefault() opts out (Radix's rule).
++        onKeyDown?.(event);
++        if (event.defaultPrevented) return;
+         if (event.key === "Escape" && pendingAnchor) {
+           // Abandon the pending anchor; the committed value is untouched.
+           setPendingAnchor(null);
+@@ -349,6 +374,7 @@ function CalendarView(props: CalendarProps) {
+           yearBounds={yearBounds}
+           onMonthChange={changeMonth}
+           locale={locale}
++          labels={labels}
+         />
+         <CalendarGrid
+           viewMonth={viewMonth}
+@@ -370,17 +396,20 @@ function CalendarView(props: CalendarProps) {
+       </div>
+     </div>
+   );
+-}
++});
+ 
+ /**
+  * Validates before any hook or date maths runs, so the view's hooks are never
+  * skipped conditionally — an invalid value unmounts the view (its month and
+  * focus state reset when a valid value comes back).
+  */
+-function Calendar(props: CalendarProps) {
++const Calendar = forwardRef<HTMLDivElement, CalendarProps>(function Calendar(
++  props,
++  ref,
++) {
+   if (!hasValidValue(props)) return null;
+-  return <CalendarView {...props} />;
+-}
++  return <CalendarView {...props} ref={ref} />;
++});
+ 
+ Calendar.displayName = "Calendar";
+ 
+diff --git a/src/components/Calendar/CalendarCaption.tsx b/src/components/Calendar/CalendarCaption.tsx
+index a9768da..763cf4e 100644
+--- a/src/components/Calendar/CalendarCaption.tsx
++++ b/src/components/Calendar/CalendarCaption.tsx
+@@ -15,6 +15,12 @@ import { BodyText, ButtonText } from "../Text";
+ import { addMonths } from "./dateUtils";
+ import { buildYearOptions, formatMonthName, isYearOutOfBounds } from "./dateFormat";
+ 
++/** Accessible names for the caption's month arrows. English by default. */
++export type CalendarLabels = {
++  previousMonth?: string;
++  nextMonth?: string;
++};
++
+ export type CalendarCaptionProps = {
+   /** First day of the displayed month. */
+   viewMonth: Date;
+@@ -24,6 +30,8 @@ export type CalendarCaptionProps = {
+   yearBounds?: { from?: Date; to?: Date };
+   onMonthChange: (month: Date) => void;
+   locale?: string;
++  /** Accessible names for the month arrows; pair with `locale`. */
++  labels?: CalendarLabels;
+   className?: string;
+ };
+ 
+@@ -34,6 +42,7 @@ function CalendarCaption({
+   yearBounds,
+   onMonthChange,
+   locale,
++  labels,
+   className,
+ }: CalendarCaptionProps) {
+   const years = buildYearOptions(viewMonth, value, today, yearBounds);
+@@ -114,7 +123,7 @@ function CalendarCaption({
+         <Button
+           variant={ButtonVariant.ghost}
+           size={ButtonSize.iconSm}
+-          aria-label="Previous month"
++          aria-label={labels?.previousMonth ?? "Previous month"}
+           disabled={atFloor}
+           className="text-ghost-fg-active"
+           onClick={() => onMonthChange(addMonths(viewMonth, -1))}
+@@ -124,7 +133,7 @@ function CalendarCaption({
+         <Button
+           variant={ButtonVariant.ghost}
+           size={ButtonSize.iconSm}
+-          aria-label="Next month"
++          aria-label={labels?.nextMonth ?? "Next month"}
+           disabled={atCeiling}
+           className="text-ghost-fg-active"
+           onClick={() => onMonthChange(addMonths(viewMonth, 1))}
+diff --git a/src/components/Calendar/index.ts b/src/components/Calendar/index.ts
+index 7d4d586..6e51e7d 100644
+--- a/src/components/Calendar/index.ts
++++ b/src/components/Calendar/index.ts
+@@ -3,7 +3,7 @@ export type { CalendarProps } from "./Calendar";
+ export { CalendarGrid } from "./CalendarGrid";
+ export type { CalendarDayRenderProps, CalendarGridProps } from "./CalendarGrid";
+ export { CalendarCaption } from "./CalendarCaption";
+-export type { CalendarCaptionProps } from "./CalendarCaption";
++export type { CalendarCaptionProps, CalendarLabels } from "./CalendarCaption";
+ export { CalendarPresetItem, CalendarPresetsPanel } from "./CalendarPresetsPanel";
+ export type {
+   CalendarPresetItemProps,
+diff --git a/src/components/Checkbox/Checkbox.tsx b/src/components/Checkbox/Checkbox.tsx
+index aabe2f5..e9a544d 100644
+--- a/src/components/Checkbox/Checkbox.tsx
++++ b/src/components/Checkbox/Checkbox.tsx
+@@ -78,7 +78,7 @@ const CheckboxIndicator = forwardRef<
+ >(({ className, ...props }, ref) => (
+   <CheckboxPrimitive.Indicator
+     ref={ref}
+-    className={cn("flex size-2.5 items-center justify-center", className)}
++    className={cn("flex size-checkbox-icon items-center justify-center", className)}
+     {...props}
+   >
+     <svg
+@@ -87,7 +87,7 @@ const CheckboxIndicator = forwardRef<
+       viewBox="0 0 10 10"
+       fill="none"
+       aria-hidden
+-      className="hidden size-2.5 group-data-[state=checked]:block"
++      className="hidden size-checkbox-icon group-data-[state=checked]:block"
+     >
+       <path
+         d="M1.75 5.15L3.85 7.25L8.25 2.75"
+@@ -103,7 +103,7 @@ const CheckboxIndicator = forwardRef<
+       viewBox="0 0 10 10"
+       fill="none"
+       aria-hidden
+-      className="hidden size-2.5 group-data-[state=indeterminate]:block"
++      className="hidden size-checkbox-icon group-data-[state=indeterminate]:block"
+     >
+       <path
+         d="M2.25 5H7.75"
+diff --git a/src/components/DatePicker/DatePicker.tsx b/src/components/DatePicker/DatePicker.tsx
+index 29915ca..8ee3478 100644
+--- a/src/components/DatePicker/DatePicker.tsx
++++ b/src/components/DatePicker/DatePicker.tsx
+@@ -1,17 +1,22 @@
+ "use client";
+ 
+-import { useState, type ReactNode } from "react";
++import { useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
++import { cn } from "../../utils/cn";
+ import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
+ import {
+   Calendar,
+   DatePickerMode,
+   type CalendarDayRenderProps,
++  type CalendarLabels,
+   type DateMatcher,
+   type DateRange,
+ } from "../Calendar";
+ import { DatePickerSplitTrigger } from "./DatePickerSplitTrigger";
+ import { DatePickerTrigger } from "./DatePickerTrigger";
+ 
++/** The picker is the one owner of these trigger props. */
++type DatePickerTriggerOwnedProps = "mode" | "value" | "disabled" | "today" | "locale";
++
+ type DatePickerSharedProps = {
+   open?: boolean;
+   onOpenChange?: (open: boolean) => void;
+@@ -20,6 +25,8 @@ type DatePickerSharedProps = {
+   triggerDisabled?: boolean;
+   today?: Date;
+   locale?: string;
++  /** Accessible names for the calendar's month arrows; pair with `locale`. */
++  labels?: CalendarLabels;
+   /** Bounds for the calendar's own navigation and its year dropdown. */
+   yearBounds?: { from?: Date; to?: Date };
+   /** Slot the day's CONTENT. The button, handlers and ARIA stay with Calendar. */
+@@ -30,6 +37,14 @@ type DatePickerSharedProps = {
+   /** Panel content composed alongside the calendar — e.g. CalendarPresetsPanel. */
+   children?: ReactNode;
+   className?: string;
++  /** Props for the trigger button — `id` (for `<label htmlFor>`), `aria-*`,
++   *  handlers, `className`. The picker owns mode/value/disabled/today/locale. */
++  triggerProps?: Omit<
++    ComponentPropsWithoutRef<typeof DatePickerTrigger>,
++    DatePickerTriggerOwnedProps
++  >;
++  /** Props for the popover panel — `align`, `side`, `sideOffset`, `aria-*`, `className`. */
++  contentProps?: ComponentPropsWithoutRef<typeof PopoverContent>;
+ };
+ 
+ export type DatePickerProps = DatePickerSharedProps &
+@@ -58,12 +73,15 @@ function DatePicker(props: DatePickerProps) {
+     triggerDisabled,
+     today,
+     locale,
++    labels,
+     yearBounds,
+     renderDay,
+     month,
+     onMonthChange,
+     children,
+     className,
++    triggerProps,
++    contentProps,
+     mode,
+   } = props;
+ 
+@@ -94,11 +112,14 @@ function DatePicker(props: DatePickerProps) {
+           trigger={
+             <PopoverTrigger asChild>
+               <DatePickerTrigger
++                {...triggerProps}
+                 mode={DatePickerMode.dateRange}
+                 value={props.value}
+                 disabled={triggerDisabled}
+                 today={today}
+                 locale={locale}
++                // The picker's `className` goes on the split container above.
++                className={triggerProps?.className}
+               />
+             </PopoverTrigger>
+           }
+@@ -107,27 +128,29 @@ function DatePicker(props: DatePickerProps) {
+         <PopoverTrigger asChild>
+           {mode === DatePickerMode.singleDay ? (
+             <DatePickerTrigger
++              {...triggerProps}
+               mode={DatePickerMode.singleDay}
+               value={props.value}
+               disabled={triggerDisabled}
+               today={today}
+               locale={locale}
+-              className={className}
++              className={cn(className, triggerProps?.className)}
+             />
+           ) : (
+             <DatePickerTrigger
++              {...triggerProps}
+               mode={DatePickerMode.dateRange}
+               value={props.value}
+               disabled={triggerDisabled}
+               today={today}
+               locale={locale}
+-              className={className}
++              className={cn(className, triggerProps?.className)}
+             />
+           )}
+         </PopoverTrigger>
+       )}
+ 
+-      <PopoverContent>
++      <PopoverContent {...contentProps}>
+         {mode === DatePickerMode.singleDay ? (
+           <Calendar
+             mode={DatePickerMode.singleDay}
+@@ -136,6 +159,7 @@ function DatePicker(props: DatePickerProps) {
+             disabled={disabled}
+             today={today}
+             locale={locale}
++            labels={labels}
+             yearBounds={yearBounds}
+             renderDay={renderDay}
+             month={month}
+@@ -151,6 +175,7 @@ function DatePicker(props: DatePickerProps) {
+             disabled={disabled}
+             today={today}
+             locale={locale}
++            labels={labels}
+             yearBounds={yearBounds}
+             renderDay={renderDay}
+             month={month}
+diff --git a/src/components/DropdownCaret/DropdownCaret.tsx b/src/components/DropdownCaret/DropdownCaret.tsx
+index 3cb9aeb..070a075 100644
+--- a/src/components/DropdownCaret/DropdownCaret.tsx
++++ b/src/components/DropdownCaret/DropdownCaret.tsx
+@@ -24,19 +24,19 @@
+  * - No state props and no listeners (Rule 7): hosts drive it through CSS only
+  *   — a listener on the host breaks when the host is a consumer's custom trigger.
+  */
+-import type { ComponentType } from "react";
+ import { cn } from "../../utils/cn";
+ import { ChevronDownIcon, IconSize } from "../Icons";
+ import { MorphRotationShape, MorphRotationShapeMode } from "../MorphRotationShape";
+-import { CloverShape, PixircleShape, PuffShape, SquircleShape } from "../Shapes";
+-import type { ShapeProps } from "../Shapes/BaseShape";
++import { Shapes } from "../Shapes";
+ import { DropdownCaretVariant } from "./constants";
+ 
+-/** [closed, open] per variant. Module-level so the array identity is stable. */
++/** [closed, open] per variant, as `Shapes` keys so this neutral module hands the
++ * client MorphRotationShape only serialisable props. Module-level so the array
++ * identity is stable. */
+ const CARET_SHAPES = {
+-  dropdown: [SquircleShape, PixircleShape],
+-  typeable: [CloverShape, PuffShape],
+-} satisfies Record<DropdownCaretVariant, ComponentType<ShapeProps>[]>;
++  dropdown: [Shapes.squircle, Shapes.pixircle],
++  typeable: [Shapes.clover, Shapes.puff],
++} satisfies Record<DropdownCaretVariant, Shapes[]>;
+ 
+ export interface DropdownCaretProps {
+   variant?: DropdownCaretVariant;
+diff --git a/src/components/DropdownTrigger/DropdownTrigger.tsx b/src/components/DropdownTrigger/DropdownTrigger.tsx
+index 8e64802..dc8756e 100644
+--- a/src/components/DropdownTrigger/DropdownTrigger.tsx
++++ b/src/components/DropdownTrigger/DropdownTrigger.tsx
+@@ -56,7 +56,7 @@ const DropdownTriggerBase = forwardRef<
+       ref={ref as ForwardedRef<HTMLElement>}
+       className={cn(
+         "inline-flex h-button items-center justify-center ds-gap-ui-sm",
+-        "min-w-40 rounded-tight border border-solid border-border-primary",
++        "min-w-menu rounded-tight border border-solid border-border-primary",
+         "bg-secondary text-secondary-fg",
+         "ds-dropdown-caret-host ds-pl-ui-md",
+         "text-style-button cursor-pointer select-none",
+@@ -197,7 +197,7 @@ const TypeableDropdownTrigger = forwardRef<
+         ref={ref}
+         className={cn(
+           "inline-flex h-button items-center ds-gap-ui-sm",
+-          "min-w-40 rounded-tight border border-solid border-border-primary",
++          "min-w-menu rounded-tight border border-solid border-border-primary",
+           "bg-secondary ds-dropdown-caret-host ds-pl-ui-md",
+           "ds-motion-state",
+           disabled
+@@ -328,7 +328,7 @@ const TextDropdownTriggerBase = forwardRef<
+           "ds-focus-visible-ring",
+           "ds-disabled-state",
+           size === TextDropdownSize.standard &&
+-            "h-[30px] text-style-button text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
++            "h-text-trigger text-style-button text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+           size === TextDropdownSize.sm &&
+             "text-style-label text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+           className,
+diff --git a/src/components/HotkeyIndicator/HotkeyIndicator.tsx b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+index 6035eb5..245e9df 100644
+--- a/src/components/HotkeyIndicator/HotkeyIndicator.tsx
++++ b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+@@ -17,7 +17,7 @@ function HotkeyIndicator({
+   ...props
+ }: HotkeyIndicatorProps) {
+   return (
+-    <span className={cn('inline-flex items-center gap-1', className)} {...props}>
++    <span className={cn('inline-flex items-center gap-xxs', className)} {...props}>
+       {keys.map((key, i) => (
+         <kbd
+           key={i}
+@@ -27,7 +27,7 @@ function HotkeyIndicator({
+             'text-style-label',
+             'ds-motion-state',
+             'ds-px-ui-sm ds-py-ui-xxs',
+-            keys.length === 1 && 'min-w-[23px] min-h-[23px]',
++            keys.length === 1 && 'ds-min-size-kbd',
+             variant === HotkeyIndicatorVariant.menu
+               ? 'h-6 min-h-6 text-text-tertiary'
+               : 'text-ghost-fg',
+diff --git a/src/components/Icons/index.ts b/src/components/Icons/index.ts
+index 51ba7f2..bb31036 100644
+--- a/src/components/Icons/index.ts
++++ b/src/components/Icons/index.ts
+@@ -1,4 +1,4 @@
+-// This file is generated by scripts/generate-icon-exports.mjs.
++// AUTO-GENERATED by scripts/generate-icon-exports.mjs. Do not edit by hand.
+ // Run `npm run generate-icon-exports` after adding or removing icon files.
+ export { BaseIcon, IconSizes as IconSize } from "./BaseIcon";
+ export type { IconProps } from "./BaseIcon";
+diff --git a/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx b/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
+index ab426f8..3fd3fd6 100644
+--- a/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
++++ b/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
+@@ -54,7 +54,7 @@ const LinearProgressIndicator = forwardRef<
+           '--ds-progress-color': resolveDsColor(color, DEFAULT_COLOR),
+         } as CSSProperties
+       }
+-      className={cn('relative h-[4px] w-full', className)}
++      className={cn('relative h-linear-progress w-full', className)}
+       {...props}
+     >
+       <ProgressPrimitive.Indicator
+diff --git a/src/components/Menu/DropdownMenu.tsx b/src/components/Menu/DropdownMenu.tsx
+index 29ebcf8..483adad 100644
+--- a/src/components/Menu/DropdownMenu.tsx
++++ b/src/components/Menu/DropdownMenu.tsx
+@@ -410,7 +410,7 @@ const DropdownMenuLabel = forwardRef<
+   <DropdownMenuPrimitive.Label
+     ref={ref}
+     className={cn(
+-      "flex h-[30px] items-center px-sm",
++      "flex h-menu-label items-center px-sm",
+       "text-style-label text-text-secondary",
+       className,
+     )}
+diff --git a/src/components/MorphRotationShape/MorphRotationShape.stories.tsx b/src/components/MorphRotationShape/MorphRotationShape.stories.tsx
+index 301ecb9..8132691 100644
+--- a/src/components/MorphRotationShape/MorphRotationShape.stories.tsx
++++ b/src/components/MorphRotationShape/MorphRotationShape.stories.tsx
+@@ -14,10 +14,11 @@ import {
+   PentagonShape,
+   PixircleShape,
+   PuffShape,
++  Shapes,
+   SquircleShape,
+ } from "../Shapes";
+ import { ButtonText } from "../Text";
+-import { MorphRotationShape } from "./MorphRotationShape";
++import { MorphRotationShape, type MorphRotationShapeProps } from "./MorphRotationShape";
+ import { MorphRotationShapeMode } from "./constants";
+ 
+ const meta = {
+@@ -27,7 +28,7 @@ const meta = {
+ export default meta;
+ type Story = StoryObj;
+ 
+-function ControlledDemo({ shapes, restingAngle }: { shapes: typeof CloverShape[]; restingAngle?: number }) {
++function ControlledDemo({ shapes, restingAngle }: { shapes: MorphRotationShapeProps["shapes"]; restingAngle?: number }) {
+   const [index, setIndex] = useState(0);
+   const [landed, setLanded] = useState(0);
+   return (
+@@ -70,6 +71,11 @@ export const RestingAngle: Story = {
+   render: () => <ControlledDemo shapes={[CloverShape, PentagonShape, PixircleShape]} restingAngle={0} />,
+ };
+ 
++/** `Shapes` keys instead of components: the serialisable form a Server Component can pass. */
++export const ShapeKeys: Story = {
++  render: () => <ControlledDemo shapes={[Shapes.clover, Shapes.puff, Shapes.squircle]} />,
++};
++
+ /**
+  * Figma 874:1682 / 874:1723 — a caret frame in a dropdown trigger. The trigger
+  * passes no props: Radix sets data-state=open and CSS moves the target.
+diff --git a/src/components/MorphRotationShape/MorphRotationShape.tsx b/src/components/MorphRotationShape/MorphRotationShape.tsx
+index 074f385..560abb1 100644
+--- a/src/components/MorphRotationShape/MorphRotationShape.tsx
++++ b/src/components/MorphRotationShape/MorphRotationShape.tsx
+@@ -56,7 +56,6 @@
+ 
+ import {
+   type ComponentPropsWithoutRef,
+-  type ComponentType,
+   type CSSProperties,
+   useLayoutEffect,
+   useMemo,
+@@ -64,8 +63,7 @@ import {
+   useState,
+ } from "react";
+ import { cn } from "../../utils/cn";
+-import type { ShapeProps } from "../Shapes/BaseShape";
+-import { getShapePath } from "../Shapes/shapePaths";
++import { getShapePath, type ShapeInput } from "../Shapes/shapePaths";
+ import { MorphRotationShapeMode } from "./constants";
+ import { Morph } from "./engine/morph";
+ import { toPathD } from "./engine/pathD";
+@@ -84,12 +82,13 @@ const NOMINAL_TURN_DEG = 90;
+ /** Below this the transitioned value has landed. */
+ const EPSILON = 0.001;
+ 
+-type ShapeComponent = ComponentType<ShapeProps>;
+ type SpanProps = Omit<ComponentPropsWithoutRef<"span">, "children">;
+ 
+ type CommonProps = SpanProps & {
+-  /** DS shape components in play order, e.g. `[CloverShape, PuffShape]`. At least two. */
+-  shapes: ShapeComponent[];
++  /** DS shapes in play order: components (`[CloverShape, PuffShape]`) or
++   * `Shapes` keys (`[Shapes.clover, Shapes.puff]`, the form a Server Component
++   * can pass). At least two. */
++  shapes: ShapeInput[];
+ };
+ 
+ export type MorphRotationShapeProps = CommonProps &
+@@ -128,13 +127,13 @@ interface ShapeData {
+   symmetry: number;
+ }
+ 
+-const shapeCache = new Map<ShapeComponent, ShapeData>();
+-function shapeData(Component: ShapeComponent): ShapeData {
+-  let data = shapeCache.get(Component);
++const shapeCache = new Map<ShapeInput, ShapeData>();
++function shapeData(shape: ShapeInput): ShapeData {
++  let data = shapeCache.get(shape);
+   if (!data) {
+-    const frame = polygonFromSvgPath(getShapePath(Component));
++    const frame = polygonFromSvgPath(getShapePath(shape));
+     data = { frame, loader: frame.normalized(), symmetry: rotationalSymmetry(frame) };
+-    shapeCache.set(Component, data);
++    shapeCache.set(shape, data);
+   }
+   return data;
+ }
+@@ -146,15 +145,15 @@ function assertProps(props: MorphRotationShapeProps) {
+     throw new Error(`MorphRotationShape: unknown mode "${String(props.mode)}"`);
+   }
+   if (!Array.isArray(props.shapes) || props.shapes.length < 2) {
+-    throw new Error("MorphRotationShape: `shapes` needs at least two DS shape components");
++    throw new Error("MorphRotationShape: `shapes` needs at least two DS shapes (components or Shapes keys)");
+   }
+   if (props.mode === MorphRotationShapeMode.controlled && !Number.isInteger(props.activeIndex)) {
+     throw new Error("MorphRotationShape: `controlled` mode requires an integer `activeIndex`");
+   }
+ }
+ 
+-/** Changes only when the shapes array's elements (by identity) change. */
+-function useShapesKey(shapes: ShapeComponent[]): number {
++/** Changes only when the shapes array's elements change (components by identity, keys by value). */
++function useShapesKey(shapes: ShapeInput[]): number {
+   const ref = useRef({ shapes, key: 0 });
+   const prev = ref.current.shapes;
+   if (prev.length !== shapes.length || prev.some((s, i) => s !== shapes[i])) {
+diff --git a/src/components/MorphRotationShape/engine/svgPath.ts b/src/components/MorphRotationShape/engine/svgPath.ts
+index efbdebf..f9aa76a 100644
+--- a/src/components/MorphRotationShape/engine/svgPath.ts
++++ b/src/components/MorphRotationShape/engine/svgPath.ts
+@@ -1,5 +1,6 @@
+ /*
+  * SVG path `d` -> morphable RoundedPolygon.
++ * Ported from AOSP androidx.graphics.shapes (Apache 2.0). See THIRD_PARTY_NOTICES.md.
+  *
+  * ## behavior
+  * - Port of androidx.graphics.shapes SvgPathParser.parseFeatures:
+diff --git a/src/components/OutlineButton/OutlineButton.tsx b/src/components/OutlineButton/OutlineButton.tsx
+index 0f31213..ab99893 100644
+--- a/src/components/OutlineButton/OutlineButton.tsx
++++ b/src/components/OutlineButton/OutlineButton.tsx
+@@ -153,7 +153,7 @@ const OutlineButtonBase = forwardRef<
+       <div
+         className={cn(
+           "inline-flex flex-col items-center justify-center",
+-          "border border-solid border-border-primary rounded-[28px]",
++          "border border-solid border-border-primary rounded-outline-frame",
+           "ds-p-ui-sm",
+           themeInverse && "border-primary",
+           className,
+@@ -164,8 +164,8 @@ const OutlineButtonBase = forwardRef<
+           ref={composedRef as ForwardedRef<HTMLElement>}
+           className={cn(
+             "group relative overflow-hidden",
+-            "inline-flex items-center justify-center gap-2",
+-            "h-[54px] min-w-[160px] px-3",
++            "inline-flex items-center justify-center gap-sm",
++            "ds-size-outline-button px-md",
+             "border border-solid rounded-soft shadow-button",
+             "text-style-button cursor-pointer select-none",
+             "ds-motion-state",
+@@ -183,37 +183,31 @@ const OutlineButtonBase = forwardRef<
+             /*
+              * Controlled mode — bottom-anchored, always lit.
+              * Orbs sit at the bottom of the frame exactly as they did before cursor
+-             * tracking was introduced. Opacity is set inline; the ds-outline-orb-*
+-             * class transitions it if `glowing` flips at runtime.
++             * tracking was introduced. Placement, opacity and blur come from
++             * the ds-outline-button-glow-* classes (--ui-outline-button-*);
++             * only the consumer's colour is inline. The ds-outline-orb-* class
++             * transitions opacity if `glowing` flips at runtime.
+              */
+             <>
+               <span
+                 aria-hidden
+                 className={cn(
+                   "pointer-events-none absolute rounded-full",
+-                  "bottom-[-18px] left-[4%] w-[62%] h-[72%]",
++                  "ds-outline-button-glow-1",
+                   "ds-outline-orb-1",
+                   disabledGlowClass,
+                 )}
+-                style={{
+-                  background: color1,
+-                  filter: "blur(18px)",
+-                  opacity: 0.38,
+-                }}
++                style={{ background: color1 }}
+               />
+               <span
+                 aria-hidden
+                 className={cn(
+                   "pointer-events-none absolute rounded-full",
+-                  "bottom-[-14px] right-[6%] w-[48%] h-[64%]",
++                  "ds-outline-button-glow-2",
+                   "ds-outline-orb-2",
+                   disabledGlowClass,
+                 )}
+-                style={{
+-                  background: color2,
+-                  filter: "blur(24px)",
+-                  opacity: 0.22,
+-                }}
++                style={{ background: color2 }}
+               />
+             </>
+           ) : (
+@@ -249,40 +243,38 @@ const OutlineButtonBase = forwardRef<
+               <span
+                 aria-hidden
+                 className={cn(
+-                  "pointer-events-none absolute rounded-full w-[62%] h-[72%]",
+-                  "opacity-0 group-hover:opacity-[0.38]",
++                  "pointer-events-none absolute rounded-full",
++                  "ds-outline-button-trail-1",
+                   "ds-outline-orb-1",
+                   disabledGlowClass,
+                 )}
+                 style={{
+                   background: color1,
+-                  filter: "blur(20px)",
+                   left: 0,
+                   top: 0,
+                   transform:
+                     "translate(" +
+-                    "calc((var(--gx, 0.5) * 0.4 + 0.25) * var(--bw, 160px) - 50%)," +
+-                    "calc(var(--gy, 0.5) * var(--bh, 54px) - 50%)" +
++                    "calc((var(--gx, 0.5) * 0.4 + 0.25) * var(--bw, var(--ui-min-w-outline-button)) - 50%)," +
++                    "calc(var(--gy, 0.5) * var(--bh, var(--ui-height-outline-button)) - 50%)" +
+                     ")",
+                 }}
+               />
+               <span
+                 aria-hidden
+                 className={cn(
+-                  "pointer-events-none absolute rounded-full w-[48%] h-[64%]",
+-                  "opacity-0 group-hover:opacity-[0.22]",
++                  "pointer-events-none absolute rounded-full",
++                  "ds-outline-button-trail-2",
+                   "ds-outline-orb-2",
+                   disabledGlowClass,
+                 )}
+                 style={{
+                   background: color2,
+-                  filter: "blur(26px)",
+                   left: 0,
+                   top: 0,
+                   transform:
+                     "translate(" +
+-                    "calc((var(--gx, 0.5) * 0.4 + 0.55) * var(--bw, 160px) - 50%)," +
+-                    "calc(var(--gy, 0.5) * var(--bh, 54px) - 50%)" +
++                    "calc((var(--gx, 0.5) * 0.4 + 0.55) * var(--bw, var(--ui-min-w-outline-button)) - 50%)," +
++                    "calc(var(--gy, 0.5) * var(--bh, var(--ui-height-outline-button)) - 50%)" +
+                     ")",
+                 }}
+               />
+@@ -294,7 +286,7 @@ const OutlineButtonBase = forwardRef<
+            * label still layers above the orbs when slotted. */}
+           <Slottable child={children}>
+             {(child) => (
+-              <span className="relative z-10 inline-flex items-center gap-2">
++              <span className="relative z-10 inline-flex items-center gap-sm">
+                 {child}
+               </span>
+             )}
+diff --git a/src/components/OutlineSection/OutlineSection.tsx b/src/components/OutlineSection/OutlineSection.tsx
+index 8e75e90..b950ecf 100644
+--- a/src/components/OutlineSection/OutlineSection.tsx
++++ b/src/components/OutlineSection/OutlineSection.tsx
+@@ -19,7 +19,7 @@ const OutlineSection = forwardRef<HTMLDivElement, OutlineSectionProps>(
+       ref={ref}
+       className={cn(
+         'inline-flex flex-col items-center justify-center',
+-        'border border-solid border-border-primary rounded-[28px]',
++        'border border-solid border-border-primary rounded-outline-frame',
+         'ds-p-ui-sm',
+         className
+       )}
+diff --git a/src/components/SearchBox/SearchBox.tsx b/src/components/SearchBox/SearchBox.tsx
+index 7c6b81d..c4deace 100644
+--- a/src/components/SearchBox/SearchBox.tsx
++++ b/src/components/SearchBox/SearchBox.tsx
+@@ -24,7 +24,7 @@ const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
+     return (
+       <div
+         className={cn(
+-          'flex items-center gap-2',
++          'flex items-center gap-sm',
+           'bg-secondary border border-solid border-border-primary',
+           'rounded-soft',
+           'ds-pl-ui-lg ds-pr-ui-md ds-py-ui-md',
+diff --git a/src/components/ShapeButton/ShapeButton.tsx b/src/components/ShapeButton/ShapeButton.tsx
+index 8c21243..c87d916 100644
+--- a/src/components/ShapeButton/ShapeButton.tsx
++++ b/src/components/ShapeButton/ShapeButton.tsx
+@@ -45,7 +45,7 @@ type ShapeButtonOwnProps = {
+ };
+ 
+ type ShapeComponentProps = {
+-  size: number;
++  size: number | string;
+   strokeColor?: string;
+   fillColor?: string;
+   strokeWeight?: number | string;
+@@ -59,8 +59,6 @@ const shapeComponents = {
+   squircle: SquircleShape,
+ } satisfies Record<ShapeButtons, ComponentType<ShapeComponentProps>>;
+ 
+-const SHAPE_SIZE = 46;
+-
+ /** Fill colors for the shape span — `currentColor` is the shape's paint. */
+ const shapeFillClasses = {
+   prominent: [
+@@ -120,7 +118,7 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
+         ref={ref as ForwardedRef<HTMLElement>}
+         className={cn(
+           "group relative inline-flex items-center justify-center",
+-          "size-[46px] cursor-pointer select-none",
++          "size-shape-button cursor-pointer select-none",
+           "outline-none ds-shape-button-focus-visible",
+           "ds-disabled-state",
+           contentClasses[resolvedVariant],
+@@ -138,7 +136,7 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
+           aria-hidden
+         >
+           <Shape
+-            size={SHAPE_SIZE}
++            size="var(--ui-size-shape-button)"
+             strokeColor="transparent"
+             fillColor="currentColor"
+           />
+diff --git a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
+index 7e3143b..c68313a 100644
+--- a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
++++ b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
+@@ -5,46 +5,45 @@
+  * --ui-size-spinner-* (never a JS size table), so overriding those tokens
+  * resizes it.
+  */
+-import type { ComponentPropsWithoutRef, ComponentType } from "react";
++import type { ComponentPropsWithoutRef } from "react";
+ import { cn } from "../../utils/cn";
+ import { resolveDsColor, type DsColor } from "../../utils/color";
+ import { LoadingSpinnerColor, LoadingSpinnerSize } from "../LoadingSpinner/constants";
+ import { MorphRotationShape } from "../MorphRotationShape/MorphRotationShape";
+ import { MorphRotationShapeMode } from "../MorphRotationShape/constants";
+ import type { MorphRotationShapeAutoplayTiming } from "../MorphRotationShape/timing";
+-import type { ShapeProps } from "../Shapes/BaseShape";
+-import {
+-  CapsuleShape,
+-  CloverShape,
+-  CookieShape,
+-  PentagonShape,
+-  PuffShape,
+-  SquircleShape,
+-} from "../Shapes";
++import { Shapes } from "../Shapes";
++import type { DsShapeComponent } from "../Shapes/BaseShape";
++import { getShapeComponent, type ShapeInput } from "../Shapes/shapePaths";
+ 
+-/** Default loader sequence. */
+-export const SHAPE_MORPH_SPINNER_SHAPES: ComponentType<ShapeProps>[] = [
+-  CookieShape,
+-  CloverShape,
+-  PuffShape,
+-  SquircleShape,
+-  PentagonShape,
+-  CapsuleShape,
++/** Default loader sequence as `Shapes` keys: serialisable, so this module stays
++ *  neutral (no "use client") and still renders from a Server Component. */
++const DEFAULT_SHAPE_KEYS: Shapes[] = [
++  Shapes.cookie,
++  Shapes.clover,
++  Shapes.puff,
++  Shapes.squircle,
++  Shapes.pentagon,
++  Shapes.capsule,
+ ];
+ 
++/** Default loader sequence. */
++export const SHAPE_MORPH_SPINNER_SHAPES: DsShapeComponent[] = DEFAULT_SHAPE_KEYS.map(getShapeComponent);
++
+ export type ShapeMorphSpinnerProps = Omit<ComponentPropsWithoutRef<"span">, "children" | "color"> & {
+   size?: LoadingSpinnerSize;
+   /** A DS colour name (DS_COLOR_TOKENS key) or any CSS colour. */
+   color?: DsColor;
+-  /** DS shape components, at least two. */
+-  shapes?: ComponentType<ShapeProps>[];
++  /** DS shapes (components or `Shapes` keys), at least two. Keys are the form a
++   *  Server Component can pass. */
++  shapes?: ShapeInput[];
+   timing?: MorphRotationShapeAutoplayTiming;
+ };
+ 
+ export const ShapeMorphSpinner = ({
+   size = LoadingSpinnerSize.md,
+   color = LoadingSpinnerColor.primary,
+-  shapes = SHAPE_MORPH_SPINNER_SHAPES,
++  shapes = DEFAULT_SHAPE_KEYS,
+   timing,
+   className,
+   style,
+diff --git a/src/components/Shapes/ArrowShape.tsx b/src/components/Shapes/ArrowShape.tsx
+index f067632..35a36a3 100644
+--- a/src/components/Shapes/ArrowShape.tsx
++++ b/src/components/Shapes/ArrowShape.tsx
+@@ -1,30 +1,6 @@
+-import { BaseShape, ShapeClipPath, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const ARROW_SHAPE_PATH =
+   "M17.0922 5.94811C16.4447 4.90881 15.7856 3.85509 14.9102 3.02982C14.0347 2.2025 12.9006 1.61802 11.7377 1.69417C10.7166 1.76208 9.77024 2.33421 9.0231 3.08128C8.27596 3.82834 7.69551 4.74828 7.12462 5.65998C5.58054 8.12139 4.03455 10.5828 2.49047 13.0462C1.75674 14.2152 1.00386 15.4356 0.800792 16.8289C0.555578 18.5124 1.21651 20.2267 2.38893 21.3463C3.615 22.5173 5.60162 22.4226 7.09397 22.1016C8.72997 21.7496 10.3296 21.087 11.9982 21.089C13.4274 21.089 14.8086 21.5789 16.1995 21.9349C17.5884 22.2889 19.0807 22.507 20.4217 21.9801C22.0865 21.3277 23.2819 19.4735 23.2494 17.5698C23.2187 15.8328 21.3873 12.8363 21.3873 12.8363C21.3873 12.8363 18.5236 8.24437 17.0922 5.94811Z";
+ 
+-export const ArrowShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <g clipPath="url(#clip0_504_971)">
+-        <path
+-          d={ARROW_SHAPE_PATH}
+-          fill={fillColor}
+-        />
+-      </g>
+-      <defs>
+-        <ShapeClipPath id="clip0_504_971" fillColor={fillColor} />
+-      </defs>
+-    </BaseShape>
+-  );
+-};
++export const ArrowShape = createShape(ARROW_SHAPE_PATH, "ArrowShape");
+diff --git a/src/components/Shapes/BaseShape.tsx b/src/components/Shapes/BaseShape.tsx
+index 5876252..9938f47 100644
+--- a/src/components/Shapes/BaseShape.tsx
++++ b/src/components/Shapes/BaseShape.tsx
+@@ -1,4 +1,4 @@
+-import type { ReactNode } from "react";
++import type { FunctionComponent, ReactNode } from "react";
+ import { BaseIcon } from "../Icons";
+ 
+ export interface ShapeProps {
+@@ -9,6 +9,16 @@ export interface ShapeProps {
+   strokeWeight?: number | string;
+ }
+ 
++declare const dsShape: unique symbol;
++
++/** One of the DS shapes, as built by createShape. The brand is type-only (no
++ *  runtime marker). It lets `shapes` props reject components getShapePath
++ *  cannot map, such as `memo(CloverShape)` or a hand-written shape, at compile
++ *  time instead of throwing during render. */
++export type DsShapeComponent = FunctionComponent<ShapeProps> & {
++  readonly [dsShape]: true;
++};
++
+ type BaseShapeProps = ShapeProps & {
+   children?: ReactNode;
+ };
+diff --git a/src/components/Shapes/CapsuleShape.tsx b/src/components/Shapes/CapsuleShape.tsx
+index c5d08a5..f3c8a73 100644
+--- a/src/components/Shapes/CapsuleShape.tsx
++++ b/src/components/Shapes/CapsuleShape.tsx
+@@ -1,22 +1,6 @@
+-import { BaseShape, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const CAPSULE_SHAPE_PATH =
+   "M6.38853 3.02165C10.4174 -1.00722 16.9495 -1.00722 20.9784 3.02165C25.0072 7.05052 25.0072 13.5826 20.9784 17.6114L17.6114 20.9784C13.5826 25.0072 7.05052 25.0072 3.02165 20.9784C-1.00722 16.9495 -1.00722 10.4174 3.02165 6.38853L6.38853 3.02165Z";
+ 
+-export const CapsuleShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <path d={CAPSULE_SHAPE_PATH} />
+-    </BaseShape>
+-  );
+-};
++export const CapsuleShape = createShape(CAPSULE_SHAPE_PATH, "CapsuleShape");
+diff --git a/src/components/Shapes/CloverShape.tsx b/src/components/Shapes/CloverShape.tsx
+index d011d15..9835426 100644
+--- a/src/components/Shapes/CloverShape.tsx
++++ b/src/components/Shapes/CloverShape.tsx
+@@ -1,33 +1,6 @@
+-import { BaseShape, ShapeClipPath, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const CLOVER_SHAPE_PATH =
+   "M2.34639 12C1.35015 10.8096 0.75 9.27309 0.75 7.59575C0.75 3.81494 3.79914 0.75 7.56044 0.75C9.26275 0.75 10.8192 1.37783 12.0132 2.41569C13.2043 1.37783 14.7571 0.75 16.4555 0.75C20.208 0.75 23.25 3.81494 23.25 7.59575C23.25 9.27309 22.6512 10.8096 21.6574 12C22.6512 13.1904 23.25 14.7269 23.25 16.4042C23.25 20.1851 20.208 23.25 16.4555 23.25C14.7571 23.25 13.2043 22.6222 12.0132 21.5843C10.8192 22.6222 9.26275 23.25 7.56044 23.25C3.79914 23.25 0.75 20.1851 0.75 16.4042C0.75 14.7269 1.35015 13.1904 2.34639 12Z";
+ 
+-export const CloverShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <g clipPath="url(#clip0_504_974)">
+-        <g clipPath="url(#clip1_504_974)">
+-          <path
+-            d={CLOVER_SHAPE_PATH}
+-            fill={fillColor}
+-          />
+-        </g>
+-      </g>
+-      <defs>
+-        <ShapeClipPath id="clip0_504_974" fillColor={fillColor} />
+-        <ShapeClipPath id="clip1_504_974" fillColor={fillColor} />
+-      </defs>
+-    </BaseShape>
+-  );
+-};
++export const CloverShape = createShape(CLOVER_SHAPE_PATH, "CloverShape");
+diff --git a/src/components/Shapes/CookieShape.tsx b/src/components/Shapes/CookieShape.tsx
+index 1e56444..6ea153d 100644
+--- a/src/components/Shapes/CookieShape.tsx
++++ b/src/components/Shapes/CookieShape.tsx
+@@ -1,33 +1,6 @@
+-import { BaseShape, ShapeClipPath, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const COOKIE_SHAPE_PATH =
+   "M15.1122 1.24877C19.945 -0.850213 24.8502 4.05494 22.7512 8.88783L22.4042 9.68689C21.7634 11.1624 21.7634 12.8376 22.4042 14.3131L22.7512 15.1122C24.8502 19.945 19.945 24.8502 15.1122 22.7512L14.3131 22.4042C12.8376 21.7634 11.1624 21.7634 9.68689 22.4042L8.88783 22.7512C4.05494 24.8502 -0.850213 19.945 1.24877 15.1122L1.59581 14.3131C2.23665 12.8376 2.23665 11.1624 1.59581 9.68689L1.24877 8.88783C-0.850213 4.05494 4.05494 -0.850213 8.88783 1.24877L9.68689 1.59581C11.1624 2.23665 12.8376 2.23665 14.3131 1.59581L15.1122 1.24877Z";
+ 
+-export const CookieShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <g clipPath="url(#clip0_504_972)">
+-        <g clipPath="url(#clip1_504_972)">
+-          <path
+-            d={COOKIE_SHAPE_PATH}
+-            fill={fillColor}
+-          />
+-        </g>
+-      </g>
+-      <defs>
+-        <ShapeClipPath id="clip0_504_972" fillColor={fillColor} />
+-        <ShapeClipPath id="clip1_504_972" fillColor={fillColor} />
+-      </defs>
+-    </BaseShape>
+-  );
+-};
++export const CookieShape = createShape(COOKIE_SHAPE_PATH, "CookieShape");
+diff --git a/src/components/Shapes/DiamondShape.tsx b/src/components/Shapes/DiamondShape.tsx
+index ce845bc..29ed4f0 100644
+--- a/src/components/Shapes/DiamondShape.tsx
++++ b/src/components/Shapes/DiamondShape.tsx
+@@ -1,22 +1,6 @@
+-import { BaseShape, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const DIAMOND_SHAPE_PATH =
+   "M18.7936 19.8953C16.741 21.948 15.7146 22.9743 14.5782 23.4661C12.9331 24.178 11.0669 24.178 9.42182 23.4661C8.28535 22.9743 7.25901 21.948 5.20637 19.8953L4.1047 18.7936C2.05205 16.741 1.02571 15.7147 0.533884 14.5782C-0.177979 12.9331 -0.177957 11.0669 0.533922 9.42184C1.02571 8.28536 2.05205 7.25902 4.1047 5.20637L5.20637 4.1047C7.25901 2.05206 8.28535 1.02572 9.42186 0.533907C11.0669 -0.177972 12.9331 -0.177967 14.5782 0.533911C15.7147 1.02572 16.741 2.05206 18.7936 4.1047L19.8953 5.20637C21.9479 7.25902 22.9743 8.28536 23.4661 9.42184C24.178 11.0669 24.178 12.9331 23.4661 14.5782C22.9743 15.7147 21.9479 16.741 19.8953 18.7936L18.7936 19.8953Z";
+ 
+-export const DiamondShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <path d={DIAMOND_SHAPE_PATH} />
+-    </BaseShape>
+-  );
+-};
++export const DiamondShape = createShape(DIAMOND_SHAPE_PATH, "DiamondShape");
+diff --git a/src/components/Shapes/DoubleShape.tsx b/src/components/Shapes/DoubleShape.tsx
+index c644fe4..6b7b927 100644
+--- a/src/components/Shapes/DoubleShape.tsx
++++ b/src/components/Shapes/DoubleShape.tsx
+@@ -1,22 +1,6 @@
+-import { BaseShape, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const DOUBLE_SHAPE_PATH =
+   "M0 6.1017C0 2.73182 2.81995 0 6.29853 0H17.7015C21.18 0 24 2.73182 24 6.1017C24 8.88077 22.0821 11.2259 19.4586 11.9628C19.4415 11.9676 19.4296 11.9828 19.4296 12C19.4296 12.0172 19.4415 12.0324 19.4586 12.0372C22.0821 12.7741 24 15.1192 24 17.8983C24 21.2682 21.18 24 17.7015 24H6.29853C2.81995 24 0 21.2682 0 17.8983C0 15.1373 1.89291 12.8047 4.49008 12.0518C4.51375 12.045 4.53014 12.0239 4.53014 12C4.53014 11.9761 4.51375 11.955 4.49008 11.9482C1.89291 11.1953 0 8.86262 0 6.1017Z";
+ 
+-export const DoubleShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <path d={DOUBLE_SHAPE_PATH} />
+-    </BaseShape>
+-  );
+-};
++export const DoubleShape = createShape(DOUBLE_SHAPE_PATH, "DoubleShape");
+diff --git a/src/components/Shapes/EightLeafCloverShape.tsx b/src/components/Shapes/EightLeafCloverShape.tsx
+index 43e288f..0452d67 100644
+--- a/src/components/Shapes/EightLeafCloverShape.tsx
++++ b/src/components/Shapes/EightLeafCloverShape.tsx
+@@ -1,22 +1,6 @@
+-import { BaseShape, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const EIGHT_LEAF_CLOVER_SHAPE_PATH =
+   "M23.1438 11.9998C25.082 15.6123 23.6176 18.8828 19.8799 19.8796C18.8828 23.6176 15.6123 25.0816 11.9998 23.1438C8.38732 25.082 5.11684 23.6176 4.12003 19.8799C0.382357 18.8828 -1.08203 15.6123 0.856176 11.9998C-1.08203 8.38732 0.382357 5.11684 4.12003 4.12003C5.11684 0.382357 8.38732 -1.08203 11.9998 0.856176C15.6123 -1.08203 18.8828 0.382357 19.8796 4.12003C23.6176 5.11684 25.0816 8.38732 23.1438 11.9998Z";
+ 
+-export const EightLeafCloverShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <path d={EIGHT_LEAF_CLOVER_SHAPE_PATH} fill={fillColor} />
+-    </BaseShape>
+-  );
+-};
++export const EightLeafCloverShape = createShape(EIGHT_LEAF_CLOVER_SHAPE_PATH, "EightLeafCloverShape");
+diff --git a/src/components/Shapes/PentagonShape.tsx b/src/components/Shapes/PentagonShape.tsx
+index ddd48db..46ec2ed 100644
+--- a/src/components/Shapes/PentagonShape.tsx
++++ b/src/components/Shapes/PentagonShape.tsx
+@@ -1,22 +1,6 @@
+-import { BaseShape, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const PENTAGON_SHAPE_PATH =
+   "M9.3101 0.863758C10.914 -0.28792 13.086 -0.287919 14.6899 0.863759L22.1133 6.19394C23.7172 7.34562 24.3884 9.38702 23.7757 11.2505L20.9402 19.8749C20.3276 21.7383 18.5705 23 16.5879 23H7.41211C5.42953 23 3.67242 21.7383 3.05976 19.8749L0.224294 11.2505C-0.388359 9.38702 0.282797 7.34562 1.88674 6.19394L9.3101 0.863758Z";
+ 
+-export const PentagonShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <path d={PENTAGON_SHAPE_PATH} />
+-    </BaseShape>
+-  );
+-};
++export const PentagonShape = createShape(PENTAGON_SHAPE_PATH, "PentagonShape");
+diff --git a/src/components/Shapes/PixircleShape.tsx b/src/components/Shapes/PixircleShape.tsx
+index bb32414..41cfcd8 100644
+--- a/src/components/Shapes/PixircleShape.tsx
++++ b/src/components/Shapes/PixircleShape.tsx
+@@ -1,22 +1,6 @@
+-import { BaseShape, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const PIXIRCLE_SHAPE_PATH =
+   "M16.8889 0H7.11111V1.55552H3.77778V3.55555H1.77778V7.11111H0V16.8889H1.77778V20.4445H3.77778V22.4444H7.11111V24H16.8889V22.4444H20.2222V20.4445H22.2222V16.8889H24V7.11111H22.2222V3.55555H20.2222V1.55552H16.8889V0Z";
+ 
+-export const PixircleShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <path d={PIXIRCLE_SHAPE_PATH} />
+-    </BaseShape>
+-  );
+-};
++export const PixircleShape = createShape(PIXIRCLE_SHAPE_PATH, "PixircleShape");
+diff --git a/src/components/Shapes/PuffShape.tsx b/src/components/Shapes/PuffShape.tsx
+index bfea35a..9557060 100644
+--- a/src/components/Shapes/PuffShape.tsx
++++ b/src/components/Shapes/PuffShape.tsx
+@@ -1,22 +1,6 @@
+-import { BaseShape, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const PUFF_SHAPE_PATH =
+   "M9.39467 1.00318C9.52407 0.896242 9.58874 0.842774 9.64778 0.797639C11.0393 -0.26588 12.9607 -0.26588 14.3522 0.797639C14.4113 0.842774 14.476 0.896242 14.6053 1.00318C14.6631 1.05091 14.692 1.07479 14.7206 1.0975C15.3754 1.61842 16.1782 1.91362 17.0113 1.93978C17.0476 1.94092 17.085 1.94139 17.1596 1.94233C17.3267 1.94442 17.4103 1.94547 17.4843 1.94924C19.2269 2.03807 20.6989 3.28581 21.0881 5.00404C21.1046 5.07697 21.1201 5.15994 21.1512 5.32587C21.165 5.39995 21.172 5.43698 21.1794 5.47293C21.3496 6.29718 21.7768 7.04464 22.3983 7.60567C22.4254 7.63012 22.4537 7.65472 22.5103 7.70385C22.637 7.81402 22.7004 7.86907 22.7546 7.92C24.033 9.11962 24.3667 11.0313 23.5716 12.6002C23.5378 12.6668 23.4969 12.7405 23.4151 12.8878C23.3786 12.9535 23.3604 12.9864 23.3432 13.0187C22.949 13.7606 22.8007 14.6106 22.9199 15.444C22.925 15.4803 22.931 15.5175 22.9431 15.5919C22.9701 15.7585 22.9836 15.8419 22.9927 15.9161C23.2087 17.6652 22.248 19.3463 20.6405 20.0319C20.5723 20.061 20.4941 20.0908 20.3378 20.1505C20.2679 20.1772 20.233 20.1905 20.1993 20.2042C19.4253 20.5166 18.7708 21.0714 18.3319 21.7871C18.3127 21.8183 18.2936 21.8507 18.2556 21.9156C18.1701 22.0607 18.1275 22.1333 18.0873 22.1962C17.1398 23.6763 15.3341 24.3402 13.6665 23.8216C13.5958 23.7996 13.5169 23.7717 13.3591 23.7159C13.2887 23.691 13.2534 23.6785 13.2189 23.6671C12.4272 23.4038 11.5728 23.4038 10.7811 23.6671C10.7466 23.6785 10.7114 23.691 10.641 23.7159C10.4832 23.7717 10.4043 23.7996 10.3335 23.8216C8.66585 24.3402 6.86023 23.6763 5.91276 22.1962C5.87255 22.1333 5.82986 22.0607 5.74448 21.9156C5.70637 21.8507 5.68731 21.8183 5.66817 21.7871C5.2292 21.0714 4.57471 20.5166 3.80073 20.2042C3.76697 20.1905 3.73207 20.1772 3.66227 20.1505C3.5059 20.0908 3.42772 20.061 3.3595 20.0319C1.75204 19.3463 0.791274 17.6652 1.00728 15.9161C1.01644 15.8419 1.02994 15.7585 1.05692 15.5919C1.06896 15.5175 1.07499 15.4803 1.08019 15.444C1.19934 14.6106 1.05098 13.7606 0.656869 13.0187C0.639679 12.9864 0.621425 12.9535 0.584919 12.8878C0.503138 12.7405 0.462249 12.6668 0.428499 12.6002C-0.366659 11.0313 -0.0329884 9.11962 1.24541 7.92C1.29967 7.86907 1.36303 7.81402 1.48975 7.70385C1.54631 7.65472 1.57459 7.63012 1.6017 7.60567C2.22323 7.04464 2.65042 6.29718 2.82059 5.47293C2.82801 5.43698 2.83495 5.39995 2.84881 5.32587C2.87989 5.15994 2.89543 5.07697 2.91195 5.00404C3.30114 3.28581 4.77313 2.03807 6.51574 1.94924C6.5897 1.94547 6.67329 1.94442 6.84044 1.94233C6.91507 1.94139 6.95237 1.94092 6.98871 1.93978C7.82178 1.91362 8.62467 1.61842 9.27948 1.0975C9.308 1.07479 9.33689 1.05091 9.39467 1.00318Z";
+ 
+-export const PuffShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <path d={PUFF_SHAPE_PATH} />
+-    </BaseShape>
+-  );
+-};
++export const PuffShape = createShape(PUFF_SHAPE_PATH, "PuffShape");
+diff --git a/src/components/Shapes/SquircleShape.tsx b/src/components/Shapes/SquircleShape.tsx
+index 38dc6b0..b8c1e5a 100644
+--- a/src/components/Shapes/SquircleShape.tsx
++++ b/src/components/Shapes/SquircleShape.tsx
+@@ -1,22 +1,6 @@
+-import { BaseShape, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const SQUIRCLE_SHAPE_PATH =
+   "M24 12.9C24 16.2538 24 17.9307 23.4734 19.2609C22.711 21.1864 21.1864 22.711 19.2609 23.4734C17.9307 24 16.2538 24 12.9 24H11.1C7.74623 24 6.0693 24 4.73906 23.4734C2.81359 22.711 1.28903 21.1864 0.526676 19.2609C-4.29153e-07 17.9307 -2.92761e-07 16.2538 4.37262e-10 12.9L1.57798e-07 11.1C4.50997e-07 7.74623 6.07967e-07 6.0693 0.526677 4.73906C1.28903 2.81359 2.8136 1.28903 4.73907 0.526676C6.0693 -4.29153e-07 7.74623 -2.92761e-07 11.1 4.37261e-10L12.9 1.57798e-07C16.2538 4.50997e-07 17.9307 6.07967e-07 19.2609 0.526677C21.1864 1.28903 22.711 2.8136 23.4734 4.73907C24 6.0693 24 7.74623 24 11.1V12.9Z";
+ 
+-export const SquircleShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <path d={SQUIRCLE_SHAPE_PATH} />
+-    </BaseShape>
+-  );
+-};
++export const SquircleShape = createShape(SQUIRCLE_SHAPE_PATH, "SquircleShape");
+diff --git a/src/components/Shapes/StarShape.tsx b/src/components/Shapes/StarShape.tsx
+index c1faadb..89a4c81 100644
+--- a/src/components/Shapes/StarShape.tsx
++++ b/src/components/Shapes/StarShape.tsx
+@@ -1,22 +1,6 @@
+-import { BaseShape, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const STAR_SHAPE_PATH =
+   "M22.4936 12C22.496 12.3077 22.4025 12.6084 22.2261 12.8604C22.0497 13.1124 21.7991 13.3032 21.5093 13.4063L15.5618 15.5691L13.3999 21.5157C13.2933 21.8027 13.1015 22.0503 12.8501 22.2251C12.5987 22.4 12.2998 22.4937 11.9936 22.4937C11.6874 22.4937 11.3886 22.4 11.1372 22.2251C10.8858 22.0503 10.6939 21.8027 10.5874 21.5157L8.4255 15.5682L2.478 13.4063C2.191 13.2997 1.9434 13.1079 1.7685 12.8565C1.5937 12.6051 1.5 12.3062 1.5 12C1.5 11.6938 1.5937 11.395 1.7685 11.1436C1.9434 10.8922 2.191 10.7003 2.478 10.5938L8.4255 8.4319L10.5874 2.4844C10.6939 2.1974 10.8858 1.9498 11.1372 1.7749C11.3886 1.6001 11.6874 1.5064 11.9936 1.5064C12.2998 1.5064 12.5987 1.6001 12.8501 1.7749C13.1015 1.9498 13.2933 2.1974 13.3999 2.4844L15.5627 8.4319L21.5093 10.5938C21.7991 10.6968 22.0497 10.8876 22.2261 11.1397C22.4025 11.3917 22.496 11.6924 22.4936 12Z";
+ 
+-export const StarShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <path d={STAR_SHAPE_PATH} />
+-    </BaseShape>
+-  );
+-};
++export const StarShape = createShape(STAR_SHAPE_PATH, "StarShape");
+diff --git a/src/components/Shapes/TripleShape.tsx b/src/components/Shapes/TripleShape.tsx
+index c2dccc4..341b8c4 100644
+--- a/src/components/Shapes/TripleShape.tsx
++++ b/src/components/Shapes/TripleShape.tsx
+@@ -1,22 +1,6 @@
+-import { BaseShape, ShapeProps } from "./BaseShape";
++import { createShape } from "./createShape";
+ 
+ export const TRIPLE_SHAPE_PATH =
+   "M19.8281 0C22.1321 8.9526e-05 23.9999 1.86785 24 4.17187C24 5.96748 22.8654 7.49778 21.2742 8.08596C22.8654 8.67408 23.9999 10.2044 24 12C24 13.7956 22.8654 15.3259 21.2742 15.914C22.8654 16.5022 23.9999 18.0325 24 19.8281C24 22.1322 22.1322 23.9999 19.8281 24H4.17187C1.8678 23.9999 0 22.1322 0 19.8281C5.53027e-05 18.0327 1.13425 16.5023 2.72519 15.914C1.13426 15.3257 0 13.7954 0 12C5.53027e-05 10.2046 1.13425 8.6742 2.72519 8.08596C1.13426 7.4976 0 5.96729 0 4.17187C6.43728e-05 1.86784 1.86784 7.53276e-05 4.17187 0H19.8281Z";
+ 
+-export const TripleShape = ({
+-  size,
+-  strokeColor,
+-  fillColor = "currentColor",
+-  strokeWeight,
+-}: ShapeProps) => {
+-  return (
+-    <BaseShape
+-      size={size}
+-      strokeColor={strokeColor}
+-      fillColor={fillColor}
+-      strokeWeight={strokeWeight}
+-    >
+-      <path d={TRIPLE_SHAPE_PATH} />
+-    </BaseShape>
+-  );
+-};
++export const TripleShape = createShape(TRIPLE_SHAPE_PATH, "TripleShape");
+diff --git a/src/components/Shapes/createShape.tsx b/src/components/Shapes/createShape.tsx
+new file mode 100644
+index 0000000..881a0cb
+--- /dev/null
++++ b/src/components/Shapes/createShape.tsx
+@@ -0,0 +1,16 @@
++import type { FunctionComponent } from "react";
++import { BaseShape, type DsShapeComponent, type ShapeProps } from "./BaseShape";
++
++/** The one render for every DS shape: a single `<path d>` in the 24-unit
++ *  viewBox. The path carries no `fill`; it inherits BaseIcon's
++ *  `<svg style="fill: …">`, so `fillColor` always applies. Call it once per
++ *  shape at module level: getShapePath keys on the returned identity. */
++export const createShape = (d: string, displayName: string): DsShapeComponent => {
++  const Shape: FunctionComponent<ShapeProps> = ({ fillColor = "currentColor", ...props }) => (
++    <BaseShape {...props} fillColor={fillColor}>
++      <path d={d} />
++    </BaseShape>
++  );
++  Shape.displayName = displayName;
++  return Shape as DsShapeComponent;
++};
+diff --git a/src/components/Shapes/shapePaths.ts b/src/components/Shapes/shapePaths.ts
+index 7b6efcf..b7e55dc 100644
+--- a/src/components/Shapes/shapePaths.ts
++++ b/src/components/Shapes/shapePaths.ts
+@@ -1,6 +1,5 @@
+-import type { ComponentType } from "react";
+ import { ARROW_SHAPE_PATH, ArrowShape } from "./ArrowShape";
+-import type { ShapeProps } from "./BaseShape";
++import type { DsShapeComponent } from "./BaseShape";
+ import { CAPSULE_SHAPE_PATH, CapsuleShape } from "./CapsuleShape";
+ import { CLOVER_SHAPE_PATH, CloverShape } from "./CloverShape";
+ import { COOKIE_SHAPE_PATH, CookieShape } from "./CookieShape";
+@@ -10,6 +9,7 @@ import {
+   EIGHT_LEAF_CLOVER_SHAPE_PATH,
+   EightLeafCloverShape,
+ } from "./EightLeafCloverShape";
++import { Shapes } from "./index";
+ import { PENTAGON_SHAPE_PATH, PentagonShape } from "./PentagonShape";
+ import { PIXIRCLE_SHAPE_PATH, PixircleShape } from "./PixircleShape";
+ import { PUFF_SHAPE_PATH, PuffShape } from "./PuffShape";
+@@ -17,30 +17,49 @@ import { SQUIRCLE_SHAPE_PATH, SquircleShape } from "./SquircleShape";
+ import { STAR_SHAPE_PATH, StarShape } from "./StarShape";
+ import { TRIPLE_SHAPE_PATH, TripleShape } from "./TripleShape";
+ 
+-/** Component -> its outline in the 24-unit viewBox. Lets MorphRotationShape
+- * take components without rendering them. */
+-const SHAPE_PATHS = new Map<ComponentType<ShapeProps>, string>([
+-  [ArrowShape, ARROW_SHAPE_PATH],
+-  [CapsuleShape, CAPSULE_SHAPE_PATH],
+-  [CloverShape, CLOVER_SHAPE_PATH],
+-  [CookieShape, COOKIE_SHAPE_PATH],
+-  [DiamondShape, DIAMOND_SHAPE_PATH],
+-  [DoubleShape, DOUBLE_SHAPE_PATH],
+-  [EightLeafCloverShape, EIGHT_LEAF_CLOVER_SHAPE_PATH],
+-  [PentagonShape, PENTAGON_SHAPE_PATH],
+-  [PixircleShape, PIXIRCLE_SHAPE_PATH],
+-  [PuffShape, PUFF_SHAPE_PATH],
+-  [SquircleShape, SQUIRCLE_SHAPE_PATH],
+-  [StarShape, STAR_SHAPE_PATH],
+-  [TripleShape, TRIPLE_SHAPE_PATH],
+-]);
++/** A DS shape as MorphRotationShape accepts it: the component, or its `Shapes`
++ * key (the serialisable form a Server Component can pass to the client
++ * MorphRotationShape). */
++export type ShapeInput = DsShapeComponent | Shapes;
+ 
+-export function getShapePath(Component: ComponentType<ShapeProps>): string {
+-  const d = SHAPE_PATHS.get(Component);
++/** `Shapes` key -> component and outline in the 24-unit viewBox, one entry per
++ * DS shape (`satisfies` makes a missing key a compile error). Lets
++ * MorphRotationShape take components or keys without rendering them. */
++const SHAPE_TABLE = {
++  [Shapes.arrow]: [ArrowShape, ARROW_SHAPE_PATH],
++  [Shapes.capsule]: [CapsuleShape, CAPSULE_SHAPE_PATH],
++  [Shapes.clover]: [CloverShape, CLOVER_SHAPE_PATH],
++  [Shapes.cookie]: [CookieShape, COOKIE_SHAPE_PATH],
++  [Shapes.diamond]: [DiamondShape, DIAMOND_SHAPE_PATH],
++  [Shapes.double]: [DoubleShape, DOUBLE_SHAPE_PATH],
++  [Shapes.eightLeafClover]: [EightLeafCloverShape, EIGHT_LEAF_CLOVER_SHAPE_PATH],
++  [Shapes.pentagon]: [PentagonShape, PENTAGON_SHAPE_PATH],
++  [Shapes.pixircle]: [PixircleShape, PIXIRCLE_SHAPE_PATH],
++  [Shapes.puff]: [PuffShape, PUFF_SHAPE_PATH],
++  [Shapes.squircle]: [SquircleShape, SQUIRCLE_SHAPE_PATH],
++  [Shapes.star]: [StarShape, STAR_SHAPE_PATH],
++  [Shapes.triple]: [TripleShape, TRIPLE_SHAPE_PATH],
++} satisfies Record<Shapes, readonly [DsShapeComponent, string]>;
++
++const ENTRIES = Object.entries(SHAPE_TABLE) as [Shapes, readonly [DsShapeComponent, string]][];
++const PATH_BY_COMPONENT = new Map<DsShapeComponent, string>(ENTRIES.map(([, [component, d]]) => [component, d]));
++const PATH_BY_NAME = new Map<string, string>(ENTRIES.map(([name, [, d]]) => [name, d]));
++const COMPONENT_BY_NAME = new Map<string, DsShapeComponent>(ENTRIES.map(([name, [component]]) => [name, component]));
++
++/** The outline of a DS shape, from its component or its `Shapes` key. Throws
++ * for anything else: a JS caller or an `as` cast can still pass a wrapper. */
++export function getShapePath(shape: ShapeInput): string {
++  const d = typeof shape === "string" ? PATH_BY_NAME.get(shape) : PATH_BY_COMPONENT.get(shape);
+   if (!d) {
+-    throw new Error(
+-      `${Component.displayName || Component.name || "component"} is not a DS shape; pass a component from Shapes/.`,
+-    );
++    const label = typeof shape === "string" ? `"${shape}"` : shape.displayName || shape.name || "component";
++    throw new Error(`${label} is not a DS shape; pass a component from Shapes/ or a Shapes key.`);
+   }
+   return d;
+ }
++
++/** The component for a `Shapes` key (lets one key list also serve as a component list). */
++export function getShapeComponent(name: Shapes): DsShapeComponent {
++  const component = COMPONENT_BY_NAME.get(name);
++  if (!component) throw new Error(`"${name}" is not a DS shape name.`);
++  return component;
++}
+diff --git a/src/components/Sheet/Sheet.tsx b/src/components/Sheet/Sheet.tsx
+index 39f0263..57802e0 100644
+--- a/src/components/Sheet/Sheet.tsx
++++ b/src/components/Sheet/Sheet.tsx
+@@ -119,7 +119,7 @@ export interface SheetContentProps
+  *   <SheetTrigger asChild><Button>Open</Button></SheetTrigger>
+  *   <SheetContent side={SheetSide.right} aria-label="Filters">
+  *     <SheetTitle className="sr-only">Filters</SheetTitle>
+- *     <div className="p-6">Your custom content here.</div>
++ *     <div className="p-lg">Your custom content here.</div>
+  *   </SheetContent>
+  * </Sheet>
+  *
+diff --git a/src/components/Slider/Slider.tsx b/src/components/Slider/Slider.tsx
+index 09119f9..7cf2c7b 100644
+--- a/src/components/Slider/Slider.tsx
++++ b/src/components/Slider/Slider.tsx
+@@ -153,6 +153,8 @@ const SliderBase = forwardRef<
+       dir,
+       inverted,
+       'aria-label': ariaLabel,
++      'aria-labelledby': ariaLabelledBy,
++      'aria-describedby': ariaDescribedBy,
+       ...props
+     },
+     ref,
+@@ -445,7 +447,9 @@ const SliderBase = forwardRef<
+             ))}
+           </SliderPrimitive.Track>
+           <SliderPrimitive.Thumb
+-            aria-label={ariaLabel ?? 'Value'}
++            aria-label={ariaLabel ?? (ariaLabelledBy ? undefined : 'Value')}
++            aria-labelledby={ariaLabelledBy}
++            aria-describedby={ariaDescribedBy}
+             className={cn(
+               'block h-[var(--ui-height-slider-handle)] w-[var(--ui-width-slider-handle)]',
+               'rounded-slider-inner ds-focus-visible-ring',
+diff --git a/src/components/SplitButton/SplitButton.tsx b/src/components/SplitButton/SplitButton.tsx
+index ea0ebf0..2e5208f 100644
+--- a/src/components/SplitButton/SplitButton.tsx
++++ b/src/components/SplitButton/SplitButton.tsx
+@@ -14,7 +14,7 @@ const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
+       ref={ref}
+       className={cn(
+         "inline-flex h-button items-center",
+-        "ds-gap-ui-sm pl-4 pr-4",
++        "ds-gap-ui-sm pl-lg pr-lg",
+         "rounded-l-tight rounded-r-none",
+         "border border-solid border-border-primary border-r-0",
+         "bg-secondary text-secondary-fg",
+@@ -28,7 +28,7 @@ const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
+       )}
+       {...props}
+     >
+-      {icon && <span className="size-[14px] shrink-0">{icon}</span>}
++      {icon && <span className="ds-size-icon-rg shrink-0">{icon}</span>}
+       {children}
+     </button>
+   ),
+diff --git a/src/components/Table/Table.tsx b/src/components/Table/Table.tsx
+index 47840bd..d2de26a 100644
+--- a/src/components/Table/Table.tsx
++++ b/src/components/Table/Table.tsx
+@@ -99,7 +99,7 @@ const TableHeaderCell = forwardRef<HTMLDivElement, TableHeaderCellProps>(
+             size={ButtonSize.standard}
+             {...buttonProps}
+             className={cn(
+-              "w-full justify-start gap-1 text-text",
++              "w-full justify-start gap-xxs text-text",
+               buttonProps?.className,
+             )}
+             onClick={onSort}
+@@ -157,7 +157,7 @@ const TableCell = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+       ref={ref}
+       role="cell"
+       className={cn(
+-        "flex flex-col justify-center overflow-hidden px-4 py-3",
++        "flex flex-col justify-center overflow-hidden px-lg py-md",
+         className,
+       )}
+       {...props}
+@@ -175,7 +175,7 @@ const TablePlaceholder = forwardRef<
+   <div
+     ref={ref}
+     role="row"
+-    className={cn("flex flex-1 items-center justify-center py-8", className)}
++    className={cn("flex flex-1 items-center justify-center py-table-placeholder-y", className)}
+     {...props}
+   >
+     {/* A row must own cells; `contents` keeps the flex centring unchanged. */}
+diff --git a/src/components/Tabs/Tabs.tsx b/src/components/Tabs/Tabs.tsx
+index 36c3652..d1ec5e2 100644
+--- a/src/components/Tabs/Tabs.tsx
++++ b/src/components/Tabs/Tabs.tsx
+@@ -16,7 +16,7 @@ const TabsList = forwardRef<
+ >(({ className, ...props }, ref) => (
+   <TabsPrimitive.List
+     ref={ref}
+-    className={cn("inline-flex items-center gap-1", className)}
++    className={cn("inline-flex items-center gap-xxs", className)}
+     {...props}
+   />
+ ));
+diff --git a/src/components/Toast/Toast.tsx b/src/components/Toast/Toast.tsx
+index b478c58..a3fcd16 100644
+--- a/src/components/Toast/Toast.tsx
++++ b/src/components/Toast/Toast.tsx
+@@ -22,7 +22,7 @@ import { CloseCancelIcon } from "../Icons";
+ // index.ts; imported here for internal variant resolution.
+ import { ToastVariant } from "./constants";
+ 
+-type ToastOptions = {
++export type ToastOptions = {
+   title?: string;
+   description?: string;
+   variant?: ToastVariant;
+@@ -32,7 +32,10 @@ type ToastOptions = {
+     altText?: string;
+     onClick: () => void;
+   };
++  /** Visible label of the complex toast's dismiss button. Default "Dismiss". */
+   dismissLabel?: string;
++  /** Accessible name of the other variants' close (X) button. Default "Close". */
++  closeLabel?: string;
+ };
+ 
+ type ToastItem = ToastOptions & {
+@@ -68,13 +71,13 @@ const toastRootVariants = cva(
+     variants: {
+       variant: {
+         simple:
+-          "ds-toast-width-simple flex-row items-center gap-xxxl border border-solid border-border-popovers bg-modal-surface py-2 pl-4 pr-2 text-text",
++          "ds-toast-width-simple flex-row items-center gap-xxxl border border-solid border-border-popovers bg-modal-surface py-sm pl-lg pr-sm text-text",
+         prominent:
+-          "ds-toast-width-simple flex-row items-center gap-xxxl border border-solid border-prominent bg-prominent py-2 pl-4 pr-2 text-prominent-fg",
++          "ds-toast-width-simple flex-row items-center gap-xxxl border border-solid border-prominent bg-prominent py-sm pl-lg pr-sm text-prominent-fg",
+         danger:
+-          "ds-toast-width-simple flex-row items-center gap-xxxl bg-danger-secondary py-2 pl-4 pr-2 text-text",
++          "ds-toast-width-simple flex-row items-center gap-xxxl bg-danger-secondary py-sm pl-lg pr-sm text-text",
+         complex:
+-          "ds-toast-width-complex flex-col gap-lg border border-solid border-border-popovers bg-modal-surface pb-3 pl-[14px] pr-3 pt-[14px] text-text",
++          "ds-toast-width-complex flex-col gap-lg border border-solid border-border-popovers bg-modal-surface pb-md pl-toast-inset pr-md pt-toast-inset text-text",
+       },
+     },
+     defaultVariants: {
+@@ -319,7 +322,7 @@ function ToastProvider({
+                   </ToastDescription>
+                 )}
+               </div>
+-              <ToastClose aria-label="Close" />
++              <ToastClose aria-label={item.closeLabel ?? "Close"} />
+             </>
+           )}
+         </ToastRoot>
+diff --git a/src/components/Toast/index.ts b/src/components/Toast/index.ts
+index ce3d18f..755c970 100644
+--- a/src/components/Toast/index.ts
++++ b/src/components/Toast/index.ts
+@@ -10,6 +10,7 @@ export {
+ } from "./Toast";
+ export { ToastVariant } from "./constants";
+ export type {
++  ToastOptions,
+   ToastDescriptionProps,
+   ToastProviderProps,
+   ToastRootProps,
+diff --git a/src/components/Tooltip/Tooltip.tsx b/src/components/Tooltip/Tooltip.tsx
+index 59a2a69..59d7ab3 100644
+--- a/src/components/Tooltip/Tooltip.tsx
++++ b/src/components/Tooltip/Tooltip.tsx
+@@ -65,7 +65,7 @@ const TooltipContent = forwardRef<
+           variant === TooltipVariant.simple &&
+             "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-lg text-style-body",
+           variant === TooltipVariant.rich &&
+-            "flex ds-width-tooltip-rich flex-col gap-sm rounded-tight border border-solid px-3 py-rg wrap-break-word",
++            "flex ds-width-tooltip-rich flex-col gap-sm rounded-tight border border-solid px-md py-rg wrap-break-word",
+           variant === TooltipVariant.complex &&
+             "ds-min-w-tooltip-complex rounded-normal border border-solid",
+           className,
+diff --git a/src/components/VerificationCode/CodeDigitInput.tsx b/src/components/VerificationCode/CodeDigitInput.tsx
+index fb0e803..125baef 100644
+--- a/src/components/VerificationCode/CodeDigitInput.tsx
++++ b/src/components/VerificationCode/CodeDigitInput.tsx
+@@ -3,8 +3,9 @@
+  *
+  * ## behavior
+  * - 46px (`size-code-digit`), `rounded-tight`, secondary surface/border.
+- * - Digit glyph is always `BaseText` at 18px / medium (body role) — never
+- *   SubheadingText and never a raw HTML text node.
++ * - Digit glyph is always `BaseText` at `--ui-text-code-digit` (18px) /
++ *   medium (body role) — never SubheadingText and never a raw HTML text node.
++ *   The input's transparent glyph uses the same token (`text-code-digit`).
+  * - `hasError` paints danger-primary border + text; `disabled` uses secondary
+  *   disabled tokens + `ds-disabled-state`; focus uses the prominent focus ring.
+  *
+@@ -59,7 +60,7 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
+       >
+         <BaseText
+           aria-hidden
+-          fontSize={18}
++          fontSize="var(--ui-text-code-digit)"
+           fontWeight={FontWeights.medium}
+           className={cn(
+             "pointer-events-none absolute inset-0 flex items-center justify-center",
+@@ -80,7 +81,7 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
+           aria-invalid={hasError || undefined}
+           className={cn(
+             "absolute inset-0 size-full appearance-none bg-transparent text-center",
+-            "text-[18px] font-medium text-transparent caret-transparent outline-none",
++            "text-code-digit font-medium text-transparent caret-transparent outline-none",
+             "selection:bg-transparent",
+           )}
+           onFocus={onFocus}
+diff --git a/src/components/VerificationCode/VerificationCodeInput.tsx b/src/components/VerificationCode/VerificationCodeInput.tsx
+index 56e4bb9..8ee6a93 100644
+--- a/src/components/VerificationCode/VerificationCodeInput.tsx
++++ b/src/components/VerificationCode/VerificationCodeInput.tsx
+@@ -46,10 +46,15 @@ export interface VerificationCodeInputProps
+   disabled?: boolean;
+   autoFocus?: boolean;
+   "aria-label"?: string;
++  /** Accessible name of each digit cell. Default `Digit ${index + 1} of ${length}`. */
++  digitLabel?: (index: number, length: number) => string;
+ }
+ 
+ const onlyDigits = (s: string) => s.replace(/\D/g, "");
+ 
++const defaultDigitLabel = (index: number, length: number) =>
++  `Digit ${index + 1} of ${length}`;
++
+ const VerificationCodeInput = forwardRef<
+   HTMLDivElement,
+   VerificationCodeInputProps
+@@ -65,6 +70,7 @@ const VerificationCodeInput = forwardRef<
+       disabled = false,
+       autoFocus = false,
+       "aria-label": ariaLabel = "Verification code",
++      digitLabel = defaultDigitLabel,
+       ...props
+     },
+     ref,
+@@ -180,7 +186,7 @@ const VerificationCodeInput = forwardRef<
+               if (!movingFocusRef.current && index > value.length)
+                 focusAt(value.length);
+             }}
+-            aria-label={`Digit ${index + 1} of ${length}`}
++            aria-label={digitLabel(index, length)}
+           />
+         ))}
+       </div>
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index 7836870..5f24c3d 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -315,6 +315,55 @@
+       transform var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
+   }
+ 
++  /* OutlineButton — the inner button box, and the orbs' paint and placement
++   * (all values: --ui-outline-button-* in tokens.css). Only the consumer's
++   * glow colour stays inline. `glow-*` is the static `glowing` mode, anchored
++   * below the bottom edge; `trail-*` is the hover mode, whose position comes
++   * from the cursor-tracking transform in OutlineButton.tsx. The disabled
++   * `group-disabled:!opacity-0` utilities still win: they are !important. */
++  .ds-size-outline-button {
++    height: var(--ui-height-outline-button);
++    min-width: var(--ui-min-w-outline-button);
++  }
++  .ds-outline-button-glow-1 {
++    bottom: var(--ui-outline-button-orb-1-bottom);
++    left: var(--ui-outline-button-orb-1-left);
++    width: var(--ui-outline-button-orb-1-width);
++    height: var(--ui-outline-button-orb-1-height);
++    opacity: var(--ui-outline-button-orb-1-opacity);
++    filter: blur(var(--ui-outline-button-orb-1-blur));
++  }
++  .ds-outline-button-glow-2 {
++    bottom: var(--ui-outline-button-orb-2-bottom);
++    right: var(--ui-outline-button-orb-2-right);
++    width: var(--ui-outline-button-orb-2-width);
++    height: var(--ui-outline-button-orb-2-height);
++    opacity: var(--ui-outline-button-orb-2-opacity);
++    filter: blur(var(--ui-outline-button-orb-2-blur));
++  }
++  .ds-outline-button-trail-1 {
++    width: var(--ui-outline-button-orb-1-width);
++    height: var(--ui-outline-button-orb-1-height);
++    opacity: 0;
++    filter: blur(var(--ui-outline-button-orb-1-hover-blur));
++  }
++  .ds-outline-button-trail-2 {
++    width: var(--ui-outline-button-orb-2-width);
++    height: var(--ui-outline-button-orb-2-height);
++    opacity: 0;
++    filter: blur(var(--ui-outline-button-orb-2-hover-blur));
++  }
++  /* Same selector and hover-capable gate as Tailwind's `group-hover:`, which
++   * these rules replace, so touch devices still never latch the glow on. */
++  @media (hover: hover) {
++    .ds-outline-button-trail-1:is(:where(.group):hover *) {
++      opacity: var(--ui-outline-button-orb-1-opacity);
++    }
++    .ds-outline-button-trail-2:is(:where(.group):hover *) {
++      opacity: var(--ui-outline-button-orb-2-opacity);
++    }
++  }
++
+   /* CTAButton — geometry + pill drop-shadow (filter so the round pill edge softens). */
+   .ds-drop-shadow-cta {
+     filter: drop-shadow(var(--ui-shadow-cta));
+@@ -423,6 +472,19 @@
+     border-radius: calc(var(--ui-radius-mini) + var(--ui-spacing-xxs));
+   }
+ 
++  /* A 14px icon slot (SplitButtonAction's leading icon). */
++  .ds-size-icon-rg {
++    width: var(--ui-icon-rg);
++    height: var(--ui-icon-rg);
++  }
++
++  /* Single-key HotkeyIndicator: a one-glyph key never gets narrower or
++   * shorter than this square. */
++  .ds-min-size-kbd {
++    min-width: var(--ui-size-kbd);
++    min-height: var(--ui-size-kbd);
++  }
++
+   /* Dims a decorative part (e.g. a trigger's icons) without fading the
+    * surface behind it — Figma applies opacity-disabled to content only. */
+   .ds-opacity-disabled {
+diff --git a/src/styles/index.css b/src/styles/index.css
+index 957f743..415ddac 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -171,6 +171,7 @@
+   --text-hero-button: var(--ui-text-hero-button);
+   --text-mono: var(--ui-text-mono);
+   --text-subheading: var(--ui-text-subheading);
++  --text-code-digit: var(--ui-text-code-digit);
+   --text-heading: var(--ui-text-heading);
+   --text-title: var(--ui-text-title);
+   --text-hero: var(--ui-text-hero);
+@@ -185,10 +186,13 @@
+   --spacing-xl: var(--ui-spacing-xl);
+   --spacing-xxl: var(--ui-spacing-xxl);
+   --spacing-xxxl: var(--ui-spacing-xxxl);
++  --spacing-toast-inset: var(--ui-spacing-toast-inset);
++  --spacing-table-placeholder-y: var(--ui-spacing-table-placeholder-y);
+   --radius-tight: var(--ui-radius-tight);
+   --radius-mini: var(--ui-radius-mini);
+   --radius-normal: var(--ui-radius-normal);
+   --radius-soft: var(--ui-radius-soft);
++  --radius-outline-frame: var(--ui-radius-outline-frame);
+   --radius-checkbox: var(--ui-radius-checkbox);
+   --radius-avatar: var(--ui-radius-avatar);
+   --radius-avatar-sm: var(--ui-radius-avatar-sm);
+@@ -375,6 +379,37 @@
+     width: var(--ui-size-code-digit);
+     height: var(--ui-size-code-digit);
+   }
++  .size-checkbox-icon {
++    width: var(--ui-size-checkbox-icon);
++    height: var(--ui-size-checkbox-icon);
++  }
++  .size-avatar {
++    width: var(--ui-size-avatar);
++    height: var(--ui-size-avatar);
++  }
++  .size-avatar-sm {
++    width: var(--ui-size-avatar-sm);
++    height: var(--ui-size-avatar-sm);
++  }
++  .size-shape-button {
++    width: var(--ui-size-shape-button);
++    height: var(--ui-size-shape-button);
++  }
++  .h-menu-label {
++    height: var(--ui-height-menu-label);
++  }
++  .h-text-trigger {
++    height: var(--ui-height-text-trigger);
++  }
++  .h-linear-progress {
++    height: var(--ui-height-linear-progress);
++  }
++  /* The 160px menu floor as a merge-aware utility, for a root that also takes
++   * the consumer className (DropdownTrigger): a consumer `min-w-*` replaces it.
++   * `.ds-min-w-menu` carries the same value on menu items. */
++  .min-w-menu {
++    min-width: var(--ui-min-w-menu);
++  }
+   .size-button-micro {
+     width: var(--ui-height-button-micro);
+     height: var(--ui-height-button-micro);
+diff --git a/src/styles/theme.css b/src/styles/theme.css
+index ddfc18b..d676a2c 100644
+--- a/src/styles/theme.css
++++ b/src/styles/theme.css
+@@ -104,6 +104,7 @@
+   --text-hero-button: var(--ui-text-hero-button);
+   --text-mono: var(--ui-text-mono);
+   --text-subheading: var(--ui-text-subheading);
++  --text-code-digit: var(--ui-text-code-digit);
+   --text-heading: var(--ui-text-heading);
+   --text-title: var(--ui-text-title);
+   --text-hero: var(--ui-text-hero);
+@@ -118,10 +119,13 @@
+   --spacing-xl: var(--ui-spacing-xl);
+   --spacing-xxl: var(--ui-spacing-xxl);
+   --spacing-xxxl: var(--ui-spacing-xxxl);
++  --spacing-toast-inset: var(--ui-spacing-toast-inset);
++  --spacing-table-placeholder-y: var(--ui-spacing-table-placeholder-y);
+   --radius-tight: var(--ui-radius-tight);
+   --radius-mini: var(--ui-radius-mini);
+   --radius-normal: var(--ui-radius-normal);
+   --radius-soft: var(--ui-radius-soft);
++  --radius-outline-frame: var(--ui-radius-outline-frame);
+   --radius-checkbox: var(--ui-radius-checkbox);
+   --radius-avatar: var(--ui-radius-avatar);
+   --radius-avatar-sm: var(--ui-radius-avatar-sm);
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index 96445e3..a99f871 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -400,6 +400,9 @@
+    * directly to break that link. */
+   --ui-text-mono: var(--ui-text-body);
+   --ui-text-subheading: 18px;
++  /* The verification-code digit (CodeDigitInput, `text-code-digit`). 18px like
++   * subheading, but not that role, so it is its own token. */
++  --ui-text-code-digit: 18px;
+   --ui-text-heading: 20px;
+   --ui-text-title: 40px;
+   --ui-text-hero: 55px;
+@@ -455,7 +458,25 @@
+   /* Micro (28px): micro buttons, icon-micro toggles/tabs, and the compact preset row. */
+   --ui-height-button-micro: 28px;
+   --ui-size-checkbox: 18px;
++  /* The check / indeterminate glyph box inside the checkbox (`.size-checkbox-icon`). */
++  --ui-size-checkbox-icon: 10px;
+   --ui-size-code-digit: 46px;
++  /* Avatar frame per size (`.size-avatar` / `.size-avatar-sm`). */
++  --ui-size-avatar: 38px;
++  --ui-size-avatar-sm: 22px;
++  /* ShapeButton frame AND the shape drawn in it (`.size-shape-button`, plus
++   * the shape's `size` prop) — one token, so the two cannot drift apart. */
++  --ui-size-shape-button: 46px;
++  /* Floor of a single-key HotkeyIndicator, so a one-glyph key stays square
++   * (`.ds-min-size-kbd`). */
++  --ui-size-kbd: 23px;
++  /* DropdownMenuLabel row height (`.h-menu-label`). */
++  --ui-height-menu-label: 30px;
++  /* TextDropdownTrigger (standard) height. Same row height as the menu label
++   * by design; own name so either retunes alone (`.h-text-trigger`). */
++  --ui-height-text-trigger: var(--ui-height-menu-label);
++  /* LinearProgressIndicator bar height (`.h-linear-progress`). */
++  --ui-height-linear-progress: 4px;
+ 
+   /* Loading spinner / progress indicator diameters */
+   --ui-size-spinner-sm: 16px;
+@@ -531,6 +552,12 @@
+   --ui-spacing-xl: 20px;
+   --ui-spacing-xxl: 26px;
+   --ui-spacing-xxxl: 42px;
++  /* Complex toast top/left inset (Figma), off the spacing scale like
++   * sticker-y (`pl-toast-inset` / `pt-toast-inset`). */
++  --ui-spacing-toast-inset: 14px;
++  /* TablePlaceholder (empty-state row) vertical padding, off the scale
++   * (`py-table-placeholder-y`). */
++  --ui-spacing-table-placeholder-y: 32px;
+ 
+   /* ── Icons ───────────────────────────────────────────────────────────── */
+ 
+@@ -550,6 +577,10 @@
+   --ui-radius-mini: 10px;
+   --ui-radius-normal: 18px;
+   --ui-radius-soft: 20px;
++  /* Concentric outer radius of the outline frame wrapping a `soft` surface
++   * with an sm inset: soft (20) + sm (8) = 28px (`rounded-outline-frame`;
++   * OutlineSection, OutlineButton). Override the parts, or this to break it. */
++  --ui-radius-outline-frame: calc(var(--ui-radius-soft) + var(--ui-spacing-sm));
+   --ui-radius-checkbox: 6px;
+   --ui-radius-avatar: 8px;
+   --ui-radius-avatar-sm: 6px;
+@@ -579,6 +610,33 @@
+    * without touching menus. Same arrangement as primary-disabled. */
+   --ui-min-w-search-box: var(--ui-min-w-menu-complex);
+ 
++  /* ── OutlineButton ─────────────────────────────────────────────────────
++   * The inner button box, and its two glow orbs. Orb 1 paints `glowColor1`
++   * (the larger, left one), orb 2 `glowColor2`. Read by the
++   * .ds-size-outline-button / .ds-outline-button-glow-* / -trail-* helpers.
++   * The hover (cursor-tracking) mode blurs each orb 2px more than the static
++   * `glowing` mode; that split predates the tokens and is kept as-is. Orb
++   * timing is NOT here: it is on the motion scale (.ds-outline-orb-*). */
++  --ui-height-outline-button: 54px;
++  --ui-min-w-outline-button: 160px;
++  --ui-outline-button-orb-1-opacity: 0.38;
++  --ui-outline-button-orb-2-opacity: 0.22;
++  --ui-outline-button-orb-1-blur: 18px;
++  --ui-outline-button-orb-2-blur: 24px;
++  --ui-outline-button-orb-1-hover-blur: 20px;
++  --ui-outline-button-orb-2-hover-blur: 26px;
++  /* Orb size, as a share of the button box (both modes). */
++  --ui-outline-button-orb-1-width: 62%;
++  --ui-outline-button-orb-1-height: 72%;
++  --ui-outline-button-orb-2-width: 48%;
++  --ui-outline-button-orb-2-height: 64%;
++  /* `glowing` mode anchors: each orb hangs below the bottom edge, orb 1 in
++   * from the left, orb 2 in from the right. */
++  --ui-outline-button-orb-1-bottom: -18px;
++  --ui-outline-button-orb-1-left: 4%;
++  --ui-outline-button-orb-2-bottom: -14px;
++  --ui-outline-button-orb-2-right: 6%;
++
+   /* ── CTAButton ───────────────────────────────────────────────────────── */
+ 
+   /* Label sizes, read by `.text-style-cta` (standard) and the big CTA. */
+diff --git a/src/utils/twMergeTheme.ts b/src/utils/twMergeTheme.ts
+index 429e18b..3ac32c4 100644
+--- a/src/utils/twMergeTheme.ts
++++ b/src/utils/twMergeTheme.ts
+@@ -11,6 +11,7 @@ export const DS_TW_MERGE_THEME: Readonly<Record<"text" | "radius" | "spacing" |
+     "hero-button",
+     "mono",
+     "subheading",
++    "code-digit",
+     "heading",
+     "title",
+     "hero",
+@@ -23,6 +24,7 @@ export const DS_TW_MERGE_THEME: Readonly<Record<"text" | "radius" | "spacing" |
+     "mini",
+     "normal",
+     "soft",
++    "outline-frame",
+     "checkbox",
+     "avatar",
+     "avatar-sm",
+@@ -39,6 +41,8 @@ export const DS_TW_MERGE_THEME: Readonly<Record<"text" | "radius" | "spacing" |
+     "xl",
+     "xxl",
+     "xxxl",
++    "toast-inset",
++    "table-placeholder-y",
+     "sticker-y"
+   ],
+   "shadow": [
+@@ -77,6 +81,9 @@ export const DS_SIZE_UTILITIES: Readonly<Record<"h" | "w" | "size" | "min-h" | "
+     "button-sm",
+     "button-medium",
+     "button-big",
++    "menu-label",
++    "text-trigger",
++    "linear-progress",
+     "button-micro",
+     "slider-track"
+   ],
+@@ -86,12 +93,17 @@ export const DS_SIZE_UTILITIES: Readonly<Record<"h" | "w" | "size" | "min-h" | "
+     "button-sm",
+     "checkbox",
+     "code-digit",
++    "checkbox-icon",
++    "avatar",
++    "avatar-sm",
++    "shape-button",
+     "button-micro"
+   ],
+   "min-h": [
+     "button"
+   ],
+   "min-w": [
++    "menu",
+     "button"
+   ],
+   "max-h": [],
+diff --git a/tsup.config.ts b/tsup.config.ts
+index 7a3cb22..5d6e99a 100644
+--- a/tsup.config.ts
++++ b/tsup.config.ts
+@@ -1,25 +1,29 @@
+ import { execSync } from 'node:child_process';
+-import { copyFileSync } from 'node:fs';
+-import { resolve } from 'node:path';
++import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
++import { join } from 'node:path';
+ 
+ import { defineConfig } from 'tsup';
+ 
+-// tsup runs with `clean: true`, which wipes dist/ before each build. Emitting
+-// both CSS assets here (rather than only in the build:css npm script) guarantees
+-// dist/styles.css and dist/theme.css are always regenerated together on any path
+-// that runs tsup — so the compiled stylesheet and the Tailwind preset can never
+-// drift apart or go missing on publish.
+-function emitCssAssets() {
+-  execSync('npx tailwindcss -i src/styles/index.css -o dist/styles.css', {
+-    stdio: 'inherit',
+-    cwd: process.cwd(),
+-  });
+-  // theme.css ships as raw @theme source (the consumer's Tailwind compiles it),
+-  // so it is copied, not compiled. Kept in sync by scripts/sync-theme.mjs.
+-  copyFileSync(
+-    resolve(process.cwd(), 'src/styles/theme.css'),
+-    resolve(process.cwd(), 'dist/theme.css'),
+-  );
++// tsup runs with clean: true, which wipes dist/ before each build. onSuccess
++// re-emits both CSS assets through scripts/emit-css.mjs (the same script build:css
++// runs), so dist/styles.css and dist/theme.css are always regenerated together on
++// any path that runs tsup.
++
++// tsup's CJS splitting emits maps whose only source is the output file itself
++// (an absolute build-machine path, no sourcesContent), so they map nothing back
++// to src/. Remove them and the comments that point at them; ESM maps stay.
++function dropCjsSourceMaps(distDir: string) {
++  for (const rel of readdirSync(distDir, { recursive: true }) as string[]) {
++    const file = join(distDir, rel);
++    if (rel.endsWith('.cjs.map')) {
++      rmSync(file);
++    } else if (rel.endsWith('.cjs')) {
++      const contents = readFileSync(file, 'utf8');
++      // Not anchored to a line start: an empty chunk is `"use strict";//# sourceMappingURL=…`.
++      const stripped = contents.replace(/\/\/# sourceMappingURL=\S+\.cjs\.map\s*$/, '');
++      if (stripped !== contents) writeFileSync(file, stripped);
++    }
++  }
+ }
+ 
+ export default defineConfig({
+@@ -30,6 +34,9 @@ export default defineConfig({
+   // components keep the directive at the top of THEIR chunk, while pure/server-safe
+   // modules (cn, types, icons, BaseText) stay free of it. dist/index.js remains the
+   // single public entry, now re-exporting sibling chunks rather than an inlined blob.
++  // The per-module .js/.cjs stubs and their maps are unreachable through `exports`
++  // and are kept out of the tarball by package.json `files`; their .d.ts stay
++  // because dist/index.d.ts references them.
+   entry: ['src/**/*.{ts,tsx}', '!src/**/*.stories.tsx', '!src/**/*.test.{ts,tsx}'],
+   format: ['esm', 'cjs'],
+   dts: true,
+@@ -43,6 +50,8 @@ export default defineConfig({
+   // itself (esbuild `write: false`), so an esbuild plugin mutating outputFiles in
+   // onEnd is ignored — the directive must be applied after the real files land.
+   metafile: true,
++  // ESM maps only; the CJS maps tsup emits map each file to itself, so onSuccess
++  // removes them.
+   sourcemap: true,
+   clean: true,
+   external: ['react', 'react-dom', 'react/jsx-runtime'],
+@@ -53,6 +62,7 @@ export default defineConfig({
+   // keep the build warning-free and preserve directives cleanly.
+   onSuccess: async () => {
+     execSync('node scripts/add-use-client.mjs', { stdio: 'inherit', cwd: process.cwd() });
+-    emitCssAssets();
++    dropCjsSourceMaps(join(process.cwd(), 'dist'));
++    execSync('node scripts/emit-css.mjs', { stdio: 'inherit', cwd: process.cwd() });
+   },
+ });

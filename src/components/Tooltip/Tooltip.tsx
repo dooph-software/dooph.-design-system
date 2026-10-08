@@ -1,5 +1,3 @@
-"use client";
-
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import {
   forwardRef,
@@ -9,9 +7,9 @@ import {
 import { cn } from "../../utils/cn";
 import { BaseText, TextVariant, type BaseTextProps } from "../Text";
 
-// TooltipTypes (+ its type) lives in ./constants (server-safe), re-exported via
+// TooltipVariant (+ its type) lives in ./constants (server-safe), re-exported via
 // index.ts; imported here for internal variant resolution.
-import { TooltipTypes } from "./constants";
+import { TooltipVariant } from "./constants";
 
 const Tooltip = TooltipPrimitive.Root;
 const TooltipTrigger = TooltipPrimitive.Trigger;
@@ -31,7 +29,7 @@ const TooltipProvider = ({
 export interface TooltipContentProps extends ComponentPropsWithoutRef<
   typeof TooltipPrimitive.Content
 > {
-  variant?: TooltipTypes;
+  variant?: TooltipVariant;
   themeInverse?: boolean;
   portal?: boolean;
   portalProps?: ComponentPropsWithoutRef<typeof TooltipPrimitive.Portal>;
@@ -44,7 +42,7 @@ const TooltipContent = forwardRef<
   (
     {
       className,
-      variant = TooltipTypes.simple,
+      variant = TooltipVariant.simple,
       themeInverse = true,
       portal = true,
       portalProps,
@@ -59,16 +57,16 @@ const TooltipContent = forwardRef<
         sideOffset={sideOffset}
         className={cn(
           "z-50 shadow-menu outline-none",
-          "data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-[state=delayed-open]:duration-100",
-          "data-[state=instant-open]:animate-in data-[state=instant-open]:fade-in-0 data-[state=instant-open]:zoom-in-95 data-[state=instant-open]:duration-100",
-          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-150",
-          "motion-reduce:data-[state=delayed-open]:duration-0 motion-reduce:data-[state=instant-open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
+          "data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95",
+          "data-[state=instant-open]:animate-in data-[state=instant-open]:fade-in-0 data-[state=instant-open]:zoom-in-95",
+          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
+          "ds-motion-overlay",
           tooltipThemeClass[themeInverse ? "inverse" : "matching"],
-          variant === TooltipTypes.simple &&
-            "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-md text-style-body",
-          variant === TooltipTypes.rich &&
-            "flex ds-width-tooltip-rich flex-col gap-xs rounded-tight border border-solid px-3 py-sm wrap-break-word",
-          variant === TooltipTypes.complex &&
+          variant === TooltipVariant.simple &&
+            "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-lg text-style-body",
+          variant === TooltipVariant.rich &&
+            "flex ds-width-tooltip-rich flex-col gap-sm rounded-tight border border-solid px-md py-rg wrap-break-word",
+          variant === TooltipVariant.complex &&
             "ds-min-w-tooltip-complex rounded-normal border border-solid",
           className,
         )}
@@ -98,16 +96,9 @@ const TooltipTitle = forwardRef<HTMLElement, TooltipTitleProps>(
 TooltipTitle.displayName = "TooltipTitle";
 
 export type TooltipBodyProps = Omit<BaseTextProps, "variant">;
-const TooltipBody = forwardRef<HTMLElement, TooltipBodyProps>(
-  ({ className, ...props }, ref) => (
-    <BaseText
-      ref={ref}
-      variant={TextVariant.body}
-      className={className}
-      {...props}
-    />
-  ),
-);
+const TooltipBody = forwardRef<HTMLElement, TooltipBodyProps>((props, ref) => (
+  <BaseText ref={ref} variant={TextVariant.body} {...props} />
+));
 TooltipBody.displayName = "TooltipBody";
 
 export {

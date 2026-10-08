@@ -2,6 +2,7 @@ export {
   BaseText,
   BodyText,
   ButtonText,
+  CTAText,
   HeadingText,
   HeroBodyText,
   HeroButtonText,
@@ -15,6 +16,7 @@ export type {
   BaseTextProps,
   BodyTextProps,
   ButtonTextProps,
+  CTATextProps,
   HeadingTextProps,
   HeroBodyTextProps,
   HeroButtonTextProps,
@@ -26,7 +28,7 @@ export type {
   TitleTextProps,
 } from "./BaseText";
 export {
-  FontAxes,
+  FontAxis,
   Fonts,
   FontSizes,
   FontWeights,
@@ -36,7 +38,6 @@ export {
 export type {
   Font,
   FontAxesValue,
-  FontAxis,
   FontSize,
   FontSizeValue,
   FontValue,
@@ -46,5 +47,4 @@ export type {
   LineHeightValue,
   TrackingValue,
 } from "./constants";
-export { serializeAxes } from "./textStyle";
 export type { TextStyleProps } from "./textStyle";

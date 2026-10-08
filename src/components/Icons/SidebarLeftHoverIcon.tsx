@@ -8,5 +8,3 @@ export const SidebarLeftHoverIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default SidebarLeftHoverIcon;

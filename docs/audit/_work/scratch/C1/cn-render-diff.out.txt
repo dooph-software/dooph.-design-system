@@ -1,0 +1,16 @@
+render error in DatePicker: Cannot read properties of undefined (reading 'getFullYear')
+render error in DatePicker range: Cannot read properties of undefined (reading 'from')
+renders ok: 441, render errors (skipped): 142
+internal cn() calls that the proposed config changes: 12
+  AIModelSelectTrigger | dropped by NEW: gap-2 px-3  (x1)
+  Button size=icon | dropped by NEW: shadow-button-secondary  (x1)
+  Button size=icon-sm | dropped by NEW: shadow-button-secondary  (x1)
+  Button size=icon-micro | dropped by NEW: shadow-button-secondary  (x1)
+  CopyButton variant=secondary | dropped by NEW: shadow-button-secondary  (x1)
+  SegmentedTabSelect | dropped by NEW: gap-1  (x1)
+  SegmentedTabSelect size=container | dropped by NEW: gap-1  (x1)
+  SegmentedTabSelect size=standard | dropped by NEW: gap-1  (x1)
+  SegmentedTabSelect size=container-icon | dropped by NEW: gap-1  (x1)
+  SegmentedTabSelect size=icon | dropped by NEW: gap-1  (x1)
+  SegmentedTabSelect variant=primary | dropped by NEW: gap-1  (x1)
+  SegmentedTabSelect variant=ghost | dropped by NEW: gap-1  (x1)

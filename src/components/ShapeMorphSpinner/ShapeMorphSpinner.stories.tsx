@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { LoadingSpinnerColor, LoadingSpinnerSize } from "../LoadingSpinner/constants";
 import { CloverShape, CookieShape, SquircleShape } from "../Shapes";
 import { ShapeMorphSpinner } from "./ShapeMorphSpinner";
@@ -39,4 +39,12 @@ export const Colors: Story = {
 
 export const CustomShapes: Story = {
   args: { shapes: [CookieShape, CloverShape, SquircleShape], size: LoadingSpinnerSize.xl },
+};
+
+/** Contradicts the --ui-shape-morph-* timing tokens for this instance. */
+export const SlowTiming: Story = {
+  args: {
+    size: LoadingSpinnerSize.xl,
+    timing: { duration: 1200, interval: 2400, ease: "linear" },
+  },
 };

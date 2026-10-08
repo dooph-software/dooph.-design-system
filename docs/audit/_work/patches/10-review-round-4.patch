@@ -1,0 +1,510 @@
+diff --git a/scripts/sync-theme.mjs b/scripts/sync-theme.mjs
+index ba7445e..221505f 100644
+--- a/scripts/sync-theme.mjs
++++ b/scripts/sync-theme.mjs
+@@ -12,7 +12,10 @@
+  *
+  * HOW IT WORKS
+  * ─────────────
+- * 1. Parse tokens.css and extract every --ui-* variable name from :root { }
++ * 1. Parse tokens.css and extract every --ui-* variable name from the first
++ *    :root / :root,.light { } block (the light palette, inside
++ *    @layer ds.tokens). Later :root blocks — the expression tokens — and the
++ *    ds.expression preset are deliberately not read: none is a theme key.
+  * 2. Map each name to a Tailwind theme token (toThemeEntry: prefix rules +
+  *    ALIASES; EXCLUDED names and names no rule matches are skipped)
+  * 3. Replace the @theme inline { } block in index.css between the auto-gen markers
+@@ -178,6 +181,10 @@ const EXCLUDED = new Set([
+   "ui-shape-morph-interval",
+   "ui-shape-morph-passive-spin-duration",
+   "ui-shape-morph-nudge",
++  // Expression tokens — raw var() inside .ds-expr-* helpers only, never a
++  // utility (see the expression block at the end of tokens.css)
++  "ui-caret-shape-scale",
++  "ui-caret-nudge",
+   // Rolling digits stagger / geometry — raw var() in @layer utilities only
+   "ui-rolling-digits-stagger",
+   "ui-rolling-digits-opacity-ratio",
+diff --git a/src/components/CTAButton/CTAButton.tsx b/src/components/CTAButton/CTAButton.tsx
+index 015f3d3..d4df82d 100644
+--- a/src/components/CTAButton/CTAButton.tsx
++++ b/src/components/CTAButton/CTAButton.tsx
+@@ -3,8 +3,10 @@
+  *
+  * ## behavior
+  * - The end mark is a FIXED shape per size: the eight-leaf clover at
+- *   `standard`, the puff at `big`. It is static: hover only rolls the label
+- *   (RollHoverText on the root `.group`).
++ *   `standard`, the puff at `big`. It never morphs. Hover rolls the label
++ *   (RollHoverText on the root `.group`) and, on hover and focus-visible,
++ *   tilts the shape by DropdownCaret's hover-nudge amount (13.5deg), on the
++ *   motion scale (`base`, `enter`) — CSS only, through `.ds-cta-shape-tilt`.
+  * - The shape is painted with the OPPOSITE button's background: a primary CTA
+  *   draws it in the secondary-button bg, a secondary CTA in the primary-button
+  *   bg. The icon on it takes that button's content colour.
+@@ -13,9 +15,11 @@
+  *   24 / 28px).
+  *
+  * ## constraints
+- * - The shape is chosen by `size`, never by a prop and never animated. That is
+- *   the maintainer's decision (2026-10-03); a shape prop or a hover morph is a
+- *   design change, not a refactor.
++ * - The shape is chosen by `size`, never by a prop, and it never morphs. That
++ *   is the maintainer's decision (2026-10-03); a shape prop or a hover morph
++ *   is a design change, not a refactor. Its only motion is the hover tilt,
++ *   approved by the maintainer (2026-10-07): one named helper,
++ *   `.ds-cta-shape-tilt`, reusing the nudge token — no listeners, no state.
+  * - The shapes are the `Shapes/` primitives, never re-drawn copies. Figma's
+  *   flattened end-mark SVGs are not the source of truth.
+  */
+@@ -125,8 +129,9 @@ type CTAButtonComponent = {
+ };
+ 
+ /**
+- * Padded-outline marketing CTA. The outline ring is primary-only; hover response
+- * is label-only via RollHoverText on an ancestor `.group`. Radii stay fully round.
++ * Padded-outline marketing CTA. The outline ring is primary-only; hover rolls
++ * the label (RollHoverText) and tilts the end shape (`.ds-cta-shape-tilt`), both
++ * keyed to the root `.group`. Radii stay fully round.
+  */
+ const CTAButtonBase = forwardRef<HTMLElement, CTAButtonProps>(
+   (
+@@ -173,7 +178,7 @@ const CTAButtonBase = forwardRef<HTMLElement, CTAButtonProps>(
+             <span
+               aria-hidden
+               className={cn(
+-                "absolute inset-0 flex items-center justify-center",
++                "ds-cta-shape-tilt absolute inset-0 flex items-center justify-center",
+                 paint.shape,
+               )}
+             >
+diff --git a/src/components/DropdownCaret/DropdownCaret.stories.tsx b/src/components/DropdownCaret/DropdownCaret.stories.tsx
+index b5d4d2e..b43120d 100644
+--- a/src/components/DropdownCaret/DropdownCaret.stories.tsx
++++ b/src/components/DropdownCaret/DropdownCaret.stories.tsx
+@@ -1,6 +1,7 @@
+ import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { useState } from "react";
+ import { Button, ButtonVariant } from "../Button";
++import { DropdownTrigger, TypeableDropdownTrigger } from "../DropdownTrigger";
+ import { ButtonText } from "../Text";
+ import { DropdownCaret } from "./DropdownCaret";
+ import { DropdownCaretVariant } from "./constants";
+@@ -52,3 +53,33 @@ function InteractiveDemo() {
+ export const Interactive: Story = {
+   render: () => <InteractiveDemo />,
+ };
++
++/** The real triggers in each expression, closed / open / disabled. */
++const TriggerColumn = ({ label }: { label: string }) => (
++  <div className="flex flex-col gap-md">
++    <ButtonText>{label}</ButtonText>
++    <DropdownTrigger>Select option</DropdownTrigger>
++    <DropdownTrigger data-state="open">Menu open</DropdownTrigger>
++    <DropdownTrigger disabled>Disabled</DropdownTrigger>
++    <TypeableDropdownTrigger placeholder="Search or select…" />
++    <TypeableDropdownTrigger placeholder="Menu open…" data-state="open" />
++    <TypeableDropdownTrigger placeholder="Disabled" disabled />
++  </div>
++);
++
++/**
++ * The caret's shape and hover nudge are expressive details. Under
++ * `data-ds-expression="practical"` (normally on <html>, nested here only to
++ * compare) they are neutral: a plain chevron in the trigger's text colour, no
++ * shape, no empty frame, no hover lean. Hover the triggers in both columns.
++ */
++export const Practical: Story = {
++  render: () => (
++    <div className="flex flex-row gap-xxl">
++      <TriggerColumn label="Default (signature)" />
++      <div data-ds-expression="practical">
++        <TriggerColumn label="Practical" />
++      </div>
++    </div>
++  ),
++};
+diff --git a/src/components/DropdownCaret/DropdownCaret.tsx b/src/components/DropdownCaret/DropdownCaret.tsx
+index 52e9c34..a2af3ba 100644
+--- a/src/components/DropdownCaret/DropdownCaret.tsx
++++ b/src/components/DropdownCaret/DropdownCaret.tsx
+@@ -4,15 +4,22 @@
+  * ## behavior
+  * - A MorphRotationShape (embedded mode) behind a 14px chevron. Closed shows
+  *   the variant's closed shape, open morphs to its open shape and flips the
+- *   chevron 180°, and hover leans --ui-shape-morph-nudge toward the other
+- *   shape in either state.
++ *   chevron 180°, and hover leans --ui-caret-nudge (by default
++ *   --ui-shape-morph-nudge) toward the other shape in either state.
+  * - State comes from the nearest `.ds-dropdown-caret-host` ancestor — the
+  *   trigger root — via CSS: [data-state="open"], :hover, and
+  *   :disabled / [aria-disabled="true"] / [data-disabled]. The trigger passes
+  *   no props; a custom trigger opts in by adding the host class.
+- * - The root is a square the trigger's height, centred on itself; the frame
+- *   inside is height-button minus spacing-rg (26px at defaults). The gaps that
+- *   leaves are a result, not a spec, and they absorb the rotation spill.
++ * - By default the root is a square the trigger's height, centred on itself;
++ *   the frame inside is height-button minus spacing-md (26px at defaults). The
++ *   gaps that leaves are a result, not a spec, and they absorb the rotation
++ *   spill.
++ * - The shape and the hover nudge are EXPRESSIVE DETAILS, read from the
++ *   expression tokens --ui-caret-shape-scale and --ui-caret-nudge through the
++ *   .ds-expr-caret-shape / .ds-expr-caret-nudge helpers on the root. Under
++ *   [data-ds-expression="practical"] both are 0: no shape, no frame, no lean,
++ *   and the root shrinks to a plain chevron in the trigger's text colour with
++ *   a trailing inset matching the host's ds-pl-ui-md.
+  *
+  * ## constraints
+  * - The root's -my-px -mr-px pulls it over the host's 1px border so the
+@@ -23,6 +30,11 @@
+  *   a prop or class bypasses the CSS's light/dark token choices.
+  * - No state props and no listeners (Rule 7): hosts drive it through CSS only
+  *   — a listener on the host breaks when the host is a consumer's custom trigger.
++ * - The shape and the nudge must stay neutralisable by the practical preset:
++ *   they are read only from --ui-caret-* via the .ds-expr-caret-* helpers, and
++ *   nothing here (no inline style, no className, no prop) may set those tokens
++ *   or size the root/frame another way — that would let a practical product
++ *   still show the signature shape, or leave an empty frame beside the chevron.
+  */
+ import { cn } from "../../utils/cn";
+ import { ChevronDownIcon, IconSize } from "../Icons";
+@@ -47,7 +59,7 @@ export const DropdownCaret = ({ variant = DropdownCaretVariant.dropdown, classNa
+   <span
+     aria-hidden
+     className={cn(
+-      "ds-dropdown-caret relative inline-flex size-button shrink-0 items-center justify-center -my-px -mr-px",
++      "ds-dropdown-caret ds-expr-caret-shape ds-expr-caret-nudge relative inline-flex h-button shrink-0 items-center justify-center -my-px -mr-px",
+       className,
+     )}
+   >
+diff --git a/src/components/ProgressIndicator/ProgressIndicator.tsx b/src/components/ProgressIndicator/ProgressIndicator.tsx
+index 51c3586..e7379ff 100644
+--- a/src/components/ProgressIndicator/ProgressIndicator.tsx
++++ b/src/components/ProgressIndicator/ProgressIndicator.tsx
+@@ -56,12 +56,13 @@ type InnerSvgProps = ComponentPropsWithoutRef<"svg"> & {
+  * Flat determinate progress — discrete arcs (M3 style):
+  *
+  * At `progress === 0` the track renders as a complete circle — no gaps — to
+- * represent the fully-empty state cleanly. From 1 % up, the standard M3
++ * represent the fully-empty state cleanly. From any value above 0, the standard M3
+  * discrete-arc gap formula applies: indicator arc spans `progress × C` from
+  * 12 o'clock; track covers the complementary arc with a `gapLength` gap at each
+- * endpoint. Between 0 and 1 % the gaps ramp in linearly, so the drawing is
+- * continuous in `progress` (it has to be — it is animated). Once the track's
+- * complement has no length it is faded out, not unmounted.
++ * endpoint. The gap is switched by `--ds-pi-gap-on` (0|1, from the TARGET
++ * `progress > 0`) — a discrete, non-transitioned property, so it appears at
++ * once while only the arc scalar animates. Once the track's complement has no
++ * length it is faded out, not unmounted.
+  *
+  * Motion: the <svg> sets ONE number, `--ds-pi-progress`, inline (plus the
+  * fixed circumference and gap), and `.ds-progress-ring` transitions only that
+@@ -120,6 +121,9 @@ function FlatProgressIndicator({
+           "--ds-pi-progress": progress,
+           "--ds-pi-c": circumference,
+           "--ds-pi-gap": gapLength,
++          // Discrete, from the TARGET progress: never transitions, so the end
++          // gaps appear at once instead of growing in over the first 1 %.
++          "--ds-pi-gap-on": progress > 0 ? 1 : 0,
+           ...style,
+         } as CSSProperties
+       }
+diff --git a/src/components/Toggle/FancyToggleSwitch.tsx b/src/components/Toggle/FancyToggleSwitch.tsx
+index 924672b..34797ab 100644
+--- a/src/components/Toggle/FancyToggleSwitch.tsx
++++ b/src/components/Toggle/FancyToggleSwitch.tsx
+@@ -37,6 +37,7 @@ import {
+ } from "react";
+ import { cn } from "../../utils/cn";
+ import { CheckIcon } from "../Icons/CheckIcon";
++import { BaseText, TextVariant } from "../Text";
+ import {
+   fancyToggleCheckClass,
+   fancyToggleIndicatorSlot,
+@@ -48,11 +49,10 @@ import { useNeverClearedValue } from "./Toggle";
+ // Figma Fancy Toggle Switch: md (12px) between options.
+ const ROOT_CLASS = "inline-flex items-center gap-md";
+ 
+-export interface FancyToggleSwitchProps
+-  extends Omit<
+-    ComponentPropsWithoutRef<typeof ToggleGroup.Root>,
+-    "type" | "value" | "onValueChange" | "defaultValue"
+-  > {
++export interface FancyToggleSwitchProps extends Omit<
++  ComponentPropsWithoutRef<typeof ToggleGroup.Root>,
++  "type" | "value" | "onValueChange" | "defaultValue"
++> {
+   /** Exactly one option is chosen, and it can never be cleared. */
+   value?: string;
+   defaultValue?: string;
+@@ -63,22 +63,27 @@ export interface FancyToggleSwitchProps
+ const FancyToggleSwitch = forwardRef<
+   ComponentRef<typeof ToggleGroup.Root>,
+   FancyToggleSwitchProps
+->(({ className, value, defaultValue, onValueChange, children, ...props }, ref) => {
+-  const single = useNeverClearedValue({ value, defaultValue, onValueChange });
++>(
++  (
++    { className, value, defaultValue, onValueChange, children, ...props },
++    ref,
++  ) => {
++    const single = useNeverClearedValue({ value, defaultValue, onValueChange });
+ 
+-  return (
+-    <ToggleGroup.Root
+-      ref={ref}
+-      type="single"
+-      value={single.value}
+-      onValueChange={single.onValueChange}
+-      className={cn(ROOT_CLASS, className)}
+-      {...props}
+-    >
+-      {children}
+-    </ToggleGroup.Root>
+-  );
+-});
++    return (
++      <ToggleGroup.Root
++        ref={ref}
++        type="single"
++        value={single.value}
++        onValueChange={single.onValueChange}
++        className={cn(ROOT_CLASS, className)}
++        {...props}
++      >
++        {children}
++      </ToggleGroup.Root>
++    );
++  },
++);
+ FancyToggleSwitch.displayName = "FancyToggleSwitch";
+ 
+ export interface FancyToggleSwitchItemProps extends ComponentPropsWithoutRef<
+@@ -113,7 +118,8 @@ const FancyToggleSwitchItem = forwardRef<
+           {hasIcon ? icon : <CheckIcon className={fancyToggleCheckClass} />}
+         </span>
+       </span>
+-      <span className="text-style-hero-button">{children}</span>
++      {/* <span className="text-style-hero-button">{children}</span> */}
++      <BaseText variant={TextVariant.button}>{children}</BaseText>
+     </ToggleGroup.Item>
+   );
+ });
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index f014585..e120d54 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -267,8 +267,11 @@
+    * disagree — it slides backwards or its length hits 0 and it vanishes.
+    *
+    * Track (complement of the indicator, a gap clear of each end):
+-   *   gap   = --ds-pi-gap ramped in over the first 1 % (0 at 0 → full circle,
+-   *           continuous; full gap from 1 % up, identical to the static M3 form)
++   *   gap   = --ds-pi-gap × --ds-pi-gap-on, where gap-on is a discrete 0|1
++   *           set inline from the TARGET progress (> 0). It is a plain custom
++   *           property (not registered), so it never transitions: the end gaps
++   *           appear / vanish at once, as in the static M3 form, while only
++   *           the arc scalar animates.
+    *   start = C·p + gap   → dashoffset −start
+    *   len   = C·(1 − p) − 2·gap → dasharray "len C"
+    * A zero-length round-capped dash still paints a dot, so each arc's
+@@ -281,14 +284,14 @@
+   .ds-progress-ring-indicator {
+     stroke-dasharray: calc(var(--ds-pi-c) * 1px);
+     stroke-dashoffset: calc(var(--ds-pi-c) * (1 - var(--ds-pi-progress)) * 1px);
+-    stroke-opacity: clamp(0, var(--ds-pi-c) * var(--ds-pi-progress) * 1000, 1);
++    stroke-opacity: clamp(0, var(--ds-pi-c) * var(--ds-pi-progress) * 1000000, 1);
+   }
+   .ds-progress-ring-track {
+-    --ds-pi-gap-now: calc(var(--ds-pi-gap) * clamp(0, var(--ds-pi-progress) * 100, 1));
++    --ds-pi-gap-now: calc(var(--ds-pi-gap) * var(--ds-pi-gap-on));
+     --ds-pi-track-len: calc(var(--ds-pi-c) * (1 - var(--ds-pi-progress)) - 2 * var(--ds-pi-gap-now));
+     stroke-dasharray: max(0px, var(--ds-pi-track-len) * 1px) calc(var(--ds-pi-c) * 1px);
+     stroke-dashoffset: calc((var(--ds-pi-c) * var(--ds-pi-progress) + var(--ds-pi-gap-now)) * -1px);
+-    stroke-opacity: clamp(0, var(--ds-pi-track-len) * 1000, 1);
++    stroke-opacity: clamp(0, var(--ds-pi-track-len) * 1000000, 1);
+   }
+   /* Stepped slider dots. The active/inactive split is a plain attribute
+    * selector rather than a Tailwind `data-[active]:` variant — variants only
+@@ -460,6 +463,19 @@
+     filter: drop-shadow(var(--ui-shadow-cta));
+   }
+ 
++  /* CTAButton end shape — hover/focus-visible tilt. The shape never morphs; it
++   * only leans by the amount DropdownCaret's hover nudge does: the nudge token
++   * is a fraction of one step (--ui-shape-morph-nudge, 0.15) and a step turns
++   * 90deg (MorphRotationShape's M3 turn), so 0.15 * 90deg = 13.5deg clockwise.
++   * Motion scale, like the nudge's own lean. The trigger is the root `.group`
++   * (:where keeps specificity flat, as the outline-button orbs above do). */
++  .ds-cta-shape-tilt {
++    transition: rotate var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
++  }
++  .ds-cta-shape-tilt:is(:where(.group):is(:hover, :focus-visible) *) {
++    rotate: calc(var(--ui-shape-morph-nudge) * 90deg);
++  }
++
+   .ds-size-cta-chip-standard {
+     width: var(--ui-size-cta-chip-standard);
+     height: var(--ui-size-cta-chip-standard);
+diff --git a/src/styles/index.css b/src/styles/index.css
+index 3841e28..6e9a02f 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -990,19 +990,52 @@
+     color: var(--ui-color-primary);
+     transition: color var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
+   }
+-  .ds-dropdown-caret-frame {
+-    width: var(--ds-dropdown-caret-frame);
+-    height: var(--ds-dropdown-caret-frame);
+-  }
+   .ds-dropdown-caret-chevron {
+-    color: var(--ui-color-primary-foreground);
+     transition:
+       rotate var(--ui-shape-morph-duration) var(--ui-shape-morph-ease),
+       color var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
+   }
++  /* Expressive detail: the caret's SHAPE, read from --ui-caret-shape-scale
++   * (an expression token; the practical preset sets it to 0). Every read of it
++   * lives in a .ds-expr-caret-shape rule.
++   *   1  the signature caret: a square the trigger's height, the morphing
++   *      shape in a frame of height-button minus spacing-md, and the chevron in
++   *      the primary FOREGROUND, because it sits on the shape.
++   *   0  a plain chevron: no frame (the shape fills the frame, so it draws
++   *      nothing), the root shrinks to the chevron plus a trailing inset that
++   *      mirrors the host's leading ds-pl-ui-md (+1px for the -mr-px pull over
++   *      the border), and the chevron takes the trigger's text colour.
++   * Values in between interpolate; 0 and 1 are the designed settings. The
++   * frame may be narrower than the chevron: it overflows centred, and the
++   * root's own width is what lays out. */
++  .ds-expr-caret-shape {
++    width: calc(
++      var(--ui-height-button) * var(--ui-caret-shape-scale) +
++        (var(--ui-icon-rg) + var(--ui-spacing-md) + 1px) *
++        (1 - var(--ui-caret-shape-scale))
++    );
++    padding-inline-end: calc(
++      (var(--ui-spacing-md) + 1px) * (1 - var(--ui-caret-shape-scale))
++    );
++  }
++  .ds-expr-caret-shape .ds-dropdown-caret-frame {
++    width: calc(var(--ds-dropdown-caret-frame) * var(--ui-caret-shape-scale));
++    height: calc(var(--ds-dropdown-caret-frame) * var(--ui-caret-shape-scale));
++  }
++  .ds-expr-caret-shape .ds-dropdown-caret-chevron {
++    color: color-mix(
++      in srgb,
++      var(--ui-color-primary-foreground)
++        clamp(0%, calc(var(--ui-caret-shape-scale) * 100%), 100%),
++      var(--ui-color-secondary-foreground)
++    );
++  }
++  /* Expressive detail: the hover NUDGE, read from --ui-caret-nudge (an
++   * expression token, following --ui-shape-morph-nudge by default; the
++   * practical preset sets it to 0). */
+   .ds-dropdown-caret-host:hover:not(:disabled):not([aria-disabled="true"]):not([data-disabled])
+-    .ds-dropdown-caret {
+-    --ds-shape-morph-nudge: var(--ui-shape-morph-nudge);
++    .ds-expr-caret-nudge {
++    --ds-shape-morph-nudge: var(--ui-caret-nudge);
+   }
+   .ds-dropdown-caret-host[data-state="open"] .ds-dropdown-caret {
+     --ds-shape-morph-target: 1;
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index 114b8fa..d2220fd 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -1,3 +1,5 @@
++@layer ds.tokens, ds.expression;
++
+ /*
+  * dooph Design System — Token Layer
+  *
+@@ -10,10 +12,25 @@
+  * — There is NO `prefers-color-scheme` remapping here: system mode is the
+  *   consuming app's job (providers add/remove `.dark` from OS preference).
+  *
+- * Consuming apps override `--ui-*` in their CSS after importing this bundle,
+- * targeting `:root` / `.light` / `.dark` as needed — never hardcoded in components.
++ * Authority — cascade layers, so precedence never depends on file order or
++ * selector specificity. Everything below sits in two layers:
++ *   ds.tokens      the DS defaults (light, dark, reduced motion)
++ *   ds.expression  the expression presets ([data-ds-expression="…"])
++ * A consuming app's own tokens.css is UNLAYERED, so it always wins:
++ *   your tokens.css > the expression preset > DS defaults.
++ * Override `--ui-*` there, targeting `:root` / `.light` / `.dark` as needed —
++ * never hardcoded in components. Import order no longer matters.
++ *
++ * Expression tokens: one per expressive DETAIL inside a practical component
++ * (e.g. the dropdown caret's shape). Each line ends in an `expression`
++ * marker comment, is read only through a `.ds-expr-*` helper, and has its
++ * neutral value in the practical preset at the end of this file. Components
++ * never set them.
++ * Checked by docs/audit/_work/scratch/expression-check.mjs.
+  */
+ 
++@layer ds.tokens {
++
+ :root,
+ .light {
+   /* ── Colors ─────────────────────────────────────────────────────────── */
+@@ -844,16 +861,51 @@
+  * static frame instead.
+  *
+  * `.light` is listed beside `:root` because it redeclares the scale; without
+- * it a `.light` subtree would quietly restore full-length motion. */
++ * it a `.light` subtree would quietly restore full-length motion.
++ *
++ * `!important` is deliberate and load-bearing: these tokens live in
++ * `@layer ds.tokens`, and a consumer's UNLAYERED override (e.g. a product
++ * tuning --ui-motion-duration-fast) would otherwise beat this block and give
++ * reduced-motion users full animations. A layered !important outranks every
++ * unlayered normal declaration, so the user's accessibility setting always
++ * wins. Do not remove it. */
+ @media (prefers-reduced-motion: reduce) {
+   :root,
+   .light {
+-    --ui-motion-duration-fast: 1ms;
+-    --ui-motion-duration-base: 1ms;
+-    --ui-motion-duration-slow: 1ms;
+-    --ui-motion-duration-slower: 1ms;
+-    --ui-motion-duration-slowest: 1ms;
+-    --ui-roll-hover-stagger: 0ms;
+-    --ui-rolling-digits-stagger: 0ms;
++    --ui-motion-duration-fast: 1ms !important;
++    --ui-motion-duration-base: 1ms !important;
++    --ui-motion-duration-slow: 1ms !important;
++    --ui-motion-duration-slower: 1ms !important;
++    --ui-motion-duration-slowest: 1ms !important;
++    --ui-roll-hover-stagger: 0ms !important;
++    --ui-rolling-digits-stagger: 0ms !important;
++  }
++}
++
++/* ── Expression details — DS defaults (the signature look) ──────────────────
++ * Declared on :root ONLY, not beside `.light`/`.dark`: a theme-class subtree
++ * must never quietly restore a detail the practical preset turned off. */
++:root {
++  /* DropdownCaret shape: 1 = the morphing shape behind the chevron, in its
++   * square; 0 = a plain chevron, no shape and no frame around it. Values in
++   * between interpolate size and colour; 0 and 1 are the designed settings. */
++  --ui-caret-shape-scale: 1; /* expression */
++  /* DropdownCaret hover lean (a fraction of one step, like
++   * --ui-shape-morph-nudge, which it follows by default); 0 = no lean. */
++  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */
++}
++
++} /* @layer ds.tokens */
++
++/* ── Expression presets ─────────────────────────────────────────────────────
++ * A product-level setting: put the attribute on the root element —
++ * `<html data-ds-expression="practical">` in a Next.js app/layout.tsx, or
++ * index.html in Vite. Nesting works ("nearest ancestor wins") but is
++ * discouraged. Every expression-marked token above MUST appear here with
++ * its neutral value. A product's own unlayered tokens.css still beats this. */
++@layer ds.expression {
++  [data-ds-expression="practical"] {
++    --ui-caret-shape-scale: 0;
++    --ui-caret-nudge: 0;
+   }
+ }

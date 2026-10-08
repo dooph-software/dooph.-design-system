@@ -7,6 +7,7 @@ import {
   CookieShape,
   DiamondShape,
   DoubleShape,
+  EightLeafCloverShape,
   PentagonShape,
   PixircleShape,
   PuffShape,
@@ -14,6 +15,7 @@ import {
   StarShape,
   TripleShape,
 } from "./index";
+import { LabelText } from "../Text";
 
 type ShapeProps = {
   size: number;
@@ -34,6 +36,7 @@ const shapes: ShapeExample[] = [
   { label: "Cookie", component: CookieShape },
   { label: "Diamond", component: DiamondShape },
   { label: "Double", component: DoubleShape },
+  { label: "Eight-leaf clover", component: EightLeafCloverShape },
   { label: "Pentagon", component: PentagonShape },
   { label: "Pixircle", component: PixircleShape },
   { label: "Puff", component: PuffShape },
@@ -76,7 +79,7 @@ const ShapeCell = ({
 }) => (
   <div className="flex flex-col items-center gap-3 rounded-normal border border-border-primary bg-surface-primary p-4">
     <Shape size={size} strokeColor="transparent" fillColor={fillColor} />
-    <span className="text-style-label text-text-secondary">{label}</span>
+    <LabelText className="text-text-secondary">{label}</LabelText>
   </div>
 );
 
@@ -102,6 +105,10 @@ export const Diamond: Story = {
 
 export const Double: Story = {
   render: (args) => <DoubleShape {...args} />,
+};
+
+export const EightLeafClover: Story = {
+  render: (args) => <EightLeafCloverShape {...args} />,
 };
 
 export const Pentagon: Story = {
@@ -148,7 +155,7 @@ export const Sizes: Story = {
             strokeColor="transparent"
             fillColor="var(--color-primary)"
           />
-          <span className="text-style-label text-text-secondary">{size}px</span>
+          <LabelText className="text-text-secondary">{size}px</LabelText>
         </div>
       ))}
     </div>

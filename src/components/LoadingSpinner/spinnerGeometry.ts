@@ -8,7 +8,11 @@
  *
  * Keeping them apart is what makes the tokens real: the SVG scales to the token
  * and every proportion inside it survives.
+ *
+ * Geometry only. No duration or easing belongs here: the spinner's clock is the
+ * --ui-spinner-* tokens, read by the .ds-spinner-* CSS helpers (Rule 6).
  */
+import { ACTIVE_INDICATOR_SCALE } from "../MorphRotationShape/geometry";
 
 /**
  * Reference diameter in USER UNITS for each size — the coordinate space every
@@ -29,7 +33,7 @@ export const SPINNER_DIAMETERS = { sm: 16, rg: 22, md: 32, xl: 40 } as const;
 
 /**
  * Rendered size per size key, as the token reference itself rather than a
- * snapshot of its value — the same technique `Fonts`/`IconSizes` use, so a
+ * snapshot of its value — the same technique `Fonts`/`IconSize` use, so a
  * consumer override resolves at paint time instead of being baked in here.
  */
 export const SPINNER_SIZE_VARS = {
@@ -39,36 +43,57 @@ export const SPINNER_SIZE_VARS = {
   xl: "var(--ui-size-spinner-xl)",
 } as const;
 
-/** Stroke width in px for each size. Scales with diameter. */
+/**
+ * Stroke width per size, in viewBox user units — the rendered size comes from
+ * the --ui-size-spinner-* token and the stroke scales with it.
+ */
 export const SPINNER_STROKE_WIDTHS = { sm: 2, rg: 2.5, md: 3, xl: 3 } as const;
 
 /** Starting angle in radians — 12 o'clock position. */
 export const SPINNER_START_ANGLE = -Math.PI / 2;
 
 /**
- * Duration in ms for one full animation cycle.
- * Matches Material Design's indeterminate circular progress timing (1.4 s).
+ * Minimum sweep fraction for the flat indeterminate arc: Material's starting
+ * dash (1 unit of its ≈126.9-unit circle), so each cycle starts from a dot.
  */
-export const SPINNER_ANIM_DURATION = 1800;
+export const SPINNER_MIN_SWEEP = 0.008;
 
-/** Minimum sweep fraction (7 % of a full rotation) for the indeterminate arc. */
-export const SPINNER_MIN_SWEEP = 0.07;
-
-/** Maximum sweep fraction for the flat spinner (72 % of a full rotation). */
+/**
+ * Maximum sweep fraction for the flat spinner (72 % of a full rotation).
+ * Material's own is ≈79 %, but this spinner also draws a track a gap clear of
+ * each end, and at `sm` 79 % leaves that track ≈3 % of a turn — a dot. 72 %
+ * keeps it a visible arc at every size.
+ */
 export const SPINNER_MAX_SWEEP = 0.72;
 
 /**
- * Reference revolution duration in ms for the spokes spinner at the `rg` size.
- * Each size derives its own duration via `getSpinnerGeometry` using a square-root
- * power law rather than a linear scale — linear over-corrects (small too fast,
- * large too slow). Power 0.5 gives the right perceptual compression:
+ * Per-size factor on the spokes/star turn duration (--ui-spinner-spokes-duration,
+ * which is the `rg` turn). A square-root power law rather than a linear scale —
+ * linear over-corrects (small too fast, large too slow); power 0.5 gives the
+ * right perceptual compression:
  *
- *   spokesDuration(size) = SPINNER_SPOKES_DURATION × (diameter / diameter_rg)^0.5
+ *   turn(size) = --ui-spinner-spokes-duration × (diameter / diameter_rg)^0.5
  *
- * At this reference the sizes come out approximately:
- *   sm → 1092 ms | rg → 1280 ms | md → 1544 ms | xl → 1726 ms
+ * The factor is geometry (a ratio of sizes); the duration it scales is a token,
+ * so the clock itself never lives in JS.
  */
-export const SPINNER_SPOKES_DURATION = 1280;
+export const SPINNER_SPIN_EXPONENT = 0.5;
+
+/**
+ * Star variant fit. `STAR_SHAPE_PATH` is drawn in a 24-unit box and its
+ * bounds are x 1.5–22.4936, y 1.5064–22.4937: an extent of ~21 units centred
+ * on (12, 12). The star is scaled about that centre so its bounds are
+ * ACTIVE_INDICATOR_SCALE (38/48) of the spinner box — the same shape-to-box
+ * ratio ShapeMorphSpinner draws its shapes at. The star's farthest points
+ * from its centre are its four tips, which also set its bounds, so it needs
+ * no further rotation-safe reduction: it stays inside the box at any angle.
+ */
+export const STAR_VIEWBOX = 24;
+const STAR_EXTENT = 22.4936 - 1.5;
+export const STAR_FIT_SCALE =
+  (ACTIVE_INDICATOR_SCALE * STAR_VIEWBOX) / STAR_EXTENT;
+/** SVG transform that applies STAR_FIT_SCALE about the box centre. */
+export const STAR_FIT_TRANSFORM = `translate(${STAR_VIEWBOX / 2} ${STAR_VIEWBOX / 2}) scale(${STAR_FIT_SCALE}) translate(${-STAR_VIEWBOX / 2} ${-STAR_VIEWBOX / 2})`;
 
 export type SpinnerSizeKey = keyof typeof SPINNER_DIAMETERS;
 
@@ -101,14 +126,10 @@ export interface SpinnerGeometry {
    */
   gapLength: number;
   /**
-   * Revolution duration in ms for the spokes variant at this size.
-   * Uses a square-root power law (exponent 0.5) so perceived speed stays
-   * consistent without over-correcting: small sizes spin a little faster,
-   * large sizes a little slower, but the range stays comfortable.
-   *
-   * = SPINNER_SPOKES_DURATION × (diameter / diameter_rg)^0.5
+   * Per-size factor on --ui-spinner-spokes-duration for the spokes and star
+   * turns: (diameter / diameter_rg)^SPINNER_SPIN_EXPONENT. 1 at `rg`.
    */
-  spokesDuration: number;
+  spinTimeScale: number;
 }
 
 /** Compute all geometry values needed to render a spinner at the given size. */
@@ -124,11 +145,11 @@ export function getSpinnerGeometry(size: SpinnerSizeKey): SpinnerGeometry {
   // Mathematical gap = 2 × strokeWidth → visual gap ≈ strokeWidth with round caps.
   const gapLength = strokeWidth * 2;
 
-  // Spokes duration: square-root power law keeps perceived speed consistent
-  // without over-correcting. Linear scaling (exponent 1) makes small too fast
-  // and large too slow; power 0.5 compresses the range to a comfortable spread.
-  const spokesDuration = Math.round(
-    SPINNER_SPOKES_DURATION * Math.pow(diameter / SPINNER_DIAMETERS.rg, 0.5),
+  // Square-root power law keeps perceived turn speed consistent across sizes
+  // without over-correcting (see SPINNER_SPIN_EXPONENT).
+  const spinTimeScale = Math.pow(
+    diameter / SPINNER_DIAMETERS.rg,
+    SPINNER_SPIN_EXPONENT,
   );
 
   return {
@@ -141,6 +162,6 @@ export function getSpinnerGeometry(size: SpinnerSizeKey): SpinnerGeometry {
     indicatorRadius,
     circumference,
     gapLength,
-    spokesDuration,
+    spinTimeScale,
   };
 }

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx", "strict": true, "noEmit": true, "module": "esnext", "moduleResolution": "bundler", "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@dooph-software/design-system": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/dist/index.d.ts"],
+      "react": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types/react"],
+      "react/jsx-runtime": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types/react/jsx-runtime"]
+    },
+    "typeRoots": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types"]
+  },
+  "files": ["probe60.tsx"]
+}

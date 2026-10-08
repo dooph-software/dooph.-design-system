@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { SendIcon } from "../Icons";
 import { LabelText } from "../Text";
 import { ShapeButton } from "./ShapeButton";
@@ -25,7 +25,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Brand: Story = {
+export const Prominent: Story = {
+  name: "Prominent",
   args: {
     shape: ShapeButtons.clover,
     variant: ShapeButtonVariant.prominent,
@@ -92,5 +93,16 @@ export const AllStates: Story = {
         </div>
       ))}
     </div>
+  ),
+};
+
+/** `asChild` renders the consumer's element as the root; the shape renders inside it. */
+export const AsChild: Story = {
+  render: () => (
+    <ShapeButton asChild shape={ShapeButtons.squircle}>
+      <a href="#send" aria-label="Send">
+        <SendIcon />
+      </a>
+    </ShapeButton>
   ),
 };

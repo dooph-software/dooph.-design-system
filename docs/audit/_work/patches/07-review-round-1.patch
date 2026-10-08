@@ -1,0 +1,1083 @@
+diff --git a/scripts/sync-theme.mjs b/scripts/sync-theme.mjs
+index 737fc90..6170da0 100644
+--- a/scripts/sync-theme.mjs
++++ b/scripts/sync-theme.mjs
+@@ -101,6 +101,9 @@ const EXCLUDED = new Set([
+   "ui-height-button",
+   "ui-height-button-sm",
+   "ui-height-button-medium",
++  // Focus-ring widths: raw var() inside the ds-focus-* helpers, never a utility
++  "ui-focus-ring-width",
++  "ui-focus-ring-width-sm",
+   "ui-height-button-big",
+   "ui-height-button-micro",
+   // Medium / big button padding — exposed via ds-px-button-* helpers
+@@ -160,6 +163,9 @@ const EXCLUDED = new Set([
+   "ui-motion-ease-linear",
+   // Loop cycle times — raw var() in @layer utilities only
+   "ui-shimmer-duration",
++  "ui-spinner-duration",
++  "ui-spinner-rotate-duration",
++  "ui-spinner-spokes-duration",
+   // Roll-on-change depth/blur — raw var() in keyframes only
+   "ui-roll-change-depth",
+   "ui-roll-change-blur",
+diff --git a/src/components/Button/Button.stories.tsx b/src/components/Button/Button.stories.tsx
+index 58fe450..d1d9705 100644
+--- a/src/components/Button/Button.stories.tsx
++++ b/src/components/Button/Button.stories.tsx
+@@ -31,8 +31,7 @@ export const Primary: Story = {
+ export const Secondary: Story = {
+   args: { children: "Button", variant: ButtonVariant.secondary },
+ };
+-/** Export kept as `Brand` so the story URL is stable; the variant is `prominent`. */
+-export const Brand: Story = {
++export const Prominent: Story = {
+   name: "Prominent",
+   args: { children: "Button", variant: ButtonVariant.prominent },
+ };
+diff --git a/src/components/Calendar/Calendar.stories.tsx b/src/components/Calendar/Calendar.stories.tsx
+index 5685ac1..eea104f 100644
+--- a/src/components/Calendar/Calendar.stories.tsx
++++ b/src/components/Calendar/Calendar.stories.tsx
+@@ -16,6 +16,7 @@ const TODAY = new Date(2026, 4, 15);
+ const meta: Meta<typeof Calendar> = {
+   title: "Dates/Calendar",
+   component: Calendar,
++  tags: ["autodocs"],
+ };
+ export default meta;
+ 
+diff --git a/src/components/Checkbox/Checkbox.tsx b/src/components/Checkbox/Checkbox.tsx
+index 17e39f8..322b404 100644
+--- a/src/components/Checkbox/Checkbox.tsx
++++ b/src/components/Checkbox/Checkbox.tsx
+@@ -41,7 +41,7 @@ const checkboxVariants = cva(
+     // press darkens only an unchecked box, like hover — never while disabled.
+     // A checked box keeps its fill so the on-fill check stays legible.
+     "data-[state=unchecked]:[&:not([data-disabled])]:active:bg-secondary-hover",
+-    "focus-visible:border-input-border-focus ds-focus-visible-ring",
++    "focus-visible:border-input-border-focus ds-focus-visible-ring ds-focus-ring-sm",
+     "data-[disabled]:focus-visible:border-secondary-border-disabled",
+     "data-[disabled]:data-[state=unchecked]:bg-secondary-disabled data-[disabled]:data-[state=unchecked]:border-secondary-border-disabled",
+     "data-[disabled]:data-[state=checked]:bg-primary-disabled data-[disabled]:data-[state=checked]:border-primary-border-disabled data-[disabled]:data-[state=checked]:text-secondary-fg data-[disabled]:data-[state=checked]:focus-visible:border-primary-border-disabled",
+diff --git a/src/components/DatePicker/DatePicker.stories.tsx b/src/components/DatePicker/DatePicker.stories.tsx
+index 95e6653..2c0aa61 100644
+--- a/src/components/DatePicker/DatePicker.stories.tsx
++++ b/src/components/DatePicker/DatePicker.stories.tsx
+@@ -16,6 +16,7 @@ const TODAY = new Date(2026, 4, 15);
+ const meta: Meta<typeof DatePicker> = {
+   title: "Dates/DatePicker",
+   component: DatePicker,
++  tags: ["autodocs"],
+ };
+ export default meta;
+ 
+diff --git a/src/components/DropdownCaret/DropdownCaret.tsx b/src/components/DropdownCaret/DropdownCaret.tsx
+index 070a075..52e9c34 100644
+--- a/src/components/DropdownCaret/DropdownCaret.tsx
++++ b/src/components/DropdownCaret/DropdownCaret.tsx
+@@ -35,7 +35,7 @@ import { DropdownCaretVariant } from "./constants";
+  * identity is stable. */
+ const CARET_SHAPES = {
+   dropdown: [Shapes.squircle, Shapes.pixircle],
+-  typeable: [Shapes.clover, Shapes.puff],
++  typeable: [Shapes.clover, Shapes.eightLeafClover],
+ } satisfies Record<DropdownCaretVariant, Shapes[]>;
+ 
+ export interface DropdownCaretProps {
+diff --git a/src/components/Icons/HeartFillIcon.tsx b/src/components/Icons/HeartFillIcon.tsx
+index 4915d43..156af16 100644
+--- a/src/components/Icons/HeartFillIcon.tsx
++++ b/src/components/Icons/HeartFillIcon.tsx
+@@ -3,7 +3,7 @@ import { BaseIcon, type IconProps } from './BaseIcon';
+ export const HeartFillIcon = (props: IconProps) => (
+   <BaseIcon {...props}>
+     <path
+-      d="M15 6.375c0 4.375-6.487 7.916-6.763 8.063a.5.5 0 0 1-.474 0C7.487 14.291 1 10.75 1 6.375A3.879 3.879 0 0 1 4.875 2.5c1.291 0 2.42.555 3.125 1.493C8.705 3.055 9.834 2.5 11.125 2.5A3.879 3.879 0 0 1 15 6.375Z"
++      d="M22.5 9.5625c0 6.5625-9.7305 11.874-10.1445 12.0945a.75.75 0 0 1-.711 0C11.2305 21.4365 1.5 16.125 1.5 9.5625A5.8185 5.8185 0 0 1 7.3125 3.75c1.9365 0 3.63.8325 4.6875 2.2395C13.0575 4.5825 14.751 3.75 16.6875 3.75A5.8185 5.8185 0 0 1 22.5 9.5625Z"
+       fill="currentColor"
+       stroke="none"
+     />
+diff --git a/src/components/Icons/Icons.stories.tsx b/src/components/Icons/Icons.stories.tsx
+index fa0915e..a72615e 100644
+--- a/src/components/Icons/Icons.stories.tsx
++++ b/src/components/Icons/Icons.stories.tsx
+@@ -156,6 +156,7 @@ export const SettingsIcons: Story = {
+         label="BugReport"
+       />
+       <IconCell icon={(props) => <CheckIcon {...props} />} label="Check" />
++      <IconCell icon={(props) => <HeartFillIcon {...props} />} label="HeartFill" />
+     </div>
+   ),
+ };
+@@ -200,11 +201,7 @@ export const Colors: Story = {
+       <LightModeIcon size={IconSize.md} color="var(--color-prominent-color)" />
+       <HeartFillIcon size={IconSize.md} color="var(--color-prominent-color)" />
+       <StopFilledIcon size={IconSize.md} color="var(--color-prominent-color)" />
+-      <TagIcon
+-        size={IconSize.md}
+-        strokeWidth={0.5}
+-        color="var(--color-prominent-color)"
+-      />
++      <TagIcon size={IconSize.md} color="var(--color-prominent-color)" />
+     </div>
+   ),
+ };
+diff --git a/src/components/Input/Input.stories.tsx b/src/components/Input/Input.stories.tsx
+index e8b2fa6..a341f27 100644
+--- a/src/components/Input/Input.stories.tsx
++++ b/src/components/Input/Input.stories.tsx
+@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
+ export const Default: Story = { args: { placeholder: 'Placeholder text' } };
+ export const WithValue: Story = { args: { defaultValue: 'Input value', placeholder: 'Placeholder' } };
+ export const Disabled: Story = { args: { placeholder: 'Disabled', disabled: true } };
+-export const Error: Story = { args: { placeholder: 'Error state', hasError: true } };
++export const HasError: Story = { args: { placeholder: 'Error state', hasError: true } };
+ /* Focused via a ref after commit rather than React's `autoFocus`. Storybook
+  * renders inside an `act` scope, and focusing during that commit trips React's
+  * "a component suspended inside an act scope" warning — noise unrelated to
+diff --git a/src/components/LoadingSpinner/LoadingSpinner.tsx b/src/components/LoadingSpinner/LoadingSpinner.tsx
+index 2cb818b..5ea1d25 100644
+--- a/src/components/LoadingSpinner/LoadingSpinner.tsx
++++ b/src/components/LoadingSpinner/LoadingSpinner.tsx
+@@ -7,17 +7,21 @@
+  * - Every variant is animated by CSS: the .ds-spinner-* helpers in index.css,
+  *   on the --ui-spinner-* tokens. This file renders once and writes geometry
+  *   only (SVG attributes plus numeric custom properties on the <svg>).
+- * - flat: an active arc and a grey track arc, drawn as two dashes on one
+- *   circle path. The arc's length eases between SPINNER_MIN_SWEEP and
+- *   SPINNER_MAX_SWEEP of a turn on a cosine while its head makes two turns
+- *   per --ui-spinner-duration, so it compacts from the tail. The track is the
+- *   complement, one stroke width of visual gap clear of each end.
++ * - flat: Material's circular indeterminate animation, an active arc plus a
++ *   grey track arc drawn as two dashes on one path. The arc group turns at a
++ *   constant rate (one turn per --ui-spinner-rotate-duration) while, once per
++ *   --ui-spinner-duration, the arc grows from SPINNER_MIN_SWEEP (a dot) to
++ *   SPINNER_MAX_SWEEP of a turn, then its tail chases its held head round
++ *   until it is a dot again. The track is the complement, one stroke width
++ *   of visual gap clear of each end.
+  * - spokes / star: a constant linear turn of an inner group, one turn per
+  *   --ui-spinner-spokes-duration scaled by the size's spinTimeScale.
+  * - star: STAR_SHAPE_PATH filled with `color`, scaled to ShapeMorphSpinner's
+  *   shape-to-box ratio (STAR_FIT_SCALE), so it stays inside the box at any
+  *   angle.
+- * - Reduced motion: flat holds a static mid-cycle frame (longest arc, head at
++ * - Every variant renders role="progressbar" (indeterminate: no
++ *   aria-valuenow) with aria-label "Loading"; a consumer's props override both.
++ * - Reduced motion: flat holds a static frame (longest arc, tail at
+  *   12 o'clock); spokes and star stand still.
+  * - `color` goes through resolveDsColor. The track is always
+  *   --ui-color-border-primary, never the indicator colour.
+@@ -26,11 +30,12 @@
+  * - No duration, easing, timer or animation loop in this file (Rule 6). The
+  *   clock is the --ui-spinner-* tokens; the sweep range and the per-size
+  *   factor are geometry and reach CSS as plain numbers.
+- * - The flat arcs share one open circle path that starts half a gap past
+- *   12 o'clock, inside the gap at the arc's head, which never moves in the
+- *   turning group's frame. Do not start it at 12 o'clock or swap it for a
+- *   <circle>: a dash that crosses its path's seam is cut in two and its round
+- *   caps flash (the artefact the old rAF arcs were built to avoid).
++ * - The flat arcs share one OPEN path that runs TWO laps of the circle from
++ *   one gap before 12 o'clock. The arc's tail travels almost a full turn per
++ *   cycle and the track runs on past the arc's tail, so on a one-lap path or
++ *   a <circle> a dash would cross the path's seam: it is cut in two and its
++ *   round caps flash. Do not shorten it to one lap or swap it for a <circle>;
++ *   the CSS keeps both dashes strictly inside the two laps.
+  * - 1 − SPINNER_MAX_SWEEP − 2 × gapLength / circumference must stay above 0 at
+  *   every size. At 0 the track's dash has zero length, and a round cap still
+  *   paints a zero-length dash as a dot.
+@@ -88,10 +93,11 @@ type SpinnerVars = Record<`--ds-spinner-${string}`, number>;
+ // ── Internal: flat arc path ──────────────────────────────────────────────────
+ 
+ /**
+- * One full clockwise circle as an OPEN path (two half arcs, no `Z`), starting
+- * `startAngle` radians round from 3 o'clock. Both flat arcs are dashes on it.
++ * Two full clockwise laps of a circle as one OPEN path (four half arcs, no
++ * `Z`), starting `startAngle` radians round from 3 o'clock. Both flat arcs are
++ * dashes on it; the second lap is what keeps them clear of the path's end.
+  */
+-function circlePathFrom(
++function twoLapCirclePathFrom(
+   cx: number,
+   cy: number,
+   r: number,
+@@ -101,15 +107,16 @@ function circlePathFrom(
+   const y0 = cy + r * Math.sin(startAngle);
+   const x1 = 2 * cx - x0;
+   const y1 = 2 * cy - y0;
+-  return `M ${x0} ${y0} A ${r} ${r} 0 0 1 ${x1} ${y1} A ${r} ${r} 0 0 1 ${x0} ${y0}`;
++  const lap = `A ${r} ${r} 0 0 1 ${x1} ${y1} A ${r} ${r} 0 0 1 ${x0} ${y0}`;
++  return `M ${x0} ${y0} ${lap} ${lap}`;
+ }
+ 
+ // ── Internal: flat spinner ────────────────────────────────────────────────────
+ 
+ /**
+- * Flat indeterminate spinner (M3 style). The <g> turns and the two dashes
+- * resize, all from one CSS phase; see .ds-spinner-flat in index.css for the
+- * dash maths.
++ * Flat indeterminate spinner (Material circular indeterminate). The <g> turns
++ * and the two dashes move along the path, all in CSS; see .ds-spinner-flat in
++ * index.css for the dash maths.
+  */
+ function FlatSpinner({ geo, color, svgProps }: VariantProps) {
+   const {
+@@ -125,12 +132,13 @@ function FlatSpinner({ geo, color, svgProps }: VariantProps) {
+   const { className, style, ...rest } = svgProps;
+ 
+   // Gap in radians: gapLength (arc length) ÷ radius = subtended angle. The path
+-  // starts half of it past the head so neither dash ever reaches the seam.
+-  const d = circlePathFrom(
++  // starts one gap before 12 o'clock, so the arc's tail, which the CSS places
++  // one gap along the path, starts the cycle at 12 o'clock.
++  const d = twoLapCirclePathFrom(
+     cx,
+     cy,
+     trackRadius,
+-    SPINNER_START_ANGLE + gapLength / trackRadius / 2,
++    SPINNER_START_ANGLE - gapLength / trackRadius,
+   );
+   const vars: SpinnerVars = {
+     "--ds-spinner-c": circumference,
+@@ -282,7 +290,8 @@ export const LoadingSpinner = forwardRef<SVGSVGElement, LoadingSpinnerProps>(
+     const resolvedColor = resolveDsColor(color, "var(--ui-color-primary)");
+ 
+     const svgProps: InnerSvgProps = {
+-      role: "status",
++      // Indeterminate progressbar: no aria-valuenow (ARIA 1.2).
++      role: "progressbar",
+       "aria-label": "Loading",
+       className: cn(className),
+       ref,
+diff --git a/src/components/LoadingSpinner/spinnerGeometry.ts b/src/components/LoadingSpinner/spinnerGeometry.ts
+index 71278bd..3184e21 100644
+--- a/src/components/LoadingSpinner/spinnerGeometry.ts
++++ b/src/components/LoadingSpinner/spinnerGeometry.ts
+@@ -52,10 +52,18 @@ export const SPINNER_STROKE_WIDTHS = { sm: 2, rg: 2.5, md: 3, xl: 3 } as const;
+ /** Starting angle in radians — 12 o'clock position. */
+ export const SPINNER_START_ANGLE = -Math.PI / 2;
+ 
+-/** Minimum sweep fraction (7 % of a full rotation) for the indeterminate arc. */
+-export const SPINNER_MIN_SWEEP = 0.07;
++/**
++ * Minimum sweep fraction for the flat indeterminate arc: Material's starting
++ * dash (1 unit of its ≈126.9-unit circle), so each cycle starts from a dot.
++ */
++export const SPINNER_MIN_SWEEP = 0.008;
+ 
+-/** Maximum sweep fraction for the flat spinner (72 % of a full rotation). */
++/**
++ * Maximum sweep fraction for the flat spinner (72 % of a full rotation).
++ * Material's own is ≈79 %, but this spinner also draws a track a gap clear of
++ * each end, and at `sm` 79 % leaves that track ≈3 % of a turn — a dot. 72 %
++ * keeps it a visible arc at every size.
++ */
+ export const SPINNER_MAX_SWEEP = 0.72;
+ 
+ /**
+diff --git a/src/components/ProgressIndicator/waveGeometry.ts b/src/components/ProgressIndicator/waveGeometry.ts
+index 50cb645..ac141dd 100644
+--- a/src/components/ProgressIndicator/waveGeometry.ts
++++ b/src/components/ProgressIndicator/waveGeometry.ts
+@@ -132,6 +132,13 @@ function splitCubicAtHalf(
+  * be painted. A zero-length round-capped SVG dash still renders a dot, so the
+  * complete state must omit the track rather than relying on a `0` dash.
+  * Shared by the flat and wavy ProgressIndicator variants.
++ *
++ * `offset` is the NEGATIVE start position (−(active + gap)), not an
++ * equivalent positive wrap of it. The flat variant transitions dasharray and
++ * dashoffset, and only this form is continuous with the full circle at 0
++ * (offset 0): a positive wrap (length + C − start) sends the offset from
++ * ≈2C to 0 on the way back to 0, and the interpolated track dash runs
++ * backwards round the circle and flashes.
+  */
+ export function getWavyTrackGeometry(
+   progress: number,
+@@ -151,7 +158,7 @@ export function getWavyTrackGeometry(
+ 
+   return {
+     length,
+-    offset: length + circumference - (activeLength + gapLength),
++    offset: -(activeLength + gapLength),
+   };
+ }
+ 
+diff --git a/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx b/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx
+index 8449314..9e18c9e 100644
+--- a/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx
++++ b/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx
+@@ -44,7 +44,7 @@ export const TextSizes: Story = {
+ };
+ 
+ /** Icon sizes — containerIcon uses 28px micro icon items. */
+-export const IconSizes: Story = {
++export const IconOnlySizes: Story = {
+   render: () => (
+     <div className="flex flex-col gap-lg">
+       {variants.map((variant) =>
+diff --git a/src/components/ShapeButton/ShapeButton.stories.tsx b/src/components/ShapeButton/ShapeButton.stories.tsx
+index 0b8fb12..cf1b343 100644
+--- a/src/components/ShapeButton/ShapeButton.stories.tsx
++++ b/src/components/ShapeButton/ShapeButton.stories.tsx
+@@ -25,8 +25,7 @@ const meta = {
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-/** Export kept as `Brand` so the story URL is stable; the variant is `prominent`. */
+-export const Brand: Story = {
++export const Prominent: Story = {
+   name: "Prominent",
+   args: {
+     shape: ShapeButtons.clover,
+diff --git a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
+index 170f06b..516d209 100644
+--- a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
++++ b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
+@@ -43,7 +43,7 @@ export type ShapeMorphSpinnerProps = Omit<ComponentPropsWithoutRef<"span">, "chi
+ export const ShapeMorphSpinner = forwardRef<HTMLSpanElement, ShapeMorphSpinnerProps>(
+   (
+     {
+-      size = LoadingSpinnerSize.md,
++      size = LoadingSpinnerSize.rg,
+       color = LoadingSpinnerColor.primary,
+       shapes = DEFAULT_SHAPE_KEYS,
+       timing,
+diff --git a/src/components/Toast/Toast.stories.tsx b/src/components/Toast/Toast.stories.tsx
+index a7041d1..904f2e8 100644
+--- a/src/components/Toast/Toast.stories.tsx
++++ b/src/components/Toast/Toast.stories.tsx
+@@ -53,8 +53,7 @@ export const Standard: Story = {
+   ),
+ };
+ 
+-/** Export kept as `Brand` so the story URL is stable; the variant is `prominent`. */
+-export const Brand: Story = {
++export const Prominent: Story = {
+   name: "Prominent",
+   render: () => (
+     <ToastProvider>
+@@ -64,7 +63,7 @@ export const Brand: Story = {
+ };
+ 
+ /** Export kept as `Error` so the story URL is stable; the variant is `danger`. */
+-export const Error: Story = {
++export const Danger: Story = {
+   name: "Danger",
+   render: () => (
+     <ToastProvider>
+diff --git a/src/components/Toggle/FancyToggleSwitch.stories.tsx b/src/components/Toggle/FancyToggleSwitch.stories.tsx
+index dc20d7c..b7860e6 100644
+--- a/src/components/Toggle/FancyToggleSwitch.stories.tsx
++++ b/src/components/Toggle/FancyToggleSwitch.stories.tsx
+@@ -1,7 +1,6 @@
+ import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { useState } from 'react';
+ import { FancyToggleSwitch, FancyToggleSwitchItem } from './FancyToggleSwitch';
+-import { FancyToggleSelectType } from './constants';
+ import {
+   CreditCardIcon,
+   GraphIcon,
+@@ -72,31 +71,6 @@ export const MixedIndicators: Story = {
+   ),
+ };
+ 
+-/**
+- * `selectType={FancyToggleSelectType.multi}` — contradicts the single default:
+- * any number of options, including none. A chosen option still toggles off on
+- * click, but it shows no hover or pressed look.
+- */
+-export const MultiSelect: Story = {
+-  render: function MultiSelectStory() {
+-    const [views, setViews] = useState<string[]>(['columns', 'graph']);
+-    return (
+-      <div className="flex flex-col items-center gap-rg">
+-        <FancyToggleSwitch
+-          selectType={FancyToggleSelectType.multi}
+-          value={views}
+-          onValueChange={setViews}
+-        >
+-          <FancyToggleSwitchItem value="columns" data-testid="multi-columns">Columns</FancyToggleSwitchItem>
+-          <FancyToggleSwitchItem value="table" data-testid="multi-table">Table</FancyToggleSwitchItem>
+-          <FancyToggleSwitchItem value="graph" data-testid="multi-graph">Graph</FancyToggleSwitchItem>
+-        </FancyToggleSwitch>
+-        <span data-testid="multi-value">value: {JSON.stringify(views)}</span>
+-      </div>
+-    );
+-  },
+-};
+-
+ /**
+  * Externally controlled, single select. Clicking the chosen option does
+  * nothing — onValueChange never receives "", same as ToggleSwitch.
+@@ -116,7 +90,12 @@ export const Controlled: Story = {
+   },
+ };
+ 
+-/** Whole row disabled, and a single disabled option in an enabled row. */
++/**
++ * Disabled: the whole option fades to the standard disabled opacity, the
++ * chosen one included (it keeps its selected paint). Rows 1–2 disable the whole
++ * row, so the chosen option is disabled too, in both indicator modes. Row 3
++ * disables only the chosen option; row 4 only an unchosen one.
++ */
+ export const Disabled: Story = {
+   render: () => (
+     <div className="flex flex-col gap-rg">
+@@ -124,6 +103,18 @@ export const Disabled: Story = {
+         <FancyToggleSwitchItem value="on">On</FancyToggleSwitchItem>
+         <FancyToggleSwitchItem value="off">Off</FancyToggleSwitchItem>
+       </FancyToggleSwitch>
++      <FancyToggleSwitch defaultValue="pay" disabled>
++        <FancyToggleSwitchItem value="pay" icon={<CreditCardIcon />} data-testid="disabled-icon-selected">
++          Pay
++        </FancyToggleSwitchItem>
++        <FancyToggleSwitchItem value="receive" icon={<InvoiceIcon />}>Receive</FancyToggleSwitchItem>
++      </FancyToggleSwitch>
++      <FancyToggleSwitch defaultValue="pay">
++        <FancyToggleSwitchItem value="pay" icon={<CreditCardIcon />} disabled>
++          Pay
++        </FancyToggleSwitchItem>
++        <FancyToggleSwitchItem value="receive" icon={<InvoiceIcon />}>Receive</FancyToggleSwitchItem>
++      </FancyToggleSwitch>
+       <FancyToggleSwitch defaultValue="pay">
+         <FancyToggleSwitchItem value="pay" icon={<CreditCardIcon />}>Pay</FancyToggleSwitchItem>
+         <FancyToggleSwitchItem value="receive" icon={<InvoiceIcon />} disabled>
+diff --git a/src/components/Toggle/FancyToggleSwitch.tsx b/src/components/Toggle/FancyToggleSwitch.tsx
+index 571da19..924672b 100644
+--- a/src/components/Toggle/FancyToggleSwitch.tsx
++++ b/src/components/Toggle/FancyToggleSwitch.tsx
+@@ -9,39 +9,34 @@
+  *
+  * ## behavior
+  * - Radix ToggleGroup wiring, like ToggleSwitch. Options sit 12px apart (md).
+- * - `selectType` single (default): `value` is a string and selection can never
+- *   be cleared — Radix's "" on a second click is dropped. This is ToggleSwitch's
+- *   own code, not a copy: both call `useNeverClearedValue` from ./Toggle.
+- *   Controlled (`value` + `onValueChange`) and uncontrolled (`defaultValue`)
+- *   both work; a controlled `value` always wins.
+- * - `selectType` multi: `value` is a string[]; any number of options,
+- *   including none. Radix owns the uncontrolled state.
+- * - Items read `selectType` from context (single: the chosen option gets the
+- *   default cursor). An item `icon` switches its indicator from the
+- *   stroke-only ring + DS check to a filled circle holding that icon.
++ * - Single select only, the same behaviour as ToggleSwitch (maintainer
++ *   decision 2026-10-04: multi-select was removed). `value` is a string and
++ *   selection can never be cleared — Radix's "" on a second click is dropped.
++ *   This is ToggleSwitch's own code, not a copy: both call
++ *   `useNeverClearedValue` from ./Toggle. Controlled (`value` +
++ *   `onValueChange`) and uncontrolled (`defaultValue`) both work; a controlled
++ *   `value` always wins.
++ * - The chosen option gets the default cursor (it cannot be clicked off). An
++ *   item `icon` switches its indicator from the stroke-only ring + DS check to
++ *   a filled circle holding that icon.
+  *
+  * ## constraints
+- * - Single mode keeps Radix fully controlled — passing `defaultValue` through
+- *   would let Radix's own state clear itself regardless of the callback (the
+- *   same constraint as Toggle.tsx). The never-clear rule itself is
++ * - Keep Radix fully controlled — passing `defaultValue` through would let
++ *   Radix's own state clear itself regardless of the callback (the same
++ *   constraint as Toggle.tsx). The never-clear rule itself is
+  *   `useNeverClearedValue` in ./Toggle; change it there, not with a local
+  *   copy, so the two rows cannot drift.
+- * - `useNeverClearedValue` is called above the mode branch (fed nothing in
+- *   multi mode) so the hook order never depends on `selectType`.
+  */
+ 
+ import * as ToggleGroup from "@radix-ui/react-toggle-group";
+ import {
+-  createContext,
+   forwardRef,
+-  useContext,
+   type ComponentPropsWithoutRef,
+   type ComponentRef,
+   type ReactNode,
+ } from "react";
+ import { cn } from "../../utils/cn";
+ import { CheckIcon } from "../Icons/CheckIcon";
+-import { FancyToggleSelectType } from "./constants";
+ import {
+   fancyToggleCheckClass,
+   fancyToggleIndicatorSlot,
+@@ -50,107 +45,38 @@ import {
+ } from "./fancyToggleOption";
+ import { useNeverClearedValue } from "./Toggle";
+ 
+-const FancyTogglePresentationContext = createContext<{
+-  selectType: FancyToggleSelectType;
+-}>({ selectType: FancyToggleSelectType.single });
+-
+-/** Stable context values, one per mode, so items don't re-render on every root render. */
+-const PRESENTATION: Record<
+-  FancyToggleSelectType,
+-  { selectType: FancyToggleSelectType }
+-> = {
+-  single: { selectType: FancyToggleSelectType.single },
+-  multi: { selectType: FancyToggleSelectType.multi },
+-};
+-
+ // Figma Fancy Toggle Switch: md (12px) between options.
+ const ROOT_CLASS = "inline-flex items-center gap-md";
+ 
+-type FancyToggleSwitchRootProps = Omit<
+-  ComponentPropsWithoutRef<typeof ToggleGroup.Root>,
+-  "type" | "value" | "onValueChange" | "defaultValue"
+->;
+-
+-export type FancyToggleSwitchProps =
+-  | (FancyToggleSwitchRootProps & {
+-      /** Default single: exactly one option, never cleared. */
+-      selectType?: typeof FancyToggleSelectType.single;
+-      value?: string;
+-      defaultValue?: string;
+-      /** Never called with "" — the selected option cannot be toggled off. */
+-      onValueChange?: (value: string) => void;
+-    })
+-  | (FancyToggleSwitchRootProps & {
+-      selectType: typeof FancyToggleSelectType.multi;
+-      value?: string[];
+-      defaultValue?: string[];
+-      onValueChange?: (value: string[]) => void;
+-    });
++export interface FancyToggleSwitchProps
++  extends Omit<
++    ComponentPropsWithoutRef<typeof ToggleGroup.Root>,
++    "type" | "value" | "onValueChange" | "defaultValue"
++  > {
++  /** Exactly one option is chosen, and it can never be cleared. */
++  value?: string;
++  defaultValue?: string;
++  /** Never called with "" — the selected option cannot be toggled off. */
++  onValueChange?: (value: string) => void;
++}
+ 
+ const FancyToggleSwitch = forwardRef<
+   ComponentRef<typeof ToggleGroup.Root>,
+   FancyToggleSwitchProps
+->((props, ref) => {
+-  const single = useNeverClearedValue(
+-    props.selectType === FancyToggleSelectType.multi
+-      ? {}
+-      : {
+-          value: props.value,
+-          defaultValue: props.defaultValue,
+-          onValueChange: props.onValueChange,
+-        },
+-  );
+-
+-  if (props.selectType === FancyToggleSelectType.multi) {
+-    const {
+-      selectType,
+-      className,
+-      value,
+-      defaultValue,
+-      onValueChange,
+-      children,
+-      ...rest
+-    } = props;
+-    return (
+-      <FancyTogglePresentationContext.Provider value={PRESENTATION[selectType]}>
+-        <ToggleGroup.Root
+-          ref={ref}
+-          type="multiple"
+-          value={value}
+-          defaultValue={defaultValue}
+-          onValueChange={onValueChange}
+-          className={cn(ROOT_CLASS, className)}
+-          {...rest}
+-        >
+-          {children}
+-        </ToggleGroup.Root>
+-      </FancyTogglePresentationContext.Provider>
+-    );
+-  }
+-
+-  const {
+-    selectType = FancyToggleSelectType.single,
+-    className,
+-    value: _value,
+-    defaultValue: _defaultValue,
+-    onValueChange: _onValueChange,
+-    children,
+-    ...rest
+-  } = props;
++>(({ className, value, defaultValue, onValueChange, children, ...props }, ref) => {
++  const single = useNeverClearedValue({ value, defaultValue, onValueChange });
+ 
+   return (
+-    <FancyTogglePresentationContext.Provider value={PRESENTATION[selectType]}>
+-      <ToggleGroup.Root
+-        ref={ref}
+-        type="single"
+-        value={single.value}
+-        onValueChange={single.onValueChange}
+-        className={cn(ROOT_CLASS, className)}
+-        {...rest}
+-      >
+-        {children}
+-      </ToggleGroup.Root>
+-    </FancyTogglePresentationContext.Provider>
++    <ToggleGroup.Root
++      ref={ref}
++      type="single"
++      value={single.value}
++      onValueChange={single.onValueChange}
++      className={cn(ROOT_CLASS, className)}
++      {...props}
++    >
++      {children}
++    </ToggleGroup.Root>
+   );
+ });
+ FancyToggleSwitch.displayName = "FancyToggleSwitch";
+@@ -170,13 +96,12 @@ const FancyToggleSwitchItem = forwardRef<
+   ComponentRef<typeof ToggleGroup.Item>,
+   FancyToggleSwitchItemProps
+ >(({ className, icon, children, ...props }, ref) => {
+-  const { selectType } = useContext(FancyTogglePresentationContext);
+   const hasIcon = icon !== undefined && icon !== null && icon !== false;
+ 
+   return (
+     <ToggleGroup.Item
+       ref={ref}
+-      className={cn(fancyToggleOptionVariants({ selectType }), className)}
++      className={cn(fancyToggleOptionVariants(), className)}
+       {...props}
+     >
+       <span aria-hidden className={fancyToggleIndicatorSlot}>
+diff --git a/src/components/Toggle/Toggle.stories.tsx b/src/components/Toggle/Toggle.stories.tsx
+index 306876d..c7c1976 100644
+--- a/src/components/Toggle/Toggle.stories.tsx
++++ b/src/components/Toggle/Toggle.stories.tsx
+@@ -43,7 +43,7 @@ export const TextSizes: Story = {
+ };
+ 
+ /** Icon switches — `iconSm` is Figma "Icon Small": the 28px micro option. */
+-export const IconSizes: Story = {
++export const IconOnlySizes: Story = {
+   render: () => (
+     <div className="flex flex-col gap-rg">
+       {variants.map((variant) =>
+@@ -90,18 +90,28 @@ export const Controlled: Story = {
+ };
+ 
+ /**
+- * `ToggleVariant.unselected` on an item keeps the shared unselected look even
+- * while it is the selected value — it never shows a primary or ghost fill.
++ * `ToggleVariant.unselected` keeps the shared unselected look even while an
++ * option is the selected value — it never shows a primary or ghost fill.
++ * Top row: set on the switch, so every option (Auto, Light, Dark) is
++ * unselected-looking whichever is chosen. Bottom row: set on the Auto item
++ * only, so Light and Dark still show the switch's primary fill when chosen.
+  */
+ export const UnselectedVariant: Story = {
+   render: () => (
+-    <ToggleSwitch defaultValue="auto" variant={ToggleVariant.primary}>
+-      <ToggleSwitchItem value="auto" variant={ToggleVariant.unselected} data-testid="unsel-selected">
+-        Auto
+-      </ToggleSwitchItem>
+-      <ToggleSwitchItem value="light" data-testid="unsel-primary">Light</ToggleSwitchItem>
+-      <ToggleSwitchItem value="dark">Dark</ToggleSwitchItem>
+-    </ToggleSwitch>
++    <div className="flex flex-col items-center gap-rg">
++      <ToggleSwitch defaultValue="auto" variant={ToggleVariant.unselected}>
++        <ToggleSwitchItem value="auto" data-testid="unsel-all-auto">Auto</ToggleSwitchItem>
++        <ToggleSwitchItem value="light" data-testid="unsel-all-light">Light</ToggleSwitchItem>
++        <ToggleSwitchItem value="dark" data-testid="unsel-all-dark">Dark</ToggleSwitchItem>
++      </ToggleSwitch>
++      <ToggleSwitch defaultValue="auto" variant={ToggleVariant.primary}>
++        <ToggleSwitchItem value="auto" variant={ToggleVariant.unselected} data-testid="unsel-selected">
++          Auto
++        </ToggleSwitchItem>
++        <ToggleSwitchItem value="light" data-testid="unsel-primary">Light</ToggleSwitchItem>
++        <ToggleSwitchItem value="dark">Dark</ToggleSwitchItem>
++      </ToggleSwitch>
++    </div>
+   ),
+ };
+ 
+diff --git a/src/components/Toggle/Toggle.tsx b/src/components/Toggle/Toggle.tsx
+index 918516f..b1df4ae 100644
+--- a/src/components/Toggle/Toggle.tsx
++++ b/src/components/Toggle/Toggle.tsx
+@@ -12,7 +12,7 @@
+  * - Controlled (`value` + `onValueChange`) and uncontrolled (`defaultValue`)
+  *   both work; a controlled `value` always wins.
+  * - That whole rule lives in `useNeverClearedValue` below, which
+- *   FancyToggleSwitch's single mode also calls. It is the one copy: change it
++ *   FancyToggleSwitch also calls. It is the one copy: change it
+  *   here and both rows change together. Exported for that internal use only;
+  *   index.ts does not re-export it.
+  *
+diff --git a/src/components/Toggle/constants.ts b/src/components/Toggle/constants.ts
+index 3907195..4ae20eb 100644
+--- a/src/components/Toggle/constants.ts
++++ b/src/components/Toggle/constants.ts
+@@ -32,19 +32,3 @@ export const ToggleSize = {
+   iconMicro: "icon-micro",
+ } as const;
+ export type ToggleSize = (typeof ToggleSize)[keyof typeof ToggleSize];
+-
+-/**
+- * Dot-accessible selection mode for FancyToggleSwitch. Same words and values
+- * as DropdownMenuSelectType.
+- * Usage: <FancyToggleSwitch selectType={FancyToggleSelectType.multi} value={["a"]} />
+- *
+- * single — exactly one option is chosen, and the user can never clear it
+- *          (same rule as ToggleSwitch). `value` is a string. Default.
+- * multi  — any number of options, including none. `value` is a string[].
+- */
+-export const FancyToggleSelectType = {
+-  single: "single",
+-  multi: "multi",
+-} as const;
+-export type FancyToggleSelectType =
+-  (typeof FancyToggleSelectType)[keyof typeof FancyToggleSelectType];
+diff --git a/src/components/Toggle/fancyToggleOption.ts b/src/components/Toggle/fancyToggleOption.ts
+index 4d91dc3..260bcc2 100644
+--- a/src/components/Toggle/fancyToggleOption.ts
++++ b/src/components/Toggle/fancyToggleOption.ts
+@@ -13,8 +13,9 @@
+  *   DS CheckIcon when selected; `icon` = filled grey circle with a dark icon,
+  *   filled prominent with a white icon when selected.
+  * - Hover / press washes (ghost-hover / ghost-active) apply to UNSELECTED
+- *   options only: a selected option is not interactive, so it has no hover or
+- *   pressed look. In single mode it also gets the default cursor.
++ *   options only: a selected option is not interactive (the row is single
++ *   select and never cleared), so it has no hover or pressed look and gets the
++ *   default cursor.
+  * - Disabled is ds-disabled-state (whole option at the disabled opacity);
+  *   a disabled selected option keeps its selected paint.
+  * - State changes run on ds-motion-state (motion scale `fast`, `standard`).
+@@ -45,20 +46,9 @@ export const fancyToggleOptionVariants = cva(
+     "ds-disabled-state",
+     "selected:border-prominent",
+     "unselected:enabled:hover:bg-ghost-hover unselected:enabled:active:bg-ghost-active",
++    // The chosen option can't be clicked off, so it doesn't read as clickable.
++    "selected:enabled:cursor-default",
+   ],
+-  {
+-    variants: {
+-      selectType: {
+-        /** The chosen option can't be clicked off, so it doesn't read as clickable. */
+-        single: "selected:enabled:cursor-default",
+-        /** A chosen option still toggles off on click; it keeps the pointer. */
+-        multi: "",
+-      },
+-    },
+-    defaultVariants: {
+-      selectType: "single",
+-    },
+-  },
+ );
+ 
+ /** The 50×50 square slot: full inner height of the 54px pill, indicator centred. */
+diff --git a/src/components/Toggle/index.ts b/src/components/Toggle/index.ts
+index d29180b..4be85b6 100644
+--- a/src/components/Toggle/index.ts
++++ b/src/components/Toggle/index.ts
+@@ -2,7 +2,6 @@ export { ToggleSwitch, ToggleSwitchItem } from './Toggle';
+ export { ToggleSize, ToggleVariant } from './constants';
+ export type { ToggleSwitchProps, ToggleSwitchItemProps } from './Toggle';
+ export { FancyToggleSwitch, FancyToggleSwitchItem } from './FancyToggleSwitch';
+-export { FancyToggleSelectType } from './constants';
+ export type {
+   FancyToggleSwitchProps,
+   FancyToggleSwitchItemProps,
+diff --git a/src/components/VerificationCode/VerificationCode.stories.tsx b/src/components/VerificationCode/VerificationCode.stories.tsx
+index ee2f637..996b732 100644
+--- a/src/components/VerificationCode/VerificationCode.stories.tsx
++++ b/src/components/VerificationCode/VerificationCode.stories.tsx
+@@ -28,7 +28,7 @@ export const Filled: Story = {
+   args: { defaultValue: "123456" },
+ };
+ 
+-export const Error: Story = {
++export const HasError: Story = {
+   args: { defaultValue: "123456", hasError: true },
+ };
+ 
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index f79ddf8..cd0104f 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -138,8 +138,13 @@
+     filter: none;
+   }
+ 
++  /* Compact controls opt into the small ring width; every ds-focus-* helper reads it. */
++  .ds-focus-ring-sm {
++    --ds-focus-ring-width: var(--ui-focus-ring-width-sm);
++  }
++
+   .ds-focus-visible-ring {
+-    outline: 4px solid transparent;
++    outline: var(--ds-focus-ring-width, var(--ui-focus-ring-width)) solid transparent;
+     outline-offset: 0;
+   }
+ 
+@@ -150,7 +155,7 @@
+   }
+ 
+   .ds-focus-within-ring {
+-    outline: 4px solid transparent;
++    outline: var(--ds-focus-ring-width, var(--ui-focus-ring-width)) solid transparent;
+     outline-offset: 0;
+   }
+ 
+@@ -165,7 +170,7 @@
+   }
+ 
+   .ds-focus-ring-on-focus {
+-    outline: 4px solid transparent;
++    outline: var(--ds-focus-ring-width, var(--ui-focus-ring-width)) solid transparent;
+     outline-offset: 0;
+   }
+ 
+@@ -181,7 +186,7 @@
+    * not in a Tailwind variant: `data-[state=open]:<any ds-* class>` composes a
+    * variant with a package class, which emits no rule at all. */
+   .ds-focus-ring-on-open {
+-    outline: 4px solid transparent;
++    outline: var(--ds-focus-ring-width, var(--ui-focus-ring-width)) solid transparent;
+     outline-offset: 0;
+   }
+ 
+@@ -274,6 +279,13 @@
+     height: var(--ui-height-slider-step-tall);
+   }
+ 
++  /* During a drag the tall step marks the value the drag started from; at the
++   * inactive dot paint it is easy to miss, so it takes the slider colour until
++   * release. On the filled side the active-dot paint already contrasts. */
++  [data-dragging] .ds-slider-dot[data-highlighted]:not([data-active]) {
++    background-color: var(--ds-slider-color, var(--ui-color-primary));
++  }
++
+   /* The active dot is a flat token, not a mix of --ds-slider-color: Figma
+    * composes it from the CONTENT paint, because it is the mark read ON the
+    * filled track rather than part of the fill. A plain attribute selector, NOT
+diff --git a/src/styles/index.css b/src/styles/index.css
+index ad6ef9d..931122a 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -59,12 +59,19 @@
+   initial-value: 0;
+ }
+ 
+-/* LoadingSpinner (flat). `phase` runs 0 → 1 once per --ui-spinner-duration
+- * and is the ONLY animated value: the arc's length and its turn are both
+- * computed from it, so they cannot drift apart. Registered so the animation
+- * interpolates a number; inherited so the arc paths read the value animated
+- * on their <svg>. */
+-@property --ds-spinner-phase {
++/* LoadingSpinner (flat) — Material's circular indeterminate dash, as two
++ * numbers animated on the <svg> once per --ui-spinner-duration:
++ *   --ds-spinner-grow  0 → 1 → 1   the arc's length, min → max sweep
++ *   --ds-spinner-tail  0 → .118 → .985  where the arc's tail sits, in turns
++ * Both arc paths compute their dashes from the same two values, so the arc
++ * and the track cannot drift apart. Registered so the animation interpolates
++ * numbers; inherited so the paths read the values animated on their <svg>. */
++@property --ds-spinner-grow {
++  syntax: "<number>";
++  inherits: true;
++  initial-value: 0;
++}
++@property --ds-spinner-tail {
+   syntax: "<number>";
+   inherits: true;
+   initial-value: 0;
+@@ -862,42 +869,57 @@
+    *   --ds-spinner-sweep-min/-max  the arc's length range, fractions of a turn
+    *   --ds-spinner-time-scale   per-size factor on the spin duration
+    *
+-   * Flat: --ds-spinner-phase runs linearly. The arc's length follows a cosine,
+-   * min + (max − min) × (1 − cos(phase turn)) / 2, and the group turns twice
+-   * per cycle, so the head sits still in the group's frame (at 12 o'clock)
+-   * and only the tail moves. The arc path starts half a gap past the head, so
+-   * neither dash ever crosses the path's seam (a dash that crosses it is cut
+-   * in two and its round caps flash). Both dashes are positioned in user
+-   * units (× 1px, which is one user unit inside an SVG).
++   * Flat: Material's circular indeterminate recipe. The group turns at a
++   * constant rate, one turn per --ui-spinner-rotate-duration. On the <svg>,
++   * --ds-spinner-grow and --ds-spinner-tail (ds-spinner-dash keyframes, on
++   * the standard curve per segment) move the arc along its path: first the
++   * head races ahead while the tail creeps (the arc grows to its max sweep),
++   * then the tail chases the head, which is held at the end of the first lap
++   * (sweep is clipped to 1 − tail), so the arc shrinks to a dot and the cycle
++   * restarts from it. Turn and dash run as two independent loops, as in
++   * Material.
++   *
++   * The path is a TWO-lap open circle starting one gap before 12 o'clock, so
++   * path position p (in turns along the path) sits p − gap turns past
++   * 12 o'clock. The arc covers [gap + tail, gap + tail + sweep] and the track, its
++   * complement a gap clear of each end, [tail + sweep + 2·gap, tail + 1]:
++   * both stay strictly inside (0, 2) turns, so neither dash ever reaches
++   * either end of the path (a dash cut by the path's seam splits in two and
++   * its round caps flash). Each dash pattern's gap is the whole path (2C),
++   * so no second dash ever appears. Both dashes are positioned in user units
++   * (× 1px, which is one user unit inside an SVG).
+    *
+    * Reduced motion: loops are off the scale, so the global block cannot
+-   * reach them. The flat arc freezes at mid-cycle (longest arc, head at
+-   * 12 o'clock); the spokes and star stop turning. */
++   * reach them. The flat arc freezes at its longest, tail at 12 o'clock;
++   * the spokes and star stop turning. */
+   .ds-spinner-flat {
+-    animation: ds-spinner-phase var(--ui-spinner-duration)
+-      var(--ui-motion-ease-linear) infinite;
++    animation: ds-spinner-dash var(--ui-spinner-duration)
++      var(--ui-motion-ease-standard) infinite;
+   }
+   .ds-spinner-flat-turn {
+     transform-box: view-box;
+     transform-origin: 50% 50%;
+-    transform: rotate(calc(var(--ds-spinner-phase) * 2turn));
++    animation: ds-spinner-rotate var(--ui-spinner-rotate-duration)
++      var(--ui-motion-ease-linear) infinite;
+   }
+   .ds-spinner-flat-arc {
+-    --ds-spinner-sweep: calc(
+-      var(--ds-spinner-sweep-min) +
+-        (var(--ds-spinner-sweep-max) - var(--ds-spinner-sweep-min)) *
+-        (1 - cos(var(--ds-spinner-phase) * 1turn)) / 2
++    --ds-spinner-sweep: min(
++      calc(
++        var(--ds-spinner-sweep-min) +
++          (var(--ds-spinner-sweep-max) - var(--ds-spinner-sweep-min)) *
++          var(--ds-spinner-grow)
++      ),
++      calc(1 - var(--ds-spinner-tail))
+     );
+   }
+-  /* Active arc: ends half a gap before the path's end (the head) and reaches
+-   * back `sweep` of a turn. */
++  /* Active arc: starts `tail` past 12 o'clock and runs `sweep` of a turn. */
+   .ds-spinner-flat-indicator {
+     stroke-dasharray:
+       calc(var(--ds-spinner-sweep) * var(--ds-spinner-c) * 1px)
+-      calc(var(--ds-spinner-c) * 1px);
++      calc(var(--ds-spinner-c) * 2px);
+     stroke-dashoffset: calc(
+-      (var(--ds-spinner-sweep) + var(--ds-spinner-gap) / 2 - 1) *
+-        var(--ds-spinner-c) * 1px
++      (var(--ds-spinner-gap) + var(--ds-spinner-tail)) *
++        var(--ds-spinner-c) * -1px
+     );
+   }
+   /* Track: the complement, a gap clear of the arc at both ends. */
+@@ -910,9 +932,13 @@
+             var(--ds-spinner-c) * 1px
+         )
+       )
+-      calc(var(--ds-spinner-c) * 1px);
++      calc(var(--ds-spinner-c) * 2px);
+     stroke-dashoffset: calc(
+-      var(--ds-spinner-gap) / -2 * var(--ds-spinner-c) * 1px
++      (
++          var(--ds-spinner-tail) + var(--ds-spinner-sweep) + 2 *
++            var(--ds-spinner-gap)
++        ) *
++        var(--ds-spinner-c) * -1px
+     );
+   }
+   /* Spokes and star: a constant linear turn of an inner group. */
+@@ -926,8 +952,10 @@
+   @media (prefers-reduced-motion: reduce) {
+     .ds-spinner-flat {
+       animation: none;
+-      --ds-spinner-phase: 0.5;
++      --ds-spinner-grow: 1;
++      --ds-spinner-tail: 0;
+     }
++    .ds-spinner-flat-turn,
+     .ds-spinner-spin {
+       animation: none;
+     }
+@@ -1066,20 +1094,29 @@
+ /*
+  * Loading spinner keyframes — read by the .ds-spinner-* helpers above.
+  *
+- * ds-spinner-rotate: one full turn, for the spokes and star variants.
+- * ds-spinner-phase: the flat variant's clock, 0 → 1 per cycle.
++ * ds-spinner-rotate: one full turn, for every variant's turning group.
++ * ds-spinner-dash: the flat arc's Material dash cycle. The stops are
++ *   Material's own, rescaled from its 44-unit circle (circumference ≈ 126.9):
++ *   dash 1 → 100 → 100 becomes grow 0 → 1 → 1 (min → max sweep), and offset
++ *   0 → −15 → −125 becomes tail 0 → 15/126.9 → 125/126.9 of a turn.
+  */
+ @keyframes ds-spinner-rotate {
+   to {
+     transform: rotate(360deg);
+   }
+ }
+-@keyframes ds-spinner-phase {
+-  from {
+-    --ds-spinner-phase: 0;
+-  }
+-  to {
+-    --ds-spinner-phase: 1;
++@keyframes ds-spinner-dash {
++  0% {
++    --ds-spinner-grow: 0;
++    --ds-spinner-tail: 0;
++  }
++  50% {
++    --ds-spinner-grow: 1;
++    --ds-spinner-tail: 0.118;
++  }
++  100% {
++    --ds-spinner-grow: 1;
++    --ds-spinner-tail: 0.985;
+   }
+ }
+ 
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index 334b098..5215bd0 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -141,6 +141,10 @@
+    * danger = danger-primary. They are literal rgba() rather than color-mix()
+    * over the source token because a consumer overriding, say,
+    * --ui-color-prominent should be able to retune the ring independently. */
++  /* Focus-ring outline width (Figma buttonSizes/focus-ring-spread), and the small
++   * step for compact controls such as Checkbox, where 4px reads as huge. */
++  --ui-focus-ring-width: 4px;
++  --ui-focus-ring-width-sm: 2px;
+   --ui-color-focus-ring-prominent: rgba(36, 6, 172, 0.35);
+   --ui-color-focus-ring-primary: rgba(23, 23, 23, 0.25);
+   --ui-color-focus-ring-danger: rgba(234, 63, 63, 0.35);
+@@ -197,13 +201,16 @@
+    * NOT collapsed under reduced motion — each loop's own reduce rule stops it
+    * or swaps in a static frame instead. */
+   --ui-shimmer-duration: 2000ms;
+-  /* LoadingSpinner. `duration` is one flat-arc cycle (the arc grows and
+-   * shrinks once while its head makes two turns). `spokes-duration` is one
+-   * turn of the spokes and star variants at the `rg` size; the component
+-   * scales it per size by a geometry factor, so retuning this retunes all
+-   * four sizes together. */
+-  --ui-spinner-duration: 1800ms;
+-  --ui-spinner-spokes-duration: 1280ms;
++  /* LoadingSpinner. `duration` is one flat-arc dash cycle (Material's
++   * circular indeterminate: the arc grows, then its tail chases the head
++   * round and it shrinks to a dot). `rotate-duration` is one constant turn of
++   * the flat variant's arc group, a separate loop. Both are Material's
++   * 1.4s. `spokes-duration` is one turn of the spokes and star variants at
++   * the `rg` size; the component scales it per size by a geometry factor, so
++   * retuning this retunes all four sizes together. */
++  --ui-spinner-duration: 1400ms;
++  --ui-spinner-rotate-duration: 1400ms;
++  --ui-spinner-spokes-duration: 1800ms;
+ 
+   /* Text shimmer (ShimmerText) */
+   --ui-shimmer-base: var(--ui-color-text-tertiary);
+@@ -658,7 +665,7 @@
+    * big). The clover fills its frame, so it aliases it; the puff sits 5px
+    * inside the big frame (Figma: a 50px puff in a 60px frame). */
+   --ui-size-cta-shape-standard: var(--ui-size-cta-chip-standard);
+-  --ui-size-cta-shape-big: 50px;
++  --ui-size-cta-shape-big: var(--ui-size-cta-chip-big);
+   /* Icon centred on the shape, per size. */
+   --ui-size-cta-icon-standard: 22px;
+   --ui-size-cta-icon-big: 26px;

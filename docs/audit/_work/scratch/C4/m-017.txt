@@ -1,0 +1,198 @@
+### U12-F7: Avatar sizes and the OutlineSection outer radius are hardcoded px arbitrary utilities; the 28px radius is a derived value (radius-soft 20 + spacing-xs 8) copied verbatim into OutlineButton
+- severity: S2
+- category: rule-violation
+- rules: [R8.1, R8.11, R9.2]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg -n \"rounded-\[\" src --glob '*.tsx' --glob '!*.stories.tsx' → OutlineSection.tsx:22 and OutlineButton.tsx:147 only. rg -n avatar src/styles/*.css → only --ui-radius-avatar / -sm (no size token). tokens.css:540 --ui-radius-soft: 20px; :515 --ui-spacing-xs: 8px; dooph-component-tokens.css:332-333 `.ds-p-ui-xs { padding: var(--ui-spacing-xs); }`."
+- locations:
+  - src/components/Avatar/Avatar.tsx:23-24
+  - src/components/OutlineSection/OutlineSection.tsx:22-23
+  - src/components/OutlineSection/OutlineSection.tsx:31
+  - src/components/OutlineButton/OutlineButton.tsx:146-148
+- evidence: |
+    Avatar.tsx:23          size === AvatarSize.standard && "size-[38px] rounded-avatar p-xs",
+    Avatar.tsx:24          size === AvatarSize.small && "size-[22px] rounded-avatar-sm p-xxs",
+    OutlineSection.tsx:22        'border border-solid border-border-primary rounded-[28px]',
+    OutlineSection.tsx:23        'ds-p-ui-xs',
+    OutlineSection.tsx:31          'rounded-soft shadow-menu',
+    OutlineButton.tsx:147          "border border-solid border-border-primary rounded-[28px]",
+- impact: OutlineSection's outer radius must equal inner radius + padding to stay concentric; both inputs are consumer-overridable tokens (`--ui-radius-soft`, `--ui-spacing-xs`) but the sum is a literal, so any consumer who retunes either gets visibly non-concentric corners on both OutlineSection and OutlineButton, and the literal has to be fixed in two files. Avatar tokenises its radius (`rounded-avatar`) and padding but not its box, so a consumer can restyle the corners but not the size — half a token contract. contrib:53 names hardcoded px radii specifically.
+- recommendation: Add tokens (e.g. `--ui-radius-outline-frame: calc(var(--ui-radius-soft) + var(--ui-spacing-xs))`, `--ui-size-avatar` / `--ui-size-avatar-sm`) and consume them via utilities in all three places.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U4-F7: Button-family geometry and spacing bypass `--ui-*` tokens (arbitrary px values, a JS size mirror, and Tailwind's numeric scale where a spacing token of the same value exists)
+- severity: S2
+- category: rule-violation
+- rules: [R8.1, R8.11, R8.13, R5.2]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "classcheck.mjs + grep of dist-styles.css: `.px-3 { padding-inline: calc(var(--spacing) * 3) }`, `.gap-2 { gap: calc(var(--spacing) * 2) }`, `.pl-4 { padding-left: calc(var(--spacing) * 4) }` (Tailwind `--spacing: 0.25rem`, not a --ui token); tokens.css:515-518 `--ui-spacing-xs: 8px` / `-rg: 12px` / `-md: 16px`; BaseIcon.tsx:11 `rg: \"var(--ui-icon-rg)\", // 14px`; no --ui token exists for a 28px radius, 54px/160px OutlineButton box, or 46px ShapeButton box."
+- locations:
+  - src/components/OutlineButton/OutlineButton.tsx:147
+  - src/components/OutlineButton/OutlineButton.tsx:158-159
+  - src/components/OutlineButton/OutlineButton.tsx:286
+  - src/components/ShapeButton/ShapeButton.tsx:64
+  - src/components/ShapeButton/ShapeButton.tsx:125
+  - src/components/SplitButton/SplitButton.tsx:19
+  - src/components/SplitButton/SplitButton.tsx:33
+  - src/components/Button/Button.tsx:39
+  - src/components/Button/Button.tsx:85-86
+- evidence: |
+    OutlineButton.tsx:147  "border border-solid border-border-primary rounded-[28px]",
+    OutlineButton.tsx:159  "h-[54px] min-w-[160px] px-3",
+    ShapeButton.tsx:64     const SHAPE_SIZE = 46;          ShapeButton.tsx:125  "size-[46px] cursor-pointer select-none",
+    SplitButton.tsx:19     "ds-gap-ui-xs pl-4 pr-4",       SplitButton.tsx:33  <span className="size-[14px] shrink-0">{icon}</span>
+    Button.tsx:39          "inline-flex items-center justify-center gap-2 whitespace-nowrap",
+    Button.tsx:85-86       default: "h-button px-3", / sm: "h-button-sm px-3",
+- impact: contrib:18/53/56 require radii from `rounded-tight|normal|soft` and forbid hardcoded px; the 28px frame radius, 54px/160px OutlineButton box and 46px ShapeButton box are values a consuming app cannot retheme. `px-3`/`gap-2`/`pl-4 pr-4`/`size-[14px]` equal `--ui-spacing-rg`/`-xs`/`-md` and `--ui-icon-rg` exactly, so a consumer who retunes those tokens re-spaces every component except Button, OutlineButton and SplitButton. The family also spells the same token three ways: CTAButton uses the generated utility (`gap-xs`, `p-xs`, CTAButton.tsx:92,107), SplitButton/OutlineButton use the parallel `ds-gap-ui-xs`/`ds-p-ui-xs` helpers (SplitButton.tsx:19, OutlineButton.tsx:148), Button uses the numeric scale. `SHAPE_SIZE = 46` and `size-[46px]` must be edited together with nothing linking them.
+- recommendation: Map each value to an existing token utility (`px-rg`, `gap-xs`, `px-md`, `IconSize.rg`) or add `--ui-*` tokens for the genuinely new ones (outline-button frame radius/height/min-width, shape-button size) and render from them; pick one spelling for spacing-token access (generated utility vs `ds-*-ui-*` helper).
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U4-F6]
+
+
+### U6-F3: Slider and CodeDigitInput carry raw `var(--ui-*)` and hardcoded px as arbitrary Tailwind values in `className`; CodeDigitInput's 18px glyph size is a component-decided number stated twice
+- severity: S2
+- category: rule-violation
+- rules: [R8.10, R8.11, R8.1, R8.12]
+- scope: internal
+- confidence: plausible
+- verified_by: "rg -n 'var\\(--ui-|-\\[[0-9]+px\\]' src/components/{Slider,VerificationCode}/*.tsx (non-story); no `h-slider-handle`/`w-slider-handle` package utility exists (index.css:322-365 defines only `h-slider-track`); dooph-component-tokens.css:4-8 asks for helpers instead of `[var(--var)]`"
+- locations:
+  - src/components/Slider/Slider.tsx:344
+  - src/components/Slider/Slider.tsx:368
+  - src/components/Slider/Slider.tsx:380
+  - src/components/Slider/Slider.tsx:398
+  - src/components/Slider/Slider.tsx:408
+  - src/components/VerificationCode/CodeDigitInput.tsx:62-65
+  - src/components/VerificationCode/CodeDigitInput.tsx:85
+- evidence: |
+    Slider.tsx:344  'h-[var(--ui-height-slider-handle)]',
+    Slider.tsx:368  'w-[max(0px,calc(var(--slider-pct)/100*(100%-var(--ui-width-slider-handle))-var(--ui-slider-track-gap)+var(--ds-slider-pad)))]',
+    Slider.tsx:380  'left-[min(100%,calc(var(--slider-pct)/100*(100%-var(--ui-width-slider-handle))+var(--ui-width-slider-handle)+var(--ui-slider-track-gap)))]',
+    Slider.tsx:398  'absolute top-1/2 size-[6px] -translate-x-1/2 -translate-y-1/2 rounded-full',
+    Slider.tsx:408  'block h-[var(--ui-height-slider-handle)] w-[var(--ui-width-slider-handle)]',
+    CodeDigitInput.tsx:64  fontSize={18}
+    CodeDigitInput.tsx:85  "text-[18px] font-medium text-transparent caret-transparent outline-none",
+    dooph-component-tokens.css:4-5  Prefer these plain CSS utilities over Tailwind arbitrary `*-(--var)` or `[var(--var)]` in component source
+- impact: contrib:52/110 bans `var(--ui-*)` in className and contrib:53/119 bans arbitrary px; the Slider is the densest violator in the package (5 sites) and the step-dot size `6px` has no token at all, so a consumer retuning the slider via `--ui-*` cannot resize the dots. The thumb-aligned formula is written three times (TS template at Slider.tsx:99-100 plus the two class strings) so a geometry change must be made in three places that the compiler cannot relate. CodeDigitInput's 18px lives in two places (inline via BaseText and the transparent input's `text-[18px]`) with no token, so the glyph and the caret-hit area can drift apart.
+- recommendation: Move the handle size and fill geometry into `ds-slider-*` helpers in dooph-component-tokens.css (the file already hosts `.ds-slider-fill`/`.ds-slider-dot`), add a dot-size token, and give the code-digit glyph size a `--ui-*` token consumed by both elements.
+- breaking: none
+- contract: n/a (Slider.tsx and the class strings have no header; CodeDigitInput.tsx "Do not hardcode Host Grotesk here" → consistent)
+- remediation: tbd
+- related: [U6-F20]
+
+
+### U8-F6: Toast and Tooltip bypass the spacing tokens — arbitrary `pl-[14px] pt-[14px]`, plus Tailwind's default numeric scale (`py-2 pl-4 pr-2 pb-3 pr-3`, `px-3`) beside token utilities in the same class strings
+- severity: S2
+- category: rule-violation
+- rules: [R8.1, R8.11, R9.2]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "dist-styles.css:1163 `.pt-\\[14px\\] { padding-top: 14px; }`, :1211 `.pl-\\[14px\\]`; numeric utilities compile to `calc(var(--spacing) * n)` with Tailwind's `--spacing: 0.25rem` (dist-styles.css:15), not `--ui-spacing-*`; tokens.css:513-521 give xs=8px, rg=12px, md=16px"
+- locations:
+  - src/components/Toast/Toast.tsx:70-76
+  - src/components/Tooltip/Tooltip.tsx:68-70
+- evidence: |
+    Toast.tsx:70   "ds-toast-width-simple flex-row items-center gap-xxl border … bg-modal-surface py-2 pl-4 pr-2 text-text",
+    Toast.tsx:76   "ds-toast-width-complex flex-col gap-md border … bg-modal-surface pb-3 pl-[14px] pr-3 pt-[14px] text-text",
+    Tooltip.tsx:68 "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-md text-style-body",
+    Tooltip.tsx:70 "flex ds-width-tooltip-rich flex-col gap-xs rounded-tight border border-solid px-3 py-sm wrap-break-word",
+- impact: A consumer who rebrands `--ui-spacing-xs/rg/md` moves the toast gaps (`gap-xxl`, `gap-md`) and the simple tooltip's `px-md` but not the toast/rich-tooltip paddings, so one surface ends up half-retuned. `[14px]` has no token at all (R8.1: add one). The same component mixes `px-md` (token) with `px-3` (default scale, = `rg`), which hides the distinction from the next editor.
+- recommendation: Use the token utilities that already equal these values (`py-xs pl-md pr-xs`, `pb-rg pr-rg`, `px-rg`) and add a spacing token (or `ds-*` helper) for the 14px complex-toast inset if it is a real design value.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U5-F4: Sizes in the menu/trigger family bypass tokens through arbitrary px values and Tailwind's default spacing scale
+- severity: S3
+- category: rule-violation
+- rules: [R8.1, R8.11]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "greps/h3-arbitrary.txt rows 82,85,86; dist-styles.css:15 `--spacing: 0.25rem`, so `min-w-40` = calc(var(--spacing)*40) = 160px; tokens.css:562 `--ui-min-w-menu: 160px`; no 30px/23px/24px size token in tokens.css (grep)."
+- locations:
+  - src/components/Menu/DropdownMenu.tsx:339
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:325
+  - src/components/HotkeyIndicator/HotkeyIndicator.tsx:11
+  - src/components/HotkeyIndicator/HotkeyIndicator.tsx:21
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:59
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:194
+  - src/components/SearchBox/SearchBox.tsx:27
+  - src/components/SearchBox/SearchBox.tsx:39-42
+  - src/components/Menu/DropdownMenuSearch.tsx:77
+- evidence: |
+    DropdownMenu.tsx:339      "flex h-[30px] items-center px-xs",
+    DropdownTrigger.tsx:325   "h-[30px] text-style-button text-ghost-fg ..."
+    HotkeyIndicator.tsx:21    keys.length === 1 && 'min-w-[23px] min-h-[23px]',
+    DropdownTrigger.tsx:59    "min-w-40 rounded-tight border border-solid border-border-primary",   // 160px from Tailwind --spacing, not --ui-min-w-menu
+    SearchBox.tsx:27          'flex items-center gap-2',   // sibling DropdownMenuSearch uses gap-xs
+    DropdownMenuSearch.tsx:77 className="shrink-0 [&_kbd]:h-6 [&_kbd]:min-h-6 ..."
+- impact: 30px (label row, text trigger), 23px (single-key kbd), 24px (kbd in the menu search) and 160px (trigger min width) are design values consumers cannot retune through tokens. `min-w-40` matches `--ui-min-w-menu` only by coincidence, so overriding the menu floor leaves triggers at 160px. `gap-2`/`gap-1` sit beside `gap-xs` siblings doing the same job. The usage skill tells consumers the opposite ("No ... `*-[…]` arbitrary values where a token exists").
+- recommendation: Add tokens (menu label/row height, kbd min size, trigger min width) with `ds-*` or theme utilities and replace the literals; use the DS spacing scale (`gap-xs`/`gap-xxs`) rather than Tailwind's numeric scale.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U5-F6, U5-F9]
+
+
+### U12-F12: Table mixes DS spacing tokens with Tailwind's numeric scale, and header/body column alignment depends on the two coinciding (4px token + 12px token = numeric 16px)
+- severity: S3
+- category: wrong-layer
+- rules: [R8.1, R5.2]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "dist-styles.css:15 `--spacing: 0.25rem`; :1118 `.px-4 { padding-inline: calc(var(--spacing) * 4) }`; :1127 `.px-rg { padding-inline: var(--ui-spacing-rg) }`; :1136 `.px-xxs { … var(--ui-spacing-xxs) }`; tokens.css:514 xxs 4px, :517 rg 12px, :518 md 16px."
+- locations:
+  - src/components/Table/Table.tsx:49
+  - src/components/Table/Table.tsx:95
+  - src/components/Table/Table.tsx:82
+  - src/components/Table/Table.tsx:134
+  - src/components/Table/Table.tsx:151
+- evidence: |
+    Table.tsx:49      className={cn("grid border-b border-border-primary py-xs px-xxs", className)}
+    Table.tsx:95        className={cn("flex items-center px-rg py-xs", className)}
+    Table.tsx:82            className="w-full justify-start gap-1 text-text-primary"   (+ Button size default = `px-3`)
+    Table.tsx:134        "flex flex-col justify-center overflow-hidden px-4 py-3",
+    Table.tsx:151    className={cn("flex flex-1 items-center justify-center py-8", className)}
+- impact: Header text starts at `--ui-spacing-xxs` + `--ui-spacing-rg` (4+12) — or xxs + Button's numeric `px-3` for sortable columns — while body text starts at numeric `px-4` (16). A consumer who retunes `--ui-spacing-rg` or `-xxs` (documented override points) shifts header labels off their body columns; the numeric parts never move. Four of the five numeric values have token equivalents (`px-md`, `py-rg`, `gap-xxs`, and the Button's own padding); `py-8` (32px) has none.
+- recommendation: Express TableCell/TablePlaceholder/sort-button spacing with the same tokens the header uses (or one `--ui-spacing-table-cell-x` token both sides read) so alignment is structural, not numeric coincidence.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U12-F11]
+
+
+### U9-F15: LinearProgressIndicator splits one element's styling across two layers — width/left math and colour as arbitrary Tailwind values in className, transitions in `ds-progress-*` helpers — with an untokened 4px height
+- severity: S3
+- category: wrong-layer
+- rules: [R8.1, R8.11, R9.2]
+- scope: internal
+- confidence: plausible
+- verified_by: "Read LPI.tsx 55-72; compiled rules exist in docs/audit/_work/dist-styles.css (293-294, 450, 579-580, 980-981). Arbitrary values are repo-wide (195 occurrences in 18 component files) — this finding is about the split, not the count."
+- locations:
+  - src/components/LinearProgressIndicator/LinearProgressIndicator.tsx:51-71
+  - src/styles/dooph-component-tokens.css:126-133
+- evidence: |
+    LPI.tsx:51  '--progress-pct': pct,
+    LPI.tsx:52  '--ds-progress-color': resolveDsColor(color, DEFAULT_COLOR),
+    LPI.tsx:55  className={cn('relative h-[4px] w-full', className)}
+    LPI.tsx:61  'w-[max(4px,calc(var(--progress-pct)*1%-2px))]',
+    LPI.tsx:62  'bg-[var(--ds-progress-color)]',
+    LPI.tsx:69  'left-[max(4px,min(100%,calc(var(--progress-pct)*1%+2px)))]',
+- impact: The fill's width formula (className) and its width transition (`.ds-progress-fill`) must agree but live in different files and layers; the 4px bar height, 4px nub and 2px gap are design values with no token (R8.1), so a consumer cannot retune the bar. Internal custom properties are named inconsistently in one component (`--progress-pct` vs `--ds-progress-color`).
+- recommendation: Move width/left/background into the existing `ds-progress-fill`/`ds-progress-remainder` rules, add a height token, and rename `--progress-pct` into the `--ds-*` internal namespace.
+- breaking: none
+- contract: LPI.tsx header "percentage stored on `--progress-pct`" → conflicts (rename would require a header update in the same commit)
+- remediation: tbd
+- related: [U9-F4]
+
+

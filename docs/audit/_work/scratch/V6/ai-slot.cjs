@@ -1,0 +1,17 @@
+const B='C:/Users/stick/Github/dooph/dooph-ds-audit-build';
+const React=require(B+'/node_modules/react');
+const {renderToStaticMarkup}=require(B+'/node_modules/react-dom/server');
+const ds=require(B+'/dist/index.cjs');
+const h=React.createElement;
+let seen=null;
+const Probe=React.forwardRef((p,ref)=>{seen=Object.keys(p);return h('button',{ref,...p},'probe');});
+const tip=(child)=>h(ds.TooltipProvider,null,h(ds.Tooltip,null,h(ds.TooltipTrigger,{asChild:true},child),h(ds.TooltipContent,null,'Send (Enter)')));
+const inForm=(child)=>h(ds.AIPromptInput,{onSubmit(){},defaultValue:'hi'},child);
+console.log('PROBE props received from TooltipTrigger asChild:\n ', renderToStaticMarkup(tip(h(Probe))), '\n  keys:', seen.join(','));
+console.log('\nSUBMIT under TooltipTrigger asChild:\n ', renderToStaticMarkup(inForm(tip(h(ds.AIPromptInputSubmit)))));
+console.log('\nSIBLING ToolbarEnd under TooltipTrigger asChild:\n ', renderToStaticMarkup(inForm(tip(h(ds.AIPromptInputToolbarEnd)))));
+console.log('\nDS Button under TooltipTrigger asChild:\n ', renderToStaticMarkup(tip(h(ds.Button,{'aria-label':'x'},'b'))));
+const steps=[{value:'a',label:'A'},{value:'b',label:'B'}];
+const sel=h(ds.AIThinkingEffortSelector,{steps,value:'a',onValueChange(){},label:'Thinking',labels:{start:'F',end:'S'}});
+console.log('\nEffortSelector under DropdownMenuTrigger asChild (root tag only):\n ', renderToStaticMarkup(h(ds.DropdownMenu,null,h(ds.DropdownMenuTrigger,{asChild:true},sel))).slice(0,160));
+console.log('\nEffortSelector with id/data-testid props (root tag only):\n ', renderToStaticMarkup(h(ds.AIThinkingEffortSelector,{steps,value:'a',onValueChange(){},label:'T',labels:{start:'F',end:'S'},id:'eff','data-testid':'eff'})).slice(0,120));

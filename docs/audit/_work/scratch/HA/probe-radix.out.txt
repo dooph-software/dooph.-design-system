@@ -1,0 +1,2 @@
+probe-radix-openautofocus.tsx(2,49): error TS2322: Type '{ onOpenAutoFocus: (e: Event) => void; }' is not assignable to type 'IntrinsicAttributes & DropdownMenuContentProps & RefAttributes<HTMLDivElement>'.
+  Property 'onOpenAutoFocus' does not exist on type 'IntrinsicAttributes & DropdownMenuContentProps & RefAttributes<HTMLDivElement>'. Did you mean 'onCloseAutoFocus'?

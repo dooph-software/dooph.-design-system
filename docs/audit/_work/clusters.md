@@ -1,0 +1,129 @@
+# Provisional merge map (M-IDs) — S1/S2 first pass (before HA/HB/HC/HD land; U10 partial)
+
+Format: M# | provisional sev | category | members (unit IDs) | one-line merged statement
+Final F-IDs assigned after Phase 4.
+
+## S1 candidates
+- M1 | S1 | build-packaging | U2-F1 (owner), U3-F1, U6-F28, U9-F1(part), U11 ref, O11 | add-use-client.mjs scans first 5 lines → 16 client modules' chunks unstamped (ESM+CJS); dist/index.js imports them; v5.3.0 also affected. Tension with R11.9.
+- M2 | S1 | build-packaging | U13-F1, U14-F4 (RC-7), O1 | HEAD carries ~50 consumer-breaking changes since v5.3.0; docs narrate them as shipped "5.4" minor; semver + R13.3 require a major + v6 migration skill → D-item.
+- M4 | S1 | api-design | U4-F1, U5-F1, U4-F15 (stories) | asChild throws on OutlineButton, ShapeButton, DropdownTrigger, TextDropdownTrigger (Slot gets >1 child); advertised by arch:221 + codebase table.
+- M5 | S1 | build-packaging | U2-F7, U13-F6 | cn text-style group lists 8/10 roles → HeroBodyText/HeroButtonText lose role class with a colour utility; usage skill snippet lists 6.
+- M6 | S2 | build-packaging | U2-F6 | cn registers no DS size/radius/spacing/shadow scales (text-body drops text-primary-fg; rounded-full vs rounded-tight). Same WI as M5.
+- M7 | S1 | build-packaging | U1-F1 | theme.css spacing keys xs..xl shadow Tailwind --container-* → max-w-md = 16px in consumer builds.
+- M8 | S1 | doc-drift | U1-F10, U13-F5, U13-F7, U10-F9 | shipped theming docs (token-contract.md, README) name non-generating utilities (rounded-l-standard, rounded-standard) and wrong defaults (icon stroke 1.5 vs 2, slider step-inactive, -alt dark behaviour, "eight roles", slider 45%).
+- M10 | S1? | inconsistency | U12-F1, U1-F12, U12-F2 (contract) | dark danger Sticker white-on-white (tokens.css:717-718) — VERIFY opacity path.
+- M11 | S1 | api-design | U10-F1 | fillColor does nothing on PentagonShape/PuffShape (path hardcodes fill=currentColor).
+- M12 | S1 | api-design | U8-F1 | ToastProvider duration ignored (item.duration ?? 4000).
+- M13 | S1 | doc-drift | U13-F2 | v5 codemod exits 0 unconditionally; skill's CI-gate/expiry claim false; R13.10.
+- M14 | S1 | doc-drift | U13-F3, U13-F4 | usage skill examples/inventory don't compile (HeroText import; required props omitted).
+- M15 | S1 | doc-drift | U13-F9 | v3 migration skill forward-compat broken (renames current bg-surface-page; done-check can't reach 0; lists removed ShapeButtons.star/DropdownMenuVariant). R13.11.
+- M16 | S1 | build-packaging | U9-F1 | ShapeMorphSpinner (neutral) passes component functions to client MorphRotationShape → RSC failure.
+- M17 | S1 | duplication | U9-F5 | flat ProgressIndicator stray track dot near completion (duplicated track formula; only wavy copy fixed).
+- M18 | S1 | doc-drift | U9-F8, U9-F9 | shipped JSDoc/.d.ts document nonexistent API: LinearProgressIndicator 'brand' colour; ProgressIndicator "polar sine-wave", "throws in development".
+- M33 | S1? | build-packaging | U10-F10, U13-F13 | vendored MIT/Apache shape-morph engine ships in dist without notices; THIRD_PARTY_NOTICES.md not in tarball and misses 3 Radix deps.
+
+## S2 clusters
+- M3 | S2 | doc-drift | U13-F12, U5-F8, O2 | CHANGELOG lacks 2.x–5.3.0; [Unreleased] omits all breaking changes + new families.
+- M9 | S2 | doc-drift | U13-F8, U13-F10, U11-F10, O8 | consumer docs omit public surface: token-contract misses 65/259 tokens; usage skill omits AIChat (18 comps) + ~50 exports; --ui-chat-* undocumented.
+- M9b | S2/S3 | doc-drift | U14-F6 | codebase skill map omits AIChat, Sticker, DropdownCaret, MorphRotationShape, ShapeMorphSpinner.
+- M20 | S2 | rule-violation | U1-F6, U3-F2, U4-F5, U5-F3, U6-F5, U8-F3, U9-F4, U3-F9, U12-F13 (+HC tally) | hardcoded motion / missing --ui-<component>-* families (R6.1/R6.5) repo-wide. Possible D-item for hover micro-durations.
+- M21 | S2 | wrong-layer + rulebook-conflict | U9-F2, U9-F3 | LoadingSpinner JS timing (rAF, 1800ms, cosine) prescribed by li skill vs Rule 6 → D-item.
+- M22 | S2 | rulebook-conflict | U14-F3, U9-F6 (RC-4) | li skill says spinner size tokens inert; false.
+- M23 | S2 | repo-hygiene | U14-F1, U14-F5, O3, O4 | skill mirrors: 3 mechanisms; fresh clone gets text-file symlinks; stale .claude loading-indicators copy teaches .brand.
+- M24 | S2 | rulebook-conflict | U14-F2 (RC-6), O5 | fhc example teaches ButtonVariant.brand / no --ui-color-danger*.
+- M25 | S2 | rule-violation | U14-F14 | vendored radix-ui-design-system skill teaches 7 banned patterns; listed as canonical.
+- M26 | S2 | rulebook-conflict | U14-F10 (RC-1), U11-F1, U7-F6, U6-F25 | discrete-prop names outside R1.11's closed exception list (checked, state, mode, …) → D-item.
+- M27 | S3 | rulebook-conflict | U14-F11 (RC-2), U14-F12 (RC-3), U14-F13 (RC-5) | → D-items.
+- M28 | S2 | inconsistency + rulebook-conflict | U2-F2, U4-F8, U9-F16, U7-F15, U11-F5 | "use client" placement inconsistent (13 hook-free modules carry it; AIModelSelect lacks it but defines handlers); R8.21 trigger list incomplete → D-item on rule wording.
+- M29 | S2 | rule-violation | U1-F2 | .dark re-declares 6 tokens with :root value (R5.3) → cancels consumer :root overrides in dark.
+- M30 | S2 | inconsistency | U10-F5 | BaseIcon color paints stroke only; TagIcon fill not rewired.
+- M31 | S2/S1 | api-design | U10-F6 | HeartFillIcon drawn on 16-grid in 24 viewBox → 58% size top-left.
+- M32 | S2 | rule-violation | U10-F8 | IconSize declared as IconSizes w/ `| string` in derived type; generator alias; JSDoc.
+- M34 | S2 | inconsistency | U11-F4 | AIPromptInputSubmit / AIThinkingEffortSelector drop unnamed props.
+- M35 | S2 | contract-drift | U12-F2, U6-F1, U11-F11, U3-F3 (+ others) | header contracts state false facts / violate fhc format (brand spelling, CheckboxVariant.brand, color-mix wash, AIModelSelect custom property, RollingDigitsText ## updating + hedge).
+- M36 | S2 | rule-violation | U12-F4 | TableHeaderCell uses nonexistent text-text-primary; tailwind-merge strips Button's text-ghost-fg.
+- M37 | S2 | inconsistency | U12-F5 (+HB style column) | TableHeader/TableRow clobber consumer style (grid template).
+- M38 | S2 | rule-violation | U12-F7, U4-F7, U6-F3, U8-F6, U5-F4 (+HC tally) | token bypass: arbitrary px, raw var(--ui-*) in className, Tailwind default spacing scale.
+- M39 | S2 | rule-violation | U6-F4 (+HC focus tally) | focus rings via shadow-focus-* not ds-focus-*.
+- M40 | S2 | rule-violation | U6-F6 | SliderStepped preventDefault in Radix onKeyDown; loses ×10 PageUp/Down.
+- M41 | S2 | api-design | U6-F11 | VerificationCodeInput gapless string: digit lands in wrong cell; delete shifts.
+- M42 | S2 | rulebook-conflict | U7-F1, U6-F23 | discriminated-union + throw pattern: Calendar warns then TypeErrors; unions accept icon={null}/color="" → "real guard" false.
+- M43 | S2 | coupling | U7-F2, U3-F7, U6-F14, U2-leaked | internal helpers public via barrels (isSameDay, startOfDay, format*, serializeAxes, TextStyleProps, tabTriggerVariants, …) vs Menu deep-import: two mechanisms.
+- M44 | S2 | rule-violation | U7-F3 | PopoverContent no reduced-motion override (R6.2).
+- M45 | S2 | inconsistency | U7-F5 (+HB controlled column) | value/callback naming three ways in date family; not onValueChange.
+- M46 | S2 | inconsistency | U5-F2, U7-F14, U6-F2 | disabled state rendered inconsistently; CalendarPresetItem, CodeDigitInput, SearchBox render none; DropdownTrigger double-fades.
+- M47 | S2 | wrong-layer | U8-F2 | Toast exit animation skipped on Radix-closed paths; dismiss() setTimeout(200) mirrors CSS (R6.6).
+- M48 | S2 | inconsistency | U8-F4 | ModalContent/SheetContent no portal escape hatch (R2.9).
+- M49 | S2 | duplication | U2-F3, U9-F7, U11-F2 | colour-prop mechanisms compete: utils/color.ts lookup + 3 private copies; color="danger" invalid on AIContextGauge.
+- M50 | S2 | naming | U3-F4, U9-F11 (+HA const table) | const/type identifier mismatch (R1.9): Fonts/Font…, ProgressIndicatorVariants/Variant.
+- M51 | S2 | api-design | U3-F5 | RollHoverText aria-label on span w/ aria-hidden content.
+- M52 | S2 | inconsistency | U4-F3, U4-F4 | OutlineButton splits props across two elements; consumer onMouseMove clobbers glow handler.
+- M53 | S2 | rule-violation | U4-F6 | OutlineButton inline blur/opacity component-decided values (R8.12).
+- M54 | S2 | type-safety | U4-F2 | CopyButtonProps resolves to any.
+- M55 | S2 | api-design | U4-F14 | SplitButtonTrigger no accessible name.
+- M56 | S2 | rule-violation | U12-F10 | Sticker wraps children in unnecessary div (R3.4).
+- M57 | S2 | api-design | U12-F11 | Table no ARIA roles; sortDirection not aria-sort.
+- M59 | S2 | doc-drift | U13-F11 | README font contract drops mono + 2 axes.
+- M60 | S2 | doc-drift | U13-F14 | CONTRIBUTING/SECURITY links 404.
+- M61 | S2 | build-packaging | U2-F13 | init-skills installs nothing non-interactively.
+- M63 | S2 | inconsistency | U9-F12, O6 | 3 loading folders have no index.ts; src/index.ts deep-imports.
+- M64 | S2 | doc-drift | U13-F10? | (placeholder — check HD roll-up)
+
+## S3/S4 merge notes (first pass, units complete; horizontal pending)
+- M20 motion += U3-F9, U12-F13, U1-F5? (no: F5 = danger focus shadow literal, standalone S3)
+- M29 .dark dup tokens += U12-F8, U12-F3 (dead dark override → dead CSS instead)
+- M28 "use client" += U6-F20, U9-F16, U8-F16(S4), U11-F5 (AIModelSelect lacks directive but defines handler)
+- M43 leaked internals += U2-F4, U3-F7, U6-F14 (recipes public; props typed from cva → also R1.2)
+- M63 barrel shapes += U2-F14
+- M9 consumer-doc coverage += U1-F11, U11-F10, U8-F9, U5-F10 (usage part)
+- M8 theming-doc wrong values += U6-F17 (45%)
+- M35 header contracts FALSE facts (S2): U12-F2, U6-F1, U11-F11, U6-F15 (Checkbox press claim), U6-F2 (header part)
+- M35b header contract FORMAT (S3): U3-F3, U11-F12, U10-F13, U6-F26 part, U4-F19 part, Toggle.tsx:1 directive-above-contract
+- M37 style clobber (S2): U12-F5, U6-F21 (Slider inline defaults override consumer style)
+- M52 prop routing split (S2): U4-F3, U4-F4, U6-F16
+- M38 token bypass (S2): += U5-F4, U12-F12, U9-F15 (LinearProgress arbitrary values), U6-F3
+- M39 focus (S2): U6-F4, U4-F11, U6-F22
+- M42 R1.6 union+throw inconsistency (S2): U7-F1, U6-F23, U3-F6, U9-F10 (NaN)
+- M45 value/callback naming (S2): U7-F5, U6-F10
+- M46 disabled (S2): U5-F2, U7-F14, U6-F2, U4-F10, U6-F12, U6-F13
+- M49 colour vocab (S2): U2-F3, U9-F7, U11-F2
+- M70 codebase skill drift (S3): U14-F6, U2-F11, U3-F10, U6-F24, U1-F15, U5-F10 (codebase part), U6-F17 part, U12-F9 part
+- M71 authoring skills stale examples/triggers (S3): U14-F8, U14-F9 (+ U14-F7 S4 batch)
+- M72 stale code/CSS comments (S3): U1-F3, U1-F8, U11-F9, U7-F9, U4-F20, U12-F9 (shipped JSDoc)
+- M73 vestigial default exports (S3): U2-F5, U10-F4
+- M74 dead CSS rules/overrides (S3): U1-F9, U12-F3, U12-F6, U8-F5
+- M75 dead tooling (S3): U1-F4 (build:css/copy-theme)
+- M76 orphan test (S3): U2-F10, U9-F13
+- M77 duplication (S3, keep separate, each own cost): U3-F8, U10-F3, U4-F9, U5-F5, U8-F7, U1-F14, U11-F7
+- M78 missing ref/rest/closed props (S3): U7-F8, U10-F7
+- M79 prop types wider than runtime (S3): U10-F14, U9-F17, U6-F7, U4-F12
+- M80 hardcoded English a11y strings (S3): U7-F10, U8-F11, U6-F8
+- M81 naming vocab (S3): U12-F15, U6-F27, U4-F13, U8-F10
+- M82 consts outside constants.ts (S3): U10-F12, U12-F14
+- M83 stories don't contradict defaults (S3, R9.23): U3-F11, U5-F12, U7-F13, U8-F13, U9-F18, U11-F14, U12-F17, U6-F19 part
+- M84 stories teach banned/stale patterns (S3, R9.13/R9.24): U4-F17, U6-F18, U8-F12, U10-F11, U6-F19 part, U3-F12(S4)
+- M85 S4 batches (keep one per category): U1-F16, U3-F12, U3-F13, U3-F14, U4-F19, U5-F11, U6-F26, U7-F11, U7-F12, U8-F14, U8-F15, U10-F13, U11-F13, U12-F18, U12-F19, U13-F15, U14-F7, U14-F13(RC-5 → D), U2-F12, U9-F19, U6-F25 (→M26)
+- Standalone S3 (1:1): U1-F5, U1-F7, U1-F13, U2-F8, U2-F9, U4-F16, U4-F18, U5-F6, U5-F7, U5-F9, U6-F9, U6-F15(→M35), U7-F4, U7-F7, U8-F8, U9-F14, U10-F2, U11-F3, U11-F6, U11-F8, U12-F16, U14-F15
+- Rulebook conflicts → D-items: M26 (RC-1: U14-F10, U7-F6, U6-F25, U11-F1), RC-2 U14-F11, RC-3 U14-F12, RC-5 U14-F13, RC-4 M22, RC-6 M24, RC-7 M2, M21 (li vs Rule 6), M28 (R8.21 wording), M1 tension (R11.9 vs stamping)
+
+## Phase 4 verdicts (running log)
+- V2: M4 CONFIRMED S1 · M10 CONFIRMED S1 (U1-F12 upgrade to S1; U12-F2 PARTIAL — only dark danger wash contradicts header) · M11 CONFIRMED S1 · M12 CONFIRMED S1 (toast({duration:0}) falls through) · M17 CONFIRMED → DOWNGRADE S2 · M31 CONFIRMED S2 · M18 U9-F8 CONFIRMED S1; U9-F9 PARTIAL S2 (comments in dist/components/**.d.ts, not dist/index.d.ts) · M14 CONFIRMED (F3 S1, F4 S2) · M15 CONFIRMED w/ caveat: all introduced post-v5.3.0 (unreleased); star/DropdownMenuVariant half = release-time R13.11 work → S2 alone; surface-page contradiction stays S1-if-released.
+- MISSED in S1 batches: M8 (theming docs wrong values) → verify in V4.
+- V1: M1 CONFIRMED S1 (RSC loader approximation: AIPromptInput `createContext is not a function` at load; Input/VerificationCodeInput/SidebarWithHoverIcon/Fade/Roll/RevealChangeText/useChangeSwap fail on render; v5.3.0 has 9 below-line-5 files, 6 break; DropdownMenuSearch breaks via onKeyDown closure not hooks) · M16 CONFIRMED S1 · M5 CONFIRMED S1 (+ v5.3.0 cn listed 6 → SubheadingText/MonoText already broken in published) · M7 CONFIRMED S1 (xs..xl for max-w/w/min-w/basis; live since v5.3.0) · M33 CONFIRMED → S2 (engine headers survive only in .js.map, no copyright/permission text; Radix rows = S4 doc gap) · M13 CONFIRMED S1 (v5.3.0 codemod exited 1 on danger hits; HEAD regressed) · M2 CONFIRMED S1 (≈76 breaking items; 26 removed tokens, 19 removed theme keys; "every consumer doc" overbroad — usage skill + README:180 don't say 5.4).
+- HC DONE: HC-F1 (motion, merges 12; D-item hover carve-out) = M20 · HC-F2 (token bypass) = M38 · HC-F3 (focus) = M39 · HC-F4 (disabled) = M46 · HC-F5 (S3 JS class ternaries; +AIToolPart, HotkeyIndicator) NEW cluster M86 (+U7-F12 part) · HC-F6 = M4 · HC-F7 (S3 NEW: DropdownMenuSub exported w/o SubTrigger/SubContent) M87 · HC-F8 (S3: 10 children wrappers vs 2 sanctioned; TextDropdownTrigger bare span) M88 (+U12-F10 Sticker → keep S2 separately or merge? → merge into M88 at S2? decide at synthesis). Rules 5/7: 0 violations.
+- V5 dispatched: HC-F1..F4, M29, M44, M36, M53, M49.
+- HA DONE (0/2/1/2): HA-F1 (S2) cva VariantProps admit null (Button variant/size, SheetContent side) → extends U6-F14 → new cluster M89 · HA-F4 (S2) 40 destructured props `any` in 7 polymorphic comps → M90 (+U4-F2 CopyButton any) · HA-F2 (S3) 4 cva recipes public undocumented → M43 · HA-F3 (S4) 3 Menu parts no props type → S4 batch (+U8-F14) · HA-F5 (S4) casts/mutable default array/unread Shapes const. Const table: 58 consts, 52 public, 27 pass all; 9 fail only on prop naming (RC-1). 443 public names src==dist. No any keyword/ts-ignore; no dead non-exported locals; no declared-but-unread props.
+- HA corrections: U5-F11 recommendation WRONG (onOpenAutoFocus private in Radix 2.1.24 → TS2322); real issue = reliance on private Radix API. U6-F23 += Sticker custom color="" compiles then throws.
+- V6 dispatched: M30, M32, M34, M35, M37, M40, M41, M43, HA-F1, HA-F4.
+- HD DONE: 843 claims / 106 docs: 673 TRUE, 116 FALSE, 42 STALE, 12 UNVERIFIABLE; 15 conflicts resolved; policy P-5.4 ("X happened in 5.4" = FALSE label). 10 UNCOVERED FALSE/STALE → roll into U14-F15 (6), M4 (CB:129), U8-F15 (CB:237 slide-* = 100% not 0.25rem), U9-F19 (LI:192), U14-F9 (LI:220). New FALSE: CB:451 (Slider raw var in className), README:30-33/:44 (published bundle has unstamped client modules → M1 doc side).
+- V3: M6 CONFIRMED S2 (+ shadow-button read as shadow colour → shadow-primary deletes it) · M28 CONFIRMED S2 w/ corrections (9 wrappers render fine w/o directive under RSC approx; Radix pkgs ship own directive; tabTriggerVariants/formatTriggerLabel client refs; AIModelSelect passes closure to client SliderLabeled + hits unstamped RollChangeText; "subtrees forced client" overstated) · M61 CONFIRMED S2 (piped answers also no-op; README addresses human) · M63 → DOWNGRADE S3 (3 folders lack index; 7 `export *` vs 32 named; 23 deep sibling imports repo-wide) · M3 CONFIRMED S2 (34 tags, four majors; no rule mandates changelog — file's own promise) · M9 CONFIRMED S2 (259 = 172 literal + 11 wildcard + 11 shorthand + 65 absent; 53 with no consumer-doc mention; AIChat 17 comps + 3 consts; `<Tooltip>` w/o TooltipProvider throws) · M59 CONFIRMED S2 low · M60 CONFIRMED S2 (WebFetch 404; broken paths copied from executor-prompt-oss-publication.md).
+- V4: M8 PARTIAL → S1 only for dead utility names (rounded-standard / rounded-l-standard); wrong defaults S2; U6-F17 S3; mitigation: token-contract.md:88 documents the rename · M21 CONFIRMED S2 (no header contract; Rule 6 escape hatch requires self-terminating loop; stale comments "1.4 s" vs 1800, "only referenced by WavySpinner") · M22 CONFIRMED S2 (li:53 false; li:51 consistent) · M23 CONFIRMED S2 (7 symlinks, 2 abs junctions/47 tracked copies, 2 real dirs; 65 match, 1 stale; scope to core.symlinks=false) · M24 REFUTED as conflict → S4 (vendored cross-project example; shows format only; Button header binding) · M25 CONFIRMED S2 (only in .agents/skills — Cursor's per bin/init.mjs:55; Claude Code doesn't load it; codebase skill calls it canonical) · M26 → DOWNGRADE S3 (`checked` is Radix's name → not a conflict; real gap: DS-chosen mode/direction/sortDirection/state, 11 props; U11-F1 → S4) · M42 PARTIAL: U7-F1 confirmed (DatePicker crashes w/o warning) but not a rulebook conflict (arch cites CalendarProps for union only); U6-F23 confirmed (icon={false}/""/0 render empty slot silently); U3-F6 REFUTED (header says union-only; R1.6 throw applies to bundle enums only); U9-F10 WORSE (NaN flat variant draws full ring = reads 100%).
+- V5: HC-F1 CONFIRMED S2 (32 durations/17 files, 7 easing utils, 7 inline strings; hover sites 13 files; CSS literal timings 12; REVERT_MS is a state-hold time not animation) + D-item: R6.1 wording plausibly excludes 17 hover colour transitions · HC-F2 PARTIAL S2 (21 arbitrary literals not 25; 4 of 32 are spacing-as-size, don't swap mechanically) · HC-F3 CONFIRMED S2 (Checkbox shadow-focus is a PRESS ring; keyboard ring ok; NEW: CodeDigitInput error state shows no focus indicator) · HC-F4 CONFIRMED S2 (browser-verified; CodeDigitInput does change bg/border, only fade/cursor missing; chevron 0.36 light/0.25 dark) · M29 PARTIAL → S3 (consumer :root override survives with html.dark if consumer CSS loads later; lost only in nested .dark regions; 2 of 6 dup lines are NEEDED — don't delete all) · M44 CONFIRMED S2 (R6.2 says how, not that every animation must; case = only overlay without it) · M36 → DOWNGRADE S3 (no visible effect) · M53 CONFIRMED S2 ("only with !important") · M49 CONFIRMED S2 (browser: text-secondary resolves on LinearProgress, no stroke on ProgressIndicator/LoadingSpinner; danger on AIContextGauge no stroke) + D-item: utils/color.ts R1.4 reading ambiguous.
+- V5 NEW FINDING (S2, verified in browser by V5): 27 alias tokens (danger family, tooltip inverse/matching, focus shadows, selection, shimmer, …) not re-declared in .dark → inside a nested .dark region in a light page they resolve to light values (primary hover dark #f0f0f0 but primary border hover light #2c2c2c). Cluster M91. Evidence: verify/V5.md.
+- 6th usage limit (reset 3:40am 2026-10-01): HB (abea77ea32bb8ad43, was writing findings), V6 (a370875cdc27dfdc8, at M41), V7 (ac9e24e33a836505d), V8 (aab7c1b7d5457273d) interrupted. V5 DONE.
+- V6: M30 → S3 (dot hidden under stroke unless strokeWidth<1) · M32 CONFIRMED S2 (R1.4 not R1.2; IconSize type collapses to string; JSDoc IconSizes TS2724) · M34 CONFIRMED S2 · M35 PARTIAL (U6-F1 S2; U11-F11 → S3; U6-F15 incomplete not false) · M37 PARTIAL (U12-F5 S2; U6-F21 override claim REFUTED) · M40 CONFIRMED S2 (Shift+Arrow still steps; only x10 lost) · M41 CONFIRMED S2 · M43 PARTIAL → S3 (U2-F4 "comment inaccurate" FALSE; DateMatcher/TextStyleProps legit public; tabTriggerVariants deliberate; 38 deep imports = majority) · HA-F1 CONFIRMED S2 · HA-F4 CONFIRMED S2.
+- final-map.psv written (pipe-separated) — authoritative list for F-ID assignment.
+- V7: M45/HB-F6 CONFIRMED S2 low (7 controls use value/onValueChange, 4 deviate; AIModelSelect.tsx:117 is AIThinkingEffortSelector; CalendarPresetItem is an action, not value control) · M47 CONFIRMED S2 (browser) · M48 CONFIRMED S2 (ToastViewport part weak) · M50 PARTIAL S2 (Fonts/FontSizes/FontWeights/Tracking = rulebook conflict w/ arch:65-77; FontAxes + ProgressIndicatorVariants plain R1.9) · M51 CONFIRMED S2 · M52 → S3 (Input deliberately documents same split; +4 comps; glow stays centred) · M54 (U4-F2) → UPGRADE S1 (no value compiles; copies "undefined") → split out of M90 · M55 CONFIRMED S2 · M56 PARTIAL (U12-F10 S2 confirmed pixel-identical; HC-F8 TextDropdownTrigger span purposeful — REFUTED; arch list is "Examples:") · M57 CONFIRMED S2 (ascend/descend vs ascending/descending) · HC-F5 PARTIAL S3 (≈8 vs 8 split; 6 emit unread attrs) · HC-F7 CONFIRMED S3.
+- fid-map regenerated after V7 (v2). C1/C2 write v1 IDs → remap at assembly via fid-map.v1.psv → key → fid-map.psv.
+- V8 (S3 sample 13/45 = 29%, 24 members): 0 fully refuted, 4 partial, 2 members → S4 (U10-F12 in M82, U14-F9 in M71; clusters stay S3) ≈ 8% refute → no need to verify remaining S3. Notes: U6-F8 (Slider labelledby still named "Value") and U6-F7 (stepped keyboard collapses [a,b]→[x]) arguably S2 — kept S3 inside M80/M79, noted. U10-F11 "TagIcon never rendered" false. U8-F12 px-width charge overstated (no width token). U4-F17 alone ≈ S4.
+- PHASE 4 COMPLETE. IDs FINAL = fid-map.psv (v2): 120 findings S1 15 / S2 43 / S3 54 / S4 8.

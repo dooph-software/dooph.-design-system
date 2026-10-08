@@ -7,5 +7,3 @@ export const AttachFileIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default AttachFileIcon;

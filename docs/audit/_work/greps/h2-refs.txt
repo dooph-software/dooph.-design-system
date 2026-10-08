@@ -1,0 +1,264 @@
+src\components\Modal\Modal.tsx:6:  type ComponentRef,
+src\components\Modal\Modal.tsx:20:const ModalOverlay = forwardRef<
+src\components\Modal\Modal.tsx:21:  ComponentRef<typeof DialogPrimitive.Overlay>,
+src\components\Modal\Modal.tsx:37:ModalOverlay.displayName = 'ModalOverlay';
+src\components\Modal\Modal.tsx:57:const ModalContent = forwardRef<
+src\components\Modal\Modal.tsx:58:  ComponentRef<typeof DialogPrimitive.Content>,
+src\components\Modal\Modal.tsx:86:ModalContent.displayName = 'ModalContent';
+src\components\Modal\Modal.tsx:90:const ModalTitle = forwardRef<
+src\components\Modal\Modal.tsx:91:  ComponentRef<typeof DialogPrimitive.Title>,
+src\components\Modal\Modal.tsx:100:ModalTitle.displayName = 'ModalTitle';
+src\components\Modal\Modal.tsx:102:const ModalDescription = forwardRef<
+src\components\Modal\Modal.tsx:103:  ComponentRef<typeof DialogPrimitive.Description>,
+src\components\Modal\Modal.tsx:112:ModalDescription.displayName = 'ModalDescription';
+src\components\WavyDivider\WavyDivider.tsx:55:export const WavyDivider = forwardRef<SVGSVGElement, WavyDividerProps>(
+src\components\WavyDivider\WavyDivider.tsx:97:WavyDivider.displayName = "WavyDivider";
+src\components\VerificationCode\VerificationCodeInput.tsx:43:const VerificationCodeInput = forwardRef<
+src\components\VerificationCode\VerificationCodeInput.tsx:161:VerificationCodeInput.displayName = "VerificationCodeInput";
+src\components\VerificationCode\CodeDigitInput.tsx:28:const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
+src\components\VerificationCode\CodeDigitInput.tsx:96:CodeDigitInput.displayName = "CodeDigitInput";
+src\components\Menu\DropdownMenuSearch.tsx:34:const DropdownMenuSearch = forwardRef<HTMLInputElement, DropdownMenuSearchProps>(
+src\components\Menu\DropdownMenuSearch.tsx:84:DropdownMenuSearch.displayName = "DropdownMenuSearch";
+src\components\Button\Button.tsx:124:const ButtonBase = forwardRef<HTMLElement, ButtonProps<ElementType>>(
+src\components\Button\Button.tsx:137:ButtonBase.displayName = "Button";
+src\components\Text\BaseText.tsx:61:const BaseTextBase = forwardRef<HTMLElement, BaseTextProps<ElementType>>(
+src\components\Text\BaseText.tsx:103:BaseTextBase.displayName = "BaseText";
+src\components\Text\BaseText.tsx:124:  displayName: string,
+src\components\Text\BaseText.tsx:126:  const Role = forwardRef<HTMLElement, RoleTextProps<ElementType>>(
+src\components\Text\BaseText.tsx:129:  Role.displayName = displayName;
+src\components\DatePicker\DatePickerTrigger.tsx:50:const DatePickerTrigger = forwardRef<HTMLButtonElement, DatePickerTriggerProps>(
+src\components\DatePicker\DatePickerTrigger.tsx:81:DatePickerTrigger.displayName = "DatePickerTrigger";
+src\components\Menu\DropdownMenu.tsx:29:  type ComponentRef,
+src\components\Menu\DropdownMenu.tsx:74:const DropdownMenuTrigger = forwardRef<
+src\components\Menu\DropdownMenu.tsx:75:  ComponentRef<typeof DropdownMenuPrimitive.Trigger>,
+src\components\Menu\DropdownMenu.tsx:87:DropdownMenuTrigger.displayName = "DropdownMenuTrigger";
+src\components\Menu\DropdownMenu.tsx:94:const DropdownMenuContent = forwardRef<
+src\components\Menu\DropdownMenu.tsx:95:  ComponentRef<typeof DropdownMenuPrimitive.Content>,
+src\components\Menu\DropdownMenu.tsx:188:DropdownMenuContent.displayName = "DropdownMenuContent";
+src\components\Menu\DropdownMenu.tsx:202:const DropdownMenuItem = forwardRef<
+src\components\Menu\DropdownMenu.tsx:203:  ComponentRef<typeof DropdownMenuPrimitive.Item>,
+src\components\Menu\DropdownMenu.tsx:221:DropdownMenuItem.displayName = "DropdownMenuItem";
+src\components\Menu\DropdownMenu.tsx:233:const DropdownMenuPlainItem = forwardRef<
+src\components\Menu\DropdownMenu.tsx:247:DropdownMenuPlainItem.displayName = "DropdownMenuPlainItem";
+src\components\Menu\DropdownMenu.tsx:250:const DropdownMenuRadioSelectItem = forwardRef<
+src\components\Menu\DropdownMenu.tsx:251:  ComponentRef<typeof DropdownMenuPrimitive.RadioItem>,
+src\components\Menu\DropdownMenu.tsx:274:DropdownMenuRadioSelectItem.displayName = "DropdownMenuRadioSelectItem";
+src\components\Menu\DropdownMenu.tsx:296:const DropdownMenuMultiSelectItem = forwardRef<
+src\components\Menu\DropdownMenu.tsx:297:  ComponentRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+src\components\Menu\DropdownMenu.tsx:330:DropdownMenuMultiSelectItem.displayName = "DropdownMenuMultiSelectItem";
+src\components\Menu\DropdownMenu.tsx:332:const DropdownMenuLabel = forwardRef<
+src\components\Menu\DropdownMenu.tsx:333:  ComponentRef<typeof DropdownMenuPrimitive.Label>,
+src\components\Menu\DropdownMenu.tsx:346:DropdownMenuLabel.displayName = "DropdownMenuLabel";
+src\components\Menu\DropdownMenu.tsx:348:const DropdownMenuSeparator = forwardRef<
+src\components\Menu\DropdownMenu.tsx:349:  ComponentRef<typeof DropdownMenuPrimitive.Separator>,
+src\components\Menu\DropdownMenu.tsx:358:DropdownMenuSeparator.displayName = "DropdownMenuSeparator";
+src\components\Menu\DropdownMenu.tsx:366:const DropdownMenuSegment = forwardRef<HTMLDivElement, DropdownMenuSegmentProps>(
+src\components\Menu\DropdownMenu.tsx:378:DropdownMenuSegment.displayName = "DropdownMenuSegment";
+src\components\Menu\DropdownMenu.tsx:390:const DropdownMenuSection = forwardRef<HTMLDivElement, DropdownMenuSectionProps>(
+src\components\Menu\DropdownMenu.tsx:400:DropdownMenuSection.displayName = "DropdownMenuSection";
+src\components\Avatar\Avatar.tsx:14:const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
+src\components\Avatar\Avatar.tsx:34:Avatar.displayName = "Avatar";
+src\components\Sheet\Sheet.tsx:8:  type ComponentRef,
+src\components\Sheet\Sheet.tsx:28:const SheetOverlay = forwardRef<
+src\components\Sheet\Sheet.tsx:29:  ComponentRef<typeof DialogPrimitive.Overlay>,
+src\components\Sheet\Sheet.tsx:45:SheetOverlay.displayName = "SheetOverlay";
+src\components\Sheet\Sheet.tsx:120:const SheetContent = forwardRef<
+src\components\Sheet\Sheet.tsx:121:  ComponentRef<typeof DialogPrimitive.Content>,
+src\components\Sheet\Sheet.tsx:150:SheetContent.displayName = "SheetContent";
+src\components\Sheet\Sheet.tsx:154:const SheetTitle = forwardRef<
+src\components\Sheet\Sheet.tsx:155:  ComponentRef<typeof DialogPrimitive.Title>,
+src\components\Sheet\Sheet.tsx:164:SheetTitle.displayName = "SheetTitle";
+src\components\Sheet\Sheet.tsx:166:const SheetDescription = forwardRef<
+src\components\Sheet\Sheet.tsx:167:  ComponentRef<typeof DialogPrimitive.Description>,
+src\components\Sheet\Sheet.tsx:176:SheetDescription.displayName = "SheetDescription";
+src\components\DatePicker\DatePickerSplitTrigger.tsx:45:const DatePickerSplitTrigger = forwardRef<
+src\components\DatePicker\DatePickerSplitTrigger.tsx:155:DatePickerSplitTrigger.displayName = "DatePickerSplitTrigger";
+src\components\DatePicker\DatePicker.tsx:167:DatePicker.displayName = "DatePicker";
+src\components\DropdownTrigger\DropdownTrigger.tsx:41:const DropdownTriggerContent = forwardRef<
+src\components\DropdownTrigger\DropdownTrigger.tsx:47:DropdownTriggerContent.displayName = "DropdownTriggerContent";
+src\components\DropdownTrigger\DropdownTrigger.tsx:49:const DropdownTriggerBase = forwardRef<
+src\components\DropdownTrigger\DropdownTrigger.tsx:78:DropdownTriggerBase.displayName = "DropdownTrigger";
+src\components\DropdownTrigger\DropdownTrigger.tsx:140:const TypeableDropdownTrigger = forwardRef<
+src\components\DropdownTrigger\DropdownTrigger.tsx:281:TypeableDropdownTrigger.displayName = "TypeableDropdownTrigger";
+src\components\DropdownTrigger\DropdownTrigger.tsx:300:const TextDropdownTriggerBase = forwardRef<
+src\components\DropdownTrigger\DropdownTrigger.tsx:342:TextDropdownTriggerBase.displayName = "TextDropdownTrigger";
+src\components\CopyButton\CopyButton.tsx:29:const CopyButton = forwardRef<HTMLElement, CopyButtonProps>(
+src\components\CopyButton\CopyButton.tsx:103:CopyButton.displayName = "CopyButton";
+src\components\Tabs\Tabs.tsx:8:  type ComponentRef,
+src\components\Tabs\Tabs.tsx:15:const TabsList = forwardRef<
+src\components\Tabs\Tabs.tsx:16:  ComponentRef<typeof TabsPrimitive.List>,
+src\components\Tabs\Tabs.tsx:25:TabsList.displayName = "TabsList";
+src\components\Tabs\Tabs.tsx:38:const TabsTrigger = forwardRef<
+src\components\Tabs\Tabs.tsx:39:  ComponentRef<typeof TabsPrimitive.Trigger>,
+src\components\Tabs\Tabs.tsx:48:TabsTrigger.displayName = "TabsTrigger";
+src\components\Tabs\Tabs.tsx:50:const TabsContent = forwardRef<
+src\components\Tabs\Tabs.tsx:51:  ComponentRef<typeof TabsPrimitive.Content>,
+src\components\Tabs\Tabs.tsx:60:TabsContent.displayName = "TabsContent";
+src\components\LoadingSpinner\LoadingSpinner.tsx:289:export const LoadingSpinner = forwardRef<SVGSVGElement, LoadingSpinnerProps>(
+src\components\LoadingSpinner\LoadingSpinner.tsx:326:LoadingSpinner.displayName = "LoadingSpinner";
+src\components\AnimatedText\UnderlineLinkText.tsx:42:const UnderlineLinkText = forwardRef<HTMLSpanElement, UnderlineLinkTextProps>(
+src\components\AnimatedText\UnderlineLinkText.tsx:63:UnderlineLinkText.displayName = "UnderlineLinkText";
+src\components\Tooltip\Tooltip.tsx:7:  type ComponentRef,
+src\components\Tooltip\Tooltip.tsx:40:const TooltipContent = forwardRef<
+src\components\Tooltip\Tooltip.tsx:41:  ComponentRef<typeof TooltipPrimitive.Content>,
+src\components\Tooltip\Tooltip.tsx:90:TooltipContent.displayName = "TooltipContent";
+src\components\Tooltip\Tooltip.tsx:93:const TooltipTitle = forwardRef<HTMLElement, TooltipTitleProps>(
+src\components\Tooltip\Tooltip.tsx:98:TooltipTitle.displayName = "TooltipTitle";
+src\components\Tooltip\Tooltip.tsx:101:const TooltipBody = forwardRef<HTMLElement, TooltipBodyProps>(
+src\components\Tooltip\Tooltip.tsx:111:TooltipBody.displayName = "TooltipBody";
+src\components\AnimatedText\ShimmerText.tsx:12:const ShimmerText = forwardRef<HTMLSpanElement, ShimmerTextProps>(
+src\components\AnimatedText\ShimmerText.tsx:17:ShimmerText.displayName = "ShimmerText";
+src\components\AnimatedText\RollingDigitsText.tsx:226:const RollingDigitsTextBase = forwardRef<
+src\components\AnimatedText\RollingDigitsText.tsx:301:RollingDigitsTextBase.displayName = "RollingDigitsText";
+src\components\Table\Table.tsx:22:const Table = forwardRef<HTMLDivElement, TableProps>(
+src\components\Table\Table.tsx:41:Table.displayName = "Table";
+src\components\Table\Table.tsx:45:const TableHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+src\components\Table\Table.tsx:55:TableHeader.displayName = "TableHeader";
+src\components\Table\Table.tsx:70:const TableHeaderCell = forwardRef<HTMLDivElement, TableHeaderCellProps>(
+src\components\Table\Table.tsx:103:TableHeaderCell.displayName = "TableHeaderCell";
+src\components\Table\Table.tsx:107:const TableRow = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+src\components\Table\Table.tsx:125:TableRow.displayName = "TableRow";
+src\components\Table\Table.tsx:129:const TableCell = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+src\components\Table\Table.tsx:141:TableCell.displayName = "TableCell";
+src\components\Table\Table.tsx:145:const TablePlaceholder = forwardRef<
+src\components\Table\Table.tsx:155:TablePlaceholder.displayName = "TablePlaceholder";
+src\components\Checkbox\Checkbox.tsx:25:  type ComponentRef,
+src\components\Checkbox\Checkbox.tsx:75:const CheckboxIndicator = forwardRef<
+src\components\Checkbox\Checkbox.tsx:76:  ComponentRef<typeof CheckboxPrimitive.Indicator>,
+src\components\Checkbox\Checkbox.tsx:117:CheckboxIndicator.displayName = "CheckboxIndicator";
+src\components\Checkbox\Checkbox.tsx:119:const Checkbox = forwardRef<
+src\components\Checkbox\Checkbox.tsx:120:  ComponentRef<typeof CheckboxPrimitive.Root>,
+src\components\Checkbox\Checkbox.tsx:131:Checkbox.displayName = "Checkbox";
+src\components\SegmentedTabSelect\SegmentedTabSelect.tsx:8:  type ComponentRef,
+src\components\SegmentedTabSelect\SegmentedTabSelect.tsx:48:const SegmentedTabSelect = forwardRef<
+src\components\SegmentedTabSelect\SegmentedTabSelect.tsx:49:  ComponentRef<typeof TabsPrimitive.Root>,
+src\components\SegmentedTabSelect\SegmentedTabSelect.tsx:78:SegmentedTabSelect.displayName = 'SegmentedTabSelect';
+src\components\SegmentedTabSelect\SegmentedTabSelect.tsx:86:const SegmentedTabItem = forwardRef<
+src\components\SegmentedTabSelect\SegmentedTabSelect.tsx:87:  ComponentRef<typeof TabsPrimitive.Trigger>,
+src\components\SegmentedTabSelect\SegmentedTabSelect.tsx:100:SegmentedTabItem.displayName = 'SegmentedTabItem';
+src\components\Calendar\Calendar.tsx:362:Calendar.displayName = "Calendar";
+src\components\AnimatedText\RollHoverText.tsx:31:const RollHoverText = forwardRef<HTMLSpanElement, RollHoverTextProps>(
+src\components\AnimatedText\RollHoverText.tsx:94:RollHoverText.displayName = "RollHoverText";
+src\components\AIChat\UserMessageHeader.tsx:19:const UserMessageHeader = forwardRef<HTMLDivElement, UserMessageHeaderProps>(
+src\components\AIChat\UserMessageHeader.tsx:31:UserMessageHeader.displayName = "UserMessageHeader";
+src\components\LinearProgressIndicator\LinearProgressIndicator.tsx:21:  type ComponentRef,
+src\components\LinearProgressIndicator\LinearProgressIndicator.tsx:36:const LinearProgressIndicator = forwardRef<
+src\components\LinearProgressIndicator\LinearProgressIndicator.tsx:37:  ComponentRef<typeof ProgressPrimitive.Root>,
+src\components\LinearProgressIndicator\LinearProgressIndicator.tsx:77:LinearProgressIndicator.displayName = 'LinearProgressIndicator';
+src\components\CTAButton\CTAButton.tsx:51:const CTAButton = forwardRef<HTMLAnchorElement, CTAButtonProps>(
+src\components\CTAButton\CTAButton.tsx:134:CTAButton.displayName = "CTAButton";
+src\components\AIChat\ChatDivider.tsx:22:const ChatDivider = forwardRef<HTMLDivElement, ChatDividerProps>(
+src\components\AIChat\ChatDivider.tsx:49:ChatDivider.displayName = "ChatDivider";
+src\components\AnimatedText\RollChangeText.tsx:46:const RollChangeText = forwardRef<HTMLSpanElement, RollChangeTextProps>(
+src\components\AnimatedText\RollChangeText.tsx:98:RollChangeText.displayName = "RollChangeText";
+src\components\Toggle\Toggle.tsx:27:  type ComponentRef,
+src\components\Toggle\Toggle.tsx:61:const ToggleSwitch = forwardRef<
+src\components\Toggle\Toggle.tsx:62:  ComponentRef<typeof ToggleGroup.Root>,
+src\components\Toggle\Toggle.tsx:108:ToggleSwitch.displayName = "ToggleSwitch";
+src\components\Toggle\Toggle.tsx:117:const ToggleSwitchItem = forwardRef<
+src\components\Toggle\Toggle.tsx:118:  ComponentRef<typeof ToggleGroup.Item>,
+src\components\Toggle\Toggle.tsx:139:ToggleSwitchItem.displayName = "ToggleSwitchItem";
+src\components\Calendar\CalendarPresetsPanel.tsx:15:const CalendarPresetsPanel = forwardRef<HTMLDivElement, CalendarPresetsPanelProps>(
+src\components\Calendar\CalendarPresetsPanel.tsx:29:CalendarPresetsPanel.displayName = "CalendarPresetsPanel";
+src\components\Calendar\CalendarPresetsPanel.tsx:47:const CalendarPresetItem = forwardRef<HTMLButtonElement, CalendarPresetItemProps>(
+src\components\Calendar\CalendarPresetsPanel.tsx:80:CalendarPresetItem.displayName = "CalendarPresetItem";
+src\components\AIChat\AITurnSummary.tsx:32:const AITurnSummary = forwardRef<HTMLDivElement, AITurnSummaryProps>(
+src\components\AIChat\AITurnSummary.tsx:61:AITurnSummary.displayName = "AITurnSummary";
+src\components\Sticker\Sticker.tsx:88:const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
+src\components\Sticker\Sticker.tsx:136:StickerBase.displayName = "Sticker";
+src\components\Sticker\Sticker.tsx:138:const Sticker = forwardRef<HTMLDivElement, StickerProps>((props, ref) => (
+src\components\Sticker\Sticker.tsx:141:Sticker.displayName = "Sticker";
+src\components\AIChat\AIToolPart.tsx:35:const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
+src\components\AIChat\AIToolPart.tsx:94:AIToolPart.displayName = "AIToolPart";
+src\components\Calendar\CalendarGrid.tsx:66:const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
+src\components\Calendar\CalendarGrid.tsx:265:CalendarGrid.displayName = "CalendarGrid";
+src\components\AIChat\AIThinkingPart.tsx:60:const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+src\components\AIChat\AIThinkingPart.tsx:205:AIThinkingPart.displayName = "AIThinkingPart";
+src\components\AnimatedText\RevealChangeText.tsx:121:const RevealChangeText = forwardRef<HTMLSpanElement, RevealChangeTextProps>(
+src\components\AnimatedText\RevealChangeText.tsx:254:RevealChangeText.displayName = "RevealChangeText";
+src\components\OutlineSection\OutlineSection.tsx:16:const OutlineSection = forwardRef<HTMLDivElement, OutlineSectionProps>(
+src\components\OutlineSection\OutlineSection.tsx:41:OutlineSection.displayName = 'OutlineSection';
+src\components\Input\Input.tsx:62:const Input = forwardRef<HTMLInputElement, InputProps>(
+src\components\Input\Input.tsx:217:Input.displayName = "Input";
+src\components\Calendar\CalendarCaption.tsx:139:CalendarCaption.displayName = "CalendarCaption";
+src\components\AIChat\AITextPart.tsx:29:const AITextPart = forwardRef<HTMLDivElement, AITextPartProps>(
+src\components\AIChat\AITextPart.tsx:42:AITextPart.displayName = "AITextPart";
+src\components\AIChat\AIPromptInput.tsx:87:const AIPromptInput = forwardRef<HTMLFormElement, AIPromptInputProps>(
+src\components\AIChat\AIPromptInput.tsx:166:AIPromptInput.displayName = "AIPromptInput";
+src\components\AIChat\AIPromptInput.tsx:180:const AIPromptInputTextarea = forwardRef<
+src\components\AIChat\AIPromptInput.tsx:234:AIPromptInputTextarea.displayName = "AIPromptInputTextarea";
+src\components\AIChat\AIPromptInput.tsx:241:const AIPromptInputToolbar = forwardRef<
+src\components\AIChat\AIPromptInput.tsx:251:AIPromptInputToolbar.displayName = "AIPromptInputToolbar";
+src\components\AIChat\AIPromptInput.tsx:254:const AIPromptInputToolbarStart = forwardRef<
+src\components\AIChat\AIPromptInput.tsx:264:AIPromptInputToolbarStart.displayName = "AIPromptInputToolbarStart";
+src\components\AIChat\AIPromptInput.tsx:267:const AIPromptInputToolbarEnd = forwardRef<
+src\components\AIChat\AIPromptInput.tsx:277:AIPromptInputToolbarEnd.displayName = "AIPromptInputToolbarEnd";
+src\components\AIChat\AIPromptInput.tsx:294:const AIPromptInputSubmit = forwardRef<
+src\components\AIChat\AIPromptInput.tsx:337:AIPromptInputSubmit.displayName = "AIPromptInputSubmit";
+src\components\SearchBox\SearchBox.tsx:22:const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
+src\components\SearchBox\SearchBox.tsx:84:SearchBox.displayName = 'SearchBox';
+src\components\SplitButton\SplitButton.tsx:13:const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
+src\components\SplitButton\SplitButton.tsx:38:SplitButtonAction.displayName = "SplitButtonAction";
+src\components\SplitButton\SplitButton.tsx:44:const SplitButtonTrigger = forwardRef<
+src\components\SplitButton\SplitButton.tsx:67:SplitButtonTrigger.displayName = "SplitButtonTrigger";
+src\components\Toast\Toast.tsx:13:  type ComponentRef,
+src\components\Toast\Toast.tsx:90:const ToastRoot = forwardRef<
+src\components\Toast\Toast.tsx:91:  ComponentRef<typeof ToastPrimitive.Root>,
+src\components\Toast\Toast.tsx:100:ToastRoot.displayName = "ToastRoot";
+src\components\Toast\Toast.tsx:102:const ToastViewport = forwardRef<
+src\components\Toast\Toast.tsx:103:  ComponentRef<typeof ToastPrimitive.Viewport>,
+src\components\Toast\Toast.tsx:115:ToastViewport.displayName = "ToastViewport";
+src\components\Toast\Toast.tsx:118:const ToastTitle = forwardRef<HTMLElement, ToastTitleProps>((props, ref) => (
+src\components\Toast\Toast.tsx:123:ToastTitle.displayName = "ToastTitle";
+src\components\Toast\Toast.tsx:126:const ToastDescription = forwardRef<HTMLElement, ToastDescriptionProps>(
+src\components\Toast\Toast.tsx:138:ToastDescription.displayName = "ToastDescription";
+src\components\Toast\Toast.tsx:140:const ToastAction = forwardRef<
+src\components\Toast\Toast.tsx:141:  ComponentRef<typeof ToastPrimitive.Action>,
+src\components\Toast\Toast.tsx:156:ToastAction.displayName = "ToastAction";
+src\components\Toast\Toast.tsx:158:const ToastClose = forwardRef<
+src\components\Toast\Toast.tsx:159:  ComponentRef<typeof ToastPrimitive.Close>,
+src\components\Toast\Toast.tsx:177:ToastClose.displayName = "ToastClose";
+src\components\Toast\Toast.tsx:179:const ToastDismiss = forwardRef<
+src\components\Toast\Toast.tsx:180:  ComponentRef<typeof ToastPrimitive.Close>,
+src\components\Toast\Toast.tsx:195:ToastDismiss.displayName = "ToastDismiss";
+src\components\AIChat\AIModelSelect.tsx:23:  type ComponentRef,
+src\components\AIChat\AIModelSelect.tsx:52:const AIModelSelectTrigger = forwardRef<
+src\components\AIChat\AIModelSelect.tsx:73:AIModelSelectTrigger.displayName = "AIModelSelectTrigger";
+src\components\AIChat\AIModelSelect.tsx:83:const AIModelSelectItem = forwardRef<
+src\components\AIChat\AIModelSelect.tsx:84:  ComponentRef<typeof DropdownMenuRadioSelectItem>,
+src\components\AIChat\AIModelSelect.tsx:103:AIModelSelectItem.displayName = "AIModelSelectItem";
+src\components\AIChat\AIModelSelect.tsx:132:const AIThinkingEffortSelector = forwardRef<
+src\components\AIChat\AIModelSelect.tsx:178:AIThinkingEffortSelector.displayName = "AIThinkingEffortSelector";
+src\components\AIChat\AIModelSelect.tsx:201:const AIModelTooltipContent = forwardRef<
+src\components\AIChat\AIModelSelect.tsx:202:  ComponentRef<typeof TooltipContent>,
+src\components\AIChat\AIModelSelect.tsx:246:AIModelTooltipContent.displayName = "AIModelTooltipContent";
+src\components\Popover\Popover.tsx:7:  type ComponentRef,
+src\components\Popover\Popover.tsx:25:const PopoverContent = forwardRef<
+src\components\Popover\Popover.tsx:26:  ComponentRef<typeof PopoverPrimitive.Content>,
+src\components\Popover\Popover.tsx:67:PopoverContent.displayName = "PopoverContent";
+src\components\AnimatedText\FadeChangeText.tsx:50:const FadeChangeText = forwardRef<HTMLSpanElement, FadeChangeTextProps>(
+src\components\AnimatedText\FadeChangeText.tsx:100:FadeChangeText.displayName = "FadeChangeText";
+src\components\OutlineButton\OutlineButton.tsx:69:const OutlineButtonBase = forwardRef<
+src\components\OutlineButton\OutlineButton.tsx:295:OutlineButtonBase.displayName = "OutlineButton";
+src\components\AIChat\AIContextGauge.tsx:38:const AIContextGauge = forwardRef<SVGSVGElement, AIContextGaugeProps>(
+src\components\AIChat\AIContextGauge.tsx:49:AIContextGauge.displayName = "AIContextGauge";
+src\components\TextLink\TextLink.tsx:14:const TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(
+src\components\TextLink\TextLink.tsx:32:TextLink.displayName = "TextLink";
+src\components\Shapes\shapePaths.ts:37:      `${Component.displayName || Component.name || "component"} is not a DS shape; pass a component from Shapes/.`,
+src\components\Slider\Slider.tsx:9:  type ComponentRef,
+src\components\Slider\Slider.tsx:112:const SliderBase = forwardRef<
+src\components\Slider\Slider.tsx:113:  ComponentRef<typeof SliderPrimitive.Root>,
+src\components\Slider\Slider.tsx:419:SliderBase.displayName = 'SliderBase';
+src\components\Slider\Slider.tsx:421:const SliderContinuous = forwardRef<
+src\components\Slider\Slider.tsx:422:  ComponentRef<typeof SliderPrimitive.Root>,
+src\components\Slider\Slider.tsx:425:SliderContinuous.displayName = 'SliderContinuous';
+src\components\Slider\Slider.tsx:427:const SliderStepped = forwardRef<
+src\components\Slider\Slider.tsx:428:  ComponentRef<typeof SliderPrimitive.Root>,
+src\components\Slider\Slider.tsx:431:SliderStepped.displayName = 'SliderStepped';
+src\components\Slider\Slider.tsx:441:const SliderLabeled = forwardRef<
+src\components\Slider\Slider.tsx:442:  ComponentRef<typeof SliderPrimitive.Root>,
+src\components\Slider\Slider.tsx:453:SliderLabeled.displayName = 'SliderLabeled';
+src\components\ProgressIndicator\ProgressIndicator.tsx:277:export const ProgressIndicator = forwardRef<
+src\components\ProgressIndicator\ProgressIndicator.tsx:332:ProgressIndicator.displayName = "ProgressIndicator";
+src\components\ShapeButton\ShapeButton.tsx:104:const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
+src\components\ShapeButton\ShapeButton.tsx:158:ShapeButtonBase.displayName = "ShapeButton";

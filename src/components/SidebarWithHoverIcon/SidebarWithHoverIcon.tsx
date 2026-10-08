@@ -22,14 +22,15 @@
  *   did not own. Consumers wire onPointerEnter/onPointerLeave on their own
  *   button; the stories show it.
  * - Motion belongs to CSS, geometry belongs here. Durations and easing are
- *   tokens on `.ds-sidebar-rail`, including the reduced-motion case. Nothing in
- *   this file may hold a duration or an easing curve.
+ *   motion-scale tokens read by `.ds-sidebar-rail`, and reduced motion is the
+ *   scale's global collapse in tokens.css. Nothing in this file may hold a
+ *   duration or an easing curve.
  * - `d` is written imperatively because SVG path data is not animatable in
  *   every engine. It is in JSX only for the FIRST render (so SSR output is
  *   right); after that React must never touch it, or a re-render mid-tween
  *   snaps the rail.
- * - One `getComputedStyle` pair per frame per icon. Fine for a toggle; do not
- *   render hundreds of these animating at once.
+ * - One `getComputedStyle` call (two property reads) per frame per icon. Fine
+ *   for a toggle; do not render hundreds of these animating at once.
  *
  * ## updating
  * The sampling loop is self-terminating: it stops as soon as both properties
@@ -146,5 +147,3 @@ export const SidebarWithHoverIcon = ({
     </BaseIcon>
   );
 };
-
-export default SidebarWithHoverIcon;

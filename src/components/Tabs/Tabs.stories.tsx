@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs';
 import { TabSize, TabVariant } from './constants';
 import { TableIcon, GraphIcon, InvoiceIcon } from '../Icons';
+import { LabelText } from '../Text';
 
 const meta = {
   title: 'Navigation/Tabs',
@@ -47,18 +48,11 @@ export const IconTabs: Story = {
   render: () => (
     <Tabs defaultValue="grid">
       <TabsList>
-        <TabsTrigger value="list" variant={TabVariant.ghost} size={TabSize.icon}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-            <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
+        <TabsTrigger value="list" variant={TabVariant.ghost} size={TabSize.icon} aria-label="List">
+          <TableIcon />
         </TabsTrigger>
-        <TabsTrigger value="grid" variant={TabVariant.ghost} size={TabSize.icon}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-            <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-            <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-            <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-            <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-          </svg>
+        <TabsTrigger value="grid" variant={TabVariant.ghost} size={TabSize.icon} aria-label="Grid">
+          <GraphIcon />
         </TabsTrigger>
       </TabsList>
     </Tabs>
@@ -81,7 +75,7 @@ export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-6 p-4">
       <div className="flex flex-col gap-2">
-        <span className="text-style-label text-text-secondary">Ghost</span>
+        <LabelText className="text-text-secondary">Ghost</LabelText>
         <Tabs defaultValue="a">
           <TabsList>
             <TabsTrigger value="a" variant={TabVariant.ghost}>First</TabsTrigger>
@@ -91,7 +85,7 @@ export const AllVariants: Story = {
         </Tabs>
       </div>
       <div className="flex flex-col gap-2">
-        <span className="text-style-label text-text-secondary">Primary</span>
+        <LabelText className="text-text-secondary">Primary</LabelText>
         <Tabs defaultValue="a">
           <TabsList>
             <TabsTrigger value="a" variant={TabVariant.primary}>First</TabsTrigger>
@@ -107,10 +101,10 @@ export const AllVariants: Story = {
 /** Figma Toggle Option (826:1723) — every size × variant, one selected. */
 export const ToggleOptionSizes: Story = {
   render: () => (
-    <div className="flex flex-col gap-md">
+    <div className="flex flex-col gap-lg">
       {([TabVariant.primary, TabVariant.ghost] as const).map((variant) => (
-        <div key={variant} className="flex flex-col gap-sm">
-          {([TabSize.default, TabSize.sm, TabSize.micro] as const).map((size) => (
+        <div key={variant} className="flex flex-col gap-rg">
+          {([TabSize.standard, TabSize.sm, TabSize.micro] as const).map((size) => (
             <Tabs key={size} defaultValue="grid">
               <TabsList>
                 <TabsTrigger value="grid" variant={variant} size={size} data-testid={`${variant}-${size}`}>
@@ -132,6 +126,24 @@ export const ToggleOptionSizes: Story = {
           ))}
         </div>
       ))}
+    </div>
+  ),
+};
+
+/** Contradicts the variant/size defaults: an `unselected` trigger stays unchosen while active; `fill` follows the parent's 48px height. */
+export const UnselectedAndFill: Story = {
+  render: () => (
+    <div className="flex h-12 items-stretch">
+      <Tabs defaultValue="all" className="flex">
+        <TabsList className="h-full">
+          <TabsTrigger value="all" variant={TabVariant.unselected} size={TabSize.fill}>
+            All
+          </TabsTrigger>
+          <TabsTrigger value="mine" variant={TabVariant.primary} size={TabSize.fill}>
+            Mine
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
     </div>
   ),
 };

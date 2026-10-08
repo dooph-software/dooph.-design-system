@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SliderContinuous, SliderStepped, SliderLabeled } from './Slider';
 import { SliderVariant } from './constants';
 import { DS_COLOR_TOKENS } from '../../utils/color';
 import { LabelText } from '../Text';
+import { Button } from '../Button';
+import { ButtonSize, ButtonVariant } from '../Button/constants';
 
 const meta = {
   title: 'Inputs/Slider',
@@ -203,13 +205,13 @@ export const Colors: Story = {
     docs: {
       description: {
         story:
-          '`color` takes a DS token name or any CSS color. The handle renders it solid and the active track renders it at 45%.',
+          '`color` takes a DS token name or any CSS color. The handle renders it solid; the active track tints it at the variant\'s track opacity (`--ui-slider-track-primary-active-opacity`: 50% light, 60% dark).',
       },
     },
   },
   render: () => (
     <div className="flex w-64 flex-col gap-4">
-      {(['primary', 'brand', 'text', 'error-primary'] as const).map((c) => (
+      {(['primary', 'prominent', 'text', 'danger-primary'] as const).map((c) => (
         <div key={c} className="flex items-center gap-3">
           <LabelText className="w-16 text-text-tertiary">{c}</LabelText>
           <SliderContinuous color={c} defaultValue={[60]} />
@@ -286,6 +288,153 @@ export const ControlledStepped: Story = {
   },
 };
 
+export const ExtraValuesPassThrough: Story = {
+  name: 'Extra values pass through',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The sliders are single-thumb: only `value[0]` is drawn and edited. Further values in the array come back unchanged — press ArrowRight or drag, and the readout keeps its second value.',
+      },
+    },
+  },
+  render: () => {
+    const [value, setValue] = useState([1, 3]);
+    return (
+      <div className="flex w-64 items-center gap-md">
+        <SliderStepped min={0} max={4} step={1} value={value} onValueChange={setValue} />
+        <LabelText className="w-12 text-text-tertiary">{JSON.stringify(value)}</LabelText>
+      </div>
+    );
+  },
+};
+
+export const HighlightedStep: Story = {
+  name: 'Highlighted step',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`highlightedStep` draws one step tall: same width, same paint, ' +
+          '10px instead of the 6px dot. It is a step INDEX counted from the ' +
+          'step at `min`, and it is optional, so no step is tall by default. ' +
+          'Each row shows it on the filled side and on the unfilled side of ' +
+          'the handle, for every variant including `custom`. The last row is ' +
+          'labeled and stepped.',
+      },
+    },
+  },
+  render: () => (
+    <div className="flex w-64 flex-col gap-xl">
+      {([SliderVariant.primary, SliderVariant.prominent] as const).map((v) => (
+        <div key={v} className="flex flex-col gap-sm">
+          <LabelText className="text-text-tertiary">{v}</LabelText>
+          <SliderStepped
+            variant={v}
+            min={0}
+            max={6}
+            step={1}
+            defaultValue={[4]}
+            highlightedStep={1}
+          />
+          <SliderStepped
+            variant={v}
+            min={0}
+            max={6}
+            step={1}
+            defaultValue={[2]}
+            highlightedStep={5}
+          />
+        </div>
+      ))}
+      <div className="flex flex-col gap-sm">
+        <LabelText className="text-text-tertiary">custom</LabelText>
+        <SliderStepped
+          variant={SliderVariant.custom}
+          color="#e48844"
+          stepColor="#ff00b8"
+          min={0}
+          max={6}
+          step={1}
+          defaultValue={[4]}
+          highlightedStep={1}
+        />
+        <SliderStepped
+          variant={SliderVariant.custom}
+          color="#e48844"
+          min={0}
+          max={6}
+          step={1}
+          defaultValue={[2]}
+          highlightedStep={5}
+        />
+      </div>
+      <SliderLabeled
+        stepped
+        min={0}
+        max={4}
+        step={1}
+        defaultValue={[3]}
+        highlightedStep={1}
+        labels={{ start: 'Faster', end: 'Smarter' }}
+      />
+    </div>
+  ),
+};
+
+export const HighlightedStepPreviousValue: Story = {
+  name: 'Highlighted step (marks the previous value)',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The consumer owns `highlightedStep`. Here it marks the last ' +
+          'COMMITTED value: drag or use the arrow keys, and the tall step ' +
+          'stays where you started until the change is committed, then eases ' +
+          'over to the new value. With `min` 0 and `step` 1 the step index ' +
+          'equals the value. The buttons move the mark directly, to show the ' +
+          'height change animating on its own.',
+      },
+    },
+  },
+  render: () => {
+    const [value, setValue] = useState([2]);
+    const [committed, setCommitted] = useState(2);
+    return (
+      <div className="flex w-64 flex-col gap-md">
+        <SliderStepped
+          min={0}
+          max={6}
+          step={1}
+          value={value}
+          onValueChange={setValue}
+          onValueCommit={([next]) => setCommitted(next ?? 0)}
+          highlightedStep={committed}
+        />
+        <LabelText className="text-text-tertiary">
+          value {value[0]} · highlighted step {committed}
+        </LabelText>
+        <div className="flex gap-sm">
+          <Button
+            variant={ButtonVariant.secondary}
+            size={ButtonSize.sm}
+            onClick={() => setCommitted((s) => Math.max(0, s - 1))}
+          >
+            Mark left
+          </Button>
+          <Button
+            variant={ButtonVariant.secondary}
+            size={ButtonSize.sm}
+            onClick={() => setCommitted((s) => Math.min(6, s + 1))}
+          >
+            Mark right
+          </Button>
+        </div>
+      </div>
+    );
+  },
+};
+
 export const Disabled: Story = {
   render: () => (
     <div className="flex w-64 flex-col gap-4">
@@ -301,7 +450,7 @@ export const KeyboardInteraction: Story = {
     docs: {
       description: {
         story:
-          'Focus the handle (Tab) then use Left/Right (or Up/Down) to move by one step; Home/End jump to min/max. The continuous slider gets this from Radix. The stepped slider handles it itself, because Radix is driven at a much finer step there to keep dragging smooth — so a key press must still move exactly one dot.',
+          'Focus the handle (Tab) then use Left/Right (or Up/Down) to move by one step; PageUp/PageDown and Shift+Arrow move 10 steps (clamped to the ends); Home/End jump to min/max. The continuous slider gets this from Radix. The stepped slider handles it itself, mirroring Radix\'s keys, because Radix is driven at a much finer step there to keep dragging smooth — so a key press must still move whole dots.',
       },
     },
   },

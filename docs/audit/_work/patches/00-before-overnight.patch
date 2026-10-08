@@ -1,0 +1,3717 @@
+diff --git a/.agents/skills/radix-ui-design-system/SKILL.md b/.agents/skills/radix-ui-design-system/SKILL.md
+deleted file mode 100644
+index fbc6beb..0000000
+--- a/.agents/skills/radix-ui-design-system/SKILL.md
++++ /dev/null
+@@ -1,853 +0,0 @@
+----
+-name: radix-ui-design-system
+-description: "Build accessible design systems with Radix UI primitives. Headless component customization, theming strategies, and compound component patterns for production-grade UI libraries."
+-risk: safe
+-source: self
+-date_added: "2026-02-27"
+----
+-
+-# Radix UI Design System
+-
+-Build production-ready, accessible design systems using Radix UI primitives with full customization control and zero style opinions.
+-
+-## Overview
+-
+-Radix UI provides unstyled, accessible components (primitives) that you can customize to match any design system. This skill guides you through building scalable component libraries with Radix UI, focusing on accessibility-first design, theming architecture, and composable patterns.
+-
+-**Key Strengths:**
+-- **Headless by design**: Full styling control without fighting defaults
+-- **Accessibility built-in**: WAI-ARIA compliant, keyboard navigation, screen reader support
+-- **Composable primitives**: Build complex components from simple building blocks
+-- **Framework agnostic**: Works with React, but styles work anywhere
+-
+-## When to Use This Skill
+-
+-- Creating a custom design system from scratch
+-- Building accessible UI component libraries
+-- Implementing complex interactive components (Dialog, Dropdown, Tabs, etc.)
+-- Migrating from styled component libraries to unstyled primitives
+-- Setting up theming systems with CSS variables or Tailwind
+-- Need full control over component behavior and styling
+-- Building applications requiring WCAG 2.1 AA/AAA compliance
+-
+-## Do not use this skill when
+-
+-- You need pre-styled components out of the box (use shadcn/ui, Mantine, etc.)
+-- Building simple static pages without interactivity
+-- The project doesn't use React 16.8+ (Radix requires hooks)
+-- You need components for frameworks other than React
+-
+----
+-
+-## Core Principles
+-
+-### 1. Accessibility First
+-
+-Every Radix primitive is built with accessibility as the foundation:
+-
+-- **Keyboard Navigation**: Full keyboard support (Tab, Arrow keys, Enter, Escape)
+-- **Screen Readers**: Proper ARIA attributes and live regions
+-- **Focus Management**: Automatic focus trapping and restoration
+-- **Disabled States**: Proper handling of disabled and aria-disabled
+-
+-**Rule**: Never override accessibility features. Enhance, don't replace.
+-
+-### 2. Headless Architecture
+-
+-Radix provides **behavior**, you provide **appearance**:
+-
+-```tsx
+-// ❌ Don't fight pre-styled components
+-<Button className="override-everything" />
+-
+-// ✅ Radix gives you behavior, you add styling
+-<Dialog.Root>
+-  <Dialog.Trigger className="your-button-styles" />
+-  <Dialog.Content className="your-modal-styles" />
+-</Dialog.Root>
+-```
+-
+-### 3. Composition Over Configuration
+-
+-Build complex components from simple primitives:
+-
+-```tsx
+-// Primitive components compose naturally
+-<Tabs.Root>
+-  <Tabs.List>
+-    <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
+-    <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
+-  </Tabs.List>
+-  <Tabs.Content value="tab1">Content 1</Tabs.Content>
+-  <Tabs.Content value="tab2">Content 2</Tabs.Content>
+-</Tabs.Root>
+-```
+-
+----
+-
+-## Getting Started
+-
+-### Installation
+-
+-```bash
+-# Install individual primitives (recommended)
+-npm install @radix-ui/react-dialog @radix-ui/react-dropdown-menu
+-
+-# Or install multiple at once
+-npm install @radix-ui/react-{dialog,dropdown-menu,tabs,tooltip}
+-
+-# For styling (optional but common)
+-npm install clsx tailwind-merge class-variance-authority
+-```
+-
+-### Basic Component Pattern
+-
+-Every Radix component follows this pattern:
+-
+-```tsx
+-import * as Dialog from '@radix-ui/react-dialog';
+-
+-export function MyDialog() {
+-  return (
+-    <Dialog.Root>
+-      {/* Trigger the dialog */}
+-      <Dialog.Trigger asChild>
+-        <button className="trigger-styles">Open</button>
+-      </Dialog.Trigger>
+-
+-      {/* Portal renders outside DOM hierarchy */}
+-      <Dialog.Portal>
+-        {/* Overlay (backdrop) */}
+-        <Dialog.Overlay className="overlay-styles" />
+-        
+-        {/* Content (modal) */}
+-        <Dialog.Content className="content-styles">
+-          <Dialog.Title>Title</Dialog.Title>
+-          <Dialog.Description>Description</Dialog.Description>
+-          
+-          {/* Your content here */}
+-          
+-          <Dialog.Close asChild>
+-            <button>Close</button>
+-          </Dialog.Close>
+-        </Dialog.Content>
+-      </Dialog.Portal>
+-    </Dialog.Root>
+-  );
+-}
+-```
+-
+----
+-
+-## Theming Strategies
+-
+-### Strategy 1: CSS Variables (Framework-Agnostic)
+-
+-**Best for**: Maximum portability, SSR-friendly
+-
+-```css
+-/* globals.css */
+-:root {
+-  --color-primary: 220 90% 56%;
+-  --color-surface: 0 0% 100%;
+-  --radius-base: 0.5rem;
+-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+-}
+-
+-[data-theme="dark"] {
+-  --color-primary: 220 90% 66%;
+-  --color-surface: 222 47% 11%;
+-}
+-```
+-
+-```tsx
+-// Component.tsx
+-<Dialog.Content 
+-  className="
+-    bg-[hsl(var(--color-surface))]
+-    rounded-[var(--radius-base)]
+-    shadow-[var(--shadow-lg)]
+-  "
+-/>
+-```
+-
+-### Strategy 2: Tailwind + CVA (Class Variance Authority)
+-
+-**Best for**: Tailwind projects, variant-heavy components
+-
+-```tsx
+-// button.tsx
+-import { cva, type VariantProps } from 'class-variance-authority';
+-import { cn } from '@/lib/utils';
+-
+-const buttonVariants = cva(
+-  // Base styles
+-  "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+-  {
+-    variants: {
+-      variant: {
+-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+-        outline: "border border-input bg-background hover:bg-accent",
+-        ghost: "hover:bg-accent hover:text-accent-foreground",
+-      },
+-      size: {
+-        default: "h-10 px-4 py-2",
+-        sm: "h-9 rounded-md px-3",
+-        lg: "h-11 rounded-md px-8",
+-        icon: "h-10 w-10",
+-      },
+-    },
+-    defaultVariants: {
+-      variant: "default",
+-      size: "default",
+-    },
+-  }
+-);
+-
+-interface ButtonProps extends VariantProps<typeof buttonVariants> {
+-  children: React.ReactNode;
+-}
+-
+-export function Button({ variant, size, children }: ButtonProps) {
+-  return (
+-    <button className={cn(buttonVariants({ variant, size }))}>
+-      {children}
+-    </button>
+-  );
+-}
+-```
+-
+-### Strategy 3: Stitches (CSS-in-JS)
+-
+-**Best for**: Runtime theming, scoped styles
+-
+-```tsx
+-import { styled } from '@stitches/react';
+-import * as Dialog from '@radix-ui/react-dialog';
+-
+-const StyledContent = styled(Dialog.Content, {
+-  backgroundColor: '$surface',
+-  borderRadius: '$md',
+-  padding: '$6',
+-  
+-  variants: {
+-    size: {
+-      small: { width: '300px' },
+-      medium: { width: '500px' },
+-      large: { width: '700px' },
+-    },
+-  },
+-  
+-  defaultVariants: {
+-    size: 'medium',
+-  },
+-});
+-```
+-
+----
+-
+-## Component Patterns
+-
+-### Pattern 1: Compound Components with Context
+-
+-**Use case**: Share state between primitive parts
+-
+-```tsx
+-// Select.tsx
+-import * as Select from '@radix-ui/react-select';
+-import { CheckIcon, ChevronDownIcon } from '@radix-ui/react-icons';
+-
+-export function CustomSelect({ items, placeholder, onValueChange }) {
+-  return (
+-    <Select.Root onValueChange={onValueChange}>
+-      <Select.Trigger className="select-trigger">
+-        <Select.Value placeholder={placeholder} />
+-        <Select.Icon>
+-          <ChevronDownIcon />
+-        </Select.Icon>
+-      </Select.Trigger>
+-
+-      <Select.Portal>
+-        <Select.Content className="select-content">
+-          <Select.Viewport>
+-            {items.map((item) => (
+-              <Select.Item 
+-                key={item.value} 
+-                value={item.value}
+-                className="select-item"
+-              >
+-                <Select.ItemText>{item.label}</Select.ItemText>
+-                <Select.ItemIndicator>
+-                  <CheckIcon />
+-                </Select.ItemIndicator>
+-              </Select.Item>
+-            ))}
+-          </Select.Viewport>
+-        </Select.Content>
+-      </Select.Portal>
+-    </Select.Root>
+-  );
+-}
+-```
+-
+-### Pattern 2: Polymorphic Components with `asChild`
+-
+-**Use case**: Render as different elements without losing behavior
+-
+-```tsx
+-// ✅ Render as Next.js Link but keep Radix behavior
+-<Dialog.Trigger asChild>
+-  <Link href="/settings">Open Settings</Link>
+-</Dialog.Trigger>
+-
+-// ✅ Render as custom component
+-<DropdownMenu.Item asChild>
+-  <YourCustomButton icon={<Icon />}>Action</YourCustomButton>
+-</DropdownMenu.Item>
+-```
+-
+-**Why `asChild` matters**: Prevents nested button/link issues in accessibility tree.
+-
+-### Pattern 3: Controlled vs Uncontrolled
+-
+-```tsx
+-// Uncontrolled (Radix manages state)
+-<Tabs.Root defaultValue="tab1">
+-  <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
+-</Tabs.Root>
+-
+-// Controlled (You manage state)
+-const [activeTab, setActiveTab] = useState('tab1');
+-
+-<Tabs.Root value={activeTab} onValueChange={setActiveTab}>
+-  <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
+-</Tabs.Root>
+-```
+-
+-**Rule**: Use controlled when you need to sync with external state (URL, Redux, etc.).
+-
+-### Pattern 4: Animation with Framer Motion
+-
+-```tsx
+-import * as Dialog from '@radix-ui/react-dialog';
+-import { motion, AnimatePresence } from 'framer-motion';
+-
+-export function AnimatedDialog({ open, onOpenChange }) {
+-  return (
+-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+-      <Dialog.Portal forceMount>
+-        <AnimatePresence>
+-          {open && (
+-            <>
+-              <Dialog.Overlay asChild>
+-                <motion.div
+-                  initial={{ opacity: 0 }}
+-                  animate={{ opacity: 1 }}
+-                  exit={{ opacity: 0 }}
+-                  className="dialog-overlay"
+-                />
+-              </Dialog.Overlay>
+-              
+-              <Dialog.Content asChild>
+-                <motion.div
+-                  initial={{ opacity: 0, scale: 0.95 }}
+-                  animate={{ opacity: 1, scale: 1 }}
+-                  exit={{ opacity: 0, scale: 0.95 }}
+-                  className="dialog-content"
+-                >
+-                  {/* Content */}
+-                </motion.div>
+-              </Dialog.Content>
+-            </>
+-          )}
+-        </AnimatePresence>
+-      </Dialog.Portal>
+-    </Dialog.Root>
+-  );
+-}
+-```
+-
+----
+-
+-## Common Primitives Reference
+-
+-### Dialog (Modal)
+-
+-```tsx
+-<Dialog.Root> {/* State container */}
+-  <Dialog.Trigger /> {/* Opens dialog */}
+-  <Dialog.Portal> {/* Renders in portal */}
+-    <Dialog.Overlay /> {/* Backdrop */}
+-    <Dialog.Content> {/* Modal content */}
+-      <Dialog.Title /> {/* Required for a11y */}
+-      <Dialog.Description /> {/* Required for a11y */}
+-      <Dialog.Close /> {/* Closes dialog */}
+-    </Dialog.Content>
+-  </Dialog.Portal>
+-</Dialog.Root>
+-```
+-
+-### Dropdown Menu
+-
+-```tsx
+-<DropdownMenu.Root>
+-  <DropdownMenu.Trigger />
+-  <DropdownMenu.Portal>
+-    <DropdownMenu.Content>
+-      <DropdownMenu.Item />
+-      <DropdownMenu.Separator />
+-      <DropdownMenu.CheckboxItem />
+-      <DropdownMenu.RadioGroup>
+-        <DropdownMenu.RadioItem />
+-      </DropdownMenu.RadioGroup>
+-      <DropdownMenu.Sub> {/* Nested menus */}
+-        <DropdownMenu.SubTrigger />
+-        <DropdownMenu.SubContent />
+-      </DropdownMenu.Sub>
+-    </DropdownMenu.Content>
+-  </DropdownMenu.Portal>
+-</DropdownMenu.Root>
+-```
+-
+-### Tabs
+-
+-```tsx
+-<Tabs.Root defaultValue="tab1">
+-  <Tabs.List>
+-    <Tabs.Trigger value="tab1" />
+-    <Tabs.Trigger value="tab2" />
+-  </Tabs.List>
+-  <Tabs.Content value="tab1" />
+-  <Tabs.Content value="tab2" />
+-</Tabs.Root>
+-```
+-
+-### Tooltip
+-
+-```tsx
+-<Tooltip.Provider delayDuration={200}>
+-  <Tooltip.Root>
+-    <Tooltip.Trigger />
+-    <Tooltip.Portal>
+-      <Tooltip.Content side="top" align="center">
+-        Tooltip text
+-        <Tooltip.Arrow />
+-      </Tooltip.Content>
+-    </Tooltip.Portal>
+-  </Tooltip.Root>
+-</Tooltip.Provider>
+-```
+-
+-### Popover
+-
+-```tsx
+-<Popover.Root>
+-  <Popover.Trigger />
+-  <Popover.Portal>
+-    <Popover.Content side="bottom" align="start">
+-      Content
+-      <Popover.Arrow />
+-      <Popover.Close />
+-    </Popover.Content>
+-  </Popover.Portal>
+-</Popover.Root>
+-```
+-
+----
+-
+-## Accessibility Checklist
+-
+-### Every Component Must Have:
+-
+-- [ ] **Focus Management**: Visible focus indicators on all interactive elements
+-- [ ] **Keyboard Navigation**: Full keyboard support (Tab, Arrows, Enter, Esc)
+-- [ ] **ARIA Labels**: Meaningful labels for screen readers
+-- [ ] **Color Contrast**: WCAG AA minimum (4.5:1 for text, 3:1 for UI)
+-- [ ] **Error States**: Clear error messages with `aria-invalid` and `aria-describedby`
+-- [ ] **Loading States**: Proper `aria-busy` during async operations
+-
+-### Dialog-Specific:
+-- [ ] `Dialog.Title` is present (required for screen readers)
+-- [ ] `Dialog.Description` provides context
+-- [ ] Focus trapped inside modal when open
+-- [ ] Escape key closes dialog
+-- [ ] Focus returns to trigger on close
+-
+-### Dropdown-Specific:
+-- [ ] Arrow keys navigate items
+-- [ ] Type-ahead search works
+-- [ ] First/last item wrapping behavior
+-- [ ] Selected state indicated visually and with ARIA
+-
+----
+-
+-## Best Practices
+-
+-### ✅ Do This
+-
+-1. **Always use `asChild` to avoid wrapper divs**
+-   ```tsx
+-   <Dialog.Trigger asChild>
+-     <button>Open</button>
+-   </Dialog.Trigger>
+-   ```
+-
+-2. **Provide semantic HTML**
+-   ```tsx
+-   <Dialog.Content asChild>
+-     <article role="dialog" aria-labelledby="title">
+-       {/* content */}
+-     </article>
+-   </Dialog.Content>
+-   ```
+-
+-3. **Use CSS variables for theming**
+-   ```css
+-   .dialog-content {
+-     background: hsl(var(--surface));
+-     color: hsl(var(--on-surface));
+-   }
+-   ```
+-
+-4. **Compose primitives for complex components**
+-   ```tsx
+-   function CommandPalette() {
+-     return (
+-       <Dialog.Root>
+-         <Dialog.Content>
+-           <Combobox /> {/* Radix Combobox inside Dialog */}
+-         </Dialog.Content>
+-       </Dialog.Root>
+-     );
+-   }
+-   ```
+-
+-### ❌ Don't Do This
+-
+-1. **Don't skip accessibility parts**
+-   ```tsx
+-   // ❌ Missing Title and Description
+-   <Dialog.Content>
+-     <div>Content</div>
+-   </Dialog.Content>
+-   ```
+-
+-2. **Don't fight the primitives**
+-   ```tsx
+-   // ❌ Overriding internal behavior
+-   <Dialog.Content onClick={(e) => e.stopPropagation()}>
+-   ```
+-
+-3. **Don't mix controlled and uncontrolled**
+-   ```tsx
+-   // ❌ Inconsistent state management
+-   <Tabs.Root defaultValue="tab1" value={activeTab}>
+-   ```
+-
+-4. **Don't ignore keyboard navigation**
+-   ```tsx
+-   // ❌ Disabling keyboard behavior
+-   <DropdownMenu.Item onKeyDown={(e) => e.preventDefault()}>
+-   ```
+-
+----
+-
+-## Real-World Examples
+-
+-### Example 1: Command Palette (Combo Dialog)
+-
+-```tsx
+-import * as Dialog from '@radix-ui/react-dialog';
+-import { Command } from 'cmdk';
+-
+-export function CommandPalette() {
+-  const [open, setOpen] = useState(false);
+-
+-  useEffect(() => {
+-    const down = (e: KeyboardEvent) => {
+-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+-        e.preventDefault();
+-        setOpen((open) => !open);
+-      }
+-    };
+-    document.addEventListener('keydown', down);
+-    return () => document.removeEventListener('keydown', down);
+-  }, []);
+-
+-  return (
+-    <Dialog.Root open={open} onOpenChange={setOpen}>
+-      <Dialog.Portal>
+-        <Dialog.Overlay className="fixed inset-0 bg-black/50" />
+-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+-          <Command>
+-            <Command.Input placeholder="Type a command..." />
+-            <Command.List>
+-              <Command.Empty>No results found.</Command.Empty>
+-              <Command.Group heading="Suggestions">
+-                <Command.Item>Calendar</Command.Item>
+-                <Command.Item>Search Emoji</Command.Item>
+-              </Command.Group>
+-            </Command.List>
+-          </Command>
+-        </Dialog.Content>
+-      </Dialog.Portal>
+-    </Dialog.Root>
+-  );
+-}
+-```
+-
+-### Example 2: Dropdown Menu with Icons
+-
+-```tsx
+-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+-
+-export function ActionsMenu() {
+-  return (
+-    <DropdownMenu.Root>
+-      <DropdownMenu.Trigger asChild>
+-        <button className="icon-button" aria-label="Actions">
+-          <DotsHorizontalIcon />
+-        </button>
+-      </DropdownMenu.Trigger>
+-
+-      <DropdownMenu.Portal>
+-        <DropdownMenu.Content className="dropdown-content" align="end">
+-          <DropdownMenu.Item className="dropdown-item">
+-            Edit
+-          </DropdownMenu.Item>
+-          <DropdownMenu.Item className="dropdown-item">
+-            Duplicate
+-          </DropdownMenu.Item>
+-          <DropdownMenu.Separator className="dropdown-separator" />
+-          <DropdownMenu.Item className="dropdown-item text-red-500">
+-            Delete
+-          </DropdownMenu.Item>
+-        </DropdownMenu.Content>
+-      </DropdownMenu.Portal>
+-    </DropdownMenu.Root>
+-  );
+-}
+-```
+-
+-### Example 3: Form with Radix Select + React Hook Form
+-
+-```tsx
+-import * as Select from '@radix-ui/react-select';
+-import { useForm, Controller } from 'react-hook-form';
+-
+-interface FormData {
+-  country: string;
+-}
+-
+-export function CountryForm() {
+-  const { control, handleSubmit } = useForm<FormData>();
+-
+-  return (
+-    <form onSubmit={handleSubmit((data) => console.log(data))}>
+-      <Controller
+-        name="country"
+-        control={control}
+-        render={({ field }) => (
+-          <Select.Root onValueChange={field.onChange} value={field.value}>
+-            <Select.Trigger className="select-trigger">
+-              <Select.Value placeholder="Select a country" />
+-              <Select.Icon />
+-            </Select.Trigger>
+-            
+-            <Select.Portal>
+-              <Select.Content className="select-content">
+-                <Select.Viewport>
+-                  <Select.Item value="us">United States</Select.Item>
+-                  <Select.Item value="ca">Canada</Select.Item>
+-                  <Select.Item value="uk">United Kingdom</Select.Item>
+-                </Select.Viewport>
+-              </Select.Content>
+-            </Select.Portal>
+-          </Select.Root>
+-        )}
+-      />
+-      <button type="submit">Submit</button>
+-    </form>
+-  );
+-}
+-```
+-
+----
+-
+-## Troubleshooting
+-
+-### Problem: Dialog doesn't close on Escape key
+-
+-**Cause**: `onEscapeKeyDown` event prevented or `open` state not synced
+-
+-**Solution**:
+-```tsx
+-<Dialog.Root open={open} onOpenChange={setOpen}>
+-  {/* Don't prevent default on escape */}
+-</Dialog.Root>
+-```
+-
+-### Problem: Dropdown menu positioning is off
+-
+-**Cause**: Parent container has `overflow: hidden` or transform
+-
+-**Solution**:
+-```tsx
+-// Use Portal to render outside overflow container
+-<DropdownMenu.Portal>
+-  <DropdownMenu.Content />
+-</DropdownMenu.Portal>
+-```
+-
+-### Problem: Animations don't work
+-
+-**Cause**: Portal content unmounts immediately
+-
+-**Solution**:
+-```tsx
+-// Use forceMount + AnimatePresence
+-<Dialog.Portal forceMount>
+-  <AnimatePresence>
+-    {open && <Dialog.Content />}
+-  </AnimatePresence>
+-</Dialog.Portal>
+-```
+-
+-### Problem: TypeScript errors with `asChild`
+-
+-**Cause**: Type inference issues with polymorphic components
+-
+-**Solution**:
+-```tsx
+-// Explicitly type your component
+-<Dialog.Trigger asChild>
+-  <button type="button">Open</button>
+-</Dialog.Trigger>
+-```
+-
+----
+-
+-## Performance Optimization
+-
+-### 1. Code Splitting
+-
+-```tsx
+-// Lazy load heavy primitives
+-const Dialog = lazy(() => import('@radix-ui/react-dialog'));
+-const DropdownMenu = lazy(() => import('@radix-ui/react-dropdown-menu'));
+-```
+-
+-### 2. Portal Container Reuse
+-
+-```tsx
+-// Create portal container once
+-<Tooltip.Provider>
+-  {/* All tooltips share portal container */}
+-  <Tooltip.Root>...</Tooltip.Root>
+-  <Tooltip.Root>...</Tooltip.Root>
+-</Tooltip.Provider>
+-```
+-
+-### 3. Memoization
+-
+-```tsx
+-// Memoize expensive render functions
+-const SelectItems = memo(({ items }) => (
+-  items.map((item) => <Select.Item key={item.value} value={item.value} />)
+-));
+-```
+-
+----
+-
+-## Integration with Popular Tools
+-
+-### shadcn/ui (Built on Radix)
+-
+-shadcn/ui is a collection of copy-paste components built with Radix + Tailwind.
+-
+-```bash
+-npx shadcn-ui@latest init
+-npx shadcn-ui@latest add dialog
+-```
+-
+-**When to use shadcn vs raw Radix**:
+-- Use shadcn: Quick prototyping, standard designs
+-- Use raw Radix: Full customization, unique designs
+-
+-### Radix Themes (Official Styled System)
+-
+-```tsx
+-import { Theme, Button, Dialog } from '@radix-ui/themes';
+-
+-function App() {
+-  return (
+-    <Theme accentColor="crimson" grayColor="sand">
+-      <Button>Click me</Button>
+-    </Theme>
+-  );
+-}
+-```
+-
+----
+-
+-## Related Skills
+-
+-- `@tailwind-design-system` - Tailwind + Radix integration patterns
+-- `@react-patterns` - React composition patterns
+-- `@frontend-design` - Overall frontend architecture
+-- `@accessibility-compliance` - WCAG compliance testing
+-
+----
+-
+-## Resources
+-
+-### Official Documentation
+-- [Radix UI Docs](https://www.radix-ui.com/primitives)
+-- [Radix Colors](https://www.radix-ui.com/colors) - Accessible color system
+-- [Radix Icons](https://www.radix-ui.com/icons) - Icon library
+-
+-### Community Resources
+-- [shadcn/ui](https://ui.shadcn.com) - Component collection
+-- [Radix UI Discord](https://discord.com/invite/7Xb99uG) - Community support
+-- [CVA Documentation](https://cva.style/docs) - Variant management
+-
+-### Examples
+-- [Radix Playground](https://www.radix-ui.com/primitives/docs/overview/introduction#try-it-out)
+-- [shadcn/ui Source](https://github.com/shadcn-ui/ui) - Production examples
+-
+----
+-
+-## Quick Reference
+-
+-### Installation
+-```bash
+-npm install @radix-ui/react-{primitive-name}
+-```
+-
+-### Basic Pattern
+-```tsx
+-<Primitive.Root>
+-  <Primitive.Trigger />
+-  <Primitive.Portal>
+-    <Primitive.Content />
+-  </Primitive.Portal>
+-</Primitive.Root>
+-```
+-
+-### Key Props
+-- `asChild` - Render as child element
+-- `defaultValue` - Uncontrolled default
+-- `value` / `onValueChange` - Controlled state
+-- `open` / `onOpenChange` - Open state
+-- `side` / `align` - Positioning
+-
+----
+-
+-**Remember**: Radix gives you **behavior**, you give it **beauty**. Accessibility is built-in, customization is unlimited.
+-
+-## Limitations
+-- Use this skill only when the task clearly matches the scope described above.
+-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+diff --git a/.agents/skills/radix-ui-design-system/examples/README.md b/.agents/skills/radix-ui-design-system/examples/README.md
+deleted file mode 100644
+index 7a84201..0000000
+--- a/.agents/skills/radix-ui-design-system/examples/README.md
++++ /dev/null
+@@ -1,63 +0,0 @@
+-# Radix UI Design System - Skill Examples
+-
+-This folder contains practical examples demonstrating how to use Radix UI primitives to build accessible, customizable components.
+-
+-## Examples
+-
+-### `dialog-example.tsx`
+-
+-Demonstrates Dialog (Modal) component patterns:
+-- **BasicDialog**: Standard modal with form
+-- **ControlledDialog**: Externally controlled modal state
+-
+-**Key Concepts**:
+-- Portal rendering outside DOM hierarchy
+-- Overlay (backdrop) handling
+-- Accessibility requirements (Title, Description)
+-- Custom styling with CSS
+-
+-### `dropdown-example.tsx`
+-
+-Complete dropdown menu implementation:
+-- **CompleteDropdown**: Full-featured menu with all Radix primitives
+-  - Regular items
+-  - Separators and labels
+-  - Checkbox items
+-  - Radio groups
+-  - Sub-menus
+-- **ActionsMenu**: Simple actions menu for data tables/cards
+-
+-**Key Concepts**:
+-- Compound component architecture
+-- Keyboard navigation
+-- Item indicators (checkboxes, radio buttons)
+-- Nested sub-menus
+-
+-## Usage
+-
+-```tsx
+-import { BasicDialog } from './examples/dialog-example';
+-import { CompleteDropdown } from './examples/dropdown-example';
+-
+-function App() {
+-  return (
+-    <>
+-      <BasicDialog />
+-      <CompleteDropdown />
+-    </>
+-  );
+-}
+-```
+-
+-## Styling
+-
+-These examples use CSS classes. You can:
+-1. Copy the CSS from each file
+-2. Replace with Tailwind classes
+-3. Use CSS-in-JS (Stitches, Emotion, etc.)
+-
+-## Learn More
+-
+-- [Main SKILL.md](../SKILL.md) - Complete guide
+-- [Component Template](../templates/component-template.tsx.template) - Boilerplate
+-- [Radix UI Docs](https://www.radix-ui.com/primitives)
+diff --git a/.agents/skills/radix-ui-design-system/examples/dialog-example.tsx b/.agents/skills/radix-ui-design-system/examples/dialog-example.tsx
+deleted file mode 100644
+index befb7da..0000000
+--- a/.agents/skills/radix-ui-design-system/examples/dialog-example.tsx
++++ /dev/null
+@@ -1,128 +0,0 @@
+-import * as Dialog from '@radix-ui/react-dialog';
+-import { Cross2Icon } from '@radix-ui/react-icons';
+-import './dialog.css';
+-
+-/**
+- * Example: Basic Dialog Component
+- * 
+- * Demonstrates:
+- * - Compound component pattern
+- * - Portal rendering
+- * - Accessibility features (Title, Description)
+- * - Custom styling with CSS
+- */
+-export function BasicDialog() {
+-  return (
+-    <Dialog.Root>
+-      <Dialog.Trigger asChild>
+-        <button className="button-primary">
+-          Open Dialog
+-        </button>
+-      </Dialog.Trigger>
+-
+-      <Dialog.Portal>
+-        {/* Overlay (backdrop) */}
+-        <Dialog.Overlay className="dialog-overlay" />
+-        
+-        {/* Content (modal) */}
+-        <Dialog.Content className="dialog-content">
+-          {/* Title - Required for accessibility */}
+-          <Dialog.Title className="dialog-title">
+-            Edit Profile
+-          </Dialog.Title>
+-
+-          {/* Description - Recommended for accessibility */}
+-          <Dialog.Description className="dialog-description">
+-            Make changes to your profile here. Click save when you're done.
+-          </Dialog.Description>
+-
+-          {/* Form Content */}
+-          <form className="dialog-form">
+-            <fieldset className="fieldset">
+-              <label className="label" htmlFor="name">
+-                Name
+-              </label>
+-              <input
+-                className="input"
+-                id="name"
+-                defaultValue="John Doe"
+-              />
+-            </fieldset>
+-
+-            <fieldset className="fieldset">
+-              <label className="label" htmlFor="email">
+-                Email
+-              </label>
+-              <input
+-                className="input"
+-                id="email"
+-                type="email"
+-                defaultValue="john@example.com"
+-              />
+-            </fieldset>
+-
+-            <div className="dialog-actions">
+-              <Dialog.Close asChild>
+-                <button className="button-secondary" type="button">
+-                  Cancel
+-                </button>
+-              </Dialog.Close>
+-              <button className="button-primary" type="submit">
+-                Save Changes
+-              </button>
+-            </div>
+-          </form>
+-
+-          {/* Close button */}
+-          <Dialog.Close asChild>
+-            <button className="icon-button" aria-label="Close">
+-              <Cross2Icon />
+-            </button>
+-          </Dialog.Close>
+-        </Dialog.Content>
+-      </Dialog.Portal>
+-    </Dialog.Root>
+-  );
+-}
+-
+-/**
+- * Example: Controlled Dialog
+- * 
+- * Use when you need to:
+- * - Sync dialog state with external state
+- * - Programmatically open/close dialog
+- * - Track dialog open state
+- */
+-export function ControlledDialog() {
+-  const [open, setOpen] = React.useState(false);
+-
+-  const handleSave = () => {
+-    // Your save logic here
+-    console.log('Saving...');
+-    setOpen(false); // Close after save
+-  };
+-
+-  return (
+-    <Dialog.Root open={open} onOpenChange={setOpen}>
+-      <Dialog.Trigger asChild>
+-        <button className="button-primary">
+-          Open Controlled Dialog
+-        </button>
+-      </Dialog.Trigger>
+-
+-      <Dialog.Portal>
+-        <Dialog.Overlay className="dialog-overlay" />
+-        <Dialog.Content className="dialog-content">
+-          <Dialog.Title>Controlled Dialog</Dialog.Title>
+-          <Dialog.Description>
+-            This dialog's state is managed externally.
+-          </Dialog.Description>
+-
+-          <p>Dialog is {open ? 'open' : 'closed'}</p>
+-
+-          <button onClick={handleSave}>Save and Close</button>
+-        </Dialog.Content>
+-      </Dialog.Portal>
+-    </Dialog.Root>
+-  );
+-}
+diff --git a/.agents/skills/radix-ui-design-system/examples/dropdown-example.tsx b/.agents/skills/radix-ui-design-system/examples/dropdown-example.tsx
+deleted file mode 100644
+index 668543f..0000000
+--- a/.agents/skills/radix-ui-design-system/examples/dropdown-example.tsx
++++ /dev/null
+@@ -1,162 +0,0 @@
+-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+-import {
+-  HamburgerMenuIcon,
+-  DotFilledIcon,
+-  CheckIcon,
+-  ChevronRightIcon,
+-} from '@radix-ui/react-icons';
+-import './dropdown.css';
+-
+-/**
+- * Example: Complete Dropdown Menu
+- * 
+- * Features:
+- * - Items, separators, labels
+- * - Checkbox items
+- * - Radio group items
+- * - Sub-menus
+- * - Keyboard navigation
+- */
+-export function CompleteDropdown() {
+-  const [bookmarksChecked, setBookmarksChecked] = React.useState(true);
+-  const [urlsChecked, setUrlsChecked] = React.useState(false);
+-  const [person, setPerson] = React.useState('pedro');
+-
+-  return (
+-    <DropdownMenu.Root>
+-      <DropdownMenu.Trigger asChild>
+-        <button className="icon-button" aria-label="Customise options">
+-          <HamburgerMenuIcon />
+-        </button>
+-      </DropdownMenu.Trigger>
+-
+-      <DropdownMenu.Portal>
+-        <DropdownMenu.Content className="dropdown-content" sideOffset={5}>
+-          {/* Regular items */}
+-          <DropdownMenu.Item className="dropdown-item">
+-            New Tab <div className="right-slot">⌘+T</div>
+-          </DropdownMenu.Item>
+-          <DropdownMenu.Item className="dropdown-item">
+-            New Window <div className="right-slot">⌘+N</div>
+-          </DropdownMenu.Item>
+-          <DropdownMenu.Item className="dropdown-item" disabled>
+-            New Private Window <div className="right-slot">⇧+⌘+N</div>
+-          </DropdownMenu.Item>
+-
+-          {/* Sub-menu */}
+-          <DropdownMenu.Sub>
+-            <DropdownMenu.SubTrigger className="dropdown-subtrigger">
+-              More Tools
+-              <div className="right-slot">
+-                <ChevronRightIcon />
+-              </div>
+-            </DropdownMenu.SubTrigger>
+-            <DropdownMenu.Portal>
+-              <DropdownMenu.SubContent
+-                className="dropdown-subcontent"
+-                sideOffset={2}
+-                alignOffset={-5}
+-              >
+-                <DropdownMenu.Item className="dropdown-item">
+-                  Save Page As… <div className="right-slot">⌘+S</div>
+-                </DropdownMenu.Item>
+-                <DropdownMenu.Item className="dropdown-item">
+-                  Create Shortcut…
+-                </DropdownMenu.Item>
+-                <DropdownMenu.Item className="dropdown-item">
+-                  Name Window…
+-                </DropdownMenu.Item>
+-                <DropdownMenu.Separator className="dropdown-separator" />
+-                <DropdownMenu.Item className="dropdown-item">
+-                  Developer Tools
+-                </DropdownMenu.Item>
+-              </DropdownMenu.SubContent>
+-            </DropdownMenu.Portal>
+-          </DropdownMenu.Sub>
+-
+-          <DropdownMenu.Separator className="dropdown-separator" />
+-
+-          {/* Checkbox items */}
+-          <DropdownMenu.CheckboxItem
+-            className="dropdown-checkbox-item"
+-            checked={bookmarksChecked}
+-            onCheckedChange={setBookmarksChecked}
+-          >
+-            <DropdownMenu.ItemIndicator className="dropdown-item-indicator">
+-              <CheckIcon />
+-            </DropdownMenu.ItemIndicator>
+-            Show Bookmarks <div className="right-slot">⌘+B</div>
+-          </DropdownMenu.CheckboxItem>
+-          <DropdownMenu.CheckboxItem
+-            className="dropdown-checkbox-item"
+-            checked={urlsChecked}
+-            onCheckedChange={setUrlsChecked}
+-          >
+-            <DropdownMenu.ItemIndicator className="dropdown-item-indicator">
+-              <CheckIcon />
+-            </DropdownMenu.ItemIndicator>
+-            Show Full URLs
+-          </DropdownMenu.CheckboxItem>
+-
+-          <DropdownMenu.Separator className="dropdown-separator" />
+-
+-          {/* Radio group */}
+-          <DropdownMenu.Label className="dropdown-label">
+-            People
+-          </DropdownMenu.Label>
+-          <DropdownMenu.RadioGroup value={person} onValueChange={setPerson}>
+-            <DropdownMenu.RadioItem className="dropdown-radio-item" value="pedro">
+-              <DropdownMenu.ItemIndicator className="dropdown-item-indicator">
+-                <DotFilledIcon />
+-              </DropdownMenu.ItemIndicator>
+-              Pedro Duarte
+-            </DropdownMenu.RadioItem>
+-            <DropdownMenu.RadioItem className="dropdown-radio-item" value="colm">
+-              <DropdownMenu.ItemIndicator className="dropdown-item-indicator">
+-                <DotFilledIcon />
+-              </DropdownMenu.ItemIndicator>
+-              Colm Tuite
+-            </DropdownMenu.RadioItem>
+-          </DropdownMenu.RadioGroup>
+-
+-          <DropdownMenu.Arrow className="dropdown-arrow" />
+-        </DropdownMenu.Content>
+-      </DropdownMenu.Portal>
+-    </DropdownMenu.Root>
+-  );
+-}
+-
+-/**
+- * Example: Simple Actions Menu
+- * 
+- * Common use case for data tables, cards, etc.
+- */
+-export function ActionsMenu({ onEdit, onDuplicate, onDelete }) {
+-  return (
+-    <DropdownMenu.Root>
+-      <DropdownMenu.Trigger asChild>
+-        <button className="icon-button" aria-label="Actions">
+-          <DotsHorizontalIcon />
+-        </button>
+-      </DropdownMenu.Trigger>
+-
+-      <DropdownMenu.Portal>
+-        <DropdownMenu.Content className="dropdown-content" align="end">
+-          <DropdownMenu.Item className="dropdown-item" onSelect={onEdit}>
+-            Edit
+-          </DropdownMenu.Item>
+-          <DropdownMenu.Item className="dropdown-item" onSelect={onDuplicate}>
+-            Duplicate
+-          </DropdownMenu.Item>
+-          <DropdownMenu.Separator className="dropdown-separator" />
+-          <DropdownMenu.Item
+-            className="dropdown-item dropdown-item-danger"
+-            onSelect={onDelete}
+-          >
+-            Delete
+-          </DropdownMenu.Item>
+-        </DropdownMenu.Content>
+-      </DropdownMenu.Portal>
+-    </DropdownMenu.Root>
+-  );
+-}
+diff --git a/.agents/skills/radix-ui-design-system/templates/component-template.tsx.template b/.agents/skills/radix-ui-design-system/templates/component-template.tsx.template
+deleted file mode 100644
+index 4210e4a..0000000
+--- a/.agents/skills/radix-ui-design-system/templates/component-template.tsx.template
++++ /dev/null
+@@ -1,148 +0,0 @@
+-/**
+- * Radix UI Component Template
+- * 
+- * This template provides a starting point for creating
+- * custom components with Radix UI primitives.
+- * 
+- * Replace [PRIMITIVE] with actual primitive name:
+- * Dialog, DropdownMenu, Select, Tabs, Tooltip, etc.
+- */
+-
+-import * as [PRIMITIVE] from '@radix-ui/react-[primitive]';
+-import { cva, type VariantProps } from 'class-variance-authority';
+-import { cn } from '@/lib/utils';
+-
+-// ============================================================================
+-// Variants Definition (using CVA)
+-// ============================================================================
+-
+-const [component]Variants = cva(
+-  // Base styles (always applied)
+-  "base-styles-here",
+-  {
+-    variants: {
+-      // Define your variants
+-      variant: {
+-        default: "default-styles",
+-        secondary: "secondary-styles",
+-        destructive: "destructive-styles",
+-      },
+-      size: {
+-        sm: "small-size-styles",
+-        md: "medium-size-styles",
+-        lg: "large-size-styles",
+-      },
+-    },
+-    defaultVariants: {
+-      variant: "default",
+-      size: "md",
+-    },
+-  }
+-);
+-
+-// ============================================================================
+-// TypeScript Interfaces
+-// ============================================================================
+-
+-interface [Component]Props 
+-  extends React.ComponentPropsWithoutRef<typeof [PRIMITIVE].Root>,
+-          VariantProps<typeof [component]Variants> {
+-  // Add custom props here
+-}
+-
+-// ============================================================================
+-// Component Implementation
+-// ============================================================================
+-
+-export function [Component]({
+-  variant,
+-  size,
+-  className,
+-  children,
+-  ...props
+-}: [Component]Props) {
+-  return (
+-    <[PRIMITIVE].Root {...props}>
+-      {/* Trigger */}
+-      <[PRIMITIVE].Trigger asChild>
+-        <button className={cn([component]Variants({ variant, size }), className)}>
+-          {children}
+-        </button>
+-      </[PRIMITIVE].Trigger>
+-
+-      {/* Portal (if needed) */}
+-      <[PRIMITIVE].Portal>
+-        {/* Overlay (for Dialog, etc.) */}
+-        <[PRIMITIVE].Overlay className="overlay-styles" />
+-        
+-        {/* Content */}
+-        <[PRIMITIVE].Content className="content-styles">
+-          {/* Required accessibility parts */}
+-          <[PRIMITIVE].Title className="title-styles">
+-            Title
+-          </[PRIMITIVE].Title>
+-          
+-          <[PRIMITIVE].Description className="description-styles">
+-            Description
+-          </[PRIMITIVE].Description>
+-
+-          {/* Your content */}
+-          <div className="content-body">
+-            {/* ... */}
+-          </div>
+-
+-          {/* Close button */}
+-          <[PRIMITIVE].Close asChild>
+-            <button className="close-button">Close</button>
+-          </[PRIMITIVE].Close>
+-        </[PRIMITIVE].Content>
+-      </[PRIMITIVE].Portal>
+-    </[PRIMITIVE].Root>
+-  );
+-}
+-
+-// ============================================================================
+-// Sub-components (if needed)
+-// ============================================================================
+-
+-[Component].[SubComponent] = function [SubComponent]({
+-  className,
+-  ...props
+-}: React.ComponentPropsWithoutRef<typeof [PRIMITIVE].[SubComponent]>) {
+-  return (
+-    <[PRIMITIVE].[SubComponent]
+-      className={cn("subcomponent-styles", className)}
+-      {...props}
+-    />
+-  );
+-};
+-
+-// ============================================================================
+-// Usage Example
+-// ============================================================================
+-
+-/*
+-import { [Component] } from './[component]';
+-
+-function App() {
+-  return (
+-    <[Component] variant="default" size="md">
+-      Trigger Content
+-    </[Component]
+-  );
+-}
+-*/
+-
+-// ============================================================================
+-// Accessibility Checklist
+-// ============================================================================
+-
+-/*
+-[ ] Keyboard navigation works (Tab, Arrow keys, Enter, Esc)
+-[ ] Focus visible on all interactive elements
+-[ ] Screen reader announces all states
+-[ ] ARIA attributes are correct
+-[ ] Color contrast meets WCAG AA (4.5:1 for text)
+-[ ] Focus trapped when needed (modals)
+-[ ] Focus restored after close
+-*/
+diff --git a/figma-variable-jsons/Colors - Interactables.json b/figma-variable-jsons/Colors - Interactables.json
+deleted file mode 100644
+index 5364e73..0000000
+--- a/figma-variable-jsons/Colors - Interactables.json	
++++ /dev/null
+@@ -1 +0,0 @@
+-{"id":"VariableCollectionId:5:318","name":"Colors - Interactables","modes":{"5:0":"Light","86:2":"Dark"},"variableIds":["VariableID:30:415","VariableID:30:418","VariableID:30:417","VariableID:30:419","VariableID:30:416","VariableID:30:414","VariableID:107:853","VariableID:107:854","VariableID:107:855","VariableID:30:426","VariableID:107:856","VariableID:107:857","VariableID:30:425","VariableID:107:858","VariableID:30:452","VariableID:107:859","VariableID:107:860","VariableID:107:861","VariableID:107:862","VariableID:30:453","VariableID:30:395","VariableID:30:398","VariableID:30:399","VariableID:30:396","VariableID:30:397","VariableID:30:394","VariableID:30:393","VariableID:30:392","VariableID:30:438","VariableID:30:439","VariableID:30:431","VariableID:30:432","VariableID:30:433","VariableID:37:393","VariableID:37:394","VariableID:38:501","VariableID:86:1165","VariableID:111:1262","VariableID:111:1260","VariableID:111:1259","VariableID:111:1258","VariableID:111:1256","VariableID:111:1261","VariableID:111:1255","VariableID:111:1254","VariableID:111:1257","VariableID:111:1253"],"variables":[{"id":"VariableID:30:392","name":"secondaryButton/color-content-secondaryButton:hover&active","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:29:516"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1158"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.08653846383094788,"g":0.08653846383094788,"b":0.08653846383094788,"a":1},"alias":"VariableID:29:516","aliasName":"Text/primaryText"},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1158","aliasName":"Text/darkMode/primaryText"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:393","name":"secondaryButton/color-content-secondaryButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:29:516"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1158"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.08653846383094788,"g":0.08653846383094788,"b":0.08653846383094788,"a":1},"alias":"VariableID:29:516","aliasName":"Text/primaryText"},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1158","aliasName":"Text/darkMode/primaryText"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:394","name":"secondaryButton/border-secondaryButton:active","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.886274516582489,"g":0.8901960849761963,"b":0.8941176533699036,"a":1},"86:2":{"r":0.22751016914844513,"g":0.2319307029247284,"b":0.24519230425357819,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.886274516582489,"g":0.8901960849761963,"b":0.8941176533699036,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.22751016914844513,"g":0.2319307029247284,"b":0.24519230425357819,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:395","name":"secondaryButton/bg-secondaryButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.9903846383094788,"g":0.9903846383094788,"b":0.9903846383094788,"a":1},"86:2":{"r":0.1121024414896965,"g":0.1121024414896965,"b":0.12019230425357819,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.9903846383094788,"g":0.9903846383094788,"b":0.9903846383094788,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.1121024414896965,"g":0.1121024414896965,"b":0.12019230425357819,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:396","name":"secondaryButton/border-secondaryButton:hover","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.886274516582489,"g":0.8901960849761963,"b":0.8941176533699036,"a":1},"86:2":{"r":0.19281619787216187,"g":0.19745439291000366,"b":0.20673076808452606,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.886274516582489,"g":0.8901960849761963,"b":0.8941176533699036,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.19281619787216187,"g":0.19745439291000366,"b":0.20673076808452606,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:397","name":"secondaryButton/bg-secondaryButton:active","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.8901960849761963,"g":0.8901960849761963,"b":0.8901960849761963,"a":1},"86:2":{"r":0.1921568661928177,"g":0.19607843458652496,"b":0.2078431397676468,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.8901960849761963,"g":0.8901960849761963,"b":0.8901960849761963,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.1921568661928177,"g":0.19607843458652496,"b":0.2078431397676468,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:398","name":"secondaryButton/border-secondaryButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.886274516582489,"g":0.8901960849761963,"b":0.8941176533699036,"a":1},"86:2":{"r":0.18983450531959534,"g":0.19546657800674438,"b":0.20673076808452606,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.886274516582489,"g":0.8901960849761963,"b":0.8941176533699036,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.18983450531959534,"g":0.19546657800674438,"b":0.20673076808452606,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:399","name":"secondaryButton/bg-secondaryButton:hover","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.9372549057006836,"g":0.9372549057006836,"b":0.9372549057006836,"a":1},"86:2":{"r":0.17018768191337585,"g":0.17018768191337585,"b":0.17788460850715637,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.9372549057006836,"g":0.9372549057006836,"b":0.9372549057006836,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.17018768191337585,"g":0.17018768191337585,"b":0.17788460850715637,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:414","name":"brandButton/border-brandButton:active","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.19607843458652496,"g":0.239215686917305,"b":0.2549019753932953,"a":1},"86:2":{"r":0.19607843458652496,"g":0.239215686917305,"b":0.2549019753932953,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.19607843458652496,"g":0.239215686917305,"b":0.2549019753932953,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.19607843458652496,"g":0.239215686917305,"b":0.2549019753932953,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:415","name":"brandButton/bg-brandButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.30857062339782715,"g":0.4017846882343292,"b":0.42788460850715637,"a":1},"86:2":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.30857062339782715,"g":0.4017846882343292,"b":0.42788460850715637,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:416","name":"brandButton/bg-brandButton:active","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.1947808861732483,"g":0.23980097472667694,"b":0.2548076808452606,"a":1},"86:2":{"r":0.19607843458652496,"g":0.239215686917305,"b":0.2549019753932953,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.1947808861732483,"g":0.23980097472667694,"b":0.2548076808452606,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.19607843458652496,"g":0.239215686917305,"b":0.2549019753932953,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:417","name":"brandButton/bg-brandButton:hover","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.27195820212364197,"g":0.3329116404056549,"b":0.35576921701431274,"a":1},"86:2":{"r":0.2705882489681244,"g":0.3333333432674408,"b":0.35686275362968445,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.27195820212364197,"g":0.3329116404056549,"b":0.35576921701431274,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.2705882489681244,"g":0.3333333432674408,"b":0.35686275362968445,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:418","name":"brandButton/border-brandButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.30980393290519714,"g":0.4000000059604645,"b":0.4274509847164154,"a":1},"86:2":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.30980393290519714,"g":0.4000000059604645,"b":0.4274509847164154,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:419","name":"brandButton/border-brandButton:hover","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.2705882489681244,"g":0.3333333432674408,"b":0.35686275362968445,"a":1},"86:2":{"r":0.2705882489681244,"g":0.3333333432674408,"b":0.35686275362968445,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.2705882489681244,"g":0.3333333432674408,"b":0.35686275362968445,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.2705882489681244,"g":0.3333333432674408,"b":0.35686275362968445,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:425","name":"brandButton/color-content-brandButton:hover&active","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1163"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1162"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1163","aliasName":"Text/invertedText"},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1162","aliasName":"Text/darkMode/invertedText"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:426","name":"brandButton/color-content-brandButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1163"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1162"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1163","aliasName":"Text/invertedText"},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1162","aliasName":"Text/darkMode/invertedText"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:431","name":"ghostButton/bg-ghostButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0,"g":0,"b":0,"a":0},"86:2":{"r":1,"g":1,"b":1,"a":0}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0,"g":0,"b":0,"a":0},"alias":null},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":0},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:432","name":"ghostButton/bg-ghostButton:hover","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0,"g":0,"b":0,"a":0.03999999910593033},"86:2":{"r":1,"g":1,"b":1,"a":0.03999999910593033}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0,"g":0,"b":0,"a":0.03999999910593033},"alias":null},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":0.03999999910593033},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:433","name":"ghostButton/bg-ghostButton:active","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0,"g":0,"b":0,"a":0.07999999821186066},"86:2":{"r":1,"g":1,"b":1,"a":0.07999999821186066}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0,"g":0,"b":0,"a":0.07999999821186066},"alias":null},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":0.07999999821186066},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:438","name":"secondaryButton/bg-secondaryButton:disabled","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.9615384340286255,"g":0.9615384340286255,"b":0.9615384340286255,"a":1},"86:2":{"r":0.13339035212993622,"g":0.13339035212993622,"b":0.13942307233810425,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.9615384340286255,"g":0.9615384340286255,"b":0.9615384340286255,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.13339035212993622,"g":0.13339035212993622,"b":0.13942307233810425,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:439","name":"secondaryButton/border-secondaryButton:disabled","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.9137254953384399,"g":0.9137254953384399,"b":0.9137254953384399,"a":1},"86:2":{"r":0.12107063829898834,"g":0.12325491011142731,"b":0.12980769574642181,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.9137254953384399,"g":0.9137254953384399,"b":0.9137254953384399,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.12107063829898834,"g":0.12325491011142731,"b":0.12980769574642181,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:452","name":"brandButton/bg-brandButton:disabled","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":0.75},"86:2":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":0.75}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":0.75},"alias":null},"86:2":{"resolvedValue":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":0.75},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:453","name":"brandButton/border-brandButton:disabled","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":0},"86:2":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":0}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":0},"alias":null},"86:2":{"resolvedValue":{"r":0.3529411852359772,"g":0.43529412150382996,"b":0.4588235318660736,"a":0},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:37:393","name":"ghostButton/color-content-ghostButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:29:512"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1157"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.28883713483810425,"g":0.28883713483810425,"b":0.28883713483810425,"a":1},"alias":"VariableID:29:512","aliasName":"Text/secondaryText"},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1157","aliasName":"Text/darkMode/secondaryText"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:37:394","name":"ghostButton/color-content-ghostButton:hover&active","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:29:516"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1158"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.08653846383094788,"g":0.08653846383094788,"b":0.08653846383094788,"a":1},"alias":"VariableID:29:516","aliasName":"Text/primaryText"},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1158","aliasName":"Text/darkMode/primaryText"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:38:501","name":"dropdown/border-typeableTrigger:hover","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.7058823704719543,"g":0.7058823704719543,"b":0.7058823704719543,"a":1},"86:2":{"r":0.22751016914844513,"g":0.2319307029247284,"b":0.24519230425357819,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.7058823704719543,"g":0.7058823704719543,"b":0.7058823704719543,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.22751016914844513,"g":0.2319307029247284,"b":0.24519230425357819,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1165","name":"dropdown/border-typeableTrigger:focus","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:30:418"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:30:418"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.30980393290519714,"g":0.4000000059604645,"b":0.4274509847164154,"a":1},"alias":"VariableID:30:418","aliasName":"brandButton/border-brandButton"},"86:2":{"resolvedValue":{"r":0.30980393290519714,"g":0.4000000059604645,"b":0.4274509847164154,"a":1},"alias":"VariableID:30:418","aliasName":"brandButton/border-brandButton"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:107:853","name":"primaryButton/bg-primaryButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.09019608050584793,"g":0.09019608050584793,"b":0.09019608050584793,"a":1},"86:2":{"r":0.9764705896377563,"g":0.9764705896377563,"b":0.9764705896377563,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.09019608050584793,"g":0.09019608050584793,"b":0.09019608050584793,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.9764705896377563,"g":0.9764705896377563,"b":0.9764705896377563,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:107:854","name":"primaryButton/border-primaryButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.09019608050584793,"g":0.09019608050584793,"b":0.09019608050584793,"a":1},"86:2":{"r":0.9764705896377563,"g":0.9764705896377563,"b":0.9764705896377563,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.09019608050584793,"g":0.09019608050584793,"b":0.09019608050584793,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.9764705896377563,"g":0.9764705896377563,"b":0.9764705896377563,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:107:855","name":"primaryButton/bg-primaryButton:hover","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.1725490242242813,"g":0.1725490242242813,"b":0.1725490242242813,"a":1},"86:2":{"r":0.942307710647583,"g":0.942307710647583,"b":0.942307710647583,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.1725490242242813,"g":0.1725490242242813,"b":0.1725490242242813,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.942307710647583,"g":0.942307710647583,"b":0.942307710647583,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:107:856","name":"primaryButton/border-primaryButton:hover","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.1725490242242813,"g":0.1725490242242813,"b":0.1725490242242813,"a":1},"86:2":{"r":0.942307710647583,"g":0.942307710647583,"b":0.942307710647583,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.1725490242242813,"g":0.1725490242242813,"b":0.1725490242242813,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.942307710647583,"g":0.942307710647583,"b":0.942307710647583,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:107:857","name":"primaryButton/bg-primaryButton:active","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.239215686917305,"g":0.239215686917305,"b":0.239215686917305,"a":1},"86:2":{"r":0.8039215803146362,"g":0.8039215803146362,"b":0.8039215803146362,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.239215686917305,"g":0.239215686917305,"b":0.239215686917305,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.8039215803146362,"g":0.8039215803146362,"b":0.8039215803146362,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:107:858","name":"primaryButton/border-primaryButton:active","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.239215686917305,"g":0.239215686917305,"b":0.239215686917305,"a":1},"86:2":{"r":0.8039215803146362,"g":0.8039215803146362,"b":0.8039215803146362,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.239215686917305,"g":0.239215686917305,"b":0.239215686917305,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.8039215803146362,"g":0.8039215803146362,"b":0.8039215803146362,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:107:859","name":"primaryButton/color-content-primaryButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1163"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1162"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1163","aliasName":"Text/invertedText"},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1162","aliasName":"Text/darkMode/invertedText"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:107:860","name":"primaryButton/color-content-primaryButton:hover&active","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1163"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1162"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1163","aliasName":"Text/invertedText"},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1162","aliasName":"Text/darkMode/invertedText"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:107:861","name":"primaryButton/bg-primaryButton:disabled","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.36057692766189575,"g":0.36057692766189575,"b":0.36057692766189575,"a":1},"86:2":{"r":0.8470588326454163,"g":0.8470588326454163,"b":0.8470588326454163,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.36057692766189575,"g":0.36057692766189575,"b":0.36057692766189575,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.8470588326454163,"g":0.8470588326454163,"b":0.8470588326454163,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:107:862","name":"primaryButton/border-primaryButton:disabled","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.36057692766189575,"g":0.36057692766189575,"b":0.36057692766189575,"a":1},"86:2":{"r":0.8470588326454163,"g":0.8470588326454163,"b":0.8470588326454163,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.36057692766189575,"g":0.36057692766189575,"b":0.36057692766189575,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.8470588326454163,"g":0.8470588326454163,"b":0.8470588326454163,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:111:1253","name":"dangerButton/border-dangerButton:disabled","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.9372549057006836,"g":0.6078431606292725,"b":0.6078431606292725,"a":1},"86:2":{"r":0.7403846383094788,"g":0.3316306173801422,"b":0.27764421701431274,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.9372549057006836,"g":0.6078431606292725,"b":0.6078431606292725,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.7403846383094788,"g":0.3316306173801422,"b":0.27764421701431274,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:111:1254","name":"dangerButton/color-content-dangerButton:hover&active","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:29:516"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1162"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.08653846383094788,"g":0.08653846383094788,"b":0.08653846383094788,"a":1},"alias":"VariableID:29:516","aliasName":"Text/primaryText"},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1162","aliasName":"Text/darkMode/invertedText"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:111:1255","name":"dangerButton/color-content-dangerButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"type":"VARIABLE_ALIAS","id":"VariableID:29:516"},"86:2":{"type":"VARIABLE_ALIAS","id":"VariableID:86:1162"}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.08653846383094788,"g":0.08653846383094788,"b":0.08653846383094788,"a":1},"alias":"VariableID:29:516","aliasName":"Text/primaryText"},"86:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:86:1162","aliasName":"Text/darkMode/invertedText"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:111:1256","name":"dangerButton/bg-dangerButton:active","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.7884615659713745,"g":0.17437130212783813,"b":0.17437130212783813,"a":1},"86:2":{"r":0.8846153616905212,"g":0.264369398355484,"b":0.18287721276283264,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.7884615659713745,"g":0.17437130212783813,"b":0.17437130212783813,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.8846153616905212,"g":0.264369398355484,"b":0.18287721276283264,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:111:1257","name":"dangerButton/bg-dangerButton:disabled","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.9372549057006836,"g":0.6078431606292725,"b":0.6078431606292725,"a":1},"86:2":{"r":0.6105769276618958,"g":0.3953583240509033,"b":0.36693325638771057,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.9372549057006836,"g":0.6078431606292725,"b":0.6078431606292725,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.6105769276618958,"g":0.3953583240509033,"b":0.36693325638771057,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:111:1258","name":"dangerButton/border-dangerButton:hover","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.8588235378265381,"g":0.21960784494876862,"b":0.21960784494876862,"a":1},"86:2":{"r":0.8653846383094788,"g":0.18548911809921265,"b":0.09569156914949417,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.8588235378265381,"g":0.21960784494876862,"b":0.21960784494876862,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.8653846383094788,"g":0.18548911809921265,"b":0.09569156914949417,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:111:1259","name":"dangerButton/bg-dangerButton:hover","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.8605769276618958,"g":0.2192816138267517,"b":0.2192816138267517,"a":1},"86:2":{"r":0.8990384340286255,"g":0.37978583574295044,"b":0.3112056255340576,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.8605769276618958,"g":0.2192816138267517,"b":0.2192816138267517,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.8990384340286255,"g":0.37978583574295044,"b":0.3112056255340576,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:111:1260","name":"dangerButton/border-dangerButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.9134615659713745,"g":0.23275703191757202,"b":0.23275703191757202,"a":1},"86:2":{"r":0.8461538553237915,"g":0.16339991986751556,"b":0.07322484999895096,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.9134615659713745,"g":0.23275703191757202,"b":0.23275703191757202,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.8461538553237915,"g":0.16339991986751556,"b":0.07322484999895096,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:111:1261","name":"dangerButton/border-dangerButton:active","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.7884615659713745,"g":0.17437130212783813,"b":0.17437130212783813,"a":1},"86:2":{"r":0.692307710647583,"g":0.1549532264471054,"b":0.07988165318965912,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.7884615659713745,"g":0.17437130212783813,"b":0.17437130212783813,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.692307710647583,"g":0.1549532264471054,"b":0.07988165318965912,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:111:1262","name":"dangerButton/bg-dangerButton","description":"","type":"COLOR","valuesByMode":{"5:0":{"r":0.9134615659713745,"g":0.23275703191757202,"b":0.23275703191757202,"a":1},"86:2":{"r":0.9038461446762085,"g":0.435555100440979,"b":0.3737056255340576,"a":1}},"resolvedValuesByMode":{"5:0":{"resolvedValue":{"r":0.9134615659713745,"g":0.23275703191757202,"b":0.23275703191757202,"a":1},"alias":null},"86:2":{"resolvedValue":{"r":0.9038461446762085,"g":0.435555100440979,"b":0.3737056255340576,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}}]}
+\ No newline at end of file
+diff --git a/figma-variable-jsons/Colors - Statics.json b/figma-variable-jsons/Colors - Statics.json
+deleted file mode 100644
+index 0da5b5e..0000000
+--- a/figma-variable-jsons/Colors - Statics.json	
++++ /dev/null
+@@ -1 +0,0 @@
+-{"id":"VariableCollectionId:29:500","name":"Colors - Statics","modes":{"29:2":"Light","86:1":"Dark"},"variableIds":["VariableID:30:262","VariableID:83:703","VariableID:321:1112","VariableID:321:1113","VariableID:321:1114","VariableID:30:430","VariableID:33:294","VariableID:30:282","VariableID:30:281","VariableID:86:1156","VariableID:30:287","VariableID:30:428","VariableID:30:429","VariableID:86:1198","VariableID:86:1199","VariableID:86:1200","VariableID:29:516","VariableID:29:512","VariableID:30:280","VariableID:86:1163","VariableID:86:1158","VariableID:86:1157","VariableID:86:1159","VariableID:86:1162","VariableID:86:1161","VariableID:86:1201","VariableID:86:1202"],"variables":[{"id":"VariableID:29:512","name":"Text/secondaryText","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.28883713483810425,"g":0.28883713483810425,"b":0.28883713483810425,"a":1},"86:1":{"r":1,"g":1,"b":1,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.28883713483810425,"g":0.28883713483810425,"b":0.28883713483810425,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:29:516","name":"Text/primaryText","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.08653846383094788,"g":0.08653846383094788,"b":0.08653846383094788,"a":1},"86:1":{"r":1,"g":1,"b":1,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.08653846383094788,"g":0.08653846383094788,"b":0.08653846383094788,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:262","name":"logoColor","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.27450981736183167,"g":0.33725491166114807,"b":0.3607843220233917,"a":1},"86:1":{"r":0.27450981736183167,"g":0.33725491166114807,"b":0.3607843220233917,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.27450981736183167,"g":0.33725491166114807,"b":0.3607843220233917,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.27450981736183167,"g":0.33725491166114807,"b":0.3607843220233917,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:280","name":"Text/tertiaryText","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.3753755986690521,"g":0.3753755986690521,"b":0.3753755986690521,"a":1},"86:1":{"r":1,"g":1,"b":1,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.3753755986690521,"g":0.3753755986690521,"b":0.3753755986690521,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:281","name":"shadowBlackStrong","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.2211538404226303,"g":0.2211538404226303,"b":0.2211538404226303,"a":0.15000000596046448},"86:1":{"r":0.04326923191547394,"g":0.04326923191547394,"b":0.04326923191547394,"a":0.8500000238418579}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.2211538404226303,"g":0.2211538404226303,"b":0.2211538404226303,"a":0.15000000596046448},"alias":null},"86:1":{"resolvedValue":{"r":0.04326923191547394,"g":0.04326923191547394,"b":0.04326923191547394,"a":0.8500000238418579},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:282","name":"shadowBlackStandard","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.21960784494876862,"g":0.21960784494876862,"b":0.21960784494876862,"a":0.10000000149011612},"86:1":{"r":0.04326923191547394,"g":0.04326923191547394,"b":0.04326923191547394,"a":0.6499999761581421}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.21960784494876862,"g":0.21960784494876862,"b":0.21960784494876862,"a":0.10000000149011612},"alias":null},"86:1":{"resolvedValue":{"r":0.04326923191547394,"g":0.04326923191547394,"b":0.04326923191547394,"a":0.6499999761581421},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:287","name":"Surfaces/pageBackground","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.9921568632125854,"g":0.9960784316062927,"b":1,"a":1},"86:1":{"r":0.08627451211214066,"g":0.09019608050584793,"b":0.09803921729326248,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.9921568632125854,"g":0.9960784316062927,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.08627451211214066,"g":0.09019608050584793,"b":0.09803921729326248,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:428","name":"Surfaces/surfacePrimary","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":0.14901961386203766,"g":0.1568627506494522,"b":0.16862745583057404,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.14901961386203766,"g":0.1568627506494522,"b":0.16862745583057404,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:429","name":"Surfaces/surfaceSecondary","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.9764705896377563,"g":0.9843137264251709,"b":0.9843137264251709,"a":1},"86:1":{"r":0.20392157137393951,"g":0.21568627655506134,"b":0.23137255012989044,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.9764705896377563,"g":0.9843137264251709,"b":0.9843137264251709,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.20392157137393951,"g":0.21568627655506134,"b":0.23137255012989044,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:30:430","name":"border/borderStandard","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.8745098114013672,"g":0.8901960849761963,"b":0.8980392217636108,"a":1},"86:1":{"r":1,"g":1,"b":1,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.8745098114013672,"g":0.8901960849761963,"b":0.8980392217636108,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:33:294","name":"border/borderSecondary","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.7895941138267517,"g":0.8241132497787476,"b":0.8509615659713745,"a":1},"86:1":{"r":1,"g":1,"b":1,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.7895941138267517,"g":0.8241132497787476,"b":0.8509615659713745,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:83:703","name":"logoAltColor","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.6313725709915161,"g":0.6666666865348816,"b":0.6470588445663452,"a":1},"86:1":{"r":0.6313725709915161,"g":0.6666666865348816,"b":0.6470588445663452,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.6313725709915161,"g":0.6666666865348816,"b":0.6470588445663452,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.6313725709915161,"g":0.6666666865348816,"b":0.6470588445663452,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1156","name":"shadowSelected","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.27450981736183167,"g":0.33725491166114807,"b":0.3607843220233917,"a":0.3499999940395355},"86:1":{"r":0.27450981736183167,"g":0.33725491166114807,"b":0.3607843220233917,"a":0.15000000596046448}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.27450981736183167,"g":0.33725491166114807,"b":0.3607843220233917,"a":0.3499999940395355},"alias":null},"86:1":{"resolvedValue":{"r":0.27450981736183167,"g":0.33725491166114807,"b":0.3607843220233917,"a":0.15000000596046448},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1157","name":"Text/darkMode/secondaryText","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":0.6875,"g":0.6875,"b":0.6875,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.6875,"g":0.6875,"b":0.6875,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1158","name":"Text/darkMode/primaryText","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":1,"g":1,"b":1,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1159","name":"Text/darkMode/tertiaryText","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":0.4423076808452606,"g":0.4423076808452606,"b":0.4423076808452606,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.4423076808452606,"g":0.4423076808452606,"b":0.4423076808452606,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1161","name":"opacity:disabled","description":"","type":"FLOAT","valuesByMode":{"29:2":60,"86:1":50},"resolvedValuesByMode":{"29:2":{"resolvedValue":60,"alias":null},"86:1":{"resolvedValue":50,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1162","name":"Text/darkMode/invertedText","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":0,"g":0,"b":0,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0,"g":0,"b":0,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1163","name":"Text/invertedText","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":1,"g":1,"b":1,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1198","name":"Surfaces/darkMode/pageBackground","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":0.07450980693101883,"g":0.10980392247438431,"b":0.11372549086809158,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.07450980693101883,"g":0.10980392247438431,"b":0.11372549086809158,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1199","name":"Surfaces/darkMode/surfacePrimary","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":0,"g":0,"b":0,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0,"g":0,"b":0,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1200","name":"Surfaces/darkMode/surfaceSecondary","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":0.13937684893608093,"g":0.14099480211734772,"b":0.14423076808452606,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.13937684893608093,"g":0.14099480211734772,"b":0.14423076808452606,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1201","name":"border/darkMode/borderStandard","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":0.1997041404247284,"g":0.20525148510932922,"b":0.2163461595773697,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.1997041404247284,"g":0.20525148510932922,"b":0.2163461595773697,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:86:1202","name":"border/darkMode/borderSecondary","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":1,"g":1,"b":1,"a":1},"86:1":{"r":0.22235576808452606,"g":0.22926680743694305,"b":0.25,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.22235576808452606,"g":0.22926680743694305,"b":0.25,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:321:1112","name":"Modals/surfaceModal","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.9899339079856873,"g":0.9899339079856873,"b":0.9899339079856873,"a":1},"86:1":{"r":0.12941177189350128,"g":0.12941177189350128,"b":0.1411764770746231,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.9899339079856873,"g":0.9899339079856873,"b":0.9899339079856873,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.12941177189350128,"g":0.12941177189350128,"b":0.1411764770746231,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:321:1113","name":"Modals/borderModal","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0.9215686321258545,"g":0.9215686321258545,"b":0.9215686321258545,"a":1},"86:1":{"r":0.2119082808494568,"g":0.2119082808494568,"b":0.23076923191547394,"a":1}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0.9215686321258545,"g":0.9215686321258545,"b":0.9215686321258545,"a":1},"alias":null},"86:1":{"resolvedValue":{"r":0.2119082808494568,"g":0.2119082808494568,"b":0.23076923191547394,"a":1},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:321:1114","name":"Modals/modalBackdrop","description":"","type":"COLOR","valuesByMode":{"29:2":{"r":0,"g":0,"b":0,"a":0.3499999940395355},"86:1":{"r":0,"g":0,"b":0,"a":0.699999988079071}},"resolvedValuesByMode":{"29:2":{"resolvedValue":{"r":0,"g":0,"b":0,"a":0.3499999940395355},"alias":null},"86:1":{"resolvedValue":{"r":0,"g":0,"b":0,"a":0.699999988079071},"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}}]}
+\ No newline at end of file
+diff --git a/figma-variable-jsons/Corner Radii.json b/figma-variable-jsons/Corner Radii.json
+deleted file mode 100644
+index b60ecb0..0000000
+--- a/figma-variable-jsons/Corner Radii.json	
++++ /dev/null
+@@ -1 +0,0 @@
+-{"id":"VariableCollectionId:6:80","name":"Corner Radii","modes":{"6:3":"Mode 1"},"variableIds":["VariableID:6:81","VariableID:6:82","VariableID:6:83"],"variables":[{"id":"VariableID:6:81","name":"tight","description":"","type":"FLOAT","valuesByMode":{"6:3":12},"resolvedValuesByMode":{"6:3":{"resolvedValue":12,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:6:82","name":"standard","description":"","type":"FLOAT","valuesByMode":{"6:3":18},"resolvedValuesByMode":{"6:3":{"resolvedValue":18,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:6:83","name":"soft","description":"","type":"FLOAT","valuesByMode":{"6:3":20},"resolvedValuesByMode":{"6:3":{"resolvedValue":20,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}}]}
+\ No newline at end of file
+diff --git a/figma-variable-jsons/Icons.json b/figma-variable-jsons/Icons.json
+deleted file mode 100644
+index 2758dbb..0000000
+--- a/figma-variable-jsons/Icons.json
++++ /dev/null
+@@ -1 +0,0 @@
+-{"id":"VariableCollectionId:6:84","name":"Icons","modes":{"6:4":"Mode 1"},"variableIds":["VariableID:6:85","VariableID:6:88","VariableID:6:86","VariableID:6:87"],"variables":[{"id":"VariableID:6:85","name":"strokewidth","description":"","type":"FLOAT","valuesByMode":{"6:4":1.5},"resolvedValuesByMode":{"6:4":{"resolvedValue":1.5,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:6:86","name":"iconStandard","description":"","type":"FLOAT","valuesByMode":{"6:4":14},"resolvedValuesByMode":{"6:4":{"resolvedValue":14,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:6:87","name":"iconMedium","description":"","type":"FLOAT","valuesByMode":{"6:4":16},"resolvedValuesByMode":{"6:4":{"resolvedValue":16,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:6:88","name":"iconTiny","description":"","type":"FLOAT","valuesByMode":{"6:4":12},"resolvedValuesByMode":{"6:4":{"resolvedValue":12,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}}]}
+\ No newline at end of file
+diff --git a/figma-variable-jsons/Sizing_Spacing.json b/figma-variable-jsons/Sizing_Spacing.json
+deleted file mode 100644
+index 87e865b..0000000
+--- a/figma-variable-jsons/Sizing_Spacing.json
++++ /dev/null
+@@ -1 +0,0 @@
+-{"id":"VariableCollectionId:6:72","name":"Sizing/Spacing","modes":{"6:1":"Mode 1"},"variableIds":["VariableID:6:73","VariableID:6:75","VariableID:6:76","VariableID:6:77","VariableID:6:78","VariableID:6:79","VariableID:60:867","VariableID:60:868","VariableID:37:399","VariableID:9:163","VariableID:9:164","VariableID:42:716","VariableID:47:892"],"variables":[{"id":"VariableID:6:73","name":"xxs","description":"","type":"FLOAT","valuesByMode":{"6:1":4},"resolvedValuesByMode":{"6:1":{"resolvedValue":4,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:6:75","name":"xs","description":"","type":"FLOAT","valuesByMode":{"6:1":8},"resolvedValuesByMode":{"6:1":{"resolvedValue":8,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:6:76","name":"sm","description":"","type":"FLOAT","valuesByMode":{"6:1":10},"resolvedValuesByMode":{"6:1":{"resolvedValue":10,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:6:77","name":"rg","description":"","type":"FLOAT","valuesByMode":{"6:1":12},"resolvedValuesByMode":{"6:1":{"resolvedValue":12,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:6:78","name":"md","description":"","type":"FLOAT","valuesByMode":{"6:1":16},"resolvedValuesByMode":{"6:1":{"resolvedValue":16,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:6:79","name":"lg","description":"","type":"FLOAT","valuesByMode":{"6:1":20},"resolvedValuesByMode":{"6:1":{"resolvedValue":20,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:9:163","name":"buttonSizes/buttonHeight","description":"","type":"FLOAT","valuesByMode":{"6:1":38},"resolvedValuesByMode":{"6:1":{"resolvedValue":38,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:9:164","name":"buttonSizes/smallButtonHeight","description":"","type":"FLOAT","valuesByMode":{"6:1":34},"resolvedValuesByMode":{"6:1":{"resolvedValue":34,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:37:399","name":"dropdownWidths/complexPopoverMenuItemMinWidth","description":"","type":"FLOAT","valuesByMode":{"6:1":324},"resolvedValuesByMode":{"6:1":{"resolvedValue":324,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:42:716","name":"dropdownWidths/standardMenuItemMinWidth","description":"","type":"FLOAT","valuesByMode":{"6:1":160},"resolvedValuesByMode":{"6:1":{"resolvedValue":160,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:47:892","name":"dropdownWidths/actionMenuItemMinWidth","description":"","type":"FLOAT","valuesByMode":{"6:1":144},"resolvedValuesByMode":{"6:1":{"resolvedValue":144,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:60:867","name":"xl","description":"","type":"FLOAT","valuesByMode":{"6:1":28},"resolvedValuesByMode":{"6:1":{"resolvedValue":28,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:60:868","name":"xxl","description":"","type":"FLOAT","valuesByMode":{"6:1":40},"resolvedValuesByMode":{"6:1":{"resolvedValue":40,"alias":null}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}}]}
+\ No newline at end of file
+diff --git a/scripts/sync-theme.mjs b/scripts/sync-theme.mjs
+index a1e8fc3..2f9eabb 100644
+--- a/scripts/sync-theme.mjs
++++ b/scripts/sync-theme.mjs
+@@ -88,6 +88,8 @@ const EXCLUDED = new Set([
+   // Button heights — exposed via custom @layer utilities (.h-button etc.)
+   "ui-height-button",
+   "ui-height-button-sm",
++  "ui-height-button-medium",
++  "ui-height-button-big",
+   "ui-height-button-micro",
+   "ui-height-slider-track",
+   "ui-slider-track-gap",
+diff --git a/skills-lock.json b/skills-lock.json
+index 07bcb38..c0657c6 100644
+--- a/skills-lock.json
++++ b/skills-lock.json
+@@ -7,12 +7,6 @@
+       "skillPath": "skills/file-header-contracts/SKILL.md",
+       "computedHash": "2e730ceb437bc2fa3e6a00150f86e997f46d2e38ba6733ffdddb62030b546f30"
+     },
+-    "radix-ui-design-system": {
+-      "source": "sickn33/antigravity-awesome-skills",
+-      "sourceType": "github",
+-      "skillPath": "skills/radix-ui-design-system/SKILL.md",
+-      "computedHash": "e80a260a82334d85f4ca41d9417f44df759db55db88c881447c8d8d2eb434825"
+-    },
+     "skill-creator": {
+       "source": "anthropics/skills",
+       "sourceType": "github",
+diff --git a/src/components/AIChat/AIChatParts.stories.tsx b/src/components/AIChat/AIChatParts.stories.tsx
+index 72ae4b2..f97c4f5 100644
+--- a/src/components/AIChat/AIChatParts.stories.tsx
++++ b/src/components/AIChat/AIChatParts.stories.tsx
+@@ -18,7 +18,7 @@ import { UserMessageHeader } from "./UserMessageHeader";
+ /* Every part at Figma's 418px transcript width. The copy in these stories is
+  * the STORY's — the components render only what they are handed. */
+ const Column = ({ children }: { children: React.ReactNode }) => (
+-  <div className="flex w-[418px] flex-col gap-rg">{children}</div>
++  <div className="flex w-[418px] flex-col gap-md">{children}</div>
+ );
+ 
+ const meta = {
+diff --git a/src/components/AIChat/AIChatStreaming.stories.tsx b/src/components/AIChat/AIChatStreaming.stories.tsx
+index c172a97..80c5def 100644
+--- a/src/components/AIChat/AIChatStreaming.stories.tsx
++++ b/src/components/AIChat/AIChatStreaming.stories.tsx
+@@ -552,7 +552,7 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
+           stickToBottom.current =
+             el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+         }}
+-        className="relative flex min-h-0 flex-1 flex-col overflow-y-auto px-rg"
++        className="relative flex min-h-0 flex-1 flex-col overflow-y-auto px-md"
+       >
+         {turns.length === 0 ? (
+           <div className="flex flex-1 items-center justify-center">
+@@ -561,7 +561,7 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
+             </BodyText>
+           </div>
+         ) : (
+-          <div className="flex flex-col gap-md pb-md pt-rg">
++          <div className="flex flex-col gap-lg pb-lg pt-md">
+             <ChatDivider>Today</ChatDivider>
+             {turns.map((turn, index) => {
+               const [head, ...replies] = turn;
+@@ -573,7 +573,7 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
+               return (
+                 // Each turn is its own container, so its sticky header is
+                 // pushed away by the next turn's — the consumer's layout.
+-                <div key={head.id} className="flex flex-col gap-rg">
++                <div key={head.id} className="flex flex-col gap-md">
+                   {switched ? (
+                     <ChatDivider>
+                       Switched to{" "}
+@@ -583,7 +583,7 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
+                       {effortLabel(head.meta.effort)}
+                     </ChatDivider>
+                   ) : null}
+-                  <div className="sticky top-0 z-10 bg-surface-page pt-xs">
++                  <div className="sticky top-0 z-10 bg-surface-page pt-sm">
+                     <UserMessageHeader className="line-clamp-4">
+                       {textOf(head)}
+                     </UserMessageHeader>
+@@ -614,7 +614,7 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
+         )}
+       </div>
+ 
+-      <div className="px-rg pb-rg">
++      <div className="px-md pb-md">
+         <AIPromptInput
+           onSubmit={(text) => void send(text)}
+           responding={responding}
+diff --git a/src/components/AIChat/AIModelSelect.stories.tsx b/src/components/AIChat/AIModelSelect.stories.tsx
+index 4c83d60..3aa16db 100644
+--- a/src/components/AIChat/AIModelSelect.stories.tsx
++++ b/src/components/AIChat/AIModelSelect.stories.tsx
+@@ -180,7 +180,7 @@ export const ThinkingEffort: Story = {
+   render: function Render() {
+     const [effort, setEffort] = useState("medium");
+     return (
+-      <div className="flex w-[234px] flex-col gap-md">
++      <div className="flex w-[234px] flex-col gap-lg">
+         <AIThinkingEffortSelector
+           label="Thinking"
+           labels={{ start: "Faster", end: "Smarter" }}
+diff --git a/src/components/AIChat/AIModelSelect.tsx b/src/components/AIChat/AIModelSelect.tsx
+index 4e73aec..6ac37a6 100644
+--- a/src/components/AIChat/AIModelSelect.tsx
++++ b/src/components/AIChat/AIModelSelect.tsx
+@@ -36,7 +36,7 @@ import { SliderLabeled } from "../Slider";
+ import { SliderVariant } from "../Slider/constants";
+ import { BodyText, ButtonText } from "../Text";
+ import { TooltipBody, TooltipContent } from "../Tooltip";
+-import { TooltipTypes } from "../Tooltip/constants";
++import { TooltipVariant } from "../Tooltip/constants";
+ 
+ // ── Trigger ───────────────────────────────────────────────────────────────────
+ 
+@@ -58,7 +58,7 @@ const AIModelSelectTrigger = forwardRef<
+     type="button"
+     variant={ButtonVariant.ghost}
+     size={ButtonSize.sm}
+-    className={cn("shrink-0 gap-xs px-xs", className)}
++    className={cn("shrink-0 gap-sm px-sm", className)}
+     {...props}
+   >
+     <span className="whitespace-nowrap text-text">{children}</span>
+@@ -146,7 +146,7 @@ const AIThinkingEffortSelector = forwardRef<
+     return (
+       <div
+         ref={ref}
+-        className={cn("flex w-full min-w-0 flex-col gap-rg p-xs", className)}
++        className={cn("flex w-full min-w-0 flex-col gap-md p-sm", className)}
+       >
+         <div className="flex items-center gap-xxs text-text">
+           <BodyText>{label}</BodyText>
+@@ -216,13 +216,13 @@ const AIModelTooltipContent = forwardRef<
+   ) => (
+     <TooltipContent
+       ref={ref}
+-      variant={TooltipTypes.complex}
++      variant={TooltipVariant.complex}
+       themeInverse={themeInverse}
+       className={cn("ds-width-chat-model-tooltip", className)}
+       {...props}
+     >
+-      <div className="flex w-full flex-col gap-rg px-rg pt-sm pb-md">
+-        <div className="flex w-full flex-col gap-xs">
++      <div className="flex w-full flex-col gap-md px-md pt-rg pb-lg">
++        <div className="flex w-full flex-col gap-sm">
+           <ButtonText
+             style={color ? { color: resolveDsColor(color, "") } : undefined}
+           >
+@@ -230,7 +230,7 @@ const AIModelTooltipContent = forwardRef<
+           </ButtonText>
+           <TooltipBody className="text-text">{description}</TooltipBody>
+         </div>
+-        <div className="flex w-full items-center gap-sm">
++        <div className="flex w-full items-center gap-rg">
+           <AISpeedIcon size={IconSize.sm} aria-hidden />
+           <LinearProgressIndicator
+             className="min-w-0 flex-1"
+diff --git a/src/components/AIChat/AIPromptInput.stories.tsx b/src/components/AIChat/AIPromptInput.stories.tsx
+index 2deb4ba..a15586d 100644
+--- a/src/components/AIChat/AIPromptInput.stories.tsx
++++ b/src/components/AIChat/AIPromptInput.stories.tsx
+@@ -75,7 +75,7 @@ function Composer({
+ }) {
+   const [sent, setSent] = useState<string | null>(null);
+   return (
+-    <div className="flex w-[418px] flex-col gap-sm">
++    <div className="flex w-[418px] flex-col gap-rg">
+       <AIPromptInput
+         defaultValue={defaultValue}
+         onSubmit={setSent}
+@@ -146,7 +146,7 @@ export const LongPrompt: Story = {
+  * range because the consumer keeps them there. */
+ export const ContextGaugeColors: Story = {
+   render: () => (
+-    <div className="flex items-center gap-rg">
++    <div className="flex items-center gap-md">
+       <AIContextGauge used={30} budget={100} />
+       <AIContextGauge used={75} budget={100} color={LoadingSpinnerColor.prominent} />
+       <AIContextGauge
+diff --git a/src/components/AIChat/AIPromptInput.tsx b/src/components/AIChat/AIPromptInput.tsx
+index 2e9efcd..4c3292a 100644
+--- a/src/components/AIChat/AIPromptInput.tsx
++++ b/src/components/AIChat/AIPromptInput.tsx
+@@ -151,7 +151,7 @@ const AIPromptInput = forwardRef<HTMLFormElement, AIPromptInputProps>(
+             }
+           }}
+           className={cn(
+-            "flex w-full min-w-0 flex-col gap-rg rounded-normal border border-solid border-border-primary bg-surface-primary p-sm shadow-menu",
++            "flex w-full min-w-0 flex-col gap-md rounded-normal border border-solid border-border-primary bg-surface-primary p-rg shadow-menu",
+             "ds-focus-within-ring focus-within:border-input-border-focus",
+             className,
+           )}
+@@ -244,7 +244,7 @@ const AIPromptInputToolbar = forwardRef<
+ >(({ className, ...props }, ref) => (
+   <div
+     ref={ref}
+-    className={cn("flex w-full min-w-0 items-center justify-between gap-rg", className)}
++    className={cn("flex w-full min-w-0 items-center justify-between gap-md", className)}
+     {...props}
+   />
+ ));
+@@ -257,7 +257,7 @@ const AIPromptInputToolbarStart = forwardRef<
+ >(({ className, ...props }, ref) => (
+   <div
+     ref={ref}
+-    className={cn("flex min-w-0 items-center gap-rg", className)}
++    className={cn("flex min-w-0 items-center gap-md", className)}
+     {...props}
+   />
+ ));
+@@ -270,7 +270,7 @@ const AIPromptInputToolbarEnd = forwardRef<
+ >(({ className, ...props }, ref) => (
+   <div
+     ref={ref}
+-    className={cn("flex min-w-0 items-center gap-xs", className)}
++    className={cn("flex min-w-0 items-center gap-sm", className)}
+     {...props}
+   />
+ ));
+diff --git a/src/components/AIChat/AITextPart.tsx b/src/components/AIChat/AITextPart.tsx
+index dc5660f..88587cc 100644
+--- a/src/components/AIChat/AITextPart.tsx
++++ b/src/components/AIChat/AITextPart.tsx
+@@ -32,7 +32,7 @@ const AITextPart = forwardRef<HTMLDivElement, AITextPartProps>(
+       ref={ref}
+       data-streaming-animation={streamingAnimation || undefined}
+       className={cn(
+-        "ds-chat-prose w-full min-w-0 px-xs text-style-body text-text wrap-break-word",
++        "ds-chat-prose w-full min-w-0 px-sm text-style-body text-text wrap-break-word",
+         className,
+       )}
+       {...props}
+diff --git a/src/components/AIChat/AIThinkingPart.tsx b/src/components/AIChat/AIThinkingPart.tsx
+index 5693e65..689f060 100644
+--- a/src/components/AIChat/AIThinkingPart.tsx
++++ b/src/components/AIChat/AIThinkingPart.tsx
+@@ -100,12 +100,12 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+           ref={ref}
+           data-state={state}
+           className={cn(
+-            "flex w-full min-w-0 flex-col gap-sm px-xs py-xxs",
++            "flex w-full min-w-0 flex-col gap-rg px-sm py-xxs",
+             className,
+           )}
+           {...props}
+         >
+-          <div className="flex min-w-0 select-none items-center gap-sm">
++          <div className="flex min-w-0 select-none items-center gap-rg">
+             <ShimmerText className="ds-chat-thinking-shimmer shrink-0 whitespace-nowrap text-style-body">
+               {label}
+             </ShimmerText>
+@@ -114,7 +114,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+           {hasTranscript ? (
+             <div
+               data-streaming-animation={streamingAnimation || undefined}
+-              className="ds-chat-prose min-w-0 pl-xs text-style-body text-text-tertiary wrap-break-word"
++              className="ds-chat-prose min-w-0 pl-sm text-style-body text-text-tertiary wrap-break-word"
+             >
+               {children}
+             </div>
+@@ -140,7 +140,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+           ref={ref}
+           data-state={state}
+           className={cn(
+-            "flex w-full min-w-0 select-none items-center gap-sm px-xs py-xxs",
++            "flex w-full min-w-0 select-none items-center gap-rg px-sm py-xxs",
+             className,
+           )}
+           {...props}
+@@ -172,7 +172,7 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+           // `h-auto!`: the row hugs its text like every other part. Button's
+           // `h-button` is a package utility tailwind-merge cannot recognise as
+           // a height, so a plain `h-auto` would not replace it.
+-          className="h-auto! w-full justify-start gap-sm border-0 px-xs py-xxs"
++          className="h-auto! w-full justify-start gap-rg border-0 px-sm py-xxs"
+         >
+           {labelNode}
+           {metaNode}
+@@ -191,9 +191,9 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+           className="ds-chat-disclosure"
+         >
+           <div>
+-            {/* px-xs matches the row's own inset; pl-xs indents the transcript
++            {/* px-sm matches the row's own inset; pl-sm indents the transcript
+                 under the label, as the live variant does. */}
+-            <div className="ds-chat-prose mx-xs min-w-0 pb-xxs pl-xs pt-sm text-style-body text-text-secondary wrap-break-word">
++            <div className="ds-chat-prose mx-sm min-w-0 pb-xxs pl-sm pt-rg text-style-body text-text-secondary wrap-break-word">
+               {children}
+             </div>
+           </div>
+diff --git a/src/components/AIChat/AIToolPart.tsx b/src/components/AIChat/AIToolPart.tsx
+index 365cc96..f2c1011 100644
+--- a/src/components/AIChat/AIToolPart.tsx
++++ b/src/components/AIChat/AIToolPart.tsx
+@@ -54,7 +54,7 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
+         data-state={state}
+         data-variant={variant}
+         className={cn(
+-          "flex w-full min-w-0 select-none items-center gap-sm px-xs py-xxs text-style-body",
++          "flex w-full min-w-0 select-none items-center gap-rg px-sm py-xxs text-style-body",
+           !isSkill && "ds-chat-reveal-root",
+           className,
+         )}
+diff --git a/src/components/AIChat/AITurnSummary.tsx b/src/components/AIChat/AITurnSummary.tsx
+index b2cc974..8b3bea0 100644
+--- a/src/components/AIChat/AITurnSummary.tsx
++++ b/src/components/AIChat/AITurnSummary.tsx
+@@ -34,7 +34,7 @@ const AITurnSummary = forwardRef<HTMLDivElement, AITurnSummaryProps>(
+     <div
+       ref={ref}
+       className={cn(
+-        "ds-chat-reveal-root flex h-button-sm w-full min-w-0 select-none items-center gap-sm px-xs text-style-body",
++        "ds-chat-reveal-root flex h-button-sm w-full min-w-0 select-none items-center gap-rg px-sm text-style-body",
+         className,
+       )}
+       {...props}
+diff --git a/src/components/AIChat/ChatDivider.tsx b/src/components/AIChat/ChatDivider.tsx
+index 98b222f..f7c3b51 100644
+--- a/src/components/AIChat/ChatDivider.tsx
++++ b/src/components/AIChat/ChatDivider.tsx
+@@ -32,7 +32,7 @@ const ChatDivider = forwardRef<HTMLDivElement, ChatDividerProps>(
+       <div
+         ref={ref}
+         className={cn(
+-          "flex w-full items-center justify-center gap-sm overflow-hidden",
++          "flex w-full items-center justify-center gap-rg overflow-hidden",
+           className,
+         )}
+         {...props}
+diff --git a/src/components/AIChat/UserMessageHeader.tsx b/src/components/AIChat/UserMessageHeader.tsx
+index b9ef328..1d92592 100644
+--- a/src/components/AIChat/UserMessageHeader.tsx
++++ b/src/components/AIChat/UserMessageHeader.tsx
+@@ -21,7 +21,7 @@ const UserMessageHeader = forwardRef<HTMLDivElement, UserMessageHeaderProps>(
+     <div
+       ref={ref}
+       className={cn(
+-        "w-full min-w-0 rounded-tight border border-solid border-border-primary bg-surface-primary p-rg shadow-standard text-style-body text-text wrap-break-word",
++        "w-full min-w-0 rounded-tight border border-solid border-border-primary bg-surface-primary p-md shadow-standard text-style-body text-text wrap-break-word",
+         className,
+       )}
+       {...props}
+diff --git a/src/components/AnimatedText/AnimatedText.stories.tsx b/src/components/AnimatedText/AnimatedText.stories.tsx
+index dafd516..13b20da 100644
+--- a/src/components/AnimatedText/AnimatedText.stories.tsx
++++ b/src/components/AnimatedText/AnimatedText.stories.tsx
+@@ -718,7 +718,7 @@ function Demo({
+ }) {
+   const [value, setValue] = useState(values[0]);
+   return (
+-    <div className="flex flex-col items-start gap-md p-4">
++    <div className="flex flex-col items-start gap-lg p-4">
+       <BaseText fontSize={28} fontWeight={FontWeights.medium}>
+         {smallDecimals ? (
+           <RollingDigitsText smallDecimals smallDecimalsComponent={LabelText}>
+@@ -817,7 +817,7 @@ const FORMATS: Array<{ value: string; note: string }> = [
+ export const RollingDigitsFormats: Story = {
+   name: "Formats",
+   render: () => (
+-    <div className="flex flex-col items-start gap-sm p-4">
++    <div className="flex flex-col items-start gap-rg p-4">
+       {FORMATS.map((f) => (
+         <div key={f.value} className="flex items-baseline gap-4">
+           <BaseText
+@@ -842,7 +842,7 @@ export const RollingDigitsScales: Story = {
+   render: () => {
+     const [value, setValue] = useState("$982.10");
+     return (
+-      <div className="flex flex-col items-start gap-md p-4">
++      <div className="flex flex-col items-start gap-lg p-4">
+         <LabelText>
+           <RollingDigitsText>{value}</RollingDigitsText>
+         </LabelText>
+@@ -878,7 +878,7 @@ export const RollingDigitsTableScrub: Story = {
+   render: () => {
+     const [amount, setAmount] = useState(TOTAL);
+     return (
+-      <div className="flex flex-col items-start gap-md p-4">
++      <div className="flex flex-col items-start gap-lg p-4">
+         <BaseText fontSize={28} fontWeight={FontWeights.medium}>
+           <RollingDigitsText smallDecimals smallDecimalsComponent={LabelText}>
+             {amount}
+@@ -928,7 +928,7 @@ export const RollingDigitsLiveTicker: Story = {
+       currency: "USD",
+     });
+     return (
+-      <div className="flex flex-col items-start gap-md p-4">
++      <div className="flex flex-col items-start gap-lg p-4">
+         <Figure>{value}</Figure>
+         <BodyText className="max-w-[46ch] text-text-secondary">
+           Random walk every 700ms, wide enough to cross magnitudes. Watch the
+diff --git a/src/components/Avatar/Avatar.stories.tsx b/src/components/Avatar/Avatar.stories.tsx
+index df50eef..9257489 100644
+--- a/src/components/Avatar/Avatar.stories.tsx
++++ b/src/components/Avatar/Avatar.stories.tsx
+@@ -45,14 +45,14 @@ export const Standard: Story = {
+ 
+ export const Small: Story = {
+   args: {
+-    size: AvatarSize.small,
++    size: AvatarSize.sm,
+     children: <LogoMark />,
+   },
+ };
+ 
+ export const WithIcon: Story = {
+   args: {
+-    size: AvatarSize.small,
++    size: AvatarSize.sm,
+     children: <OrganizationIcon />,
+   },
+ };
+@@ -63,10 +63,10 @@ export const AllSizes: Story = {
+       <Avatar>
+         <LogoMark />
+       </Avatar>
+-      <Avatar size={AvatarSize.small}>
++      <Avatar size={AvatarSize.sm}>
+         <LogoMark />
+       </Avatar>
+-      <Avatar size={AvatarSize.small}>
++      <Avatar size={AvatarSize.sm}>
+         <OrganizationIcon />
+       </Avatar>
+     </div>
+@@ -75,7 +75,7 @@ export const AllSizes: Story = {
+ 
+ export const WithCustomChildren: Story = {
+   render: () => (
+-    <Avatar size={AvatarSize.small}>
++    <Avatar size={AvatarSize.sm}>
+       <span className="text-style-label text-text">⌘</span>
+     </Avatar>
+   ),
+diff --git a/src/components/Avatar/Avatar.tsx b/src/components/Avatar/Avatar.tsx
+index 48d8bd8..54449e2 100644
+--- a/src/components/Avatar/Avatar.tsx
++++ b/src/components/Avatar/Avatar.tsx
+@@ -3,7 +3,7 @@ import { cn } from "../../utils/cn";
+ 
+ export const AvatarSize = {
+   standard: "standard",
+-  small: "small",
++  sm: "sm",
+ } as const;
+ export type AvatarSize = (typeof AvatarSize)[keyof typeof AvatarSize];
+ 
+@@ -20,8 +20,8 @@ const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
+           "inline-flex shrink-0 items-center justify-center",
+           "bg-surface-secondary border border-solid border-border-secondary",
+           "text-prominent-color *:size-full *:object-contain",
+-          size === AvatarSize.standard && "size-[38px] rounded-avatar p-xs",
+-          size === AvatarSize.small && "size-[22px] rounded-avatar-sm p-xxs",
++          size === AvatarSize.standard && "size-[38px] rounded-avatar p-sm",
++          size === AvatarSize.sm && "size-[22px] rounded-avatar-sm p-xxs",
+           className,
+         )}
+         {...props}
+diff --git a/src/components/Button/Button.stories.tsx b/src/components/Button/Button.stories.tsx
+index 24ea549..6e29612 100644
+--- a/src/components/Button/Button.stories.tsx
++++ b/src/components/Button/Button.stories.tsx
+@@ -69,7 +69,7 @@ export const AllVariants: Story = {
+ export const AllSizes: Story = {
+   render: () => (
+     <div className="flex items-center gap-3 p-4">
+-      <Button variant={ButtonVariant.primary} size={ButtonSize.default}>
++      <Button variant={ButtonVariant.primary} size={ButtonSize.standard}>
+         Default
+       </Button>
+       <Button variant={ButtonVariant.primary} size={ButtonSize.sm}>
+diff --git a/src/components/Button/Button.tsx b/src/components/Button/Button.tsx
+index 0132bcb..a681ddf 100644
+--- a/src/components/Button/Button.tsx
++++ b/src/components/Button/Button.tsx
+@@ -82,7 +82,7 @@ const buttonVariants = cva(
+         ],
+       },
+       size: {
+-        default: "h-button px-3",
++        standard: "h-button px-3",
+         sm: "h-button-sm px-3",
+         icon: "size-button p-0",
+         "icon-sm": "size-button-sm p-0",
+@@ -99,7 +99,7 @@ const buttonVariants = cva(
+     ],
+     defaultVariants: {
+       variant: "secondary",
+-      size: "default",
++      size: "standard",
+     },
+   },
+ );
+diff --git a/src/components/Button/constants.ts b/src/components/Button/constants.ts
+index ff5cd7a..4f73cea 100644
+--- a/src/components/Button/constants.ts
++++ b/src/components/Button/constants.ts
+@@ -16,7 +16,7 @@ export const ButtonVariant = {
+ export type ButtonVariant = (typeof ButtonVariant)[keyof typeof ButtonVariant];
+ 
+ export const ButtonSize = {
+-  default: "default",
++  standard: "standard",
+   sm: "sm",
+   icon: "icon",
+   iconSm: "icon-sm",
+diff --git a/src/components/CTAButton/CTAButton.stories.tsx b/src/components/CTAButton/CTAButton.stories.tsx
+index d577541..3978054 100644
+--- a/src/components/CTAButton/CTAButton.stories.tsx
++++ b/src/components/CTAButton/CTAButton.stories.tsx
+@@ -89,7 +89,7 @@ export const AllVariants: Story = {
+     icon: downloadIcon,
+   },
+   render: () => (
+-    <div className="flex flex-col items-start gap-md">
++    <div className="flex flex-col items-start gap-lg">
+       <CTAButton
+         text="Primary standard"
+         href="#"
+diff --git a/src/components/CTAButton/CTAButton.tsx b/src/components/CTAButton/CTAButton.tsx
+index 31b7b36..a20d865 100644
+--- a/src/components/CTAButton/CTAButton.tsx
++++ b/src/components/CTAButton/CTAButton.tsx
+@@ -14,14 +14,14 @@ import { CTAButtonSize, CTAButtonVariant } from "./constants";
+ 
+ const SIZES = {
+   standard: {
+-    pill: "p-md gap-rg",
+-    content: "gap-xxl ds-min-w-cta-content-standard pl-rg",
++    pill: "p-lg gap-md",
++    content: "gap-xxxl ds-min-w-cta-content-standard pl-md",
+     chip: "ds-size-cta-chip-standard",
+     fontSize: "var(--ui-text-cta-standard)",
+   },
+   big: {
+-    pill: "p-rg gap-md ds-min-w-cta-pill-big",
+-    content: "ds-gap-cta-content-big ds-min-w-cta-content-big pl-md",
++    pill: "p-md gap-lg ds-min-w-cta-pill-big",
++    content: "ds-gap-cta-content-big ds-min-w-cta-content-big pl-lg",
+     chip: "ds-size-cta-chip-big",
+     fontSize: "var(--ui-text-cta-big)",
+   },
+@@ -89,7 +89,7 @@ const CTAButton = forwardRef<HTMLAnchorElement, CTAButtonProps>(
+ 
+           <span
+             className={cn(
+-              "flex shrink-0 items-center justify-center gap-xs px-rg",
++              "flex shrink-0 items-center justify-center gap-sm px-md",
+               "rounded-full",
+               s.chip,
+               isPrimary ? "bg-secondary" : "bg-primary",
+@@ -104,7 +104,7 @@ const CTAButton = forwardRef<HTMLAnchorElement, CTAButtonProps>(
+     );
+ 
+     const rootClassName = cn(
+-      "group inline-flex items-center justify-center p-xs",
++      "group inline-flex items-center justify-center p-sm",
+       "rounded-full",
+       "ds-focus-visible-ring",
+       isPrimary && "border-2 border-solid border-border-cta",
+diff --git a/src/components/Calendar/Calendar.stories.tsx b/src/components/Calendar/Calendar.stories.tsx
+index 54afff4..2713129 100644
+--- a/src/components/Calendar/Calendar.stories.tsx
++++ b/src/components/Calendar/Calendar.stories.tsx
+@@ -127,7 +127,7 @@ export const EdgeMonths: Story = {
+       new Date(2100, 1, 1),
+     ];
+     return (
+-      <div className="flex flex-wrap gap-md">
++      <div className="flex flex-wrap gap-lg">
+         {months.map((month) => (
+           <Calendar
+             key={month.toISOString()}
+diff --git a/src/components/Calendar/Calendar.tsx b/src/components/Calendar/Calendar.tsx
+index 45f42ed..1bb6913 100644
+--- a/src/components/Calendar/Calendar.tsx
++++ b/src/components/Calendar/Calendar.tsx
+@@ -328,7 +328,7 @@ function Calendar(props: CalendarProps) {
+       }}
+     >
+       {children}
+-      <div className="flex flex-col gap-sm p-rg ds-calendar-panel-w">
++      <div className="flex flex-col gap-rg p-md ds-calendar-panel-w">
+         <CalendarCaption
+           viewMonth={viewMonth}
+           value={anchorDate}
+diff --git a/src/components/Calendar/CalendarCaption.tsx b/src/components/Calendar/CalendarCaption.tsx
+index ef606d5..a9768da 100644
+--- a/src/components/Calendar/CalendarCaption.tsx
++++ b/src/components/Calendar/CalendarCaption.tsx
+@@ -55,8 +55,8 @@ function CalendarCaption({
+     viewInBounds && isYearOutOfBounds(addMonths(viewMonth, 1), yearBounds);
+ 
+   return (
+-    <div className={cn("flex items-center justify-between gap-xs", className)}>
+-      <div className="flex items-center gap-xs">
++    <div className={cn("flex items-center justify-between gap-sm", className)}>
++      <div className="flex items-center gap-sm">
+         <DropdownMenu>
+           <DropdownMenuTrigger asChild>
+             <TextDropdownTrigger
+diff --git a/src/components/Calendar/CalendarGrid.tsx b/src/components/Calendar/CalendarGrid.tsx
+index a342465..df05948 100644
+--- a/src/components/Calendar/CalendarGrid.tsx
++++ b/src/components/Calendar/CalendarGrid.tsx
+@@ -116,7 +116,7 @@ const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
+             <div
+               key={name}
+               role="columnheader"
+-              className="flex items-center justify-center pb-xs"
++              className="flex items-center justify-center pb-sm"
+             >
+               <LabelText className="text-ghost-fg">{name}</LabelText>
+             </div>
+diff --git a/src/components/Calendar/CalendarPresetsPanel.tsx b/src/components/Calendar/CalendarPresetsPanel.tsx
+index a20225c..5711d4c 100644
+--- a/src/components/Calendar/CalendarPresetsPanel.tsx
++++ b/src/components/Calendar/CalendarPresetsPanel.tsx
+@@ -17,7 +17,7 @@ const CalendarPresetsPanel = forwardRef<HTMLDivElement, CalendarPresetsPanelProp
+     <div
+       ref={ref}
+       className={cn(
+-        "flex flex-col gap-xxs p-xs",
++        "flex flex-col gap-xxs p-sm",
+         "ds-calendar-presets-w",
+         "border-r border-solid border-border-primary",
+         className,
+diff --git a/src/components/CopyButton/CopyButton.stories.tsx b/src/components/CopyButton/CopyButton.stories.tsx
+index 275950e..e153c2d 100644
+--- a/src/components/CopyButton/CopyButton.stories.tsx
++++ b/src/components/CopyButton/CopyButton.stories.tsx
+@@ -15,6 +15,7 @@ const meta = {
+     },
+     value: { control: "text" },
+   },
++  args: { value: "npm install @dooph-software/design-system" },
+ } satisfies Meta<typeof CopyButton>;
+ 
+ export default meta;
+@@ -27,11 +28,11 @@ type Story = StoryObj<typeof meta>;
+  * button is clicked again before the revert fires — the timer resets.
+  */
+ export const Ghost: Story = {
+-  args: { variant: CopyButtonVariant.ghost, value: "npm install @dooph-software/design-system" },
++  args: { variant: CopyButtonVariant.ghost },
+ };
+ 
+ export const Secondary: Story = {
+-  args: { variant: CopyButtonVariant.secondary, value: "npm install @dooph-software/design-system" },
++  args: { variant: CopyButtonVariant.secondary },
+ };
+ 
+ export const AllVariants: Story = {
+diff --git a/src/components/CopyButton/CopyButton.tsx b/src/components/CopyButton/CopyButton.tsx
+index c6e22aa..345b3c2 100644
+--- a/src/components/CopyButton/CopyButton.tsx
++++ b/src/components/CopyButton/CopyButton.tsx
+@@ -16,10 +16,7 @@ import { CopyButtonVariant } from "./constants";
+ const REVERT_MS = 2000;
+ 
+ export interface CopyButtonProps
+-  extends Omit<
+-    ComponentPropsWithoutRef<typeof Button>,
+-    "variant" | "size" | "children" | "asChild"
+-  > {
++  extends Omit<ComponentPropsWithoutRef<"button">, "children"> {
+   /** Text written to the clipboard. */
+   value: string;
+   variant?: CopyButtonVariant;
+@@ -49,7 +46,7 @@ const CopyButton = forwardRef<HTMLElement, CopyButtonProps>(
+ 
+     const handleClick = useCallback(
+       (e: React.MouseEvent<HTMLButtonElement>) => {
+-        onClick?.(e as never);
++        onClick?.(e);
+         void navigator.clipboard
+           .writeText(value)
+           .then(() => {
+diff --git a/src/components/DatePicker/DatePicker.stories.tsx b/src/components/DatePicker/DatePicker.stories.tsx
+index 20b5755..11b43c0 100644
+--- a/src/components/DatePicker/DatePicker.stories.tsx
++++ b/src/components/DatePicker/DatePicker.stories.tsx
+@@ -116,7 +116,7 @@ export const CrossingAYearBoundary: Story = {
+ 
+ export const DisabledTrigger: Story = {
+   render: () => (
+-    <div className="flex flex-col gap-sm">
++    <div className="flex flex-col gap-rg">
+       <DatePicker
+         mode={DatePickerMode.singleDay}
+         value={new Date(2026, 4, 14)}
+diff --git a/src/components/DropdownTrigger/DropdownTrigger.stories.tsx b/src/components/DropdownTrigger/DropdownTrigger.stories.tsx
+index ae4d45b..c778811 100644
+--- a/src/components/DropdownTrigger/DropdownTrigger.stories.tsx
++++ b/src/components/DropdownTrigger/DropdownTrigger.stories.tsx
+@@ -75,7 +75,7 @@ export const TypeableFocused: Story = {
+ /** Figma Typeable Dropdown Trigger (38:410) — Placeholder / Single / Multi / Disabled. */
+ export const TypeableStates: Story = {
+   render: () => (
+-    <div className="flex flex-col gap-sm">
++    <div className="flex flex-col gap-rg">
+       <TypeableDropdownTrigger placeholder="Users..." data-testid="tt-placeholder" />
+       <TypeableDropdownTrigger placeholder="Users..." displayValue="jacesimons14" data-testid="tt-single" />
+       <TypeableDropdownTrigger placeholder="Users..." displayValue="2 Selected" data-testid="tt-multi" />
+diff --git a/src/components/DropdownTrigger/DropdownTrigger.tsx b/src/components/DropdownTrigger/DropdownTrigger.tsx
+index e4c4717..7e276e8 100644
+--- a/src/components/DropdownTrigger/DropdownTrigger.tsx
++++ b/src/components/DropdownTrigger/DropdownTrigger.tsx
+@@ -42,7 +42,7 @@ const DropdownTriggerContent = forwardRef<
+   HTMLDivElement,
+   DropdownTriggerContentProps
+ >(({ className, ...props }, ref) => (
+-  <div ref={ref} className={cn("flex flex-row gap-xs", className)} {...props} />
++  <div ref={ref} className={cn("flex flex-row gap-sm", className)} {...props} />
+ ));
+ DropdownTriggerContent.displayName = "DropdownTriggerContent";
+ 
+@@ -55,10 +55,10 @@ const DropdownTriggerBase = forwardRef<
+     <Comp
+       ref={ref as ForwardedRef<HTMLElement>}
+       className={cn(
+-        "inline-flex h-button items-center justify-center ds-gap-ui-xs",
++        "inline-flex h-button items-center justify-center ds-gap-ui-sm",
+         "min-w-40 rounded-tight border border-solid border-border-primary",
+         "bg-secondary text-secondary-fg",
+-        "ds-dropdown-caret-host ds-pl-ui-rg",
++        "ds-dropdown-caret-host ds-pl-ui-md",
+         "text-style-button cursor-pointer select-none",
+         "transition-all duration-150 ease-out",
+         "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-secondary",
+@@ -190,9 +190,9 @@ const TypeableDropdownTrigger = forwardRef<
+       <div
+         ref={ref}
+         className={cn(
+-          "inline-flex h-button items-center ds-gap-ui-xs",
++          "inline-flex h-button items-center ds-gap-ui-sm",
+           "min-w-40 rounded-tight border border-solid border-border-primary",
+-          "bg-secondary ds-dropdown-caret-host ds-pl-ui-rg",
++          "bg-secondary ds-dropdown-caret-host ds-pl-ui-md",
+           "transition-all duration-150 ease-out",
+           disabled
+             ? "cursor-not-allowed bg-secondary-disabled border-secondary-border-disabled"
+@@ -305,7 +305,7 @@ const TextDropdownTriggerBase = forwardRef<
+     {
+       className,
+       children,
+-      size = TextDropdownSize.default,
++      size = TextDropdownSize.standard,
+       asChild = false,
+       ...props
+     },
+@@ -316,12 +316,12 @@ const TextDropdownTriggerBase = forwardRef<
+       <Comp
+         ref={ref as ForwardedRef<HTMLElement>}
+         className={cn(
+-          "inline-flex items-center ds-gap-ui-xs",
++          "inline-flex items-center ds-gap-ui-sm",
+           "rounded-tight border border-transparent bg-transparent",
+           "cursor-pointer select-none transition-all duration-150 ease-out",
+           "ds-focus-visible-ring",
+           "ds-disabled-state",
+-          size === TextDropdownSize.default &&
++          size === TextDropdownSize.standard &&
+             "h-[30px] text-style-button text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+           size === TextDropdownSize.sm &&
+             "text-style-label text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+diff --git a/src/components/DropdownTrigger/constants.ts b/src/components/DropdownTrigger/constants.ts
+index 8dbaf7f..160bebd 100644
+--- a/src/components/DropdownTrigger/constants.ts
++++ b/src/components/DropdownTrigger/constants.ts
+@@ -6,7 +6,7 @@
+  * Usage: <TextDropdownTrigger size={TextDropdownSize.sm} />
+  */
+ export const TextDropdownSize = {
+-  default: "default",
++  standard: "standard",
+   sm: "sm",
+ } as const;
+ export type TextDropdownSize =
+diff --git a/src/components/HotkeyIndicator/HotkeyIndicator.tsx b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+index 356822a..980c9b1 100644
+--- a/src/components/HotkeyIndicator/HotkeyIndicator.tsx
++++ b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+@@ -17,7 +17,7 @@ function HotkeyIndicator({ keys, pressed = false, className, ...props }: HotkeyI
+             'rounded-tight border border-border-primary',
+             'text-style-label text-ghost-fg',
+             'transition-colors duration-100',
+-            'ds-px-ui-xs ds-py-ui-xxs',
++            'ds-px-ui-sm ds-py-ui-xxs',
+             keys.length === 1 && 'min-w-[23px] min-h-[23px]',
+             pressed
+               ? 'bg-ghost-active border-border-primary'
+diff --git a/src/components/Input/Input.tsx b/src/components/Input/Input.tsx
+index 882ec36..d436748 100644
+--- a/src/components/Input/Input.tsx
++++ b/src/components/Input/Input.tsx
+@@ -118,7 +118,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+           {...fieldProps}
+           className={cn(
+             "flex h-button w-full rounded-tight border border-solid border-border-primary bg-secondary",
+-            "ds-pl-ui-rg ds-pr-ui-sm",
++            "ds-pl-ui-md ds-pr-ui-rg",
+             "text-style-button text-text placeholder:text-text-tertiary",
+             "transition-all duration-100 ds-focus-ring-on-focus",
+             "hover:border-input-border-hover hover:shadow-button-secondary",
+@@ -157,9 +157,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+           "h-button items-center rounded-tight border border-solid border-border-primary bg-secondary",
+           "transition-all duration-100 ds-focus-within-ring",
+           isNumber
+-            ? "inline-flex min-w-button justify-center ds-pl-ui-rg ds-pr-ui-rg"
+-            : "flex w-full ds-pl-ui-rg ds-pr-ui-sm",
+-          hasIcon && (isNumber ? "gap-xxs" : "gap-xs"),
++            ? "inline-flex min-w-button justify-center ds-pl-ui-md ds-pr-ui-md"
++            : "flex w-full ds-pl-ui-md ds-pr-ui-rg",
++          hasIcon && (isNumber ? "gap-xxs" : "gap-sm"),
+           disabled
+             ? "cursor-not-allowed bg-secondary-disabled border-secondary-border-disabled"
+             : [
+diff --git a/src/components/Menu/DropdownMenu.stories.tsx b/src/components/Menu/DropdownMenu.stories.tsx
+index 23b6bc6..b47b25b 100644
+--- a/src/components/Menu/DropdownMenu.stories.tsx
++++ b/src/components/Menu/DropdownMenu.stories.tsx
+@@ -334,7 +334,7 @@ export const ItemVariants: Story = {
+           <DropdownMenuItem variant={DropdownMenuItemVariant.danger}><span className="flex-1">Logout</span><LogOutIcon /></DropdownMenuItem>
+           <DropdownMenuItem>
+             <div className="flex flex-1 items-center justify-between">
+-              <span className="flex items-center gap-sm"><SettingsGearIcon />Edit</span>
++              <span className="flex items-center gap-rg"><SettingsGearIcon />Edit</span>
+               <ArrowRightIcon />
+             </div>
+           </DropdownMenuItem>
+diff --git a/src/components/Menu/DropdownMenu.tsx b/src/components/Menu/DropdownMenu.tsx
+index 4190b4c..b5dee37 100644
+--- a/src/components/Menu/DropdownMenu.tsx
++++ b/src/components/Menu/DropdownMenu.tsx
+@@ -158,8 +158,8 @@ const DropdownMenuContent = forwardRef<
+             } as ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>)
+           : {})}
+         className={cn(
+-          "z-50 flex flex-col gap-xs overflow-hidden rounded-normal border border-solid border-border-popovers bg-modal-surface",
+-          "ds-py-ui-xs",
++          "z-50 flex flex-col gap-sm overflow-hidden rounded-normal border border-solid border-border-popovers bg-modal-surface",
++          "ds-py-ui-sm",
+           "shadow-menu",
+           "ds-radix-dropdown-content-origin",
+           // Items carry the 160px floor and the panel hugs them; matching the
+@@ -194,7 +194,7 @@ DropdownMenuContent.displayName = "DropdownMenuContent";
+  * presets rail is 144px wide. Internal: not re-exported from src/index.ts.
+  */
+ export const menuItemClassName =
+-  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-sm rounded-tight px-xs ds-radix-data-disabled text-style-body text-ghost-fg-active outline-none transition-colors duration-100 hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
++  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-rg rounded-tight px-sm ds-radix-data-disabled text-style-body text-ghost-fg-active outline-none transition-colors duration-100 hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
+ 
+ /** Dropdown items also hold the menu's 160px floor; sections and the panel hug them. */
+ const itemBase = cn(menuItemClassName, "ds-min-w-menu");
+@@ -237,7 +237,7 @@ const DropdownMenuPlainItem = forwardRef<
+   <div
+     ref={ref}
+     className={cn(
+-      "flex min-h-button w-full items-center gap-sm rounded-tight pl-xs ds-min-w-menu",
++      "flex min-h-button w-full items-center gap-rg rounded-tight pl-sm ds-min-w-menu",
+       "text-style-body text-ghost-fg-active",
+       className,
+     )}
+@@ -265,7 +265,7 @@ const DropdownMenuRadioSelectItem = forwardRef<
+     )}
+     {...props}
+   >
+-    <span className="flex flex-1 items-center gap-sm">{children}</span>
++    <span className="flex flex-1 items-center gap-rg">{children}</span>
+     <DropdownMenuPrimitive.ItemIndicator className="flex shrink-0">
+       <CheckIcon />
+     </DropdownMenuPrimitive.ItemIndicator>
+@@ -323,7 +323,7 @@ const DropdownMenuMultiSelectItem = forwardRef<
+         aria-hidden
+         className="pointer-events-none ml-xxxs data-disabled:opacity-100!"
+       />
+-      <span className="flex flex-1 items-center gap-sm">{children}</span>
++      <span className="flex flex-1 items-center gap-rg">{children}</span>
+     </DropdownMenuPrimitive.CheckboxItem>
+   );
+ });
+@@ -336,7 +336,7 @@ const DropdownMenuLabel = forwardRef<
+   <DropdownMenuPrimitive.Label
+     ref={ref}
+     className={cn(
+-      "flex h-[30px] items-center px-xs",
++      "flex h-[30px] items-center px-sm",
+       "text-style-label text-text-secondary",
+       className,
+     )}
+@@ -365,10 +365,10 @@ export interface DropdownMenuSegmentProps extends HTMLAttributes<HTMLDivElement>
+ /** Figma Menu Segment — place directly in DropdownMenuContent, between sections. */
+ const DropdownMenuSegment = forwardRef<HTMLDivElement, DropdownMenuSegmentProps>(
+   ({ className, variant = DropdownMenuSegmentVariant.divider, children, ...props }, ref) => (
+-    <div ref={ref} className={cn("flex w-full flex-col gap-xs", className)} {...props}>
++    <div ref={ref} className={cn("flex w-full flex-col gap-sm", className)} {...props}>
+       <DropdownMenuSeparator />
+       {variant === DropdownMenuSegmentVariant.labeled ? (
+-        <div className="flex ds-px-ui-xs">
++        <div className="flex ds-px-ui-sm">
+           <DropdownMenuLabel>{children}</DropdownMenuLabel>
+         </div>
+       ) : null}
+@@ -391,7 +391,7 @@ const DropdownMenuSection = forwardRef<HTMLDivElement, DropdownMenuSectionProps>
+   ({ className, width, style, ...props }, ref) => (
+     <div
+       ref={ref}
+-      className={cn("flex flex-col ds-px-ui-xs", className)}
++      className={cn("flex flex-col ds-px-ui-sm", className)}
+       style={width === undefined ? style : { ...style, width }}
+       {...props}
+     />
+diff --git a/src/components/Menu/DropdownMenuSearch.tsx b/src/components/Menu/DropdownMenuSearch.tsx
+index 76c5b34..50763d4 100644
+--- a/src/components/Menu/DropdownMenuSearch.tsx
++++ b/src/components/Menu/DropdownMenuSearch.tsx
+@@ -51,8 +51,8 @@ const DropdownMenuSearch = forwardRef<HTMLInputElement, DropdownMenuSearchProps>
+     return (
+       <div
+         className={cn(
+-          "flex ds-min-w-menu-complex items-center gap-xs",
+-          "ds-px-ui-sm ds-py-ui-xxs",
++          "flex ds-min-w-menu-complex items-center gap-sm",
++          "ds-px-ui-rg ds-py-ui-xxs",
+           className,
+         )}
+       >
+diff --git a/src/components/OutlineButton/OutlineButton.tsx b/src/components/OutlineButton/OutlineButton.tsx
+index a453a57..7f7274f 100644
+--- a/src/components/OutlineButton/OutlineButton.tsx
++++ b/src/components/OutlineButton/OutlineButton.tsx
+@@ -145,7 +145,7 @@ const OutlineButtonBase = forwardRef<
+         className={cn(
+           "inline-flex flex-col items-center justify-center",
+           "border border-solid border-border-primary rounded-[28px]",
+-          "ds-p-ui-xs",
++          "ds-p-ui-sm",
+           inverseTheme && "border-primary",
+           className,
+         )}
+diff --git a/src/components/OutlineSection/OutlineSection.stories.tsx b/src/components/OutlineSection/OutlineSection.stories.tsx
+index 1ec7c14..3421604 100644
+--- a/src/components/OutlineSection/OutlineSection.stories.tsx
++++ b/src/components/OutlineSection/OutlineSection.stories.tsx
+@@ -32,10 +32,10 @@ export const Default: Story = {
+ export const Card: Story = {
+   render: () => (
+     <OutlineSection>
+-      <div className="flex w-80 flex-col gap-md">
+-        <div className="flex items-start justify-between gap-sm">
+-          <div className="flex items-center gap-sm">
+-            <Avatar size={AvatarSize.small}>
++      <div className="flex w-80 flex-col gap-lg">
++        <div className="flex items-start justify-between gap-rg">
++          <div className="flex items-center gap-rg">
++            <Avatar size={AvatarSize.sm}>
+               <OrganizationIcon />
+             </Avatar>
+             <div className="flex flex-col">
+@@ -53,8 +53,8 @@ export const Card: Story = {
+           Billing is on track for this cycle. Two seats are still unassigned.
+         </BodyText>
+ 
+-        <div className="flex flex-col gap-xs">
+-          <div className="flex items-center justify-between gap-sm">
++        <div className="flex flex-col gap-sm">
++          <div className="flex items-center justify-between gap-rg">
+             <LabelText>Seats used</LabelText>
+             <LabelText>18 / 24</LabelText>
+           </div>
+@@ -70,7 +70,7 @@ export const Card: Story = {
+           <SegmentedTabItem value="billing">Billing</SegmentedTabItem>
+         </SegmentedTabSelect>
+ 
+-        <div className="flex items-center justify-end gap-sm">
++        <div className="flex items-center justify-end gap-rg">
+           <Button variant={ButtonVariant.secondary} size={ButtonSize.sm}>
+             <PlusIcon />
+             Invite
+diff --git a/src/components/OutlineSection/OutlineSection.tsx b/src/components/OutlineSection/OutlineSection.tsx
+index 9539e2d..8e75e90 100644
+--- a/src/components/OutlineSection/OutlineSection.tsx
++++ b/src/components/OutlineSection/OutlineSection.tsx
+@@ -20,7 +20,7 @@ const OutlineSection = forwardRef<HTMLDivElement, OutlineSectionProps>(
+       className={cn(
+         'inline-flex flex-col items-center justify-center',
+         'border border-solid border-border-primary rounded-[28px]',
+-        'ds-p-ui-xs',
++        'ds-p-ui-sm',
+         className
+       )}
+       {...props}
+@@ -29,7 +29,7 @@ const OutlineSection = forwardRef<HTMLDivElement, OutlineSectionProps>(
+         className={cn(
+           'bg-secondary border border-solid border-border-primary',
+           'rounded-soft shadow-menu',
+-          'ds-p-ui-xs',
++          'ds-p-ui-sm',
+           'inline-flex items-center justify-center',
+         )}
+       >
+diff --git a/src/components/Popover/Popover.stories.tsx b/src/components/Popover/Popover.stories.tsx
+index 8a37785..fc52a0c 100644
+--- a/src/components/Popover/Popover.stories.tsx
++++ b/src/components/Popover/Popover.stories.tsx
+@@ -17,7 +17,7 @@ export const Default: Story = {
+       <PopoverTrigger asChild>
+         <Button variant={ButtonVariant.secondary}>Open popover</Button>
+       </PopoverTrigger>
+-      <PopoverContent className="p-md">
++      <PopoverContent className="p-lg">
+         <BodyText>Anchored panel content.</BodyText>
+       </PopoverContent>
+     </Popover>
+@@ -31,7 +31,7 @@ export const AlignedEnd: Story = {
+         <PopoverTrigger asChild>
+           <Button variant={ButtonVariant.secondary}>Aligned end</Button>
+         </PopoverTrigger>
+-        <PopoverContent align="end" className="p-md">
++        <PopoverContent align="end" className="p-lg">
+           <BodyText>Right-aligned to the trigger.</BodyText>
+         </PopoverContent>
+       </Popover>
+@@ -45,7 +45,7 @@ export const Inline: Story = {
+       <PopoverTrigger asChild>
+         <Button variant={ButtonVariant.secondary}>Not portalled</Button>
+       </PopoverTrigger>
+-      <PopoverContent portal={false} className="p-md">
++      <PopoverContent portal={false} className="p-lg">
+         <BodyText>Rendered in place rather than in a portal.</BodyText>
+       </PopoverContent>
+     </Popover>
+diff --git a/src/components/ProgressIndicator/waveGeometry.test.ts b/src/components/ProgressIndicator/waveGeometry.test.ts
+deleted file mode 100644
+index 02e3c8e..0000000
+--- a/src/components/ProgressIndicator/waveGeometry.test.ts
++++ /dev/null
+@@ -1,54 +0,0 @@
+-import assert from "node:assert/strict";
+-import test from "node:test";
+-// Node's built-in strip-types runner requires the source extension; the package
+-// compiler intentionally does not enable allowImportingTsExtensions.
+-// @ts-expect-error TS5097 -- required by the zero-dependency Node test command.
+-import * as waveGeometryModule from "./waveGeometry.ts";
+-
+-const { createMaterialWaveGeometry } = waveGeometryModule;
+-
+-test("rounds all nine Material lobes without passing through sharp star vertices", () => {
+-  const geometry = createMaterialWaveGeometry(48, 4);
+-
+-  assert.equal(geometry.waveCount, 9);
+-  assert.equal(geometry.outerRadius, 22);
+-  assert.ok(Math.abs(geometry.innerRadius - 14.52) < 0.000001);
+-  assert.equal(geometry.path.match(/\bC\b/g)?.length, 19);
+-  assert.equal(geometry.path.match(/\bL\b/g)?.length, 18);
+-  assert.match(geometry.path, /^M 24 2 C /);
+-  assert.match(geometry.path, / Z$/);
+-});
+-
+-test("keeps the rounded wave inside each supported spinner viewBox", () => {
+-  const sizes = [
+-    [16, 2],
+-    [22, 2.5],
+-    [32, 3],
+-    [40, 3],
+-  ] as const;
+-
+-  for (const [diameter, strokeWidth] of sizes) {
+-    const geometry = createMaterialWaveGeometry(diameter, strokeWidth);
+-    const coordinates = geometry.path.match(/-?\d+(?:\.\d+)?/g)?.map(Number) ?? [];
+-
+-    assert.ok(geometry.waveCount >= 5);
+-    assert.ok(coordinates.every((coordinate) => coordinate >= 0));
+-    assert.ok(coordinates.every((coordinate) => coordinate <= diameter));
+-  }
+-});
+-
+-test("omits the round-capped inactive track when progress is complete", () => {
+-  const getWavyTrackGeometry = (
+-    waveGeometryModule as unknown as Record<string, unknown>
+-  ).getWavyTrackGeometry;
+-  assert.equal(typeof getWavyTrackGeometry, "function");
+-  if (typeof getWavyTrackGeometry !== "function") return;
+-
+-  const circumference = 100;
+-
+-  assert.deepEqual(getWavyTrackGeometry(0, circumference, 4), {
+-    length: circumference,
+-    offset: 0,
+-  });
+-  assert.equal(getWavyTrackGeometry(1, circumference, 4), null);
+-});
+diff --git a/src/components/SearchBox/SearchBox.tsx b/src/components/SearchBox/SearchBox.tsx
+index 9e6a1f7..7ce1f9d 100644
+--- a/src/components/SearchBox/SearchBox.tsx
++++ b/src/components/SearchBox/SearchBox.tsx
+@@ -27,7 +27,7 @@ const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
+           'flex items-center gap-2',
+           'bg-secondary border border-solid border-border-primary',
+           'rounded-soft',
+-          'ds-pl-ui-md ds-pr-ui-rg ds-py-ui-rg',
++          'ds-pl-ui-lg ds-pr-ui-md ds-py-ui-md',
+           'ds-min-w-search-box',
+           'transition-all duration-100',
+           'hover:border-input-border-hover',
+diff --git a/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx b/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx
+index 753eab3..b254973 100644
+--- a/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx
++++ b/src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx
+@@ -28,7 +28,7 @@ const variants = [SegmentedVariant.primary, SegmentedVariant.ghost] as const;
+ /** Figma Tab Select (827:2784) — text sizes. */
+ export const TextSizes: Story = {
+   render: () => (
+-    <div className="flex flex-col gap-md">
++    <div className="flex flex-col gap-lg">
+       {variants.map((variant) =>
+         [SegmentedSize.container, SegmentedSize.standard].map((size) => (
+           <SegmentedTabSelect key={`${variant}-${size}`} defaultValue="funding" variant={variant} size={size} data-testid={`${variant}-${size}`}>
+@@ -45,7 +45,7 @@ export const TextSizes: Story = {
+ /** Icon sizes — containerIcon uses 28px micro icon items. */
+ export const IconSizes: Story = {
+   render: () => (
+-    <div className="flex flex-col gap-md">
++    <div className="flex flex-col gap-lg">
+       {variants.map((variant) =>
+         [SegmentedSize.containerIcon, SegmentedSize.icon].map((size) => (
+           <SegmentedTabSelect key={`${variant}-${size}`} defaultValue="table" variant={variant} size={size} data-testid={`${variant}-${size}`}>
+diff --git a/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx b/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
+index 48a9c7d..61a29a8 100644
+--- a/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
++++ b/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
+@@ -36,7 +36,7 @@ export interface SegmentedTabSelectProps
+ const ITEM_SIZE: Record<SegmentedSize, TabSize> = {
+   container: TabSize.micro,
+   'container-icon': TabSize.iconMicro,
+-  standard: TabSize.default,
++  standard: TabSize.standard,
+   icon: TabSize.icon,
+ };
+ 
+@@ -92,7 +92,7 @@ const SegmentedTabItem = forwardRef<
+     <TabsTrigger
+       ref={ref}
+       variant={variant ?? ctx.tabVariant ?? TabVariant.ghost}
+-      size={size ?? ctx.itemSize ?? TabSize.default}
++      size={size ?? ctx.itemSize ?? TabSize.standard}
+       {...props}
+     />
+   );
+diff --git a/src/components/Shapes/EightLeafCloverShape.tsx b/src/components/Shapes/EightLeafCloverShape.tsx
+new file mode 100644
+index 0000000..474882a
+--- /dev/null
++++ b/src/components/Shapes/EightLeafCloverShape.tsx
+@@ -0,0 +1,25 @@
++import BaseShape, { ShapeProps } from "./BaseShape";
++
++export const EIGHT_LEAF_CLOVER_SHAPE_PATH =
++  "M2.34639 12C1.35015 10.8096 0.75 9.27309 0.75 7.59575C0.75 3.81494 3.79914 0.75 7.56044 0.75C9.26275 0.75 10.8192 1.37783 12.0132 2.41569C13.2043 1.37783 14.7571 0.75 16.4555 0.75C20.208 0.75 23.25 3.81494 23.25 7.59575C23.25 9.27309 22.6512 10.8096 21.6574 12C22.6512 13.1904 23.25 14.7269 23.25 16.4042C23.25 20.1851 20.208 23.25 16.4555 23.25C14.7571 23.25 13.2043 22.6222 12.0132 21.5843C10.8192 22.6222 9.26275 23.25 7.56044 23.25C3.79914 23.25 0.75 20.1851 0.75 16.4042C0.75 14.7269 1.35015 13.1904 2.34639 12Z";
++
++export const EightLeafCloverShape = ({
++  size,
++  strokeColor,
++  fillColor = "currentColor",
++  strokeWeight,
++}: ShapeProps) => {
++  return (
++    <BaseShape
++      size={size}
++      strokeColor={strokeColor}
++      fillColor={fillColor}
++      strokeWeight={strokeWeight}
++    >
++      <path
++        d="M23.1438 11.9998C25.082 15.6123 23.6176 18.8828 19.8799 19.8796C18.8828 23.6176 15.6123 25.0816 11.9998 23.1438C8.38732 25.082 5.11684 23.6176 4.12003 19.8799C0.382357 18.8828 -1.08203 15.6123 0.856176 11.9998C-1.08203 8.38732 0.382357 5.11684 4.12003 4.12003C5.11684 0.382357 8.38732 -1.08203 11.9998 0.856176C15.6123 -1.08203 18.8828 0.382357 19.8796 4.12003C23.6176 5.11684 25.0816 8.38732 23.1438 11.9998Z"
++        fill={fillColor}
++      />
++    </BaseShape>
++  );
++};
+diff --git a/src/components/Shapes/PentagonShape.tsx b/src/components/Shapes/PentagonShape.tsx
+index 11641c4..ddd48db 100644
+--- a/src/components/Shapes/PentagonShape.tsx
++++ b/src/components/Shapes/PentagonShape.tsx
+@@ -16,10 +16,7 @@ export const PentagonShape = ({
+       fillColor={fillColor}
+       strokeWeight={strokeWeight}
+     >
+-      <path
+-        d={PENTAGON_SHAPE_PATH}
+-        fill="currentColor"
+-      />
++      <path d={PENTAGON_SHAPE_PATH} />
+     </BaseShape>
+   );
+ };
+diff --git a/src/components/Shapes/PuffShape.tsx b/src/components/Shapes/PuffShape.tsx
+index 29994eb..a917a7c 100644
+--- a/src/components/Shapes/PuffShape.tsx
++++ b/src/components/Shapes/PuffShape.tsx
+@@ -16,10 +16,7 @@ export const PuffShape = ({
+       fillColor={fillColor}
+       strokeWeight={strokeWeight}
+     >
+-      <path
+-        d={PUFF_SHAPE_PATH}
+-        fill="currentColor"
+-      />
++      <path d={PUFF_SHAPE_PATH} />
+     </BaseShape>
+   );
+ };
+diff --git a/src/components/Shapes/svgs/eightleafclover.svg b/src/components/Shapes/svgs/eightleafclover.svg
+new file mode 100644
+index 0000000..5b7419e
+--- /dev/null
++++ b/src/components/Shapes/svgs/eightleafclover.svg
+@@ -0,0 +1,3 @@
++<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
++<path d="M23.1438 11.9998C25.082 15.6123 23.6176 18.8828 19.8799 19.8796C18.8828 23.6176 15.6123 25.0816 11.9998 23.1438C8.38732 25.082 5.11684 23.6176 4.12003 19.8799C0.382357 18.8828 -1.08203 15.6123 0.856176 11.9998C-1.08203 8.38732 0.382357 5.11684 4.12003 4.12003C5.11684 0.382357 8.38732 -1.08203 11.9998 0.856176C15.6123 -1.08203 18.8828 0.382357 19.8796 4.12003C23.6176 5.11684 25.0816 8.38732 23.1438 11.9998Z" fill="#13C29F"/>
++</svg>
+diff --git a/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.stories.tsx b/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.stories.tsx
+index d261648..54ae759 100644
+--- a/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.stories.tsx
++++ b/src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.stories.tsx
+@@ -68,7 +68,7 @@ function SidebarToggle({
+  * outward direction is interpolated rather than branched on. */
+ export const Toggle: Story = {
+   render: () => (
+-    <div className="flex flex-col items-center gap-md p-4">
++    <div className="flex flex-col items-center gap-lg p-4">
+       <SidebarToggle />
+       <BodyText className="max-w-[42ch] text-center text-text-secondary">
+         Hover to pull the rail into a chevron pointing where the panel will go.
+diff --git a/src/components/Slider/Slider.tsx b/src/components/Slider/Slider.tsx
+index d3548ce..0a7fce4 100644
+--- a/src/components/Slider/Slider.tsx
++++ b/src/components/Slider/Slider.tsx
+@@ -306,7 +306,7 @@ const SliderBase = forwardRef<
+       <div
+         className={cn(
+           'relative flex w-full items-center',
+-          showSteps && 'px-xs',
++          showSteps && 'px-sm',
+           className,
+         )}
+       >
+@@ -336,7 +336,7 @@ const SliderBase = forwardRef<
+                 stepColor,
+                 paints.stepActive,
+               ),
+-              '--ds-slider-pad': showSteps ? 'var(--ui-spacing-xs)' : '0px',
++              '--ds-slider-pad': showSteps ? 'var(--ui-spacing-sm)' : '0px',
+             } as CSSProperties
+           }
+           className={cn(
+diff --git a/src/components/SplitButton/SplitButton.tsx b/src/components/SplitButton/SplitButton.tsx
+index c93934a..7625a53 100644
+--- a/src/components/SplitButton/SplitButton.tsx
++++ b/src/components/SplitButton/SplitButton.tsx
+@@ -16,7 +16,7 @@ const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
+       ref={ref}
+       className={cn(
+         "inline-flex h-button items-center",
+-        "ds-gap-ui-xs pl-4 pr-4",
++        "ds-gap-ui-sm pl-4 pr-4",
+         "rounded-l-tight rounded-r-none",
+         "border border-solid border-border-primary border-r-0",
+         "bg-secondary text-secondary-fg",
+diff --git a/src/components/Sticker/Sticker.stories.tsx b/src/components/Sticker/Sticker.stories.tsx
+index 39865de..dca68fe 100644
+--- a/src/components/Sticker/Sticker.stories.tsx
++++ b/src/components/Sticker/Sticker.stories.tsx
+@@ -126,7 +126,7 @@ export const Micro: Story = {
+ export const Sizes: Story = {
+   args: { children: "Milestones" },
+   render: () => (
+-    <div className="flex flex-col items-start gap-sm">
++    <div className="flex flex-col items-start gap-rg">
+       {([StickerSize.standard, StickerSize.micro] as const).map((size) => (
+         <Sticker key={size} variant={StickerVariant.prominent} size={size}>
+           <AIPlanIcon size={IconSize.md} />
+@@ -140,7 +140,7 @@ export const Sizes: Story = {
+ export const AllVariants: Story = {
+   args: { children: "Milestones" },
+   render: () => (
+-    <div className="flex flex-col items-start gap-sm">
++    <div className="flex flex-col items-start gap-rg">
+       <Sticker variant={StickerVariant.prominent}>
+         <AIPlanIcon size={IconSize.md} />
+         {label("Milestones")}
+diff --git a/src/components/Sticker/Sticker.tsx b/src/components/Sticker/Sticker.tsx
+index c520a06..fec10b0 100644
+--- a/src/components/Sticker/Sticker.tsx
++++ b/src/components/Sticker/Sticker.tsx
+@@ -6,8 +6,8 @@
+  *   wash. Both are already-resolved tokens (the wash is a color-mix at the
+  *   sticker opacity), so the component does not apply alpha a second time.
+  * - `size` is the shell. `standard` hugs its label. `micro` is a fixed
+- *   `--ui-height-tab-micro` chip with the mini radius. Paints do not change.
+- * - Children are the content. They are wrapped in a row with `gap-xs` so an
++ *   `--ui-height-button-micro` chip with the mini radius. Paints do not change.
++ * - Children are the content. They are wrapped in a row with `gap-sm` so an
+  *   icon and a text node sit beside each other without a wrapper at the call
+  *   site. The wrapper is layout, not an interactive element.
+  * - `custom` has no paints of its own. `color` (inline, so it beats class
+@@ -31,7 +31,7 @@ import { StickerSize, StickerVariant } from "./constants";
+ const stickerVariants = cva(
+   [
+     "inline-flex w-fit items-center overflow-clip",
+-    "px-sm text-style-button whitespace-nowrap",
++    "px-rg text-style-button whitespace-nowrap",
+   ],
+   {
+     variants: {
+@@ -45,7 +45,7 @@ const stickerVariants = cva(
+       },
+       size: {
+         standard: "rounded-tight py-sticker-y",
+-        micro: "h-tab-micro rounded-mini",
++        micro: "h-button-micro rounded-mini",
+       },
+     },
+     defaultVariants: {
+@@ -128,7 +128,7 @@ const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
+         }
+         {...props}
+       >
+-        <div className="flex flex-row items-center gap-xs">{children}</div>
++        <div className="flex flex-row items-center gap-sm">{children}</div>
+       </div>
+     );
+   },
+diff --git a/src/components/Sticker/constants.ts b/src/components/Sticker/constants.ts
+index 3f74033..16eb98a 100644
+--- a/src/components/Sticker/constants.ts
++++ b/src/components/Sticker/constants.ts
+@@ -33,7 +33,7 @@ export type StickerVariant = (typeof StickerVariant)[keyof typeof StickerVariant
+  * Usage: <Sticker size={StickerSize.micro} />
+  *
+  * `standard` hugs its content (6px vertical padding, tight radius).
+- * `micro` is a fixed `--ui-height-tab-micro` (28px) chip with `radius-mini`.
++ * `micro` is a fixed `--ui-height-button-micro` (28px) chip with `radius-mini`.
+  */
+ export const StickerSize = {
+   standard: "standard",
+diff --git a/src/components/Table/Table.tsx b/src/components/Table/Table.tsx
+index f9ddc65..5c2f71b 100644
+--- a/src/components/Table/Table.tsx
++++ b/src/components/Table/Table.tsx
+@@ -46,7 +46,7 @@ const TableHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+   ({ className, ...props }, ref) => (
+     <div
+       ref={ref}
+-      className={cn("grid border-b border-border-primary py-xs px-xxs", className)}
++      className={cn("grid border-b border-border-primary py-sm px-xxs", className)}
+       style={{ gridTemplateColumns: "var(--table-cols)" }}
+       {...props}
+     />
+@@ -78,7 +78,7 @@ const TableHeaderCell = forwardRef<HTMLDivElement, TableHeaderCellProps>(
+         >
+           <Button
+             variant={ButtonVariant.text}
+-            size={ButtonSize.default}
++            size={ButtonSize.standard}
+             className="w-full justify-start gap-1 text-text-primary"
+             onClick={onSort}
+           >
+@@ -92,7 +92,7 @@ const TableHeaderCell = forwardRef<HTMLDivElement, TableHeaderCellProps>(
+     return (
+       <div
+         ref={ref}
+-        className={cn("flex items-center px-rg py-xs", className)}
++        className={cn("flex items-center px-md py-sm", className)}
+         {...props}
+       >
+         {children}
+diff --git a/src/components/Tabs/Tabs.stories.tsx b/src/components/Tabs/Tabs.stories.tsx
+index 58c6fb0..460b8d7 100644
+--- a/src/components/Tabs/Tabs.stories.tsx
++++ b/src/components/Tabs/Tabs.stories.tsx
+@@ -107,10 +107,10 @@ export const AllVariants: Story = {
+ /** Figma Toggle Option (826:1723) — every size × variant, one selected. */
+ export const ToggleOptionSizes: Story = {
+   render: () => (
+-    <div className="flex flex-col gap-md">
++    <div className="flex flex-col gap-lg">
+       {([TabVariant.primary, TabVariant.ghost] as const).map((variant) => (
+-        <div key={variant} className="flex flex-col gap-sm">
+-          {([TabSize.default, TabSize.sm, TabSize.micro] as const).map((size) => (
++        <div key={variant} className="flex flex-col gap-rg">
++          {([TabSize.standard, TabSize.sm, TabSize.micro] as const).map((size) => (
+             <Tabs key={size} defaultValue="grid">
+               <TabsList>
+                 <TabsTrigger value="grid" variant={variant} size={size} data-testid={`${variant}-${size}`}>
+diff --git a/src/components/Tabs/constants.ts b/src/components/Tabs/constants.ts
+index 2659498..866ec31 100644
+--- a/src/components/Tabs/constants.ts
++++ b/src/components/Tabs/constants.ts
+@@ -6,9 +6,9 @@
+  * Usage: <TabsTrigger size={TabSize.icon} />
+  */
+ export const TabSize = {
+-  /** 38px — Figma `buttonSizes/buttonHeight`, `md` (16px) horizontal padding. */
+-  default: "default",
+-  /** 34px — Figma `buttonSizes/smallButtonHeight`, `rg` (12px) padding. */
++  /** 38px — Figma `buttonSizes/buttonHeight`, `lg` (16px) horizontal padding. */
++  standard: "standard",
++  /** 34px — Figma `buttonSizes/smallButtonHeight`, `md` (12px) padding. */
+   sm: "sm",
+   /** 28px compact item — Figma Toggle Option "Micro", radius-mini. */
+   micro: "micro",
+diff --git a/src/components/Text/BaseText.stories.tsx b/src/components/Text/BaseText.stories.tsx
+index 1cf545e..1fff96e 100644
+--- a/src/components/Text/BaseText.stories.tsx
++++ b/src/components/Text/BaseText.stories.tsx
+@@ -53,7 +53,7 @@ type Story = StoryObj<typeof meta>;
+ /* ── helpers ─────────────────────────────────────────────────────────── */
+ 
+ const Row = ({ label, children }: { label: string; children: ReactNode }) => (
+-  <div className="flex items-baseline gap-md border-b border-border-primary py-sm">
++  <div className="flex items-baseline gap-lg border-b border-border-primary py-rg">
+     <LabelText className="w-[14rem] shrink-0 text-text-tertiary">
+       {label}
+     </LabelText>
+@@ -70,12 +70,12 @@ const Section = ({
+   note?: string;
+   children: ReactNode;
+ }) => (
+-  <section className="flex flex-col gap-xs pb-xl">
++  <section className="flex flex-col gap-sm pb-xxl">
+     <HeadingText className="text-text">{title}</HeadingText>
+     {note ? (
+       <BodyText className="max-w-[48rem] text-text-secondary">{note}</BodyText>
+     ) : null}
+-    <div className="pt-xs">{children}</div>
++    <div className="pt-sm">{children}</div>
+   </section>
+ );
+ 
+diff --git a/src/components/Toast/Toast.stories.tsx b/src/components/Toast/Toast.stories.tsx
+index 4549e38..bb1b2f3 100644
+--- a/src/components/Toast/Toast.stories.tsx
++++ b/src/components/Toast/Toast.stories.tsx
+@@ -2,7 +2,7 @@ import { useState } from "react";
+ import type { Meta, StoryObj } from "@storybook/react";
+ import { Button, ButtonVariant } from "../Button";
+ import { ToastProvider, useToast } from "./Toast";
+-import { ToastTypes } from "./constants";
++import { ToastVariant } from "./constants";
+ 
+ const meta = {
+   title: "Overlays/Toast",
+@@ -18,7 +18,7 @@ function ToastDemo({
+   variant,
+ }: {
+   label: string;
+-  variant?: ToastTypes;
++  variant?: ToastVariant;
+ }) {
+   const { toast } = useToast();
+ 
+@@ -29,7 +29,7 @@ function ToastDemo({
+         toast({
+           title: label,
+           description:
+-            variant === ToastTypes.simple ? "dashboard.fig moved to trash" : undefined,
++            variant === ToastVariant.simple ? "dashboard.fig moved to trash" : undefined,
+           variant,
+         })
+       }
+@@ -42,7 +42,7 @@ function ToastDemo({
+ export const Standard: Story = {
+   render: () => (
+     <ToastProvider>
+-      <ToastDemo label="File deleted" variant={ToastTypes.simple} />
++      <ToastDemo label="File deleted" variant={ToastVariant.simple} />
+     </ToastProvider>
+   ),
+ };
+@@ -50,7 +50,7 @@ export const Standard: Story = {
+ export const Brand: Story = {
+   render: () => (
+     <ToastProvider>
+-      <ToastDemo label="Published" variant={ToastTypes.prominent} />
++      <ToastDemo label="Published" variant={ToastVariant.prominent} />
+     </ToastProvider>
+   ),
+ };
+@@ -58,7 +58,7 @@ export const Brand: Story = {
+ export const Error: Story = {
+   render: () => (
+     <ToastProvider>
+-      <ToastDemo label="Upload failed" variant={ToastTypes.danger} />
++      <ToastDemo label="Upload failed" variant={ToastVariant.danger} />
+     </ToastProvider>
+   ),
+ };
+@@ -74,7 +74,7 @@ export const Action: Story = {
+           onClick={() =>
+             toast({
+               title: "Export will be discarded. Continue?",
+-              variant: ToastTypes.complex,
++              variant: ToastVariant.complex,
+               action: {
+                 label: "Undo",
+                 onClick: () => undefined,
+@@ -140,15 +140,25 @@ export const AllVariants: Story = {
+   render: () => (
+     <ToastProvider>
+       <div className="flex flex-wrap gap-3">
+-        <ToastDemo label="Saved successfully" variant={ToastTypes.simple} />
+-        <ToastDemo label="Published" variant={ToastTypes.prominent} />
+-        <ToastDemo label="Upload failed" variant={ToastTypes.danger} />
++        <ToastDemo label="Saved successfully" variant={ToastVariant.simple} />
++        <ToastDemo label="Published" variant={ToastVariant.prominent} />
++        <ToastDemo label="Upload failed" variant={ToastVariant.danger} />
+         <ActionButton />
+       </div>
+     </ToastProvider>
+   ),
+ };
+ 
++/** `ToastProvider duration` sets the auto-dismiss delay for every toast it renders. */
++export const ProviderDuration: Story = {
++  name: "Provider duration (1s)",
++  render: () => (
++    <ToastProvider duration={1000}>
++      <ToastDemo label="Gone in a second" variant={ToastVariant.simple} />
++    </ToastProvider>
++  ),
++};
++
+ function ActionButton() {
+   const { toast } = useToast();
+ 
+@@ -158,7 +168,7 @@ function ActionButton() {
+       onClick={() =>
+         toast({
+           title: "Export will be discarded. Continue?",
+-          variant: ToastTypes.complex,
++          variant: ToastVariant.complex,
+           action: { label: "Undo", onClick: () => undefined },
+         })
+       }
+diff --git a/src/components/Toast/Toast.tsx b/src/components/Toast/Toast.tsx
+index a211cf0..5d25b53 100644
+--- a/src/components/Toast/Toast.tsx
++++ b/src/components/Toast/Toast.tsx
+@@ -18,14 +18,14 @@ import { ButtonSize, ButtonVariant, buttonVariants } from "../Button";
+ import { BaseText, TextVariant, type BaseTextProps } from "../Text";
+ import { CloseCancelIcon } from "../Icons";
+ 
+-// ToastTypes (+ its type) lives in ./constants (server-safe), re-exported via
++// ToastVariant (+ its type) lives in ./constants (server-safe), re-exported via
+ // index.ts; imported here for internal variant resolution.
+-import { ToastTypes } from "./constants";
++import { ToastVariant } from "./constants";
+ 
+ type ToastOptions = {
+   title?: string;
+   description?: string;
+-  variant?: ToastTypes;
++  variant?: ToastVariant;
+   duration?: number;
+   action?: {
+     label: string;
+@@ -38,7 +38,7 @@ type ToastOptions = {
+ type ToastItem = ToastOptions & {
+   id: string;
+   open: boolean;
+-  variant: ToastTypes;
++  variant: ToastVariant;
+ };
+ 
+ type ToastFn = (options: ToastOptions) => string;
+@@ -67,13 +67,13 @@ const toastRootVariants = cva(
+     variants: {
+       variant: {
+         simple:
+-          "ds-toast-width-simple flex-row items-center gap-xxl border border-solid border-border-popovers bg-modal-surface py-2 pl-4 pr-2 text-text",
++          "ds-toast-width-simple flex-row items-center gap-xxxl border border-solid border-border-popovers bg-modal-surface py-2 pl-4 pr-2 text-text",
+         prominent:
+-          "ds-toast-width-simple flex-row items-center gap-xxl border border-solid border-prominent bg-prominent py-2 pl-4 pr-2 text-prominent-fg",
++          "ds-toast-width-simple flex-row items-center gap-xxxl border border-solid border-prominent bg-prominent py-2 pl-4 pr-2 text-prominent-fg",
+         danger:
+-          "ds-toast-width-simple flex-row items-center gap-xxl bg-danger-secondary py-2 pl-4 pr-2 text-text",
++          "ds-toast-width-simple flex-row items-center gap-xxxl bg-danger-secondary py-2 pl-4 pr-2 text-text",
+         complex:
+-          "ds-toast-width-complex flex-col gap-md border border-solid border-border-popovers bg-modal-surface pb-3 pl-[14px] pr-3 pt-[14px] text-text",
++          "ds-toast-width-complex flex-col gap-lg border border-solid border-border-popovers bg-modal-surface pb-3 pl-[14px] pr-3 pt-[14px] text-text",
+       },
+     },
+     defaultVariants: {
+@@ -84,7 +84,7 @@ const toastRootVariants = cva(
+ 
+ export interface ToastRootProps
+   extends ComponentPropsWithoutRef<typeof ToastPrimitive.Root> {
+-  variant?: ToastTypes;
++  variant?: ToastVariant;
+ }
+ 
+ const ToastRoot = forwardRef<
+@@ -106,7 +106,7 @@ const ToastViewport = forwardRef<
+   <ToastPrimitive.Viewport
+     ref={ref}
+     className={cn(
+-      "ds-toast-viewport fixed bottom-md right-md z-60 m-0 flex list-none flex-col items-end gap-xs p-0 outline-none",
++      "ds-toast-viewport fixed bottom-lg right-lg z-60 m-0 flex list-none flex-col items-end gap-sm p-0 outline-none",
+       className,
+     )}
+     {...props}
+@@ -199,11 +199,18 @@ export interface ToastProviderProps extends ComponentPropsWithoutRef<
+ > {
+   children: ReactNode;
+   viewportProps?: ComponentPropsWithoutRef<typeof ToastPrimitive.Viewport>;
++  /**
++   * Auto-dismiss delay in ms for every toast this provider renders. A
++   * `toast({ duration })` overrides it for that toast; pass `Infinity` to keep
++   * one open. Default 4000.
++   */
++  duration?: number;
+ }
+ 
+ function ToastProvider({
+   children,
+   viewportProps,
++  duration = 4000,
+   ...props
+ }: ToastProviderProps) {
+   const [toasts, setToasts] = useState<ToastItem[]>([]);
+@@ -216,7 +223,7 @@ function ToastProvider({
+         ...options,
+         id,
+         open: true,
+-        variant: options.variant ?? ToastTypes.simple,
++        variant: options.variant ?? ToastVariant.simple,
+       },
+     ]);
+     return id;
+@@ -234,13 +241,17 @@ function ToastProvider({
+   const value = useMemo(() => ({ toast, dismiss }), [toast, dismiss]);
+ 
+   return (
+-    <ToastPrimitive.Provider swipeDirection="right" {...props}>
++    <ToastPrimitive.Provider
++      swipeDirection="right"
++      duration={duration}
++      {...props}
++    >
+       <ToastContext.Provider value={value}>{children}</ToastContext.Provider>
+       {toasts.map((item) => (
+         <ToastRoot
+           key={item.id}
+           open={item.open}
+-          duration={item.duration ?? 4000}
++          duration={item.duration}
+           variant={item.variant}
+           onOpenChange={(open) => {
+             if (!open) {
+@@ -250,7 +261,7 @@ function ToastProvider({
+             }
+           }}
+         >
+-          {item.variant === ToastTypes.complex ? (
++          {item.variant === ToastVariant.complex ? (
+             <>
+               <div className="flex w-full items-center justify-center pr-xxs">
+                 <ToastTitle className="min-w-0 flex-1 wrap-break-word text-text">
+@@ -283,7 +294,7 @@ function ToastProvider({
+                   <ToastTitle
+                     className={cn(
+                       "block wrap-break-word",
+-                      item.variant === ToastTypes.prominent
++                      item.variant === ToastVariant.prominent
+                         ? "text-prominent-fg"
+                         : "text-text",
+                     )}
+@@ -295,7 +306,7 @@ function ToastProvider({
+                   <ToastDescription
+                     className={cn(
+                       "block wrap-break-word",
+-                      item.variant === ToastTypes.prominent
++                      item.variant === ToastVariant.prominent
+                         ? "text-prominent-fg"
+                         : "text-text-secondary",
+                     )}
+diff --git a/src/components/Toast/constants.ts b/src/components/Toast/constants.ts
+index 4150911..f49d91a 100644
+--- a/src/components/Toast/constants.ts
++++ b/src/components/Toast/constants.ts
+@@ -1,10 +1,10 @@
+ // Server-safe constants — no client APIs, intentionally NO "use client" directive
+ // so these dot-accessible enums can be read from React Server Components.
+ 
+-export const ToastTypes = {
++export const ToastVariant = {
+   simple: "simple",
+   prominent: "prominent",
+   danger: "danger",
+   complex: "complex",
+ } as const;
+-export type ToastTypes = (typeof ToastTypes)[keyof typeof ToastTypes];
++export type ToastVariant = (typeof ToastVariant)[keyof typeof ToastVariant];
+diff --git a/src/components/Toast/index.ts b/src/components/Toast/index.ts
+index d7da741..ce3d18f 100644
+--- a/src/components/Toast/index.ts
++++ b/src/components/Toast/index.ts
+@@ -8,7 +8,7 @@ export {
+   ToastViewport,
+   useToast,
+ } from "./Toast";
+-export { ToastTypes } from "./constants";
++export { ToastVariant } from "./constants";
+ export type {
+   ToastDescriptionProps,
+   ToastProviderProps,
+diff --git a/src/components/Toggle/Toggle.stories.tsx b/src/components/Toggle/Toggle.stories.tsx
+index c948a40..e073b0a 100644
+--- a/src/components/Toggle/Toggle.stories.tsx
++++ b/src/components/Toggle/Toggle.stories.tsx
+@@ -29,9 +29,9 @@ const variants = [ToggleVariant.primary, ToggleVariant.ghost] as const;
+ /** Figma Toggle Switch (826:2149) — text sizes. */
+ export const TextSizes: Story = {
+   render: () => (
+-    <div className="flex flex-col gap-sm">
++    <div className="flex flex-col gap-rg">
+       {variants.map((variant) =>
+-        [ToggleSize.default, ToggleSize.sm].map((size) => (
++        [ToggleSize.standard, ToggleSize.sm].map((size) => (
+           <ToggleSwitch key={`${variant}-${size}`} defaultValue="off" variant={variant} size={size}>
+             <ToggleSwitchItem value="off" data-testid={`${variant}-${size}`}>Off</ToggleSwitchItem>
+             <ToggleSwitchItem value="on">On</ToggleSwitchItem>
+@@ -45,9 +45,9 @@ export const TextSizes: Story = {
+ /** Icon switches — `iconSm` is Figma "Icon Small": the 28px micro option. */
+ export const IconSizes: Story = {
+   render: () => (
+-    <div className="flex flex-col gap-sm">
++    <div className="flex flex-col gap-rg">
+       {variants.map((variant) =>
+-        [ToggleSize.icon, ToggleSize.iconSm].map((size) => (
++        [ToggleSize.icon, ToggleSize.iconMicro].map((size) => (
+           <ToggleSwitch key={`${variant}-${size}`} defaultValue="no" variant={variant} size={size}>
+             <ToggleSwitchItem value="no" aria-label="No" data-testid={`${variant}-${size}`}><CloseCancelIcon /></ToggleSwitchItem>
+             <ToggleSwitchItem value="yes" aria-label="Yes"><CheckIcon /></ToggleSwitchItem>
+@@ -77,7 +77,7 @@ export const Controlled: Story = {
+   render: function ControlledStory() {
+     const [range, setRange] = useState('14');
+     return (
+-      <div className="flex flex-col items-center gap-sm">
++      <div className="flex flex-col items-center gap-rg">
+         <ToggleSwitch value={range} onValueChange={setRange} variant={ToggleVariant.primary}>
+           <ToggleSwitchItem value="30" data-testid="ctl-30">30 Days</ToggleSwitchItem>
+           <ToggleSwitchItem value="14" data-testid="ctl-14">14 Days</ToggleSwitchItem>
+diff --git a/src/components/Toggle/Toggle.tsx b/src/components/Toggle/Toggle.tsx
+index a99a561..8e645bf 100644
+--- a/src/components/Toggle/Toggle.tsx
++++ b/src/components/Toggle/Toggle.tsx
+@@ -35,10 +35,10 @@ import { toggleOptionVariants, type ToggleOptionSize } from "./toggleOption";
+ 
+ /** Switch size → Toggle Option size. Figma's switch "Icon Small" is the micro icon option. */
+ const OPTION_SIZE: Record<ToggleSize, ToggleOptionSize> = {
+-  default: "default",
++  standard: "standard",
+   sm: "sm",
+   icon: "icon",
+-  "icon-sm": "icon-micro",
++  "icon-micro": "icon-micro",
+ };
+ 
+ const TogglePresentationContext = createContext<{
+@@ -120,7 +120,7 @@ const ToggleSwitchItem = forwardRef<
+ >(({ className, variant, size, ...props }, ref) => {
+   const presentation = useContext(TogglePresentationContext);
+   const resolvedVariant = variant ?? presentation.variant ?? ToggleVariant.primary;
+-  const resolvedSize = size ?? presentation.size ?? ToggleSize.default;
++  const resolvedSize = size ?? presentation.size ?? ToggleSize.standard;
+ 
+   return (
+     <ToggleGroup.Item
+diff --git a/src/components/Toggle/constants.ts b/src/components/Toggle/constants.ts
+index e9aca23..4ae20eb 100644
+--- a/src/components/Toggle/constants.ts
++++ b/src/components/Toggle/constants.ts
+@@ -3,7 +3,7 @@
+ 
+ /**
+  * Dot-accessible toggle (Figma Toggle Switch) variant and size constants.
+- * Usage: <ToggleSwitch variant={ToggleVariant.ghost} size={ToggleSize.iconSm} />
++ * Usage: <ToggleSwitch variant={ToggleVariant.ghost} size={ToggleSize.iconMicro} />
+  *
+  * primary    — selected option is filled primary
+  * ghost      — selected option is ghost-active
+@@ -26,9 +26,9 @@ export type ToggleVariant = (typeof ToggleVariant)[keyof typeof ToggleVariant];
+  * MICRO icon option (not the 34×34 one).
+  */
+ export const ToggleSize = {
+-  default: "default",
++  standard: "standard",
+   sm: "sm",
+   icon: "icon",
+-  iconSm: "icon-sm",
++  iconMicro: "icon-micro",
+ } as const;
+ export type ToggleSize = (typeof ToggleSize)[keyof typeof ToggleSize];
+diff --git a/src/components/Toggle/toggleOption.ts b/src/components/Toggle/toggleOption.ts
+index 4d40430..71f92d0 100644
+--- a/src/components/Toggle/toggleOption.ts
++++ b/src/components/Toggle/toggleOption.ts
+@@ -24,7 +24,7 @@ import { cva, type VariantProps } from "class-variance-authority";
+ 
+ export const toggleOptionVariants = cva(
+   [
+-    "inline-flex items-center justify-center gap-xs whitespace-nowrap",
++    "inline-flex items-center justify-center gap-sm whitespace-nowrap",
+     "border border-transparent",
+     "text-style-button text-text cursor-pointer select-none",
+     "transition-all duration-150 ease-out",
+@@ -47,24 +47,24 @@ export const toggleOptionVariants = cva(
+       },
+       size: {
+         /** 38px — Figma Standard. */
+-        default: "h-button rounded-tight px-sm",
++        standard: "h-button rounded-tight px-rg",
+         /** 34px — Figma Small. */
+-        sm: "h-button-sm rounded-tight px-sm",
++        sm: "h-button-sm rounded-tight px-rg",
+         /** 28px — Figma Micro, radius-mini. */
+-        micro: "h-tab-micro rounded-mini px-sm",
++        micro: "h-button-micro rounded-mini px-rg",
+         /** Follows the parent's height (nested segmented rows). */
+-        fill: "h-full rounded-tight px-sm",
++        fill: "h-full rounded-tight px-rg",
+         /** 38×38 icon-only. */
+         icon: "size-button p-0 rounded-tight",
+         /** 34×34 icon-only. */
+         "icon-sm": "size-button-sm p-0 rounded-tight",
+         /** 28×28 icon-only — Figma Micro icon. */
+-        "icon-micro": "size-tab-micro p-0 rounded-mini",
++        "icon-micro": "size-button-micro p-0 rounded-mini",
+       },
+     },
+     defaultVariants: {
+       variant: "ghost",
+-      size: "default",
++      size: "standard",
+     },
+   },
+ );
+diff --git a/src/components/Tooltip/Tooltip.stories.tsx b/src/components/Tooltip/Tooltip.stories.tsx
+index 04b0c56..ec82d0f 100644
+--- a/src/components/Tooltip/Tooltip.stories.tsx
++++ b/src/components/Tooltip/Tooltip.stories.tsx
+@@ -10,7 +10,7 @@ import {
+   TooltipTitle,
+   TooltipTrigger,
+ } from "./Tooltip";
+-import { TooltipTypes } from "./constants";
++import { TooltipVariant } from "./constants";
+ 
+ const meta = {
+   title: "Overlays/Tooltip",
+@@ -20,7 +20,7 @@ const meta = {
+   argTypes: {
+     variant: {
+       control: "select",
+-      options: Object.values(TooltipTypes),
++      options: Object.values(TooltipVariant),
+     },
+     themeInverse: { control: "boolean" },
+     side: {
+@@ -57,7 +57,7 @@ export const Rich: Story = {
+       <TooltipTrigger asChild>
+         <Button variant={ButtonVariant.ghost}>Hover me</Button>
+       </TooltipTrigger>
+-      <TooltipContent variant={TooltipTypes.rich}>
++      <TooltipContent variant={TooltipVariant.rich}>
+         <TooltipTitle>Command Palette</TooltipTitle>
+         <TooltipBody>Search across all actions and settings</TooltipBody>
+       </TooltipContent>
+@@ -73,7 +73,7 @@ export const Composable: Story = {
+           <SettingsGearIcon />
+         </Button>
+       </TooltipTrigger>
+-      <TooltipContent variant={TooltipTypes.complex}>
++      <TooltipContent variant={TooltipVariant.complex}>
+         <div className="flex items-center gap-3 p-3">
+           <SettingsGearIcon />
+           <div className="flex flex-col gap-1">
+diff --git a/src/components/Tooltip/Tooltip.tsx b/src/components/Tooltip/Tooltip.tsx
+index 913f1e2..73e8f9f 100644
+--- a/src/components/Tooltip/Tooltip.tsx
++++ b/src/components/Tooltip/Tooltip.tsx
+@@ -9,9 +9,9 @@ import {
+ import { cn } from "../../utils/cn";
+ import { BaseText, TextVariant, type BaseTextProps } from "../Text";
+ 
+-// TooltipTypes (+ its type) lives in ./constants (server-safe), re-exported via
++// TooltipVariant (+ its type) lives in ./constants (server-safe), re-exported via
+ // index.ts; imported here for internal variant resolution.
+-import { TooltipTypes } from "./constants";
++import { TooltipVariant } from "./constants";
+ 
+ const Tooltip = TooltipPrimitive.Root;
+ const TooltipTrigger = TooltipPrimitive.Trigger;
+@@ -31,7 +31,7 @@ const TooltipProvider = ({
+ export interface TooltipContentProps extends ComponentPropsWithoutRef<
+   typeof TooltipPrimitive.Content
+ > {
+-  variant?: TooltipTypes;
++  variant?: TooltipVariant;
+   themeInverse?: boolean;
+   portal?: boolean;
+   portalProps?: ComponentPropsWithoutRef<typeof TooltipPrimitive.Portal>;
+@@ -44,7 +44,7 @@ const TooltipContent = forwardRef<
+   (
+     {
+       className,
+-      variant = TooltipTypes.simple,
++      variant = TooltipVariant.simple,
+       themeInverse = true,
+       portal = true,
+       portalProps,
+@@ -64,11 +64,11 @@ const TooltipContent = forwardRef<
+           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-150",
+           "motion-reduce:data-[state=delayed-open]:duration-0 motion-reduce:data-[state=instant-open]:duration-0 motion-reduce:data-[state=closed]:duration-0",
+           tooltipThemeClass[themeInverse ? "inverse" : "matching"],
+-          variant === TooltipTypes.simple &&
+-            "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-md text-style-body",
+-          variant === TooltipTypes.rich &&
+-            "flex ds-width-tooltip-rich flex-col gap-xs rounded-tight border border-solid px-3 py-sm wrap-break-word",
+-          variant === TooltipTypes.complex &&
++          variant === TooltipVariant.simple &&
++            "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-lg text-style-body",
++          variant === TooltipVariant.rich &&
++            "flex ds-width-tooltip-rich flex-col gap-sm rounded-tight border border-solid px-3 py-rg wrap-break-word",
++          variant === TooltipVariant.complex &&
+             "ds-min-w-tooltip-complex rounded-normal border border-solid",
+           className,
+         )}
+diff --git a/src/components/Tooltip/constants.ts b/src/components/Tooltip/constants.ts
+index 912e338..124f299 100644
+--- a/src/components/Tooltip/constants.ts
++++ b/src/components/Tooltip/constants.ts
+@@ -1,9 +1,9 @@
+ // Server-safe constants — no client APIs, intentionally NO "use client" directive
+ // so these dot-accessible enums can be read from React Server Components.
+ 
+-export const TooltipTypes = {
++export const TooltipVariant = {
+   simple: "simple",
+   rich: "rich",
+   complex: "complex",
+ } as const;
+-export type TooltipTypes = (typeof TooltipTypes)[keyof typeof TooltipTypes];
++export type TooltipVariant = (typeof TooltipVariant)[keyof typeof TooltipVariant];
+diff --git a/src/components/Tooltip/index.ts b/src/components/Tooltip/index.ts
+index 60f6f51..f1defc8 100644
+--- a/src/components/Tooltip/index.ts
++++ b/src/components/Tooltip/index.ts
+@@ -6,7 +6,7 @@ export {
+   TooltipTitle,
+   TooltipTrigger,
+ } from "./Tooltip";
+-export { TooltipTypes } from "./constants";
++export { TooltipVariant } from "./constants";
+ export type {
+   TooltipBodyProps,
+   TooltipContentProps,
+diff --git a/src/components/VerificationCode/VerificationCode.stories.tsx b/src/components/VerificationCode/VerificationCode.stories.tsx
+index 091d05c..7c90429 100644
+--- a/src/components/VerificationCode/VerificationCode.stories.tsx
++++ b/src/components/VerificationCode/VerificationCode.stories.tsx
+@@ -40,7 +40,7 @@ export const Controlled: Story = {
+   render: () => {
+     const [value, setValue] = useState("");
+     return (
+-      <div className="flex flex-col items-start gap-md p-4">
++      <div className="flex flex-col items-start gap-lg p-4">
+         <VerificationCodeInput value={value} onChange={setValue} />
+         <LabelText className="text-text-secondary">
+           Value: {value || "(empty)"}
+@@ -56,7 +56,7 @@ export const Controlled: Story = {
+  * instead. Interactive entry is covered by the group stories above. */
+ export const SingleDigitStates: Story = {
+   render: () => (
+-    <div className="flex items-center gap-md p-4">
++    <div className="flex items-center gap-lg p-4">
+       <CodeDigitInput value="" readOnly aria-label="Empty" />
+       <CodeDigitInput value="1" readOnly aria-label="Filled" />
+       <CodeDigitInput value="1" readOnly hasError aria-label="Error" />
+@@ -83,7 +83,7 @@ export const PreRolledSection: Story = {
+       return () => window.clearTimeout(id);
+     }, []);
+     return (
+-      <div className="flex w-[360px] flex-col items-start gap-md p-6">
++      <div className="flex w-[360px] flex-col items-start gap-lg p-6">
+         <HeadingText>Enter verification code</HeadingText>
+         <BodyText className="text-text-secondary">
+           We sent a 6-digit code to your email. Enter it below to continue.
+diff --git a/src/components/VerificationCode/VerificationCodeInput.tsx b/src/components/VerificationCode/VerificationCodeInput.tsx
+index 91ff45e..6410dba 100644
+--- a/src/components/VerificationCode/VerificationCodeInput.tsx
++++ b/src/components/VerificationCode/VerificationCodeInput.tsx
+@@ -135,7 +135,7 @@ const VerificationCodeInput = forwardRef<
+         ref={ref}
+         role="group"
+         aria-label={ariaLabel}
+-        className={cn("flex items-center gap-xs", className)}
++        className={cn("flex items-center gap-sm", className)}
+         {...props}
+       >
+         {Array.from({ length }, (_, index) => (
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index baaab0d..97fad3a 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -252,15 +252,15 @@
+     gap: var(--ui-spacing-cta-content-big);
+   }
+ 
+-  .ds-px-ui-sm {
+-    padding-inline: var(--ui-spacing-sm);
++  .ds-px-ui-rg {
++    padding-inline: var(--ui-spacing-rg);
+   }
+ 
+   /* Toast sizing — fixed design widths capped to the available viewport. */
+   .ds-toast-viewport {
+     width: min(
+       var(--ui-width-toast-viewport),
+-      calc(100vw - (var(--ui-spacing-md) * 2))
++      calc(100vw - (var(--ui-spacing-lg) * 2))
+     );
+   }
+ 
+@@ -326,38 +326,38 @@
+   }
+ 
+   /* spacing — semantic names mirror token stems */
+-  .ds-gap-ui-xs {
+-    gap: var(--ui-spacing-xs);
++  .ds-gap-ui-sm {
++    gap: var(--ui-spacing-sm);
+   }
+-  .ds-p-ui-xs {
+-    padding: var(--ui-spacing-xs);
++  .ds-p-ui-sm {
++    padding: var(--ui-spacing-sm);
+   }
+-  .ds-px-ui-xs {
+-    padding-inline: var(--ui-spacing-xs);
++  .ds-px-ui-sm {
++    padding-inline: var(--ui-spacing-sm);
+   }
+-  .ds-py-ui-xs {
+-    padding-block: var(--ui-spacing-xs);
++  .ds-py-ui-sm {
++    padding-block: var(--ui-spacing-sm);
+   }
+   .ds-py-ui-xxs {
+     padding-block: var(--ui-spacing-xxs);
+   }
+-  .ds-py-ui-rg {
+-    padding-block: var(--ui-spacing-rg);
++  .ds-py-ui-md {
++    padding-block: var(--ui-spacing-md);
++  }
++  .ds-pl-ui-lg {
++    padding-left: var(--ui-spacing-lg);
+   }
+   .ds-pl-ui-md {
+     padding-left: var(--ui-spacing-md);
+   }
+-  .ds-pl-ui-rg {
+-    padding-left: var(--ui-spacing-rg);
++  .ds-pr-ui-md {
++    padding-right: var(--ui-spacing-md);
+   }
+   .ds-pr-ui-rg {
+     padding-right: var(--ui-spacing-rg);
+   }
+-  .ds-pr-ui-sm {
+-    padding-right: var(--ui-spacing-sm);
+-  }
+-  .ds-my-ui-xs {
+-    margin-block: var(--ui-spacing-xs);
++  .ds-my-ui-sm {
++    margin-block: var(--ui-spacing-sm);
+   }
+ 
+   /*
+@@ -563,7 +563,7 @@
+     color: inherit;
+   }
+   .ds-chat-prose :is(p, ul, ol, blockquote, pre, table) {
+-    margin-block: var(--ui-spacing-sm);
++    margin-block: var(--ui-spacing-rg);
+   }
+   .ds-chat-prose :is(strong, b) {
+     font-weight: var(--ui-weight-semibold);
+@@ -574,8 +574,8 @@
+   }
+   .ds-chat-prose :is(h1, h2, h3, h4, h5, h6) {
+     color: inherit;
+-    margin-top: var(--ui-spacing-rg);
+-    margin-bottom: var(--ui-spacing-xs);
++    margin-top: var(--ui-spacing-md);
++    margin-bottom: var(--ui-spacing-sm);
+   }
+   .ds-chat-prose h1 {
+     font-family: var(--ui-font-title);
+@@ -601,11 +601,11 @@
+   }
+   .ds-chat-prose ul {
+     list-style: disc outside;
+-    padding-left: var(--ui-spacing-rg);
++    padding-left: var(--ui-spacing-md);
+   }
+   .ds-chat-prose ol {
+     list-style: decimal outside;
+-    padding-left: var(--ui-spacing-rg);
++    padding-left: var(--ui-spacing-md);
+   }
+   .ds-chat-prose li {
+     margin-block: var(--ui-spacing-xxxs);
+@@ -624,14 +624,14 @@
+   }
+   .ds-chat-prose blockquote {
+     border-left: 2px solid var(--ui-color-border-primary);
+-    padding-left: var(--ui-spacing-sm);
++    padding-left: var(--ui-spacing-rg);
+     color: var(--ui-color-text-secondary);
+     font-style: normal;
+   }
+   .ds-chat-prose hr {
+     border: 0;
+     border-top: 1px solid var(--ui-color-border-primary);
+-    margin-block: var(--ui-spacing-md);
++    margin-block: var(--ui-spacing-lg);
+   }
+   .ds-chat-prose code {
+     font-family: var(--ui-font-mono);
+@@ -646,7 +646,7 @@
+     overflow-x: auto;
+     border-radius: var(--ui-radius-tight);
+     background-color: var(--ui-color-surface-secondary);
+-    padding: var(--ui-spacing-sm);
++    padding: var(--ui-spacing-rg);
+     box-shadow: var(--ui-shadow-button);
+   }
+   .ds-chat-prose pre code {
+@@ -659,7 +659,7 @@
+   }
+   .ds-chat-prose :is(td, th) {
+     border: 1px solid var(--ui-color-border-primary);
+-    padding: var(--ui-spacing-xxs) var(--ui-spacing-xs);
++    padding: var(--ui-spacing-xxs) var(--ui-spacing-sm);
+     text-align: left;
+   }
+   .ds-chat-prose th {
+diff --git a/src/styles/index.css b/src/styles/index.css
+index 54c2fd3..fabae4b 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -172,6 +172,7 @@
+   --spacing-lg: var(--ui-spacing-lg);
+   --spacing-xl: var(--ui-spacing-xl);
+   --spacing-xxl: var(--ui-spacing-xxl);
++  --spacing-xxxl: var(--ui-spacing-xxxl);
+   --radius-tight: var(--ui-radius-tight);
+   --radius-mini: var(--ui-radius-mini);
+   --radius-normal: var(--ui-radius-normal);
+@@ -327,6 +328,12 @@
+   .h-button-sm {
+     height: var(--ui-height-button-sm);
+   }
++  .h-button-medium {
++    height: var(--ui-height-button-medium);
++  }
++  .h-button-big {
++    height: var(--ui-height-button-big);
++  }
+   .size-button {
+     width: var(--ui-height-button);
+     height: var(--ui-height-button);
+@@ -347,12 +354,8 @@
+     width: var(--ui-height-button-micro);
+     height: var(--ui-height-button-micro);
+   }
+-  .h-tab-micro {
+-    height: var(--ui-height-tab-micro);
+-  }
+-  .size-tab-micro {
+-    width: var(--ui-height-tab-micro);
+-    height: var(--ui-height-tab-micro);
++  .h-button-micro {
++    height: var(--ui-height-button-micro);
+   }
+   .min-h-button {
+     min-height: var(--ui-height-button);
+@@ -817,7 +820,7 @@
+    * (the trigger root): Radix data-state, :hover, and the disabled forms.
+    * The shape is painted by currentColor, so every state is a colour here. */
+   .ds-dropdown-caret {
+-    --ds-dropdown-caret-frame: calc(var(--ui-height-button) - var(--ui-spacing-rg));
++    --ds-dropdown-caret-frame: calc(var(--ui-height-button) - var(--ui-spacing-md));
+     /* Closed: the primary button's background. */
+     color: var(--ui-color-primary);
+     transition: color var(--ui-shape-morph-nudge-duration) var(--ui-shape-morph-nudge-ease);
+diff --git a/src/styles/theme.css b/src/styles/theme.css
+index 3019a9c..ddfc18b 100644
+--- a/src/styles/theme.css
++++ b/src/styles/theme.css
+@@ -117,6 +117,7 @@
+   --spacing-lg: var(--ui-spacing-lg);
+   --spacing-xl: var(--ui-spacing-xl);
+   --spacing-xxl: var(--ui-spacing-xxl);
++  --spacing-xxxl: var(--ui-spacing-xxxl);
+   --radius-tight: var(--ui-radius-tight);
+   --radius-mini: var(--ui-radius-mini);
+   --radius-normal: var(--ui-radius-normal);
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index a876635..ce9f126 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -85,7 +85,7 @@
+   --ui-color-danger-border-disabled: var(--ui-color-secondary-border-disabled);
+ 
+   /* Ghost (no rest bg; hover/active are translucent overlays) */
+-  --ui-color-ghost-foreground: #4a4a4a;
++  --ui-color-ghost-foreground: var(--ui-color-text);
+   --ui-color-ghost-hover: rgba(0, 0, 0, 0.04);
+   --ui-color-ghost-active: rgba(0, 0, 0, 0.08);
+   --ui-color-ghost-foreground-active: #161616;
+@@ -448,6 +448,10 @@
+ 
+   --ui-height-button: 38px;
+   --ui-height-button-sm: 34px;
++  --ui-height-button-medium: 46px;
++  --ui-height-button-big: 54px;
++  /* Micro (28px): micro buttons, icon-micro toggles/tabs, and the compact preset row. */
++  --ui-height-button-micro: 28px;
+   --ui-size-checkbox: 18px;
+   --ui-size-code-digit: 46px;
+ 
+@@ -472,9 +476,6 @@
+   /* Panel width sets the day-cell size: cells are aspect-square across seven
+    * equal columns, so widening the panel makes each day physically bigger. */
+   --ui-min-w-calendar-panel: 300px;
+-  --ui-height-button-micro: 26px;
+-  /* Micro segmented-tab item — the compact inline preset row (Figma "Micro", 28px). */
+-  --ui-height-tab-micro: 28px;
+   --ui-height-slider-track: 22px;
+   --ui-radius-slider-inner: 8px;
+   --ui-slider-track-gap: 6px;
+@@ -512,13 +513,14 @@
+ 
+   --ui-spacing-xxxs: 2px;
+   --ui-spacing-xxs: 4px;
+-  --ui-spacing-xs: 8px;
+-  --ui-spacing-sm: 10px;
+-  --ui-spacing-rg: 12px;
+-  --ui-spacing-md: 16px;
+-  --ui-spacing-lg: 20px;
+-  --ui-spacing-xl: 28px;
+-  --ui-spacing-xxl: 40px;
++  --ui-spacing-xs: 6px;
++  --ui-spacing-sm: 8px;
++  --ui-spacing-rg: 10px;
++  --ui-spacing-md: 12px;
++  --ui-spacing-lg: 16px;
++  --ui-spacing-xl: 20px;
++  --ui-spacing-xxl: 26px;
++  --ui-spacing-xxxl: 42px;
+ 
+   /* ── Icons ───────────────────────────────────────────────────────────── */
+ 
+@@ -659,7 +661,7 @@
+ 
+   --ui-color-ghost-hover: rgba(255, 255, 255, 0.04);
+   --ui-color-ghost-active: rgba(255, 255, 255, 0.08);
+-  --ui-color-ghost-foreground: #afafaf;
++  --ui-color-ghost-foreground: var(--ui-color-text);
+   --ui-color-ghost-foreground-active: #ffffff;
+ 
+   --ui-color-surface-page: #131c1d;

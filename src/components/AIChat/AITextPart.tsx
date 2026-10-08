@@ -6,7 +6,8 @@
  *   react-markdown, MDX or a plain string. `ds-chat-prose` styles the elements
  *   any of them emit.
  * - `streamingAnimation` makes each block rise out of a blur as it mounts
- *   (`ds-chat-stream-in`, timed by the --ui-chat-stream-* tokens).
+ *   (`ds-chat-stream-in`, timed by the motion scale; blur and rise are
+ *   --ui-chat-stream-* tokens).
  *
  * ## constraints
  * - The package takes NO dependency on a markdown renderer. Do not import one
@@ -32,7 +33,7 @@ const AITextPart = forwardRef<HTMLDivElement, AITextPartProps>(
       ref={ref}
       data-streaming-animation={streamingAnimation || undefined}
       className={cn(
-        "ds-chat-prose w-full min-w-0 px-xs text-style-body text-text wrap-break-word",
+        "ds-chat-prose w-full min-w-0 px-sm text-style-body text-text wrap-break-word",
         className,
       )}
       {...props}

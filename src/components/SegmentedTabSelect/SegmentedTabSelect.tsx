@@ -11,6 +11,11 @@ import * as TabsPrimitive from '@radix-ui/react-tabs';
 import { TabsList, TabsTrigger, type TabsTriggerProps } from '../Tabs/Tabs';
 import { TabSize, TabVariant } from '../Tabs/constants';
 import { cn } from '../../utils/cn';
+// SegmentedVariant/SegmentedSize (+ their types) live in ./constants
+// (server-safe), re-exported via index.ts; imported here for internal
+// variant/size resolution. See constants.ts for the Figma Tab Select
+// variant × size table.
+import { SegmentedSize, SegmentedVariant } from './constants';
 
 /**
  * Context that SegmentedTabSelect passes down to SegmentedTabItem,
@@ -21,12 +26,6 @@ const SegmentedTabContext = createContext<{
   itemSize?: TabSize;
 }>({});
 
-// SegmentedVariant/SegmentedSize (+ their types) live in ./constants
-// (server-safe), re-exported via index.ts; imported here for internal
-// variant/size resolution. See constants.ts for the Figma Tab Select
-// variant × size table.
-import { SegmentedSize, SegmentedVariant } from './constants';
-
 export interface SegmentedTabSelectProps
   extends ComponentPropsWithoutRef<typeof TabsPrimitive.Root> {
   variant?: SegmentedVariant;
@@ -36,7 +35,7 @@ export interface SegmentedTabSelectProps
 const ITEM_SIZE: Record<SegmentedSize, TabSize> = {
   container: TabSize.micro,
   'container-icon': TabSize.iconMicro,
-  standard: TabSize.default,
+  standard: TabSize.standard,
   icon: TabSize.icon,
 };
 
@@ -45,6 +44,8 @@ const SHELL_SIZES: SegmentedSize[] = [
   SegmentedSize.containerIcon,
 ];
 
+/** Props, `ref` and `style` go to the Radix Tabs Root; `className` styles the
+ * inner TabsList (the visible shell at the container sizes). */
 const SegmentedTabSelect = forwardRef<
   ComponentRef<typeof TabsPrimitive.Root>,
   SegmentedTabSelectProps
@@ -92,7 +93,7 @@ const SegmentedTabItem = forwardRef<
     <TabsTrigger
       ref={ref}
       variant={variant ?? ctx.tabVariant ?? TabVariant.ghost}
-      size={size ?? ctx.itemSize ?? TabSize.default}
+      size={size ?? ctx.itemSize ?? TabSize.standard}
       {...props}
     />
   );

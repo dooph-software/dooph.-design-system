@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "target": "ES2020",
+    "lib": ["DOM", "ES2022"],
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "typeRoots": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types"],
+    "types": ["react", "react-dom"],
+    "paths": {
+      "@dooph-software/design-system": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/dist/index.d.ts"],
+      "react": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types/react/index.d.ts"],
+      "react/*": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/@types/react/*"],
+      "tailwind-merge": ["C:/Users/stick/Github/dooph/dooph-ds-audit-build/node_modules/tailwind-merge"]
+    }
+  },
+  "include": ["*.tsx", "*.ts"]
+}

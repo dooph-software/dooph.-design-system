@@ -8,5 +8,3 @@ export const TagIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default TagIcon;

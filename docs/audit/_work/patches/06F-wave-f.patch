@@ -1,0 +1,1072 @@
+diff --git a/src/components/Avatar/Avatar.stories.tsx b/src/components/Avatar/Avatar.stories.tsx
+index 79836e8..ecaa3aa 100644
+--- a/src/components/Avatar/Avatar.stories.tsx
++++ b/src/components/Avatar/Avatar.stories.tsx
+@@ -1,6 +1,6 @@
+ import type { Meta, StoryObj } from "@storybook/react-vite";
+ import { OrganizationIcon } from "../Icons";
+-import { Avatar, AvatarSize } from "./Avatar";
++import { Avatar, AvatarSize } from ".";
+ import { LabelText } from "../Text";
+ 
+ const LogoMark = () => (
+diff --git a/src/components/Avatar/Avatar.tsx b/src/components/Avatar/Avatar.tsx
+index 16375fd..5a65da1 100644
+--- a/src/components/Avatar/Avatar.tsx
++++ b/src/components/Avatar/Avatar.tsx
+@@ -1,11 +1,6 @@
+ import { forwardRef, type HTMLAttributes } from "react";
+ import { cn } from "../../utils/cn";
+-
+-export const AvatarSize = {
+-  standard: "standard",
+-  sm: "sm",
+-} as const;
+-export type AvatarSize = (typeof AvatarSize)[keyof typeof AvatarSize];
++import { AvatarSize } from "./constants";
+ 
+ export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
+   size?: AvatarSize;
+diff --git a/src/components/Avatar/constants.ts b/src/components/Avatar/constants.ts
+new file mode 100644
+index 0000000..ae5b0f2
+--- /dev/null
++++ b/src/components/Avatar/constants.ts
+@@ -0,0 +1,8 @@
++// Server-safe constants — no "use client" so React Server Components can read
++// these values. Avatar.tsx imports them; the folder index re-exports them.
++
++export const AvatarSize = {
++  standard: "standard",
++  sm: "sm",
++} as const;
++export type AvatarSize = (typeof AvatarSize)[keyof typeof AvatarSize];
+diff --git a/src/components/Avatar/index.ts b/src/components/Avatar/index.ts
+index 130ab76..ac66a4f 100644
+--- a/src/components/Avatar/index.ts
++++ b/src/components/Avatar/index.ts
+@@ -1,2 +1,3 @@
+-export { Avatar, AvatarSize } from "./Avatar";
++export { Avatar } from "./Avatar";
++export { AvatarSize } from "./constants";
+ export type { AvatarProps } from "./Avatar";
+diff --git a/src/components/Button/Button.tsx b/src/components/Button/Button.tsx
+index a67bef5..09ab8b0 100644
+--- a/src/components/Button/Button.tsx
++++ b/src/components/Button/Button.tsx
+@@ -19,6 +19,10 @@
+  *   excluded by design, and there is no icon-only pill. Do not widen
+  *   `ButtonOwnProps` back to plain `VariantProps` — the restriction would
+  *   silently disappear.
++ * - `variant` / `size` are typed from the `ButtonVariant` / `ButtonSize` consts
++ *   (./constants), never from cva's `VariantProps`: that admits `null`, which
++ *   cva reads as "no variant", so `variant={null}` would compile and render a
++ *   colourless, unsized button.
+  * - `text-style-hero-button` must stay registered in `cn`'s `text-style`
+  *   group (src/utils/cn.ts). Unregistered, twMerge reads it as a text COLOUR
+  *   and drops the variant's `text-*-fg`, so medium/big labels lose their colour.
+@@ -36,7 +40,7 @@
+  *   every consumer's prominent call to action.
+  */
+ import { Slot } from "@radix-ui/react-slot";
+-import { cva, type VariantProps } from "class-variance-authority";
++import { cva } from "class-variance-authority";
+ import {
+   forwardRef,
+   type ComponentPropsWithoutRef,
+@@ -46,6 +50,7 @@ import {
+   type ReactElement,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import type { ButtonSize, ButtonVariant } from "./constants";
+ 
+ const buttonVariants = cva(
+   [
+@@ -126,9 +131,11 @@ const buttonVariants = cva(
+ // ButtonVariant / ButtonSize (+ their types) live in ./constants — kept server-safe
+ // (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
+ 
+-type ButtonCvaProps = VariantProps<typeof buttonVariants>;
+-type ButtonPillSize = "medium" | "big";
+-type ButtonPillVariant = "prominent" | "primary" | "secondary";
++type ButtonPillSize = Extract<ButtonSize, "medium" | "big">;
++type ButtonPillVariant = Extract<
++  ButtonVariant,
++  "prominent" | "primary" | "secondary"
++>;
+ 
+ /**
+  * `variant` × `size`, with the pill sizes (`medium`, `big`) reachable only from
+@@ -137,12 +144,12 @@ type ButtonPillVariant = "prominent" | "primary" | "secondary";
+  */
+ type ButtonVariantSizeProps =
+   | {
+-      variant?: Extract<ButtonCvaProps["variant"], ButtonPillVariant | null>;
+-      size?: ButtonCvaProps["size"];
++      variant?: ButtonPillVariant;
++      size?: ButtonSize;
+     }
+   | {
+-      variant: Exclude<ButtonCvaProps["variant"], ButtonPillVariant | null | undefined>;
+-      size?: Exclude<ButtonCvaProps["size"], ButtonPillSize>;
++      variant: Exclude<ButtonVariant, ButtonPillVariant>;
++      size?: Exclude<ButtonSize, ButtonPillSize>;
+     };
+ 
+ type ButtonOwnProps = ButtonVariantSizeProps & {
+@@ -159,7 +166,9 @@ type ButtonComponent = <TElement extends ElementType = "button">(
+   },
+ ) => ReactElement | null;
+ 
+-const ButtonBase = forwardRef<HTMLElement, ButtonProps<ElementType>>(
++/* The render function is typed at the default element so its bindings keep
++ * their types; only the exported cast below is polymorphic. */
++const ButtonBase = forwardRef<HTMLElement, ButtonProps<"button">>(
+   ({ className, variant, size, asChild = false, ...props }, ref) => {
+     const Comp = (asChild ? Slot : "button") as ElementType;
+     return (
+diff --git a/src/components/CTAButton/CTAButton.tsx b/src/components/CTAButton/CTAButton.tsx
+index 1fac5db..1629624 100644
+--- a/src/components/CTAButton/CTAButton.tsx
++++ b/src/components/CTAButton/CTAButton.tsx
+@@ -27,6 +27,7 @@ import {
+   type ForwardedRef,
+   type ReactElement,
+   type ReactNode,
++  type RefAttributes,
+ } from "react";
+ import { cn } from "../../utils/cn";
+ import { RollHoverText } from "../AnimatedText";
+@@ -85,14 +86,48 @@ export interface CTAButtonProps
+    * `<CTAButton asChild text="…" icon={…}><Link href="/pricing" /></CTAButton>`
+    */
+   asChild?: boolean;
++  /**
++   * Read only with `asChild`: the single element CTAButton slots onto (its own
++   * children are replaced by the CTA content). Without `asChild` there is no
++   * place to render children — pass the label as `text`.
++   */
+   children?: ReactNode;
+ }
+ 
++/* Public call signatures: `children` type-checks only together with
++ * `asChild`, so a label passed as children in anchor mode (which renders
++ * nothing) is a compile error rather than silently dropped. Overloads rather
++ * than a union keep `CTAButtonProps` extendable by consumer interfaces. */
++type CTAButtonComponent = {
++  (
++    props: Omit<CTAButtonProps, "asChild" | "children"> & {
++      asChild: true;
++      children: ReactElement;
++    } & RefAttributes<HTMLElement>,
++  ): ReactElement | null;
++  /* A runtime boolean (`asChild={isLink}`) needs an element child to slot onto. */
++  (
++    props: Omit<CTAButtonProps, "asChild" | "children"> & {
++      asChild: boolean;
++      children: ReactElement;
++    } & RefAttributes<HTMLElement>,
++  ): ReactElement | null;
++  /* Anchor mode — listed LAST because ComponentProps (and so Storybook's
++   * Meta<typeof CTAButton>) reads the last call signature. */
++  (
++    props: Omit<CTAButtonProps, "asChild" | "children"> & {
++      asChild?: false;
++      children?: never;
++    } & RefAttributes<HTMLElement>,
++  ): ReactElement | null;
++  displayName?: string;
++};
++
+ /**
+  * Padded-outline marketing CTA. The outline ring is primary-only; hover response
+  * is label-only via RollHoverText on an ancestor `.group`. Radii stay fully round.
+  */
+-const CTAButton = forwardRef<HTMLElement, CTAButtonProps>(
++const CTAButtonBase = forwardRef<HTMLElement, CTAButtonProps>(
+   (
+     {
+       text,
+@@ -196,6 +231,8 @@ const CTAButton = forwardRef<HTMLElement, CTAButtonProps>(
+     );
+   },
+ );
+-CTAButton.displayName = "CTAButton";
++CTAButtonBase.displayName = "CTAButton";
++
++const CTAButton = CTAButtonBase as CTAButtonComponent;
+ 
+ export { CTAButton };
+diff --git a/src/components/Calendar/CalendarGrid.tsx b/src/components/Calendar/CalendarGrid.tsx
+index 20953e5..99aaf81 100644
+--- a/src/components/Calendar/CalendarGrid.tsx
++++ b/src/components/Calendar/CalendarGrid.tsx
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import { forwardRef, type ReactNode } from "react";
++import { forwardRef, type KeyboardEvent, type ReactNode } from "react";
+ import { cn } from "../../utils/cn";
+ import { BodyText, LabelText } from "../Text";
+ import type { DateRange } from "./constants";
+@@ -47,7 +47,7 @@ export type CalendarGridProps = {
+   onDayClick: (date: Date) => void;
+   onDayHover: (date: Date) => void;
+   onDayHoverEnd: () => void;
+-  onDayKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
++  onDayKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
+   dayRef: (node: HTMLButtonElement | null) => void;
+   renderDay?: (day: CalendarDayRenderProps) => ReactNode;
+   locale?: string;
+diff --git a/src/components/Calendar/constants.ts b/src/components/Calendar/constants.ts
+index 6cc8c06..8ac00f6 100644
+--- a/src/components/Calendar/constants.ts
++++ b/src/components/Calendar/constants.ts
+@@ -115,7 +115,7 @@ export const CalendarPresets = {
+ } as const;
+ 
+ /** The six presets in the Figma panel rail, in design order. */
+-export const DEFAULT_CALENDAR_PRESETS: CalendarPreset[] = [
++export const DEFAULT_CALENDAR_PRESETS: readonly CalendarPreset[] = [
+   CalendarPresets.days.three,
+   CalendarPresets.days.seven,
+   CalendarPresets.days.fourteen,
+@@ -125,7 +125,7 @@ export const DEFAULT_CALENDAR_PRESETS: CalendarPreset[] = [
+ ];
+ 
+ /** The three inline presets in the Figma split trigger, in design order. */
+-export const DEFAULT_SPLIT_TRIGGER_PRESETS: CalendarPreset[] = [
++export const DEFAULT_SPLIT_TRIGGER_PRESETS: readonly CalendarPreset[] = [
+   CalendarPresets.days.seven,
+   CalendarPresets.days.thirty,
+   CalendarPresets.months.three,
+diff --git a/src/components/Calendar/dateFormat.ts b/src/components/Calendar/dateFormat.ts
+index d95083a..8942dd0 100644
+--- a/src/components/Calendar/dateFormat.ts
++++ b/src/components/Calendar/dateFormat.ts
+@@ -91,10 +91,12 @@ export function buildYearOptions(
+   bounds?: { from?: Date; to?: Date },
+ ): number[] {
+   const nowYear = now.getFullYear();
+-  const hasFrom = bounds?.from !== undefined;
+-  const hasTo = bounds?.to !== undefined;
+-  let first = hasFrom ? bounds!.from!.getFullYear() : nowYear - YEARS_BACK;
+-  let last = hasTo ? bounds!.to!.getFullYear() : nowYear + YEARS_FORWARD;
++  const from = bounds?.from;
++  const to = bounds?.to;
++  const hasFrom = from !== undefined;
++  const hasTo = to !== undefined;
++  let first = hasFrom ? from.getFullYear() : nowYear - YEARS_BACK;
++  let last = hasTo ? to.getFullYear() : nowYear + YEARS_FORWARD;
+ 
+   for (const year of [viewMonth.getFullYear(), value.getFullYear()]) {
+     if (!hasFrom && year < first) first = year;
+diff --git a/src/components/Checkbox/Checkbox.tsx b/src/components/Checkbox/Checkbox.tsx
+index 2ea2d3f..17e39f8 100644
+--- a/src/components/Checkbox/Checkbox.tsx
++++ b/src/components/Checkbox/Checkbox.tsx
+@@ -19,13 +19,14 @@
+  *   escape hatch.
+  */
+ import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+-import { cva, type VariantProps } from "class-variance-authority";
++import { cva } from "class-variance-authority";
+ import {
+   forwardRef,
+   type ComponentPropsWithoutRef,
+   type ComponentRef,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import type { CheckboxVariant } from "./constants";
+ 
+ // CheckboxChecked / CheckboxVariant (+ their types) live in ./constants — kept
+ // server-safe (no "use client") so RSC code can read the enum values.
+@@ -69,10 +70,14 @@ const checkboxVariants = cva(
+   },
+ );
+ 
++/* `variant` is typed from the `CheckboxVariant` const, not cva's
++ * `VariantProps`: that admits `null`, which cva reads as "no variant" (no
++ * checked fill). */
+ export interface CheckboxProps
+-  extends
+-    ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,
+-    VariantProps<typeof checkboxVariants> {}
++  extends ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> {
++  /** Checked / indeterminate fill. Defaults to `prominent`. */
++  variant?: CheckboxVariant;
++}
+ 
+ const CheckboxIndicator = forwardRef<
+   ComponentRef<typeof CheckboxPrimitive.Indicator>,
+diff --git a/src/components/DatePicker/DatePicker.tsx b/src/components/DatePicker/DatePicker.tsx
+index 1f9b0b5..67f72fc 100644
+--- a/src/components/DatePicker/DatePicker.tsx
++++ b/src/components/DatePicker/DatePicker.tsx
+@@ -8,6 +8,7 @@ import {
+   DatePickerMode,
+   type CalendarDayRenderProps,
+   type CalendarLabels,
++  type CalendarPreset,
+   type DateMatcher,
+   type DateRange,
+ } from "../Calendar";
+@@ -63,7 +64,7 @@ export type DatePickerProps = DatePickerSharedProps &
+         value: DateRange;
+         onValueChange: (range: DateRange) => void;
+         /** Render the split trigger with these inline preset shortcuts. */
+-        splitPresets?: Parameters<typeof DatePickerSplitTrigger>[0]["presets"];
++        splitPresets?: readonly CalendarPreset[];
+       }
+   );
+ 
+diff --git a/src/components/DatePicker/DatePickerSplitTrigger.tsx b/src/components/DatePicker/DatePickerSplitTrigger.tsx
+index 6b477cf..aafd8a2 100644
+--- a/src/components/DatePicker/DatePickerSplitTrigger.tsx
++++ b/src/components/DatePicker/DatePickerSplitTrigger.tsx
+@@ -30,12 +30,14 @@ export type DatePickerSplitTriggerProps = Omit<
+ > & {
+   value: DateRange;
+   /** Inline shortcuts. Defaults to the three from the Figma spec. */
+-  presets?: CalendarPreset[];
++  presets?: readonly CalendarPreset[];
+   onValueChange: (range: DateRange) => void;
+   today?: Date;
+   locale?: string;
+   disabled?: boolean;
+-  /** Props forwarded to the INTERNAL left trigger. Ignored when `trigger` is set. */
++  /** Props forwarded to the INTERNAL left trigger. Ignored when `trigger` is set.
++   *  `className` is merged after the seam classes; `disabled` here can only add
++   *  to the component's `disabled` (which also disables the presets). */
+   triggerProps?: ComponentPropsWithoutRef<"button">;
+   /**
+    * Replaces the internal left trigger — e.g. a `PopoverTrigger asChild`
+@@ -66,6 +68,14 @@ const DatePickerSplitTrigger = forwardRef<
+   ) => {
+     const now = startOfDay(today ?? new Date());
+ 
++    // Consumer trigger props spread first; the seam classes and the
++    // component-level `disabled` are merged in after, so neither can be undone.
++    const {
++      className: triggerClassName,
++      disabled: triggerDisabled,
++      ...restTriggerProps
++    } = triggerProps ?? {};
++
+     // Active state stays derived from the live range rather than stored, so the
+     // calendar remains the single source of truth. Radix Tabs treats "" as
+     // "nothing selected", which is exactly the case where the range matches no
+@@ -102,9 +112,9 @@ const DatePickerSplitTrigger = forwardRef<
+           </div>
+         ) : (
+           <DropdownTrigger
+-            disabled={disabled}
+-            className="rounded-r-none border-r-0"
+-            {...triggerProps}
++            {...restTriggerProps}
++            disabled={disabled || triggerDisabled}
++            className={cn("rounded-r-none border-r-0", triggerClassName)}
+           >
+             <DropdownTriggerContent className="items-center">
+               <CalendarIcon size={IconSize.rg} />
+diff --git a/src/components/DropdownTrigger/DropdownTrigger.tsx b/src/components/DropdownTrigger/DropdownTrigger.tsx
+index 29bad84..42ca182 100644
+--- a/src/components/DropdownTrigger/DropdownTrigger.tsx
++++ b/src/components/DropdownTrigger/DropdownTrigger.tsx
+@@ -46,9 +46,11 @@ const DropdownTriggerContent = forwardRef<
+ ));
+ DropdownTriggerContent.displayName = "DropdownTriggerContent";
+ 
++/* Typed at the default element so the render body's bindings keep their
++ * types; only the exported cast is polymorphic. */
+ const DropdownTriggerBase = forwardRef<
+   HTMLElement,
+-  DropdownTriggerProps<ElementType>
++  DropdownTriggerProps<"button">
+ >(({ className, children, asChild = false, ...props }, ref) => {
+   const Comp = (asChild ? Slot : "button") as ElementType;
+   return (
+@@ -285,9 +287,10 @@ type TextDropdownTriggerComponent = <TElement extends ElementType = "button">(
+   },
+ ) => ReactElement | null;
+ 
++/* Typed at the default element, as DropdownTriggerBase above. */
+ const TextDropdownTriggerBase = forwardRef<
+   HTMLElement,
+-  TextDropdownTriggerProps<ElementType>
++  TextDropdownTriggerProps<"button">
+ >(
+   (
+     {
+diff --git a/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx b/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
+index 3fd3fd6..202739f 100644
+--- a/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
++++ b/src/components/LinearProgressIndicator/LinearProgressIndicator.tsx
+@@ -58,17 +58,12 @@ const LinearProgressIndicator = forwardRef<
+       {...props}
+     >
+       <ProgressPrimitive.Indicator
+-        className={cn(
+-          'absolute inset-y-0 left-0 rounded-full ds-progress-fill',
+-          'w-[max(4px,calc(var(--progress-pct)*1%-2px))]',
+-          'bg-[var(--ds-progress-color)]',
+-        )}
++        className="absolute inset-y-0 left-0 rounded-full ds-progress-fill"
+       />
+       <div
+         aria-hidden
+         className={cn(
+           'absolute inset-y-0 right-0 rounded-full bg-border-primary ds-progress-remainder',
+-          'left-[max(4px,min(100%,calc(var(--progress-pct)*1%+2px)))]',
+           'data-[hidden]:hidden',
+         )}
+         data-hidden={pct >= 100 || undefined}
+diff --git a/src/components/LoadingSpinner/LoadingSpinner.tsx b/src/components/LoadingSpinner/LoadingSpinner.tsx
+index cb28d7a..2cb818b 100644
+--- a/src/components/LoadingSpinner/LoadingSpinner.tsx
++++ b/src/components/LoadingSpinner/LoadingSpinner.tsx
+@@ -54,7 +54,6 @@ import {
+   STAR_FIT_TRANSFORM,
+   STAR_VIEWBOX,
+   type SpinnerGeometry,
+-  type SpinnerSizeKey,
+ } from "./spinnerGeometry";
+ 
+ // ── Types ─────────────────────────────────────────────────────────────────────
+@@ -279,7 +278,7 @@ export const LoadingSpinner = forwardRef<SVGSVGElement, LoadingSpinnerProps>(
+     },
+     ref,
+   ) => {
+-    const geo = getSpinnerGeometry(size as SpinnerSizeKey);
++    const geo = getSpinnerGeometry(size);
+     const resolvedColor = resolveDsColor(color, "var(--ui-color-primary)");
+ 
+     const svgProps: InnerSvgProps = {
+diff --git a/src/components/MorphRotationShape/MorphRotationShape.tsx b/src/components/MorphRotationShape/MorphRotationShape.tsx
+index d92deb9..d6f1730 100644
+--- a/src/components/MorphRotationShape/MorphRotationShape.tsx
++++ b/src/components/MorphRotationShape/MorphRotationShape.tsx
+@@ -91,7 +91,7 @@ type CommonProps = SpanProps & {
+   /** DS shapes in play order: components (`[CloverShape, PuffShape]`) or
+    * `Shapes` keys (`[Shapes.clover, Shapes.puff]`, the form a Server Component
+    * can pass). At least two. */
+-  shapes: ShapeInput[];
++  shapes: readonly ShapeInput[];
+ };
+ 
+ export type MorphRotationShapeProps = CommonProps &
+@@ -156,7 +156,7 @@ function assertProps(props: MorphRotationShapeProps) {
+ }
+ 
+ /** Changes only when the shapes array's elements change (components by identity, keys by value). */
+-function useShapesKey(shapes: ShapeInput[]): number {
++function useShapesKey(shapes: readonly ShapeInput[]): number {
+   const ref = useRef({ shapes, key: 0 });
+   const prev = ref.current.shapes;
+   if (prev.length !== shapes.length || prev.some((s, i) => s !== shapes[i])) {
+diff --git a/src/components/OutlineButton/OutlineButton.tsx b/src/components/OutlineButton/OutlineButton.tsx
+index f0e0625..0d89150 100644
+--- a/src/components/OutlineButton/OutlineButton.tsx
++++ b/src/components/OutlineButton/OutlineButton.tsx
+@@ -46,6 +46,8 @@ type OutlineButtonComponent = <TElement extends ElementType = "button">(
+   },
+ ) => ReactElement | null;
+ 
++/* Typed at the default element so the render body's bindings keep their
++ * types; only the exported cast is polymorphic. */
+ /**
+  * An outlined pill-shaped button with an inner elevated surface.
+  *
+@@ -68,10 +70,7 @@ type OutlineButtonComponent = <TElement extends ElementType = "button">(
+  *   Find anything
+  * </OutlineButton>
+  */
+-const OutlineButtonBase = forwardRef<
+-  HTMLElement,
+-  OutlineButtonProps<ElementType>
+->(
++const OutlineButtonBase = forwardRef<HTMLElement, OutlineButtonProps<"button">>(
+   (
+     {
+       className,
+diff --git a/src/components/OutlineSection/OutlineSection.stories.tsx b/src/components/OutlineSection/OutlineSection.stories.tsx
+index a635b77..431a989 100644
+--- a/src/components/OutlineSection/OutlineSection.stories.tsx
++++ b/src/components/OutlineSection/OutlineSection.stories.tsx
+@@ -1,5 +1,5 @@
+ import type { Meta, StoryObj } from '@storybook/react-vite';
+-import { Avatar, AvatarSize } from '../Avatar/Avatar';
++import { Avatar, AvatarSize } from '../Avatar';
+ import { Button } from '../Button/Button';
+ import { ButtonSize, ButtonVariant } from '../Button/constants';
+ import { CheckIcon, OrganizationIcon, PlusIcon } from '../Icons';
+diff --git a/src/components/ProgressIndicator/ProgressIndicator.tsx b/src/components/ProgressIndicator/ProgressIndicator.tsx
+index e838112..1eb0172 100644
+--- a/src/components/ProgressIndicator/ProgressIndicator.tsx
++++ b/src/components/ProgressIndicator/ProgressIndicator.tsx
+@@ -12,7 +12,6 @@ import { resolveDsColor, type DsColor } from "../../utils/color";
+ import {
+   getSpinnerGeometry,
+   type SpinnerGeometry,
+-  type SpinnerSizeKey,
+ } from "../LoadingSpinner/spinnerGeometry";
+ // Color and Size enums are shared with LoadingSpinner — same const objects.
+ import {
+@@ -272,7 +271,7 @@ export const ProgressIndicator = forwardRef<
+       );
+     }
+ 
+-    const geo = getSpinnerGeometry(size as SpinnerSizeKey);
++    const geo = getSpinnerGeometry(size);
+     const strokeColor = resolveDsColor(color, "var(--ui-color-primary)");
+ 
+     const svgProps: InnerSvgProps = {
+diff --git a/src/components/ShapeButton/ShapeButton.tsx b/src/components/ShapeButton/ShapeButton.tsx
+index 7db6ce9..d9af7e7 100644
+--- a/src/components/ShapeButton/ShapeButton.tsx
++++ b/src/components/ShapeButton/ShapeButton.tsx
+@@ -89,6 +89,8 @@ type ShapeButtonComponent = <TElement extends ElementType = "button">(
+   },
+ ) => ReactElement | null;
+ 
++/* Typed at the default element so the render body's bindings keep their
++ * types; only the exported cast is polymorphic. */
+ /**
+  * An icon button with an organic SVG shape background.
+  *
+@@ -97,7 +99,7 @@ type ShapeButtonComponent = <TElement extends ElementType = "button">(
+  *   <SendIcon />
+  * </ShapeButton>
+  */
+-const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
++const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<"button">>(
+   (
+     {
+       className,
+@@ -110,8 +112,7 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
+     ref,
+   ) => {
+     const Comp = (asChild ? Slot : "button") as ElementType;
+-    const Shape = shapeComponents[shape as ShapeButtons];
+-    const resolvedVariant = variant as ShapeButtonVariant;
++    const Shape = shapeComponents[shape];
+ 
+     return (
+       <Comp
+@@ -121,7 +122,7 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
+           "size-shape-button cursor-pointer select-none",
+           "outline-none ds-shape-button-focus-visible",
+           "ds-disabled-state",
+-          contentClasses[resolvedVariant],
++          contentClasses[variant],
+           className,
+         )}
+         {...props}
+@@ -130,7 +131,7 @@ const ShapeButtonBase = forwardRef<HTMLElement, ShapeButtonProps<ElementType>>(
+         <span
+           className={cn(
+             "ds-shape-button-shadow absolute inset-0 flex items-center justify-center",
+-            shapeFillClasses[resolvedVariant],
++            shapeFillClasses[variant],
+             "[.group:is(:disabled,[aria-disabled=true])_&]:text-secondary-disabled",
+           )}
+           aria-hidden
+diff --git a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
+index f1ce688..170f06b 100644
+--- a/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
++++ b/src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx
+@@ -18,7 +18,7 @@ import { getShapeComponent, type ShapeInput } from "../Shapes/shapePaths";
+ 
+ /** Default loader sequence as `Shapes` keys: serialisable, so this module stays
+  *  neutral (no "use client") and still renders from a Server Component. */
+-const DEFAULT_SHAPE_KEYS: Shapes[] = [
++const DEFAULT_SHAPE_KEYS: readonly Shapes[] = [
+   Shapes.cookie,
+   Shapes.clover,
+   Shapes.puff,
+@@ -28,7 +28,7 @@ const DEFAULT_SHAPE_KEYS: Shapes[] = [
+ ];
+ 
+ /** Default loader sequence. */
+-export const SHAPE_MORPH_SPINNER_SHAPES: DsShapeComponent[] = DEFAULT_SHAPE_KEYS.map(getShapeComponent);
++export const SHAPE_MORPH_SPINNER_SHAPES: readonly DsShapeComponent[] = DEFAULT_SHAPE_KEYS.map(getShapeComponent);
+ 
+ export type ShapeMorphSpinnerProps = Omit<ComponentPropsWithoutRef<"span">, "children" | "color"> & {
+   size?: LoadingSpinnerSize;
+@@ -36,7 +36,7 @@ export type ShapeMorphSpinnerProps = Omit<ComponentPropsWithoutRef<"span">, "chi
+   color?: DsColor;
+   /** DS shapes (components or `Shapes` keys), at least two. Keys are the form a
+    *  Server Component can pass. */
+-  shapes?: ShapeInput[];
++  shapes?: readonly ShapeInput[];
+   timing?: MorphRotationShapeAutoplayTiming;
+ };
+ 
+diff --git a/src/components/Shapes/constants.ts b/src/components/Shapes/constants.ts
+new file mode 100644
+index 0000000..3617d4a
+--- /dev/null
++++ b/src/components/Shapes/constants.ts
+@@ -0,0 +1,20 @@
++// Server-safe constants — no "use client" so React Server Components can read
++// these values. ShapeButton and MorphRotationShape read these keys; the folder
++// index re-exports them.
++
++export const Shapes = {
++  arrow: "arrow",
++  capsule: "capsule",
++  clover: "clover",
++  cookie: "cookie",
++  diamond: "diamond",
++  double: "double",
++  eightLeafClover: "eightLeafClover",
++  pentagon: "pentagon",
++  pixircle: "pixircle",
++  puff: "puff",
++  squircle: "squircle",
++  star: "star",
++  triple: "triple",
++} as const;
++export type Shapes = (typeof Shapes)[keyof typeof Shapes];
+diff --git a/src/components/Shapes/index.ts b/src/components/Shapes/index.ts
+index 53929de..d41cf5e 100644
+--- a/src/components/Shapes/index.ts
++++ b/src/components/Shapes/index.ts
+@@ -13,19 +13,4 @@ export * from "./SquircleShape";
+ export * from "./StarShape";
+ export * from "./TripleShape";
+ 
+-export const Shapes = {
+-  arrow: "arrow",
+-  capsule: "capsule",
+-  clover: "clover",
+-  cookie: "cookie",
+-  diamond: "diamond",
+-  double: "double",
+-  eightLeafClover: "eightLeafClover",
+-  pentagon: "pentagon",
+-  pixircle: "pixircle",
+-  puff: "puff",
+-  squircle: "squircle",
+-  star: "star",
+-  triple: "triple",
+-} as const;
+-export type Shapes = (typeof Shapes)[keyof typeof Shapes];
++export * from "./constants";
+diff --git a/src/components/Shapes/shapePaths.ts b/src/components/Shapes/shapePaths.ts
+index b7e55dc..387adda 100644
+--- a/src/components/Shapes/shapePaths.ts
++++ b/src/components/Shapes/shapePaths.ts
+@@ -2,6 +2,7 @@ import { ARROW_SHAPE_PATH, ArrowShape } from "./ArrowShape";
+ import type { DsShapeComponent } from "./BaseShape";
+ import { CAPSULE_SHAPE_PATH, CapsuleShape } from "./CapsuleShape";
+ import { CLOVER_SHAPE_PATH, CloverShape } from "./CloverShape";
++import { Shapes } from "./constants";
+ import { COOKIE_SHAPE_PATH, CookieShape } from "./CookieShape";
+ import { DIAMOND_SHAPE_PATH, DiamondShape } from "./DiamondShape";
+ import { DOUBLE_SHAPE_PATH, DoubleShape } from "./DoubleShape";
+@@ -9,7 +10,6 @@ import {
+   EIGHT_LEAF_CLOVER_SHAPE_PATH,
+   EightLeafCloverShape,
+ } from "./EightLeafCloverShape";
+-import { Shapes } from "./index";
+ import { PENTAGON_SHAPE_PATH, PentagonShape } from "./PentagonShape";
+ import { PIXIRCLE_SHAPE_PATH, PixircleShape } from "./PixircleShape";
+ import { PUFF_SHAPE_PATH, PuffShape } from "./PuffShape";
+diff --git a/src/components/Sheet/Sheet.tsx b/src/components/Sheet/Sheet.tsx
+index 6ff3241..516bc44 100644
+--- a/src/components/Sheet/Sheet.tsx
++++ b/src/components/Sheet/Sheet.tsx
+@@ -1,5 +1,5 @@
+ import * as DialogPrimitive from "@radix-ui/react-dialog";
+-import { cva, type VariantProps } from "class-variance-authority";
++import { cva } from "class-variance-authority";
+ import {
+   forwardRef,
+   type ComponentPropsWithoutRef,
+@@ -99,9 +99,12 @@ const sheetVariants = cva(
+   },
+ );
+ 
++/* `side` is typed from the `SheetSide` const, not cva's `VariantProps`: that
++ * admits `null`, which cva reads as "no variant" (an unpositioned sheet). */
+ export interface SheetContentProps
+-  extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
+-    VariantProps<typeof sheetVariants> {
++  extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
++  /** Edge the sheet slides in from. Defaults to `right`. */
++  side?: SheetSide;
+   /** When true, renders the overlay behind the sheet. Defaults to true. */
+   withOverlay?: boolean;
+   /** Render through a portal (the default) or in place. */
+diff --git a/src/components/Slider/Slider.tsx b/src/components/Slider/Slider.tsx
+index bf7bf3c..37f731e 100644
+--- a/src/components/Slider/Slider.tsx
++++ b/src/components/Slider/Slider.tsx
+@@ -111,8 +111,8 @@ const pctOf = (v: number, min: number, max: number) =>
+  * and both fills use the SAME formula so a dot sits exactly under the thumb at
+  * its stop instead of a few px beside it.
+  *
+- * IMPORTANT: the calc() class strings below MUST stay as single literal strings
+- * — Tailwind's scanner reads source text and cannot see concatenated names. */
++ * The same formula backs `.ds-slider-active-part` / `.ds-slider-inactive-part`
++ * in dooph-component-tokens.css; change them together. */
+ const thumbAlignedLeft = (percent: number) =>
+   `calc(${percent} / 100 * (100% - var(--ui-width-slider-handle)) + var(--ui-width-slider-handle) / 2)`;
+ 
+@@ -330,7 +330,7 @@ const SliderBase = forwardRef<
+       );
+     }
+ 
+-    const paints = VARIANT_PAINTS[variant as SliderVariant];
++    const paints = VARIANT_PAINTS[variant];
+ 
+     return (
+       /* The outer box owns the width; on the stepped slider its horizontal
+@@ -377,8 +377,7 @@ const SliderBase = forwardRef<
+             } as CSSProperties
+           }
+           className={cn(
+-            'relative flex w-full touch-none select-none items-center',
+-            'h-[var(--ui-height-slider-handle)]',
++            'relative flex w-full touch-none select-none items-center ds-slider-root',
+             /* ds-radix-data-disabled, NOT `data-[disabled]:ds-disabled-state`.
+              * That form was broken twice over: a Tailwind variant only composes
+              * with a GENERATED utility, so pairing one with a package class
+@@ -401,8 +400,7 @@ const SliderBase = forwardRef<
+               className={cn(
+                 'ds-slider-part absolute inset-y-0 overflow-hidden data-[hidden]:hidden',
+                 'rounded-l-tight rounded-r-slider-inner',
+-                'left-[calc(-1*var(--ds-slider-pad))]',
+-                'w-[max(0px,calc(var(--ds-slider-pct)/100*(100%-var(--ui-width-slider-handle))-var(--ui-slider-track-gap)+var(--ds-slider-pad)))]',
++                'ds-slider-active-part',
+                 'ds-slider-fill',
+               )}
+             />
+@@ -413,8 +411,7 @@ const SliderBase = forwardRef<
+               className={cn(
+                 'ds-slider-part absolute inset-y-0 overflow-hidden data-[hidden]:hidden',
+                 'rounded-r-tight rounded-l-slider-inner',
+-                'right-[calc(-1*var(--ds-slider-pad))]',
+-                'left-[min(100%,calc(var(--ds-slider-pct)/100*(100%-var(--ui-width-slider-handle))+var(--ui-width-slider-handle)+var(--ui-slider-track-gap)))]',
++                'ds-slider-inactive-part',
+                 'bg-secondary border border-solid border-secondary-border',
+               )}
+             />
+@@ -451,10 +448,9 @@ const SliderBase = forwardRef<
+             aria-labelledby={ariaLabelledBy}
+             aria-describedby={ariaDescribedBy}
+             className={cn(
+-              'block h-[var(--ui-height-slider-handle)] w-[var(--ui-width-slider-handle)]',
++              'block ds-slider-thumb',
+               'rounded-slider-inner ds-focus-visible-ring',
+               'cursor-grab active:cursor-ew-resize',
+-              'bg-[var(--ds-slider-color)]',
+             )}
+           />
+         </SliderPrimitive.Root>
+diff --git a/src/components/SplitButton/SplitButton.stories.tsx b/src/components/SplitButton/SplitButton.stories.tsx
+index 6244e6c..3c98f25 100644
+--- a/src/components/SplitButton/SplitButton.stories.tsx
++++ b/src/components/SplitButton/SplitButton.stories.tsx
+@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
+ import {
+   SplitButton,
+   SplitButtonAction,
++  SplitButtonGroup,
+   SplitButtonTrigger,
+ } from "./SplitButton";
+ import {
+@@ -44,12 +45,12 @@ export const Disabled: Story = {
+ export const WithDropdown: Story = {
+   render: () => (
+     <DropdownMenu>
+-      <div className="inline-flex">
++      <SplitButtonGroup>
+         <SplitButtonAction>Save</SplitButtonAction>
+         <DropdownMenuTrigger asChild>
+-          <SplitButtonTrigger />
++          <SplitButtonTrigger aria-label="More save options" />
+         </DropdownMenuTrigger>
+-      </div>
++      </SplitButtonGroup>
+       <DropdownMenuContent>
+         <DropdownMenuSection>
+           <DropdownMenuItem>New file</DropdownMenuItem>
+diff --git a/src/components/SplitButton/SplitButton.tsx b/src/components/SplitButton/SplitButton.tsx
+index b5c73ee..68798e1 100644
+--- a/src/components/SplitButton/SplitButton.tsx
++++ b/src/components/SplitButton/SplitButton.tsx
+@@ -1,7 +1,23 @@
+ import { forwardRef, type ButtonHTMLAttributes, type HTMLAttributes, type ReactNode } from "react";
+ import { cn } from "../../utils/cn";
++// Deep sibling imports, so a later change to the Button barrel cannot break them.
++import { buttonVariants } from "../Button/Button";
++import { ButtonSize, ButtonVariant } from "../Button/constants";
+ import { ChevronDownIcon } from "../Icons";
+ 
++/* The split parts ARE secondary Buttons: paints, state guards, focus ring and
++ * disabled treatment come from buttonVariants. Only the split geometry is
++ * local — one-sided radii, a single shared seam (the action drops its right
++ * border), and no per-part shadow (the group carries shadow-button). The
++ * one-sided `rounded-*-none` / `border-r-0` classes sit next to the recipe's
++ * `rounded-tight` / `border` (twMerge keeps both) and win because Tailwind
++ * emits longhands after their shorthand. */
++const PART_SHADOW_NONE = [
++  "shadow-none",
++  "[&:not(:disabled):not([aria-disabled=true])]:hover:shadow-none",
++  "[&:not(:disabled):not([aria-disabled=true])]:active:shadow-none",
++];
++
+ /* SplitButtonAction (left part) */
+ 
+ export interface SplitButtonActionProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+@@ -13,17 +29,10 @@ const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
+     <button
+       ref={ref}
+       className={cn(
+-        "inline-flex h-button items-center",
+-        "ds-gap-ui-sm pl-lg pr-lg",
+-        "rounded-l-tight rounded-r-none",
+-        "border border-solid border-border-primary border-r-0",
+-        "bg-secondary text-secondary-fg",
+-        "text-style-button cursor-pointer select-none",
+-        "ds-motion-state",
+-        "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover",
+-        "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active",
+-        "ds-focus-visible-ring",
+-        "ds-disabled-state disabled:border-secondary-border-disabled",
++        buttonVariants({ variant: ButtonVariant.secondary, size: ButtonSize.standard }),
++        // 16px inline padding (the secondary Button's is 12px) and the seam.
++        "px-lg rounded-r-none border-r-0",
++        PART_SHADOW_NONE,
+         className,
+       )}
+       {...props}
+@@ -37,24 +46,23 @@ SplitButtonAction.displayName = "SplitButtonAction";
+ 
+ /* SplitButtonTrigger (chevron) */
+ 
+-export interface SplitButtonTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
++export interface SplitButtonTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
++  /** Accessible name of the icon-only trigger. Defaults to "More options"
++   * unless `aria-labelledby` is passed; pass a localised label to override. */
++  "aria-label"?: string;
++}
+ 
+ const SplitButtonTrigger = forwardRef<
+   HTMLButtonElement,
+   SplitButtonTriggerProps
+->(({ className, ...props }, ref) => (
++>(({ className, "aria-label": ariaLabel, ...props }, ref) => (
+   <button
+     ref={ref}
++    aria-label={ariaLabel ?? (props["aria-labelledby"] ? undefined : "More options")}
+     className={cn(
+-      "inline-flex size-button items-center justify-center",
+-      "rounded-r-tight rounded-l-none",
+-      "border border-solid border-border-primary",
+-      "bg-secondary text-secondary-fg",
+-      "cursor-pointer select-none ds-motion-state",
+-      "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover",
+-      "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active",
+-      "ds-focus-visible-ring",
+-      "ds-disabled-state disabled:border-secondary-border-disabled",
++      buttonVariants({ variant: ButtonVariant.secondary, size: ButtonSize.icon }),
++      "rounded-l-none",
++      PART_SHADOW_NONE,
+       className,
+     )}
+     {...props}
+@@ -64,10 +72,31 @@ const SplitButtonTrigger = forwardRef<
+ ));
+ SplitButtonTrigger.displayName = "SplitButtonTrigger";
+ 
++/* SplitButtonGroup (wrapper) — the composite's chrome as a part, so a split
++ * button whose trigger opens a DropdownMenu (and must therefore be composed
++ * by hand under DropdownMenuTrigger asChild) keeps the same radius and shadow. */
++
++export type SplitButtonGroupProps = HTMLAttributes<HTMLDivElement>;
++
++const SplitButtonGroup = forwardRef<HTMLDivElement, SplitButtonGroupProps>(
++  ({ className, ...props }, ref) => (
++    <div
++      ref={ref}
++      className={cn("inline-flex rounded-tight shadow-button", className)}
++      {...props}
++    />
++  ),
++);
++SplitButtonGroup.displayName = "SplitButtonGroup";
++
+ /* SplitButton (composite) */
+ 
+ export interface SplitButtonProps extends HTMLAttributes<HTMLDivElement> {
++  /** Props for the action part. `disabled` here can only add to the
++   * composite's `disabled`, never undo it. */
+   actionProps?: SplitButtonActionProps;
++  /** Props for the trigger part. `disabled` here can only add to the
++   * composite's `disabled`, never undo it. */
+   triggerProps?: SplitButtonTriggerProps;
+   icon?: ReactNode;
+   disabled?: boolean;
+@@ -75,18 +104,17 @@ export interface SplitButtonProps extends HTMLAttributes<HTMLDivElement> {
+ 
+ const SplitButton = forwardRef<HTMLDivElement, SplitButtonProps>(
+   ({ actionProps, triggerProps, icon, children, className, disabled, ...props }, ref) => (
+-    <div
+-      ref={ref}
+-      className={cn("inline-flex rounded-tight shadow-button", className)}
+-      {...props}
+-    >
+-      <SplitButtonAction icon={icon} disabled={disabled} {...actionProps}>
++    <SplitButtonGroup ref={ref} className={className} {...props}>
++      {/* `disabled` goes after the spread so a part's `disabled: false` cannot
++          re-enable a disabled composite; `icon` stays before it so
++          `actionProps.icon` still overrides. */}
++      <SplitButtonAction icon={icon} {...actionProps} disabled={disabled || actionProps?.disabled}>
+         {children}
+       </SplitButtonAction>
+-      <SplitButtonTrigger disabled={disabled} {...triggerProps} />
+-    </div>
++      <SplitButtonTrigger {...triggerProps} disabled={disabled || triggerProps?.disabled} />
++    </SplitButtonGroup>
+   ),
+ );
+ SplitButton.displayName = "SplitButton";
+ 
+-export { SplitButton, SplitButtonAction, SplitButtonTrigger };
++export { SplitButton, SplitButtonAction, SplitButtonGroup, SplitButtonTrigger };
+diff --git a/src/components/SplitButton/index.ts b/src/components/SplitButton/index.ts
+index 4570393..3b69be5 100644
+--- a/src/components/SplitButton/index.ts
++++ b/src/components/SplitButton/index.ts
+@@ -1,2 +1,2 @@
+-export { SplitButton, SplitButtonAction, SplitButtonTrigger } from './SplitButton';
+-export type { SplitButtonProps, SplitButtonActionProps, SplitButtonTriggerProps } from './SplitButton';
++export { SplitButton, SplitButtonAction, SplitButtonGroup, SplitButtonTrigger } from './SplitButton';
++export type { SplitButtonProps, SplitButtonActionProps, SplitButtonGroupProps, SplitButtonTriggerProps } from './SplitButton';
+diff --git a/src/components/Tabs/Tabs.tsx b/src/components/Tabs/Tabs.tsx
+index c8d8a42..2e83f41 100644
+--- a/src/components/Tabs/Tabs.tsx
++++ b/src/components/Tabs/Tabs.tsx
+@@ -1,5 +1,4 @@
+ import * as TabsPrimitive from "@radix-ui/react-tabs";
+-import { type VariantProps } from "class-variance-authority";
+ import {
+   forwardRef,
+   type ComponentPropsWithoutRef,
+@@ -7,6 +6,7 @@ import {
+ } from "react";
+ import { cn } from "../../utils/cn";
+ import { toggleOptionVariants } from "../Toggle/toggleOption";
++import type { TabSize, TabVariant } from "./constants";
+ 
+ const TabsRoot = TabsPrimitive.Root;
+ 
+@@ -28,10 +28,16 @@ const tabTriggerVariants = toggleOptionVariants;
+ // TabSize / TabVariant (+ their types) live in ./constants — kept server-safe
+ // (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
+ 
++/* `size` / `variant` are typed from the `TabSize` / `TabVariant` consts, not
++ * cva's `VariantProps`: that admits `null`, which cva reads as "no variant"
++ * (an unsized or unfilled tab). */
+ export interface TabsTriggerProps
+-  extends
+-    ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>,
+-    VariantProps<typeof tabTriggerVariants> {}
++  extends ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
++  /** Defaults to `standard`. */
++  size?: TabSize;
++  /** Defaults to `ghost`. */
++  variant?: TabVariant;
++}
+ 
+ const TabsTrigger = forwardRef<
+   ComponentRef<typeof TabsPrimitive.Trigger>,
+diff --git a/src/components/Text/BaseText.tsx b/src/components/Text/BaseText.tsx
+index ef4c644..b7cab6a 100644
+--- a/src/components/Text/BaseText.tsx
++++ b/src/components/Text/BaseText.tsx
+@@ -37,6 +37,14 @@ type PolymorphicTextComponent<TOwnProps> = <
+     },
+ ) => ReactElement | null;
+ 
++/* The render function sees the own props plus span attributes; only the
++ * exported cast below is polymorphic. `as` stays ElementType so any tag can
++ * render. */
++type BaseTextRenderProps = BaseTextOwnProps & { as?: ElementType } & Omit<
++    ComponentPropsWithoutRef<"span">,
++    keyof BaseTextOwnProps | "as"
++  >;
++
+ /**
+  * BaseText — the typography primitive behind every role component and consumer
+  * text (DS controls such as Button apply `text-style-*` classes directly).
+@@ -59,7 +67,7 @@ type PolymorphicTextComponent<TOwnProps> = <
+  *   <BodyText fontSize={16} fontWeight={450} lineHeight={1.6} />
+  *   <BodyText axes={{ [FontAxis.grade]: 40 }} />
+  */
+-const BaseTextBase = forwardRef<HTMLElement, BaseTextProps<ElementType>>(
++const BaseTextBase = forwardRef<HTMLElement, BaseTextRenderProps>(
+   (
+     {
+       variant = TextVariant.body,
+@@ -78,7 +86,7 @@ const BaseTextBase = forwardRef<HTMLElement, BaseTextProps<ElementType>>(
+     },
+     ref,
+   ) => {
+-    const role = unstyled ? undefined : (variant as TextVariant);
++    const role = unstyled ? undefined : variant;
+     const typography = buildTextStyle(
+       { font, fontSize, fontWeight, lineHeight, letterSpacing, axes, tabular },
+       role,
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index 1b67543..f79ddf8 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -202,13 +202,43 @@
+     );
+   }
+ 
++  /* Slider geometry. The Slider root sets --ds-slider-pct, --ds-slider-pad and
++   * --ds-slider-color inline. The thumb-aligned term
++   * (pct / 100 × (100% − handle) …) is the same formula as thumbAlignedLeft()
++   * in Slider.tsx — change them together, or the fills drift off the thumb.
++   * Helpers, not utilities: none of these elements takes the consumer's
++   * className (that goes to Slider's outer box), so nothing needs to merge. */
++  .ds-slider-root {
++    height: var(--ui-height-slider-handle);
++  }
++  .ds-slider-active-part {
++    left: calc(-1 * var(--ds-slider-pad));
++    width: max(0px, calc(var(--ds-slider-pct) / 100 * (100% - var(--ui-width-slider-handle)) - var(--ui-slider-track-gap) + var(--ds-slider-pad)));
++  }
++  .ds-slider-inactive-part {
++    right: calc(-1 * var(--ds-slider-pad));
++    left: min(100%, calc(var(--ds-slider-pct) / 100 * (100% - var(--ui-width-slider-handle)) + var(--ui-width-slider-handle) + var(--ui-slider-track-gap)));
++  }
++  .ds-slider-thumb {
++    width: var(--ui-width-slider-handle);
++    height: var(--ui-height-slider-handle);
++    background-color: var(--ds-slider-color);
++  }
++
+   /* Linear progress — width/left transition whenever --progress-pct changes
+-   * their computed value. */
++   * their computed value. The root sets --progress-pct and --ds-progress-color
++   * inline. The fill never narrows below the bar's height (a round nub at 0%);
++   * fill and remainder sit --ui-spacing-xxs apart, half on each side of the
++   * value. Helpers, not utilities: only the root takes the consumer's
++   * className (its height is the mergeable `h-linear-progress`). */
+   .ds-progress-fill {
++    width: max(var(--ui-height-linear-progress), calc(var(--progress-pct) * 1% - var(--ui-spacing-xxs) / 2));
++    background-color: var(--ds-progress-color);
+     transition: width var(--ui-motion-duration-slow)
+       var(--ui-motion-ease-standard);
+   }
+   .ds-progress-remainder {
++    left: max(var(--ui-height-linear-progress), min(100%, calc(var(--progress-pct) * 1% + var(--ui-spacing-xxs) / 2)));
+     transition: left var(--ui-motion-duration-slow)
+       var(--ui-motion-ease-standard);
+   }

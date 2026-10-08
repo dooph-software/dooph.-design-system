@@ -2,6 +2,7 @@
 // Everything goes through Intl; the package ships no formatting dependency.
 
 import type { DateRange } from "./constants";
+import { isValidDate, isValidRange } from "./dateUtils";
 
 const YEARS_BACK = 10;
 const YEARS_FORWARD = 1;
@@ -27,14 +28,17 @@ function format(date: Date, locale: string | undefined, withYear: boolean): stri
   }).format(date);
 }
 
+/* An invalid value labels as "" so a trigger never crashes; Calendar warns and renders nothing for the same value. */
 export function formatSingleLabel(
   date: Date,
   now: Date,
   locale?: string,
 ): string {
+  if (!isValidDate(date)) return "";
   return format(date, locale, date.getFullYear() !== now.getFullYear());
 }
 
+/* An invalid value labels as "" so a trigger never crashes; Calendar warns and renders nothing for the same value. */
 /**
  * The year appears when the range is not entirely within the current year —
  * and it appears on BOTH endpoints or neither, never on one.
@@ -44,6 +48,7 @@ export function formatRangeLabel(
   now: Date,
   locale?: string,
 ): string {
+  if (!isValidRange(range)) return "";
   const currentYear = now.getFullYear();
   const withYear =
     range.from.getFullYear() !== currentYear ||
@@ -86,10 +91,12 @@ export function buildYearOptions(
   bounds?: { from?: Date; to?: Date },
 ): number[] {
   const nowYear = now.getFullYear();
-  const hasFrom = bounds?.from !== undefined;
-  const hasTo = bounds?.to !== undefined;
-  let first = hasFrom ? bounds!.from!.getFullYear() : nowYear - YEARS_BACK;
-  let last = hasTo ? bounds!.to!.getFullYear() : nowYear + YEARS_FORWARD;
+  const from = bounds?.from;
+  const to = bounds?.to;
+  const hasFrom = from !== undefined;
+  const hasTo = to !== undefined;
+  let first = hasFrom ? from.getFullYear() : nowYear - YEARS_BACK;
+  let last = hasTo ? to.getFullYear() : nowYear + YEARS_FORWARD;
 
   for (const year of [viewMonth.getFullYear(), value.getFullYear()]) {
     if (!hasFrom && year < first) first = year;

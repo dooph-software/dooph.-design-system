@@ -1,0 +1,249 @@
+### U1-F6: Six animated components' motion is hardcoded inside ds-* helpers, with no `--ui-<component>-*` duration/ease family
+- severity: S2
+- category: rule-violation
+- rules: [R6.1, R6.5, R8.1]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg -n \"\\b[0-9.]+m?s\\b|cubic-bezier|ease-out|linear\\b\" src/styles/index.css src/styles/dooph-component-tokens.css (comment lines dropped) → the literals below; tokens.css has no --ui-shimmer-duration, --ui-roll-hover-ease, --ui-copy-*, --ui-progress-*, --ui-slider-glide-*, --ui-shape-button-* (tokens.mjs root list). Consumers of each helper: dsclasses.mjs (ShimmerText, RollHoverText, ShapeButton, LinearProgressIndicator, Slider, CopyButton)."
+- locations:
+  - src/styles/index.css:380
+  - src/styles/index.css:421-424
+  - src/styles/dooph-component-tokens.css:42-44
+  - src/styles/dooph-component-tokens.css:128-133
+  - src/styles/dooph-component-tokens.css:166-171
+  - src/styles/dooph-component-tokens.css:372-374
+- evidence: |
+    index.css:380   animation: ds-shimmer 2s linear infinite;                                   (ShimmerText)
+    index.css:422   transform var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),     (RollHoverText: 5 tokens, no ease token; curve repeated at :423, :424)
+    dooph-component-tokens.css:43-44   color 150ms, filter 150ms;                             (ShapeButton)
+    dooph-component-tokens.css:129     transition: width 300ms ease-out;                      (LinearProgressIndicator; :132 left 300ms ease-out)
+    dooph-component-tokens.css:169-170 transition-duration: 180ms; transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);  (Slider glide)
+    dooph-component-tokens.css:373-374 opacity 120ms ease-out, transform 160ms cubic-bezier(0.32, 0.72, 0, 1);  (CopyButton)
+- impact: arch Rule 6 says every animated component gets a family with "at minimum a duration and an ease"; these six have neither (RollHoverText has a duration but its curve is a literal repeated three times). A consumer cannot retune them the way token-contract.md:142-144 promises ("Retuning a value here retunes the component"), and the next agent adding motion sees mixed precedent — half the helpers read tokens, half hardcode. It is the CSS-side twin of the `const DURATION_MS` anti-pattern R6.5 names.
+- recommendation: Give each a `--ui-<component>-duration`/`-ease` pair in tokens.css (aliasing the existing house curve where the literal is `cubic-bezier(0.32, 0.72, 0, 1)`), and add `--ui-roll-hover-ease`.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U1-F11]
+
+
+### U3-F2: ShimmerText and RollHoverText have no duration + ease token pair; CSS hard-codes `2s linear` and `cubic-bezier(0.32, 0.72, 0, 1)`
+- severity: S2
+- category: rule-violation
+- rules: [R6.1]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "grep -n 'shimmer\\|roll-hover' src/styles/tokens.css → only --ui-shimmer-base/-highlight (colour) and --ui-roll-hover-{duration,stagger,blur,depth,perspective}; no ease token for roll-hover, no duration/ease token for shimmer. The other five wrappers each have both (roll-change, fade-change, reveal-change, rolling-digits, underline-link)."
+- locations:
+  - src/styles/index.css:380
+  - src/styles/index.css:421-424
+  - src/styles/tokens.css:165-171
+  - src/styles/tokens.css:220-227
+- evidence: |
+    index.css:380   animation: ds-shimmer 2s linear infinite;
+    index.css:422   transform var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+    index.css:423   filter var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1),
+    index.css:424   opacity var(--ui-roll-hover-duration) cubic-bezier(0.32, 0.72, 0, 1);
+    tokens.css:220  --ui-roll-hover-duration: 500ms;   (no --ui-roll-hover-ease follows, 220-227)
+    tokens.css:166  --ui-shimmer-base: var(--ui-color-text-tertiary);   (no --ui-shimmer-duration / -ease)
+- impact: A consumer cannot retune the shimmer speed, or the roll-hover curve, through tokens. The other five wrappers allow this, and the codebase skill tells people to "tune via" tokens. The roll-hover curve is also repeated three times inline, so retuning it by hand needs three edits.
+- recommendation: Add `--ui-shimmer-duration`/`-ease` and `--ui-roll-hover-ease` and read them in the existing rules. Values unchanged.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U4-F5: No button ships a `--ui-<component>-*` motion family; durations and easings are hardcoded in components, inline styles and CSS helpers
+- severity: S2
+- category: rule-violation
+- rules: [R6.1, R6.5, R9.14]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg -n \"(DURATION|_MS|duration|ease|cubic-bezier|\\d+ms)\" over the six components + src/styles/dooph-component-tokens.css; grep of src/styles/tokens.css for button/copy/outline/shape/split motion tokens → none (existing families are roll-hover, roll-change, fade-change, shape-morph, rolling-digits, sidebar-icon, underline-link, reveal-change, chat-*)."
+- locations:
+  - src/components/OutlineButton/OutlineButton.tsx:192
+  - src/components/OutlineButton/OutlineButton.tsx:206
+  - src/components/OutlineButton/OutlineButton.tsx:257-258
+  - src/components/OutlineButton/OutlineButton.tsx:278-279
+  - src/components/CopyButton/CopyButton.tsx:16
+  - src/components/CopyButton/CopyButton.tsx:59
+  - src/styles/dooph-component-tokens.css:372-374
+  - src/styles/dooph-component-tokens.css:42-44
+  - src/components/Button/Button.tsx:41
+  - src/components/OutlineButton/OutlineButton.tsx:162
+  - src/components/SplitButton/SplitButton.tsx:24
+  - src/components/SplitButton/SplitButton.tsx:55
+- evidence: |
+    OutlineButton.tsx:192  transition: "opacity 0.36s ease-out",
+    OutlineButton.tsx:206  transition: "opacity 0.42s ease-out",
+    OutlineButton.tsx:258  "opacity 0.36s ease-out, transform 0.16s ease-out",
+    OutlineButton.tsx:279  "opacity 0.42s ease-out, transform 0.22s ease-out",
+    CopyButton.tsx:16      const REVERT_MS = 2000;
+    dooph-component-tokens.css:373-374  opacity 120ms ease-out, / transform 160ms cubic-bezier(0.32, 0.72, 0, 1);   (CopyButton icon swap)
+    dooph-component-tokens.css:43-44    color 150ms, / filter 150ms;   (ShapeButton shadow)
+    Button.tsx:41 / OutlineButton.tsx:162  "transition-all duration-150 ease-out ..."; SplitButton.tsx:24,55 "transition-all duration-100"
+- impact: arch Rule 6 makes timing a token so consumers can retune it; none of these can be retuned. OutlineButton's four inline durations are exactly the "hardcode a duration in a component" shape the rule bans (and inline style beats any consumer CSS). `REVERT_MS` is the literal `const X_MS =` anti-pattern (contrib:131); it is also published to consumers as "for 2s" (usage SKILL.md:116) and in the story doc (CopyButton.stories.tsx:26). The family also disagrees with itself on the base state transition (150ms Button/OutlineButton vs 100ms SplitButton). Note the timer itself is needed (it drives `aria-label` and the live region, which CSS cannot); only its value is the design decision. The plain `duration-*` hover utilities are a repo-wide habit (38 hits in 16 non-story .tsx files), so the maintainer may prefer to sanction them explicitly rather than tokenise them — the inline OutlineButton values and the CopyButton/ShapeButton CSS literals have no such cover.
+- recommendation: Add `--ui-outline-button-*`, `--ui-copy-button-*` (incl. the hold time, or make it a prop with a documented default), `--ui-shape-button-*` duration/ease tokens and read them from `ds-*` classes; decide once whether the shared `duration-150 ease-out` state transition is a system token (`--ui-button-transition-*`) or a sanctioned exception, and record it in arch Rule 6.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U4-F6]
+
+
+### U5-F3: Menu and trigger motion is hardcoded as Tailwind durations/easings in class strings, not a `--ui-<component>-*` token family
+- severity: S2
+- category: rule-violation
+- rules: [R6.1, R6.5]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "docs/audit/_work/greps/h6-timing.txt rows 2,3,27-29,58-61; tokens.css has no menu/dropdown/trigger/search/hotkey motion tokens (grep)."
+- locations:
+  - src/components/Menu/DropdownMenu.tsx:168-170
+  - src/components/Menu/DropdownMenu.tsx:197
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:63
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:196
+  - src/components/DropdownTrigger/DropdownTrigger.tsx:321
+  - src/components/SearchBox/SearchBox.tsx:32
+  - src/components/HotkeyIndicator/HotkeyIndicator.tsx:19
+- evidence: |
+    DropdownMenu.tsx:168  "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-100",
+    DropdownMenu.tsx:169  "data-[state=closed]:animate-out ... data-[state=closed]:slide-out-to-bottom-1.5 data-[state=closed]:duration-150",
+    DropdownMenu.tsx:197  "... transition-colors duration-100 hover:bg-ghost-hover ..."
+    DropdownTrigger.tsx:63  "transition-all duration-150 ease-out",
+    SearchBox.tsx:32      'transition-all duration-100',
+    HotkeyIndicator.tsx:19  'transition-colors duration-100',
+- impact: Rule 6 treats a duration or easing as a design value that lives in `tokens.css`. Here the menu panel's enter/exit and every trigger's hover transition are fixed in component source, so neither a consumer retuning motion nor the DS itself can reach them, and the same 100/150ms values repeat in 7 places in this unit alone. `DropdownCaret` inside the same triggers already runs on `--ui-shape-morph-*` tokens, so one control mixes token-driven and hardcoded motion. Cross-unit: `Button` carries the identical `transition-all duration-150 ease-out` (h6-timing.txt), so this is one repo-wide pattern for the coordinator to merge.
+- recommendation: Add token families for menu enter/exit and control hover transitions and consume them through `ds-*` helpers (as `.ds-dropdown-caret` does), or record in the architecture skill that Tailwind `duration-*` on hover transitions is an accepted exception.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U6-F5: Motion in this unit is hardcoded — `.ds-slider-glide` pins 180ms + a cubic-bezier with no `--ui-slider-*` duration/ease token, and four components use `transition-all duration-1x0 [ease-out]` utilities
+- severity: S2
+- category: rule-violation
+- rules: [R6.1, R6.5]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg -n 'duration|cubic-bezier' src/styles/dooph-component-tokens.css; rg -noE 'duration-[0-9]+|ease-out' in scope files; rg -n 'slider' src/styles/tokens.css shows no duration/ease token (tokens.css:477-509)"
+- locations:
+  - src/styles/dooph-component-tokens.css:166-171
+  - src/components/Toggle/toggleOption.ts:30
+  - src/components/Checkbox/Checkbox.tsx:37
+  - src/components/Input/Input.tsx:123
+  - src/components/Input/Input.tsx:158
+  - src/components/VerificationCode/CodeDigitInput.tsx:48
+- evidence: |
+    dooph-component-tokens.css:168-170  transition-property: left, width;
+                                        transition-duration: 180ms;
+                                        transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    toggleOption.ts:30   "transition-all duration-150 ease-out",
+    Checkbox.tsx:37      "cursor-pointer select-none transition-all duration-150 ease-out",
+    Input.tsx:123        "transition-all duration-100 ds-focus-ring-on-focus",
+    CodeDigitInput.tsx:48  "transition-all duration-100",
+- impact: arch:317-321 requires every animated component to get a `--ui-<component>-*` duration + ease; the slider's settle animation is the one genuine animation here and it is not retunable by a consumer theme, while the rulebook's own examples (RollChangeText, ShapeMorph, chat parts: tokens.css:193-278) show the expected shape. The `duration-150`/`duration-100` utilities are the same pattern repo-wide (also Button, DropdownTrigger, OutlineButton, SearchBox, Tooltip, Toast… — other units), so the two hover-transition speeds (100 vs 150ms) are chosen per component with no shared token.
+- recommendation: Add `--ui-slider-glide-duration`/`-ease` and read them in `.ds-slider-glide`; for hover transitions decide one control-transition token pair and route the utilities through it (coordinate with the unit(s) owning Button/DropdownTrigger — one finding repo-wide).
+- breaking: none
+- contract: src/components/Toggle/toggleOption.ts "Never prefix a package class (h-button, size-*, ds-*) with a variant." → consistent
+- remediation: tbd
+- related: []
+
+
+### U8-F3: All four overlays hard-code enter/exit durations (and Sheet its easings and slide distance) in component class strings; no `--ui-modal-*` / `--ui-sheet-*` / `--ui-tooltip-*` / `--ui-toast-*` motion family exists
+- severity: S2
+- category: rule-violation
+- rules: [R6.1, R6.5, R8.11, R9.2]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg over tokens.css for `--ui-[a-z-]*(duration|ease|motion|delay)` → families only for chat, roll, fade-change, shape-morph, rolling-digits, sidebar-icon, underline-link, reveal-change (tokens.css:193-373); none for modal/sheet/tooltip/toast. Classes resolve in dist-styles.css:1860-2110 (e.g. `.data-\\[state\\=open\\]\\:\\[animation-timing-function\\:cubic-bezier\\(0\\.32\\,0\\.72\\,0\\,1\\)\\]`)."
+- locations:
+  - src/components/Modal/Modal.tsx:29-30
+  - src/components/Modal/Modal.tsx:75-76
+  - src/components/Sheet/Sheet.tsx:37-38
+  - src/components/Sheet/Sheet.tsx:73-74
+  - src/components/Sheet/Sheet.tsx:82-94
+  - src/components/Tooltip/Tooltip.tsx:62-64
+  - src/components/Toast/Toast.tsx:62-63
+- evidence: |
+    Modal.tsx:75   'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:duration-200',
+    Sheet.tsx:73   "data-[state=open]:animate-in … data-[state=open]:duration-300 data-[state=open]:[animation-timing-function:cubic-bezier(0.32,0.72,0,1)]",
+    Sheet.tsx:74   "data-[state=closed]:animate-out … data-[state=closed]:duration-200 data-[state=closed]:[animation-timing-function:cubic-bezier(0.4,0,1,1)]",
+    Sheet.tsx:86   "data-[state=open]:slide-in-from-right-[20%] data-[state=closed]:slide-out-to-right-[20%]",
+    Tooltip.tsx:62 "data-[state=delayed-open]:animate-in … data-[state=delayed-open]:duration-100",
+    Toast.tsx:62   "data-[state=open]:animate-in … data-[state=open]:slide-in-from-right-2 data-[state=open]:duration-150",
+    tokens.css:245-248  --ui-roll-change-out-duration: 200ms; --ui-roll-change-in-duration: 300ms; --ui-roll-change-out-ease: cubic-bezier(0.4, 0, 1, 1); --ui-roll-change-in-ease: cubic-bezier(0.32, 0.72, 0, 1);
+- impact: Rule 6 requires every animated component to own a `--ui-<component>-*` duration + ease family read through CSS; here the motion is baked into Tailwind literals, so a consumer cannot retune overlay motion by token override (unlike rolling digits, sidebar icon, etc.), and the Sheet's 300/200ms + two cubic-beziers are an untokenised copy of exactly the `--ui-roll-change-*` values — two sources for one motion spec that can drift. The codebase skill (SKILL.md:459-460) tells agents "Every animated component owns a `--ui-<component>-*` family", which is false for these four. Reduced motion is correctly handled in CSS (`motion-reduce:*:duration-0`), so R6.2 is met.
+- recommendation: Add per-component duration/ease tokens (Sheet can alias `--ui-roll-change-*` or the reverse) and apply them through `ds-*` helpers in `dooph-component-tokens.css` (animation-duration / animation-timing-function), replacing the `duration-*` literals and arbitrary `[animation-timing-function:…]` / `slide-*-[20%]` values.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U8-F2]
+
+
+### U9-F4: Determinate progress transitions hardcode their timing — ProgressIndicator inline `300ms cubic-bezier(0.4, 0, 0.2, 1)` in the component, LinearProgressIndicator `300ms ease-out` in its ds-* helpers — with no token family, and ProgressIndicator has no reduced-motion path
+- severity: S2
+- category: rule-violation
+- rules: [R6.1, R6.2, R6.5, R8.1]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read PI.tsx 1-332, LPI.tsx 1-79; sed -n 120,142p src/styles/dooph-component-tokens.css; no --ui-*progress* tokens (grep above)."
+- locations:
+  - src/components/ProgressIndicator/ProgressIndicator.tsx:123-124
+  - src/components/ProgressIndicator/ProgressIndicator.tsx:151
+  - src/components/ProgressIndicator/ProgressIndicator.tsx:165
+  - src/styles/dooph-component-tokens.css:128-139
+- evidence: |
+    PI.tsx:123  const easing = "cubic-bezier(0.4, 0, 0.2, 1)";
+    PI.tsx:124  const transition = `stroke-dasharray 300ms ${easing}, stroke-dashoffset 300ms ${easing}`;
+    PI.tsx:165  style={{ transition: `stroke-dashoffset 300ms ${easing}` }}
+    dooph-component-tokens.css:129  transition: width 300ms ease-out;
+    dooph-component-tokens.css:132  transition: left 300ms ease-out;
+- impact: Two siblings that animate the same concept (a progress value changing) use different easings, neither retunable; ProgressIndicator's is an inline style, so no stylesheet (and no reduced-motion block) can reach it. li:184 documents the hardcoded value as the design, so the next agent reproduces it.
+- recommendation: One `--ui-progress-*` duration/ease pair consumed by a `ds-*` class on both components, with reduced-motion in CSS (LinearProgressIndicator already has the reduced-motion block).
+- breaking: none
+- contract: LPI.tsx header "Fill width animates when that percentage changes via registered `@property --progress-pct`" → consistent (recommendation keeps that)
+- remediation: tbd
+- related: [U9-F2, U1 (dooph-component-tokens.css 300ms lines)]
+
+
+### U3-F9: TextLink hard-codes its hover transition duration as a Tailwind utility (`duration-100`), with no token
+- severity: S3
+- category: wrong-layer
+- rules: [R6.5, R6.1]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "grep -rn 'duration-[0-9]' src --include=*.tsx (non-story) → 30 hits across 16 files; TextLink is the one in this unit"
+- locations:
+  - src/components/TextLink/TextLink.tsx:22
+  - (repo-wide, other units) Button.tsx:41, Checkbox.tsx:37, DropdownTrigger.tsx:63,196,321, HotkeyIndicator.tsx:19, Input.tsx:123,158, DropdownMenu.tsx:168-170,197, Modal.tsx:29-31,75-77, OutlineButton.tsx:162, SearchBox.tsx:32, Sheet.tsx:37-39,73-75, SplitButton.tsx:24,55, Table.tsx:114
+- evidence: |
+    TextLink.tsx:22   "transition-colors duration-100",
+- impact: The one motion value in TextLink is fixed at 100ms and cannot be retuned by a consumer, unlike every AnimatedText wrapper. The repo-wide spread shows that micro-interaction transitions have a de facto second convention that Rule 6 does not mention. An agent applying R6.5 literally would flag or "fix" thirty sites inconsistently.
+- recommendation: Decide once, repo-wide: either a shared interaction-transition token (for example `--ui-duration-interaction`) behind a `ds-*` helper, or an explicit carve-out in arch Rule 6 for colour-only state transitions. TextLink follows whichever is chosen.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [repo-wide duration utilities — other units]
+
+
+### U12-F13: `TableRow` hardcodes its hover transition timing (`transition-colors duration-100`) instead of a `--ui-*` motion token — one instance of a 38-occurrence / 16-file pattern
+- severity: S3
+- category: rule-violation
+- rules: [R6.5, R6.1]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg -n \"duration-[0-9]+\" src --glob '*.tsx' --glob '!*.stories.tsx' | wc -l → 38 across 16 files (Input, OutlineButton, Button, Checkbox, DropdownTrigger, HotkeyIndicator, Modal, TextLink, DropdownMenu, Tooltip, Table, CodeDigitInput, Toast, SearchBox, SplitButton, Sheet)."
+- locations:
+  - src/components/Table/Table.tsx:114
+- evidence: |
+    Table.tsx:114        "hover:bg-ghost-hover transition-colors duration-100",
+- impact: arch Rule 6 ("Never hardcode a duration or easing curve in a component"; "Every animated component gets a `--ui-<component>-*` family") is written for all motion, but the hover-transition idiom ignores it DS-wide, so a consumer cannot retune or disable row-hover motion and the rule's scope is ambiguous to the next agent. Kept at S3 here because the defect is the DS-wide idiom, not Table; synthesis should merge with other units' instances or record a rule exemption for hover state-colour transitions.
+- recommendation: Decide once: a shared hover-transition token consumed via a `ds-*` helper, or an explicit Rule 6 exemption for state-colour transitions. Don't fix per file.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+

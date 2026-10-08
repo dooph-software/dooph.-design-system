@@ -7,5 +7,3 @@ export const LightModeIcon = (props: IconProps) => {
         </BaseIcon>
     );
 };
-
-export default LightModeIcon;

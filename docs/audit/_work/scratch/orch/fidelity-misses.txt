@@ -1,0 +1,144 @@
+# evidence misses
+F-001 token-contract.md:110 «... Dark secondary mixes at the shared 20% rather than the s»
+F-003 ShapeButton.tsx:134 «<span ← child 1: `ds-shape-button-shadow absolute inset-0 »
+F-011 .agents/skills/dooph-ds-codebase/SKILL.md:635 «`add-use-client.mjs` stamps dist chunks purely from source /»
+F-012 ShapeMorphSpinner.tsx:57 «<MorphRotationShape / mode={MorphRotationShapeMode.autoplay}»
+F-012 DropdownCaret.tsx:34 «const CARET_SHAPES = { / dropdown: [SquircleShape, PixircleS»
+F-014 cn.ts:17 «'text-style': [ 'text-style-button', 'text-style-body', 'tex»
+F-016 Menu/DropdownMenu.tsx:197 «"... outline-none transition-colors duration-100 hover:bg-gh»
+F-016 dooph-component-tokens.css:43 «color 150ms, / filter 150ms;»
+F-017 Avatar.tsx:23 «"size-[38px] rounded-avatar p-xs" / "size-[22px] rounded-ava»
+F-017 Toast.tsx:76 «"... bg-modal-surface pb-3 pl-[14px] pr-3 pt-[14px] text-tex»
+F-018 dooph-component-tokens.css:35 «.ds-shape-button-focus-visible:focus-visible { outline: 2px »
+F-021 OutlineButton.tsx:244 «"opacity-0 group-hover:opacity-[0.38]", / :249 filter: "blur»
+F-021 OutlineButton.tsx:265 «"opacity-0 group-hover:opacity-[0.22]", / :270 filter: "blur»
+F-026 DropdownMenu.tsx:197 «"... ds-radix-data-disabled ... hover:bg-ghost-hover data-hi»
+F-026 CodeDigitInput.tsx:52 «disabled && / "border-secondary-border-disabled bg-secondary»
+F-027 Tabs.tsx:28 «const tabTriggerVariants = toggleOptionVariants; Tabs.tsx:62»
+F-037 Sheet.tsx:132 «side = SheetSide.right, ← the default replaces undefined onl»
+F-052 README.md:65 «six declarations»
+F-052 tokens.css:388 «--ui-font-mono: / "Google Sans Code", ui-monospace, "SF Mono»
+F-054 constants.ts:12 «export const CheckboxVariant = { / prominent: "prominent", /»
+F-054 constants.ts:10 «* secondary button's active border, and danger washes danger»
+F-054 tokens.css:717 «--ui-color-sticker-danger: #ffffff; / --ui-color-sticker-bg-»
+F-056 THIRD_PARTY_NOTICES.md:76 «### shape-morph / - **License:** MIT / - **Copyright:** Copy»
+F-056 package.json:35 «"files": [ "dist", "skills", "bin" ],»
+F-056 package.json:83 «"@radix-ui/react-popover" / "@radix-ui/react-progress" / "@r»
+F-058 src/components/LoadingSpinner/constants.ts:16 «export const LoadingSpinnerColor = { primary: "primary", pro»
+F-059 tokens.css:451 «--ui-size-checkbox: 18px; tokens.css:720 --ui-size-checkbox:»
+F-059 tokens.css:541 «--ui-radius-checkbox: 6px; tokens.css:721 --ui-radius-checkb»
+F-059 tokens.css:542 «--ui-radius-avatar: 8px; tokens.css:722 --ui-radius-avatar: »
+F-059 tokens.css:543 «--ui-radius-avatar-sm: 6px; tokens.css:723 --ui-radius-avata»
+F-061 CodeDigitInput.tsx:59 «data-filled={filled || undefined} / data-error={hasError || »
+F-061 HotkeyIndicator.tsx:22 «pressed / ? 'bg-ghost-active border-border-primary' / : 'bg-»
+F-062 Input.tsx:8 «`className` always lands on the chrome element; every other »
+F-062 OutlineButton.tsx:171 «{...props} ← onMouseMove/onMouseLeave are not destructured»
+F-063 BaseIcon.tsx:59 «fill: fillColor ?? undefined, / stroke: strokeColor ?? color»
+F-076 Table.tsx:112 «"grid border-b border-border-primary", / "not-last:border-b"»
+F-078 package.json:40 «scripts: no "test" entry»
+F-079 useChangeSwap.ts:13 «The wrapper renders both in one grid cell and spreads these »
+F-080 CloverShape.tsx:28 «<ShapeClipPath id="clip0_504_974" fillColor={fillColor} /> <»
+F-080 BaseShape.tsx:26 «<clipPath id={id}> <rect width={SHAPE_VIEWBOX_SIZE} height={»
+F-082 SearchBox.tsx:9 «shortcut?: string[]; /** Whether the hotkey indicator is sho»
+F-082 DropdownMenuSearch.tsx:29 «shortcut?: string[]; /** Whether the hotkey indicator is sho»
+F-082 DropdownMenuSearch.tsx:38 «shortcut = ["Esc"], / showShortcut = true, / placeholder = "»
+F-082 SearchBox.tsx:39 «<svg width="16" height="16" viewBox="0 0 16 16" »
+F-082 DropdownMenuSearch.tsx:59 «<SearchIcon size={IconSize.md}»
+F-084 index.css:272 «.text-style-mono { font-family: var»
+F-084 dooph-component-tokens.css:636 «.ds-chat-prose code { / font-family: var»
+F-084 dooph-component-tokens.css:580 «.ds-chat-prose h1 { / font-family: var»
+F-084 dooph-component-tokens.css:592 «.ds-chat-prose h3 { / font-family: var»
+F-087 Sticker.tsx:44 «custom: "", Sticker.tsx:104 if»
+F-088 HotkeyIndicator.tsx:22 «pressed ? 'bg-ghost-active border-border-primary' : 'bg-surf»
+F-092 SplitButton.tsx:71 «export interface SplitButtonProps { actionProps?; triggerPro»
+F-095 DatePickerSplitTrigger.tsx:125 «disabled && "bg-secondary-disabled border-secondary-border-d»
+F-100 tokens.css:536 «--ui-radius-tight: 12px; »
+F-100 tokens.css:409 «--ui-text-title: 40px; / --ui-text-hero: 55px;»
+F-102 AIModelSelect.tsx:6 «parts table, then `## constraints` — no `## behavior` sectio»
+F-105 Modal.stories.tsx:31 «<ModalTitle className="sr-only">Modal</ModalTitle> »
+F-105 Icons.stories.tsx:109 «<IconCell icon={»
+F-105 MorphRotationShape.stories.tsx:84 «hand-built caret frame»
+F-107 package.json:62 «"@storybook/addon-docs": "^10.5.10", / "@storybook/react-vit»
+F-108 PentagonShape.tsx:3 «export const PENTAGON_SHAPE_PATH = / "M9.3101 0.863758C10.91»
+F-108 PuffShape.tsx:3 «export const PUFF_SHAPE_PATH = / "M9.39467 1.00318C9.52407 0»
+F-110 AIToolPart.tsx:29 «state?: AIToolPartState; / variant?: AIToolPartVariant;»
+F-120 tokens.css:541 «--ui-radius-checkbox: 6px; --ui-radius-avatar: 8px; --ui-rad»
+
+# anchor misses
+WI-010 «* - Keep this file a faithful port. Behaviour fixes belong in ../svgPa»
+WI-012 «.agents/skills/dooph-ds-codebase/SKILL.md:103-107»
+WI-012 «.agents/skills/dooph-ds-codebase/SKILL.md:660-662»
+WI-016 «codebase:547 `text-style-button`, `text-style-body`, `text-style-label»
+WI-016 «codebase:588 npm run build»
+WI-019 «- Prop name is always `variant` (not `styleVariant`, not `type`, not `»
+WI-024 «arch SKILL.md:159 … `DropdownMenuSection width` is the explicit overri»
+WI-025 «pentagon.svg:2 <path d="M9.47822 2.46207C10.9819 1.42931 13.0181 1.429»
+WI-025 «PentagonShape.tsx:3-4 export const PENTAGON_SHAPE_PATH =»
+WI-025 «"M9.3101 0.863758C10.914 -0.28792 13.086 -0.287919 14.6899 0.863759L22»
+WI-026 «/* tokens.css:449-450, :470-475, :214-215 */»
+WI-026 «/* index.css:68-74 */»
+WI-026 «/* dooph-component-tokens.css:620, :626 */»
+WI-028 «.agents/skills/dooph-ds-codebase/SKILL.md:656-658»
+WI-028 «.agents/skills/dooph-ds-codebase/SKILL.md:676-677»
+WI-028 «git ls-files -s: 120000 … .claude/skills/dooph-ds-codebase ; 120000 … »
+WI-029 «/* src/styles/index.css:16-21 */»
+WI-029 «/* src/styles/index.css:1030-1045 */»
+WI-047 «SKILL.md:212 - **Utility:** `cn`.»
+WI-054 «/* dooph-component-tokens.css:511-517 */»
+WI-058 «"transition-all duration-150 ease-out cursor-pointer select-none",»
+WI-058 «"hover:bg-ghost-hover transition-colors duration-100",»
+WI-059 «default: "h-button px-3",»
+WI-059 «sm: "h-button-sm px-3",»
+WI-059 «"min-w-40 rounded-tight border border-solid border-border-primary",»
+WI-059 «"flex flex-col justify-center overflow-hidden px-4 py-3",»
+WI-061 «/* tokens.css:647-648 */»
+WI-061 «/* tokens.css:73-75 */»
+WI-061 «/* tokens.css:105-106 */»
+WI-062 «/* dooph-component-tokens.css:35-38 */»
+WI-067 «/* index.css:855-859 */»
+WI-070 «/* index.css:421-424 */ transition:»
+WI-070 «/* dooph-component-tokens.css:42-44 */ transition:»
+WI-070 «/* :372-374 */ transition:»
+WI-073 «/* tokens.css:718-724 */»
+WI-073 «/* :root, .light — the values these duplicate (tokens.css:451, :541-54»
+WI-077 «/* src/styles/tokens.css:557-558 */»
+WI-078 «/* src/styles/tokens.css:707-711 (.dark) */»
+WI-079 «/* src/styles/dooph-component-tokens.css:580-597 */»
+WI-079 «/* src/styles/dooph-component-tokens.css:636-644 */»
+WI-082 «// :188-193 (glowing orb 1; orb 2 at :202-207 is 24px / 0.22 / 0.42s)»
+WI-082 «// :244, :247-259 (hover orb 1; orb 2 at :265, :268-280 is 0.22 / 26px»
+WI-088 «Input.tsx:8-9 `className` always lands on the chrome element; every ot»
+WI-092 «* but interactive children (e.g. a ToggleSwitch) are pointer-only insi»
+WI-092 «* Radix menu: Radix's roving focus skips this plain div, Tab is preven»
+WI-092 «* the menu content, arrow keys are only handled when the content itsel»
+WI-092 «* the target, and letter keys start typeahead instead of reaching the »
+WI-092 «* Consumers must provide a keyboard-reachable equivalent (e.g. radio-s»
+WI-092 «* items, or a control outside the menu).»
+WI-097 «/* dooph-component-tokens.css:396-410 */»
+WI-097 «/* index.css:382-388 (context only, not edited) */»
+WI-097 «.ds-shimmer-text {»
+WI-097 «background: none;»
+WI-098 «Sheet.tsx:28-45 (`SheetOverlay`) is Modal.tsx:20-37 with `duration-300»
+WI-104 «const HEIGHT = 12;»
+WI-104 «width="100%"»
+WI-104 «height={HEIGHT}»
+WI-104 «className={cn("block", className)}»
+WI-108 «export const CloverShape = ({»
+WI-108 «strokeWeight,»
+WI-108 «}: ShapeProps) => {»
+WI-115 «import BaseShape, { ShapeClipPath, ShapeProps } from "./BaseShape";»
+WI-115 «export const ArrowShape = ({»
+WI-115 «strokeWeight,»
+WI-115 «}: ShapeProps) => {»
+WI-115 «strokeColor={strokeColor}»
+WI-115 «strokeWeight={strokeWeight}»
+WI-115 «<g clipPath="url(#clip0_504_971)">»
+WI-115 «d={ARROW_SHAPE_PATH}»
+WI-115 «</BaseShape>»
+WI-115 «d={PENTAGON_SHAPE_PATH}»
+WI-115 «fill="currentColor"»
+WI-115 «<path d={SQUIRCLE_SHAPE_PATH} />»
+WI-124 «token-contract.md:17 … (renamed from `--ui-color-brand*` in 5.4, along»
+WI-125 «/* src/styles/dooph-component-tokens.css:27-33 */»
+WI-125 «/* :98-101 */»
+WI-125 «/* :359-361 */»

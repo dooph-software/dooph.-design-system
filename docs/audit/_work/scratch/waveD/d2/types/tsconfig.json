@@ -1,0 +1,7 @@
+{
+  "extends": "../../../../../../../tsconfig.json",
+  "compilerOptions": { "noEmit": true, "declaration": false, "declarationMap": false, "sourceMap": false, "noUnusedLocals": false, "baseUrl": ".",
+    "paths": { "@dooph-software/design-system": ["../../../../../../../src/index.ts"] } },
+  "include": [],
+  "files": ["probe.tsx"]
+}

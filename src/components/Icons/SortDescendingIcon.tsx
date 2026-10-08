@@ -11,5 +11,3 @@ export const SortDescendingIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default SortDescendingIcon;

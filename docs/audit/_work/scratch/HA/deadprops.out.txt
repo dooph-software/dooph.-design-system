@@ -1,0 +1,838 @@
+TO-REST(props) | src/components/AIChat/AIContextGauge.tsx:39 | color | declared src/components/ProgressIndicator/ProgressIndicator.tsx:55
+DROPPED(no rest) | src/components/AIChat/AIModelSelect.tsx:142 | label | declared src/components/AIChat/AIModelSelect.tsx:109
+TO-REST(props) | src/components/AIChat/AIModelSelect.tsx:205 | portal | declared src/components/Tooltip/Tooltip.tsx:36
+TO-REST(props) | src/components/AIChat/AIModelSelect.tsx:205 | portalProps | declared src/components/Tooltip/Tooltip.tsx:37
+DESTRUCTURED-NEVER-READ | src/components/AIChat/AIPromptInput.tsx:88 | onStop | declared src/components/AIChat/AIPromptInput.tsx:83
+TO-REST(cur(whole)) | src/components/AnimatedText/RevealChangeText.tsx:150 | shownChildren | declared src/components/AnimatedText/RevealChangeText.tsx:86
+TO-REST(cur(whole)) | src/components/AnimatedText/RevealChangeText.tsx:150 | open | declared src/components/AnimatedText/RevealChangeText.tsx:87
+TO-REST(cur(whole)) | src/components/AnimatedText/RevealChangeText.tsx:150 | phase | declared src/components/AnimatedText/RevealChangeText.tsx:88
+TO-REST(cur(whole)) | src/components/AnimatedText/RevealChangeText.tsx:211 | shown | declared src/components/AnimatedText/RevealChangeText.tsx:85
+TO-REST(cur(whole)) | src/components/AnimatedText/RevealChangeText.tsx:211 | shownChildren | declared src/components/AnimatedText/RevealChangeText.tsx:86
+TO-REST(cur(whole)) | src/components/AnimatedText/RevealChangeText.tsx:211 | open | declared src/components/AnimatedText/RevealChangeText.tsx:87
+DROPPED(no rest) | src/components/AnimatedText/rollingDigitsModel.ts:173 | digit | declared src/components/AnimatedText/rollingDigitsModel.ts:46
+DROPPED(no rest) | src/components/AnimatedText/rollingDigitsModel.ts:173 | exiting | declared src/components/AnimatedText/rollingDigitsModel.ts:48
+DROPPED(no rest) | src/components/AnimatedText/rollingDigitsModel.ts:173 | entering | declared src/components/AnimatedText/rollingDigitsModel.ts:50
+DROPPED(no rest) | src/components/AnimatedText/RollingDigitsText.tsx:161 | digit | declared src/components/AnimatedText/rollingDigitsModel.ts:46
+TO-REST(cur(whole)) | src/components/AnimatedText/RollingDigitsText.tsx:216 | source | declared src/components/AnimatedText/RollingDigitsText.tsx:197
+TO-REST(cur(whole)) | src/components/AnimatedText/RollingDigitsText.tsx:216 | epoch | declared src/components/AnimatedText/RollingDigitsText.tsx:198
+DROPPED(no rest) | src/components/AnimatedText/RollingDigitsText.tsx:217 | place | declared src/components/AnimatedText/rollingDigitsModel.ts:45
+DROPPED(no rest) | src/components/AnimatedText/RollingDigitsText.tsx:217 | digit | declared src/components/AnimatedText/rollingDigitsModel.ts:46
+DROPPED(no rest) | src/components/AnimatedText/RollingDigitsText.tsx:217 | exiting | declared src/components/AnimatedText/rollingDigitsModel.ts:48
+DROPPED(no rest) | src/components/AnimatedText/RollingDigitsText.tsx:217 | entering | declared src/components/AnimatedText/rollingDigitsModel.ts:50
+DROPPED(no rest) | src/components/AnimatedText/RollingDigitsText.tsx:229 | smallDecimals | declared src/components/AnimatedText/RollingDigitsText.tsx:78
+DROPPED(no rest) | src/components/AnimatedText/RollingDigitsText.tsx:229 | smallDecimalsComponent | declared src/components/AnimatedText/RollingDigitsText.tsx:79
+DROPPED(no rest) | src/components/AnimatedText/RollingDigitsText.tsx:256 | place | declared src/components/AnimatedText/rollingDigitsModel.ts:45
+DROPPED(no rest) | src/components/AnimatedText/RollingDigitsText.tsx:256 | digit | declared src/components/AnimatedText/rollingDigitsModel.ts:46
+DROPPED(no rest) | src/components/AnimatedText/RollingDigitsText.tsx:256 | exiting | declared src/components/AnimatedText/rollingDigitsModel.ts:48
+TO-REST(cur(whole)) | src/components/AnimatedText/useChangeSwap.ts:108 | exiting | declared src/components/AnimatedText/useChangeSwap.ts:82
+TO-REST(cur(whole)) | src/components/AnimatedText/useChangeSwap.ts:108 | entering | declared src/components/AnimatedText/useChangeSwap.ts:84
+TO-REST(cur(whole)) | src/components/AnimatedText/useChangeSwap.ts:132 | source | declared src/components/AnimatedText/useChangeSwap.ts:81
+TO-REST(cur(whole)) | src/components/AnimatedText/useChangeSwap.ts:132 | entering | declared src/components/AnimatedText/useChangeSwap.ts:84
+TO-REST(cur(whole)) | src/components/AnimatedText/useChangeSwap.ts:132 | count | declared src/components/AnimatedText/useChangeSwap.ts:85
+TO-REST(cur(whole)) | src/components/AnimatedText/useChangeSwap.ts:141 | source | declared src/components/AnimatedText/useChangeSwap.ts:81
+TO-REST(cur(whole)) | src/components/AnimatedText/useChangeSwap.ts:141 | exiting | declared src/components/AnimatedText/useChangeSwap.ts:82
+TO-REST(cur(whole)) | src/components/AnimatedText/useChangeSwap.ts:141 | count | declared src/components/AnimatedText/useChangeSwap.ts:85
+DROPPED(no rest) | src/components/Calendar/Calendar.tsx:61 | month | declared src/components/Calendar/Calendar.tsx:32
+DROPPED(no rest) | src/components/Calendar/Calendar.tsx:61 | onMonthChange | declared src/components/Calendar/Calendar.tsx:33
+DROPPED(no rest) | src/components/Calendar/Calendar.tsx:61 | disabled | declared src/components/Calendar/Calendar.tsx:34
+DROPPED(no rest) | src/components/Calendar/Calendar.tsx:61 | yearBounds | declared src/components/Calendar/Calendar.tsx:36
+DROPPED(no rest) | src/components/Calendar/Calendar.tsx:61 | renderDay | declared src/components/Calendar/Calendar.tsx:38
+DROPPED(no rest) | src/components/Calendar/Calendar.tsx:61 | locale | declared src/components/Calendar/Calendar.tsx:39
+DROPPED(no rest) | src/components/Calendar/Calendar.tsx:61 | today | declared src/components/Calendar/Calendar.tsx:41
+DROPPED(no rest) | src/components/Calendar/Calendar.tsx:61 | onSelect | declared src/components/Calendar/Calendar.tsx:50
+DESTRUCTURED-NEVER-READ | src/components/Checkbox/Checkbox.tsx:122 | variant | declared src/components/Checkbox/Checkbox.tsx:50
+DROPPED(no rest) | src/components/DatePicker/DatePickerSplitTrigger.tsx:71 | id | declared src/components/Calendar/constants.ts:36
+DROPPED(no rest) | src/components/DatePicker/DatePickerSplitTrigger.tsx:71 | label | declared src/components/Calendar/constants.ts:37
+DROPPED(no rest) | src/components/DatePicker/DatePickerSplitTrigger.tsx:80 | label | declared src/components/Calendar/constants.ts:37
+DROPPED(no rest) | src/components/DatePicker/DatePickerSplitTrigger.tsx:80 | getRange | declared src/components/Calendar/constants.ts:38
+DROPPED(no rest) | src/components/DatePicker/DatePickerSplitTrigger.tsx:136 | getRange | declared src/components/Calendar/constants.ts:38
+DROPPED(no rest) | src/components/DatePicker/DatePickerTrigger.tsx:40 | today | declared src/components/DatePicker/DatePickerTrigger.tsx:19
+DROPPED(no rest) | src/components/DatePicker/DatePickerTrigger.tsx:40 | locale | declared src/components/DatePicker/DatePickerTrigger.tsx:20
+TO-REST(triggerProps) | src/components/DropdownTrigger/DropdownTrigger.tsx:144 | data-select-type | declared src/components/DropdownTrigger/DropdownTrigger.tsx:135
+TO-REST(triggerProps) | src/components/DropdownTrigger/DropdownTrigger.tsx:144 | data-state | declared src/components/DropdownTrigger/DropdownTrigger.tsx:137
+TO-REST(props(whole)) | src/components/Icons/AIContextIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/AIContextIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/AIContextIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/AIContextIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/AIContextIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/AIContextIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/AIPlanIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/AIPlanIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/AIPlanIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/AIPlanIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/AIPlanIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/AIPlanIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/AIPowerIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/AIPowerIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/AIPowerIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/AIPowerIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/AIPowerIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/AIPowerIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/AISkillIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/AISkillIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/AISkillIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/AISkillIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/AISkillIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/AISkillIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/AISpeedIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/AISpeedIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/AISpeedIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/AISpeedIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/AISpeedIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/AISpeedIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/AIThinkingIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/AIThinkingIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/AIThinkingIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/AIThinkingIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/AIThinkingIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/AIThinkingIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/AIToolActionIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/AIToolActionIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/AIToolActionIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/AIToolActionIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/AIToolActionIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/AIToolActionIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/AIToolReadIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/AIToolReadIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/AIToolReadIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/AIToolReadIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/AIToolReadIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/AIToolReadIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ArrowDownIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ArrowDownIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ArrowDownIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ArrowDownIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ArrowDownIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ArrowDownIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ArrowDownLeftIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ArrowDownLeftIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ArrowDownLeftIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ArrowDownLeftIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ArrowDownLeftIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ArrowDownLeftIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ArrowDownRightIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ArrowDownRightIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ArrowDownRightIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ArrowDownRightIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ArrowDownRightIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ArrowDownRightIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ArrowLeftIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ArrowLeftIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ArrowLeftIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ArrowLeftIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ArrowLeftIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ArrowLeftIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ArrowRightIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ArrowRightIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ArrowRightIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ArrowRightIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ArrowRightIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ArrowRightIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ArrowUpIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ArrowUpIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ArrowUpIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ArrowUpIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ArrowUpIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ArrowUpIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ArrowUpLeftIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ArrowUpLeftIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ArrowUpLeftIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ArrowUpLeftIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ArrowUpLeftIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ArrowUpLeftIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ArrowUpRightIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ArrowUpRightIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ArrowUpRightIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ArrowUpRightIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ArrowUpRightIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ArrowUpRightIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/AttachFileIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/AttachFileIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/AttachFileIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/AttachFileIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/AttachFileIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/AttachFileIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/BarChartAxesIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/BarChartAxesIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/BarChartAxesIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/BarChartAxesIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/BarChartAxesIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/BarChartAxesIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/BarChartIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/BarChartIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/BarChartIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/BarChartIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/BarChartIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/BarChartIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+DROPPED(no rest) | src/components/Icons/BaseIcon.tsx:38 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/BugReportIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/BugReportIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/BugReportIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/BugReportIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/BugReportIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/BugReportIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/CalendarIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/CalendarIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/CalendarIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/CalendarIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/CalendarIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/CalendarIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ChangelogIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ChangelogIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ChangelogIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ChangelogIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ChangelogIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ChangelogIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/CheckIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/CheckIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/CheckIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/CheckIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/CheckIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/CheckIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ChevronDownIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ChevronDownIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ChevronDownIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ChevronDownIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ChevronDownIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ChevronDownIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ChevronLeftIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ChevronLeftIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ChevronLeftIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ChevronLeftIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ChevronLeftIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ChevronLeftIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ChevronRightIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ChevronRightIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ChevronRightIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ChevronRightIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ChevronRightIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ChevronRightIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ChevronsDownUpIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ChevronsDownUpIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ChevronsDownUpIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ChevronsDownUpIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ChevronsDownUpIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ChevronsDownUpIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ChevronsLeftRightIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ChevronsLeftRightIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ChevronsLeftRightIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ChevronsLeftRightIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ChevronsLeftRightIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ChevronsLeftRightIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightLeftIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightLeftIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightLeftIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightLeftIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightLeftIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ChevronsRightLeftIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ChevronsUpDownIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ChevronsUpDownIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ChevronsUpDownIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ChevronsUpDownIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ChevronsUpDownIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ChevronsUpDownIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ChevronUpIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ChevronUpIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ChevronUpIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ChevronUpIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ChevronUpIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ChevronUpIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ClearFilterFunnelIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ClearFilterFunnelIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ClearFilterFunnelIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ClearFilterFunnelIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ClearFilterFunnelIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ClearFilterFunnelIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ClipboardIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ClipboardIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ClipboardIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ClipboardIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ClipboardIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ClipboardIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/CloseCancelIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/CloseCancelIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/CloseCancelIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/CloseCancelIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/CloseCancelIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/CloseCancelIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/CreditCardIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/CreditCardIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/CreditCardIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/CreditCardIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/CreditCardIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/CreditCardIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/DarkModeIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/DarkModeIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/DarkModeIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/DarkModeIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/DarkModeIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/DarkModeIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/DiscPlatterDBIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/DiscPlatterDBIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/DiscPlatterDBIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/DiscPlatterDBIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/DiscPlatterDBIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/DiscPlatterDBIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/DownloadIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/DownloadIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/DownloadIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/DownloadIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/DownloadIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/DownloadIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/DropdownIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/DropdownIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/DropdownIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/DropdownIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/DropdownIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/DropdownIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ErrorAlternativeIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ErrorAlternativeIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ErrorAlternativeIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ErrorAlternativeIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ErrorAlternativeIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ErrorAlternativeIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ErrorIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ErrorIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ErrorIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ErrorIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ErrorIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ErrorIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ExtensionsIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ExtensionsIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ExtensionsIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ExtensionsIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ExtensionsIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ExtensionsIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/FilterFunnelIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/FilterFunnelIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/FilterFunnelIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/FilterFunnelIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/FilterFunnelIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/FilterFunnelIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/FilterLinesIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/FilterLinesIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/FilterLinesIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/FilterLinesIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/FilterLinesIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/FilterLinesIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/FiltersSlidersIcon.tsx:4 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/FiltersSlidersIcon.tsx:4 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/FiltersSlidersIcon.tsx:4 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/FiltersSlidersIcon.tsx:4 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/FiltersSlidersIcon.tsx:4 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/FiltersSlidersIcon.tsx:4 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/GraphIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/GraphIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/GraphIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/GraphIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/GraphIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/GraphIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props) | src/components/Icons/HeartFillIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props) | src/components/Icons/HeartFillIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props) | src/components/Icons/HeartFillIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props) | src/components/Icons/HeartFillIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props) | src/components/Icons/HeartFillIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/HelpIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/HelpIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/HelpIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/HelpIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/HelpIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/HelpIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/HideMoneyIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/HideMoneyIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/HideMoneyIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/HideMoneyIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/HideMoneyIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/HideMoneyIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/InfoIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/InfoIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/InfoIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/InfoIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/InfoIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/InfoIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/InvoiceIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/InvoiceIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/InvoiceIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/InvoiceIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/InvoiceIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/InvoiceIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/KeyIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/KeyIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/KeyIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/KeyIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/KeyIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/KeyIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/LightModeIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/LightModeIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/LightModeIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/LightModeIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/LightModeIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/LightModeIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/LoadingSpinnerIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/LoadingSpinnerIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/LoadingSpinnerIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/LoadingSpinnerIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/LoadingSpinnerIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/LoadingSpinnerIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/LogOutIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/LogOutIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/LogOutIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/LogOutIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/LogOutIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/LogOutIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ManyUsersIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ManyUsersIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ManyUsersIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ManyUsersIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ManyUsersIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ManyUsersIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ManyUsersRoundedIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ManyUsersRoundedIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ManyUsersRoundedIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ManyUsersRoundedIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ManyUsersRoundedIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ManyUsersRoundedIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/NewChatIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/NewChatIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/NewChatIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/NewChatIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/NewChatIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/NewChatIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/OrganizationIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/OrganizationIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/OrganizationIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/OrganizationIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/OrganizationIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/OrganizationIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/OverviewIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/OverviewIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/OverviewIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/OverviewIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/OverviewIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/OverviewIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/PlaceholderIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/PlaceholderIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/PlaceholderIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/PlaceholderIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/PlaceholderIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/PlaceholderIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/PlusIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/PlusIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/PlusIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/PlusIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/PlusIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/PlusIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/RecentsIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/RecentsIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/RecentsIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/RecentsIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/RecentsIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/RecentsIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SaveAlternativeIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SaveAlternativeIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SaveAlternativeIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SaveAlternativeIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SaveAlternativeIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SaveAlternativeIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SaveIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SaveIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SaveIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SaveIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SaveIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SaveIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SearchIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SearchIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SearchIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SearchIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SearchIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SearchIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SendIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SendIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SendIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SendIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SendIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SendIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SettingsBoltIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SettingsBoltIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SettingsBoltIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SettingsBoltIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SettingsBoltIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SettingsBoltIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SettingsGearIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SettingsGearIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SettingsGearIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SettingsGearIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SettingsGearIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SettingsGearIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ShowMoneyIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ShowMoneyIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ShowMoneyIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ShowMoneyIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ShowMoneyIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ShowMoneyIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftHoverIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftHoverIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftHoverIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftHoverIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftHoverIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftHoverIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SidebarLeftIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SidebarRightHoverIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SidebarRightHoverIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SidebarRightHoverIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SidebarRightHoverIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SidebarRightHoverIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SidebarRightHoverIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SidebarRightIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SidebarRightIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SidebarRightIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SidebarRightIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SidebarRightIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SidebarRightIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SortAscendingIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SortAscendingIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SortAscendingIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SortAscendingIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SortAscendingIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SortAscendingIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SortDescendingIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SortDescendingIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SortDescendingIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SortDescendingIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SortDescendingIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SortDescendingIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/StopAlternativeIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/StopAlternativeIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/StopAlternativeIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/StopAlternativeIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/StopAlternativeIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/StopAlternativeIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props) | src/components/Icons/StopFilledIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props) | src/components/Icons/StopFilledIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props) | src/components/Icons/StopFilledIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props) | src/components/Icons/StopFilledIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props) | src/components/Icons/StopFilledIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/StopIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/StopIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/StopIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/StopIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/StopIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/StopIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/SystemThemeIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/SystemThemeIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/SystemThemeIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/SystemThemeIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/SystemThemeIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/SystemThemeIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/TableIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/TableIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/TableIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/TableIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/TableIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/TableIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/TagIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/TagIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/TagIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/TagIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/TagIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/TagIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ThreeColumnsIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ThreeColumnsIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ThreeColumnsIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ThreeColumnsIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ThreeColumnsIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ThreeColumnsIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/ThreeDotsIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/ThreeDotsIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/ThreeDotsIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/ThreeDotsIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/ThreeDotsIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/ThreeDotsIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/UserIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/UserIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/UserIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/UserIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/UserIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/UserIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/UserRoundedIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/UserRoundedIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/UserRoundedIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/UserRoundedIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/UserRoundedIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/UserRoundedIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Icons/WarningIcon.tsx:3 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(props(whole)) | src/components/Icons/WarningIcon.tsx:3 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(props(whole)) | src/components/Icons/WarningIcon.tsx:3 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(props(whole)) | src/components/Icons/WarningIcon.tsx:3 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(props(whole)) | src/components/Icons/WarningIcon.tsx:3 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(props(whole)) | src/components/Icons/WarningIcon.tsx:3 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+DESTRUCTURED-NEVER-READ | src/components/Menu/DropdownMenu.tsx:54 | selectType | declared src/components/Menu/DropdownMenu.tsx:60
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:304 | points | declared src/components/MorphRotationShape/engine/cubic.ts:52
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:304 | pointOnCurve | declared src/components/MorphRotationShape/engine/cubic.ts:116
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:304 | convexTo | declared src/components/MorphRotationShape/engine/cubic.ts:137
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:304 | split | declared src/components/MorphRotationShape/engine/cubic.ts:144
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:304 | reverse | declared src/components/MorphRotationShape/engine/cubic.ts:179
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:304 | transformed | declared src/components/MorphRotationShape/engine/cubic.ts:192
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:304 | calculateBounds | declared src/components/MorphRotationShape/engine/cubic.ts:202
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | points | declared src/components/MorphRotationShape/engine/cubic.ts:52
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | anchor0X | declared src/components/MorphRotationShape/engine/cubic.ts:91
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | anchor0Y | declared src/components/MorphRotationShape/engine/cubic.ts:94
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | control0X | declared src/components/MorphRotationShape/engine/cubic.ts:97
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | control0Y | declared src/components/MorphRotationShape/engine/cubic.ts:100
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | pointOnCurve | declared src/components/MorphRotationShape/engine/cubic.ts:116
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | zeroLength | declared src/components/MorphRotationShape/engine/cubic.ts:130
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | convexTo | declared src/components/MorphRotationShape/engine/cubic.ts:137
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | split | declared src/components/MorphRotationShape/engine/cubic.ts:144
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | reverse | declared src/components/MorphRotationShape/engine/cubic.ts:179
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | transformed | declared src/components/MorphRotationShape/engine/cubic.ts:192
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:328 | calculateBounds | declared src/components/MorphRotationShape/engine/cubic.ts:202
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | points | declared src/components/MorphRotationShape/engine/cubic.ts:52
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | anchor0X | declared src/components/MorphRotationShape/engine/cubic.ts:91
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | anchor0Y | declared src/components/MorphRotationShape/engine/cubic.ts:94
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | control0X | declared src/components/MorphRotationShape/engine/cubic.ts:97
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | control0Y | declared src/components/MorphRotationShape/engine/cubic.ts:100
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | control1X | declared src/components/MorphRotationShape/engine/cubic.ts:103
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | control1Y | declared src/components/MorphRotationShape/engine/cubic.ts:106
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | anchor1X | declared src/components/MorphRotationShape/engine/cubic.ts:109
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | anchor1Y | declared src/components/MorphRotationShape/engine/cubic.ts:112
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | pointOnCurve | declared src/components/MorphRotationShape/engine/cubic.ts:116
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | convexTo | declared src/components/MorphRotationShape/engine/cubic.ts:137
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | split | declared src/components/MorphRotationShape/engine/cubic.ts:144
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | reverse | declared src/components/MorphRotationShape/engine/cubic.ts:179
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | transformed | declared src/components/MorphRotationShape/engine/cubic.ts:192
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:340 | calculateBounds | declared src/components/MorphRotationShape/engine/cubic.ts:202
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:348 | points | declared src/components/MorphRotationShape/engine/cubic.ts:52
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:348 | anchor1X | declared src/components/MorphRotationShape/engine/cubic.ts:109
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:348 | anchor1Y | declared src/components/MorphRotationShape/engine/cubic.ts:112
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:348 | pointOnCurve | declared src/components/MorphRotationShape/engine/cubic.ts:116
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:348 | convexTo | declared src/components/MorphRotationShape/engine/cubic.ts:137
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:348 | split | declared src/components/MorphRotationShape/engine/cubic.ts:144
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:348 | reverse | declared src/components/MorphRotationShape/engine/cubic.ts:179
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:348 | transformed | declared src/components/MorphRotationShape/engine/cubic.ts:192
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:348 | calculateBounds | declared src/components/MorphRotationShape/engine/cubic.ts:202
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | points | declared src/components/MorphRotationShape/engine/cubic.ts:52
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | anchor0X | declared src/components/MorphRotationShape/engine/cubic.ts:91
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | anchor0Y | declared src/components/MorphRotationShape/engine/cubic.ts:94
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | control0X | declared src/components/MorphRotationShape/engine/cubic.ts:97
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | control0Y | declared src/components/MorphRotationShape/engine/cubic.ts:100
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | control1X | declared src/components/MorphRotationShape/engine/cubic.ts:103
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | control1Y | declared src/components/MorphRotationShape/engine/cubic.ts:106
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | anchor1X | declared src/components/MorphRotationShape/engine/cubic.ts:109
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | anchor1Y | declared src/components/MorphRotationShape/engine/cubic.ts:112
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | pointOnCurve | declared src/components/MorphRotationShape/engine/cubic.ts:116
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | zeroLength | declared src/components/MorphRotationShape/engine/cubic.ts:130
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | split | declared src/components/MorphRotationShape/engine/cubic.ts:144
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | reverse | declared src/components/MorphRotationShape/engine/cubic.ts:179
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | transformed | declared src/components/MorphRotationShape/engine/cubic.ts:192
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:373 | calculateBounds | declared src/components/MorphRotationShape/engine/cubic.ts:202
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | points | declared src/components/MorphRotationShape/engine/cubic.ts:52
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | anchor0X | declared src/components/MorphRotationShape/engine/cubic.ts:91
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | anchor0Y | declared src/components/MorphRotationShape/engine/cubic.ts:94
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | control0X | declared src/components/MorphRotationShape/engine/cubic.ts:97
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | control0Y | declared src/components/MorphRotationShape/engine/cubic.ts:100
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | control1X | declared src/components/MorphRotationShape/engine/cubic.ts:103
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | control1Y | declared src/components/MorphRotationShape/engine/cubic.ts:106
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | anchor1X | declared src/components/MorphRotationShape/engine/cubic.ts:109
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | anchor1Y | declared src/components/MorphRotationShape/engine/cubic.ts:112
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | pointOnCurve | declared src/components/MorphRotationShape/engine/cubic.ts:116
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | zeroLength | declared src/components/MorphRotationShape/engine/cubic.ts:130
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | convexTo | declared src/components/MorphRotationShape/engine/cubic.ts:137
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | split | declared src/components/MorphRotationShape/engine/cubic.ts:144
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | reverse | declared src/components/MorphRotationShape/engine/cubic.ts:179
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:414 | calculateBounds | declared src/components/MorphRotationShape/engine/cubic.ts:202
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | points | declared src/components/MorphRotationShape/engine/cubic.ts:52
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | anchor0X | declared src/components/MorphRotationShape/engine/cubic.ts:91
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | anchor0Y | declared src/components/MorphRotationShape/engine/cubic.ts:94
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | control0X | declared src/components/MorphRotationShape/engine/cubic.ts:97
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | control0Y | declared src/components/MorphRotationShape/engine/cubic.ts:100
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | control1X | declared src/components/MorphRotationShape/engine/cubic.ts:103
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | control1Y | declared src/components/MorphRotationShape/engine/cubic.ts:106
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | anchor1X | declared src/components/MorphRotationShape/engine/cubic.ts:109
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | anchor1Y | declared src/components/MorphRotationShape/engine/cubic.ts:112
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | pointOnCurve | declared src/components/MorphRotationShape/engine/cubic.ts:116
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | zeroLength | declared src/components/MorphRotationShape/engine/cubic.ts:130
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | convexTo | declared src/components/MorphRotationShape/engine/cubic.ts:137
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | split | declared src/components/MorphRotationShape/engine/cubic.ts:144
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | transformed | declared src/components/MorphRotationShape/engine/cubic.ts:192
+DROPPED(no rest) | src/components/MorphRotationShape/engine/cubic.ts:422 | calculateBounds | declared src/components/MorphRotationShape/engine/cubic.ts:202
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:121 | findCubicCutPoint | declared src/components/MorphRotationShape/engine/morph.ts:28
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:194 | cubic | declared src/components/MorphRotationShape/engine/morph.ts:75
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:194 | measuredSize | declared src/components/MorphRotationShape/engine/morph.ts:77
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:323 | type | declared src/components/MorphRotationShape/engine/cubic.ts:407
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:332 | cubics | declared src/components/MorphRotationShape/engine/cubic.ts:407
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:359 | f1 | declared src/components/MorphRotationShape/engine/morph.ts:348
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:359 | f2 | declared src/components/MorphRotationShape/engine/morph.ts:349
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:443 | progress | declared src/components/MorphRotationShape/engine/morph.ts:71
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:444 | progress | declared src/components/MorphRotationShape/engine/morph.ts:71
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:495 | features | declared src/components/MorphRotationShape/engine/polygon.ts:46
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:495 | center | declared src/components/MorphRotationShape/engine/polygon.ts:47
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:495 | cubics | declared src/components/MorphRotationShape/engine/polygon.ts:48
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:495 | centerX | declared src/components/MorphRotationShape/engine/polygon.ts:56
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:495 | centerY | declared src/components/MorphRotationShape/engine/polygon.ts:59
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:495 | transformed | declared src/components/MorphRotationShape/engine/polygon.ts:63
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:495 | normalized | declared src/components/MorphRotationShape/engine/polygon.ts:71
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:495 | calculateBounds | declared src/components/MorphRotationShape/engine/polygon.ts:83
+DROPPED(no rest) | src/components/MorphRotationShape/engine/morph.ts:495 | calculateMaxBounds | declared src/components/MorphRotationShape/engine/polygon.ts:98
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:65 | type | declared src/components/MorphRotationShape/engine/cubic.ts:407
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:65 | cubics | declared src/components/MorphRotationShape/engine/cubic.ts:407
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | points | declared src/components/MorphRotationShape/engine/cubic.ts:52
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | anchor0X | declared src/components/MorphRotationShape/engine/cubic.ts:91
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | anchor0Y | declared src/components/MorphRotationShape/engine/cubic.ts:94
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | control0X | declared src/components/MorphRotationShape/engine/cubic.ts:97
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | control0Y | declared src/components/MorphRotationShape/engine/cubic.ts:100
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | control1X | declared src/components/MorphRotationShape/engine/cubic.ts:103
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | control1Y | declared src/components/MorphRotationShape/engine/cubic.ts:106
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | pointOnCurve | declared src/components/MorphRotationShape/engine/cubic.ts:116
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | convexTo | declared src/components/MorphRotationShape/engine/cubic.ts:137
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | split | declared src/components/MorphRotationShape/engine/cubic.ts:144
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | reverse | declared src/components/MorphRotationShape/engine/cubic.ts:179
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | transformed | declared src/components/MorphRotationShape/engine/cubic.ts:192
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:138 | calculateBounds | declared src/components/MorphRotationShape/engine/cubic.ts:202
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:532 | x | declared src/components/MorphRotationShape/engine/utils.ts:19
+DROPPED(no rest) | src/components/MorphRotationShape/engine/polygon.ts:532 | y | declared src/components/MorphRotationShape/engine/utils.ts:20
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:136 | points | declared src/components/MorphRotationShape/engine/cubic.ts:52
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:136 | control1X | declared src/components/MorphRotationShape/engine/cubic.ts:103
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:136 | control1Y | declared src/components/MorphRotationShape/engine/cubic.ts:106
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:136 | pointOnCurve | declared src/components/MorphRotationShape/engine/cubic.ts:116
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:136 | zeroLength | declared src/components/MorphRotationShape/engine/cubic.ts:130
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:136 | convexTo | declared src/components/MorphRotationShape/engine/cubic.ts:137
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:136 | split | declared src/components/MorphRotationShape/engine/cubic.ts:144
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:136 | reverse | declared src/components/MorphRotationShape/engine/cubic.ts:179
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:136 | transformed | declared src/components/MorphRotationShape/engine/cubic.ts:192
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:136 | calculateBounds | declared src/components/MorphRotationShape/engine/cubic.ts:202
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:141 | points | declared src/components/MorphRotationShape/engine/cubic.ts:52
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:141 | control0X | declared src/components/MorphRotationShape/engine/cubic.ts:97
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:141 | control0Y | declared src/components/MorphRotationShape/engine/cubic.ts:100
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:141 | pointOnCurve | declared src/components/MorphRotationShape/engine/cubic.ts:116
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:141 | zeroLength | declared src/components/MorphRotationShape/engine/cubic.ts:130
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:141 | convexTo | declared src/components/MorphRotationShape/engine/cubic.ts:137
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:141 | split | declared src/components/MorphRotationShape/engine/cubic.ts:144
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:141 | reverse | declared src/components/MorphRotationShape/engine/cubic.ts:179
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:141 | transformed | declared src/components/MorphRotationShape/engine/cubic.ts:192
+DROPPED(no rest) | src/components/MorphRotationShape/engine/svgPath.ts:141 | calculateBounds | declared src/components/MorphRotationShape/engine/cubic.ts:202
+DROPPED(no rest) | src/components/MorphRotationShape/engine/symmetry.ts:24 | features | declared src/components/MorphRotationShape/engine/polygon.ts:46
+DROPPED(no rest) | src/components/MorphRotationShape/engine/symmetry.ts:24 | center | declared src/components/MorphRotationShape/engine/polygon.ts:47
+DROPPED(no rest) | src/components/MorphRotationShape/engine/symmetry.ts:24 | centerX | declared src/components/MorphRotationShape/engine/polygon.ts:56
+DROPPED(no rest) | src/components/MorphRotationShape/engine/symmetry.ts:24 | centerY | declared src/components/MorphRotationShape/engine/polygon.ts:59
+DROPPED(no rest) | src/components/MorphRotationShape/engine/symmetry.ts:24 | transformed | declared src/components/MorphRotationShape/engine/polygon.ts:63
+DROPPED(no rest) | src/components/MorphRotationShape/engine/symmetry.ts:24 | normalized | declared src/components/MorphRotationShape/engine/polygon.ts:71
+DROPPED(no rest) | src/components/MorphRotationShape/engine/symmetry.ts:24 | calculateBounds | declared src/components/MorphRotationShape/engine/polygon.ts:83
+DROPPED(no rest) | src/components/MorphRotationShape/engine/symmetry.ts:24 | calculateMaxBounds | declared src/components/MorphRotationShape/engine/polygon.ts:98
+DROPPED(no rest) | src/components/MorphRotationShape/engine/utils.ts:133 | x | declared src/components/MorphRotationShape/engine/utils.ts:19
+DROPPED(no rest) | src/components/MorphRotationShape/engine/utils.ts:133 | y | declared src/components/MorphRotationShape/engine/utils.ts:20
+DROPPED(no rest) | src/components/MorphRotationShape/MorphRotationShape.tsx:143 | timing | declared src/components/MorphRotationShape/MorphRotationShape.tsx:98
+DROPPED(no rest) | src/components/MorphRotationShape/MorphRotationShape.tsx:143 | restingAngle | declared src/components/MorphRotationShape/MorphRotationShape.tsx:100
+DROPPED(no rest) | src/components/MorphRotationShape/MorphRotationShape.tsx:143 | onStepComplete | declared src/components/MorphRotationShape/MorphRotationShape.tsx:101
+TO-REST(props(whole)) | src/components/MorphRotationShape/MorphRotationShape.tsx:165 | mode | declared src/components/MorphRotationShape/MorphRotationShape.tsx:97
+TO-REST(props(whole)) | src/components/MorphRotationShape/MorphRotationShape.tsx:165 | timing | declared src/components/MorphRotationShape/MorphRotationShape.tsx:98
+TO-REST(props(whole)) | src/components/MorphRotationShape/MorphRotationShape.tsx:165 | activeIndex | declared src/components/MorphRotationShape/MorphRotationShape.tsx:99
+TO-REST(props(whole)) | src/components/MorphRotationShape/MorphRotationShape.tsx:165 | restingAngle | declared src/components/MorphRotationShape/MorphRotationShape.tsx:100
+TO-REST(props(whole)) | src/components/MorphRotationShape/MorphRotationShape.tsx:165 | onStepComplete | declared src/components/MorphRotationShape/MorphRotationShape.tsx:101
+DROPPED(no rest) | src/components/MorphRotationShape/MorphRotationShape.tsx:191 | frame | declared src/components/MorphRotationShape/MorphRotationShape.tsx:124
+DROPPED(no rest) | src/components/MorphRotationShape/MorphRotationShape.tsx:191 | symmetry | declared src/components/MorphRotationShape/MorphRotationShape.tsx:127
+DROPPED(no rest) | src/components/ProgressIndicator/waveGeometry.ts:75 | x | declared src/components/ProgressIndicator/waveGeometry.ts:19
+DROPPED(no rest) | src/components/ProgressIndicator/waveGeometry.ts:75 | y | declared src/components/ProgressIndicator/waveGeometry.ts:20
+DROPPED(no rest) | src/components/ProgressIndicator/waveGeometry.ts:99 | x | declared src/components/ProgressIndicator/waveGeometry.ts:19
+DROPPED(no rest) | src/components/ProgressIndicator/waveGeometry.ts:99 | y | declared src/components/ProgressIndicator/waveGeometry.ts:20
+DROPPED(no rest) | src/components/ProgressIndicator/waveGeometry.ts:184 | x | declared src/components/ProgressIndicator/waveGeometry.ts:19
+DROPPED(no rest) | src/components/ProgressIndicator/waveGeometry.ts:184 | y | declared src/components/ProgressIndicator/waveGeometry.ts:20
+DROPPED(no rest) | src/components/ProgressIndicator/waveGeometry.ts:219 | edgeLength | declared src/components/ProgressIndicator/waveGeometry.ts:201
+DESTRUCTURED-NEVER-READ | src/components/Sheet/Sheet.tsx:128 | side | declared src/components/Sheet/Sheet.tsx:79
+TO-REST(iconProps) | src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx:83 | size | declared src/components/Icons/BaseIcon.tsx:18
+TO-REST(iconProps) | src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx:83 | color | declared src/components/Icons/BaseIcon.tsx:19
+TO-REST(iconProps) | src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx:83 | strokeWidth | declared src/components/Icons/BaseIcon.tsx:20
+TO-REST(iconProps) | src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx:83 | strokeColor | declared src/components/Icons/BaseIcon.tsx:21
+TO-REST(iconProps) | src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx:83 | fillColor | declared src/components/Icons/BaseIcon.tsx:22
+TO-REST(iconProps) | src/components/SidebarWithHoverIcon/SidebarWithHoverIcon.tsx:83 | aria-hidden | declared src/components/Icons/BaseIcon.tsx:25
+TO-REST(props(whole)) | src/components/Slider/Slider.tsx:424 | color | declared src/components/Slider/Slider.tsx:33
+TO-REST(props(whole)) | src/components/Slider/Slider.tsx:424 | variant | declared src/components/Slider/Slider.tsx:30
+TO-REST(props(whole)) | src/components/Slider/Slider.tsx:424 | stepColor | declared src/components/Slider/Slider.tsx:36
+TO-REST(props(whole)) | src/components/Slider/Slider.tsx:430 | color | declared src/components/Slider/Slider.tsx:33
+TO-REST(props(whole)) | src/components/Slider/Slider.tsx:430 | variant | declared src/components/Slider/Slider.tsx:30
+TO-REST(props(whole)) | src/components/Slider/Slider.tsx:430 | stepColor | declared src/components/Slider/Slider.tsx:36
+TO-REST(props) | src/components/Slider/Slider.tsx:444 | color | declared src/components/Slider/Slider.tsx:33
+TO-REST(props) | src/components/Slider/Slider.tsx:444 | variant | declared src/components/Slider/Slider.tsx:30
+TO-REST(props) | src/components/Slider/Slider.tsx:444 | stepColor | declared src/components/Slider/Slider.tsx:36
+DESTRUCTURED-NEVER-READ | src/components/Sticker/Sticker.tsx:89 | size | declared src/components/Sticker/Sticker.tsx:84
+TO-REST(props(whole)) | src/components/Sticker/Sticker.tsx:138 | variant | declared src/components/Sticker/Sticker.tsx:60
+TO-REST(props(whole)) | src/components/Sticker/Sticker.tsx:138 | color | declared src/components/Sticker/Sticker.tsx:61
+TO-REST(props(whole)) | src/components/Sticker/Sticker.tsx:138 | size | declared src/components/Sticker/Sticker.tsx:77
+DESTRUCTURED-NEVER-READ | src/components/Tabs/Tabs.tsx:41 | variant | declared src/components/Toggle/toggleOption.ts:38
+DESTRUCTURED-NEVER-READ | src/components/Tabs/Tabs.tsx:41 | size | declared src/components/Toggle/toggleOption.ts:48
+DESTRUCTURED-NEVER-READ | src/components/Toast/Toast.tsx:93 | variant | declared src/components/Toast/Toast.tsx:87
+TO-REST(props(whole)) | src/components/Toast/Toast.tsx:118 | fontSize | declared src/components/Text/textStyle.ts:45
+TO-REST(props(whole)) | src/components/Toast/Toast.tsx:118 | fontWeight | declared src/components/Text/textStyle.ts:46
+TO-REST(props(whole)) | src/components/Toast/Toast.tsx:118 | letterSpacing | declared src/components/Text/textStyle.ts:48
+TO-REST(props(whole)) | src/components/Toast/Toast.tsx:118 | font | declared src/components/Text/textStyle.ts:44
+TO-REST(props(whole)) | src/components/Toast/Toast.tsx:118 | lineHeight | declared src/components/Text/textStyle.ts:47
+TO-REST(props(whole)) | src/components/Toast/Toast.tsx:118 | axes | declared src/components/Text/textStyle.ts:49
+TO-REST(props(whole)) | src/components/Toast/Toast.tsx:118 | tabular | declared src/components/Text/textStyle.ts:65
+TO-REST(props(whole)) | src/components/Toast/Toast.tsx:118 | unstyled | declared src/components/Text/BaseText.tsx:18
+TO-REST(props(whole)) | src/components/Toast/Toast.tsx:118 | as | declared src/components/Text/BaseText.tsx:24
+TO-REST(props) | src/components/Toast/Toast.tsx:127 | fontSize | declared src/components/Text/textStyle.ts:45
+TO-REST(props) | src/components/Toast/Toast.tsx:127 | fontWeight | declared src/components/Text/textStyle.ts:46
+TO-REST(props) | src/components/Toast/Toast.tsx:127 | letterSpacing | declared src/components/Text/textStyle.ts:48
+TO-REST(props) | src/components/Toast/Toast.tsx:127 | font | declared src/components/Text/textStyle.ts:44
+TO-REST(props) | src/components/Toast/Toast.tsx:127 | lineHeight | declared src/components/Text/textStyle.ts:47
+TO-REST(props) | src/components/Toast/Toast.tsx:127 | axes | declared src/components/Text/textStyle.ts:49
+TO-REST(props) | src/components/Toast/Toast.tsx:127 | tabular | declared src/components/Text/textStyle.ts:65
+TO-REST(props) | src/components/Toast/Toast.tsx:127 | unstyled | declared src/components/Text/BaseText.tsx:18
+TO-REST(props) | src/components/Toast/Toast.tsx:127 | as | declared src/components/Text/BaseText.tsx:24
+TO-REST(options(whole)) | src/components/Toast/Toast.tsx:211 | title | declared src/components/Toast/Toast.tsx:26
+TO-REST(options(whole)) | src/components/Toast/Toast.tsx:211 | description | declared src/components/Toast/Toast.tsx:27
+TO-REST(options(whole)) | src/components/Toast/Toast.tsx:211 | duration | declared src/components/Toast/Toast.tsx:29
+TO-REST(options(whole)) | src/components/Toast/Toast.tsx:211 | action | declared src/components/Toast/Toast.tsx:30
+TO-REST(options(whole)) | src/components/Toast/Toast.tsx:211 | dismissLabel | declared src/components/Toast/Toast.tsx:35
+TO-REST(item(whole)) | src/components/Toast/Toast.tsx:227 | title | declared src/components/Toast/Toast.tsx:26
+TO-REST(item(whole)) | src/components/Toast/Toast.tsx:227 | description | declared src/components/Toast/Toast.tsx:27
+TO-REST(item(whole)) | src/components/Toast/Toast.tsx:227 | variant | declared src/components/Toast/Toast.tsx:28
+TO-REST(item(whole)) | src/components/Toast/Toast.tsx:227 | duration | declared src/components/Toast/Toast.tsx:29
+TO-REST(item(whole)) | src/components/Toast/Toast.tsx:227 | action | declared src/components/Toast/Toast.tsx:30
+TO-REST(item(whole)) | src/components/Toast/Toast.tsx:227 | dismissLabel | declared src/components/Toast/Toast.tsx:35
+TO-REST(item(whole)) | src/components/Toast/Toast.tsx:227 | open | declared src/components/Toast/Toast.tsx:40
+DROPPED(no rest) | src/components/Toast/Toast.tsx:230 | title | declared src/components/Toast/Toast.tsx:26
+DROPPED(no rest) | src/components/Toast/Toast.tsx:230 | description | declared src/components/Toast/Toast.tsx:27
+DROPPED(no rest) | src/components/Toast/Toast.tsx:230 | variant | declared src/components/Toast/Toast.tsx:28
+DROPPED(no rest) | src/components/Toast/Toast.tsx:230 | duration | declared src/components/Toast/Toast.tsx:29
+DROPPED(no rest) | src/components/Toast/Toast.tsx:230 | action | declared src/components/Toast/Toast.tsx:30
+DROPPED(no rest) | src/components/Toast/Toast.tsx:230 | dismissLabel | declared src/components/Toast/Toast.tsx:35
+DROPPED(no rest) | src/components/Toast/Toast.tsx:230 | open | declared src/components/Toast/Toast.tsx:40
+DROPPED(no rest) | src/components/Toast/Toast.tsx:248 | title | declared src/components/Toast/Toast.tsx:26
+DROPPED(no rest) | src/components/Toast/Toast.tsx:248 | description | declared src/components/Toast/Toast.tsx:27
+DROPPED(no rest) | src/components/Toast/Toast.tsx:248 | variant | declared src/components/Toast/Toast.tsx:28
+DROPPED(no rest) | src/components/Toast/Toast.tsx:248 | duration | declared src/components/Toast/Toast.tsx:29
+DROPPED(no rest) | src/components/Toast/Toast.tsx:248 | action | declared src/components/Toast/Toast.tsx:30
+DROPPED(no rest) | src/components/Toast/Toast.tsx:248 | dismissLabel | declared src/components/Toast/Toast.tsx:35
+DROPPED(no rest) | src/components/Toast/Toast.tsx:248 | open | declared src/components/Toast/Toast.tsx:40
+DESTRUCTURED-NEVER-READ | src/components/Toggle/Toggle.tsx:65 | variant | declared src/components/Toggle/Toggle.tsx:53
+DESTRUCTURED-NEVER-READ | src/components/Toggle/Toggle.tsx:65 | size | declared src/components/Toggle/Toggle.tsx:54
+TO-REST(props(whole)) | src/components/Tooltip/Tooltip.tsx:94 | fontSize | declared src/components/Text/textStyle.ts:45
+TO-REST(props(whole)) | src/components/Tooltip/Tooltip.tsx:94 | fontWeight | declared src/components/Text/textStyle.ts:46
+TO-REST(props(whole)) | src/components/Tooltip/Tooltip.tsx:94 | letterSpacing | declared src/components/Text/textStyle.ts:48
+TO-REST(props(whole)) | src/components/Tooltip/Tooltip.tsx:94 | font | declared src/components/Text/textStyle.ts:44
+TO-REST(props(whole)) | src/components/Tooltip/Tooltip.tsx:94 | lineHeight | declared src/components/Text/textStyle.ts:47
+TO-REST(props(whole)) | src/components/Tooltip/Tooltip.tsx:94 | axes | declared src/components/Text/textStyle.ts:49
+TO-REST(props(whole)) | src/components/Tooltip/Tooltip.tsx:94 | tabular | declared src/components/Text/textStyle.ts:65
+TO-REST(props(whole)) | src/components/Tooltip/Tooltip.tsx:94 | unstyled | declared src/components/Text/BaseText.tsx:18
+TO-REST(props(whole)) | src/components/Tooltip/Tooltip.tsx:94 | as | declared src/components/Text/BaseText.tsx:24
+TO-REST(props) | src/components/Tooltip/Tooltip.tsx:102 | fontSize | declared src/components/Text/textStyle.ts:45
+TO-REST(props) | src/components/Tooltip/Tooltip.tsx:102 | fontWeight | declared src/components/Text/textStyle.ts:46
+TO-REST(props) | src/components/Tooltip/Tooltip.tsx:102 | letterSpacing | declared src/components/Text/textStyle.ts:48
+TO-REST(props) | src/components/Tooltip/Tooltip.tsx:102 | font | declared src/components/Text/textStyle.ts:44
+TO-REST(props) | src/components/Tooltip/Tooltip.tsx:102 | lineHeight | declared src/components/Text/textStyle.ts:47
+TO-REST(props) | src/components/Tooltip/Tooltip.tsx:102 | axes | declared src/components/Text/textStyle.ts:49
+TO-REST(props) | src/components/Tooltip/Tooltip.tsx:102 | tabular | declared src/components/Text/textStyle.ts:65
+TO-REST(props) | src/components/Tooltip/Tooltip.tsx:102 | unstyled | declared src/components/Text/BaseText.tsx:18
+TO-REST(props) | src/components/Tooltip/Tooltip.tsx:102 | as | declared src/components/Text/BaseText.tsx:24
+TO-REST(props) | src/components/VerificationCode/VerificationCodeInput.tsx:47 | aria-label | declared src/components/VerificationCode/VerificationCodeInput.tsx:38

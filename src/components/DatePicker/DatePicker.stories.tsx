@@ -16,6 +16,7 @@ const TODAY = new Date(2026, 4, 15);
 const meta: Meta<typeof DatePicker> = {
   title: "Dates/DatePicker",
   component: DatePicker,
+  tags: ["autodocs"],
 };
 export default meta;
 
@@ -28,7 +29,7 @@ export const SingleDay: Story = {
       <DatePicker
         mode={DatePickerMode.singleDay}
         value={value}
-        onChange={setValue}
+        onValueChange={setValue}
         today={TODAY}
       />
     );
@@ -45,7 +46,7 @@ export const DateRangeMode: Story = {
       <DatePicker
         mode={DatePickerMode.dateRange}
         value={value}
-        onChange={setValue}
+        onValueChange={setValue}
         today={TODAY}
       />
     );
@@ -61,7 +62,7 @@ export const WithPresetsPanel: Story = {
       <DatePicker
         mode={DatePickerMode.dateRange}
         value={value}
-        onChange={setValue}
+        onValueChange={setValue}
         today={TODAY}
       >
         <CalendarPresetsPanel>
@@ -69,9 +70,9 @@ export const WithPresetsPanel: Story = {
             <CalendarPresetItem
               key={preset.id}
               preset={preset}
-              selected={value}
+              value={value}
               today={TODAY}
-              onSelect={setValue}
+              onValueChange={setValue}
             />
           ))}
         </CalendarPresetsPanel>
@@ -89,7 +90,7 @@ export const SplitTrigger: Story = {
       <DatePicker
         mode={DatePickerMode.dateRange}
         value={value}
-        onChange={setValue}
+        onValueChange={setValue}
         splitPresets={DEFAULT_SPLIT_TRIGGER_PRESETS}
         today={TODAY}
       />
@@ -107,7 +108,7 @@ export const CrossingAYearBoundary: Story = {
       <DatePicker
         mode={DatePickerMode.dateRange}
         value={value}
-        onChange={setValue}
+        onValueChange={setValue}
         today={TODAY}
       />
     );
@@ -116,22 +117,65 @@ export const CrossingAYearBoundary: Story = {
 
 export const DisabledTrigger: Story = {
   render: () => (
-    <div className="flex flex-col gap-sm">
+    <div className="flex flex-col gap-rg">
       <DatePicker
         mode={DatePickerMode.singleDay}
         value={new Date(2026, 4, 14)}
-        onChange={() => {}}
+        onValueChange={() => {}}
         triggerDisabled
         today={TODAY}
       />
       <DatePicker
         mode={DatePickerMode.dateRange}
         value={{ from: new Date(2026, 4, 14), to: new Date(2026, 5, 14) }}
-        onChange={() => {}}
+        onValueChange={() => {}}
         splitPresets={DEFAULT_SPLIT_TRIGGER_PRESETS}
         triggerDisabled
         today={TODAY}
       />
     </div>
   ),
+};
+
+/**
+ * An invalid `value` gives the triggers an empty label instead of crashing.
+ * Opening the panel shows no calendar: Calendar warns and renders nothing.
+ */
+export const InvalidValueEmptyLabel: Story = {
+  render: () => (
+    <div className="flex flex-col gap-rg">
+      <DatePicker
+        mode={DatePickerMode.singleDay}
+        value={new Date("not a date")}
+        onValueChange={() => {}}
+        today={TODAY}
+      />
+      <DatePicker
+        mode={DatePickerMode.dateRange}
+        value={{ from: new Date(NaN), to: TODAY }}
+        onValueChange={() => {}}
+        splitPresets={DEFAULT_SPLIT_TRIGGER_PRESETS}
+        today={TODAY}
+      />
+    </div>
+  ),
+};
+
+/** Contradicts DEFAULT_SPLIT_TRIGGER_PRESETS and the default locale. */
+export const SplitTriggerCustomPresetsLocale: Story = {
+  render: () => {
+    const [value, setValue] = useState<DateRange>(
+      CalendarPresets.days.fourteen.getRange(TODAY),
+    );
+    return (
+      <DatePicker
+        mode={DatePickerMode.dateRange}
+        value={value}
+        onValueChange={setValue}
+        splitPresets={[CalendarPresets.days.fourteen, CalendarPresets.months.six]}
+        locale="de-DE"
+        today={TODAY}
+      />
+    );
+  },
 };

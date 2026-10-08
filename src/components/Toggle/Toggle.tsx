@@ -11,10 +11,17 @@
  *   internal state nor the consumer's onValueChange ever sees it.
  * - Controlled (`value` + `onValueChange`) and uncontrolled (`defaultValue`)
  *   both work; a controlled `value` always wins.
+ * - That whole rule lives in `useNeverClearedValue` below, which
+ *   FancyToggleSwitch also calls. It is the one copy: change it
+ *   here and both rows change together. Exported for that internal use only;
+ *   index.ts does not re-export it.
  *
  * ## constraints
  * - Keep Radix fully controlled here — passing `defaultValue` through would let
  *   Radix's own state clear itself regardless of the callback.
+ * - `useNeverClearedValue` lives in this module (not its own file) because
+ *   this module is already `"use client"`; a separate hook module would need
+ *   the directive too and add a client module to the package.
  */
 
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
@@ -35,11 +42,45 @@ import { toggleOptionVariants, type ToggleOptionSize } from "./toggleOption";
 
 /** Switch size → Toggle Option size. Figma's switch "Icon Small" is the micro icon option. */
 const OPTION_SIZE: Record<ToggleSize, ToggleOptionSize> = {
-  default: "default",
+  standard: "standard",
   sm: "sm",
   icon: "icon",
-  "icon-sm": "icon-micro",
+  "icon-micro": "icon-micro",
 };
+
+/**
+ * The single-select "never cleared" rule shared by ToggleSwitch and
+ * FancyToggleSwitch (single mode). Feed the result straight to a Radix
+ * ToggleGroup `type="single"` as `value` / `onValueChange`: Radix is always
+ * controlled, and its "" (the active item clicked again) is dropped before it
+ * reaches internal state or the consumer's callback.
+ */
+export function useNeverClearedValue({
+  value,
+  defaultValue,
+  onValueChange,
+}: {
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+}) {
+  const [uncontrolledValue, setUncontrolledValue] = useState(
+    defaultValue ?? "",
+  );
+  const isControlled = value !== undefined;
+
+  const handleValueChange = (next: string) => {
+    // Radix reports "" when the active item is clicked again — ignore it.
+    if (next === "") return;
+    if (!isControlled) setUncontrolledValue(next);
+    onValueChange?.(next);
+  };
+
+  return {
+    value: isControlled ? value : uncontrolledValue,
+    onValueChange: handleValueChange,
+  };
+}
 
 const TogglePresentationContext = createContext<{
   variant?: ToggleVariant;
@@ -75,26 +116,19 @@ const ToggleSwitch = forwardRef<
     },
     ref,
   ) => {
-    const [uncontrolledValue, setUncontrolledValue] = useState(
-      defaultValue ?? "",
-    );
-    const isControlled = value !== undefined;
-    const currentValue = isControlled ? value : uncontrolledValue;
-
-    const handleValueChange = (next: string) => {
-      // Radix reports "" when the active item is clicked again — ignore it.
-      if (next === "") return;
-      if (!isControlled) setUncontrolledValue(next);
-      onValueChange?.(next);
-    };
+    const selection = useNeverClearedValue({
+      value,
+      defaultValue,
+      onValueChange,
+    });
 
     return (
       <TogglePresentationContext.Provider value={{ variant, size }}>
         <ToggleGroup.Root
           ref={ref}
           type="single"
-          value={currentValue}
-          onValueChange={handleValueChange}
+          value={selection.value}
+          onValueChange={selection.onValueChange}
           // Figma Toggle Switch: xxs (4px) between options in every variant.
           className={cn("inline-flex items-center gap-xxs", className)}
           {...props}
@@ -120,7 +154,7 @@ const ToggleSwitchItem = forwardRef<
 >(({ className, variant, size, ...props }, ref) => {
   const presentation = useContext(TogglePresentationContext);
   const resolvedVariant = variant ?? presentation.variant ?? ToggleVariant.primary;
-  const resolvedSize = size ?? presentation.size ?? ToggleSize.default;
+  const resolvedSize = size ?? presentation.size ?? ToggleSize.standard;
 
   return (
     <ToggleGroup.Item

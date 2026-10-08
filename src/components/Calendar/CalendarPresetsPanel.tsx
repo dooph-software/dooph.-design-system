@@ -17,7 +17,7 @@ const CalendarPresetsPanel = forwardRef<HTMLDivElement, CalendarPresetsPanelProp
     <div
       ref={ref}
       className={cn(
-        "flex flex-col gap-xxs p-xs",
+        "flex flex-col gap-xxs p-sm",
         "ds-calendar-presets-w",
         "border-r border-solid border-border-primary",
         className,
@@ -28,15 +28,19 @@ const CalendarPresetsPanel = forwardRef<HTMLDivElement, CalendarPresetsPanelProp
 );
 CalendarPresetsPanel.displayName = "CalendarPresetsPanel";
 
+// `value` is omitted because the native button attribute would collide with
+// the range. `onSelect` stays omitted so a pre-v6 `onSelect` is a type error
+// rather than a silently-attached native DOM handler.
 export type CalendarPresetItemProps = Omit<
   ComponentPropsWithoutRef<"button">,
-  "onSelect" | "children"
+  "value" | "onSelect" | "children"
 > & {
   preset: CalendarPreset;
   /** The live committed range, used to derive the active state. */
-  selected?: DateRange | null;
+  value?: DateRange | null;
   today?: Date;
-  onSelect: (range: DateRange) => void;
+  /** Called with this preset's range when the item is clicked. */
+  onValueChange: (range: DateRange) => void;
 };
 
 /**
@@ -45,29 +49,33 @@ export type CalendarPresetItemProps = Omit<
  * `getRange`, so the calendar stays the single source of truth.
  */
 const CalendarPresetItem = forwardRef<HTMLButtonElement, CalendarPresetItemProps>(
-  ({ className, preset, selected, today, onSelect, onClick, ...props }, ref) => {
+  ({ className, preset, value, today, onValueChange, onClick, ...props }, ref) => {
     const now = startOfDay(today ?? new Date());
     const presetRange = preset.getRange(now);
     const isActive =
-      !!selected &&
-      isSameDay(selected.from, presetRange.from) &&
-      isSameDay(selected.to, presetRange.to);
+      !!value &&
+      isSameDay(value.from, presetRange.from) &&
+      isSameDay(value.to, presetRange.to);
 
     return (
       <button
         ref={ref}
         type="button"
         data-active={isActive ? "" : undefined}
+        data-disabled={props.disabled ? "" : undefined}
         onClick={(event) => {
           // Compose rather than let a consumer `onClick` silently replace
           // preset selection: theirs runs first, selection always follows.
           onClick?.(event);
-          onSelect(preset.getRange(now));
+          onValueChange(preset.getRange(now));
         }}
         className={cn(
           menuItemClassName,
           "ds-focus-visible-ring",
-          isActive && "bg-ghost-active",
+          // Zero specificity (:where) so menuItemClassName's hover / press /
+          // disabled fills still win over the active fill, as they did over
+          // the plain `bg-ghost-active` this replaced.
+          "[:where(&[data-active])]:bg-ghost-active",
           className,
         )}
         {...props}

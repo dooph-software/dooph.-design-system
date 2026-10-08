@@ -1,0 +1,2 @@
+probe-polyany.tsx(16,7): error TS2322: Type 'string | null | undefined' is not assignable to type 'number'.
+  Type 'undefined' is not assignable to type 'number'.

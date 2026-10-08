@@ -42,7 +42,24 @@ type SliderPaintProps =
       stepColor?: DsColor;
     };
 
+/** Single thumb. Only `value[0]` / `defaultValue[0]` is drawn and edited; any
+ *  further values are passed back unchanged in `onValueChange` / `onValueCommit`. */
 export type SliderProps = RootProps & SliderPaintProps;
+
+/* Props that only mean something where step dots are drawn. Kept off
+ * `SliderProps` so SliderContinuous, which has no dots, rejects them. */
+type SliderStepProps = {
+  /** Index of the step to draw tall, counted from the step at `min` (0).
+   * Controlled and optional: the slider never sets it, so the consumer
+   * decides what it marks, e.g. the last committed value while a drag is in
+   * progress. Same width and paint as the other dots; the height change
+   * animates. An index with no step (out of range, not an integer) draws
+   * every dot normally. Visual only: if the mark carries meaning, also say
+   * so in text, e.g. via `aria-valuetext` or a nearby label. */
+  highlightedStep?: number;
+};
+
+export type SliderSteppedProps = SliderProps & SliderStepProps;
 
 /* Figma tunes three paints together per variant, and they are not derivable
  * from one another: the track is the variant's own hue at a variant-specific
@@ -94,15 +111,15 @@ const pctOf = (v: number, min: number, max: number) =>
  * and both fills use the SAME formula so a dot sits exactly under the thumb at
  * its stop instead of a few px beside it.
  *
- * IMPORTANT: the calc() class strings below MUST stay as single literal strings
- * — Tailwind's scanner reads source text and cannot see concatenated names. */
+ * The same formula backs `.ds-slider-active-part` / `.ds-slider-inactive-part`
+ * in dooph-component-tokens.css; change them together. */
 const thumbAlignedLeft = (percent: number) =>
   `calc(${percent} / 100 * (100% - var(--ui-width-slider-handle)) + var(--ui-width-slider-handle) / 2)`;
 
 /* SliderBase takes the WIDENED shape: the union is the public contract, but
  * narrowing it inside the implementation would mean branching on the variant
  * just to read props every branch shares. */
-interface SliderBaseProps extends RootProps {
+interface SliderBaseProps extends RootProps, SliderStepProps {
   variant?: SliderVariant;
   color?: DsColor;
   stepColor?: DsColor;
@@ -121,6 +138,7 @@ const SliderBase = forwardRef<
       stepColor,
       variant = SliderVariant.primary,
       showSteps = false,
+      highlightedStep,
       min = 0,
       max = 100,
       step = 1,
@@ -135,6 +153,8 @@ const SliderBase = forwardRef<
       dir,
       inverted,
       'aria-label': ariaLabel,
+      'aria-labelledby': ariaLabelledBy,
+      'aria-describedby': ariaDescribedBy,
       ...props
     },
     ref,
@@ -174,32 +194,43 @@ const SliderBase = forwardRef<
       [onValueChange, settled],
     );
 
+    /* Single thumb: Radix is handed only value[0] (Root `value` below), so its
+     * callbacks carry one value. Re-attach the consumer's extra values so an
+     * `[a, b]` state comes back as `[a', b]`, never truncated, moved or
+     * re-sorted by Radix's closest-thumb logic. Extras pass through as given —
+     * not snapped — so a value off the step grid stays the consumer's. */
+    const withExtras = useCallback(
+      (first: number) => [first, ...settled.slice(1)],
+      [settled],
+    );
+
     const handleValueChange = useCallback(
       (next: number[]) => {
         if (!showSteps) {
-          setInternal(next);
-          onValueChange?.(next);
+          const merged = withExtras(next[0] ?? min);
+          setInternal(merged);
+          onValueChange?.(merged);
           return;
         }
         setDrag(next);
-        publish(next.map(snap));
+        publish(withExtras(snap(next[0] ?? min)));
       },
-      [onValueChange, publish, showSteps, snap],
+      [min, onValueChange, publish, showSteps, snap, withExtras],
     );
 
     const handleValueCommit = useCallback(
       (next: number[]) => {
         setDragging(false);
         if (!showSteps) {
-          onValueCommit?.(next);
+          onValueCommit?.(withExtras(next[0] ?? min));
           return;
         }
-        const snapped = next.map(snap);
+        const snapped = withExtras(snap(next[0] ?? min));
         setDrag(null);
         publish(snapped);
         onValueCommit?.(snapped);
       },
-      [onValueCommit, publish, showSteps, snap],
+      [min, onValueCommit, publish, showSteps, snap, withExtras],
     );
 
     /* Radix only commits when the value actually changed, so a press-and-release
@@ -217,25 +248,31 @@ const SliderBase = forwardRef<
       /* The fine drag step would otherwise make an arrow press move a hundredth
        * of a dot, so stepped keyboard interaction is handled here instead.
        * Left/Right follow the visual direction; Up/Down are always increase or
-       * decrease, matching Radix. */
+       * decrease, matching Radix. PageUp/PageDown and Shift+Arrow move 10 dots,
+       * mirroring Radix's own multiplier (`isSkipKey ? 10 : 1`), so both slider
+       * variants answer the same keys the same way. */
       const flip = (dir === 'rtl' ? -1 : 1) * (inverted ? -1 : 1);
       const from = snap(display[0] ?? min);
+      const isPageKey = event.key === 'PageUp' || event.key === 'PageDown';
+      const isSkipKey =
+        isPageKey || (event.shiftKey && event.key.startsWith('Arrow'));
+      const big = step * (isSkipKey ? 10 : 1);
       let next: number;
 
       switch (event.key) {
         case 'ArrowLeft':
-          next = from - step * flip;
+          next = from - big * flip;
           break;
         case 'ArrowRight':
-          next = from + step * flip;
+          next = from + big * flip;
           break;
         case 'ArrowDown':
         case 'PageDown':
-          next = from - step;
+          next = from - big;
           break;
         case 'ArrowUp':
         case 'PageUp':
-          next = from + step;
+          next = from + big;
           break;
         case 'Home':
           next = min;
@@ -248,7 +285,7 @@ const SliderBase = forwardRef<
       }
 
       event.preventDefault(); // stops Radix moving by the fine drag step
-      const committed = [snap(Math.min(max, Math.max(min, next)))];
+      const committed = withExtras(snap(Math.min(max, Math.max(min, next))));
       setDrag(null);
       publish(committed);
       onValueCommit?.(committed);
@@ -293,7 +330,7 @@ const SliderBase = forwardRef<
       );
     }
 
-    const paints = VARIANT_PAINTS[variant as SliderVariant];
+    const paints = VARIANT_PAINTS[variant];
 
     return (
       /* The outer box owns the width; on the stepped slider its horizontal
@@ -306,7 +343,7 @@ const SliderBase = forwardRef<
       <div
         className={cn(
           'relative flex w-full items-center',
-          showSteps && 'px-xs',
+          showSteps && 'px-sm',
           className,
         )}
       >
@@ -315,7 +352,7 @@ const SliderBase = forwardRef<
           min={min}
           max={max}
           step={showSteps ? step / DRAG_SUBDIVISIONS : step}
-          value={display}
+          value={[display[0] ?? min]}
           onValueChange={handleValueChange}
           onValueCommit={handleValueCommit}
           onKeyDown={handleKeyDown}
@@ -329,19 +366,18 @@ const SliderBase = forwardRef<
           style={
             {
               ...style,
-              '--slider-pct': pct,
+              '--ds-slider-pct': pct,
               '--ds-slider-color': resolveDsColor(color, paints.color),
               '--ds-slider-track-opacity': paints.trackOpacity,
               '--ds-slider-step-active': resolveDsColor(
                 stepColor,
                 paints.stepActive,
               ),
-              '--ds-slider-pad': showSteps ? 'var(--ui-spacing-xs)' : '0px',
+              '--ds-slider-pad': showSteps ? 'var(--ui-spacing-sm)' : '0px',
             } as CSSProperties
           }
           className={cn(
-            'relative flex w-full touch-none select-none items-center',
-            'h-[var(--ui-height-slider-handle)]',
+            'relative flex w-full touch-none select-none items-center ds-slider-root',
             /* ds-radix-data-disabled, NOT `data-[disabled]:ds-disabled-state`.
              * That form was broken twice over: a Tailwind variant only composes
              * with a GENERATED utility, so pairing one with a package class
@@ -364,8 +400,7 @@ const SliderBase = forwardRef<
               className={cn(
                 'ds-slider-part absolute inset-y-0 overflow-hidden data-[hidden]:hidden',
                 'rounded-l-tight rounded-r-slider-inner',
-                'left-[calc(-1*var(--ds-slider-pad))]',
-                'w-[max(0px,calc(var(--slider-pct)/100*(100%-var(--ui-width-slider-handle))-var(--ui-slider-track-gap)+var(--ds-slider-pad)))]',
+                'ds-slider-active-part',
                 'ds-slider-fill',
               )}
             />
@@ -376,8 +411,7 @@ const SliderBase = forwardRef<
               className={cn(
                 'ds-slider-part absolute inset-y-0 overflow-hidden data-[hidden]:hidden',
                 'rounded-r-tight rounded-l-slider-inner',
-                'right-[calc(-1*var(--ds-slider-pad))]',
-                'left-[min(100%,calc(var(--slider-pct)/100*(100%-var(--ui-width-slider-handle))+var(--ui-width-slider-handle)+var(--ui-slider-track-gap)))]',
+                'ds-slider-inactive-part',
                 'bg-secondary border border-solid border-secondary-border',
               )}
             />
@@ -385,17 +419,24 @@ const SliderBase = forwardRef<
              *
              * No colour transition, deliberately. Crossing a step is a discrete
              * event: by the time the dot's state flips the handle has already
-             * passed it, so fading the colour over 150ms only makes the dot lag
+             * passed it, so fading the colour at all only makes the dot lag
              * behind the thing that changed it. The handle and fills DO glide
              * (`.ds-slider-glide`), because they settle onto a position; a dot
-             * does not move, it just switches sides. */}
-            {stepValues.map((v) => (
+             * does not move, it just switches sides.
+             *
+             * The highlighted step is the one exception to "nothing animates
+             * here": its HEIGHT eases between dot and tall (`.ds-slider-dot`
+             * transitions height only), because which step is highlighted is a
+             * consumer state change, not a crossing. Its colour still flips
+             * discretely like every other dot. */}
+            {stepValues.map((v, i) => (
               <span
                 key={v}
                 aria-hidden
                 data-active={v <= (display[0] ?? min) || undefined}
+                data-highlighted={i === highlightedStep || undefined}
                 className={cn(
-                  'absolute top-1/2 size-[6px] -translate-x-1/2 -translate-y-1/2 rounded-full',
+                  'absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full',
                   'ds-slider-dot',
                 )}
                 style={{ left: thumbAlignedLeft(pctOf(v, min, max)) }}
@@ -403,12 +444,13 @@ const SliderBase = forwardRef<
             ))}
           </SliderPrimitive.Track>
           <SliderPrimitive.Thumb
-            aria-label={ariaLabel ?? 'Value'}
+            aria-label={ariaLabel ?? (ariaLabelledBy ? undefined : 'Value')}
+            aria-labelledby={ariaLabelledBy}
+            aria-describedby={ariaDescribedBy}
             className={cn(
-              'block h-[var(--ui-height-slider-handle)] w-[var(--ui-width-slider-handle)]',
+              'block ds-slider-thumb',
               'rounded-slider-inner ds-focus-visible-ring',
               'cursor-grab active:cursor-ew-resize',
-              'bg-[var(--ds-slider-color)]',
             )}
           />
         </SliderPrimitive.Root>
@@ -418,15 +460,19 @@ const SliderBase = forwardRef<
 );
 SliderBase.displayName = 'SliderBase';
 
+/** `className` styles the outer box, which owns the width; `ref`, `style` and
+ * every other prop go to the Radix Root inside it. */
 const SliderContinuous = forwardRef<
   ComponentRef<typeof SliderPrimitive.Root>,
   SliderProps
 >((props, ref) => <SliderBase ref={ref} showSteps={false} {...props} />);
 SliderContinuous.displayName = 'SliderContinuous';
 
+/** `className` styles the outer box, which owns the width and the end-dot
+ * inset; `ref`, `style` and every other prop go to the Radix Root inside it. */
 const SliderStepped = forwardRef<
   ComponentRef<typeof SliderPrimitive.Root>,
-  SliderProps
+  SliderSteppedProps
 >((props, ref) => <SliderBase ref={ref} showSteps {...props} />);
 SliderStepped.displayName = 'SliderStepped';
 
@@ -436,8 +482,13 @@ SliderStepped.displayName = 'SliderStepped';
 export type SliderLabeledProps = SliderProps & {
   stepped?: boolean;
   labels: { start: string; end: string };
+  /** Index of the step to draw tall; see SliderStepped. Only drawn when
+   * `stepped`, since a continuous slider has no step dots. */
+  highlightedStep?: number;
 };
 
+/** `className` styles the outer column (track + labels); `ref`, `style` and
+ * every other prop go to the slider's Radix Root. */
 const SliderLabeled = forwardRef<
   ComponentRef<typeof SliderPrimitive.Root>,
   SliderLabeledProps

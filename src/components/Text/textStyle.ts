@@ -11,6 +11,7 @@
  */
 
 import type { CSSProperties } from 'react';
+import { toPxLength } from '../../utils/length';
 import {
   ROLE_AXIS_TOKEN,
   type FontAxesValue,
@@ -21,10 +22,6 @@ import {
   type LineHeightValue,
   type TextVariant,
 } from './constants';
-
-/** Numbers mean px; strings (incl. `var(--ui-*)` tokens) pass through. */
-const toLength = (value: string | number | undefined) =>
-  typeof value === 'number' ? `${value}px` : value;
 
 /** Numbers stay unitless — a line-height ratio scales with font-size, px does not. */
 const toUnitless = (value: string | number | undefined) =>
@@ -90,10 +87,10 @@ export const buildTextStyle = (
   const style: CSSProperties = {};
 
   if (font !== undefined) style.fontFamily = font;
-  if (fontSize !== undefined) style.fontSize = toLength(fontSize);
+  if (fontSize !== undefined) style.fontSize = toPxLength(fontSize);
   if (fontWeight !== undefined) style.fontWeight = toUnitless(fontWeight);
   if (lineHeight !== undefined) style.lineHeight = toUnitless(lineHeight);
-  if (letterSpacing !== undefined) style.letterSpacing = toLength(letterSpacing);
+  if (letterSpacing !== undefined) style.letterSpacing = toPxLength(letterSpacing);
   /* Explicit both ways. `proportional-nums` rather than `normal` so passing
    * false overrides an inherited tabular run instead of merely declining to
    * set one. */

@@ -26,18 +26,15 @@
  *   text. No 3D, no blur; that treatment belongs to RollHoverText.
  * - `smallDecimalsComponent` is required when `smallDecimals` is true —
  *   enforced by the discriminated union below, never by a runtime throw.
- *
- * ## updating
- * - Motion lives in CSS and in tokens (`--ui-rolling-digits-*`). Nothing here
- *   may hold a duration: an earlier version mirrored the CSS timings in JS
- *   constants to stage the fade against the roll, and the mirror desynced.
- * - There is no timer, no requestAnimationFrame and no transitionend in this
- *   file, and adding one is almost always the wrong fix. Entry is a mount
+ * - No duration in this file: motion lives in CSS, timing and easing on the
+ *   motion scale (`--ui-motion-*`), stagger and fade ratio in the
+ *   `--ui-rolling-digits-*` tokens. A JS copy of a CSS duration desyncs from it
+ *   and the fade overruns the roll.
+ * - No timer, requestAnimationFrame or transitionend here. Entry is a mount
  *   animation, which needs no scheduling; exit is a single `animationend`.
- * - The reconcile runs in the RENDER phase (React's documented "adjusting state
- *   when props change"). Do not move it into an effect — that reintroduces a
- *   frame of lag between the value and the wheels, which is what forced the old
- *   `hasCents` union hack.
+ * - The reconcile runs in the RENDER phase (React's "adjusting state when props
+ *   change"). Moving it into an effect adds a frame of lag between the value
+ *   and the wheels.
  */
 "use client";
 
@@ -126,9 +123,9 @@ function Wheel({
         } as CSSProperties
       }
       /* Only the wheel reports; its separator is a sibling that unmounts with
-       * it. Guarded on the target because the roll's own transitionend and any
-       * animation a consumer puts on the content would otherwise both land
-       * here. */
+       * it. Guarded on the target because an animation a consumer puts on the
+       * content would otherwise bubble its own animationend here (the column's
+       * roll is a transition, so it never fires animationend). */
       onAnimationEnd={(e) => {
         if (state.exiting && e.target === e.currentTarget) onExited(state.key);
       }}
@@ -232,12 +229,10 @@ const RollingDigitsTextBase = forwardRef<
     smallDecimals = false,
     smallDecimalsComponent: SmallDecimals,
     className,
-    style,
     ...rest
   } = props as RollingDigitsTextBaseProps & {
     smallDecimals?: boolean;
     smallDecimalsComponent?: SmallDecimalsComponent;
-    className?: string;
   };
 
   const parsed = useMemo(() => parseDigitsString(children), [children]);
@@ -271,7 +266,6 @@ const RollingDigitsTextBase = forwardRef<
     <span
       ref={ref}
       className={cn("ds-rolling-digits", className)}
-      style={style}
       {...rest}
     >
       {/* Ten glyphs per wheel would be announced as "0123456789" once per digit,

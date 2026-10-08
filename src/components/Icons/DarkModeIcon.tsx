@@ -6,5 +6,3 @@ export const DarkModeIcon = (props: IconProps) => {
         </BaseIcon>
     );
 };
-
-export default DarkModeIcon;

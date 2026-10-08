@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button, ButtonSize, ButtonVariant } from "../Button";
 import { HotkeyIndicator } from "../HotkeyIndicator";
 import { HelpIcon, SettingsGearIcon } from "../Icons";
@@ -10,7 +10,7 @@ import {
   TooltipTitle,
   TooltipTrigger,
 } from "./Tooltip";
-import { TooltipTypes } from "./constants";
+import { TooltipVariant } from "./constants";
 
 const meta = {
   title: "Overlays/Tooltip",
@@ -20,7 +20,7 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: Object.values(TooltipTypes),
+      options: Object.values(TooltipVariant),
     },
     themeInverse: { control: "boolean" },
     side: {
@@ -57,7 +57,7 @@ export const Rich: Story = {
       <TooltipTrigger asChild>
         <Button variant={ButtonVariant.ghost}>Hover me</Button>
       </TooltipTrigger>
-      <TooltipContent variant={TooltipTypes.rich}>
+      <TooltipContent variant={TooltipVariant.rich}>
         <TooltipTitle>Command Palette</TooltipTitle>
         <TooltipBody>Search across all actions and settings</TooltipBody>
       </TooltipContent>
@@ -73,7 +73,7 @@ export const Composable: Story = {
           <SettingsGearIcon />
         </Button>
       </TooltipTrigger>
-      <TooltipContent variant={TooltipTypes.complex}>
+      <TooltipContent variant={TooltipVariant.complex}>
         <div className="flex items-center gap-3 p-3">
           <SettingsGearIcon />
           <div className="flex flex-col gap-1">
@@ -124,5 +124,23 @@ export const ThemeInverseDisabled: Story = {
         Inherits the current theme
       </TooltipContent>
     </Tooltip>
+  ),
+};
+
+/** portal={false} renders inside the clipping box (and is clipped); sideOffset 16; no open delay. */
+export const InlineNoDelay: Story = {
+  render: () => (
+    <TooltipProvider delayDuration={0}>
+      <div className="flex h-24 w-64 items-start justify-center overflow-hidden border border-solid border-border-primary p-lg">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant={ButtonVariant.ghost}>Inline, clipped</Button>
+          </TooltipTrigger>
+          <TooltipContent portal={false} sideOffset={16} side="bottom">
+            Rendered in place, not portalled
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
   ),
 };

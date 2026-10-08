@@ -34,8 +34,16 @@
   ],
   "files": [
     "dist",
+    "!dist/components/**/*.js",
+    "!dist/components/**/*.cjs",
+    "!dist/components/**/*.map",
+    "!dist/utils/**/*.js",
+    "!dist/utils/**/*.cjs",
+    "!dist/utils/**/*.map",
+    "!dist/**/*.cjs.map",
     "skills",
-    "bin"
+    "bin",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {
     "generate-icon-exports": "node scripts/generate-icon-exports.mjs",
@@ -45,10 +53,9 @@
     "prep-release:minor": "npm version minor && npm run build && git push --follow-tags",
     "sync-tokens": "node scripts/sync-theme.mjs",
     "build:js": "node --max-old-space-size=8192 node_modules/tsup/dist/cli-default.js",
-    "build:css": "tailwindcss -i src/styles/index.css -o dist/styles.css && npm run copy-theme",
-    "copy-theme": "node scripts/copy-theme.mjs",
+    "build:css": "node scripts/emit-css.mjs",
     "build": "npm run generate-icon-exports && npm run generate-shape-morph-ease && npm run sync-tokens && npm run build:js",
-    "build:watch": "tsup --watch",
+    "build:watch": "npm run generate-icon-exports && npm run generate-shape-morph-ease && npm run sync-tokens && node --max-old-space-size=8192 node_modules/tsup/dist/cli-default.js --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "tsc --noEmit",

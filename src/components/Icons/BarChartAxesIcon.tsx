@@ -10,5 +10,3 @@ export const BarChartAxesIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default BarChartAxesIcon;

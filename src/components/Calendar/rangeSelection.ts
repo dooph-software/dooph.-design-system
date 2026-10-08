@@ -15,7 +15,7 @@ export type RangeClickResult =
   | { kind: "commit"; range: DateRange };
 
 /**
- * `onChange` must fire only for a "commit" result. A "pending" result leaves
+ * `onValueChange` must fire only for a "commit" result. A "pending" result leaves
  * the consumer's committed value untouched, so an incomplete range is never
  * emitted and never rendered.
  */
@@ -39,7 +39,7 @@ export function previewRange(anchor: Date, hovered: Date): DateRange {
 
 export type DayRangePosition = "none" | "start" | "middle" | "end" | "single";
 
-/** Drives the band rounding in CalendarGrid — see the layer model in Task 9. */
+/** Drives the band rounding in CalendarGrid. */
 export function getDayRangePosition(
   day: Date,
   range: DateRange | null,

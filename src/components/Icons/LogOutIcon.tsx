@@ -9,5 +9,3 @@ export const LogOutIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default LogOutIcon;

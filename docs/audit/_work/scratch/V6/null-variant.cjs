@@ -1,0 +1,13 @@
+const B='C:/Users/stick/Github/dooph/dooph-ds-audit-build';
+const React=require(B+'/node_modules/react');
+const {renderToStaticMarkup}=require(B+'/node_modules/react-dom/server');
+const {cva}=require(B+'/node_modules/class-variance-authority');
+const ds=require(B+'/dist/index.cjs');
+const h=React.createElement;
+console.log('default    :', renderToStaticMarkup(h(ds.Button,null,'x')).match(/class="([^"]*)"/)[1].split(' ').filter(c=>/^(bg-|text-secondary|h-button|px-3|size-)/.test(c)).join(' '));
+const nul=renderToStaticMarkup(h(ds.Button,{variant:null,size:null},'x'));
+console.log('null/null  :', nul);
+const vn=renderToStaticMarkup(h(ds.Button,{variant:null},'x')).match(/class="([^"]*)"/)[1];
+console.log('variant=null has bg-*:', /\bbg-/.test(vn), '| tail:', vn.split(' ').slice(-3).join(' '));
+const sheetLike=cva('fixed z-50',{variants:{side:{right:'inset-y-0 right-0'}},defaultVariants:{side:'right'}});
+console.log('cva side undefined:', JSON.stringify(sheetLike({side:undefined})), ' side null:', JSON.stringify(sheetLike({side:null})));

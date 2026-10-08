@@ -3,10 +3,13 @@
  *
  * ## behavior
  * - `state` picks the tone: `active` shimmers the label via ShimmerText (re-based
- *   onto the tool pair by `ds-chat-tool-shimmer`), `complete` rests at ghost
- *   weight, `error` paints the label danger.
+ *   onto the tool pair by `ds-chat-tool-shimmer`), `complete` rests at
+ *   text-secondary and lifts to text-primary under row hover, `error` paints the
+ *   label danger.
  * - `meta` (timing, token count, a failure reason) stays visible while active
  *   and is revealed on hover once settled.
+ * - The root carries `data-state` (AIToolPartState) and `data-variant`; the
+ *   error label reads `data-state`, and both are consumer styling hooks.
  * - `variant={AIToolPartVariant.skill}` is the static skill-load row: no hover
  *   response and no meta.
  *
@@ -15,8 +18,9 @@
  *   ReactNode. The component formats nothing and measures nothing — it holds no
  *   timer. Elapsed time is ticked by the consumer and passed in as `meta`, so it
  *   starts whenever THEY decide, not on mount.
- * - `state` is AIToolPartState, never an AI SDK state string. Mapping one onto
- *   the other is the consumer's one line of glue.
+ * - `state` is AIToolPartState, never an AI SDK state string: taking the SDK's
+ *   strings would tie the package to one SDK's vocabulary and version. Mapping one
+ *   onto the other is the consumer's one line of glue.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../utils/cn";
@@ -54,7 +58,7 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
         data-state={state}
         data-variant={variant}
         className={cn(
-          "flex w-full min-w-0 select-none items-center gap-sm px-xs py-xxs text-style-body",
+          "group/tool flex w-full min-w-0 select-none items-center gap-rg px-sm py-xxs text-style-body",
           !isSkill && "ds-chat-reveal-root",
           className,
         )}
@@ -68,9 +72,7 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
           <span
             className={cn(
               "shrink-0 whitespace-nowrap",
-              state === AIToolPartState.error
-                ? "text-danger-primary"
-                : "text-ghost-fg",
+              "text-text-secondary group-data-[state=error]/tool:text-danger-primary",
               state === AIToolPartState.complete && !isSkill && "ds-chat-lift",
             )}
           >
@@ -80,7 +82,7 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
         {showMeta ? (
           <span
             className={cn(
-              "min-w-0 truncate text-text-tertiary",
+              "min-w-0 truncate text-text-secondary",
               !isActive && "ds-chat-reveal",
             )}
           >

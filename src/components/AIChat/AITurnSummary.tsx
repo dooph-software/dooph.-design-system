@@ -2,15 +2,16 @@
  * AITurnSummary — the closing row of a settled assistant turn (Figma 761:1368).
  *
  * ## behavior
- * - `label` rests at ghost weight ("Worked for 1m 22s"), `meta` at tertiary
- *   ("12k tokens"). With `copyValue`, a ghost CopyButton is revealed on hover
+ * - `label` rests at text-secondary ("Worked for 1m 22s") and lifts to
+ *   text-primary on hover, `meta` stays text-secondary ("12k tokens").
+ *   With `copyValue`, a ghost CopyButton is revealed on hover
  *   (Figma Variant2) and on keyboard focus.
+ * - Meant for a settled turn; when to render it is the consumer's call, since
+ *   only they know when their stream has finished.
  *
  * ## constraints
  * - Durations and counts arrive formatted. The component never reads a clock
  *   or a usage object; what "worked for" measures is the consumer's decision.
- * - Render it only once a turn has settled — that rule is the consumer's to
- *   apply, since only they know when their stream has finished.
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../utils/cn";
@@ -34,16 +35,16 @@ const AITurnSummary = forwardRef<HTMLDivElement, AITurnSummaryProps>(
     <div
       ref={ref}
       className={cn(
-        "ds-chat-reveal-root flex h-button-sm w-full min-w-0 select-none items-center gap-sm px-xs text-style-body",
+        "ds-chat-reveal-root flex h-button-sm w-full min-w-0 select-none items-center gap-rg px-sm text-style-body",
         className,
       )}
       {...props}
     >
       {label != null && label !== false ? (
-        <span className="shrink-0 whitespace-nowrap text-ghost-fg">{label}</span>
+        <span className="ds-chat-lift shrink-0 whitespace-nowrap text-text-secondary">{label}</span>
       ) : null}
       {meta != null && meta !== false ? (
-        <span className="min-w-0 truncate text-text-tertiary">{meta}</span>
+        <span className="min-w-0 truncate text-text-secondary">{meta}</span>
       ) : null}
       {copyValue !== undefined ? (
         <CopyButton

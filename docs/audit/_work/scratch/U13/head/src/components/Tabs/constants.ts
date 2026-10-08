@@ -1,0 +1,41 @@
+// Server-safe constants — no client APIs, intentionally NO "use client" directive
+// so these dot-accessible enums can be read from React Server Components.
+
+/**
+ * Dot-accessible tab size constant.
+ * Usage: <TabsTrigger size={TabSize.icon} />
+ */
+export const TabSize = {
+  /** 38px — Figma `buttonSizes/buttonHeight`, `md` (16px) horizontal padding. */
+  default: "default",
+  /** 34px — Figma `buttonSizes/smallButtonHeight`, `rg` (12px) padding. */
+  sm: "sm",
+  /** 28px compact item — Figma Toggle Option "Micro", radius-mini. */
+  micro: "micro",
+  /**
+   * Height follows the parent instead of a fixed value — for a segmented row
+   * nested in a control whose own height is authoritative.
+   */
+  fill: "fill",
+  /** 38×38 icon-only tab. */
+  icon: "icon",
+  /** 34×34 icon-only tab, pairing with the small variants. */
+  iconSm: "icon-sm",
+  /** 28×28 icon-only tab — Figma Micro icon (Tab Select "Container Icon"). */
+  iconMicro: "icon-micro",
+} as const;
+export type TabSize = (typeof TabSize)[keyof typeof TabSize];
+
+/**
+ * Dot-accessible tab variant constant.
+ * Usage: <TabsTrigger variant={TabVariant.primary} />
+ *
+ * `unselected` renders the shared unselected look even when the tab is active —
+ * for a trigger that must never read as chosen.
+ */
+export const TabVariant = {
+  ghost: "ghost",
+  primary: "primary",
+  unselected: "unselected",
+} as const;
+export type TabVariant = (typeof TabVariant)[keyof typeof TabVariant];

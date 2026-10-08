@@ -1,30 +1,32 @@
 /*
- * Checkbox — Radix checkbox with brand/primary checked fills.
+ * Checkbox — Radix checkbox with prominent/primary checked fills.
  *
  * ## behavior
- * - Unchecked hover/active use secondary surface tokens.
- * - Checked/indeterminate fill follows `CheckboxVariant` (brand | primary).
+ * - Unchecked hover/active use secondary surface tokens; a checked or
+ *   indeterminate box keeps its fill while pressed.
+ * - Checked/indeterminate fill follows `CheckboxVariant` (prominent | primary).
  * - Disabled unchecked paints secondary-disabled; disabled checked/indeterminate
  *   paints primary-disabled bg/border with secondary-fg checkmark (theme-
- *   matching, not inverse white). Active/focus rings are gated off while
- *   `data-disabled` so a click cannot flash the focus shadow.
+ *   matching, not inverse white). The press shadow (`shadow-press-*`) and
+ *   focus ring are gated off while `data-disabled` so a click cannot flash them.
  *
  * ## constraints
  * - Style states via Radix `data-[state]` / `data-[disabled]` only — no JS
  *   class toggling for checked/disabled.
- * - Indicator SVGs stay decorative (`aria-hidden`); do not replace with
- *   interactive children unless composing via the `children` escape hatch.
+ * - Indicator SVGs stay decorative (`aria-hidden`) — an interactive element
+ *   inside the checkbox button is a nested control that assistive tech
+ *   cannot reach. Custom indicator content goes through the `children`
+ *   escape hatch.
  */
-"use client";
-
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { cva, type VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import {
   forwardRef,
   type ComponentPropsWithoutRef,
   type ComponentRef,
 } from "react";
 import { cn } from "../../utils/cn";
+import type { CheckboxVariant } from "./constants";
 
 // CheckboxChecked / CheckboxVariant (+ their types) live in ./constants — kept
 // server-safe (no "use client") so RSC code can read the enum values.
@@ -34,11 +36,12 @@ const checkboxVariants = cva(
   [
     "group inline-flex size-checkbox shrink-0 items-center justify-center overflow-hidden align-middle",
     "rounded-checkbox border border-solid border-border-primary bg-transparent text-primary-fg",
-    "cursor-pointer select-none transition-all duration-150 ease-out",
+    "cursor-pointer select-none ds-motion-state",
     "data-[state=unchecked]:hover:bg-secondary-hover data-[state=unchecked]:hover:border-border-primary data-[state=unchecked]:hover:shadow-button-secondary",
-    // active bg stays at hover color intentionally — never while disabled
-    "[&:not([data-disabled])]:active:bg-secondary-hover",
-    "focus-visible:border-input-border-focus ds-focus-visible-ring",
+    // press darkens only an unchecked box, like hover — never while disabled.
+    // A checked box keeps its fill so the on-fill check stays legible.
+    "data-[state=unchecked]:[&:not([data-disabled])]:active:bg-secondary-hover",
+    "focus-visible:border-input-border-focus ds-focus-visible-ring ds-focus-ring-sm",
     "data-[disabled]:focus-visible:border-secondary-border-disabled",
     "data-[disabled]:data-[state=unchecked]:bg-secondary-disabled data-[disabled]:data-[state=unchecked]:border-secondary-border-disabled",
     "data-[disabled]:data-[state=checked]:bg-primary-disabled data-[disabled]:data-[state=checked]:border-primary-border-disabled data-[disabled]:data-[state=checked]:text-secondary-fg data-[disabled]:data-[state=checked]:focus-visible:border-primary-border-disabled",
@@ -51,13 +54,13 @@ const checkboxVariants = cva(
         prominent: [
           "data-[state=checked]:bg-prominent data-[state=checked]:border-prominent data-[state=checked]:text-prominent-fg",
           "data-[state=indeterminate]:bg-prominent data-[state=indeterminate]:border-prominent data-[state=indeterminate]:text-prominent-fg",
-          // active border matches typeabletrigger hover, not brand
-          "[&:not([data-disabled])]:active:border-input-border-hover [&:not([data-disabled])]:active:shadow-focus-prominent",
+          // active border matches the typeable trigger's hover border
+          "[&:not([data-disabled])]:active:border-input-border-hover [&:not([data-disabled])]:active:shadow-press-prominent",
         ],
         primary: [
           "data-[state=checked]:bg-primary data-[state=checked]:border-primary data-[state=checked]:text-primary-fg",
           "data-[state=indeterminate]:bg-primary data-[state=indeterminate]:border-primary data-[state=indeterminate]:text-primary-fg",
-          "[&:not([data-disabled])]:active:border-primary [&:not([data-disabled])]:active:shadow-focus-primary",
+          "[&:not([data-disabled])]:active:border-primary [&:not([data-disabled])]:active:shadow-press-primary",
         ],
       },
     },
@@ -67,10 +70,14 @@ const checkboxVariants = cva(
   },
 );
 
+/* `variant` is typed from the `CheckboxVariant` const, not cva's
+ * `VariantProps`: that admits `null`, which cva reads as "no variant" (no
+ * checked fill). */
 export interface CheckboxProps
-  extends
-    ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,
-    VariantProps<typeof checkboxVariants> {}
+  extends ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> {
+  /** Checked / indeterminate fill. Defaults to `prominent`. */
+  variant?: CheckboxVariant;
+}
 
 const CheckboxIndicator = forwardRef<
   ComponentRef<typeof CheckboxPrimitive.Indicator>,
@@ -78,7 +85,7 @@ const CheckboxIndicator = forwardRef<
 >(({ className, ...props }, ref) => (
   <CheckboxPrimitive.Indicator
     ref={ref}
-    className={cn("flex size-2.5 items-center justify-center", className)}
+    className={cn("flex size-checkbox-icon items-center justify-center", className)}
     {...props}
   >
     <svg
@@ -87,7 +94,7 @@ const CheckboxIndicator = forwardRef<
       viewBox="0 0 10 10"
       fill="none"
       aria-hidden
-      className="hidden size-2.5 group-data-[state=checked]:block"
+      className="hidden size-checkbox-icon group-data-[state=checked]:block"
     >
       <path
         d="M1.75 5.15L3.85 7.25L8.25 2.75"
@@ -103,7 +110,7 @@ const CheckboxIndicator = forwardRef<
       viewBox="0 0 10 10"
       fill="none"
       aria-hidden
-      className="hidden size-2.5 group-data-[state=indeterminate]:block"
+      className="hidden size-checkbox-icon group-data-[state=indeterminate]:block"
     >
       <path
         d="M2.25 5H7.75"

@@ -1,4 +1,3 @@
-import ArrowUpLeftIcon from "./ArrowUpLeftIcon";
 import { BaseIcon, IconProps } from "./BaseIcon";
 
 export const FiltersSlidersIcon = (props: IconProps) => {
@@ -16,5 +15,3 @@ export const FiltersSlidersIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default ArrowUpLeftIcon;

@@ -20,12 +20,13 @@
  *   slot moves. Pair it with RollChangeText for the piece that swaps its text,
  *   and hang that roll off `onSettled` so it FOLLOWS the reveal rather than
  *   racing it.
- * - Nothing here may hold a duration. Timing, easing and the reduced-motion
- *   case are `--ui-reveal-change-*` tokens read by `.ds-reveal-change` in
- *   index.css. Reduced motion drops those to 1ms rather than to
- *   `transition: none`: the content swap AND `onSettled` both hang off
- *   `transitionend`, which `transition: none` would never fire — stranding the
- *   outgoing content on screen forever.
+ * - Nothing here may hold a duration. Timing and easing come from the motion
+ *   scale (`--ui-motion-*`) read by `.ds-reveal-change` in index.css. Reduced
+ *   motion is the scale's global collapse in tokens.css, which drops every
+ *   duration to an instant but NON-ZERO value rather than to
+ *   `transition: none` or zero: the content swap AND `onSettled` both hang off
+ *   `transitionend`, which neither `transition: none` nor a zero duration
+ *   would ever fire — stranding the outgoing content on screen forever.
  * - Slot state is reconciled during RENDER, never in an effect. Doing it in an
  *   effect commits a frame of stale slot state and schedules another, which is
  *   the cascading render `react-hooks/set-state-in-effect` flags.

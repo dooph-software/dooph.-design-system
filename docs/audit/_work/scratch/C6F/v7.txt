@@ -1,0 +1,68 @@
+### M48 (U8-F4)
+- verdict: CONFIRMED
+- method: tsc probe `scratch/V7/tsc/probe.tsx`, using `tsconfig.json` copied from V2 and pointed at the audit build's `dist/index.d.ts`. I ran `node …/dooph-ds-audit-build/node_modules/typescript/bin/tsc -p tsconfig.json --pretty false`. I also read `Modal.tsx:13-85`, `Sheet.tsx:15-18,120-149`, `Toast.tsx:102-115,312` and arch `SKILL.md:167-182,193`.
+- evidence:
+  ```
+  probe.tsx(19,40): error TS2322 … Property 'portal' does not exist on type … DialogContentProps …          (<ModalContent portal={false}>)
+  probe.tsx(20,40): error TS2322 … Property 'portalProps' does not exist …                                  (<ModalContent portalProps={{container:null}}>)
+  probe.tsx(21,40): error TS2322 … Property 'portal' does not exist … VariantProps<...> …                   (<SheetContent portal={false}>)
+  probe.tsx(22,40): error TS2322 … Property 'portalProps' does not exist …                                  (<SheetContent portalProps=…>)
+  ```
+  The same probe's `<TooltipContent portal={false}>`, `<PopoverContent portal={false}>` and `<DropdownMenuContent portal={false}>` (lines 23-25) compile without error. The code always portals: `Modal.tsx:64 <ModalPortal>` and `Sheet.tsx:138 <SheetPortal>` wrap content unconditionally. Exporting `ModalPortal`/`SheetPortal` does not help. Nesting `ModalContent` inside a consumer `<ModalPortal container={x}>` still re-portals through the inner, container-less `DialogPrimitive.Portal` to `document.body`, so the only escape is dropping to `@radix-ui/react-dialog` directly. `Toast.tsx:312 <ToastViewport {...viewportProps} />` is rendered in place inside the provider, with no Portal import in the file.
+- corrections: The ToastViewport part is the weakest leg. R2.9 is about overlay `*Content`, and Radix Toast already portals each toast *into* the viewport (`react-toast index.mjs:380 ReactDOM.createPortal`). An un-portalled viewport is therefore a design choice the rule does not clearly cover, and the finding itself only asks for a decision. The Modal/Sheet legs stand as stated.
+- severity note: S2 is right for Modal/Sheet. It violates arch:167 "Always expose an escape hatch", and arch:193 tells new Radix wrappers to copy "the exact same … pattern as `Modal.tsx`", which spreads the non-compliant shape. It is not S1, because default behaviour works.
+
+### M47 (U8-F2)
+- verdict: CONFIRMED
+- method:
+  1. Read `src/components/Toast/Toast.tsx:56-64` (root classes), `:203-252` (provider), and Radix `@radix-ui/react-toast@1.2.23` `dist/index.mjs:243-281` in the audit build (`grep -n "useControllableState\|Presence\|onClose\|setOpen(false)"`).
+  2. Ran it in a real browser. I bundled `scratch/V7/web/entry.jsx` with esbuild against the audit build's `dist/index.js` (one React copy), served it via `scratch/V7/web/serve.cjs` on 127.0.0.1:4877, and loaded it in the Browser pane with `dist/styles.css`.
+  3. A MutationObserver logged `<li>` add/remove and `data-state` changes for three toasts, one per removal path: the close button, `dismiss(id)`, and the Radix duration timer.
+- evidence: Browser log (ms since start):
+  ```
+  302ms click close on A
+  303ms sync after click: A in DOM=true state=open
+  308ms removed li[A-closebtn] state-at-removal=open        <- never reached data-state=closed
+  609ms call dismiss(B)
+  627ms attr data-state=closed on li[B-dismiss] anim=exit
+  669ms +50ms: B in DOM=true state=closed anim=exit dur=0.15s
+  823ms removed li[B-dismiss] state-at-removal=closed      <- ~214ms after dismiss()
+  1079ms added li[C-timer] state=open   (duration: 400)
+  1485ms removed li[C-timer] state-at-removal=open          <- timer close, no exit either
+  ```
+  The mechanism matches the finding. Radix `index.mjs:243` runs `useControllableState({prop: openProp, onChange: onOpenChange})` and `:255` `onClose: () => setOpen(false)`. Swipe-end uses `setOpen(false)` (`:281`) and Close uses `interactiveContext.onClose` (`:532`). With `open` controlled, those calls only invoke the DS `onOpenChange`, and `Toast.tsx:245-251` filters the item out synchronously. `ToastRoot` therefore unmounts before `<Presence present={open}>` ever sees `false`. Only `dismiss` (`Toast.tsx:225-232`) sets `open:false` first and then removes the item in `setTimeout(…, 200)`. The CSS exit it waits on is `data-[state=closed]:duration-150` (`:63`, computed `animation-duration: 0.15s`).
+  The rule text is `.agents/skills/dooph-ds-architecture/SKILL.md:354-359`: "Mirror a CSS duration in a JS constant in order to stage two motions" and "Reach for a timer … before checking whether a mount animation … already does the job". Radix Presence already defers unmount until the exit animation ends. R6.7 applies squarely. R6.6 applies by intent: the timer stages unmount against a CSS motion rather than two motions against each other.
+- corrections: none of substance. The Escape and swipe paths were not exercised in the browser, but they reach the same `setOpen(false)`, so the verdict covers them. "Dismiss" in the title means the `ToastDismiss` button (`Toast.tsx:179`, used at `:266`), which is a `ToastPrimitive.Close`. That is the same path as the close-button run, so it is confirmed too.
+- severity note: S2 is right. It is a stated-rule violation (R6.6/R6.7). The exit-animation classes are dead for every user- or timer-driven close, which is the common case, and the 200ms copy will truncate the exit again as soon as someone tokenises or lengthens it.
+
+### HC-F7
+- verdict: CONFIRMED
+- method:
+  1. tsc probes against the audit build's `dist/index.d.ts`. `scratch/V7/tsc/probe-sub.ts` imports `DropdownMenuSubTrigger, DropdownMenuSubContent`. `probe.tsx:26` renders `<DropdownMenuSub>x</DropdownMenuSub>`.
+  2. Read `DropdownMenu.tsx:88-92,402-418` and `Menu/index.ts:7`.
+  3. `git log --oneline -S "DropdownMenuSub = " -- src` and `git log --oneline -S "SubContent" -- src`.
+  4. Checked `package.json` for how the Radix package is declared, and grepped the stories and usage skill for any submenu use.
+- evidence:
+  - `probe-sub.ts(1,10): error TS2724: '"@dooph-software/design-system"' has no exported member named 'DropdownMenuSubTrigger'. Did you mean 'DropdownMenuTrigger'?` and the same error for `DropdownMenuSubContent` at `(1,34)`. Meanwhile `<DropdownMenuSub>` itself type-checks: `probe.tsx:26` produces no error.
+  - `DropdownMenu.tsx:91 const DropdownMenuSub = DropdownMenuPrimitive.Sub;` is exported at `:416`.
+  - The DS's `DropdownMenuTrigger`/`DropdownMenuContent` wrap the *root* `Trigger`/`Content` (`:75-160`). Placed inside `Sub`, they bind to the root menu, not the submenu, so no DS part can stand in for SubTrigger/SubContent.
+  - `@radix-ui/react-dropdown-menu` is a `dependency`, not a peer (`package.json:82`, `peer: false`). A consumer must therefore add their own copy, and it has to dedupe to the DS's copy for the shared context to work.
+  - Git: `a01e5e8 Initial commit` added the alias. No commit has ever added `SubContent`. The stories have 0 uses, and the usage skill has no submenu mention.
+- corrections: none.
+- severity note: S3 is right. It is a vestigial public export that is unusable without reaching around the DS. It is not advertised in consumer docs (only the internal codebase skill:218 lists it as a pass-through), so it does not reach S1's "documented thing that does nothing".
+
+## DONE
+
+Summary (V7):
+- M45 (U7-F5, U6-F10): CONFIRMED. `value`/`onValueChange` covers 7 non-native controls vs 4 deviators, so the convention is dominant. Corrections: AIModelSelect.tsx:117 is AIThinkingEffortSelector; CalendarPresetItem is an action item, not a value control. Severity S2, low end.
+- M47 (U8-F2): CONFIRMED in the browser. Close-button and timer closes remove the `<li>` while it is still `data-state=open`; only `dismiss()` reaches `closed` and is removed about 214ms later. S2.
+- M48 (U8-F4): CONFIRMED by tsc. `portal`/`portalProps` are rejected on ModalContent and SheetContent but accepted on Tooltip/Popover/DropdownMenu content. The ToastViewport leg is weak. S2.
+- M50 (U3-F4, U9-F11): PARTIAL. Fonts/FontSizes/FontWeights/Tracking are a rulebook conflict (arch:65-77 sanctions them against arch:120). FontAxes and ProgressIndicatorVariants are plain R1.9 violations. U3-F4's "four of five" count is off. S2.
+- M51 (U3-F5): CONFIRMED. The phrase is missing from the paragraph's text, and its label sits only on a generic node. S2.
+- M52 (U4-F3, U4-F4, U6-F16): DOWNGRADE(S3). Render confirms className goes to the frame and the rest to the button, and a consumer onMouseMove disables tracking. But the split is an established DS pattern (Input and 4 others), so "every other component" is wrong.
+- M54 (U4-F2): UPGRADE(S1). Understated: `<CopyButton />`, `value={123}`, `variant="bogus"` and `foo={1}` all compile. Omit-over-index-signature erases even CopyButton's own props.
+- M55 (U4-F14): CONFIRMED. The accessibility tree shows the trigger as an unnamed `button`. S2.
+- M56 (U12-F10, HC-F8): PARTIAL. Removing Sticker's wrapper renders pixel-identically, so U12-F10 is confirmed (S2). TextDropdownTrigger's span does have a layout effect with mixed children, which refutes HC-F8's "none"; and arch's list says "Examples:". S3.
+- M57 (U12-F11): CONFIRMED. 0 roles and 0 aria-sort in the rendered table; TableSortDirection values do not match ARIA's. S2.
+- HC-F5: PARTIAL. All sites confirmed, but CalendarGrid and AIPromptInput also emit unread attributes, so the split is even rather than "dominant" and the unread set is 6, not 3. S3.
+- HC-F7: CONFIRMED. tsc reports TS2724 for SubTrigger/SubContent; the alias dates from the initial commit; Radix is a direct dependency. S3.

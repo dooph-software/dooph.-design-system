@@ -1,0 +1,242 @@
+### U12-F4: Sortable `TableHeaderCell` passes a non-existent utility `text-text-primary`; it emits no CSS and tailwind-merge uses it to strip the Button's own `text-ghost-fg`, so the header label colour is inherited from whatever ancestor
+- severity: S2
+- category: rule-violation
+- rules: [R5.2]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "node docs/audit/_work/scratch/U12/classcheck.mjs docs/audit/_work/dist-styles.css text-text-primary → MISSING (theme has --color-text, --color-text-secondary, --color-text-tertiary only; dist-styles.css:34-36). node docs/audit/_work/scratch/U12/twm.mjs → merged Button class list contains `text-text-primary` and NO `text-ghost-fg`. Browser pane (built CSS, .dark on html): element with that merged class list → color rgb(0,0,0) (inherited body default)."
+- locations:
+  - src/components/Table/Table.tsx:79-86
+  - src/components/Button/Button.tsx:78-79
+- evidence: |
+    Table.tsx:80            variant={ButtonVariant.text}
+    Table.tsx:82            className="w-full justify-start gap-1 text-text-primary"
+    Button.tsx:78        text: [
+    Button.tsx:79          "text-ghost-fg border-transparent",
+    twm.mjs output: "… text-style-button border-transparent [&:not(:disabled)…]:hover:text-ghost-fg-active … h-button px-3 w-full justify-start gap-1 text-text-primary"
+- impact: The resting colour of every sortable header label is whatever the consumer's ancestor `color` is — the DS sets no body colour, so in dark mode on an app that does not set one the label is black on a dark surface; in light mode sortable headers differ from non-sortable ones (which also set no colour) only by accident. On hover it jumps to `text-ghost-fg-active` because the hover variant survived the merge. A class that looks like a token utility but is not one invites copy-paste.
+- recommendation: Use the existing utility (`text-text`) or drop the override and accept the text-Button's `text-ghost-fg`; pick whichever the Figma header spec says.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U12-F6]
+
+
+### U7-F12: CalendarPresetItem emits `data-active` but styles the active state with a JS class toggle; DatePicker re-implements Radix's controllable `open` (batched S4)
+- severity: S4
+- category: inconsistency
+- rules: []
+- scope: internal
+- confidence: plausible
+- verified_by: "`rg -n 'data-active' src` (no CSS/selector reads it for presets); Radix Popover.Root treats `open={undefined}` as uncontrolled"
+- locations:
+  - src/components/Calendar/CalendarPresetsPanel.tsx:60,70
+  - src/components/DatePicker/DatePicker.tsx:70-75,81
+- evidence: |
+    CalendarPresetsPanel.tsx:60  data-active={isActive ? "" : undefined}
+    CalendarPresetsPanel.tsx:70  isActive && "bg-ghost-active",
+    DatePicker.tsx:70   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+    DatePicker.tsx:71   const isOpen = open ?? uncontrolledOpen;
+    DatePicker.tsx:81   <Popover open={isOpen} onOpenChange={setOpen}>
+- impact: Two channels for one state on the preset item (the attribute is otherwise unused); DatePicker duplicates Radix state logic and, unlike Radix, cannot take `defaultOpen`.
+- recommendation: Style via `data-active:bg-ghost-active`; pass `open`/`onOpenChange` (and `defaultOpen`) straight to `Popover`.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U7-F8]
+
+
+### U10-F5: `BaseIcon`'s `color` prop paints only the stroke, so every filled icon must re-wire it — two do, `TagIcon` does not
+- severity: S2
+- category: inconsistency
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read BaseIcon.tsx and every icon with a geometry fill (verify-icons.mjs 'geometry attrs'): HeartFillIcon and StopFilledIcon destructure `color` and set `fill={color ?? 'currentColor'}`; TagIcon's dot keeps `fill=\"currentColor\"`. SSR (ssr-shapes.mjs): HeartFillIcon color='red' → svg `style=\"…stroke:red…\"`, path `fill=\"red\"` — the workaround works; nothing sets CSS `color`, so any `currentColor` child ignores the prop."
+- locations:
+  - src/components/Icons/BaseIcon.tsx:56-62
+  - src/components/Icons/HeartFillIcon.tsx:3-8
+  - src/components/Icons/StopFilledIcon.tsx:3-15
+  - src/components/Icons/TagIcon.tsx:7
+- evidence: |
+    BaseIcon.tsx:60   stroke: strokeColor ?? color ?? "currentColor",
+    StopFilledIcon.tsx:5-7  {/* BaseIcon maps `color` to stroke only, so the fill is wired up here to keep both in sync. … */}
+    StopFilledIcon.tsx:14   fill={color ?? "currentColor"}
+    HeartFillIcon.tsx:3     export const HeartFillIcon = ({ color, ...props }: IconProps) => (
+    TagIcon.tsx:7           <circle cx="7.5" cy="7.5" r=".5" fill="currentColor" />
+- impact: `<TagIcon color="red" />` draws a red outline with a dot in the inherited text colour. Every future filled icon has to know to copy the HeartFill/StopFilled workaround; the one that didn't is already wrong. The Icons story "Icon Colors" (Icons.stories.tsx:189-205) only uses LightModeIcon, so it cannot show this.
+- recommendation: Have BaseIcon set CSS `color` from the `color` prop (and let fills use `currentColor`), then delete the two per-icon re-wirings.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U10-F4, U10-F1]
+
+
+### U1-F5: The danger focus shadow is a literal `0 0 0 4px` hardcoded in the generator, while its prominent/primary siblings are tokens
+- severity: S3
+- category: inconsistency
+- rules: [R8.1]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read scripts/sync-theme.mjs:232-236 and tokens.css:557-558; tokens.mjs util column shows `.shadow-focus-danger` is emitted in dist/styles.css, i.e. a component uses it."
+- locations:
+  - scripts/sync-theme.mjs:232-236
+  - src/styles/index.css:206-207
+  - src/styles/tokens.css:557-558
+- evidence: |
+    tokens.css:557  --ui-shadow-focus-prominent: 0 0 0 4px var(--ui-color-focus-ring-prominent);
+    tokens.css:558  --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
+    sync-theme.mjs:235  "--shadow-focus-danger: 0 0 0 4px var(--ui-color-focus-ring-danger);",
+- impact: A consumer who retunes ring geometry by overriding `--ui-shadow-focus-prominent`/`-primary` cannot do the same for danger — there is no `--ui-shadow-focus-danger` — and the geometry lives in a build script rather than in tokens.css, which the script's own header calls the "Single source of truth" (sync-theme.mjs:4). The COMPUTED escape hatch exists for this one entry only.
+- recommendation: Add `--ui-shadow-focus-danger` to tokens.css beside its siblings and drop the COMPUTED special case (the normal `ui-shadow-*` rule then maps it).
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U1-F7: ds-* helpers are split across two files with no rule deciding which — 28 classes (10 component systems) live in index.css despite R8.26
+- severity: S3
+- category: inconsistency
+- rules: [R8.26]
+- scope: internal
+- confidence: plausible
+- verified_by: "node docs/audit/_work/scratch/U1/dsclasses.mjs → '== ds-* defined OUTSIDE dooph-component-tokens.css ==' lists 28 classes, all in index.css @layer utilities (shimmer-text, roll-hover*, underline-link, rolling-digits*, roll-change*, fade-change*, sidebar-rail, shape-morph*, dropdown-caret*, reveal-change*); none defined twice; none outside a layer."
+- locations:
+  - src/styles/index.css:322-919
+  - src/styles/dooph-component-tokens.css:363-667
+  - .agents/skills/dooph-ds-codebase/SKILL.md:34-36
+- evidence: |
+    codebase SKILL.md:34  index.css ← Tailwind build entry: @import chain, generated @theme inline block, text-style-* role classes (@layer components), h-button/size-* utilities
+    codebase SKILL.md:36  dooph-component-tokens.css ← @layer utilities: ds-* helpers (spacing, disabled states, radix origin)
+    index.css:369   .ds-shimmer-text {          index.css:789  .ds-shape-morph {        index.css:882  .ds-reveal-change {
+    dooph-component-tokens.css:368  .ds-copy-icon-clipboard,     dooph-component-tokens.css:419  .ds-chat-reveal {
+- impact: Component motion systems of the same kind land in either file (CopyButton and the AI-chat animation in dooph-component-tokens.css; ShimmerText, RollHoverText, RevealChangeText, DropdownCaret in index.css), so "where is the ds-* class for X" needs a grep of both, and index.css has become a mixed-responsibility file (build entry + generated theme + role typography + height utilities + ten animation systems + 14 keyframes + 6 `@property`s). The codebase skill's file map (34-36) describes neither file's actual contents. The keyframes' "outside @layer" requirement does not force index.css — they can sit outside the layer in either file.
+- recommendation: Pick one home for component ds-* systems (R8.26 says dooph-component-tokens.css), move the index.css ones with their keyframes/`@property`s, and update the codebase skill's file map.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U1-F13]
+
+
+### U1-F9: Three ds-* helpers have no user, and the one intended for consumers (`.ds-selection`) is documented only in a CSS comment
+- severity: S3
+- category: dead-code
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "node docs/audit/_work/scratch/U1/dsclasses.mjs → '== unused by components ==': ds-focus-ring, ds-selection, ds-my-ui-xs (0 component files, 0 story files, 0 skills/ mentions). rg -n \"ds-selection\" skills → no hits. tokens.mjs: --ui-color-selection / -foreground absent from token-contract.md and theming SKILL.md."
+- locations:
+  - src/styles/dooph-component-tokens.css:98-101
+  - src/styles/dooph-component-tokens.css:359-361
+  - src/styles/dooph-component-tokens.css:180-189
+  - src/styles/tokens.css:98-108
+- evidence: |
+    dooph-component-tokens.css:98   .ds-focus-ring {   (its own neighbour comment :104 cites `data-[state=open]:ds-focus-ring` as the broken pattern that was replaced by .ds-focus-ring-on-open)
+    dooph-component-tokens.css:359  .ds-my-ui-xs {
+    dooph-component-tokens.css:185  .ds-selection ::selection,
+    tokens.css:99   them is a global, app-owned decision; use the .ds-selection opt-in class or
+- impact: `ds-focus-ring` and `ds-my-ui-xs` ship in styles.css and are listed as available helpers in the codebase skill (531, 540), so agents reach for a helper whose only historical use was the broken variant composition. `.ds-selection` plus its two tokens (mapped to `bg-selection`/`text-selection-fg` utilities) is a consumer feature no consumer doc mentions — consumers cannot discover it.
+- recommendation: Delete `ds-focus-ring` and `ds-my-ui-xs` (or document them); document `.ds-selection` and `--ui-color-selection*` in token-contract.md.
+- breaking: minor
+- contract: n/a
+- remediation: tbd
+- related: [U1-F11]
+
+
+### U12-F3: `.dark { --ui-sticker-bg-opacity-secondary: 60% }` is a dead override — nothing in dark scope reads it
+- severity: S3
+- category: dead-code
+- rules: [R5.3]
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "rg -n \"sticker-bg-opacity-secondary\" (repo, excluding docs/audit) → only tokens.css:603 (def), :613 (light wash reads it), :711 (dark def), scripts/sync-theme.mjs:162 (EXCLUDED list), token-contract.md:112, constants.ts:13. The dark wash at tokens.css:712-716 is redeclared to use `--ui-sticker-bg-opacity`."
+- locations:
+  - src/styles/tokens.css:711
+  - src/styles/tokens.css:712-716
+  - skills/dooph-design-system-theming/references/token-contract.md:112
+- evidence: |
+    tokens.css:707  /* Secondary's own opacity variable drops to 60%, but the dark sticker WASH
+    tokens.css:708   * does not use it — Figma binds `color-sticker-bg-secondary` to the shared
+    tokens.css:711  --ui-sticker-bg-opacity-secondary: 60%;
+    tokens.css:712  --ui-color-sticker-bg-secondary: color-mix(
+    tokens.css:714    var(--ui-color-secondary-border-active) var(--ui-sticker-bg-opacity),
+    token-contract.md:112  - `--ui-sticker-bg-opacity-secondary` — 80% light / 60% dark. The light secondary wash reads it; the dark wash does not (see above)
+- impact: A shipped, documented token override that changes nothing. A consumer (or agent) tuning `--ui-sticker-bg-opacity-secondary` under `.dark` gets no visual change; the next maintainer has to rediscover from a comment that the value is a Figma mirror with no reader. The comment itself admits it is unread.
+- recommendation: Drop the `.dark` override (and its token-contract "60% dark" note), or make the dark secondary wash read it; one or the other, not a documented no-op.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: [U12-F2]
+
+
+### U12-F6: `TableRow` carries an unconditional `border-b` AND `not-last:border-b`; the second class is a no-op, and a last-child row paints a bottom border that doubles the Table's own outer border
+- severity: S3
+- category: dead-code
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Read Table.tsx; `git log -L '/not-last:border-b/,+1:src/components/Table/Table.tsx'` → both classes present since 0ee42ab 'tables' (the file's first commit); twm.mjs shows tailwind-merge keeps both (different variants)."
+- locations:
+  - src/components/Table/Table.tsx:111-115
+  - src/components/Table/Table.tsx:27
+- evidence: |
+    Table.tsx:112        "grid border-b border-border-primary",
+    Table.tsx:113        "not-last:border-b",
+    Table.tsx:27        "flex flex-col w-full border border-border-primary rounded-normal",
+- impact: `not-last:border-b` reads as "no divider under the last row", which is what a reader will believe the component does; it does not. In the `Rows` / `CellStackedContent` stories (last child is a TableRow) the last row's 1px bottom border sits directly on the Table's 1px outer border, a 2px bottom edge unlike the 1px top/sides. The next agent "fixing" the double border will not know which of the two classes was intended.
+- recommendation: Keep one: either drop the unconditional `border-b` (divider only between rows, matching the modifier's evident intent) or drop the no-op `not-last:border-b`.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U8-F5: `ToastClose`'s `hover:text-current active:text-current` override is dead — outranked by `buttonVariants` ghost's `[&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active`, so the close icon turns #161616 on the #340fd9 prominent toast on hover
+- severity: S3
+- category: dead-code
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "node docs/audit/_work/scratch/U8/toastclose-merge.mjs (built cn + buttonVariants) → merged className keeps BOTH `[&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active` and `hover:text-current`; dist-styles.css:1670 `.hover\\:text-current:hover` (specificity 0,2,0) vs :2222 `.\\[\\&\\:not…\\]\\:hover\\:text-ghost-fg-active:not(:disabled):not([aria-disabled=true]):hover` (0,4,0)"
+- locations:
+  - src/components/Toast/Toast.tsx:164-170
+  - src/components/Button/Button.tsx:75-76
+- evidence: |
+    Toast.tsx:165      buttonVariants({
+    Toast.tsx:166        variant: ButtonVariant.ghost,
+    Toast.tsx:169      "shrink-0 text-current hover:text-current active:text-current",
+    Button.tsx:75   "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-ghost-hover [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+    tokens.css:53   --ui-color-prominent: #340fd9;   tokens.css:91  --ui-color-ghost-foreground-active: #161616;
+- impact: The override exists to keep the close icon in the toast's own foreground (`text-prominent-fg` white on the prominent toast); it only works at rest. On hover/press the icon switches to the ghost foreground (#161616 in light mode) on the #340fd9 prominent surface — near-invisible — and the next agent reading `hover:text-current` believes the case is handled.
+- recommendation: Neutralise the ghost state colours with selectors of equal specificity (or use a variant/helper that doesn't paint hover text), and verify on the prominent toast in light mode.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+
+### U1-F14: `ds-chat-prose` re-spells four role typographies by hand and has already drifted from them
+- severity: S3
+- category: duplication
+- rules: []
+- scope: consumer-visible
+- confidence: plausible
+- verified_by: "Side-by-side read of index.css:224-318 and dooph-component-tokens.css:580-644."
+- locations:
+  - src/styles/dooph-component-tokens.css:580-597
+  - src/styles/dooph-component-tokens.css:636-644
+  - src/styles/index.css:272-280
+- evidence: |
+    index.css:272-279  .text-style-mono { font-family: var(--ui-font-mono); font-optical-sizing: auto; font-size: var(--ui-text-mono); ... letter-spacing: var(--ui-tracking-mono); }
+    dooph-component-tokens.css:636-640  .ds-chat-prose code { font-family: var(--ui-font-mono); font-size: var(--ui-text-mono); font-weight: var(--ui-weight-mono); font-variation-settings: var(--ui-font-var-mono);
+       (no letter-spacing: --ui-tracking-mono, the -3% "Mono Text" tracking tokens.css:442-445 calls part of the role)
+    dooph-component-tokens.css:580-585  .ds-chat-prose h1 { font-family: var(--ui-font-title); font-size: var(--ui-text-title); font-weight: var(--ui-weight-title); font-variation-settings: normal; }
+- impact: Inline code in AI answers renders at a different tracking from `MonoText` with no stated reason, and every future change to a role (a new axis token, tracking) must be made in two places; the hero-role duplication in index.css (243-248) is at least commented as "keep in sync by hand", this one is not.
+- recommendation: Add the missing `letter-spacing` and a "mirrors text-style-*" note, or state why prose code differs.
+- breaking: none
+- contract: n/a
+- remediation: tbd
+- related: []
+
+

@@ -10,5 +10,3 @@ export const CalendarIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default CalendarIcon;

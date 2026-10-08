@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   AIPlanIcon,
   AISkillIcon,
@@ -124,9 +124,8 @@ export const Micro: Story = {
 };
 
 export const Sizes: Story = {
-  args: { children: "Milestones" },
   render: () => (
-    <div className="flex flex-col items-start gap-sm">
+    <div className="flex flex-col items-start gap-rg">
       {([StickerSize.standard, StickerSize.micro] as const).map((size) => (
         <Sticker key={size} variant={StickerVariant.prominent} size={size}>
           <AIPlanIcon size={IconSize.md} />
@@ -138,9 +137,8 @@ export const Sizes: Story = {
 };
 
 export const AllVariants: Story = {
-  args: { children: "Milestones" },
   render: () => (
-    <div className="flex flex-col items-start gap-sm">
+    <div className="flex flex-col items-start gap-rg">
       <Sticker variant={StickerVariant.prominent}>
         <AIPlanIcon size={IconSize.md} />
         {label("Milestones")}

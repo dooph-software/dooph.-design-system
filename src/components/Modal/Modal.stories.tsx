@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import {
   Modal,
@@ -10,6 +10,7 @@ import {
 } from './Modal';
 import { Button } from '../Button/Button';
 import { ButtonVariant, ButtonSize } from '../Button/constants';
+import { ButtonText, LabelText } from '../Text';
 
 const meta = {
   title: 'Overlays/Modal',
@@ -28,13 +29,12 @@ export const Default: Story = {
         <Button variant={ButtonVariant.primary}>Open modal</Button>
       </ModalTrigger>
       <ModalContent className="w-[400px]">
-        <ModalTitle className="sr-only">Modal</ModalTitle>
         <div className="flex flex-col gap-4 p-6">
-          <p className="text-style-heading text-text">Modal title</p>
-          <p className="text-style-body text-text-secondary">
+          <ModalTitle>Modal title</ModalTitle>
+          <ModalDescription>
             This is the raw modal primitive. No internal padding or flex is added by
             the component — you compose it directly.
-          </p>
+          </ModalDescription>
           <div className="flex justify-end gap-2">
             <ModalClose asChild>
               <Button variant={ButtonVariant.secondary}>Cancel</Button>
@@ -56,9 +56,8 @@ export const LargerContent: Story = {
         <Button variant={ButtonVariant.secondary}>Open large modal</Button>
       </ModalTrigger>
       <ModalContent className="w-[560px]">
-        <ModalTitle className="sr-only">Large modal</ModalTitle>
         <div className="flex flex-col gap-4 p-6">
-          <p className="text-style-heading text-text">Larger modal</p>
+          <ModalTitle>Larger modal</ModalTitle>
           <ModalDescription>
             The width and padding are entirely up to the consumer. The primitive
             only provides the surface, border, backdrop, and animation.
@@ -69,7 +68,7 @@ export const LargerContent: Story = {
                 key={item}
                 className="flex items-center justify-between rounded-normal border border-border-primary px-4 py-3"
               >
-                <span className="text-style-button text-text">{item}</span>
+                <ButtonText className="text-text">{item}</ButtonText>
                 <Button variant={ButtonVariant.ghost} size={ButtonSize.sm}>Select</Button>
               </div>
             ))}
@@ -95,13 +94,12 @@ export const Controlled: Story = {
         </Button>
         <Modal open={open} onOpenChange={setOpen}>
           <ModalContent className="w-[400px]">
-            <ModalTitle className="sr-only">Controlled modal</ModalTitle>
             <div className="flex flex-col gap-4 p-6">
-              <p className="text-style-heading text-text">Controlled modal</p>
-              <p className="text-style-body text-text-secondary">
+              <ModalTitle>Controlled modal</ModalTitle>
+              <ModalDescription>
                 Open/close state is managed externally via the{' '}
-                <code className="text-style-label bg-surface-secondary rounded px-1">open</code> prop.
-              </p>
+                <LabelText as="code" className="bg-surface-secondary rounded-tight px-xxs">open</LabelText> prop.
+              </ModalDescription>
               <div className="flex justify-end">
                 <Button variant={ButtonVariant.secondary} onClick={() => setOpen(false)}>
                   Close
@@ -122,13 +120,12 @@ export const NoOverlay: Story = {
         <Button variant={ButtonVariant.secondary}>Open (no backdrop)</Button>
       </ModalTrigger>
       <ModalContent withOverlay={false} className="w-[400px]">
-        <ModalTitle className="sr-only">Modal without overlay</ModalTitle>
         <div className="flex flex-col gap-4 p-6">
-          <p className="text-style-heading text-text">No backdrop</p>
-          <p className="text-style-body text-text-secondary">
+          <ModalTitle>No backdrop</ModalTitle>
+          <ModalDescription>
             Rendered without the fullscreen overlay. Useful for in-page panels or
             when a custom backdrop is already present.
-          </p>
+          </ModalDescription>
           <div className="flex justify-end">
             <ModalClose asChild>
               <Button variant={ButtonVariant.secondary}>Close</Button>
@@ -138,4 +135,28 @@ export const NoOverlay: Story = {
       </ModalContent>
     </Modal>
   ),
+};
+
+function ModalInContainerDemo() {
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  return (
+    <div className="flex flex-col items-center gap-md">
+      <Modal>
+        <ModalTrigger asChild>
+          <Button variant={ButtonVariant.primary}>Open into the frame</Button>
+        </ModalTrigger>
+        <ModalContent portalProps={{ container }} aria-describedby={undefined}>
+          <div className="p-xl">
+            <ModalTitle>Portalled into a local container</ModalTitle>
+          </div>
+        </ModalContent>
+      </Modal>
+      <div ref={setContainer} data-testid="modal-container" />
+    </div>
+  );
+}
+
+/** `portalProps={{ container }}` mounts the overlay and panel into a chosen element instead of `document.body`. `portal={false}` renders them in place. */
+export const CustomContainer: Story = {
+  render: () => <ModalInContainerDemo />,
 };

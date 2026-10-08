@@ -48,7 +48,6 @@ const RollHoverText = forwardRef<HTMLSpanElement, RollHoverTextProps>(
     return (
       <span
         ref={ref}
-        aria-label={children}
         data-active={active ? "true" : undefined}
         className={cn("ds-roll-hover", className)}
         style={
@@ -59,6 +58,10 @@ const RollHoverText = forwardRef<HTMLSpanElement, RollHoverTextProps>(
         }
         {...props}
       >
+        {/* Every glyph below renders twice and is aria-hidden, so the readable
+         * text is this copy — a name on the role-less root would be dropped by
+         * screen readers in reading mode. Same pattern as RollingDigitsText. */}
+        <span className="sr-only">{children}</span>
         {children.split(/(\s+)/).map((segment, segmentIndex) => {
           if (segment === "") return null;
           if (/^\s+$/.test(segment)) {

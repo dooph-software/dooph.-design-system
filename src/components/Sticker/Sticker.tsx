@@ -6,10 +6,10 @@
  *   wash. Both are already-resolved tokens (the wash is a color-mix at the
  *   sticker opacity), so the component does not apply alpha a second time.
  * - `size` is the shell. `standard` hugs its label. `micro` is a fixed
- *   `--ui-height-tab-micro` chip with the mini radius. Paints do not change.
- * - Children are the content. They are wrapped in a row with `gap-xs` so an
- *   icon and a text node sit beside each other without a wrapper at the call
- *   site. The wrapper is layout, not an interactive element.
+ *   `--ui-height-button-micro` chip with the mini radius. Paints do not change.
+ * - Children are the content and sit directly in the root, which is the
+ *   row: `gap-sm` on the root spaces an icon and a text node, so a consumer's
+ *   `gap-*` or child selectors on `className` reach them.
  * - `custom` has no paints of its own. `color` (inline, so it beats class
  *   order) is the content colour, and the wash is that colour at
  *   `--ui-sticker-bg-opacity`.
@@ -30,8 +30,8 @@ import { StickerSize, StickerVariant } from "./constants";
 
 const stickerVariants = cva(
   [
-    "inline-flex w-fit items-center overflow-clip",
-    "px-sm text-style-button whitespace-nowrap",
+    "inline-flex w-fit items-center gap-sm overflow-clip",
+    "px-rg text-style-button whitespace-nowrap",
   ],
   {
     variants: {
@@ -45,7 +45,7 @@ const stickerVariants = cva(
       },
       size: {
         standard: "rounded-tight py-sticker-y",
-        micro: "h-tab-micro rounded-mini",
+        micro: "h-button-micro rounded-mini",
       },
     },
     defaultVariants: {
@@ -110,7 +110,8 @@ const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
 
     const customColor =
       variant === StickerVariant.custom
-        ? resolveDsColor(color, "var(--ui-color-prominent)")
+        ? // Fallback unreachable: the throw above guarantees `color` here.
+          resolveDsColor(color, "")
         : undefined;
 
     return (
@@ -128,12 +129,12 @@ const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
         }
         {...props}
       >
-        <div className="flex flex-row items-center gap-xs">{children}</div>
+        {children}
       </div>
     );
   },
 );
-StickerBase.displayName = "Sticker";
+StickerBase.displayName = "StickerBase";
 
 const Sticker = forwardRef<HTMLDivElement, StickerProps>((props, ref) => (
   <StickerBase ref={ref} {...props} />

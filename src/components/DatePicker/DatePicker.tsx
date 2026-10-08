@@ -1,25 +1,35 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { cn } from "../../utils/cn";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import {
   Calendar,
   DatePickerMode,
   type CalendarDayRenderProps,
+  type CalendarLabels,
+  type CalendarPreset,
   type DateMatcher,
   type DateRange,
 } from "../Calendar";
 import { DatePickerSplitTrigger } from "./DatePickerSplitTrigger";
 import { DatePickerTrigger } from "./DatePickerTrigger";
 
+/** The picker is the one owner of these trigger props. */
+type DatePickerTriggerOwnedProps = "mode" | "value" | "disabled" | "today" | "locale";
+
 type DatePickerSharedProps = {
   open?: boolean;
+  /** Initial open state when uncontrolled (`open` omitted). Default false. */
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   disabled?: DateMatcher | DateMatcher[];
   /** Disables the trigger control itself, distinct from disabled days. */
   triggerDisabled?: boolean;
   today?: Date;
   locale?: string;
+  /** Accessible names for the calendar's month arrows; pair with `locale`. */
+  labels?: CalendarLabels;
   /** Bounds for the calendar's own navigation and its year dropdown. */
   yearBounds?: { from?: Date; to?: Date };
   /** Slot the day's CONTENT. The button, handlers and ARIA stay with Calendar. */
@@ -30,6 +40,14 @@ type DatePickerSharedProps = {
   /** Panel content composed alongside the calendar — e.g. CalendarPresetsPanel. */
   children?: ReactNode;
   className?: string;
+  /** Props for the trigger button — `id` (for `<label htmlFor>`), `aria-*`,
+   *  handlers, `className`. The picker owns mode/value/disabled/today/locale. */
+  triggerProps?: Omit<
+    ComponentPropsWithoutRef<typeof DatePickerTrigger>,
+    DatePickerTriggerOwnedProps
+  >;
+  /** Props for the popover panel — `align`, `side`, `sideOffset`, `aria-*`, `className`. */
+  contentProps?: ComponentPropsWithoutRef<typeof PopoverContent>;
 };
 
 export type DatePickerProps = DatePickerSharedProps &
@@ -37,53 +55,52 @@ export type DatePickerProps = DatePickerSharedProps &
     | {
         mode: typeof DatePickerMode.singleDay;
         value: Date;
-        onChange: (date: Date) => void;
+        onValueChange: (date: Date) => void;
         /** Not available in single-day mode. */
         splitPresets?: never;
       }
     | {
         mode: typeof DatePickerMode.dateRange;
         value: DateRange;
-        onChange: (range: DateRange) => void;
+        onValueChange: (range: DateRange) => void;
         /** Render the split trigger with these inline preset shortcuts. */
-        splitPresets?: Parameters<typeof DatePickerSplitTrigger>[0]["presets"];
+        splitPresets?: readonly CalendarPreset[];
       }
   );
 
 function DatePicker(props: DatePickerProps) {
   const {
     open,
+    defaultOpen,
     onOpenChange,
     disabled,
     triggerDisabled,
     today,
     locale,
+    labels,
     yearBounds,
     renderDay,
     month,
     onMonthChange,
     children,
     className,
+    triggerProps,
+    contentProps,
     mode,
   } = props;
-
-  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
-  const isOpen = open ?? uncontrolledOpen;
-  const setOpen = (next: boolean) => {
-    if (open === undefined) setUncontrolledOpen(next);
-    onOpenChange?.(next);
-  };
 
   const useSplit =
     mode === DatePickerMode.dateRange && props.splitPresets !== undefined;
 
   return (
-    <Popover open={isOpen} onOpenChange={setOpen}>
+    // Radix Popover owns the open state: controlled when `open` is defined,
+    // otherwise uncontrolled from `defaultOpen`.
+    <Popover open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange}>
       {useSplit && mode === DatePickerMode.dateRange ? (
         <DatePickerSplitTrigger
           value={props.value}
           presets={props.splitPresets}
-          onSelect={props.onChange}
+          onValueChange={props.onValueChange}
           today={today}
           locale={locale}
           disabled={triggerDisabled}
@@ -94,11 +111,14 @@ function DatePicker(props: DatePickerProps) {
           trigger={
             <PopoverTrigger asChild>
               <DatePickerTrigger
+                {...triggerProps}
                 mode={DatePickerMode.dateRange}
                 value={props.value}
                 disabled={triggerDisabled}
                 today={today}
                 locale={locale}
+                // The picker's `className` goes on the split container above.
+                className={triggerProps?.className}
               />
             </PopoverTrigger>
           }
@@ -107,35 +127,38 @@ function DatePicker(props: DatePickerProps) {
         <PopoverTrigger asChild>
           {mode === DatePickerMode.singleDay ? (
             <DatePickerTrigger
+              {...triggerProps}
               mode={DatePickerMode.singleDay}
               value={props.value}
               disabled={triggerDisabled}
               today={today}
               locale={locale}
-              className={className}
+              className={cn(className, triggerProps?.className)}
             />
           ) : (
             <DatePickerTrigger
+              {...triggerProps}
               mode={DatePickerMode.dateRange}
               value={props.value}
               disabled={triggerDisabled}
               today={today}
               locale={locale}
-              className={className}
+              className={cn(className, triggerProps?.className)}
             />
           )}
         </PopoverTrigger>
       )}
 
-      <PopoverContent>
+      <PopoverContent {...contentProps}>
         {mode === DatePickerMode.singleDay ? (
           <Calendar
             mode={DatePickerMode.singleDay}
-            selected={props.value}
-            onSelect={props.onChange}
+            value={props.value}
+            onValueChange={props.onValueChange}
             disabled={disabled}
             today={today}
             locale={locale}
+            labels={labels}
             yearBounds={yearBounds}
             renderDay={renderDay}
             month={month}
@@ -146,11 +169,12 @@ function DatePicker(props: DatePickerProps) {
         ) : (
           <Calendar
             mode={DatePickerMode.dateRange}
-            selected={props.value}
-            onSelect={props.onChange}
+            value={props.value}
+            onValueChange={props.onValueChange}
             disabled={disabled}
             today={today}
             locale={locale}
+            labels={labels}
             yearBounds={yearBounds}
             renderDay={renderDay}
             month={month}

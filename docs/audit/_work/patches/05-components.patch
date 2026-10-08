@@ -1,0 +1,2356 @@
+diff --git a/scripts/sync-theme.mjs b/scripts/sync-theme.mjs
+index dca5138..0ba0e64 100644
+--- a/scripts/sync-theme.mjs
++++ b/scripts/sync-theme.mjs
+@@ -71,6 +71,7 @@ const EXCLUDED = new Set([
+   "ui-weight-title",
+   "ui-weight-hero",
+   "ui-weight-mono",
++  "ui-weight-cta",
+   "ui-weight-regular",
+   "ui-weight-medium",
+   "ui-weight-semibold",
+@@ -91,6 +92,9 @@ const EXCLUDED = new Set([
+   "ui-height-button-medium",
+   "ui-height-button-big",
+   "ui-height-button-micro",
++  // Medium / big button padding — exposed via ds-px-button-* helpers
++  "ui-spacing-button-medium-x",
++  "ui-spacing-button-big-x",
+   "ui-height-slider-track",
+   "ui-slider-track-gap",
+   "ui-width-slider-handle",
+@@ -147,10 +151,13 @@ const EXCLUDED = new Set([
+   // CTAButton geometry — exposed via ds-* helpers
+   "ui-size-cta-chip-standard",
+   "ui-size-cta-chip-big",
+-  "ui-size-cta-icon",
++  "ui-size-cta-shape-standard",
++  "ui-size-cta-shape-big",
++  "ui-size-cta-icon-standard",
++  "ui-size-cta-icon-big",
+   "ui-min-w-cta-content-standard",
+   "ui-min-w-cta-content-big",
+-  "ui-min-w-cta-pill-big",
++  "ui-spacing-cta-content-standard",
+   "ui-spacing-cta-content-big",
+   // Opacity — used as var() in arbitrary Tailwind values
+   "ui-opacity-disabled",
+diff --git a/src/components/Button/Button.stories.tsx b/src/components/Button/Button.stories.tsx
+index 6e29612..55dbf7a 100644
+--- a/src/components/Button/Button.stories.tsx
++++ b/src/components/Button/Button.stories.tsx
+@@ -1,5 +1,5 @@
+ import type { Meta, StoryObj } from "@storybook/react";
+-import { IconSize, SidebarLeftIcon } from "../Icons";
++import { IconSize, NewChatIcon, SidebarLeftIcon } from "../Icons";
+ import { LabelText } from "../Text";
+ import { Button } from "./Button";
+ import { ButtonSize, ButtonVariant } from "./constants";
+@@ -50,6 +50,20 @@ export const Small: Story = {
+     size: ButtonSize.sm,
+   },
+ };
++export const Medium: Story = {
++  args: {
++    children: "Button",
++    variant: ButtonVariant.primary,
++    size: ButtonSize.medium,
++  },
++};
++export const Big: Story = {
++  args: {
++    children: "Button",
++    variant: ButtonVariant.prominent,
++    size: ButtonSize.big,
++  },
++};
+ export const Disabled: Story = {
+   args: { children: "Button", variant: ButtonVariant.primary, disabled: true },
+ };
+@@ -69,8 +83,14 @@ export const AllVariants: Story = {
+ export const AllSizes: Story = {
+   render: () => (
+     <div className="flex items-center gap-3 p-4">
++      <Button variant={ButtonVariant.primary} size={ButtonSize.big}>
++        Big
++      </Button>
++      <Button variant={ButtonVariant.primary} size={ButtonSize.medium}>
++        Medium
++      </Button>
+       <Button variant={ButtonVariant.primary} size={ButtonSize.standard}>
+-        Default
++        Standard
+       </Button>
+       <Button variant={ButtonVariant.primary} size={ButtonSize.sm}>
+         Small
+@@ -135,3 +155,43 @@ export const IconSizeComparison: Story = {
+     </div>
+   ),
+ };
++
++/** Medium (46px) and big (54px) pills: prominent, primary and secondary only.
++ * Danger, ghost and text have no pill sizes — the type rejects them. */
++const pillVariants = [
++  ButtonVariant.prominent,
++  ButtonVariant.primary,
++  ButtonVariant.secondary,
++] as const;
++const pillSizes = [ButtonSize.big, ButtonSize.medium] as const;
++
++export const PillSizes: Story = {
++  render: () => (
++    <div className="flex flex-col gap-lg p-lg">
++      {pillSizes.map((size) => (
++        <div key={size} className="flex flex-col gap-md">
++          {[false, true].map((disabled) => (
++            <div key={String(disabled)} className="flex items-center gap-md">
++              <div className="w-20">
++                <LabelText className="text-text-secondary">
++                  {disabled ? `${size} disabled` : size}
++                </LabelText>
++              </div>
++              {pillVariants.map((variant) => (
++                <Button
++                  key={variant}
++                  variant={variant}
++                  size={size}
++                  disabled={disabled}
++                >
++                  <NewChatIcon size={IconSize.md} />
++                  New Chat
++                </Button>
++              ))}
++            </div>
++          ))}
++        </div>
++      ))}
++    </div>
++  ),
++};
+diff --git a/src/components/Button/Button.tsx b/src/components/Button/Button.tsx
+index f9315c7..71abb55 100644
+--- a/src/components/Button/Button.tsx
++++ b/src/components/Button/Button.tsx
+@@ -7,8 +7,21 @@
+  * - Disabled styling paints each variant's own explicit disabled bg/border
+  *   tokens (primary, prominent and danger all alias secondary-disabled by
+  *   default) plus `ds-disabled-state` opacity — not opacity alone.
++ * - `medium` (46px) and `big` (54px) are pills (`rounded-full`) with their own
++ *   off-scale padding tokens (`ds-px-button-medium` / `-big`) and the hero
++ *   button text role (16px). Every other size is `rounded-tight` with the
++ *   14px button role. Per-variant shadows are the same at every labelled size.
+  *
+  * ## constraints
++ * - The pill sizes exist for `prominent`, `primary` and `secondary` only, and
++ *   that is enforced in the TYPE (`ButtonVariantSizeProps`), so
++ *   `variant="danger" size="big"` fails to compile. Danger, ghost and text are
++ *   excluded by design, and there is no icon-only pill. Do not widen
++ *   `ButtonOwnProps` back to plain `VariantProps` — the restriction would
++ *   silently disappear.
++ * - `text-style-hero-button` must stay registered in `cn`'s `text-style`
++ *   group (src/utils/cn.ts). Unregistered, twMerge reads it as a text COLOUR
++ *   and drops the variant's `text-*-fg`, so medium/big labels lose their colour.
+  * - The `danger` variant paints the `--ui-color-danger-*` STATE family
+  *   (bg-danger / border-danger-border / text-danger-fg / ...), not the raw
+  *   `--ui-color-danger-primary`/`-secondary` palette. Those two are still the
+@@ -35,7 +48,7 @@ import { cn } from "../../utils/cn";
+ const buttonVariants = cva(
+   [
+     "inline-flex items-center justify-center gap-2 whitespace-nowrap",
+-    "border border-solid rounded-tight",
++    "border border-solid",
+     "ds-motion-state cursor-pointer select-none",
+     "ds-focus-visible-ring",
+     "ds-disabled-state",
+@@ -79,12 +92,18 @@ const buttonVariants = cva(
+           "[&:not(:disabled):not([aria-disabled=true])]:active:text-ghost-fg-active",
+         ],
+       },
++      // Radius lives per size, not in the base: twMerge does not treat
++      // `rounded-tight` and `rounded-full` as one group, so a base radius would
++      // survive next to the pill one and win or lose on stylesheet order.
+       size: {
+-        standard: "h-button px-3",
+-        sm: "h-button-sm px-3",
+-        icon: "size-button p-0",
+-        "icon-sm": "size-button-sm p-0",
+-        "icon-micro": "size-button-micro p-0",
++        big: "h-button-big ds-px-button-big rounded-full text-style-hero-button",
++        medium:
++          "h-button-medium ds-px-button-medium rounded-full text-style-hero-button",
++        standard: "h-button px-3 rounded-tight",
++        sm: "h-button-sm px-3 rounded-tight",
++        icon: "size-button p-0 rounded-tight",
++        "icon-sm": "size-button-sm p-0 rounded-tight",
++        "icon-micro": "size-button-micro p-0 rounded-tight",
+       },
+     },
+     compoundVariants: [
+@@ -105,7 +124,26 @@ const buttonVariants = cva(
+ // ButtonVariant / ButtonSize (+ their types) live in ./constants — kept server-safe
+ // (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
+ 
+-type ButtonOwnProps = VariantProps<typeof buttonVariants> & {
++type ButtonCvaProps = VariantProps<typeof buttonVariants>;
++type ButtonPillSize = "medium" | "big";
++type ButtonPillVariant = "prominent" | "primary" | "secondary";
++
++/**
++ * `variant` × `size`, with the pill sizes (`medium`, `big`) reachable only from
++ * `prominent`, `primary` and `secondary` (omitted `variant` = `secondary`).
++ * `danger`, `ghost` and `text` get every other size.
++ */
++type ButtonVariantSizeProps =
++  | {
++      variant?: Extract<ButtonCvaProps["variant"], ButtonPillVariant | null>;
++      size?: ButtonCvaProps["size"];
++    }
++  | {
++      variant: Exclude<ButtonCvaProps["variant"], ButtonPillVariant | null | undefined>;
++      size?: Exclude<ButtonCvaProps["size"], ButtonPillSize>;
++    };
++
++type ButtonOwnProps = ButtonVariantSizeProps & {
+   asChild?: boolean;
+ };
+ 
+diff --git a/src/components/Button/constants.ts b/src/components/Button/constants.ts
+index 4f73cea..63bfcc1 100644
+--- a/src/components/Button/constants.ts
++++ b/src/components/Button/constants.ts
+@@ -15,7 +15,15 @@ export const ButtonVariant = {
+ } as const;
+ export type ButtonVariant = (typeof ButtonVariant)[keyof typeof ButtonVariant];
+ 
++/**
++ * `medium` (46px) and `big` (54px) are pill-shaped, use the hero button text
++ * role (16px), and exist for `prominent`, `primary` and `secondary` only —
++ * `<Button variant="danger" size="big">` does not compile. No icon-only
++ * counterparts.
++ */
+ export const ButtonSize = {
++  big: "big",
++  medium: "medium",
+   standard: "standard",
+   sm: "sm",
+   icon: "icon",
+diff --git a/src/components/CTAButton/CTAButton.stories.tsx b/src/components/CTAButton/CTAButton.stories.tsx
+index 3978054..b2bc3bc 100644
+--- a/src/components/CTAButton/CTAButton.stories.tsx
++++ b/src/components/CTAButton/CTAButton.stories.tsx
+@@ -1,5 +1,5 @@
+ import type { Meta, StoryObj } from "@storybook/react";
+-import { DownloadIcon } from "../Icons";
++import { ChevronsRightIcon } from "../Icons";
+ import { CTAButton } from "./CTAButton";
+ import { CTAButtonSize, CTAButtonVariant } from "./constants";
+ 
+@@ -25,13 +25,14 @@ const meta = {
+ export default meta;
+ type Story = StoryObj<typeof meta>;
+ 
+-const downloadIcon = <DownloadIcon size={20} />;
++/* Fills the per-size icon slot (22px standard, 26px big). */
++const chevronsIcon = <ChevronsRightIcon size="100%" />;
+ 
+ export const PrimaryStandard: Story = {
+   args: {
+     text: "Download for Mac",
+     href: "#",
+-    icon: downloadIcon,
++    icon: chevronsIcon,
+     size: CTAButtonSize.standard,
+     variant: CTAButtonVariant.primary,
+   },
+@@ -41,7 +42,7 @@ export const PrimaryBig: Story = {
+   args: {
+     text: "Get started",
+     href: "#",
+-    icon: downloadIcon,
++    icon: chevronsIcon,
+     size: CTAButtonSize.big,
+     variant: CTAButtonVariant.primary,
+   },
+@@ -51,7 +52,7 @@ export const SecondaryStandard: Story = {
+   args: {
+     text: "View docs",
+     href: "#",
+-    icon: downloadIcon,
++    icon: chevronsIcon,
+     size: CTAButtonSize.standard,
+     variant: CTAButtonVariant.secondary,
+   },
+@@ -61,7 +62,7 @@ export const SecondaryBig: Story = {
+   args: {
+     text: "Talk to us",
+     href: "#",
+-    icon: downloadIcon,
++    icon: chevronsIcon,
+     size: CTAButtonSize.big,
+     variant: CTAButtonVariant.secondary,
+   },
+@@ -71,7 +72,7 @@ export const AsChildButton: Story = {
+   name: "asChild with button",
+   args: {
+     text: "Continue",
+-    icon: downloadIcon,
++    icon: chevronsIcon,
+     size: CTAButtonSize.standard,
+     variant: CTAButtonVariant.primary,
+   },
+@@ -86,35 +87,35 @@ export const AllVariants: Story = {
+   args: {
+     text: "Primary standard",
+     href: "#",
+-    icon: downloadIcon,
++    icon: chevronsIcon,
+   },
+   render: () => (
+     <div className="flex flex-col items-start gap-lg">
+       <CTAButton
+         text="Primary standard"
+         href="#"
+-        icon={downloadIcon}
++        icon={chevronsIcon}
+         size={CTAButtonSize.standard}
+         variant={CTAButtonVariant.primary}
+       />
+       <CTAButton
+         text="Primary big"
+         href="#"
+-        icon={downloadIcon}
++        icon={chevronsIcon}
+         size={CTAButtonSize.big}
+         variant={CTAButtonVariant.primary}
+       />
+       <CTAButton
+         text="Secondary standard"
+         href="#"
+-        icon={downloadIcon}
++        icon={chevronsIcon}
+         size={CTAButtonSize.standard}
+         variant={CTAButtonVariant.secondary}
+       />
+       <CTAButton
+         text="Secondary big"
+         href="#"
+-        icon={downloadIcon}
++        icon={chevronsIcon}
+         size={CTAButtonSize.big}
+         variant={CTAButtonVariant.secondary}
+       />
+diff --git a/src/components/CTAButton/CTAButton.tsx b/src/components/CTAButton/CTAButton.tsx
+index a20d865..b57b81f 100644
+--- a/src/components/CTAButton/CTAButton.tsx
++++ b/src/components/CTAButton/CTAButton.tsx
+@@ -1,3 +1,23 @@
++/*
++ * CTAButton — padded-outline marketing CTA with a fixed shape end mark.
++ *
++ * ## behavior
++ * - The end mark is a FIXED shape per size: the eight-leaf clover at
++ *   `standard`, the puff at `big`. It is static: hover only rolls the label
++ *   (RollHoverText on the root `.group`).
++ * - The shape is painted with the OPPOSITE button's background: a primary CTA
++ *   draws it in the secondary-button bg, a secondary CTA in the primary-button
++ *   bg. The icon on it takes that button's content colour.
++ * - Both sizes hug their content: 16px pill padding, a 60px label → mark gap,
++ *   the label in `.text-style-cta` (button role, semibold, 24 / 28px).
++ *
++ * ## constraints
++ * - The shape is chosen by `size`, never by a prop and never animated. That is
++ *   the maintainer's decision (2026-10-03); a shape prop or a hover morph is a
++ *   design change, not a refactor.
++ * - The shapes are the `Shapes/` primitives, never re-drawn copies. Figma's
++ *   flattened end-mark SVGs are not the source of truth.
++ */
+ import { Slot } from "@radix-ui/react-slot";
+ import {
+   cloneElement,
+@@ -9,30 +29,53 @@ import {
+ } from "react";
+ import { cn } from "../../utils/cn";
+ import { RollHoverText } from "../AnimatedText";
+-import { ButtonText, FontWeights } from "../Text";
++import { EightLeafCloverShape, PuffShape } from "../Shapes";
++import { BaseText } from "../Text";
+ import { CTAButtonSize, CTAButtonVariant } from "./constants";
+ 
+ const SIZES = {
+   standard: {
+-    pill: "p-lg gap-md",
+-    content: "gap-xxxl ds-min-w-cta-content-standard pl-md",
+-    chip: "ds-size-cta-chip-standard",
+-    fontSize: "var(--ui-text-cta-standard)",
++    content: "ds-gap-cta-content-standard ds-min-w-cta-content-standard pl-md",
++    mark: "ds-size-cta-chip-standard",
++    Shape: EightLeafCloverShape,
++    shapeSize: "var(--ui-size-cta-shape-standard)",
++    icon: "ds-size-cta-icon-standard",
++    /* `.text-style-cta` is already sized for standard. */
++    fontSize: undefined,
+   },
+   big: {
+-    pill: "p-md gap-lg ds-min-w-cta-pill-big",
+     content: "ds-gap-cta-content-big ds-min-w-cta-content-big pl-lg",
+-    chip: "ds-size-cta-chip-big",
++    mark: "ds-size-cta-chip-big",
++    Shape: PuffShape,
++    shapeSize: "var(--ui-size-cta-shape-big)",
++    icon: "ds-size-cta-icon-big",
+     fontSize: "var(--ui-text-cta-big)",
+   },
+ } as const;
+ 
++/** Per variant: pill fill, label colour, shape paint, icon colour. */
++const PAINTS = {
++  primary: {
++    pill: "bg-primary",
++    label: "text-primary-fg",
++    shape: "text-secondary",
++    icon: "text-secondary-fg",
++  },
++  secondary: {
++    pill: "bg-secondary",
++    label: "text-secondary-fg",
++    shape: "text-primary",
++    icon: "text-primary-fg",
++  },
++} as const satisfies Record<CTAButtonVariant, Record<string, string>>;
++
+ export interface CTAButtonProps
+   extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "children"> {
+-  /** Label shown inside ButtonText + RollHoverText. */
++  /** Label shown in the CTA text style + RollHoverText. */
+   text: string;
+-  /** Icon rendered inside the contrasting end chip. */
++  /** Icon centred on the end-mark shape. */
+   icon: ReactNode;
++  /** Also picks the end-mark shape: eight-leaf clover (standard) or puff (big). */
+   size?: CTAButtonSize;
+   variant?: CTAButtonVariant;
+   /**
+@@ -63,39 +106,55 @@ const CTAButton = forwardRef<HTMLAnchorElement, CTAButtonProps>(
+     ref,
+   ) => {
+     const s = SIZES[size];
++    const paint = PAINTS[variant];
+     const isPrimary = variant === CTAButtonVariant.primary;
++    const Shape = s.Shape;
+ 
+     const content = (
+       <span
+         className={cn(
+-          "flex items-center",
++          "flex items-center p-lg",
+           "rounded-full",
+           "ds-drop-shadow-cta",
+-          s.pill,
+-          isPrimary ? "bg-primary" : "bg-secondary",
++          paint.pill,
+         )}
+       >
+         <span className={cn("flex items-center", s.content)}>
+-          <ButtonText
++          <BaseText
++            unstyled
+             fontSize={s.fontSize}
+-            fontWeight={FontWeights.medium}
+-            className={cn(
+-              "min-w-px flex-1",
+-              isPrimary ? "text-primary-fg" : "text-secondary-fg",
+-            )}
++            className={cn("text-style-cta min-w-px flex-1", paint.label)}
+           >
+             <RollHoverText>{text}</RollHoverText>
+-          </ButtonText>
++          </BaseText>
+ 
+           <span
+             className={cn(
+-              "flex shrink-0 items-center justify-center gap-sm px-md",
+-              "rounded-full",
+-              s.chip,
+-              isPrimary ? "bg-secondary" : "bg-primary",
++              "relative flex shrink-0 items-center justify-center",
++              s.mark,
+             )}
+           >
+-            <span className="relative shrink-0 overflow-clip ds-size-cta-icon">
++            <span
++              aria-hidden
++              className={cn(
++                "absolute inset-0 flex items-center justify-center",
++                paint.shape,
++              )}
++            >
++              <Shape
++                size={s.shapeSize}
++                strokeColor="transparent"
++                strokeWeight={0}
++                fillColor="currentColor"
++              />
++            </span>
++            <span
++              className={cn(
++                "relative shrink-0 overflow-clip",
++                s.icon,
++                paint.icon,
++              )}
++            >
+               {icon}
+             </span>
+           </span>
+diff --git a/src/components/LoadingSpinner/LoadingSpinner.stories.tsx b/src/components/LoadingSpinner/LoadingSpinner.stories.tsx
+index a5da0f5..c137fab 100644
+--- a/src/components/LoadingSpinner/LoadingSpinner.stories.tsx
++++ b/src/components/LoadingSpinner/LoadingSpinner.stories.tsx
+@@ -46,6 +46,14 @@ export const Spokes: Story = {
+   },
+ };
+ 
++export const Star: Story = {
++  args: {
++    variant: LoadingSpinnerVariant.star,
++    color: LoadingSpinnerColor.primary,
++    size: LoadingSpinnerSize.rg,
++  },
++};
++
+ export const AllSizes: Story = {
+   render: () => (
+     <div className="flex items-center gap-4">
+@@ -80,6 +88,45 @@ export const AllSizesSpokes: Story = {
+   ),
+ };
+ 
++export const AllSizesStar: Story = {
++  render: () => (
++    <div className="flex items-center gap-lg">
++      <LoadingSpinner
++        variant={LoadingSpinnerVariant.star}
++        size={LoadingSpinnerSize.sm}
++      />
++      <LoadingSpinner
++        variant={LoadingSpinnerVariant.star}
++        size={LoadingSpinnerSize.rg}
++      />
++      <LoadingSpinner
++        variant={LoadingSpinnerVariant.star}
++        size={LoadingSpinnerSize.md}
++      />
++      <LoadingSpinner
++        variant={LoadingSpinnerVariant.star}
++        size={LoadingSpinnerSize.xl}
++      />
++    </div>
++  ),
++};
++
++/**
++ * The star inside a 1px border drawn exactly on its box: at every size and
++ * every angle of the turn, the star stays clear of the border.
++ */
++export const StarStaysInBox: Story = {
++  render: () => (
++    <div className="flex items-center gap-lg">
++      {Object.values(LoadingSpinnerSize).map((size) => (
++        <span key={size} className="inline-flex border border-solid border-border-primary">
++          <LoadingSpinner variant={LoadingSpinnerVariant.star} size={size} />
++        </span>
++      ))}
++    </div>
++  ),
++};
++
+ export const Colors: Story = {
+   render: () => (
+     <div className="flex items-center gap-4">
+@@ -125,6 +172,25 @@ export const AllVariantsAndColors: Story = {
+           size={LoadingSpinnerSize.md}
+         />
+       </div>
++      <div className="flex items-center gap-lg">
++        <span className="w-12 text-style-label text-text-secondary">star</span>
++        <LoadingSpinner
++          variant={LoadingSpinnerVariant.star}
++          color={LoadingSpinnerColor.primary}
++          size={LoadingSpinnerSize.md}
++        />
++        <LoadingSpinner
++          variant={LoadingSpinnerVariant.star}
++          color={LoadingSpinnerColor.prominent}
++          size={LoadingSpinnerSize.md}
++        />
++        {/* `color` overriding the default with an arbitrary CSS colour */}
++        <LoadingSpinner
++          variant={LoadingSpinnerVariant.star}
++          color="#e05252"
++          size={LoadingSpinnerSize.md}
++        />
++      </div>
+     </div>
+   ),
+ };
+diff --git a/src/components/LoadingSpinner/LoadingSpinner.tsx b/src/components/LoadingSpinner/LoadingSpinner.tsx
+index 00d894d..cb28d7a 100644
+--- a/src/components/LoadingSpinner/LoadingSpinner.tsx
++++ b/src/components/LoadingSpinner/LoadingSpinner.tsx
+@@ -1,14 +1,46 @@
+-"use client";
+-
+-import {
+-  forwardRef,
+-  useEffect,
+-  useRef,
+-  type ComponentPropsWithoutRef,
+-  type Ref,
+-} from "react";
++/*
++ * LoadingSpinner — indeterminate circular loading indicator in three looks:
++ * `flat` (M3 arc and track), `spokes` (eight-spoke icon) and `star` (the
++ * StarShape outline).
++ *
++ * ## behavior
++ * - Every variant is animated by CSS: the .ds-spinner-* helpers in index.css,
++ *   on the --ui-spinner-* tokens. This file renders once and writes geometry
++ *   only (SVG attributes plus numeric custom properties on the <svg>).
++ * - flat: an active arc and a grey track arc, drawn as two dashes on one
++ *   circle path. The arc's length eases between SPINNER_MIN_SWEEP and
++ *   SPINNER_MAX_SWEEP of a turn on a cosine while its head makes two turns
++ *   per --ui-spinner-duration, so it compacts from the tail. The track is the
++ *   complement, one stroke width of visual gap clear of each end.
++ * - spokes / star: a constant linear turn of an inner group, one turn per
++ *   --ui-spinner-spokes-duration scaled by the size's spinTimeScale.
++ * - star: STAR_SHAPE_PATH filled with `color`, scaled to ShapeMorphSpinner's
++ *   shape-to-box ratio (STAR_FIT_SCALE), so it stays inside the box at any
++ *   angle.
++ * - Reduced motion: flat holds a static mid-cycle frame (longest arc, head at
++ *   12 o'clock); spokes and star stand still.
++ * - `color` goes through resolveDsColor. The track is always
++ *   --ui-color-border-primary, never the indicator colour.
++ *
++ * ## constraints
++ * - No duration, easing, timer or animation loop in this file (Rule 6). The
++ *   clock is the --ui-spinner-* tokens; the sweep range and the per-size
++ *   factor are geometry and reach CSS as plain numbers.
++ * - The flat arcs share one open circle path that starts half a gap past
++ *   12 o'clock, inside the gap at the arc's head, which never moves in the
++ *   turning group's frame. Do not start it at 12 o'clock or swap it for a
++ *   <circle>: a dash that crosses its path's seam is cut in two and its round
++ *   caps flash (the artefact the old rAF arcs were built to avoid).
++ * - 1 − SPINNER_MAX_SWEEP − 2 × gapLength / circumference must stay above 0 at
++ *   every size. At 0 the track's dash has zero length, and a round cap still
++ *   paints a zero-length dash as a dot.
++ * - No "use client": nothing here needs the client. Adding a hook, a timer or
++ *   a listener makes this module client-only again.
++ */
++import { forwardRef, type ComponentPropsWithoutRef, type CSSProperties, type Ref } from "react";
+ import { cn } from "../../utils/cn";
+ import { resolveDsColor, type DsColor } from "../../utils/color";
++import { STAR_SHAPE_PATH } from "../Shapes/StarShape";
+ import {
+   LoadingSpinnerColor,
+   LoadingSpinnerSize,
+@@ -16,10 +48,11 @@ import {
+ } from "./constants";
+ import {
+   getSpinnerGeometry,
+-  SPINNER_ANIM_DURATION,
+   SPINNER_MAX_SWEEP,
+   SPINNER_MIN_SWEEP,
+   SPINNER_START_ANGLE,
++  STAR_FIT_TRANSFORM,
++  STAR_VIEWBOX,
+   type SpinnerGeometry,
+   type SpinnerSizeKey,
+ } from "./spinnerGeometry";
+@@ -44,131 +77,68 @@ type InnerSvgProps = ComponentPropsWithoutRef<"svg"> & {
+   ref?: Ref<SVGSVGElement>;
+ };
+ 
+-// ── Internal: flat arc path helper ───────────────────────────────────────────
++type VariantProps = {
++  geo: SpinnerGeometry;
++  color: string;
++  svgProps: InnerSvgProps;
++};
++
++/** Numeric custom properties for the .ds-spinner-* helpers (never px-suffixed by React). */
++type SpinnerVars = Record<`--ds-spinner-${string}`, number>;
++
++// ── Internal: flat arc path ──────────────────────────────────────────────────
+ 
+ /**
+- * Returns an SVG clockwise arc `M…A…` path string.
+- *
+- * @param startAngle - Start angle in radians (0 = 3 o'clock, −π/2 = 12 o'clock).
+- * @param sweepAngle - Arc span in radians, must be positive.
+- *
+- * Returns an empty string when `sweepAngle ≤ 0`.
+- * Clamps to just under 2π: at exactly 2π the start/end points are identical
+- * and the SVG `A` command draws nothing.
+- *
+- * WHY THIS APPROACH:
+- * Using `<path>` + explicit arc coordinates entirely avoids the rendering
+- * artefact that occurs with `<circle>` + `strokeDashoffset` when the dash
+- * position crosses the circle element's path endpoint (12 o'clock after the
+- * rotate(-90) transform). At that point SVG clips the dash at the path end
+- * instead of wrapping, producing a spurious visual contraction + flash with
+- * round linecaps. Direct arc coordinates have no such seam.
++ * One full clockwise circle as an OPEN path (two half arcs, no `Z`), starting
++ * `startAngle` radians round from 3 o'clock. Both flat arcs are dashes on it.
+  */
+-function flatArcPath(
++function circlePathFrom(
+   cx: number,
+   cy: number,
+   r: number,
+   startAngle: number,
+-  sweepAngle: number,
+ ): string {
+-  if (sweepAngle <= 0) return "";
+-  const sweep = Math.min(sweepAngle, 2 * Math.PI - 0.0001);
+-  const endAngle = startAngle + sweep;
+-  const x1 = cx + r * Math.cos(startAngle);
+-  const y1 = cy + r * Math.sin(startAngle);
+-  const x2 = cx + r * Math.cos(endAngle);
+-  const y2 = cy + r * Math.sin(endAngle);
+-  return `M ${x1} ${y1} A ${r} ${r} 0 ${sweep > Math.PI ? 1 : 0} 1 ${x2} ${y2}`;
++  const x0 = cx + r * Math.cos(startAngle);
++  const y0 = cy + r * Math.sin(startAngle);
++  const x1 = 2 * cx - x0;
++  const y1 = 2 * cy - y0;
++  return `M ${x0} ${y0} A ${r} ${r} 0 0 1 ${x1} ${y1} A ${r} ${r} 0 0 1 ${x0} ${y0}`;
+ }
+ 
+ // ── Internal: flat spinner ────────────────────────────────────────────────────
+ 
+ /**
+- * Flat indeterminate spinner — rAF-driven, path-based discrete arcs (M3 style):
+- *
+- * Both arcs are `<path>` elements whose `d` attribute is replaced each frame
+- * via `requestAnimationFrame` + direct `setAttribute`. Using `<path>` with
+- * explicit SVG arc coordinates (not `<circle>` + dashoffset) avoids the clip
+- * artefact that occurs when a dashed stroke crosses the circle path's seam.
+- *
+- * Animation model:
+- * - Arc length oscillates between SPINNER_MIN_SWEEP and SPINNER_MAX_SWEEP of
+- *   a full rotation via cosine easing over SPINNER_ANIM_DURATION ms.
+- * - Arc head (leading edge) advances at 2 full rotations per cycle; tail
+- *   trails sweepAngle behind. The arc therefore compacts from the back.
+- * - Track arc covers the complementary arc: (2π − sweepAngle − 2×gapAngle).
+- *   With round linecaps the visual gap ≈ strokeWidth (M3 spec).
++ * Flat indeterminate spinner (M3 style). The <g> turns and the two dashes
++ * resize, all from one CSS phase; see .ds-spinner-flat in index.css for the
++ * dash maths.
+  */
+-function FlatSpinner({
+-  geo,
+-  strokeColor,
+-  svgProps,
+-}: {
+-  geo: SpinnerGeometry;
+-  strokeColor: string;
+-  svgProps: InnerSvgProps;
+-}) {
+-  const { diameter, cssSize, strokeWidth, cx, cy, trackRadius, gapLength } =
+-    geo;
++function FlatSpinner({ geo, color, svgProps }: VariantProps) {
++  const {
++    diameter,
++    cssSize,
++    strokeWidth,
++    cx,
++    cy,
++    trackRadius,
++    circumference,
++    gapLength,
++  } = geo;
+   const { className, style, ...rest } = svgProps;
+ 
+-  const activeRef = useRef<SVGPathElement>(null);
+-  const trackRef = useRef<SVGPathElement>(null);
+-
+-  useEffect(() => {
+-    const startTime = performance.now();
+-    let frameId: number;
+-    const twoPi = 2 * Math.PI;
+-    // Gap in radians: gapLength (arc-length) ÷ radius = subtended angle.
+-    const gapAngle = gapLength / trackRadius;
+-
+-    function animate(now: number) {
+-      const elapsed = now - startTime;
+-      const phase = (elapsed % SPINNER_ANIM_DURATION) / SPINNER_ANIM_DURATION;
+-
+-      // Cosine easing: 0→1→0 over one cycle.
+-      const easedPhase = (1 - Math.cos(phase * twoPi)) / 2;
+-      const sweepAngle =
+-        (SPINNER_MIN_SWEEP +
+-          (SPINNER_MAX_SWEEP - SPINNER_MIN_SWEEP) * easedPhase) *
+-        twoPi;
+-
+-      // Head advances at 2 full rotations per cycle; tail = head − sweepAngle.
+-      const arcEndAngle =
+-        SPINNER_START_ANGLE + (elapsed / SPINNER_ANIM_DURATION) * 2 * twoPi;
+-      const arcStartAngle = arcEndAngle - sweepAngle;
+-
+-      if (activeRef.current) {
+-        activeRef.current.setAttribute(
+-          "d",
+-          flatArcPath(cx, cy, trackRadius, arcStartAngle, sweepAngle),
+-        );
+-      }
+-
+-      if (trackRef.current) {
+-        const trackSweepAngle = twoPi - sweepAngle - 2 * gapAngle;
+-        if (trackSweepAngle > 0) {
+-          trackRef.current.setAttribute(
+-            "d",
+-            flatArcPath(
+-              cx,
+-              cy,
+-              trackRadius,
+-              arcEndAngle + gapAngle,
+-              trackSweepAngle,
+-            ),
+-          );
+-        } else {
+-          trackRef.current.setAttribute("d", "");
+-        }
+-      }
+-
+-      frameId = requestAnimationFrame(animate);
+-    }
+-
+-    frameId = requestAnimationFrame(animate);
+-    return () => cancelAnimationFrame(frameId);
+-  }, [cx, cy, trackRadius, gapLength]);
++  // Gap in radians: gapLength (arc length) ÷ radius = subtended angle. The path
++  // starts half of it past the head so neither dash ever reaches the seam.
++  const d = circlePathFrom(
++    cx,
++    cy,
++    trackRadius,
++    SPINNER_START_ANGLE + gapLength / trackRadius / 2,
++  );
++  const vars: SpinnerVars = {
++    "--ds-spinner-c": circumference,
++    "--ds-spinner-gap": gapLength / circumference,
++    "--ds-spinner-sweep-min": SPINNER_MIN_SWEEP,
++    "--ds-spinner-sweep-max": SPINNER_MAX_SWEEP,
++  };
+ 
+   return (
+     <svg
+@@ -180,25 +150,29 @@ function FlatSpinner({
+       width={diameter}
+       height={diameter}
+       viewBox={`0 0 ${diameter} ${diameter}`}
+-      className={className}
+-      style={{ width: cssSize, height: cssSize, ...style }}
++      className={cn("ds-spinner-flat", className)}
++      style={{ width: cssSize, height: cssSize, ...vars, ...style } as CSSProperties}
+     >
+-      {/* Track arc — discrete complement of active arc, driven by rAF */}
+-      <path
+-        ref={trackRef}
+-        fill="none"
+-        stroke="var(--ui-color-border-primary)"
+-        strokeWidth={strokeWidth}
+-        strokeLinecap="round"
+-      />
+-      {/* Active indicator arc — driven by rAF */}
+-      <path
+-        ref={activeRef}
+-        fill="none"
+-        stroke={strokeColor}
+-        strokeWidth={strokeWidth}
+-        strokeLinecap="round"
+-      />
++      <g className="ds-spinner-flat-turn">
++        {/* Track arc — the complement of the active arc */}
++        <path
++          className="ds-spinner-flat-arc ds-spinner-flat-track"
++          d={d}
++          fill="none"
++          strokeWidth={strokeWidth}
++          strokeLinecap="round"
++          style={{ stroke: "var(--ui-color-border-primary)" }}
++        />
++        {/* Active indicator arc */}
++        <path
++          className="ds-spinner-flat-arc ds-spinner-flat-indicator"
++          d={d}
++          fill="none"
++          strokeWidth={strokeWidth}
++          strokeLinecap="round"
++          style={{ stroke: color }}
++        />
++      </g>
+     </svg>
+   );
+ }
+@@ -206,25 +180,13 @@ function FlatSpinner({
+ // ── Internal: spokes spinner ─────────────────────────────────────────────────
+ 
+ /**
+- * Spokes (icon) spinner — the eight-spoke LoadingSpinnerIcon paths rendered
+- * inside an SVG sized to match the spinner's diameter, rotating at a constant
+- * linear rate via `ds-spinner-rotate`.
+- *
+- * Unlike the flat arc variant there is no arc animation — the entire SVG
+- * simply spins. This is the lightest-weight variant: no rAF loop, no path
+- * recomputation, pure CSS animation.
++ * Spokes (icon) spinner — the eight-spoke LoadingSpinnerIcon paths, turning at
++ * a constant linear rate via .ds-spinner-spin.
+  */
+-function SpokesSpinner({
+-  geo,
+-  strokeColor,
+-  svgProps,
+-}: {
+-  geo: SpinnerGeometry;
+-  strokeColor: string;
+-  svgProps: InnerSvgProps;
+-}) {
+-  const { diameter, cssSize, spokesDuration } = geo;
++function SpokesSpinner({ geo, color, svgProps }: VariantProps) {
++  const { diameter, cssSize, spinTimeScale } = geo;
+   const { className, style, ...rest } = svgProps;
++  const vars: SpinnerVars = { "--ds-spinner-time-scale": spinTimeScale };
+ 
+   return (
+     <svg
+@@ -232,8 +194,7 @@ function SpokesSpinner({
+       xmlns="http://www.w3.org/2000/svg"
+       /* Attribute = intrinsic size before CSS lands; the token below overrides
+        * it, since an SVG attribute cannot resolve var(). This variant is drawn
+-       * in a fixed 24-unit space, so it already scaled — only the rendered size
+-       * was pinned to the JS table. */
++       * in a fixed 24-unit space, so it scales with the rendered size. */
+       width={diameter}
+       height={diameter}
+       viewBox="0 0 24 24"
+@@ -245,22 +206,52 @@ function SpokesSpinner({
+         {
+           width: cssSize,
+           height: cssSize,
+-          stroke: strokeColor,
++          stroke: color,
+           strokeWidth: "var(--ui-icon-stroke-width)",
+-          animation: `ds-spinner-rotate ${spokesDuration}ms linear infinite`,
+-          transformOrigin: "center",
++          ...vars,
+           ...style,
+-        } as React.CSSProperties
++        } as CSSProperties
+       }
+     >
+-      <path d="M12 2v4" />
+-      <path d="m16.2 7.8 2.9-2.9" />
+-      <path d="M18 12h4" />
+-      <path d="m16.2 16.2 2.9 2.9" />
+-      <path d="M12 18v4" />
+-      <path d="m4.9 19.1 2.9-2.9" />
+-      <path d="M2 12h4" />
+-      <path d="m4.9 4.9 2.9 2.9" />
++      <g className="ds-spinner-spin">
++        <path d="M12 2v4" />
++        <path d="m16.2 7.8 2.9-2.9" />
++        <path d="M18 12h4" />
++        <path d="m16.2 16.2 2.9 2.9" />
++        <path d="M12 18v4" />
++        <path d="m4.9 19.1 2.9-2.9" />
++        <path d="M2 12h4" />
++        <path d="m4.9 4.9 2.9 2.9" />
++      </g>
++    </svg>
++  );
++}
++
++// ── Internal: star spinner ───────────────────────────────────────────────────
++
++/**
++ * Star spinner — the StarShape outline, filled, turning at a constant linear
++ * rate via .ds-spinner-spin. Same turn rate as the spokes.
++ */
++function StarSpinner({ geo, color, svgProps }: VariantProps) {
++  const { diameter, cssSize, spinTimeScale } = geo;
++  const { className, style, ...rest } = svgProps;
++  const vars: SpinnerVars = { "--ds-spinner-time-scale": spinTimeScale };
++
++  return (
++    <svg
++      {...rest}
++      xmlns="http://www.w3.org/2000/svg"
++      /* Attribute = intrinsic size before CSS lands; the token overrides it. */
++      width={diameter}
++      height={diameter}
++      viewBox={`0 0 ${STAR_VIEWBOX} ${STAR_VIEWBOX}`}
++      className={cn(className)}
++      style={{ width: cssSize, height: cssSize, ...vars, ...style } as CSSProperties}
++    >
++      <g className="ds-spinner-spin">
++        <path d={STAR_SHAPE_PATH} transform={STAR_FIT_TRANSFORM} style={{ fill: color }} />
++      </g>
+     </svg>
+   );
+ }
+@@ -273,6 +264,7 @@ function SpokesSpinner({
+  * ```tsx
+  * <LoadingSpinner />
+  * <LoadingSpinner variant={LoadingSpinnerVariant.spokes} color={LoadingSpinnerColor.prominent} />
++ * <LoadingSpinner variant={LoadingSpinnerVariant.star} size={LoadingSpinnerSize.md} />
+  * <LoadingSpinner size={LoadingSpinnerSize.md} color="#a3c2d1" />
+  * ```
+  */
+@@ -288,7 +280,7 @@ export const LoadingSpinner = forwardRef<SVGSVGElement, LoadingSpinnerProps>(
+     ref,
+   ) => {
+     const geo = getSpinnerGeometry(size as SpinnerSizeKey);
+-    const strokeColor = resolveDsColor(color, "var(--ui-color-primary)");
++    const resolvedColor = resolveDsColor(color, "var(--ui-color-primary)");
+ 
+     const svgProps: InnerSvgProps = {
+       role: "status",
+@@ -299,18 +291,12 @@ export const LoadingSpinner = forwardRef<SVGSVGElement, LoadingSpinnerProps>(
+     };
+ 
+     if (variant === LoadingSpinnerVariant.spokes) {
+-      return (
+-        <SpokesSpinner
+-          geo={geo}
+-          strokeColor={strokeColor}
+-          svgProps={svgProps}
+-        />
+-      );
++      return <SpokesSpinner geo={geo} color={resolvedColor} svgProps={svgProps} />;
+     }
+-
+-    return (
+-      <FlatSpinner geo={geo} strokeColor={strokeColor} svgProps={svgProps} />
+-    );
++    if (variant === LoadingSpinnerVariant.star) {
++      return <StarSpinner geo={geo} color={resolvedColor} svgProps={svgProps} />;
++    }
++    return <FlatSpinner geo={geo} color={resolvedColor} svgProps={svgProps} />;
+   },
+ );
+ LoadingSpinner.displayName = "LoadingSpinner";
+diff --git a/src/components/LoadingSpinner/constants.ts b/src/components/LoadingSpinner/constants.ts
+index ab49e93..a4baf5d 100644
+--- a/src/components/LoadingSpinner/constants.ts
++++ b/src/components/LoadingSpinner/constants.ts
+@@ -2,13 +2,18 @@
+ // these values. Re-exported via the barrel; LoadingSpinner.tsx imports them.
+ 
+ export const LoadingSpinnerVariant = {
+-  /** Smooth circular arc — rAF-driven discrete arcs with M3 gap behaviour. */
++  /** Smooth circular arc — CSS-driven discrete arc and track with M3 gap behaviour. */
+   flat: "flat",
+   /**
+    * Icon spinner — the LoadingSpinnerIcon paths rotate at a constant linear
+    * rate. Communicates "loading" via a familiar eight-spoke icon.
+    */
+   spokes: "spokes",
++  /**
++   * The StarShape outline, filled, turning at a constant linear rate. Sized at
++   * ShapeMorphSpinner's shape-to-box ratio so the turn stays inside the box.
++   */
++  star: "star",
+ } as const;
+ export type LoadingSpinnerVariant =
+   (typeof LoadingSpinnerVariant)[keyof typeof LoadingSpinnerVariant];
+diff --git a/src/components/LoadingSpinner/spinnerGeometry.ts b/src/components/LoadingSpinner/spinnerGeometry.ts
+index 72ed8a2..ab5d5d5 100644
+--- a/src/components/LoadingSpinner/spinnerGeometry.ts
++++ b/src/components/LoadingSpinner/spinnerGeometry.ts
+@@ -8,7 +8,11 @@
+  *
+  * Keeping them apart is what makes the tokens real: the SVG scales to the token
+  * and every proportion inside it survives.
++ *
++ * Geometry only. No duration or easing belongs here: the spinner's clock is the
++ * --ui-spinner-* tokens, read by the .ds-spinner-* CSS helpers (Rule 6).
+  */
++import { ACTIVE_INDICATOR_SCALE } from "../MorphRotationShape/geometry";
+ 
+ /**
+  * Reference diameter in USER UNITS for each size — the coordinate space every
+@@ -45,12 +49,6 @@ export const SPINNER_STROKE_WIDTHS = { sm: 2, rg: 2.5, md: 3, xl: 3 } as const;
+ /** Starting angle in radians — 12 o'clock position. */
+ export const SPINNER_START_ANGLE = -Math.PI / 2;
+ 
+-/**
+- * Duration in ms for one full animation cycle.
+- * Matches Material Design's indeterminate circular progress timing (1.4 s).
+- */
+-export const SPINNER_ANIM_DURATION = 1800;
+-
+ /** Minimum sweep fraction (7 % of a full rotation) for the indeterminate arc. */
+ export const SPINNER_MIN_SWEEP = 0.07;
+ 
+@@ -58,17 +56,33 @@ export const SPINNER_MIN_SWEEP = 0.07;
+ export const SPINNER_MAX_SWEEP = 0.72;
+ 
+ /**
+- * Reference revolution duration in ms for the spokes spinner at the `rg` size.
+- * Each size derives its own duration via `getSpinnerGeometry` using a square-root
+- * power law rather than a linear scale — linear over-corrects (small too fast,
+- * large too slow). Power 0.5 gives the right perceptual compression:
++ * Per-size factor on the spokes/star turn duration (--ui-spinner-spokes-duration,
++ * which is the `rg` turn). A square-root power law rather than a linear scale —
++ * linear over-corrects (small too fast, large too slow); power 0.5 gives the
++ * right perceptual compression:
+  *
+- *   spokesDuration(size) = SPINNER_SPOKES_DURATION × (diameter / diameter_rg)^0.5
++ *   turn(size) = --ui-spinner-spokes-duration × (diameter / diameter_rg)^0.5
+  *
+- * At this reference the sizes come out approximately:
+- *   sm → 1092 ms | rg → 1280 ms | md → 1544 ms | xl → 1726 ms
++ * The factor is geometry (a ratio of sizes); the duration it scales is a token,
++ * so the clock itself never lives in JS.
+  */
+-export const SPINNER_SPOKES_DURATION = 1280;
++export const SPINNER_SPIN_EXPONENT = 0.5;
++
++/**
++ * Star variant fit. `STAR_SHAPE_PATH` is drawn in a 24-unit box and its
++ * bounds are x 1.5–22.4936, y 1.5064–22.4937: an extent of ~21 units centred
++ * on (12, 12). The star is scaled about that centre so its bounds are
++ * ACTIVE_INDICATOR_SCALE (38/48) of the spinner box — the same shape-to-box
++ * ratio ShapeMorphSpinner draws its shapes at. The star's farthest points
++ * from its centre are its four tips, which also set its bounds, so it needs
++ * no further rotation-safe reduction: it stays inside the box at any angle.
++ */
++export const STAR_VIEWBOX = 24;
++const STAR_EXTENT = 22.4936 - 1.5;
++export const STAR_FIT_SCALE =
++  (ACTIVE_INDICATOR_SCALE * STAR_VIEWBOX) / STAR_EXTENT;
++/** SVG transform that applies STAR_FIT_SCALE about the box centre. */
++export const STAR_FIT_TRANSFORM = `translate(${STAR_VIEWBOX / 2} ${STAR_VIEWBOX / 2}) scale(${STAR_FIT_SCALE}) translate(${-STAR_VIEWBOX / 2} ${-STAR_VIEWBOX / 2})`;
+ 
+ export type SpinnerSizeKey = keyof typeof SPINNER_DIAMETERS;
+ 
+@@ -101,14 +115,10 @@ export interface SpinnerGeometry {
+    */
+   gapLength: number;
+   /**
+-   * Revolution duration in ms for the spokes variant at this size.
+-   * Uses a square-root power law (exponent 0.5) so perceived speed stays
+-   * consistent without over-correcting: small sizes spin a little faster,
+-   * large sizes a little slower, but the range stays comfortable.
+-   *
+-   * = SPINNER_SPOKES_DURATION × (diameter / diameter_rg)^0.5
++   * Per-size factor on --ui-spinner-spokes-duration for the spokes and star
++   * turns: (diameter / diameter_rg)^SPINNER_SPIN_EXPONENT. 1 at `rg`.
+    */
+-  spokesDuration: number;
++  spinTimeScale: number;
+ }
+ 
+ /** Compute all geometry values needed to render a spinner at the given size. */
+@@ -124,11 +134,11 @@ export function getSpinnerGeometry(size: SpinnerSizeKey): SpinnerGeometry {
+   // Mathematical gap = 2 × strokeWidth → visual gap ≈ strokeWidth with round caps.
+   const gapLength = strokeWidth * 2;
+ 
+-  // Spokes duration: square-root power law keeps perceived speed consistent
+-  // without over-correcting. Linear scaling (exponent 1) makes small too fast
+-  // and large too slow; power 0.5 compresses the range to a comfortable spread.
+-  const spokesDuration = Math.round(
+-    SPINNER_SPOKES_DURATION * Math.pow(diameter / SPINNER_DIAMETERS.rg, 0.5),
++  // Square-root power law keeps perceived turn speed consistent across sizes
++  // without over-correcting (see SPINNER_SPIN_EXPONENT).
++  const spinTimeScale = Math.pow(
++    diameter / SPINNER_DIAMETERS.rg,
++    SPINNER_SPIN_EXPONENT,
+   );
+ 
+   return {
+@@ -141,6 +151,6 @@ export function getSpinnerGeometry(size: SpinnerSizeKey): SpinnerGeometry {
+     indicatorRadius,
+     circumference,
+     gapLength,
+-    spokesDuration,
++    spinTimeScale,
+   };
+ }
+diff --git a/src/components/Shapes/BaseShape.tsx b/src/components/Shapes/BaseShape.tsx
+index 21286b4..e044ce4 100644
+--- a/src/components/Shapes/BaseShape.tsx
++++ b/src/components/Shapes/BaseShape.tsx
+@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
+ import { BaseIcon } from "../Icons";
+ 
+ export interface ShapeProps {
+-  size: number;
++  /** px number, or any CSS length — e.g. a `var(--ui-size-*)` token. */
++  size: number | string;
+   strokeColor?: string;
+   fillColor?: string;
+   strokeWeight?: number | string;
+diff --git a/src/components/Shapes/EightLeafCloverShape.tsx b/src/components/Shapes/EightLeafCloverShape.tsx
+index 474882a..93da64b 100644
+--- a/src/components/Shapes/EightLeafCloverShape.tsx
++++ b/src/components/Shapes/EightLeafCloverShape.tsx
+@@ -1,7 +1,7 @@
+ import BaseShape, { ShapeProps } from "./BaseShape";
+ 
+ export const EIGHT_LEAF_CLOVER_SHAPE_PATH =
+-  "M2.34639 12C1.35015 10.8096 0.75 9.27309 0.75 7.59575C0.75 3.81494 3.79914 0.75 7.56044 0.75C9.26275 0.75 10.8192 1.37783 12.0132 2.41569C13.2043 1.37783 14.7571 0.75 16.4555 0.75C20.208 0.75 23.25 3.81494 23.25 7.59575C23.25 9.27309 22.6512 10.8096 21.6574 12C22.6512 13.1904 23.25 14.7269 23.25 16.4042C23.25 20.1851 20.208 23.25 16.4555 23.25C14.7571 23.25 13.2043 22.6222 12.0132 21.5843C10.8192 22.6222 9.26275 23.25 7.56044 23.25C3.79914 23.25 0.75 20.1851 0.75 16.4042C0.75 14.7269 1.35015 13.1904 2.34639 12Z";
++  "M23.1438 11.9998C25.082 15.6123 23.6176 18.8828 19.8799 19.8796C18.8828 23.6176 15.6123 25.0816 11.9998 23.1438C8.38732 25.082 5.11684 23.6176 4.12003 19.8799C0.382357 18.8828 -1.08203 15.6123 0.856176 11.9998C-1.08203 8.38732 0.382357 5.11684 4.12003 4.12003C5.11684 0.382357 8.38732 -1.08203 11.9998 0.856176C15.6123 -1.08203 18.8828 0.382357 19.8796 4.12003C23.6176 5.11684 25.0816 8.38732 23.1438 11.9998Z";
+ 
+ export const EightLeafCloverShape = ({
+   size,
+@@ -16,10 +16,7 @@ export const EightLeafCloverShape = ({
+       fillColor={fillColor}
+       strokeWeight={strokeWeight}
+     >
+-      <path
+-        d="M23.1438 11.9998C25.082 15.6123 23.6176 18.8828 19.8799 19.8796C18.8828 23.6176 15.6123 25.0816 11.9998 23.1438C8.38732 25.082 5.11684 23.6176 4.12003 19.8799C0.382357 18.8828 -1.08203 15.6123 0.856176 11.9998C-1.08203 8.38732 0.382357 5.11684 4.12003 4.12003C5.11684 0.382357 8.38732 -1.08203 11.9998 0.856176C15.6123 -1.08203 18.8828 0.382357 19.8796 4.12003C23.6176 5.11684 25.0816 8.38732 23.1438 11.9998Z"
+-        fill={fillColor}
+-      />
++      <path d={EIGHT_LEAF_CLOVER_SHAPE_PATH} fill={fillColor} />
+     </BaseShape>
+   );
+ };
+diff --git a/src/components/Shapes/Shapes.stories.tsx b/src/components/Shapes/Shapes.stories.tsx
+index 6a342c8..3470d33 100644
+--- a/src/components/Shapes/Shapes.stories.tsx
++++ b/src/components/Shapes/Shapes.stories.tsx
+@@ -7,6 +7,7 @@ import {
+   CookieShape,
+   DiamondShape,
+   DoubleShape,
++  EightLeafCloverShape,
+   PentagonShape,
+   PixircleShape,
+   PuffShape,
+@@ -34,6 +35,7 @@ const shapes: ShapeExample[] = [
+   { label: "Cookie", component: CookieShape },
+   { label: "Diamond", component: DiamondShape },
+   { label: "Double", component: DoubleShape },
++  { label: "Eight-leaf clover", component: EightLeafCloverShape },
+   { label: "Pentagon", component: PentagonShape },
+   { label: "Pixircle", component: PixircleShape },
+   { label: "Puff", component: PuffShape },
+@@ -104,6 +106,10 @@ export const Double: Story = {
+   render: (args) => <DoubleShape {...args} />,
+ };
+ 
++export const EightLeafClover: Story = {
++  render: (args) => <EightLeafCloverShape {...args} />,
++};
++
+ export const Pentagon: Story = {
+   render: (args) => <PentagonShape {...args} />,
+ };
+diff --git a/src/components/Shapes/index.ts b/src/components/Shapes/index.ts
+index c6af36d..53929de 100644
+--- a/src/components/Shapes/index.ts
++++ b/src/components/Shapes/index.ts
+@@ -5,6 +5,7 @@ export * from "./CloverShape";
+ export * from "./CookieShape";
+ export * from "./DiamondShape";
+ export * from "./DoubleShape";
++export * from "./EightLeafCloverShape";
+ export * from "./PentagonShape";
+ export * from "./PixircleShape";
+ export * from "./PuffShape";
+@@ -19,6 +20,7 @@ export const Shapes = {
+   cookie: "cookie",
+   diamond: "diamond",
+   double: "double",
++  eightLeafClover: "eightLeafClover",
+   pentagon: "pentagon",
+   pixircle: "pixircle",
+   puff: "puff",
+diff --git a/src/components/Shapes/shapePaths.ts b/src/components/Shapes/shapePaths.ts
+index 3d668cf..7b6efcf 100644
+--- a/src/components/Shapes/shapePaths.ts
++++ b/src/components/Shapes/shapePaths.ts
+@@ -6,6 +6,10 @@ import { CLOVER_SHAPE_PATH, CloverShape } from "./CloverShape";
+ import { COOKIE_SHAPE_PATH, CookieShape } from "./CookieShape";
+ import { DIAMOND_SHAPE_PATH, DiamondShape } from "./DiamondShape";
+ import { DOUBLE_SHAPE_PATH, DoubleShape } from "./DoubleShape";
++import {
++  EIGHT_LEAF_CLOVER_SHAPE_PATH,
++  EightLeafCloverShape,
++} from "./EightLeafCloverShape";
+ import { PENTAGON_SHAPE_PATH, PentagonShape } from "./PentagonShape";
+ import { PIXIRCLE_SHAPE_PATH, PixircleShape } from "./PixircleShape";
+ import { PUFF_SHAPE_PATH, PuffShape } from "./PuffShape";
+@@ -22,6 +26,7 @@ const SHAPE_PATHS = new Map<ComponentType<ShapeProps>, string>([
+   [CookieShape, COOKIE_SHAPE_PATH],
+   [DiamondShape, DIAMOND_SHAPE_PATH],
+   [DoubleShape, DOUBLE_SHAPE_PATH],
++  [EightLeafCloverShape, EIGHT_LEAF_CLOVER_SHAPE_PATH],
+   [PentagonShape, PENTAGON_SHAPE_PATH],
+   [PixircleShape, PIXIRCLE_SHAPE_PATH],
+   [PuffShape, PUFF_SHAPE_PATH],
+diff --git a/src/components/Slider/Slider.stories.tsx b/src/components/Slider/Slider.stories.tsx
+index 9306ca0..83d5de0 100644
+--- a/src/components/Slider/Slider.stories.tsx
++++ b/src/components/Slider/Slider.stories.tsx
+@@ -4,6 +4,8 @@ import { SliderContinuous, SliderStepped, SliderLabeled } from './Slider';
+ import { SliderVariant } from './constants';
+ import { DS_COLOR_TOKENS } from '../../utils/color';
+ import { LabelText } from '../Text';
++import { Button } from '../Button';
++import { ButtonSize, ButtonVariant } from '../Button/constants';
+ 
+ const meta = {
+   title: 'Inputs/Slider',
+@@ -286,6 +288,132 @@ export const ControlledStepped: Story = {
+   },
+ };
+ 
++export const HighlightedStep: Story = {
++  name: 'Highlighted step',
++  parameters: {
++    docs: {
++      description: {
++        story:
++          '`highlightedStep` draws one step tall: same width, same paint, ' +
++          '10px instead of the 6px dot. It is a step INDEX counted from the ' +
++          'step at `min`, and it is optional, so no step is tall by default. ' +
++          'Each row shows it on the filled side and on the unfilled side of ' +
++          'the handle, for every variant including `custom`. The last row is ' +
++          'labeled and stepped.',
++      },
++    },
++  },
++  render: () => (
++    <div className="flex w-64 flex-col gap-xl">
++      {([SliderVariant.primary, SliderVariant.prominent] as const).map((v) => (
++        <div key={v} className="flex flex-col gap-sm">
++          <LabelText className="text-text-tertiary">{v}</LabelText>
++          <SliderStepped
++            variant={v}
++            min={0}
++            max={6}
++            step={1}
++            defaultValue={[4]}
++            highlightedStep={1}
++          />
++          <SliderStepped
++            variant={v}
++            min={0}
++            max={6}
++            step={1}
++            defaultValue={[2]}
++            highlightedStep={5}
++          />
++        </div>
++      ))}
++      <div className="flex flex-col gap-sm">
++        <LabelText className="text-text-tertiary">custom</LabelText>
++        <SliderStepped
++          variant={SliderVariant.custom}
++          color="#e48844"
++          stepColor="#ff00b8"
++          min={0}
++          max={6}
++          step={1}
++          defaultValue={[4]}
++          highlightedStep={1}
++        />
++        <SliderStepped
++          variant={SliderVariant.custom}
++          color="#e48844"
++          min={0}
++          max={6}
++          step={1}
++          defaultValue={[2]}
++          highlightedStep={5}
++        />
++      </div>
++      <SliderLabeled
++        stepped
++        min={0}
++        max={4}
++        step={1}
++        defaultValue={[3]}
++        highlightedStep={1}
++        labels={{ start: 'Faster', end: 'Smarter' }}
++      />
++    </div>
++  ),
++};
++
++export const HighlightedStepPreviousValue: Story = {
++  name: 'Highlighted step (marks the previous value)',
++  parameters: {
++    docs: {
++      description: {
++        story:
++          'The consumer owns `highlightedStep`. Here it marks the last ' +
++          'COMMITTED value: drag or use the arrow keys, and the tall step ' +
++          'stays where you started until the change is committed, then eases ' +
++          'over to the new value. With `min` 0 and `step` 1 the step index ' +
++          'equals the value. The buttons move the mark directly, to show the ' +
++          'height change animating on its own.',
++      },
++    },
++  },
++  render: () => {
++    const [value, setValue] = useState([2]);
++    const [committed, setCommitted] = useState(2);
++    return (
++      <div className="flex w-64 flex-col gap-md">
++        <SliderStepped
++          min={0}
++          max={6}
++          step={1}
++          value={value}
++          onValueChange={setValue}
++          onValueCommit={([next]) => setCommitted(next ?? 0)}
++          highlightedStep={committed}
++        />
++        <LabelText className="text-text-tertiary">
++          value {value[0]} · highlighted step {committed}
++        </LabelText>
++        <div className="flex gap-sm">
++          <Button
++            variant={ButtonVariant.secondary}
++            size={ButtonSize.sm}
++            onClick={() => setCommitted((s) => Math.max(0, s - 1))}
++          >
++            Mark left
++          </Button>
++          <Button
++            variant={ButtonVariant.secondary}
++            size={ButtonSize.sm}
++            onClick={() => setCommitted((s) => Math.min(6, s + 1))}
++          >
++            Mark right
++          </Button>
++        </div>
++      </div>
++    );
++  },
++};
++
+ export const Disabled: Story = {
+   render: () => (
+     <div className="flex w-64 flex-col gap-4">
+diff --git a/src/components/Slider/Slider.tsx b/src/components/Slider/Slider.tsx
+index 2f1c3fe..83ec529 100644
+--- a/src/components/Slider/Slider.tsx
++++ b/src/components/Slider/Slider.tsx
+@@ -44,6 +44,21 @@ type SliderPaintProps =
+ 
+ export type SliderProps = RootProps & SliderPaintProps;
+ 
++/* Props that only mean something where step dots are drawn. Kept off
++ * `SliderProps` so SliderContinuous, which has no dots, rejects them. */
++type SliderStepProps = {
++  /** Index of the step to draw tall, counted from the step at `min` (0).
++   * Controlled and optional: the slider never sets it, so the consumer
++   * decides what it marks, e.g. the last committed value while a drag is in
++   * progress. Same width and paint as the other dots; the height change
++   * animates. An index with no step (out of range, not an integer) draws
++   * every dot normally. Visual only: if the mark carries meaning, also say
++   * so in text, e.g. via `aria-valuetext` or a nearby label. */
++  highlightedStep?: number;
++};
++
++export type SliderSteppedProps = SliderProps & SliderStepProps;
++
+ /* Figma tunes three paints together per variant, and they are not derivable
+  * from one another: the track is the variant's own hue at a variant-specific
+  * alpha, while the step dot is composed from the CONTENT paint so it stays
+@@ -102,7 +117,7 @@ const thumbAlignedLeft = (percent: number) =>
+ /* SliderBase takes the WIDENED shape: the union is the public contract, but
+  * narrowing it inside the implementation would mean branching on the variant
+  * just to read props every branch shares. */
+-interface SliderBaseProps extends RootProps {
++interface SliderBaseProps extends RootProps, SliderStepProps {
+   variant?: SliderVariant;
+   color?: DsColor;
+   stepColor?: DsColor;
+@@ -121,6 +136,7 @@ const SliderBase = forwardRef<
+       stepColor,
+       variant = SliderVariant.primary,
+       showSteps = false,
++      highlightedStep,
+       min = 0,
+       max = 100,
+       step = 1,
+@@ -388,14 +404,21 @@ const SliderBase = forwardRef<
+              * passed it, so fading the colour at all only makes the dot lag
+              * behind the thing that changed it. The handle and fills DO glide
+              * (`.ds-slider-glide`), because they settle onto a position; a dot
+-             * does not move, it just switches sides. */}
+-            {stepValues.map((v) => (
++             * does not move, it just switches sides.
++             *
++             * The highlighted step is the one exception to "nothing animates
++             * here": its HEIGHT eases between dot and tall (`.ds-slider-dot`
++             * transitions height only), because which step is highlighted is a
++             * consumer state change, not a crossing. Its colour still flips
++             * discretely like every other dot. */}
++            {stepValues.map((v, i) => (
+               <span
+                 key={v}
+                 aria-hidden
+                 data-active={v <= (display[0] ?? min) || undefined}
++                data-highlighted={i === highlightedStep || undefined}
+                 className={cn(
+-                  'absolute top-1/2 size-[6px] -translate-x-1/2 -translate-y-1/2 rounded-full',
++                  'absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full',
+                   'ds-slider-dot',
+                 )}
+                 style={{ left: thumbAlignedLeft(pctOf(v, min, max)) }}
+@@ -426,7 +449,7 @@ SliderContinuous.displayName = 'SliderContinuous';
+ 
+ const SliderStepped = forwardRef<
+   ComponentRef<typeof SliderPrimitive.Root>,
+-  SliderProps
++  SliderSteppedProps
+ >((props, ref) => <SliderBase ref={ref} showSteps {...props} />);
+ SliderStepped.displayName = 'SliderStepped';
+ 
+@@ -436,6 +459,9 @@ SliderStepped.displayName = 'SliderStepped';
+ export type SliderLabeledProps = SliderProps & {
+   stepped?: boolean;
+   labels: { start: string; end: string };
++  /** Index of the step to draw tall; see SliderStepped. Only drawn when
++   * `stepped`, since a continuous slider has no step dots. */
++  highlightedStep?: number;
+ };
+ 
+ const SliderLabeled = forwardRef<
+diff --git a/src/components/Slider/index.ts b/src/components/Slider/index.ts
+index f89c72c..59fb470 100644
+--- a/src/components/Slider/index.ts
++++ b/src/components/Slider/index.ts
+@@ -1,3 +1,7 @@
+ export { SliderContinuous, SliderStepped, SliderLabeled } from './Slider';
+-export type { SliderProps, SliderLabeledProps } from './Slider';
++export type {
++  SliderProps,
++  SliderSteppedProps,
++  SliderLabeledProps,
++} from './Slider';
+ export { SliderVariant } from './constants';
+diff --git a/src/components/Toggle/FancyToggleSwitch.stories.tsx b/src/components/Toggle/FancyToggleSwitch.stories.tsx
+new file mode 100644
+index 0000000..bbef03f
+--- /dev/null
++++ b/src/components/Toggle/FancyToggleSwitch.stories.tsx
+@@ -0,0 +1,135 @@
++import type { Meta, StoryObj } from '@storybook/react';
++import { useState } from 'react';
++import { FancyToggleSwitch, FancyToggleSwitchItem } from './FancyToggleSwitch';
++import { FancyToggleSelectType } from './constants';
++import {
++  CreditCardIcon,
++  GraphIcon,
++  InvoiceIcon,
++  TableIcon,
++  ThreeColumnsIcon,
++} from '../Icons';
++
++const meta = {
++  title: 'Inputs/FancyToggleSwitch',
++  component: FancyToggleSwitch,
++  parameters: { layout: 'centered' },
++  tags: ['autodocs'],
++} satisfies Meta<typeof FancyToggleSwitch>;
++
++export default meta;
++type Story = StoryObj<typeof meta>;
++
++/**
++ * Figma Toggle Switch `Fancy` (907:3307). No item icon: the indicator is a
++ * stroke-only ring that fills prominent and shows the DS check when chosen.
++ * The chosen option has no hover or pressed look.
++ */
++export const Fancy: Story = {
++  render: () => (
++    <FancyToggleSwitch defaultValue="on">
++      <FancyToggleSwitchItem value="on" data-testid="fancy-on">On</FancyToggleSwitchItem>
++      <FancyToggleSwitchItem value="off" data-testid="fancy-off">Off</FancyToggleSwitchItem>
++    </FancyToggleSwitch>
++  ),
++};
++
++/**
++ * Figma `Fancy+Icon` (907:3340). An item `icon` makes the indicator a filled
++ * circle: grey with a dark icon, prominent with a white icon when chosen.
++ */
++export const WithIcons: Story = {
++  render: () => (
++    <FancyToggleSwitch defaultValue="pay">
++      <FancyToggleSwitchItem value="pay" icon={<CreditCardIcon />} data-testid="icon-pay">
++        Pay
++      </FancyToggleSwitchItem>
++      <FancyToggleSwitchItem value="receive" icon={<InvoiceIcon />} data-testid="icon-receive">
++        Receive
++      </FancyToggleSwitchItem>
++    </FancyToggleSwitch>
++  ),
++};
++
++/** Figma "Fancy Cusotm" (907:3387) is the same variant with N options. */
++export const ManyOptions: Story = {
++  render: () => (
++    <FancyToggleSwitch defaultValue="columns">
++      <FancyToggleSwitchItem value="columns" icon={<ThreeColumnsIcon />}>Columns</FancyToggleSwitchItem>
++      <FancyToggleSwitchItem value="table" icon={<TableIcon />}>Table</FancyToggleSwitchItem>
++      <FancyToggleSwitchItem value="graph" icon={<GraphIcon />}>Graph</FancyToggleSwitchItem>
++    </FancyToggleSwitch>
++  ),
++};
++
++/** Icon is per item, so one row can mix filled-icon and ring indicators. */
++export const MixedIndicators: Story = {
++  render: () => (
++    <FancyToggleSwitch defaultValue="card">
++      <FancyToggleSwitchItem value="card" icon={<CreditCardIcon />}>Card</FancyToggleSwitchItem>
++      <FancyToggleSwitchItem value="later">Pay later</FancyToggleSwitchItem>
++    </FancyToggleSwitch>
++  ),
++};
++
++/**
++ * `selectType={FancyToggleSelectType.multi}` — contradicts the single default:
++ * any number of options, including none. A chosen option still toggles off on
++ * click, but it shows no hover or pressed look.
++ */
++export const MultiSelect: Story = {
++  render: function MultiSelectStory() {
++    const [views, setViews] = useState<string[]>(['columns', 'graph']);
++    return (
++      <div className="flex flex-col items-center gap-rg">
++        <FancyToggleSwitch
++          selectType={FancyToggleSelectType.multi}
++          value={views}
++          onValueChange={setViews}
++        >
++          <FancyToggleSwitchItem value="columns" data-testid="multi-columns">Columns</FancyToggleSwitchItem>
++          <FancyToggleSwitchItem value="table" data-testid="multi-table">Table</FancyToggleSwitchItem>
++          <FancyToggleSwitchItem value="graph" data-testid="multi-graph">Graph</FancyToggleSwitchItem>
++        </FancyToggleSwitch>
++        <span data-testid="multi-value">value: {JSON.stringify(views)}</span>
++      </div>
++    );
++  },
++};
++
++/**
++ * Externally controlled, single select. Clicking the chosen option does
++ * nothing — onValueChange never receives "", same as ToggleSwitch.
++ */
++export const Controlled: Story = {
++  render: function ControlledStory() {
++    const [plan, setPlan] = useState('monthly');
++    return (
++      <div className="flex flex-col items-center gap-rg">
++        <FancyToggleSwitch value={plan} onValueChange={setPlan}>
++          <FancyToggleSwitchItem value="monthly" data-testid="ctl-monthly">Monthly</FancyToggleSwitchItem>
++          <FancyToggleSwitchItem value="yearly" data-testid="ctl-yearly">Yearly</FancyToggleSwitchItem>
++        </FancyToggleSwitch>
++        <span data-testid="ctl-value">value: {JSON.stringify(plan)}</span>
++      </div>
++    );
++  },
++};
++
++/** Whole row disabled, and a single disabled option in an enabled row. */
++export const Disabled: Story = {
++  render: () => (
++    <div className="flex flex-col gap-rg">
++      <FancyToggleSwitch defaultValue="on" disabled>
++        <FancyToggleSwitchItem value="on">On</FancyToggleSwitchItem>
++        <FancyToggleSwitchItem value="off">Off</FancyToggleSwitchItem>
++      </FancyToggleSwitch>
++      <FancyToggleSwitch defaultValue="pay">
++        <FancyToggleSwitchItem value="pay" icon={<CreditCardIcon />}>Pay</FancyToggleSwitchItem>
++        <FancyToggleSwitchItem value="receive" icon={<InvoiceIcon />} disabled>
++          Receive
++        </FancyToggleSwitchItem>
++      </FancyToggleSwitch>
++    </div>
++  ),
++};
+diff --git a/src/components/Toggle/FancyToggleSwitch.tsx b/src/components/Toggle/FancyToggleSwitch.tsx
+new file mode 100644
+index 0000000..295bcef
+--- /dev/null
++++ b/src/components/Toggle/FancyToggleSwitch.tsx
+@@ -0,0 +1,200 @@
++"use client";
++
++/*
++ * FancyToggleSwitch / FancyToggleSwitchItem — Figma Toggle Switch `Fancy`
++ * (826:2149) built from Toggle Option `Fancy` / `Fancy+Icon` (826:1723).
++ * A dedicated row, separate from ToggleSwitch by maintainer decision
++ * (2026-10-03) so ToggleSwitch's 4px gap and toggleOption's shared unselected
++ * look stay true. Option styling lives in ./fancyToggleOption.
++ *
++ * ## behavior
++ * - Radix ToggleGroup wiring, like ToggleSwitch. Options sit 12px apart (md).
++ * - `selectType` single (default): `value` is a string and selection can never
++ *   be cleared — Radix's "" on a second click is dropped, exactly as in
++ *   ToggleSwitch. Controlled (`value` + `onValueChange`) and uncontrolled
++ *   (`defaultValue`) both work; a controlled `value` always wins.
++ * - `selectType` multi: `value` is a string[]; any number of options,
++ *   including none. Radix owns the uncontrolled state.
++ * - Items read `selectType` from context (single: the chosen option gets the
++ *   default cursor). An item `icon` switches its indicator from the
++ *   stroke-only ring + DS check to a filled circle holding that icon.
++ *
++ * ## constraints
++ * - Single mode keeps Radix fully controlled — passing `defaultValue` through
++ *   would let Radix's own state clear itself regardless of the callback (the
++ *   same constraint as Toggle.tsx). If ToggleSwitch's never-clear rule
++ *   changes, change this one with it; they must not drift.
++ * - The single-mode useState sits above the mode branch so the hook order
++ *   never depends on `selectType`.
++ */
++
++import * as ToggleGroup from "@radix-ui/react-toggle-group";
++import {
++  createContext,
++  forwardRef,
++  useContext,
++  useState,
++  type ComponentPropsWithoutRef,
++  type ComponentRef,
++  type ReactNode,
++} from "react";
++import { cn } from "../../utils/cn";
++import { CheckIcon } from "../Icons/CheckIcon";
++import { FancyToggleSelectType } from "./constants";
++import {
++  fancyToggleCheckClass,
++  fancyToggleIndicatorSlot,
++  fancyToggleIndicatorVariants,
++  fancyToggleOptionVariants,
++} from "./fancyToggleOption";
++
++const FancyTogglePresentationContext = createContext<{
++  selectType: FancyToggleSelectType;
++}>({ selectType: FancyToggleSelectType.single });
++
++/** Stable context values, one per mode, so items don't re-render on every root render. */
++const PRESENTATION: Record<
++  FancyToggleSelectType,
++  { selectType: FancyToggleSelectType }
++> = {
++  single: { selectType: FancyToggleSelectType.single },
++  multi: { selectType: FancyToggleSelectType.multi },
++};
++
++// Figma Fancy Toggle Switch: md (12px) between options.
++const ROOT_CLASS = "inline-flex items-center gap-md";
++
++type FancyToggleSwitchRootProps = Omit<
++  ComponentPropsWithoutRef<typeof ToggleGroup.Root>,
++  "type" | "value" | "onValueChange" | "defaultValue"
++>;
++
++export type FancyToggleSwitchProps =
++  | (FancyToggleSwitchRootProps & {
++      /** Default single: exactly one option, never cleared. */
++      selectType?: typeof FancyToggleSelectType.single;
++      value?: string;
++      defaultValue?: string;
++      /** Never called with "" — the selected option cannot be toggled off. */
++      onValueChange?: (value: string) => void;
++    })
++  | (FancyToggleSwitchRootProps & {
++      selectType: typeof FancyToggleSelectType.multi;
++      value?: string[];
++      defaultValue?: string[];
++      onValueChange?: (value: string[]) => void;
++    });
++
++const FancyToggleSwitch = forwardRef<
++  ComponentRef<typeof ToggleGroup.Root>,
++  FancyToggleSwitchProps
++>((props, ref) => {
++  const [uncontrolledValue, setUncontrolledValue] = useState(
++    props.selectType === FancyToggleSelectType.multi
++      ? ""
++      : (props.defaultValue ?? ""),
++  );
++
++  if (props.selectType === FancyToggleSelectType.multi) {
++    const {
++      selectType,
++      className,
++      value,
++      defaultValue,
++      onValueChange,
++      children,
++      ...rest
++    } = props;
++    return (
++      <FancyTogglePresentationContext.Provider value={PRESENTATION[selectType]}>
++        <ToggleGroup.Root
++          ref={ref}
++          type="multiple"
++          value={value}
++          defaultValue={defaultValue}
++          onValueChange={onValueChange}
++          className={cn(ROOT_CLASS, className)}
++          {...rest}
++        >
++          {children}
++        </ToggleGroup.Root>
++      </FancyTogglePresentationContext.Provider>
++    );
++  }
++
++  const {
++    selectType = FancyToggleSelectType.single,
++    className,
++    value,
++    defaultValue: _defaultValue,
++    onValueChange,
++    children,
++    ...rest
++  } = props;
++  const isControlled = value !== undefined;
++  const currentValue = isControlled ? value : uncontrolledValue;
++
++  const handleValueChange = (next: string) => {
++    // Radix reports "" when the active item is clicked again — ignore it.
++    if (next === "") return;
++    if (!isControlled) setUncontrolledValue(next);
++    onValueChange?.(next);
++  };
++
++  return (
++    <FancyTogglePresentationContext.Provider value={PRESENTATION[selectType]}>
++      <ToggleGroup.Root
++        ref={ref}
++        type="single"
++        value={currentValue}
++        onValueChange={handleValueChange}
++        className={cn(ROOT_CLASS, className)}
++        {...rest}
++      >
++        {children}
++      </ToggleGroup.Root>
++    </FancyTogglePresentationContext.Provider>
++  );
++});
++FancyToggleSwitch.displayName = "FancyToggleSwitch";
++
++export interface FancyToggleSwitchItemProps extends ComponentPropsWithoutRef<
++  typeof ToggleGroup.Item
++> {
++  /**
++   * Optional icon in the leading 28px indicator (DS icons default to 14px and
++   * paint with currentColor). With an icon the indicator is a filled circle;
++   * without one it is a stroke-only ring that shows the DS check when selected.
++   */
++  icon?: ReactNode;
++}
++
++const FancyToggleSwitchItem = forwardRef<
++  ComponentRef<typeof ToggleGroup.Item>,
++  FancyToggleSwitchItemProps
++>(({ className, icon, children, ...props }, ref) => {
++  const { selectType } = useContext(FancyTogglePresentationContext);
++  const hasIcon = icon !== undefined && icon !== null && icon !== false;
++
++  return (
++    <ToggleGroup.Item
++      ref={ref}
++      className={cn(fancyToggleOptionVariants({ selectType }), className)}
++      {...props}
++    >
++      <span aria-hidden className={fancyToggleIndicatorSlot}>
++        <span
++          className={fancyToggleIndicatorVariants({
++            indicator: hasIcon ? "icon" : "check",
++          })}
++        >
++          {hasIcon ? icon : <CheckIcon className={fancyToggleCheckClass} />}
++        </span>
++      </span>
++      <span className="text-style-hero-button">{children}</span>
++    </ToggleGroup.Item>
++  );
++});
++FancyToggleSwitchItem.displayName = "FancyToggleSwitchItem";
++
++export { FancyToggleSwitch, FancyToggleSwitchItem };
+diff --git a/src/components/Toggle/constants.ts b/src/components/Toggle/constants.ts
+index 4ae20eb..3907195 100644
+--- a/src/components/Toggle/constants.ts
++++ b/src/components/Toggle/constants.ts
+@@ -32,3 +32,19 @@ export const ToggleSize = {
+   iconMicro: "icon-micro",
+ } as const;
+ export type ToggleSize = (typeof ToggleSize)[keyof typeof ToggleSize];
++
++/**
++ * Dot-accessible selection mode for FancyToggleSwitch. Same words and values
++ * as DropdownMenuSelectType.
++ * Usage: <FancyToggleSwitch selectType={FancyToggleSelectType.multi} value={["a"]} />
++ *
++ * single — exactly one option is chosen, and the user can never clear it
++ *          (same rule as ToggleSwitch). `value` is a string. Default.
++ * multi  — any number of options, including none. `value` is a string[].
++ */
++export const FancyToggleSelectType = {
++  single: "single",
++  multi: "multi",
++} as const;
++export type FancyToggleSelectType =
++  (typeof FancyToggleSelectType)[keyof typeof FancyToggleSelectType];
+diff --git a/src/components/Toggle/fancyToggleOption.ts b/src/components/Toggle/fancyToggleOption.ts
+new file mode 100644
+index 0000000..030824c
+--- /dev/null
++++ b/src/components/Toggle/fancyToggleOption.ts
+@@ -0,0 +1,92 @@
++/*
++ * fancyToggleOptionVariants / fancyToggleIndicatorVariants — the Figma Toggle
++ * Option `Fancy` / `Fancy+Icon` variants (907:3048…907:3252), used only by
++ * FancyToggleSwitchItem. Deliberately separate from toggleOption.ts: that
++ * module's "one shared unselected look" does not hold here (2px grey border,
++ * indicator ring), so the fancy look must not be folded into it.
++ *
++ * ## behavior
++ * - 54px pill (h-button-big, shared with Button big), 2px border: grey
++ *   (secondary-border) unselected, prominent selected. Prominent colour only.
++ * - Leading 50px square slot (full inner height) holding a 28px indicator
++ *   circle. `check` = stroke-only grey ring that fills prominent and shows the
++ *   DS CheckIcon when selected; `icon` = filled grey circle with a dark icon,
++ *   filled prominent with a white icon when selected.
++ * - Hover / press washes (ghost-hover / ghost-active) apply to UNSELECTED
++ *   options only: a selected option is not interactive, so it has no hover or
++ *   pressed look. In single mode it also gets the default cursor.
++ * - Disabled is ds-disabled-control (whole option at the disabled opacity);
++ *   a disabled selected option keeps its selected paint.
++ * - State changes run on ds-motion-state (motion scale `fast`, `standard`).
++ *
++ * ## constraints
++ * - Neutral module (no "use client"): no client API here.
++ * - The 2px borders are a hardcoded `border-2` by maintainer decision
++ *   (2026-10-03); don't swap them for a token or for toggleOption's 1px border.
++ * - Keep `text-style-hero-button` out of any cn() call that also holds a
++ *   `text-*` colour: a text-style class cn's tailwind-merge doesn't register
++ *   (hero-button wasn't, 2026-10-03) is erased by a later colour class. The
++ *   label span carries the text style alone; the colour lives on the option.
++ * - Indicator rules key off the named group `group/fancy-option`, never a bare
++ *   `group`, so an outer consumer `.group` with data-state=on can't paint
++ *   unselected indicators as selected.
++ * - Never prefix a package class (h-button-big, size-button-micro, ds-*) with a
++ *   variant.
++ */
++import { cva } from "class-variance-authority";
++
++export const fancyToggleOptionVariants = cva(
++  [
++    "group/fancy-option inline-flex h-button-big shrink-0 items-center whitespace-nowrap",
++    "rounded-full border-2 border-secondary-border pr-lg",
++    "text-text cursor-pointer select-none",
++    "ds-motion-state",
++    "ds-focus-visible-ring",
++    "ds-disabled-control",
++    "selected:border-prominent",
++    "unselected:enabled:hover:bg-ghost-hover unselected:enabled:active:bg-ghost-active",
++  ],
++  {
++    variants: {
++      selectType: {
++        /** The chosen option can't be clicked off, so it doesn't read as clickable. */
++        single: "selected:enabled:cursor-default",
++        /** A chosen option still toggles off on click; it keeps the pointer. */
++        multi: "",
++      },
++    },
++    defaultVariants: {
++      selectType: "single",
++    },
++  },
++);
++
++/** The 50×50 square slot: full inner height of the 54px pill, indicator centred. */
++export const fancyToggleIndicatorSlot =
++  "flex aspect-square h-full shrink-0 items-center justify-center";
++
++export const fancyToggleIndicatorVariants = cva(
++  [
++    "flex size-button-micro shrink-0 items-center justify-center rounded-full",
++    "ds-motion-state",
++    "group-selected/fancy-option:bg-prominent group-selected/fancy-option:text-prominent-fg",
++  ],
++  {
++    variants: {
++      indicator: {
++        /** No item icon: stroke-only ring, filled + DS check when selected. */
++        check:
++          "border-2 border-secondary-border group-selected/fancy-option:border-prominent",
++        /** Item icon: always a filled circle. */
++        icon: "bg-secondary-border text-secondary-fg",
++      },
++    },
++    defaultVariants: {
++      indicator: "check",
++    },
++  },
++);
++
++/** The DS check inside a `check` indicator: visible only while selected. */
++export const fancyToggleCheckClass =
++  "ds-motion-state group-unselected/fancy-option:opacity-0";
+diff --git a/src/components/Toggle/index.ts b/src/components/Toggle/index.ts
+index 1132063..d29180b 100644
+--- a/src/components/Toggle/index.ts
++++ b/src/components/Toggle/index.ts
+@@ -1,3 +1,9 @@
+ export { ToggleSwitch, ToggleSwitchItem } from './Toggle';
+ export { ToggleSize, ToggleVariant } from './constants';
+ export type { ToggleSwitchProps, ToggleSwitchItemProps } from './Toggle';
++export { FancyToggleSwitch, FancyToggleSwitchItem } from './FancyToggleSwitch';
++export { FancyToggleSelectType } from './constants';
++export type {
++  FancyToggleSwitchProps,
++  FancyToggleSwitchItemProps,
++} from './FancyToggleSwitch';
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index 2982d8d..5896014 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -215,9 +215,25 @@
+   /* Stepped slider dots. The active/inactive split is a plain attribute
+    * selector rather than a Tailwind `data-[active]:` variant — variants only
+    * compose with generated utilities, so pairing one with a class defined here
+-   * silently produced no rule and every dot stayed the inactive tone. */
++   * silently produced no rule and every dot stayed the inactive tone.
++   *
++   * The helper owns the dot's geometry too, so the highlighted step can grow
++   * from it. ONLY `height` transitions: the colour flip stays discrete on
++   * purpose (see the step-dot comment in Slider.tsx). The dot is centred with
++   * a -50% translate of its own height, so it grows from its centre. */
+   .ds-slider-dot {
++    width: var(--ui-size-slider-step);
++    height: var(--ui-size-slider-step);
+     background-color: var(--ui-color-slider-step-inactive);
++    transition-property: height;
++    transition-duration: var(--ui-motion-duration-base);
++    transition-timing-function: var(--ui-motion-ease-standard);
++  }
++
++  /* The step a slider's `highlightedStep` picks: same width and paint, drawn
++   * tall. Plain attribute selector for the same reason as [data-active]. */
++  .ds-slider-dot[data-highlighted] {
++    height: var(--ui-height-slider-step-tall);
+   }
+ 
+   /* The active dot is a flat token, not a mix of --ds-slider-color: Figma
+@@ -314,9 +330,14 @@
+     height: var(--ui-size-cta-chip-big);
+   }
+ 
+-  .ds-size-cta-icon {
+-    width: var(--ui-size-cta-icon);
+-    height: var(--ui-size-cta-icon);
++  .ds-size-cta-icon-standard {
++    width: var(--ui-size-cta-icon-standard);
++    height: var(--ui-size-cta-icon-standard);
++  }
++
++  .ds-size-cta-icon-big {
++    width: var(--ui-size-cta-icon-big);
++    height: var(--ui-size-cta-icon-big);
+   }
+ 
+   .ds-min-w-cta-content-standard {
+@@ -327,8 +348,8 @@
+     min-width: var(--ui-min-w-cta-content-big);
+   }
+ 
+-  .ds-min-w-cta-pill-big {
+-    min-width: var(--ui-min-w-cta-pill-big);
++  .ds-gap-cta-content-standard {
++    gap: var(--ui-spacing-cta-content-standard);
+   }
+ 
+   .ds-gap-cta-content-big {
+@@ -440,6 +461,14 @@
+     padding-right: var(--ui-spacing-rg);
+   }
+ 
++  /* Button medium / big — the pill sizes' off-scale horizontal padding. */
++  .ds-px-button-medium {
++    padding-inline: var(--ui-spacing-button-medium-x);
++  }
++  .ds-px-button-big {
++    padding-inline: var(--ui-spacing-button-big-x);
++  }
++
+   /*
+    * CopyButton — stacked clipboard/check icons swap via [data-copied].
+    * Both icons share the same grid cell (parent has `grid place-items-center`)
+diff --git a/src/styles/index.css b/src/styles/index.css
+index 98638fe..957f743 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -66,6 +66,17 @@
+   initial-value: 0;
+ }
+ 
++/* LoadingSpinner (flat). `phase` runs 0 → 1 once per --ui-spinner-duration
++ * and is the ONLY animated value: the arc's length and its turn are both
++ * computed from it, so they cannot drift apart. Registered so the animation
++ * interpolates a number; inherited so the arc paths read the value animated
++ * on their <svg>. */
++@property --ds-spinner-phase {
++  syntax: "<number>";
++  inherits: true;
++  initial-value: 0;
++}
++
+ /*
+  * @theme inline — maps --ui-* tokens into Tailwind utility namespaces.
+  * "inline" means Tailwind emits var(--ui-*) references instead of the
+@@ -319,6 +330,19 @@
+     letter-spacing: var(--ui-tracking-hero);
+   }
+ 
++  /* Hero CTA label: the button role (family, axes) at semibold. Sized for the
++   * standard CTA; the big CTA sets --ui-text-cta-big through BaseText's
++   * fontSize prop. Spelled out like the hero-scale pair, so keep it in sync by
++   * hand if the button role gains a property. */
++  .text-style-cta {
++    font-family: var(--ui-font-button);
++    font-optical-sizing: auto;
++    font-size: var(--ui-text-cta-standard);
++    font-style: normal;
++    font-weight: var(--ui-weight-cta);
++    font-variation-settings: var(--ui-font-var-button);
++  }
++
+ }
+ 
+ @layer utilities {
+@@ -797,6 +821,85 @@
+     }
+   }
+ 
++  /* LoadingSpinner — CSS owns the clock (architecture Rule 6); the component
++   * owns geometry only, written as inline custom properties on the <svg>:
++   *   --ds-spinner-c            circumference of the arc path, user units
++   *   --ds-spinner-gap          visual-gap allowance between the arcs,
++   *                             as a fraction of one turn
++   *   --ds-spinner-sweep-min/-max  the arc's length range, fractions of a turn
++   *   --ds-spinner-time-scale   per-size factor on the spin duration
++   *
++   * Flat: --ds-spinner-phase runs linearly. The arc's length follows a cosine,
++   * min + (max − min) × (1 − cos(phase turn)) / 2, and the group turns twice
++   * per cycle, so the head sits still in the group's frame (at 12 o'clock)
++   * and only the tail moves. The arc path starts half a gap past the head, so
++   * neither dash ever crosses the path's seam (a dash that crosses it is cut
++   * in two and its round caps flash). Both dashes are positioned in user
++   * units (× 1px, which is one user unit inside an SVG).
++   *
++   * Reduced motion: loops are off the scale, so the global block cannot
++   * reach them. The flat arc freezes at mid-cycle (longest arc, head at
++   * 12 o'clock); the spokes and star stop turning. */
++  .ds-spinner-flat {
++    animation: ds-spinner-phase var(--ui-spinner-duration)
++      var(--ui-motion-ease-linear) infinite;
++  }
++  .ds-spinner-flat-turn {
++    transform-box: view-box;
++    transform-origin: 50% 50%;
++    transform: rotate(calc(var(--ds-spinner-phase) * 2turn));
++  }
++  .ds-spinner-flat-arc {
++    --ds-spinner-sweep: calc(
++      var(--ds-spinner-sweep-min) +
++        (var(--ds-spinner-sweep-max) - var(--ds-spinner-sweep-min)) *
++        (1 - cos(var(--ds-spinner-phase) * 1turn)) / 2
++    );
++  }
++  /* Active arc: ends half a gap before the path's end (the head) and reaches
++   * back `sweep` of a turn. */
++  .ds-spinner-flat-indicator {
++    stroke-dasharray:
++      calc(var(--ds-spinner-sweep) * var(--ds-spinner-c) * 1px)
++      calc(var(--ds-spinner-c) * 1px);
++    stroke-dashoffset: calc(
++      (var(--ds-spinner-sweep) + var(--ds-spinner-gap) / 2 - 1) *
++        var(--ds-spinner-c) * 1px
++    );
++  }
++  /* Track: the complement, a gap clear of the arc at both ends. */
++  .ds-spinner-flat-track {
++    stroke-dasharray:
++      max(
++        0px,
++        calc(
++          (1 - var(--ds-spinner-sweep) - 2 * var(--ds-spinner-gap)) *
++            var(--ds-spinner-c) * 1px
++        )
++      )
++      calc(var(--ds-spinner-c) * 1px);
++    stroke-dashoffset: calc(
++      var(--ds-spinner-gap) / -2 * var(--ds-spinner-c) * 1px
++    );
++  }
++  /* Spokes and star: a constant linear turn of an inner group. */
++  .ds-spinner-spin {
++    transform-box: view-box;
++    transform-origin: 50% 50%;
++    animation: ds-spinner-rotate
++      calc(var(--ui-spinner-spokes-duration) * var(--ds-spinner-time-scale, 1))
++      var(--ui-motion-ease-linear) infinite;
++  }
++  @media (prefers-reduced-motion: reduce) {
++    .ds-spinner-flat {
++      animation: none;
++      --ds-spinner-phase: 0.5;
++    }
++    .ds-spinner-spin {
++      animation: none;
++    }
++  }
++
+   /* DropdownCaret. State is read from the nearest .ds-dropdown-caret-host
+    * (the trigger root): Radix data-state, :hover, and the disabled forms.
+    * The shape is painted by currentColor, so every state is a colour here. */
+@@ -923,18 +1026,24 @@
+ }
+ 
+ /*
+- * Loading spinner keyframes — defined outside @layer so they are globally
+- * reachable from SVG element animations applied via inline style.
++ * Loading spinner keyframes — read by the .ds-spinner-* helpers above.
+  *
+- * ds-spinner-rotate: continuous 360° spin for the wavy LoadingSpinner SVG
+- * container. The flat variant is now fully rAF-driven and does not use CSS
+- * animation; this keyframe is only referenced by WavySpinner.
++ * ds-spinner-rotate: one full turn, for the spokes and star variants.
++ * ds-spinner-phase: the flat variant's clock, 0 → 1 per cycle.
+  */
+ @keyframes ds-spinner-rotate {
+   to {
+     transform: rotate(360deg);
+   }
+ }
++@keyframes ds-spinner-phase {
++  from {
++    --ds-spinner-phase: 0;
++  }
++  to {
++    --ds-spinner-phase: 1;
++  }
++}
+ 
+ @keyframes ds-shimmer {
+   from { background-position: 150% center; }
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index f033cc6..96445e3 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -197,6 +197,13 @@
+    * NOT collapsed under reduced motion — each loop's own reduce rule stops it
+    * or swaps in a static frame instead. */
+   --ui-shimmer-duration: 2000ms;
++  /* LoadingSpinner. `duration` is one flat-arc cycle (the arc grows and
++   * shrinks once while its head makes two turns). `spokes-duration` is one
++   * turn of the spokes and star variants at the `rg` size; the component
++   * scales it per size by a geometry factor, so retuning this retunes all
++   * four sizes together. */
++  --ui-spinner-duration: 1800ms;
++  --ui-spinner-spokes-duration: 1280ms;
+ 
+   /* Text shimmer (ShimmerText) */
+   --ui-shimmer-base: var(--ui-color-text-tertiary);
+@@ -406,6 +413,8 @@
+   --ui-weight-title: 700;
+   --ui-weight-hero: 700;
+   --ui-weight-mono: var(--ui-weight-button);
++  /* Hero CTA label: the button role, semibold. */
++  --ui-weight-cta: var(--ui-weight-semibold);
+ 
+   /* Font weights — by name (BaseText `fontWeight` prop; consumer-overridable) */
+   --ui-weight-regular: 400;
+@@ -438,6 +447,11 @@
+   --ui-height-button-sm: 34px;
+   --ui-height-button-medium: 46px;
+   --ui-height-button-big: 54px;
++  /* Horizontal padding of the pill-shaped medium / big buttons. Figma draws
++   * them as raw 22 / 32px, off the spacing scale, so they are their own
++   * tokens. Raw var() inside the ds-px-button-* helpers only. */
++  --ui-spacing-button-medium-x: 22px;
++  --ui-spacing-button-big-x: 32px;
+   /* Micro (28px): micro buttons, icon-micro toggles/tabs, and the compact preset row. */
+   --ui-height-button-micro: 28px;
+   --ui-size-checkbox: 18px;
+@@ -469,6 +483,14 @@
+   --ui-slider-track-gap: 6px;
+   --ui-width-slider-handle: 6px;
+   --ui-height-slider-handle: 42px;
++  /* Stepped slider step marks (Figma "Slider Step"). Every step is a round dot
++   * of --ui-size-slider-step; the one a slider's `highlightedStep` picks keeps
++   * that width and grows to --ui-height-slider-step-tall, a capsule centred on
++   * the same point. 10px is the maintainer's call: Figma draws a 12px pill
++   * overflowing a 10px frame, which is a mistake. Raw var() inside the
++   * .ds-slider-dot helper only, never a utility. */
++  --ui-size-slider-step: 6px;
++  --ui-height-slider-step-tall: 10px;
+ 
+   /* Slider paints (Figma SliderPrimary/* and SliderProminent/*).
+    *
+@@ -559,14 +581,25 @@
+ 
+   /* ── CTAButton ───────────────────────────────────────────────────────── */
+ 
++  /* Label sizes, read by `.text-style-cta` (standard) and the big CTA. */
+   --ui-text-cta-standard: 24px;
+   --ui-text-cta-big: 28px;
++  /* End-mark frame per size. */
+   --ui-size-cta-chip-standard: 46px;
+   --ui-size-cta-chip-big: 60px;
+-  --ui-size-cta-icon: 20px;
++  /* The FIXED shape drawn in that frame (eight-leaf clover at standard, puff at
++   * big). The clover fills its frame, so it aliases it; the puff sits 5px
++   * inside the big frame (Figma: a 50px puff in a 60px frame). */
++  --ui-size-cta-shape-standard: var(--ui-size-cta-chip-standard);
++  --ui-size-cta-shape-big: 50px;
++  /* Icon centred on the shape, per size. */
++  --ui-size-cta-icon-standard: 22px;
++  --ui-size-cta-icon-big: 26px;
+   --ui-min-w-cta-content-standard: 330px;
+   --ui-min-w-cta-content-big: 350px;
+-  --ui-min-w-cta-pill-big: 370px;
++  /* Label → end-mark gap. Both sizes hug their content with the same 60px gap;
++   * one token per size so either can be retuned alone. */
++  --ui-spacing-cta-content-standard: 60px;
+   --ui-spacing-cta-content-big: 60px;
+ 
+   /* ── Stickers ──────────────────────────────────────────────────────────
+diff --git a/src/utils/cn.ts b/src/utils/cn.ts
+index 4f439eb..38b99b2 100644
+--- a/src/utils/cn.ts
++++ b/src/utils/cn.ts
+@@ -16,6 +16,7 @@ const twMerge = extendTailwindMerge<'text-style'>({
+     classGroups: {
+       'text-style': [
+         'text-style-button',
++        'text-style-hero-button',
+         'text-style-body',
+         'text-style-label',
+         'text-style-title',
+@@ -23,6 +24,7 @@ const twMerge = extendTailwindMerge<'text-style'>({
+         'text-style-subheading',
+         'text-style-hero',
+         'text-style-mono',
++        'text-style-cta',
+       ],
+     },
+   },

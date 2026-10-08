@@ -9,5 +9,3 @@ export const RecentsIcon = (props: IconProps) => {
     </BaseIcon>
   );
 };
-
-export default RecentsIcon;

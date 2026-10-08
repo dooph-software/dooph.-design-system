@@ -1,0 +1,20 @@
+// WI-C7-55 reproduction. Usage: node 55-split-triggers.cjs [build-dir]  (a dir holding dist/ and node_modules/)
+const B = process.argv[2] || 'C:/Users/stick/Github/dooph/dooph-ds-audit-build';
+const React = require(B + '/node_modules/react');
+const { renderToStaticMarkup } = require(B + '/node_modules/react-dom/server');
+const ds = require(B + '/dist/index.cjs');
+const h = React.createElement;
+let fail = 0;
+const check = (label, ok) => { console.log((ok ? 'PASS ' : 'FAIL ') + label); if (!ok) fail = 1; };
+const r = { from: new Date(2026, 0, 1), to: new Date(2026, 0, 7) };
+const today = new Date(2026, 0, 7);
+const firstButton = (html) => (html.match(/<button[^>]*>/) || [''])[0];
+const dp = (p) => firstButton(renderToStaticMarkup(h(ds.DatePickerSplitTrigger, { value: r, onSelect: () => {}, today, ...p })));
+const cls = dp({ triggerProps: { className: 'w-60' } });
+check('triggerProps.className keeps the seam classes', /rounded-r-none/.test(cls) && /border-r-0/.test(cls));
+check('triggerProps.className is applied', /w-60/.test(cls));
+check('disabled + triggerProps.disabled=false keeps the left trigger disabled', / disabled=""/.test(dp({ disabled: true, triggerProps: { disabled: false } })));
+check('triggerProps.disabled alone still disables the left trigger', / disabled=""/.test(dp({ triggerProps: { disabled: true } })));
+const sb = renderToStaticMarkup(h(ds.SplitButton, { disabled: true, actionProps: { disabled: false }, triggerProps: { disabled: false } }, 'Save'));
+check('SplitButton disabled wins over actionProps/triggerProps disabled=false', (sb.match(/<button[^>]* disabled=""/g) || []).length === 2);
+process.exit(fail);

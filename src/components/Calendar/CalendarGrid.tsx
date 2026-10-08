@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, type ReactNode } from "react";
+import { forwardRef, type KeyboardEvent, type ReactNode } from "react";
 import { cn } from "../../utils/cn";
 import { BodyText, LabelText } from "../Text";
 import type { DateRange } from "./constants";
@@ -47,14 +47,14 @@ export type CalendarGridProps = {
   onDayClick: (date: Date) => void;
   onDayHover: (date: Date) => void;
   onDayHoverEnd: () => void;
-  onDayKeyDown: (event: React.KeyboardEvent<HTMLButtonElement>) => void;
+  onDayKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
   dayRef: (node: HTMLButtonElement | null) => void;
   renderDay?: (day: CalendarDayRenderProps) => ReactNode;
   locale?: string;
   className?: string;
 };
 
-/** Seven narrow weekday names taken from any known week — no lookup table. */
+/** Seven short weekday names taken from any known week — no lookup table. */
 function getWeekdayNames(locale: string | undefined): string[] {
   const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
   // 2026-05-31 is a Sunday, so this walks Sun..Sat in order.
@@ -63,6 +63,7 @@ function getWeekdayNames(locale: string | undefined): string[] {
   );
 }
 
+/** Each day tile carries `data-range` (DayRangePosition) and its button `data-today` / `data-outside`. The grid's fills read `data-range` and `data-outside`; all three are also consumer styling hooks. */
 const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
   (
     {
@@ -116,7 +117,7 @@ const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
             <div
               key={name}
               role="columnheader"
-              className="flex items-center justify-center pb-xs"
+              className="flex items-center justify-center pb-sm"
             >
               <LabelText className="text-ghost-fg">{name}</LabelText>
             </div>
@@ -170,7 +171,7 @@ const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
                     // below. Hover, today's outline and the endpoint fill all
                     // sit on the WHOLE tile rather than on the inset button.
                     "group/day relative aspect-square p-xxs",
-                    !isEndpoint && position !== "none" && "bg-ghost-active",
+                    "data-[range=middle]:bg-ghost-active",
                     // Unselected tiles round themselves so the hover and the
                     // today outline read as a tile, not a square.
                     position === "none" && "rounded-calendar-day",
@@ -243,7 +244,9 @@ const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(
                       // Layer 2 is now the label only — every fill lives on the
                       // tile, so hovering anywhere in the cell reads as one day.
                       "text-ghost-fg-active",
-                      isOutside && "text-ghost-fg",
+                      // Outside-month label, scoped to non-endpoint tiles so an
+                      // outside ENDPOINT keeps text-primary-fg below.
+                      "group-data-[range=none]/day:data-[outside]:text-ghost-fg group-data-[range=middle]/day:data-[outside]:text-ghost-fg",
                       isEndpoint && "text-primary-fg",
                     )}
                   >

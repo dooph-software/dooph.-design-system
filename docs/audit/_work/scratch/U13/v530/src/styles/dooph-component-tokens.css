@@ -1,0 +1,387 @@
+/*
+ * Layout and state helpers bound to design tokens (--ui-*).
+ *
+ * Prefer these plain CSS utilities over Tailwind arbitrary `*-(--var)` or
+ * `[var(--var)]` in component source: the JSX references stable class names
+ * while declarations stay vanilla CSS compatible with shipped styles.css —
+ * Tailwind-only syntax is avoided for token wiring so the sheet remains
+ * approachable for consumers who bundle CSS without Tailwind.
+ */
+
+@layer utilities {
+  /* Disabled / inactive (native + aria-invalid disabled pattern) */
+  .ds-disabled-state:is(:disabled, [aria-disabled="true"]) {
+    cursor: not-allowed;
+    opacity: var(--ui-opacity-disabled);
+  }
+
+  /*
+   * Radix primitives set data-disabled on menu items etc.
+   * Does not imply :disabled; keep separate from ds-disabled-state.
+   */
+  .ds-radix-data-disabled[data-disabled] {
+    cursor: not-allowed;
+    opacity: var(--ui-opacity-disabled);
+  }
+
+  /*
+   * Native disabled only — for controls that don't use aria-disabled.
+   */
+  .ds-disabled-control:disabled {
+    cursor: not-allowed;
+    opacity: var(--ui-opacity-disabled);
+  }
+
+  .ds-shape-button-focus-visible:focus-visible {
+    outline: 2px solid var(--ui-color-focus-ring-brand);
+    outline-offset: 2px;
+  }
+
+  .ds-shape-button-shadow {
+    filter: drop-shadow(var(--ui-shadow-button-secondary));
+    transition:
+      color 150ms,
+      filter 150ms;
+  }
+
+  .group:not(:disabled):not([aria-disabled="true"]):hover .ds-shape-button-shadow {
+    filter: drop-shadow(var(--ui-shadow-button-hover));
+  }
+
+  .group:not(:disabled):not([aria-disabled="true"]):active .ds-shape-button-shadow {
+    filter: drop-shadow(var(--ui-shadow-button-active));
+  }
+
+  .group:is(:disabled, [aria-disabled="true"]) .ds-shape-button-shadow {
+    filter: none;
+  }
+
+  .ds-focus-visible-ring {
+    outline: 4px solid transparent;
+    outline-offset: 0;
+  }
+
+  .ds-focus-visible-ring:focus-visible:not(:disabled):not([data-disabled]):not(
+      [aria-disabled="true"]
+    ) {
+    outline-color: var(--ui-color-focus-ring-brand);
+  }
+
+  .ds-focus-within-ring {
+    outline: 4px solid transparent;
+    outline-offset: 0;
+  }
+
+  .ds-focus-within-ring:focus-within {
+    outline-color: var(--ui-color-focus-ring-brand);
+  }
+
+  .ds-focus-ring-on-focus {
+    outline: 4px solid transparent;
+    outline-offset: 0;
+  }
+
+  .ds-focus-ring-on-focus:focus {
+    outline-color: var(--ui-color-focus-ring-brand);
+  }
+
+  .ds-focus-ring-error-on-focus:focus {
+    outline-color: var(--ui-color-focus-ring-error);
+  }
+
+  .ds-focus-ring {
+    outline: 4px solid var(--ui-color-focus-ring-brand);
+    outline-offset: 0;
+  }
+
+  /* Open-state ring for popover/menu triggers. The state lives in the SELECTOR,
+   * not in a Tailwind variant: `data-[state=open]:ds-focus-ring` composes a
+   * variant with a package class, which emits no rule at all. */
+  .ds-focus-ring-on-open {
+    outline: 4px solid transparent;
+    outline-offset: 0;
+  }
+
+  .ds-focus-ring-on-open[data-state="open"] {
+    outline-color: var(--ui-color-focus-ring-brand);
+  }
+
+  /* Active slider track — the handle color at 45% (Figma applies alpha on top).
+   * --ds-slider-color is set on the Slider root from its `color` prop. */
+  .ds-slider-fill {
+    background-color: color-mix(
+      in srgb,
+      var(--ds-slider-color, var(--ui-color-primary)) 45%,
+      transparent
+    );
+  }
+
+  /* Linear progress — width/left interpolate because --progress-pct is a
+   * registered @property in index.css. */
+  .ds-progress-fill {
+    transition: width 300ms ease-out;
+  }
+  .ds-progress-remainder {
+    transition: left 300ms ease-out;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ds-progress-fill,
+    .ds-progress-remainder {
+      transition: none;
+    }
+  }
+  /* Stepped slider dots. The active/inactive split is a plain attribute
+   * selector rather than a Tailwind `data-[active]:` variant — variants only
+   * compose with generated utilities, so pairing one with a class defined here
+   * silently produced no rule and every dot stayed the inactive tone. */
+  .ds-slider-dot {
+    background-color: var(--ui-color-secondary-border);
+  }
+
+  .ds-slider-dot[data-active] {
+    background-color: color-mix(in srgb, var(--ui-color-text) 40%, transparent);
+  }
+
+  /* Stepped slider settling onto a dot after the pointer is released. The handle
+   * and both fills share one duration and easing so they arrive together — the
+   * handle is moved by Radix, which writes `left` on an unstyleable wrapper span
+   * (the root's last child), hence the structural selector. The class is only on
+   * the root while NOT dragging, so a drag still tracks the pointer 1:1. */
+  .ds-slider-glide > span:last-child,
+  .ds-slider-glide .ds-slider-part {
+    transition-property: left, width;
+    transition-duration: 180ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-slider-glide > span:last-child,
+    .ds-slider-glide .ds-slider-part {
+      transition-property: none;
+    }
+  }
+
+  /* Opt-in global text selection colour. Apply to <body> (or any subtree root).
+   * Selection styles match the ORIGINATING element, so both forms are needed:
+   * the bare selector for descendants, and ::selection on the element itself.
+   * Shipped as a class, not a bare ::selection rule, because restyling the whole
+   * host app's selection is the app's call, not the package's. */
+  .ds-selection ::selection,
+  .ds-selection::selection {
+    background-color: var(--ui-color-selection);
+    color: var(--ui-color-selection-foreground);
+  }
+
+  /* Radix DropdownMenu content — follows Radix transform-origin injection */
+  .ds-radix-dropdown-content-origin {
+    transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+  }
+
+  /* Radix Popover content — follows Radix transform-origin injection */
+  .ds-radix-popover-content-origin {
+    transform-origin: var(--radix-popover-content-transform-origin);
+  }
+
+  /* Menu width floor, selected by DropdownMenuVariant on the root and read here
+   * via --ds-menu-min-w. The floor applies in BOTH width modes: with
+   * matchTriggerWidth it is the lower bound of the max(), without it, it is the
+   * width. Falls back to the standard token when no variant class is present. */
+  .ds-menu-w-standard {
+    --ds-menu-min-w: var(--ui-min-w-menu);
+  }
+
+  .ds-menu-w-action {
+    --ds-menu-min-w: var(--ui-min-w-menu-action);
+  }
+
+  .ds-menu-w-complex {
+    --ds-menu-min-w: var(--ui-min-w-menu-complex);
+  }
+
+  .ds-radix-dropdown-match-trigger-width {
+    min-width: max(
+      var(--radix-dropdown-menu-trigger-width),
+      var(--ds-menu-min-w, var(--ui-min-w-menu))
+    );
+  }
+
+  .ds-min-w-menu {
+    min-width: var(--ds-menu-min-w, var(--ui-min-w-menu));
+  }
+
+  /* Applies the complex-menu width directly. Distinct from
+   * .ds-menu-w-complex, which only sets --ds-menu-min-w for the
+   * trigger-matching helper above and never sets a width itself. */
+  .ds-min-w-menu-complex {
+    min-width: var(--ui-min-w-menu-complex);
+  }
+
+  .ds-min-w-search-box {
+    min-width: var(--ui-min-w-search-box);
+  }
+
+  /* CTAButton — geometry + pill drop-shadow (filter so the round pill edge softens). */
+  .ds-drop-shadow-cta {
+    filter: drop-shadow(var(--ui-shadow-cta));
+  }
+
+  .ds-size-cta-chip-standard {
+    width: var(--ui-size-cta-chip-standard);
+    height: var(--ui-size-cta-chip-standard);
+  }
+
+  .ds-size-cta-chip-big {
+    width: var(--ui-size-cta-chip-big);
+    height: var(--ui-size-cta-chip-big);
+  }
+
+  .ds-size-cta-icon {
+    width: var(--ui-size-cta-icon);
+    height: var(--ui-size-cta-icon);
+  }
+
+  .ds-min-w-cta-content-standard {
+    min-width: var(--ui-min-w-cta-content-standard);
+  }
+
+  .ds-min-w-cta-content-big {
+    min-width: var(--ui-min-w-cta-content-big);
+  }
+
+  .ds-min-w-cta-pill-big {
+    min-width: var(--ui-min-w-cta-pill-big);
+  }
+
+  .ds-gap-cta-content-big {
+    gap: var(--ui-spacing-cta-content-big);
+  }
+
+  .ds-px-ui-sm {
+    padding-inline: var(--ui-spacing-sm);
+  }
+
+  /* Toast sizing — fixed design widths capped to the available viewport. */
+  .ds-toast-viewport {
+    width: min(
+      var(--ui-width-toast-viewport),
+      calc(100vw - (var(--ui-spacing-md) * 2))
+    );
+  }
+
+  .ds-toast-width-simple {
+    width: min(var(--ui-width-toast-simple), 100%);
+  }
+
+  .ds-toast-width-complex {
+    width: min(var(--ui-width-toast-complex), 100%);
+  }
+
+  /* Tooltip sizing — token-backed so consumers can retune per brand.
+   * The simple variant has no helper: it hugs its content by design. */
+  .ds-width-tooltip-rich {
+    width: var(--ui-width-tooltip-rich);
+  }
+
+  .ds-min-w-tooltip-complex {
+    min-width: var(--ui-min-w-tooltip-complex);
+  }
+
+  .ds-tooltip-inverse-theme {
+    background-color: var(--ui-color-tooltip-inverse-surface);
+    border-color: var(--ui-color-tooltip-inverse-border);
+    color: var(--ui-color-tooltip-inverse-text);
+  }
+
+  .ds-tooltip-matching-theme {
+    background-color: var(--ui-color-tooltip-matching-surface);
+    border-color: var(--ui-color-tooltip-matching-border);
+    color: var(--ui-color-tooltip-matching-text);
+  }
+
+  /* Calendar sizing — presets rail width and panel min-width. */
+  .ds-calendar-presets-w {
+    width: var(--ui-width-calendar-presets);
+    flex: none;
+  }
+
+  .ds-calendar-panel-w {
+    min-width: var(--ui-min-w-calendar-panel);
+  }
+
+  /* Concentric inner radius for a control nested inside `tight` corners with an
+   * xxs inset. Lives here rather than as a `rounded-[calc(…)]` utility because
+   * tailwind-merge does not recognise `tight` as a radius value, so it cannot
+   * dedupe the two — and Tailwind emits arbitrary radii BEFORE the named ones,
+   * so `rounded-tight` would win on source order. */
+  .ds-radius-tight-inset-xxs {
+    border-radius: calc(var(--ui-radius-tight) - var(--ui-spacing-xxs));
+  }
+
+  /* spacing — semantic names mirror token stems */
+  .ds-gap-ui-xs {
+    gap: var(--ui-spacing-xs);
+  }
+  .ds-p-ui-xs {
+    padding: var(--ui-spacing-xs);
+  }
+  .ds-px-ui-xs {
+    padding-inline: var(--ui-spacing-xs);
+  }
+  .ds-py-ui-xs {
+    padding-block: var(--ui-spacing-xs);
+  }
+  .ds-py-ui-xxs {
+    padding-block: var(--ui-spacing-xxs);
+  }
+  .ds-py-ui-rg {
+    padding-block: var(--ui-spacing-rg);
+  }
+  .ds-pl-ui-md {
+    padding-left: var(--ui-spacing-md);
+  }
+  .ds-pl-ui-rg {
+    padding-left: var(--ui-spacing-rg);
+  }
+  .ds-pr-ui-rg {
+    padding-right: var(--ui-spacing-rg);
+  }
+  .ds-pr-ui-sm {
+    padding-right: var(--ui-spacing-sm);
+  }
+  .ds-my-ui-xs {
+    margin-block: var(--ui-spacing-xs);
+  }
+
+  /*
+   * CopyButton — stacked clipboard/check icons swap via [data-copied].
+   * Both icons share the same grid cell (parent has `grid place-items-center`)
+   * so the swap is a cross-fade + scale instead of a layout shift.
+   */
+  .ds-copy-icon-clipboard,
+  .ds-copy-icon-check {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    transition:
+      opacity 120ms ease-out,
+      transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  [data-copied] .ds-copy-icon-clipboard {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  .ds-copy-icon-check {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  [data-copied] .ds-copy-icon-check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-copy-icon-clipboard,
+    .ds-copy-icon-check {
+      transition: none;
+    }
+  }
+}

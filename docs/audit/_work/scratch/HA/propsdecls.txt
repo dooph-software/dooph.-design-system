@@ -1,0 +1,123 @@
+src\components\WavyDivider\WavyDivider.tsx:36:export type WavyDividerProps = {
+src\components\TextLink\TextLink.tsx:5:export interface TextLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+src\components\VerificationCode\VerificationCodeInput.tsx:29:export interface VerificationCodeInputProps
+src\components\OutlineSection\OutlineSection.tsx:4:export interface OutlineSectionProps extends HTMLAttributes<HTMLDivElement> {}
+src\components\VerificationCode\CodeDigitInput.tsx:22:export interface CodeDigitInputProps
+src\components\SplitButton\SplitButton.tsx:9:export interface SplitButtonActionProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+src\components\SplitButton\SplitButton.tsx:42:export interface SplitButtonTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+src\components\SplitButton\SplitButton.tsx:71:export interface SplitButtonProps {
+src\components\ShapeButton\ShapeButton.tsx:43:type ShapeButtonOwnProps = {
+src\components\ShapeButton\ShapeButton.tsx:49:type ShapeComponentProps = {
+src\components\ShapeButton\ShapeButton.tsx:86:export type ShapeButtonProps<TElement extends ElementType = "button"> =
+src\components\DropdownCaret\DropdownCaret.tsx:39:export interface DropdownCaretProps {
+src\components\Toggle\toggleOption.ts:72:export type ToggleOptionVariantProps = VariantProps<typeof toggleOptionVariants>;
+src\components\Text\textStyle.ts:43:export interface TextStyleProps {
+src\components\OutlineButton\OutlineButton.tsx:18:type OutlineButtonOwnProps = {
+src\components\OutlineButton\OutlineButton.tsx:40:export type OutlineButtonProps<TElement extends ElementType = "button"> =
+src\components\CTAButton\CTAButton.tsx:30:export interface CTAButtonProps
+src\components\Tooltip\Tooltip.tsx:31:export interface TooltipContentProps extends ComponentPropsWithoutRef<
+src\components\Tooltip\Tooltip.tsx:92:export type TooltipTitleProps = Omit<BaseTextProps, "variant">;
+src\components\Tooltip\Tooltip.tsx:100:export type TooltipBodyProps = Omit<BaseTextProps, "variant">;
+src\components\Text\BaseText.tsx:14:type BaseTextOwnProps = TextStyleProps & {
+src\components\Text\BaseText.tsx:23:export type BaseTextProps<TElement extends ElementType = "span"> =
+src\components\Text\BaseText.tsx:113:export type RoleTextProps<TElement extends ElementType = "span"> = Omit<
+src\components\Text\BaseText.tsx:160:export type ButtonTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+src\components\Text\BaseText.tsx:161:export type HeadingTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+src\components\Text\BaseText.tsx:162:export type SubheadingTextProps<T extends ElementType = "span"> =
+src\components\Text\BaseText.tsx:164:export type HeroTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+src\components\Text\BaseText.tsx:165:export type TitleTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+src\components\Text\BaseText.tsx:166:export type BodyTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+src\components\Text\BaseText.tsx:167:export type HeroBodyTextProps<T extends ElementType = "span"> =
+src\components\Text\BaseText.tsx:169:export type HeroButtonTextProps<T extends ElementType = "span"> =
+src\components\Text\BaseText.tsx:171:export type LabelTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+src\components\Text\BaseText.tsx:172:export type MonoTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
+src\components\Slider\Slider.tsx:17:type RootProps = ComponentPropsWithoutRef<typeof SliderPrimitive.Root>;
+src\components\Slider\Slider.tsx:27:type SliderPaintProps =
+src\components\Slider\Slider.tsx:45:export type SliderProps = RootProps & SliderPaintProps;
+src\components\Slider\Slider.tsx:105:interface SliderBaseProps extends RootProps {
+src\components\Slider\Slider.tsx:436:export type SliderLabeledProps = SliderProps & {
+src\components\Toggle\Toggle.tsx:49:export interface ToggleSwitchProps extends Omit<
+src\components\Toggle\Toggle.tsx:110:export interface ToggleSwitchItemProps extends ComponentPropsWithoutRef<
+src\components\SegmentedTabSelect\SegmentedTabSelect.tsx:30:export interface SegmentedTabSelectProps
+src\components\SegmentedTabSelect\SegmentedTabSelect.tsx:84:export interface SegmentedTabItemProps extends TabsTriggerProps {}
+src\components\DatePicker\DatePickerTrigger.tsx:15:type DatePickerTriggerSharedProps = Omit<
+src\components\DatePicker\DatePickerTrigger.tsx:23:export type DatePickerTriggerProps = DatePickerTriggerSharedProps &
+src\components\DatePicker\DatePickerSplitTrigger.tsx:24:export type DatePickerSplitTriggerProps = Omit<
+src\components\DatePicker\DatePicker.tsx:15:type DatePickerSharedProps = {
+src\components\DatePicker\DatePicker.tsx:35:export type DatePickerProps = DatePickerSharedProps &
+src\components\Tabs\Tabs.tsx:33:export interface TabsTriggerProps
+src\components\CopyButton\CopyButton.tsx:18:export interface CopyButtonProps
+src\components\SearchBox\SearchBox.tsx:7:export interface SearchBoxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+src\components\SidebarWithHoverIcon\SidebarWithHoverIcon.tsx:56:export interface SidebarWithHoverIconProps extends IconProps {
+src\components\Checkbox\Checkbox.tsx:70:export interface CheckboxProps
+src\components\MorphRotationShape\MorphRotationShape.tsx:87:type SpanProps = Omit<ComponentPropsWithoutRef<"span">, "children">;
+src\components\MorphRotationShape\MorphRotationShape.tsx:89:type CommonProps = SpanProps & {
+src\components\MorphRotationShape\MorphRotationShape.tsx:94:export type MorphRotationShapeProps = CommonProps &
+src\components\Calendar\Calendar.tsx:30:type CalendarSharedProps = {
+src\components\Calendar\Calendar.tsx:47:type CalendarSingleProps = CalendarSharedProps & {
+src\components\Calendar\Calendar.tsx:53:type CalendarRangeProps = CalendarSharedProps & {
+src\components\Calendar\Calendar.tsx:59:export type CalendarProps = CalendarSingleProps | CalendarRangeProps;
+src\components\ShapeMorphSpinner\ShapeMorphSpinner.tsx:38:export type ShapeMorphSpinnerProps = Omit<ComponentPropsWithoutRef<"span">, "children" | "color"> & {
+src\components\Popover\Popover.tsx:17:export type PopoverContentProps = ComponentPropsWithoutRef<
+src\components\LoadingSpinner\LoadingSpinner.tsx:40:export type LoadingSpinnerProps = {
+src\components\LoadingSpinner\LoadingSpinner.tsx:53:type InnerSvgProps = ComponentPropsWithoutRef<"svg"> & {
+src\components\Shapes\BaseShape.tsx:4:export interface ShapeProps {
+src\components\Shapes\BaseShape.tsx:11:type BaseShapeProps = ShapeProps & {
+src\components\Shapes\BaseShape.tsx:17:type ShapeClipPathProps = {
+src\components\ProgressIndicator\ProgressIndicator.tsx:44:export type ProgressIndicatorProps = {
+src\components\ProgressIndicator\ProgressIndicator.tsx:64:type InnerSvgProps = ComponentPropsWithoutRef<"svg"> & {
+src\components\Calendar\CalendarPresetsPanel.tsx:10:export type CalendarPresetsPanelProps = ComponentPropsWithoutRef<"div"> & {
+src\components\Calendar\CalendarPresetsPanel.tsx:31:export type CalendarPresetItemProps = Omit<
+src\components\Button\Button.tsx:110:type ButtonOwnProps = VariantProps<typeof buttonVariants> & {
+src\components\Button\Button.tsx:114:export type ButtonProps<TElement extends ElementType = "button"> =
+src\components\Toast\Toast.tsx:85:export interface ToastRootProps
+src\components\Toast\Toast.tsx:117:export type ToastTitleProps = Omit<BaseTextProps, "variant">;
+src\components\Toast\Toast.tsx:125:export type ToastDescriptionProps = Omit<BaseTextProps, "variant">;
+src\components\Toast\Toast.tsx:197:export interface ToastProviderProps extends ComponentPropsWithoutRef<
+src\components\Table\Table.tsx:17:export interface TableProps extends HTMLAttributes<HTMLDivElement> {
+src\components\Table\Table.tsx:59:export interface TableHeaderCellProps extends HTMLAttributes<HTMLDivElement> {
+src\components\DropdownTrigger\DropdownTrigger.tsx:25:type TriggerOwnProps = {
+src\components\DropdownTrigger\DropdownTrigger.tsx:29:export type DropdownTriggerProps<TElement extends ElementType = "button"> =
+src\components\DropdownTrigger\DropdownTrigger.tsx:39:export type DropdownTriggerContentProps = ComponentPropsWithoutRef<"div">;
+src\components\DropdownTrigger\DropdownTrigger.tsx:99:type TypeableInputProps = Pick<
+src\components\DropdownTrigger\DropdownTrigger.tsx:120:export type TypeableDropdownTriggerProps = Omit<
+src\components\DropdownTrigger\DropdownTrigger.tsx:285:type TextDropdownTriggerOwnProps = {
+src\components\DropdownTrigger\DropdownTrigger.tsx:290:export type TextDropdownTriggerProps<TElement extends ElementType = "button"> =
+src\components\Calendar\CalendarGrid.tsx:24:export type CalendarDayRenderProps = {
+src\components\Calendar\CalendarGrid.tsx:36:export type CalendarGridProps = {
+src\components\LinearProgressIndicator\LinearProgressIndicator.tsx:27:export interface LinearProgressIndicatorProps
+src\components\Calendar\CalendarCaption.tsx:18:export type CalendarCaptionProps = {
+src\components\Avatar\Avatar.tsx:10:export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
+src\components\Sticker\Sticker.tsx:58:type StickerPaintProps =
+src\components\Sticker\Sticker.tsx:75:export type StickerProps = StickerPaintProps &
+src\components\Sticker\Sticker.tsx:82:type StickerBaseProps = Omit<HTMLAttributes<HTMLDivElement>, "color"> & {
+src\components\Input\Input.tsx:47:type InputBaseProps = InputHTMLAttributes<HTMLInputElement> & {
+src\components\Input\Input.tsx:51:export type InputProps =
+src\components\Icons\BaseIcon.tsx:17:export interface IconProps {
+src\components\AIChat\UserMessageHeader.tsx:17:export type UserMessageHeaderProps = HTMLAttributes<HTMLDivElement>;
+src\components\AIChat\AIThinkingPart.tsx:41:export interface AIThinkingPartProps
+src\components\AIChat\AITextPart.tsx:24:export interface AITextPartProps extends HTMLAttributes<HTMLDivElement> {
+src\components\AIChat\ChatDivider.tsx:20:export type ChatDividerProps = HTMLAttributes<HTMLDivElement>;
+src\components\HotkeyIndicator\HotkeyIndicator.tsx:4:export interface HotkeyIndicatorProps extends HTMLAttributes<HTMLSpanElement> {
+src\components\AIChat\AIPromptInput.tsx:73:export interface AIPromptInputProps
+src\components\AIChat\AIPromptInput.tsx:170:export type AIPromptInputTextareaProps = Omit<
+src\components\AIChat\AIPromptInput.tsx:238:export type AIPromptInputToolbarProps = HTMLAttributes<HTMLDivElement>;
+src\components\AIChat\AIPromptInput.tsx:281:export interface AIPromptInputSubmitProps {
+src\components\AIChat\AITurnSummary.tsx:20:export interface AITurnSummaryProps
+src\components\AIChat\AIModelSelect.tsx:43:export interface AIModelSelectTriggerProps
+src\components\AIChat\AIModelSelect.tsx:77:export interface AIModelSelectItemProps
+src\components\AIChat\AIModelSelect.tsx:112:export interface AIThinkingEffortSelectorProps {
+src\components\AIChat\AIModelSelect.tsx:182:export interface AIModelTooltipContentProps
+src\components\Menu\DropdownMenu.tsx:360:export interface DropdownMenuSegmentProps extends HTMLAttributes<HTMLDivElement> {
+src\components\Menu\DropdownMenu.tsx:380:export interface DropdownMenuSectionProps extends HTMLAttributes<HTMLDivElement> {
+src\components\AIChat\AIContextGauge.tsx:28:export type AIContextGaugeProps = Omit<
+src\components\Menu\DropdownMenuSearch.tsx:26:export interface DropdownMenuSearchProps
+src\components\AIChat\AIToolPart.tsx:26:export interface AIToolPartProps extends HTMLAttributes<HTMLDivElement> {
+src\components\AnimatedText\RevealChangeText.tsx:97:export interface RevealChangeTextProps extends HTMLAttributes<HTMLSpanElement> {
+src\components\AnimatedText\RollHoverText.tsx:5:export interface RollHoverTextProps extends Omit<
+src\components\AnimatedText\FadeChangeText.tsx:39:export interface FadeChangeTextProps extends HTMLAttributes<HTMLSpanElement> {
+src\components\AnimatedText\RollingDigitsText.tsx:68:type RollingDigitsTextBaseProps = Omit<
+src\components\AnimatedText\RollingDigitsText.tsx:76:export type RollingDigitsTextProps =
+src\components\AnimatedText\ShimmerText.tsx:4:export type ShimmerTextProps = HTMLAttributes<HTMLSpanElement>;
+src\components\AnimatedText\UnderlineLinkText.tsx:4:export interface UnderlineLinkTextProps extends HTMLAttributes<HTMLSpanElement> {
+src\components\AnimatedText\RollChangeText.tsx:35:export interface RollChangeTextProps extends HTMLAttributes<HTMLSpanElement> {

@@ -1,0 +1,121 @@
+fid|key|sev|title
+F-001|M10|S1|In dark mode a danger Sticker paints white content on an opaque white wash and is invisible
+F-002|M54|S1|CopyButtonProps resolves every inherited prop to any, so <CopyButton /> with no value compiles and the shipped button copies the string "
+F-003|M4|S1|asChild throws on OutlineButton, ShapeButton, DropdownTrigger and TextDropdownTrigger — 4 of the 5 leaves arch:221 promises it for
+F-004|M11|S1|fillColor does nothing on PentagonShape and PuffShape because their path hard-codes fill="currentColor"
+F-005|M12|S1|ToastProvider's duration prop is ignored because every provider-rendered toast passes item.duration ?? 4000
+F-006|M8a|S1|Shipped theming docs present rounded-standard / rounded-l-standard as current utilities; neither generates
+F-007|M13|S1|The v5 migration codemod exits 0 unconditionally (v5.3.0's exited 1 on hits), so the skill's CI-gate and expiry claims are false
+F-008|M14a|S1|The usage skill's typography example uses HeroText without importing it and fails to compile (TS2304)
+F-009|M15|S1|The v3 migration skill tells consumers both to keep and to rename surface-page, so its done-check grep can never reach zero
+F-010|M18a|S1|LinearProgressIndicator's shipped JSDoc and stories offer a 'brand' colour that resolves to transparent
+F-011|M1|S1|add-use-client.mjs reads only the first 5 lines, so 16 client modules (9 in published v5.3.0) ship in chunks without "use client" and fail
+F-012|M16|S1|ShapeMorphSpinner and DropdownCaret are neutral modules that pass component functions to the client MorphRotationShape, which React Serve
+F-013|M2|S1|HEAD holds about 76 consumer-breaking changes since v5.3.0 while package.json says 5.3.0 and the docs narrate an already-released "5.4" mi
+F-014|M5|S1|cn's text-style group lists 8 of 10 roles, so HeroBodyText/HeroButtonText lose their role class when given a colour className
+F-015|M7|S1|Importing dist/theme.css into a consumer Tailwind build remaps max-w/w/min-w/basis xs–xl from container widths to 8–28px spacing value
+F-016|HC-F1|S2|Motion timing is hardcoded in 17 component files and 12 ds-* helpers; 30 of 41 animated components have no --ui-<component>-* duration/
+F-017|HC-F2|S2|Token bypass: 21 arbitrary px/opacity literals, 32 Tailwind numeric-scale utilities equal to an existing token, and 5 raw var(--ui-*) i
+F-018|HC-F3|S2|Focus indication bypasses ds-focus-* three ways, and TabsContent and an error-state CodeDigitInput show no focus indicator at all
+F-019|M91|S2|27 alias tokens are not re-declared in .dark, so inside a nested .dark region they keep their light values
+F-020|M44|S2|PopoverContent is the only overlay content with no reduced-motion override
+F-021|M53|S2|OutlineButton emits component-decided blur radii and opacities as inline style
+F-022|M40|S2|SliderStepped calls preventDefault in Radix's onKeyDown and re-implements stepping, dropping the x10 PageUp/PageDown/Shift jumps
+F-023|M32|S2|The public IconSize type collapses to string, and the shipped JSDoc names IconSizes, which is not exported
+F-024|M56|S2|Sticker wraps children in an inner div the root already lays out, so a consumer gap override on Sticker does nothing
+F-025|M25|S2|The vendored radix-ui-design-system skill, listed as canonical, teaches seven patterns the rulebook bans
+F-026|HC-F4|S2|Disabled state is drawn four ways with three helpers; CalendarPresetItem and SearchBox show no disabled look and DropdownTrigger fades 
+F-027|M28|S2|"use client" placement follows no single rule: 13 hook-free modules carry it while AIModelSelect lacks it but passes a closure to a clien
+F-028|M34|S2|AIPromptInputSubmit and AIThinkingEffortSelector drop unnamed props, so DS asChild triggers lose their handlers and data-state
+F-029|M37|S2|Inline-style precedence is decided three ways, and a consumer style on TableHeader or TableRow wipes out the column grid
+F-030|M48|S2|ModalContent and SheetContent always portal with no portal/portalProps escape hatch
+F-031|HB-F6|S2|Value-holding controls name their change callback three ways and the force-active boolean four ways
+F-032|M49|S2|Two colour-prop mechanisms compete, so color="text-secondary" and "danger" draw nothing on ProgressIndicator, LoadingSpinner and AIContex
+F-033|M17|S2|Flat ProgressIndicator paints a stray track dot near 88–92% because the track formula is duplicated and only the wavy copy guards zero 
+F-034|M21|S2|LoadingSpinner times its motion in JavaScript (infinite rAF, 1800ms, cosine, no reduced motion), which the loading-indicators skill presc
+F-035|M47|S2|Toasts closed by Radix unmount before their exit animation; only dismiss() animates, through a setTimeout that mirrors the CSS
+F-036|M90|S2|The seven polymorphic components type all 40 destructured props as any, so misspelled or renamed props compile
+F-037|M89|S2|cva-derived prop types admit null, so <Button variant={null}> compiles and renders with no variant classes
+F-038|M42|S2|Discriminated-union guards don't match runtime: icon={null}/false and color="" compile, Calendar warns then TypeErrors, NaN progress draw
+F-039|HB-F2|S2|Whether a consumer can reach a component's element is answered five ways; four of them block ref or rest props
+F-040|M41|S2|VerificationCodeInput stores a gapless string, so a digit typed into a later empty cell lands in the first and deleting a middle digit sh
+F-041|M55|S2|SplitButtonTrigger renders an icon-only button with no accessible name
+F-042|M57|S2|Table renders plain divs with no table roles, and sortDirection never reaches aria-sort
+F-043|M31|S2|HeartFillIcon is drawn on a 16-unit grid inside a 24-unit viewBox and renders at about 58% size in the top-left corner
+F-044|M51|S2|RollHoverText puts aria-label on a role-less span whose content is aria-hidden
+F-045|M50|S2|FontAxes and ProgressIndicatorVariants break R1.9, and the architecture skill names Fonts/FontSizes/FontWeights/Tracking as its own count
+F-046|M14b|S2|The usage skill's component inventory omits required props (MorphRotationShape shapes, CTAButton text/icon), so code written from it doe
+F-047|M8b|S2|Shipped theming docs give wrong token facts: icon stroke 1.5 (is 2), slider step-inactive default, -alt dark behaviour, eight roles (ten)
+F-048|M9|S2|Consumer docs omit public surface: 53 tokens have no doc mention, and the AIChat family and TooltipProvider/ToastProvider are never mentio
+F-049|M3|S2|CHANGELOG has no entries for the 34 tags after 1.1.0, and [Unreleased] omits every breaking change on HEAD
+F-050|M18b|S2|ProgressIndicator's shipped JSDoc describes a "polar sine-wave" and a dev-only throw that no longer exist
+F-051|M22|S2|The loading-indicators skill says spinner size tokens are inert, but the SVGs render from the token
+F-052|M59|S2|README's font contract omits the mono role and the opsz/slnt axes
+F-053|M60|S2|CONTRIBUTING.md and SECURITY.md link to a repository path that 404s
+F-054|M35|S2|Checkbox and CodeDigitInput headers describe the removed brand spelling and a nonexistent CheckboxVariant.brand; the Sticker header's dar
+F-055|M6|S2|cn registers none of the DS size/radius/spacing/shadow scales, so DS utilities and stock utilities either both survive or wrongly erase ea
+F-056|M33|S2|The vendored MIT/Apache shape-morph engine ships without its licence notices, and THIRD_PARTY_NOTICES.md is not in the tarball
+F-057|M61|S2|init-skills exits 0 having installed nothing when stdin is not interactive
+F-058|M23|S2|Skill mirroring uses three mechanisms; with core.symlinks=false Claude agents lose the rulebook skills but still load a stale copy teachi
+F-059|M29|S3|.dark re-declares 6 tokens with their :root values (2 are needed), which cancels :root overrides inside nested .dark regions
+F-060|M36|S3|TableHeaderCell passes the nonexistent text-text-primary, which also makes cn strip the Button's text-ghost-fg
+F-061|HC-F5|S3|About 8 components style state with JS class ternaries, and 6 emit data attributes that nothing reads
+F-062|M52|S3|In 9 components className styles a different element than ref/style/rest, and OutlineButton's consumer mouse handlers replace its glow ha
+F-063|M30|S3|BaseIcon's color prop paints only strokes; filled icons must re-wire it, and TagIcon's dot does not (visible only below stroke-width 1)
+F-064|M63|S3|Barrel shape is split three ways; three folders have no index.ts and src/index.ts deep-imports them
+F-065|M82|S3|Shapes and AvatarSize declare consts outside a constants.ts, an exception the docs list only partly
+F-066|HB-F5|S3|Variant-to-class resolution is cva in 7 components and hand-built in 9 with four idioms
+F-067|U1-F5|S3|The danger focus shadow is a literal in sync-theme.mjs while its siblings are tokens
+F-068|U1-F7|S3|ds-* helpers are split across two stylesheets with no rule; 28 classes live in index.css despite R8.26
+F-069|U5-F9|S3|There are two competing ways to widen a menu to the complex width, and stories hardcode 324
+F-070|U6-F9|S3|hasError sets aria-invalid on CodeDigitInput but only repaints Input
+F-071|U7-F4|S3|PopoverContent's surface, border, shadow and offset diverge from every other floating panel
+F-072|U9-F14|S3|ShapeMorphSpinner diverges from its loader siblings (no forwardRef/displayName, different role)
+F-073|U11-F8|S3|Under reduced motion, live tool and thinking labels lose the chat tone
+F-074|U12-F16|S3|TableHeaderCell applies header typography only on the sortable branch
+F-075|M73|S3|73 modules keep vestigial default exports, and FiltersSlidersIcon's default exports ArrowUpLeftIcon
+F-076|M74|S3|Dead CSS: three unused ds-* helpers, a dead .dark override, a no-op TableRow class and an outranked ToastClose override
+F-077|M75|S3|build:css and copy-theme.mjs duplicate what tsup onSuccess does, and nothing calls them
+F-078|M76|S3|waveGeometry.test.ts is the repo's only test and nothing runs it
+F-079|U3-F8|S3|RollChangeText and FadeChangeText are line-for-line copies apart from two class strings
+F-080|U10-F3|S3|The 12 shape components are copy-pasted with three render bodies, some with static clipPath ids that collide
+F-081|U4-F9|S3|SplitButtonAction/Trigger rebuild the secondary Button look by hand and have drifted from it
+F-082|U5-F5|S3|SearchBox and DropdownMenuSearch are parallel implementations with three different search icons
+F-083|U8-F7|S3|Modal and Sheet copy-paste their Overlay, Title, Description and Content shell
+F-084|U1-F14|S3|ds-chat-prose re-spells four role typographies by hand and has drifted from them
+F-085|U11-F7|S3|Ref merging is hand-rolled four ways, and AIPromptInputTextarea's copy re-fires a consumer callback ref every render
+F-086|U8-F8|S3|Toast per-variant text colour is decided in ToastProvider's JSX, so composed parts get grey text on the prominent toast
+F-087|M43|S3|Undocumented internal helpers and cva recipes are public through folder barrels; formatTriggerLabel is a client reference
+F-088|U5-F6|S3|DropdownMenuSearch restyles HotkeyIndicator's internal kbd markup through five descendant overrides
+F-089|M79|S3|Public prop types are wider than the runtime honours (shapes, value: null, number[], ref types)
+F-090|M80|S3|Calendar navigation, the imperative toast close and Slider hardcode English accessible names with no override
+F-091|HC-F7|S3|DropdownMenuSub is exported but no SubTrigger/SubContent part exists
+F-092|U4-F16|S3|The SplitButton composite cannot host a menu trigger
+F-093|U4-F18|S3|CTAButton accepts children in every mode but discards them unless asChild is set
+F-094|U5-F7|S3|DropdownMenuSearch is unreachable by keyboard inside the menu, and this is undocumented
+F-095|U7-F7|S3|DatePickerSplitTrigger spreads triggerProps last, so a consumer className or disabled replaces the seam styling
+F-096|U11-F3|S3|AIThinkingPart's root data-state means the phase in two branches and the disclosure state in the third
+F-097|U11-F6|S3|AIThinkingEffortSelector silently coerces an unknown value to the first step
+F-098|M81|S3|Naming vocabulary splits: base size is standard or default, ToggleSize.iconSm and TabSize.iconSm render different sizes, *Types consts br
+F-099|M70|S3|The codebase skill misdescribes the build, roles, slider, style layer and menu API, and omits five component folders
+F-100|M71|S3|The contribution skill's examples teach stale or banned values, and the loading-indicators skill never triggers for the shape-morph compo
+F-101|M72|S3|Stale comments in seven files, including OutlineSection's shipped JSDoc describing a dashed ring
+F-102|M35b|S3|Header contracts break the file-header format or are incomplete: hard rules under ## updating, hedged prohibitions, constraints without 
+F-103|HB-F7|S3|Invariants are recorded in five forms, and only the ## constraints header is protected by AGENTS.md
+F-104|U2-F8|S3|About 40% of the tarball is unreachable per-module stubs and maps, and every CJS sourcemap maps to itself
+F-105|HB-F8|S3|Stories in all ten component units leave override props uncontradicted and use raw elements or removed spellings, which is where three 
+F-106|U1-F13|S3|The committed figma-variable-jsons are the initial-commit snapshot and contradict the current token model
+F-107|U2-F9|S3|.storybook/preview.ts and 40 stories import @storybook/react, which is not a declared dependency
+F-108|U10-F2|S3|Shapes/svgs is not the source of the path constants: Pentagon and Puff differ and Star has no svg
+F-109|U14-F15|S3|Five one-off planning and prompt documents are tracked at the root and outside any docs convention
+F-110|M26|S3|arch:122's closed list of non-variant/size prop names omits four DS-chosen names (mode, direction, sortDirection, state)
+F-111|RC2|S3|contrib:65 requires a layout wrapper to be aria-hidden and absolute, but arch:232-235 sanctions two child wrappers that are neither
+F-112|RC3|S3|contrib:100 asks for breaking-change notes at the top of component files, which file-header-contracts forbids as changelog content
+F-113|S4-incons|S4|S4 batch: small code inconsistencies (U5-F11's recommendation corrected: onOpenAutoFocus is private in Radix)
+F-114|S4-coupling|S4|S4 batch: chat parts restate sibling internals (h-3 band, h-auto!)
+F-115|S4-types|S4|S4 batch: type nits (no-op casts, mutable default array, Menu parts without props types)
+F-116|S4-naming|S4|S4 batch: naming and cosmetic nits
+F-117|S4-doc|S4|S4 batch: doc and comment wording nits, incl. the file-header-contracts example that still shows ButtonVariant.brand
+F-118|S4-stories|S4|S4 batch: story hygiene nits
+F-119|S4-tooling|S4|S4 batch: tooling nits
+F-120|RC5|S4|contrib:56's radius checklist names three utilities while nine radius tokens exist

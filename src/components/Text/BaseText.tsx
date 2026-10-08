@@ -37,8 +37,17 @@ type PolymorphicTextComponent<TOwnProps> = <
     },
 ) => ReactElement | null;
 
+/* The render function sees the own props plus span attributes; only the
+ * exported cast below is polymorphic. `as` stays ElementType so any tag can
+ * render. */
+type BaseTextRenderProps = BaseTextOwnProps & { as?: ElementType } & Omit<
+    ComponentPropsWithoutRef<"span">,
+    keyof BaseTextOwnProps | "as"
+  >;
+
 /**
- * BaseText — every visible string in the system renders through this.
+ * BaseText — the typography primitive behind every role component and consumer
+ * text (DS controls such as Button apply `text-style-*` classes directly).
  *
  * Three tiers decide the final typography, in this order:
  *
@@ -56,9 +65,9 @@ type PolymorphicTextComponent<TOwnProps> = <
  *
  *   <BaseText font={Fonts.body} fontWeight={FontWeights.regular} />
  *   <BodyText fontSize={16} fontWeight={450} lineHeight={1.6} />
- *   <BodyText axes={{ [FontAxes.grade]: 40 }} />
+ *   <BodyText axes={{ [FontAxis.grade]: 40 }} />
  */
-const BaseTextBase = forwardRef<HTMLElement, BaseTextProps<ElementType>>(
+const BaseTextBase = forwardRef<HTMLElement, BaseTextRenderProps>(
   (
     {
       variant = TextVariant.body,
@@ -77,7 +86,7 @@ const BaseTextBase = forwardRef<HTMLElement, BaseTextProps<ElementType>>(
     },
     ref,
   ) => {
-    const role = unstyled ? undefined : (variant as TextVariant);
+    const role = unstyled ? undefined : variant;
     const typography = buildTextStyle(
       { font, fontSize, fontWeight, lineHeight, letterSpacing, axes, tabular },
       role,
@@ -150,6 +159,9 @@ export const HeroButtonText = createRoleText(
   TextVariant.heroButton,
   "HeroButtonText",
 );
+/* Marketing CTA label: the button role at semibold, 24px (`.text-style-cta`).
+ * The big CTA lifts it to 28px by passing `fontSize={var(--ui-text-cta-big)}`. */
+export const CTAText = createRoleText(TextVariant.cta, "CTAText");
 export const LabelText = createRoleText(TextVariant.label, "LabelText");
 /* Button's size and weight in the mono family — the two roles' size and weight
  * tokens alias each other, so mono sits at the same optical scale beside a
@@ -166,6 +178,7 @@ export type TitleTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
 export type BodyTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
 export type HeroBodyTextProps<T extends ElementType = "span"> =
   RoleTextProps<T>;
+export type CTATextProps<T extends ElementType = "span"> = RoleTextProps<T>;
 export type HeroButtonTextProps<T extends ElementType = "span"> =
   RoleTextProps<T>;
 export type LabelTextProps<T extends ElementType = "span"> = RoleTextProps<T>;
