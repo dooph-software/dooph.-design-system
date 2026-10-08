@@ -139,6 +139,7 @@
   --shadow-cta: var(--ui-shadow-cta);
   --shadow-focus-prominent: var(--ui-shadow-focus-prominent);
   --shadow-focus-primary: var(--ui-shadow-focus-primary);
+  --shadow-focus-danger: var(--ui-shadow-focus-danger);
   --shadow-press-prominent: var(--ui-shadow-press-prominent);
   --shadow-press-primary: var(--ui-shadow-press-primary);
   --text-cta-standard: var(--ui-text-cta-standard);
@@ -154,8 +155,5 @@
   --color-sticker-bg-tertiary: var(--ui-color-sticker-bg-tertiary);
   --color-sticker-bg-danger: var(--ui-color-sticker-bg-danger);
   --spacing-sticker-y: var(--ui-spacing-sticker-y);
-
-  /* Focus ring with danger */
-  --shadow-focus-danger: 0 0 0 4px var(--ui-color-focus-ring-danger);
 }
 /* __GENERATED_THEME_END__ */

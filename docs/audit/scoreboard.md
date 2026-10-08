@@ -41,3 +41,4 @@ Note 2026-10-04: m3 no longer counts zero resets (`p-0`, `m-0`). Zero is not a s
 | 2026-10-04 | b436647+dirty | 0 | 0 | 0 | 0 | 0 | 0 | 27 | 5 | 0 | 0 | review round 3 |
 | 2026-10-07 | b436647+dirty | 0 | 0 | 0 | 0 | 0 | 0 | 27 | 5 | 0 | 0 | review round 4: expression system, PI gap, CTA tilt |
 | 2026-10-08 | 97a057c+dirty | 0 | 0 | 0 | 0 | 0 | 0 | 27 | 5 | 0 | 0 | 0 | 0 | 11 text components: text-style 42->0 (audited 76), raw font utilities 12->0 (audited 11); CTA tilt removed |
+| 2026-10-08 | afe2f42+dirty | 0 | 0 | 0 | 0 | 0 | 0 | 27 | 5 | 0 | 0 | 0 | 0 | 12 chat prose roles, dark theme complete (alias group 33, invariants out, focus-danger token, 3 placeholders) |

@@ -288,18 +288,10 @@ const vars = parseLightModeVars(tokensCss);
 
 const entries = vars.map(toThemeEntry).filter(Boolean);
 
-// Computed entries that can't be derived from token names alone
-const COMPUTED = [
-  "/* Focus ring with danger */",
-  "--shadow-focus-danger: 0 0 0 4px var(--ui-color-focus-ring-danger);",
-];
-
 const generated = [
   GEN_START,
   "@theme inline {",
   ...entries.map((e) => `  ${e}`),
-  "",
-  ...COMPUTED.map((l) => `  ${l}`),
   "}",
   GEN_END,
 ].join("\n");
@@ -375,7 +367,7 @@ writeFileSync(THEME_PRESET_PATH, themePreset, "utf8");
 //   h-/size-/…    ← the custom `.h-*` / `.size-*` / `.min-w-*` … rules in index.css
 const TW_MERGE_SCALES = ["text", "radius", "spacing", "shadow"];
 const twMergeTheme = Object.fromEntries(TW_MERGE_SCALES.map((s) => [s, []]));
-for (const line of [...entries, ...COMPUTED]) {
+for (const line of entries) {
   const m = line.match(
     /^--(text|radius|spacing|shadow)-([a-z0-9]+(?:-[a-z0-9]+)*):/,
   );

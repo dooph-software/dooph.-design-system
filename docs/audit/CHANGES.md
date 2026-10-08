@@ -4822,3 +4822,44 @@ scoreboard: motion 0, "use client" 27, timers 5.
 ### 13 — FancyToggle label at the button role, 14px (maintainer decision, 2026-10-07)
 - The maintainer's own edit swapped the label from `text-style-hero-button` (16px) to `BaseText variant={TextVariant.button}` (14px). They confirmed it's intentional: the fancy toggle label is the 14px button role.
 - **docs owed:** any skill or story text saying the fancy toggle label is 16px or hero-button.
+
+### 14 — Chat prose headings and code match their text roles [F-084, WI-079]
+- **files:** `src/styles/dooph-component-tokens.css` (`.ds-chat-prose` h1–h3 and code), `src/styles/index.css` (a pointer comment at the top of the role classes).
+- **what changed:**
+  - The prose rules for h2, h3 and code gained the role properties they had drifted from: `font-optical-sizing: auto` and `font-style: normal`, and on code `letter-spacing: var(--ui-tracking-mono)`.
+  - h1–h3 now reset `letter-spacing` to `normal`. Inside the prose they inherited the body role's tracking, which no heading role has.
+  - Both stylesheets now carry a "keep in sync by hand" note naming the four copies.
+- **consumer impact:** inside AITextPart / AIThinkingPart prose, inline and block code is set slightly tighter (the mono role's -3% tracking, like `MonoText`), and headings lose the body tracking (0.14px at 14px). Nothing outside the prose changes.
+- **breaking:** no.
+- **verified:** in Storybook, the prose's code, h1, h2 and h3 each equal a standalone `.text-style-mono` / `-title` / `-heading` / `-subheading` element on all seven font properties (family, size, weight, variation settings, optical sizing, style, letter spacing).
+- **docs owed:** CHANGELOG Fixed: "Code and headings in AI chat prose now match the mono and heading text roles."
+
+### 15 — Dark theme: complete and island-safe (placeholder values; maintainer tunes later) [F-019, F-059, F-067, D-07; WI-061, WI-073, WI-077]
+- **files:** `src/styles/tokens.css`, `scripts/sync-theme.mjs`, plus the regenerated `src/styles/index.css`, `theme.css` and `src/utils/twMergeTheme.ts`. New check: `docs/audit/_work/scratch/dark-inventory.mjs`; browser checks in `docs/audit/_work/scratch/dark-check.js`.
+- **what changed:**
+  - **Nested `.dark` regions now work.** `.dark` gained an alias re-declaration group: 33 lines, each text-identical to its `:root` line. That is the audit's 28 aliases, plus the 2 disabled lines moved into the group, plus 3 that appeared since (prominent-border-disabled, the two press shadows, the new danger focus shadow). Three token comments that claimed "no .dark block needed" were corrected.
+  - **Four redundant `.dark` lines were removed** (checkbox size and radius, both avatar radii). They repeated `:root` and blocked a consumer's `:root` override inside dark islands.
+  - **The danger focus shadow is now a token,** `--ui-shadow-focus-danger`. sync-theme's hardcoded escape hatch is gone, and `shadow-focus-danger` now maps to the token.
+  - **The danger Sticker in dark is a PLACEHOLDER.** Figma's literal white content and white wash made it invisible. The content now takes `--ui-color-danger-secondary`, and the wash keeps the light formula (danger-secondary at the shared opacity).
+- **Left as-is on purpose:** 11 paints with no dark value, all documented as identical in both modes: the prominent button family, the raw danger pair, the brand-identity trio, and the anthropic and gemini marks. `dark-inventory.mjs` lists them.
+- **consumer impact:**
+  - Inside a nested `.dark` region on a light page, the danger button, tooltips, selection, shimmers, focus and press rings, slider steps and the secondary sticker now take their dark values (before, they kept their light ones).
+  - A consumer `:root` override of checkbox size or radius, or the avatar radii, now applies inside dark islands too.
+  - The danger Sticker is visible in dark.
+- **breaking:** no. Under `<html class="dark">` and in light mode, every value is unchanged, except the danger sticker.
+- **verified:**
+  - `dark-inventory.mjs`: 0 missing aliases, 0 redundant lines.
+  - Browser island probe: all 291 `--ui-*` tokens resolve identically inside a `.dark` island on a light page and under `<html class="dark">`. Spot values: the island danger surface is `#1d1d1f` while the light root's is `#fdfdfd`, and a consumer `:root { --ui-radius-avatar: 4px }` reaches the island.
+  - `npm run sync-tokens`: the generated block changed only the danger-shadow entry.
+  - Dark contrast sweep of all stories: see the notes below.
+- **docs owed:**
+  - token-contract: islands work for aliases. A consumer's own aliases (`--app-x: var(--ui-…)`) need the same treatment: declare them on both `:root` and `.dark`.
+  - Contribution rule: a dark line is added when the RESOLVED value changes, so aliases of dark-changed tokens are repeated.
+  - Add `--ui-shadow-focus-danger` to the shadow list.
+  - CHANGELOG Fixed (islands, the danger sticker) and Added (the token).
+- **dark contrast sweep (all 372 stories, Dark theme, every text element vs its effective background, flagged below 3:1):** two real problems, now fixed with PLACEHOLDERS:
+  - **Prominent Sticker** (also inside the OutlineSection card): #340fd9 on its own wash read at 1.75:1. `.dark` now sets `--ui-color-sticker-prominent: #8c7bff`.
+  - **Menu hotkey chip:** text-tertiary read at 2.9:1. Dark `--ui-color-text-tertiary` went #717171 → #8b8b8b. This lifts every dark tertiary text (placeholders, meta).
+
+  Re-run on the 53 sticker, OutlineSection, hotkey and menu stories: 0 flags. The remaining flags are false positives: shimmer text paints through a clipped background, and Calendar endpoint days draw their fill on a sibling layer the sweep doesn't see.
+- **Placeholders for the maintainer to tune** (each marked `PLACEHOLDER (2026-10-07)` in tokens.css): the danger sticker content, the prominent sticker content, and dark text-tertiary.

@@ -4,7 +4,7 @@
 - REVERTED: CTA hover tilt. The maintainer decided against it, so the CTAButton header is back to "never animated" and `.ds-cta-shape-tilt` is gone.
 - DECIDED, keep: the caret's open-flip spring overshoot stays under practical. It is not an expression detail.
 - DROPPED: VerificationCode backspace in place.
-- MAINTAINER OWNS: every dark-theme item below. Edits assume the dark overhaul lands.
+- DONE (2026-10-07, at the maintainer's request): dark theme complete and island-safe. Alias group, invariant lines out, danger focus-shadow token, three PLACEHOLDER values (danger sticker, prominent sticker, dark text-tertiary) for the maintainer to tune. Chat prose headings and code match their roles. Patch 12-prose-dark.
 - DONE: Text-component sweep, measured by scoreboard m11 and m12 (76/11 audited → 42/12 after round 4 → 0/0). `buttonVariants` / `tabTriggerVariants` lost their typography (maintainer chose the v6 break). Agent rule 13; patch 11-text-components.
 - OPEN: the contribution skill still says "Typography uses `text-style-*` composite utility classes", the opposite of the rule. Docs are deferred, so agent rule 13 overrides it for now.
 

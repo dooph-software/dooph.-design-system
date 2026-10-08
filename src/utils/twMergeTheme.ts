@@ -55,9 +55,9 @@ export const DS_TW_MERGE_THEME: Readonly<Record<"text" | "radius" | "spacing" | 
     "cta",
     "focus-prominent",
     "focus-primary",
+    "focus-danger",
     "press-prominent",
-    "press-primary",
-    "focus-danger"
+    "press-primary"
   ]
 };
 

@@ -60,8 +60,9 @@
   --ui-color-secondary-border-disabled: #e9e9e9;
 
   /* Prominent (deep violet) — Figma ButtonProminent/*. Borders alias bg per
-   * state. Fully mode-invariant, so this family has no .dark override at all:
-   * the Figma group carries identical values in both modes, INCLUDING the
+   * state. Its own paints are mode-invariant, so they have no .dark override
+   * (the two disabled aliases are repeated in the .dark alias group): the
+   * Figma group carries identical values in both modes, INCLUDING the
    * content colour. That last part is worth stating because the Figma export
    * aliases the content to Text/text-inverted, which flips to black in dark —
    * black on #340fd9 is 2.2:1 and unreadable, and the export's own resolved
@@ -87,9 +88,9 @@
 
   /* Danger button (Figma ButtonDanger/*) — a full state family so consumers can
    * retune the danger button without touching the secondary family it defaults
-   * to. Every value is an ALIAS, which is also what makes a .dark block
-   * unnecessary: the aliased tokens are themselves redefined per mode, so these
-   * follow along for free. Override any one of them to break that link. */
+   * to. Every value is an ALIAS, so they follow the secondary family per mode;
+   * they are repeated in the .dark alias group so nested `.dark` regions
+   * re-resolve them. Override any one of them to break that link. */
   --ui-color-danger: var(--ui-color-secondary);
   --ui-color-danger-border: var(--ui-color-secondary-border);
   --ui-color-danger-hover: var(--ui-color-danger-secondary);
@@ -119,8 +120,8 @@
      Aliased to the primary button pair, so a selection reads as a primary
      surface and follows a rebrand for free. Note this inverts with the palette
      (dark-on-light in light mode, light-on-dark in dark) because primary does;
-     override both tokens if you need a fixed colour. No .dark block: the alias
-     already resolves per palette. */
+     override both tokens if you need a fixed colour. Repeated in the .dark alias
+     group so a nested .dark region re-resolves it. */
   --ui-color-selection: var(--ui-color-primary);
   --ui-color-selection-foreground: var(--ui-color-primary-foreground);
 
@@ -635,6 +636,7 @@
   --ui-shadow-cta: 0 1px 2px rgba(56, 56, 56, 0.15);
   --ui-shadow-focus-prominent: 0 0 0 4px var(--ui-color-focus-ring-prominent);
   --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
+  --ui-shadow-focus-danger: 0 0 0 4px var(--ui-color-focus-ring-danger);
   /* Checkbox press ring (Figma active state) — the focus-ring paint, named for
    * its job so component classes never use a focus shadow for a press. */
   --ui-shadow-press-prominent: var(--ui-shadow-focus-prominent);
@@ -765,8 +767,6 @@
   --ui-color-primary-foreground: #000000;
   --ui-color-primary-hover: #f0f0f0;
   --ui-color-primary-active: #cdcdcd;
-  --ui-color-primary-disabled: var(--ui-color-secondary-disabled);
-  --ui-color-primary-border-disabled: var(--ui-color-secondary-border-disabled);
 
   --ui-color-secondary: #1d1d1f;
   --ui-color-secondary-foreground: #ffffff;
@@ -801,7 +801,9 @@
 
   --ui-color-text: #ffffff;
   --ui-color-text-secondary: #afafaf;
-  --ui-color-text-tertiary: #717171;
+  /* PLACEHOLDER (2026-10-07), pending the maintainer's dark pass: was #717171,
+   * which read at 2.9:1 on the menu hotkey chip (secondary-hover). */
+  --ui-color-text-tertiary: #8b8b8b;
 
   /* The prominent ring keys to the rest paint (not :hover) in dark, per Figma. */
   --ui-color-focus-ring-prominent: rgba(52, 15, 217, 0.15);
@@ -827,20 +829,65 @@
 
   /* The dark secondary WASH does not read --ui-sticker-bg-opacity-secondary
    * (80%, light only) — Figma binds `color-sticker-bg-secondary` to the shared
-   * 20% opacity in dark. Danger stops being a composite at all: both the
-   * content and the wash are a literal white, not danger-primary/secondary. */
+   * 20% opacity in dark.
+   * Danger: PLACEHOLDER (2026-10-07), pending the maintainer's dark pass.
+   * Figma's dark values were a literal white for both content and wash, which
+   * made the sticker invisible. For now the content takes the lighter
+   * danger-secondary, and the wash keeps the light formula (danger-secondary
+   * at the shared opacity). */
   --ui-color-sticker-bg-secondary: color-mix(
     in srgb,
     var(--ui-color-secondary-border-active) var(--ui-sticker-bg-opacity),
     transparent
   );
-  --ui-color-sticker-danger: #ffffff;
-  --ui-color-sticker-bg-danger: #ffffff;
+  --ui-color-sticker-danger: var(--ui-color-danger-secondary);
+  /* PLACEHOLDER (2026-10-07): the prominent content (#340fd9) read at 1.75:1 on
+   * its own wash over dark surfaces. A lifted violet until the dark pass. */
+  --ui-color-sticker-prominent: #8c7bff;
 
-  --ui-size-checkbox: 18px;
-  --ui-radius-checkbox: 6px;
-  --ui-radius-avatar: 8px;
-  --ui-radius-avatar-sm: 6px;
+  /* ── Alias re-declarations ─────────────────────────────────────────────
+   * A var() inside a custom property is resolved on the element that
+   * DECLARES it. Under <html class="dark"> that is the same element as
+   * :root, but a nested `.dark` region inherits an alias already resolved to
+   * its LIGHT value unless `.dark` declares it again. So every :root alias
+   * whose target changes in dark is repeated here, text identical to :root.
+   * "Only lines whose value changes in dark" means the RESOLVED value, so do
+   * not delete these as unchanged. Add a line whenever a new alias points at
+   * a token this block overrides; docs/audit/_work/scratch/dark-inventory.mjs
+   * lists any that are missing. */
+  --ui-color-primary-border: var(--ui-color-primary);
+  --ui-color-primary-border-hover: var(--ui-color-primary-hover);
+  --ui-color-primary-border-active: var(--ui-color-primary-active);
+  --ui-color-primary-disabled: var(--ui-color-secondary-disabled);
+  --ui-color-primary-border-disabled: var(--ui-color-secondary-border-disabled);
+  --ui-color-prominent-disabled: var(--ui-color-secondary-disabled);
+  --ui-color-prominent-border-disabled: var(--ui-color-secondary-border-disabled);
+  --ui-color-danger: var(--ui-color-secondary);
+  --ui-color-danger-border: var(--ui-color-secondary-border);
+  --ui-color-danger-foreground-active: var(--ui-color-secondary-foreground);
+  --ui-color-danger-disabled: var(--ui-color-secondary-disabled);
+  --ui-color-danger-border-disabled: var(--ui-color-secondary-border-disabled);
+  --ui-color-selection: var(--ui-color-primary);
+  --ui-color-selection-foreground: var(--ui-color-primary-foreground);
+  --ui-color-tooltip-inverse-surface: var(--ui-color-primary);
+  --ui-color-tooltip-inverse-text: var(--ui-color-primary-foreground);
+  --ui-color-tooltip-inverse-border: var(--ui-color-primary);
+  --ui-color-tooltip-matching-surface: var(--ui-color-secondary);
+  --ui-color-tooltip-matching-text: var(--ui-color-secondary-foreground);
+  --ui-color-tooltip-matching-border: var(--ui-color-border-primary);
+  --ui-shimmer-base: var(--ui-color-text-tertiary);
+  --ui-shimmer-highlight: color-mix(in srgb, var(--ui-color-text-tertiary) 35%, transparent);
+  --ui-chat-tool-shimmer-base: var(--ui-color-ghost-foreground-active);
+  --ui-chat-tool-shimmer-highlight: color-mix(in srgb, var(--ui-color-ghost-foreground-active) 35%, transparent);
+  --ui-chat-thinking-shimmer-base: var(--ui-color-text-secondary);
+  --ui-chat-thinking-shimmer-highlight: color-mix(in srgb, var(--ui-color-text-secondary) 35%, transparent);
+  --ui-color-slider-step-inactive: var(--ui-color-secondary-border);
+  --ui-shadow-focus-prominent: 0 0 0 4px var(--ui-color-focus-ring-prominent);
+  --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
+  --ui-shadow-focus-danger: 0 0 0 4px var(--ui-color-focus-ring-danger);
+  --ui-shadow-press-prominent: var(--ui-shadow-focus-prominent);
+  --ui-shadow-press-primary: var(--ui-shadow-focus-primary);
+  --ui-color-sticker-secondary: var(--ui-color-text-tertiary);
 }
 
 /* ── Reduced motion — the ONE place it is handled ───────────────────────────

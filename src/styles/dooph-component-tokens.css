@@ -845,11 +845,23 @@
   .ds-chat-prose :is(em, i) {
     font-style: italic;
   }
+  .ds-chat-prose :is(h1, h2, h3) {
+    letter-spacing: normal;
+  }
   .ds-chat-prose :is(h1, h2, h3, h4, h5, h6) {
     color: inherit;
     margin-top: var(--ui-spacing-md);
     margin-bottom: var(--ui-spacing-sm);
   }
+  /* Hand copies of four text-style-* roles (index.css @layer components):
+   * h1 ← .text-style-title, h2 ← .text-style-heading, h3 ←
+   * .text-style-subheading, code ← .text-style-mono. They cannot @apply the
+   * roles: those sit in `components`, which a markdown renderer's utilities
+   * would beat. Keep them property-for-property in sync by hand when a role
+   * changes. Two deliberate differences, both resets of what the prose
+   * container (the body role) would otherwise pass down: h1 sets
+   * font-variation-settings to `normal` (the title role sets no axes), and
+   * h1-h3 set letter-spacing to `normal` (none of the three roles tracks). */
   .ds-chat-prose h1 {
     font-family: var(--ui-font-title);
     font-size: var(--ui-text-title);
@@ -858,13 +870,17 @@
   }
   .ds-chat-prose h2 {
     font-family: var(--ui-font-heading);
+    font-optical-sizing: auto;
     font-size: var(--ui-text-heading);
+    font-style: normal;
     font-weight: var(--ui-weight-heading);
     font-variation-settings: var(--ui-font-var-heading);
   }
   .ds-chat-prose h3 {
     font-family: var(--ui-font-heading);
+    font-optical-sizing: auto;
     font-size: var(--ui-text-subheading);
+    font-style: normal;
     font-weight: var(--ui-weight-subheading);
     font-variation-settings: var(--ui-font-var-heading);
   }
@@ -907,11 +923,16 @@
     border-top: 1px solid var(--ui-color-border-primary);
     margin-block: var(--ui-spacing-lg);
   }
+  /* ← .text-style-mono (see the note above h1). The last three lines are the
+   * inline-code chip, which the role does not have. */
   .ds-chat-prose code {
     font-family: var(--ui-font-mono);
+    font-optical-sizing: auto;
     font-size: var(--ui-text-mono);
+    font-style: normal;
     font-weight: var(--ui-weight-mono);
     font-variation-settings: var(--ui-font-var-mono);
+    letter-spacing: var(--ui-tracking-mono);
     background-color: var(--ui-color-surface-secondary);
     border-radius: var(--ui-chat-prose-code-radius);
     padding: 1px var(--ui-spacing-xxs);

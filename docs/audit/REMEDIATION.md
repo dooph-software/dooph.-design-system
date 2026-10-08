@@ -256,7 +256,7 @@ Each item blocks the work items listed under it. Fill in the `decision:` line; t
 | WI-058 | Route the 17 hover/state transitions through one --ui-interaction-* pair (recommended D-03 option) | P3 | review | F-016 | — | none | — |
 | WI-059 | Replace the 25 token-equal Tailwind numeric-scale utilities with the DS spacing scale | P3 | review | F-017 | WI-035 | none | — |
 | WI-060 | Replace the remaining arbitrary px literals with tokens (Avatar, ShapeButton, SplitButton, CodeDigitInput, menu label / text trigger, HotkeyIndicator, Toast, Checkbox, OutlineSection) | P3 | review | F-017 | WI-035 | none | — |
-| WI-061 | Re-declare the 28 dark-dependent alias tokens in .dark so nested .dark regions resolve them to dark values | P3 | todo (needs maintainer) | F-019 | — | none | — |
+| WI-061 | Re-declare the 28 dark-dependent alias tokens in .dark so nested .dark regions resolve them to dark values | P3 | review | F-019 | — | none | — |
 | WI-062 | Give TabsContent and CodeDigitInput (incl. error state) a ds-focus-* ring; bring ShapeButton's ring and Checkbox's press ring into the sanctioned helpers/tokens | P3 | review | F-018 | WI-061 | none | — |
 | WI-063 | Add the reduced-motion opt-out to PopoverContent | P3 | review | F-020 | — | none | — |
 | WI-064 | Give the six overlays a --ui-<overlay>-* motion family read by ds-*-motion helpers | P3 | review | F-016 | WI-063 | none | — |
@@ -268,13 +268,13 @@ Each item blocks the work items listed under it. Fill in the `decision:` line; t
 | WI-070 | Tokenise the feature-motion literals in ShimmerText, RollHoverText, ShapeButton, CopyButton, Slider glide and both progress indicators | P3 | review | F-016 | WI-069 | none | — |
 | WI-071 | Move Slider and LinearProgressIndicator geometry out of className into ds-slider-* / ds-progress-* helpers | P3 | review | F-017 | WI-070 | none | — |
 | WI-072 | Redraw HeartFillIcon on the 24-unit grid and add it to the Icons gallery story | P3 | review | F-043 | — | none | — |
-| WI-073 | Delete the four mode-invariant size/radius re-declarations from .dark (keep the two alias lines in WI-061's commented group) | P3 | todo (needs maintainer) | F-059 | WI-061 | none | — |
+| WI-073 | Delete the four mode-invariant size/radius re-declarations from .dark (keep the two alias lines in WI-061's commented group) | P3 | review | F-059 | WI-061 | none | — |
 | WI-074 | Replace TableHeaderCell's nonexistent text-text-primary with the real text-text utility | P3 | review | F-060 | — | none | — |
 | WI-075 | State the DS-set-state idiom in arch Rule 2 and restyle CodeDigitInput, CalendarPresetItem, CalendarGrid, AIToolPart and HotkeyIndicator from the data attributes they emit | P3 | review | F-061 | WI-066, WI-067 | none | — |
 | WI-076 | Make BaseIcon's color prop drive currentColor, and drop the per-icon fill re-wiring | P3 | review | F-063 | — | none | — |
-| WI-077 | Make the danger focus shadow a token (--ui-shadow-focus-danger) and delete sync-theme's COMPUTED escape hatch | P3 | todo (needs maintainer) | F-067 | WI-061 | none | — |
+| WI-077 | Make the danger focus shadow a token (--ui-shadow-focus-danger) and delete sync-theme's COMPUTED escape hatch | P3 | review | F-067 | WI-061 | none | — |
 | WI-078 | Fix or document the non-breaking dead CSS: document .ds-selection, drop the dead dark sticker opacity, keep one TableRow divider rule, make ToastClose's colour override win | P3 | review | F-076 | — | none | — |
-| WI-079 | Bring ds-chat-prose's heading and code rules back in line with the text-style roles they copy, and mark both sides "keep in sync" | P3 | todo (needs maintainer) | F-084 | — | none | — |
+| WI-079 | Bring ds-chat-prose's heading and code rules back in line with the text-style roles they copy, and mark both sides "keep in sync" | P3 | review | F-084 | — | none | — |
 | WI-080 | Type CopyButton's props from the concrete `<button>` element | P3 | review | F-002, F-036 | — | none | — |
 | WI-081 | Make `asChild` work on the four decorated leaves with Radix `Slottable`, and add the missing asChild stories | P3 | review | F-003, F-024 | — | none | — |
 | WI-082 | Move OutlineButton's orb paint, orb timing and box geometry into --ui-outline-button-* tokens read by ds-* classes | P3 | review | F-021, F-016, F-017 | WI-060, WI-081 | none | — |
@@ -4214,7 +4214,7 @@ No P0 items. Later phases need only what already works at the audited SHA: `npm 
   - 2026-10-04 — Done in overnight wave C (see CHANGES.md, _work/patches/06C-wave-c.patch). Lint 0; all-stories snapshot shows no layout or colour change, only the intended element-count changes (sr-only copy, removed clip leftovers). CHECKPOINT — awaiting maintainer commit.
 
 ### WI-061: Re-declare the 28 dark-dependent alias tokens in .dark so nested .dark regions resolve them to dark values
-- status: todo (needs maintainer)
+- status: review
 - addresses: [F-019]
 - depends_on: []
 - phase: P3
@@ -4295,6 +4295,7 @@ No P0 items. Later phases need only what already works at the audited SHA: `npm 
   - 2026-10-01 — created by audit
   - 2026-10-02 — D-07: the maintainer is overhauling the dark theme constants. Ask before running; this may be absorbed.
   - 2026-10-03 — Skipped overnight: this changes a component's look (or is dark-theme work the maintainer is overhauling) and needs a maintainer decision. Listed in docs/audit/overnight.md under 'Morning list'.
+  - 2026-10-08 — 2026-10-07 — done at the maintainer's request: alias group: 33 lines (the audit's 28, plus 2 moved primary-disabled lines and 3 found since: prominent-border-disabled, press-prominent/-primary, focus-danger); island probe 291/291 tokens equal html.dark
 
 ### WI-062: Give TabsContent and CodeDigitInput (incl. error state) a ds-focus-* ring; bring ShapeButton's ring and Checkbox's press ring into the sanctioned helpers/tokens
 - status: review
@@ -5208,7 +5209,7 @@ No P0 items. Later phases need only what already works at the audited SHA: `npm 
   - 2026-10-04 — Done in review round 1 (agent R1): HeartFillIcon redrawn on the 24-unit grid and added to the gallery. See CHANGES.md. CHECKPOINT — awaiting maintainer commit.
 
 ### WI-073: Delete the four mode-invariant size/radius re-declarations from .dark (keep the two alias lines in WI-061's commented group)
-- status: todo (needs maintainer)
+- status: review
 - addresses: [F-059]
 - depends_on: [WI-061]
 - phase: P3
@@ -5259,6 +5260,7 @@ No P0 items. Later phases need only what already works at the audited SHA: `npm 
   - 2026-10-01 — created by audit
   - 2026-10-02 — D-07: the maintainer is overhauling the dark theme constants. Ask before running; this may be absorbed.
   - 2026-10-03 — Skipped overnight: this changes a component's look (or is dark-theme work the maintainer is overhauling) and needs a maintainer decision. Listed in docs/audit/overnight.md under 'Morning list'.
+  - 2026-10-08 — 2026-10-07 — done at the maintainer's request: four mode-invariant size/radius lines removed from .dark; consumer :root override now reaches .dark islands (verified)
 
 ### WI-074: Replace TableHeaderCell's nonexistent text-text-primary with the real text-text utility
 - status: review
@@ -5522,7 +5524,7 @@ No P0 items. Later phases need only what already works at the audited SHA: `npm 
   - 2026-10-03 — Done in overnight wave A (see CHANGES.md, _work/patches/06A-wave-a.patch). Lint 0; all-stories snapshot shows only new stories and the intended fixes. CHECKPOINT — awaiting maintainer commit.
 
 ### WI-077: Make the danger focus shadow a token (--ui-shadow-focus-danger) and delete sync-theme's COMPUTED escape hatch
-- status: todo (needs maintainer)
+- status: review
 - addresses: [F-067]
 - depends_on: [WI-061]
 - phase: P3
@@ -5592,6 +5594,7 @@ No P0 items. Later phases need only what already works at the audited SHA: `npm 
 - log:
   - 2026-10-02 — created by audit (continuation agent W4b)
   - 2026-10-03 — Skipped overnight: this changes a component's look (or is dark-theme work the maintainer is overhauling) and needs a maintainer decision. Listed in docs/audit/overnight.md under 'Morning list'.
+  - 2026-10-08 — 2026-10-07 — done at the maintainer's request: --ui-shadow-focus-danger token added (root + dark alias group); sync-theme COMPUTED removed; regenerated block changes only that entry
 
 ### WI-078: Fix or document the non-breaking dead CSS: document .ds-selection, drop the dead dark sticker opacity, keep one TableRow divider rule, make ToastClose's colour override win
 - status: review
@@ -5672,7 +5675,7 @@ No P0 items. Later phases need only what already works at the audited SHA: `npm 
   - 2026-10-04 — Done in overnight wave E (see CHANGES.md, _work/patches/06E-wave-e.patch). Lint 0; snapshot differences are the story rework plus the intended fixes. CHECKPOINT — awaiting maintainer commit.
 
 ### WI-079: Bring ds-chat-prose's heading and code rules back in line with the text-style roles they copy, and mark both sides "keep in sync"
-- status: todo (needs maintainer)
+- status: review
 - addresses: [F-084]
 - depends_on: []
 - phase: P3
@@ -5781,6 +5784,7 @@ No P0 items. Later phases need only what already works at the audited SHA: `npm 
 - log:
   - 2026-10-02 — created by audit (continuation agent W4b)
   - 2026-10-03 — Skipped overnight: this changes a component's look (or is dark-theme work the maintainer is overhauling) and needs a maintainer decision. Listed in docs/audit/overnight.md under 'Morning list'.
+  - 2026-10-08 — 2026-10-07 — done at the maintainer's request: prose h2/h3/code match their roles on all 7 font props (verified in Storybook); keep-in-sync notes both sides; h1-h3 also reset the body tracking they inherited
 
 ### WI-080: Type CopyButton's props from the concrete `<button>` element
 - status: review
