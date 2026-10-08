@@ -47,6 +47,7 @@ const TooltipContent = forwardRef<
       portal = true,
       portalProps,
       sideOffset = 6,
+      children,
       ...props
     },
     ref,
@@ -63,7 +64,7 @@ const TooltipContent = forwardRef<
           "ds-motion-overlay",
           tooltipThemeClass[themeInverse ? "inverse" : "matching"],
           variant === TooltipVariant.simple &&
-            "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-lg text-style-body",
+            "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-lg",
           variant === TooltipVariant.rich &&
             "flex ds-width-tooltip-rich flex-col gap-sm rounded-tight border border-solid px-md py-rg wrap-break-word",
           variant === TooltipVariant.complex &&
@@ -71,7 +72,13 @@ const TooltipContent = forwardRef<
           className,
         )}
         {...props}
-      />
+      >
+        {variant === TooltipVariant.simple ? (
+          <BaseText variant={TextVariant.body}>{children}</BaseText>
+        ) : (
+          children
+        )}
+      </TooltipPrimitive.Content>
     );
 
     if (!portal) {

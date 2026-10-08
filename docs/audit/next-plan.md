@@ -1,5 +1,13 @@
 # Next plan — deferred from review round 1 (2026-10-04)
 
+**Round 5 status (2026-10-07):**
+- REVERTED: CTA hover tilt. The maintainer decided against it, so the CTAButton header is back to "never animated" and `.ds-cta-shape-tilt` is gone.
+- DECIDED, keep: the caret's open-flip spring overshoot stays under practical. It is not an expression detail.
+- DROPPED: VerificationCode backspace in place.
+- MAINTAINER OWNS: every dark-theme item below. Edits assume the dark overhaul lands.
+- DONE: Text-component sweep, measured by scoreboard m11 and m12 (76/11 audited → 42/12 after round 4 → 0/0). `buttonVariants` / `tabTriggerVariants` lost their typography (maintainer chose the v6 break). Agent rule 13; patch 11-text-components.
+- OPEN: the contribution skill still says "Typography uses `text-style-*` composite utility classes", the opposite of the rule. Docs are deferred, so agent rule 13 overrides it for now.
+
 **Round 4 status (2026-10-07):**
 - DONE: expression system (token layers, practical preset, caret as first case, expression-check in the scoreboard); CTA hover tilt (contract reworded); progress ring below-1% rest look restored with the race fix kept; reduced motion made to win over consumer overrides.
 - CANDIDATE: under practical, should the caret's open-flip spring overshoot also be neutralised?

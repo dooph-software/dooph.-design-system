@@ -1,5 +1,6 @@
 import { forwardRef, type InputHTMLAttributes } from 'react';
 import { cn } from '../../utils/cn';
+import { ButtonText } from '../Text';
 import { HotkeyIndicator } from '../HotkeyIndicator/HotkeyIndicator';
 import { IconSize, SearchIcon } from '../Icons';
 
@@ -42,13 +43,14 @@ const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
         <SearchIcon size={IconSize.md} className="shrink-0 text-text-tertiary" />
 
         {/* Native input */}
-        <input
+        <ButtonText
+          as="input"
           ref={ref}
           placeholder={placeholder}
           disabled={disabled}
           className={cn(
             'flex-1 min-w-0 bg-transparent outline-none',
-            'text-style-button text-text placeholder:text-text-tertiary',
+            'text-text placeholder:text-text-tertiary',
           )}
           {...props}
         />

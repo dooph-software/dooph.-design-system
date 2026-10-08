@@ -12,6 +12,7 @@ import {
   type Ref,
 } from "react";
 import { cn } from "../../utils/cn";
+import { BaseText, ButtonText, TextVariant } from "../Text";
 import { useComposedRefs } from "../../utils/composeRefs";
 import { DropdownCaret, DropdownCaretVariant } from "../DropdownCaret";
 import { ChevronDownIcon, IconSize, SearchIcon } from "../Icons";
@@ -54,14 +55,15 @@ const DropdownTriggerBase = forwardRef<
 >(({ className, children, asChild = false, ...props }, ref) => {
   const Comp = (asChild ? Slot : "button") as ElementType;
   return (
-    <Comp
+    <ButtonText
+      as={Comp}
       ref={ref as ForwardedRef<HTMLElement>}
       className={cn(
         "inline-flex h-button items-center justify-center ds-gap-ui-sm",
         "min-w-menu rounded-tight border border-solid border-border-primary",
         "bg-secondary text-secondary-fg",
         "ds-dropdown-caret-host ds-pl-ui-md",
-        "text-style-button cursor-pointer select-none",
+        "cursor-pointer select-none",
         "ds-motion-state",
         "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-secondary",
         "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active",
@@ -77,7 +79,7 @@ const DropdownTriggerBase = forwardRef<
         {(child) => <span className="flex-1 text-left">{child}</span>}
       </Slottable>
       <DropdownCaret variant={DropdownCaretVariant.dropdown} />
-    </Comp>
+    </ButtonText>
   );
 });
 DropdownTriggerBase.displayName = "DropdownTrigger";
@@ -238,7 +240,8 @@ const TypeableDropdownTrigger = forwardRef<
         data-disabled={disabled ? "" : undefined}
       >
         <SearchIcon className={cn(disabled && "ds-opacity-disabled")} />
-        <input
+        <ButtonText
+          as="input"
           ref={setInputRef}
           disabled={disabled}
           placeholder={displayValue ?? placeholder}
@@ -256,7 +259,7 @@ const TypeableDropdownTrigger = forwardRef<
           minLength={minLength}
           pattern={pattern}
           className={cn(
-            "h-full min-w-0 flex-1 bg-transparent text-left text-style-button text-text",
+            "h-full min-w-0 flex-1 bg-transparent text-left text-text",
             "placeholder:text-text-tertiary outline-none",
             displayValue !== undefined && "placeholder:text-text",
             "ds-disabled-state",
@@ -304,8 +307,12 @@ const TextDropdownTriggerBase = forwardRef<
   ) => {
     const Comp = (asChild ? Slot : "button") as ElementType;
     return (
-      <Comp
+      <BaseText
+        as={Comp}
         ref={ref as ForwardedRef<HTMLElement>}
+        variant={
+          size === TextDropdownSize.sm ? TextVariant.label : TextVariant.button
+        }
         className={cn(
           "inline-flex items-center ds-gap-ui-sm",
           "rounded-tight border border-transparent bg-transparent",
@@ -313,9 +320,9 @@ const TextDropdownTriggerBase = forwardRef<
           "ds-focus-visible-ring",
           "ds-disabled-state",
           size === TextDropdownSize.standard &&
-            "h-text-trigger text-style-button text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+            "h-text-trigger text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
           size === TextDropdownSize.sm &&
-            "text-style-label text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+            "text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
           className,
         )}
         {...props}
@@ -328,7 +335,7 @@ const TextDropdownTriggerBase = forwardRef<
             size === TextDropdownSize.sm ? IconSize.sm : IconSize.rg
           }
         />
-      </Comp>
+      </BaseText>
     );
   },
 );

@@ -11,6 +11,9 @@
  *   off-scale padding tokens (`ds-px-button-medium` / `-big`) and the hero
  *   button text role (16px). Every other size is `rounded-tight` with the
  *   14px button role. Per-variant shadows are the same at every labelled size.
+ * - The root renders through `BaseText` (`as` = the button or Slot) with the
+ *   size's text role from `buttonTextVariant`. `buttonVariants` holds no
+ *   typography: colour, border, size and shape only.
  *
  * ## constraints
  * - The pill sizes exist for `prominent`, `primary` and `secondary` only, and
@@ -23,9 +26,15 @@
  *   (./constants), never from cva's `VariantProps`: that admits `null`, which
  *   cva reads as "no variant", so `variant={null}` would compile and render a
  *   colourless, unsized button.
+ * - Typography comes only from the Text component the root renders through,
+ *   never from a `text-style-*` class in `buttonVariants` (maintainer rule:
+ *   text is always set by a Text component). Anything built on
+ *   `buttonVariants` (SplitButton, Toast) renders through `BaseText` too, or
+ *   its label loses the button role (ButtonText `as` the part).
  * - `text-style-hero-button` must stay registered in `cn`'s `text-style`
- *   group (src/utils/cn.ts). Unregistered, twMerge reads it as a text COLOUR
- *   and drops the variant's `text-*-fg`, so medium/big labels lose their colour.
+ *   group (src/utils/cn.ts). BaseText merges the role class with this
+ *   recipe's `text-*-fg` in one cn() call; unregistered, twMerge reads the
+ *   role as a text COLOUR and drops one of them.
  * - The `danger` variant paints the `--ui-color-danger-*` STATE family
  *   (bg-danger / border-danger-border / text-danger-fg / ...), not the raw
  *   `--ui-color-danger-primary`/`-secondary` palette. Those two are still the
@@ -50,7 +59,8 @@ import {
   type ReactElement,
 } from "react";
 import { cn } from "../../utils/cn";
-import type { ButtonSize, ButtonVariant } from "./constants";
+import { BaseText, TextVariant } from "../Text";
+import { ButtonSize, type ButtonVariant } from "./constants";
 
 const buttonVariants = cva(
   [
@@ -59,7 +69,6 @@ const buttonVariants = cva(
     "ds-motion-state cursor-pointer select-none",
     "ds-focus-visible-ring",
     "ds-disabled-state",
-    "text-style-button",
   ],
   {
     variants: {
@@ -103,9 +112,8 @@ const buttonVariants = cva(
       // `rounded-tight` and `rounded-full` as one group, so a base radius would
       // survive next to the pill one and win or lose on stylesheet order.
       size: {
-        big: "h-button-big ds-px-button-big rounded-full text-style-hero-button",
-        medium:
-          "h-button-medium ds-px-button-medium rounded-full text-style-hero-button",
+        big: "h-button-big ds-px-button-big rounded-full",
+        medium: "h-button-medium ds-px-button-medium rounded-full",
         standard: "h-button px-md rounded-tight",
         sm: "h-button-sm px-md rounded-tight",
         icon: "size-button p-0 rounded-tight",
@@ -127,6 +135,13 @@ const buttonVariants = cva(
     },
   },
 );
+
+/** The text role a Button size renders with: the pill sizes take the hero-scale
+ * button role (16px), every other size the button role (14px). */
+const buttonTextVariant = (size?: ButtonSize): TextVariant =>
+  size === ButtonSize.big || size === ButtonSize.medium
+    ? TextVariant.heroButton
+    : TextVariant.button;
 
 // ButtonVariant / ButtonSize (+ their types) live in ./constants — kept server-safe
 // (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
@@ -172,8 +187,10 @@ const ButtonBase = forwardRef<HTMLElement, ButtonProps<"button">>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = (asChild ? Slot : "button") as ElementType;
     return (
-      <Comp
+      <BaseText
+        as={Comp}
         ref={ref as ForwardedRef<HTMLElement>}
+        variant={buttonTextVariant(size)}
         className={cn(buttonVariants({ variant, size }), className)}
         {...props}
       />

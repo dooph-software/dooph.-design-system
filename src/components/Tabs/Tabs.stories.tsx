@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs';
 import { TabSize, TabVariant } from './constants';
 import { TableIcon, GraphIcon, InvoiceIcon } from '../Icons';
-import { LabelText } from '../Text';
+import { BodyText, LabelText } from '../Text';
 
 const meta = {
   title: 'Navigation/Tabs',
@@ -22,9 +22,9 @@ export const Ghost: Story = {
         <TabsTrigger value="two" variant={TabVariant.ghost}>Second tab</TabsTrigger>
         <TabsTrigger value="three" variant={TabVariant.ghost}>Third tab</TabsTrigger>
       </TabsList>
-      <TabsContent value="one" className="mt-4 text-style-body text-text">Content for first tab</TabsContent>
-      <TabsContent value="two" className="mt-4 text-style-body text-text">Content for second tab</TabsContent>
-      <TabsContent value="three" className="mt-4 text-style-body text-text">Content for third tab</TabsContent>
+      <TabsContent value="one" className="mt-lg"><BodyText className="text-text">Content for first tab</BodyText></TabsContent>
+      <TabsContent value="two" className="mt-lg"><BodyText className="text-text">Content for second tab</BodyText></TabsContent>
+      <TabsContent value="three" className="mt-lg"><BodyText className="text-text">Content for third tab</BodyText></TabsContent>
     </Tabs>
   ),
 };
@@ -37,9 +37,9 @@ export const Primary: Story = {
         <TabsTrigger value="two" variant={TabVariant.primary}>Second tab</TabsTrigger>
         <TabsTrigger value="three" variant={TabVariant.primary}>Third tab</TabsTrigger>
       </TabsList>
-      <TabsContent value="one" className="mt-4 text-style-body text-text">Content for first tab</TabsContent>
-      <TabsContent value="two" className="mt-4 text-style-body text-text">Content for second tab</TabsContent>
-      <TabsContent value="three" className="mt-4 text-style-body text-text">Content for third tab</TabsContent>
+      <TabsContent value="one" className="mt-lg"><BodyText className="text-text">Content for first tab</BodyText></TabsContent>
+      <TabsContent value="two" className="mt-lg"><BodyText className="text-text">Content for second tab</BodyText></TabsContent>
+      <TabsContent value="three" className="mt-lg"><BodyText className="text-text">Content for third tab</BodyText></TabsContent>
     </Tabs>
   ),
 };

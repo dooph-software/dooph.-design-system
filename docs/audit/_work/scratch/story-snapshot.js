@@ -8,7 +8,7 @@ window.__snapRun = async function (tag, startAt = 0) {
   const fr = document.createElement('iframe');
   fr.style.cssText = 'position:fixed;left:0;top:0;width:1200px;height:900px;opacity:0;pointer-events:none;z-index:-1';
   document.body.appendChild(fr);
-  window.__snapProps = ['paddingTop','paddingRight','paddingBottom','paddingLeft','marginTop','marginRight','marginBottom','marginLeft','rowGap','columnGap','width','height','color','backgroundColor','borderTopWidth','transitionDuration','transitionTimingFunction','animationDuration'];
+  window.__snapProps = ['paddingTop','paddingRight','paddingBottom','paddingLeft','marginTop','marginRight','marginBottom','marginLeft','rowGap','columnGap','width','height','color','backgroundColor','borderTopWidth','transitionDuration','transitionTimingFunction','animationDuration','fontFamily','fontSize','fontWeight','lineHeight','letterSpacing','fontVariationSettings','fontVariantNumeric','textTransform','whiteSpace'];
   for (const id of ids.slice(startAt)) {
     await Promise.race([new Promise((res) => { fr.onload = res; fr.src = '/iframe.html?id=' + id + '&viewMode=story'; }), new Promise((res) => setTimeout(res, 8000))]);
     const d = fr.contentDocument; if (!d) { out[id] = ["LOAD-FAILED"]; window.__snapProgress.done++; continue; } const t0 = performance.now();

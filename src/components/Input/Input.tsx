@@ -97,6 +97,7 @@ import {
   type ReactElement,
 } from "react";
 import { cn } from "../../utils/cn";
+import { BaseText, ButtonText, TextVariant } from "../Text";
 import { useComposedRefs } from "../../utils/composeRefs";
 import { InputVariant } from "./constants";
 
@@ -353,12 +354,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
     if (!isNumber && !hasIcon) {
       return (
-        <input
+        <ButtonText
+          as="input"
           {...fieldProps}
           className={cn(
             "flex h-button w-full rounded-tight border border-solid border-border-primary bg-secondary",
             "ds-pl-ui-md ds-pr-ui-rg",
-            "text-style-button text-text placeholder:text-text-tertiary",
+            "text-text placeholder:text-text-tertiary",
             "ds-motion-state ds-focus-ring-on-focus",
             // `enabled:` keeps a disabled input from lifting; `not-focus:` keeps the
             // focus border winning over the hover border, as the plain `hover:`
@@ -374,10 +376,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       );
     }
 
-    const fieldText = isNumber ? "text-style-mono" : "text-style-button";
+    const fieldRole = isNumber ? TextVariant.mono : TextVariant.button;
     const innerInputClass = cn(
       "min-w-0 bg-transparent outline-none",
-      fieldText,
       "text-text placeholder:text-text-tertiary ds-disabled-state",
     );
 
@@ -430,16 +431,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {hugs ? (
           <span className="inline-grid min-w-0">
             {/* Sizes the cell to the value — see the header. */}
-            <span
+            <BaseText
               aria-hidden
-              className={cn(
-                "invisible whitespace-pre [grid-area:1/1] pr-px",
-                fieldText,
-              )}
+              variant={fieldRole}
+              className="invisible whitespace-pre [grid-area:1/1] pr-px"
             >
               {mirrorText}
-            </span>
-            <input
+            </BaseText>
+            <BaseText
+              as="input"
+              variant={fieldRole}
               {...fieldProps}
               // w-0 + min-w-full: contributes nothing to the cell's size (its
               // ~20ch intrinsic width would prop the cell open), then fills it.
@@ -447,7 +448,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             />
           </span>
         ) : (
-          <input
+          <BaseText
+            as="input"
+            variant={fieldRole}
             {...fieldProps}
             className={cn("h-full flex-1", innerInputClass)}
           />

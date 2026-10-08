@@ -4,9 +4,11 @@ import { cn } from "../../utils/cn";
 import { buttonVariants } from "../Button/Button";
 import { ButtonSize, ButtonVariant } from "../Button/constants";
 import { ChevronDownIcon } from "../Icons";
+import { ButtonText } from "../Text";
 
 /* The split parts ARE secondary Buttons: paints, state guards, focus ring and
- * disabled treatment come from buttonVariants. Only the split geometry is
+ * disabled treatment come from buttonVariants, and each part renders through
+ * ButtonText (the recipe holds no typography). Only the split geometry is
  * local — one-sided radii, a single shared seam (the action drops its right
  * border), and no per-part shadow (the group carries shadow-button). The
  * one-sided `rounded-*-none` / `border-r-0` classes sit next to the recipe's
@@ -26,7 +28,8 @@ export interface SplitButtonActionProps extends ButtonHTMLAttributes<HTMLButtonE
 
 const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
   ({ className, children, icon, ...props }, ref) => (
-    <button
+    <ButtonText
+      as="button"
       ref={ref}
       className={cn(
         buttonVariants({ variant: ButtonVariant.secondary, size: ButtonSize.standard }),
@@ -39,7 +42,7 @@ const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
     >
       {icon && <span className="ds-size-icon-rg shrink-0">{icon}</span>}
       {children}
-    </button>
+    </ButtonText>
   ),
 );
 SplitButtonAction.displayName = "SplitButtonAction";
@@ -56,7 +59,8 @@ const SplitButtonTrigger = forwardRef<
   HTMLButtonElement,
   SplitButtonTriggerProps
 >(({ className, "aria-label": ariaLabel, ...props }, ref) => (
-  <button
+  <ButtonText
+    as="button"
     ref={ref}
     aria-label={ariaLabel ?? (props["aria-labelledby"] ? undefined : "More options")}
     className={cn(
@@ -68,7 +72,7 @@ const SplitButtonTrigger = forwardRef<
     {...props}
   >
     <ChevronDownIcon />
-  </button>
+  </ButtonText>
 ));
 SplitButtonTrigger.displayName = "SplitButtonTrigger";
 

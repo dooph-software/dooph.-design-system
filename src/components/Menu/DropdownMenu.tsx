@@ -45,6 +45,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "../../utils/cn";
+import { BodyText, LabelText } from "../Text";
 import { Checkbox } from "../Checkbox/Checkbox";
 import { CheckboxVariant } from "../Checkbox/constants";
 import { CheckIcon } from "../Icons/CheckIcon";
@@ -217,10 +218,12 @@ DropdownMenuContent.displayName = "DropdownMenuContent";
  * Shared menu-item styling (Figma Menu Item). Exported so surfaces that cannot
  * host a Radix `DropdownMenu.Item` — such as the calendar presets rail inside a
  * Popover — render visually identical items. Carries NO width floor: the
- * presets rail is 144px wide. Internal: not re-exported from src/index.ts.
+ * presets rail is 144px wide. Holds no typography: every item renders through
+ * BodyText (`as` the Radix part or element). Internal: not re-exported from
+ * src/index.ts.
  */
 export const menuItemClassName =
-  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-rg rounded-tight px-sm ds-radix-data-disabled text-style-body text-ghost-fg-active outline-none ds-motion-state hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
+  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-rg rounded-tight px-sm ds-radix-data-disabled text-ghost-fg-active outline-none ds-motion-state hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
 
 /** Dropdown items also hold the menu's 160px floor; sections and the panel hug them. */
 const itemBase = cn(menuItemClassName, "ds-min-w-menu");
@@ -230,7 +233,8 @@ const DropdownMenuSubTrigger = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.SubTrigger>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger>
 >(({ className, children, ...props }, ref) => (
-  <DropdownMenuPrimitive.SubTrigger
+  <BodyText
+    as={DropdownMenuPrimitive.SubTrigger}
     ref={ref}
     className={cn(itemBase, "data-[state=open]:bg-ghost-active", className)}
     {...props}
@@ -239,7 +243,7 @@ const DropdownMenuSubTrigger = forwardRef<
     <span className="flex shrink-0" aria-hidden>
       <ChevronRightIcon size={IconSize.rg} />
     </span>
-  </DropdownMenuPrimitive.SubTrigger>
+  </BodyText>
 ));
 DropdownMenuSubTrigger.displayName = "DropdownMenuSubTrigger";
 
@@ -279,7 +283,8 @@ const DropdownMenuItem = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Item>,
   DropdownMenuItemProps
 >(({ className, variant = DropdownMenuItemVariant.default, ...props }, ref) => (
-  <DropdownMenuPrimitive.Item
+  <BodyText
+    as={DropdownMenuPrimitive.Item}
     ref={ref}
     className={cn(
       itemBase,
@@ -308,11 +313,12 @@ const DropdownMenuPlainItem = forwardRef<
   HTMLDivElement,
   HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
+  <BodyText
+    as="div"
     ref={ref}
     className={cn(
       "flex min-h-button w-full items-center gap-rg rounded-tight pl-sm ds-min-w-menu",
-      "text-style-body text-ghost-fg-active",
+      "text-ghost-fg-active",
       className,
     )}
     {...props}
@@ -325,7 +331,8 @@ const DropdownMenuRadioSelectItem = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.RadioItem>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
 >(({ className, children, ...props }, ref) => (
-  <DropdownMenuPrimitive.RadioItem
+  <BodyText
+    as={DropdownMenuPrimitive.RadioItem}
     ref={ref}
     className={cn(
       itemBase,
@@ -343,7 +350,7 @@ const DropdownMenuRadioSelectItem = forwardRef<
     <DropdownMenuPrimitive.ItemIndicator className="flex shrink-0">
       <CheckIcon />
     </DropdownMenuPrimitive.ItemIndicator>
-  </DropdownMenuPrimitive.RadioItem>
+  </BodyText>
 ));
 DropdownMenuRadioSelectItem.displayName = "DropdownMenuRadioSelectItem";
 
@@ -381,7 +388,8 @@ const DropdownMenuMultiSelectItem = forwardRef<
   };
 
   return (
-    <DropdownMenuPrimitive.CheckboxItem
+    <BodyText
+      as={DropdownMenuPrimitive.CheckboxItem}
       ref={ref}
       checked={checked}
       disabled={disabled}
@@ -399,7 +407,7 @@ const DropdownMenuMultiSelectItem = forwardRef<
       />
       {/* flex-1 fills the row beside the leading checkbox, so the label takes the remaining width. */}
       <span className="flex flex-1 items-center gap-rg">{children}</span>
-    </DropdownMenuPrimitive.CheckboxItem>
+    </BodyText>
   );
 });
 DropdownMenuMultiSelectItem.displayName = "DropdownMenuMultiSelectItem";
@@ -408,11 +416,12 @@ const DropdownMenuLabel = forwardRef<
   ComponentRef<typeof DropdownMenuPrimitive.Label>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label>
 >(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Label
+  <LabelText
+    as={DropdownMenuPrimitive.Label}
     ref={ref}
     className={cn(
       "flex h-menu-label items-center px-sm",
-      "text-style-label text-text-secondary",
+      "text-text-secondary",
       className,
     )}
     {...props}

@@ -18,9 +18,10 @@
  * ## constraints
  * - Do not mount this inside DropdownMenuContent by default — consumers opt
  *   in; a menu that never asked for search would grow one.
- * - Keep typography on the input via `text-style-button`; do not introduce bare
- *   labeled HTML text nodes for the placeholder (placeholder attr is fine) —
- *   a bare text node escapes the text-style system.
+ * - Keep typography on the input itself: it renders as ButtonText (`as`
+ *   "input"). Do not introduce bare labeled HTML text nodes for the
+ *   placeholder (placeholder attr is fine) — a bare text node escapes the
+ *   Text components.
  */
 "use client";
 
@@ -30,6 +31,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { cn } from "../../utils/cn";
+import { ButtonText } from "../Text";
 import { HotkeyIndicator } from "../HotkeyIndicator/HotkeyIndicator";
 import { HotkeyIndicatorVariant } from "../HotkeyIndicator/constants";
 import { SearchIcon, IconSize } from "../Icons";
@@ -81,13 +83,14 @@ const DropdownMenuSearch = forwardRef<HTMLInputElement, DropdownMenuSearchProps>
           className="shrink-0 text-text-tertiary"
           aria-hidden
         />
-        <input
+        <ButtonText
+          as="input"
           ref={ref}
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
           className={cn(
             "min-w-0 flex-1 bg-transparent outline-none",
-            "text-style-button text-text placeholder:text-text-tertiary",
+            "text-text placeholder:text-text-tertiary",
           )}
           {...props}
         />

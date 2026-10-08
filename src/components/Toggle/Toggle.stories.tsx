@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ToggleSwitch, ToggleSwitchItem } from './Toggle';
 import { ToggleSize, ToggleVariant } from './constants';
 import { CheckIcon, CloseCancelIcon } from '../Icons';
+import { BodyText } from '../Text';
 
 const meta = {
   title: 'Inputs/ToggleSwitch',
@@ -83,7 +84,7 @@ export const Controlled: Story = {
           <ToggleSwitchItem value="14" data-testid="ctl-14">14 Days</ToggleSwitchItem>
           <ToggleSwitchItem value="7" data-testid="ctl-7">7 Days</ToggleSwitchItem>
         </ToggleSwitch>
-        <span data-testid="ctl-value">value: {JSON.stringify(range)}</span>
+        <BodyText data-testid="ctl-value">value: {JSON.stringify(range)}</BodyText>
       </div>
     );
   },

@@ -15,6 +15,7 @@
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../utils/cn";
+import { BodyText } from "../Text";
 import { CopyButton } from "../CopyButton";
 import { CopyButtonVariant } from "../CopyButton/constants";
 
@@ -32,10 +33,11 @@ export interface AITurnSummaryProps
 
 const AITurnSummary = forwardRef<HTMLDivElement, AITurnSummaryProps>(
   ({ label, meta, copyValue, copyLabel, className, ...props }, ref) => (
-    <div
+    <BodyText
+      as="div"
       ref={ref}
       className={cn(
-        "ds-chat-reveal-root flex h-button-sm w-full min-w-0 select-none items-center gap-rg px-sm text-style-body",
+        "ds-chat-reveal-root flex h-button-sm w-full min-w-0 select-none items-center gap-rg px-sm",
         className,
       )}
       {...props}
@@ -56,7 +58,7 @@ const AITurnSummary = forwardRef<HTMLDivElement, AITurnSummaryProps>(
           className="ds-chat-reveal shrink-0"
         />
       ) : null}
-    </div>
+    </BodyText>
   ),
 );
 AITurnSummary.displayName = "AITurnSummary";

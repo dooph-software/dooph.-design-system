@@ -83,6 +83,8 @@ the docs should read, what they should hold, or a principle the code follows.
 
 ## Rule text to carry into the new skills (decided 2026-10-02)
 
+- **Text is always set by a Text component** (maintainer, stated from the start and restated 2026-10-07). Use `ButtonText` / `BodyText` / `LabelText` / … or `BaseText` with props. A root that owns its text renders through one with `as` (`<ButtonText as={Comp}>`, `<BodyText as={DropdownMenuPrimitive.Item}>`, `<ButtonText as="input">`). Typography is set once, on that element; descendants inherit it. Never put a `text-style-*` class outside the Text components, never use font/size/tracking/leading utilities, and never use inline font styles. The failure it prevents: typography that bypasses the props tier and the role system, and that agents copy into new code. The OLD contribution skill told agents the opposite ("Typography uses text-style-* composite utility classes"). That line must not survive.
+
 - **Discrete-option prop names.** `variant` and `size` are the defaults. Also
   sanctioned: `shape`, `side`, `selectType`, `mode`, `direction`,
   `sortDirection`, `state`. Each names a mode or direction orthogonal to the

@@ -1,5 +1,6 @@
 import { forwardRef, type HTMLAttributes } from 'react';
 import { cn } from '../../utils/cn';
+import { LabelText } from '../Text';
 import { HotkeyIndicatorVariant } from './constants';
 
 export interface HotkeyIndicatorProps extends HTMLAttributes<HTMLSpanElement> {
@@ -28,12 +29,12 @@ const HotkeyIndicator = forwardRef<HTMLSpanElement, HotkeyIndicatorProps>(
         {...props}
       >
         {keys.map((key, i) => (
-          <kbd
+          <LabelText
+            as="kbd"
             key={i}
             className={cn(
               'inline-flex items-center justify-center',
               'rounded-tight border',
-              'text-style-label',
               'ds-motion-state',
               'ds-px-ui-sm ds-py-ui-xxs',
               keys.length === 1 && 'ds-min-size-kbd',
@@ -48,7 +49,7 @@ const HotkeyIndicator = forwardRef<HTMLSpanElement, HotkeyIndicatorProps>(
             )}
           >
             {key}
-          </kbd>
+          </LabelText>
         ))}
       </span>
     );

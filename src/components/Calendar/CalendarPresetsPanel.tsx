@@ -58,7 +58,8 @@ const CalendarPresetItem = forwardRef<HTMLButtonElement, CalendarPresetItemProps
       isSameDay(value.to, presetRange.to);
 
     return (
-      <button
+      <BodyText
+        as="button"
         ref={ref}
         type="button"
         data-active={isActive ? "" : undefined}
@@ -80,8 +81,8 @@ const CalendarPresetItem = forwardRef<HTMLButtonElement, CalendarPresetItemProps
         )}
         {...props}
       >
-        <BodyText>{preset.label}</BodyText>
-      </button>
+        {preset.label}
+      </BodyText>
     );
   },
 );

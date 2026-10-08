@@ -4760,3 +4760,65 @@ scoreboard: motion 0, "use client" 27, timers 5.
 - breaking: no
 - verified: `npm run lint` exits 0; sync-tokens ok; expression-check passes.
 - docs owed: token-contract / theming docs say that reduced motion always wins.
+
+
+### 11 — CTAButton hover tilt removed (maintainer decision, 2026-10-07)
+- **files:** `src/components/CTAButton/CTAButton.tsx` (header, JSDoc, and the class on the shape wrapper), `src/styles/dooph-component-tokens.css` (`.ds-cta-shape-tilt` deleted).
+- **what changed:** this fully reverses entry 10-B. The header constraint is back to its 2026-10-03 wording: "chosen by `size`, never by a prop and never animated". The hover is label-only again. **Contract change: per AGENTS.md, commit it on its own.** Because 10-B was never committed, the net change against HEAD is just that wording, unchanged.
+- **consumer impact:** none against HEAD.
+- **breaking:** no.
+- **docs owed:** delete 10-B's CHANGELOG line ("the end shape tilts…") and don't carry it over.
+
+### 12 — Text is always set by a Text component (maintainer rule, 2026-10-07)
+- **Rule:** text is set only by a Text component (`ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `MonoText`, … or `BaseText` with props). A root that owns its text renders through one with `as`. Typography is set once, on that element, and descendants inherit it. No `text-style-*` class appears outside `src/components/Text/`, and no typography utility or inline font style appears anywhere.
+- **Measured:** two new scoreboard lines, "Text styled without a Text component". They count components and stories, with comments stripped.
+
+  | | `text-style-*` classes | font utilities / inline font styles |
+  |---|---|---|
+  | audited commit b436647 | 76 | 11 |
+  | after the cleanup (round 4) | 42 | 12 |
+  | now | **0** | **0** |
+
+  The cleanup lowered the class count only incidentally, through story sweeps. It also ADDED new violations in new code: the FancyToggle label span, Button's medium/big `text-style-hero-button`, an Input story readout, a CodeDigitInput class, and an AnimatedText story.
+- **files:**
+  - **Controls (root `as`):** Button, SplitButton (both parts), Toast (Action / Close / Dismiss), ToggleSwitchItem, TabsTrigger, OutlineButton (inner surface), DropdownTrigger / TextDropdownTrigger (label role at `sm`), every DropdownMenu item (SubTrigger, Item, RadioSelectItem, MultiSelectItem, PlainItem), DropdownMenuLabel (LabelText), CalendarPresetsPanel preset button.
+  - **Fields (`as="input"` / `"textarea"`):** Input (all three fields, plus the sizing mirror on the field's role), SearchBox, DropdownMenuSearch, TypeableDropdownTrigger, AIPromptInputTextarea, CodeDigitInput.
+  - **Text-bearing roots:** TextLink (BodyText `as` the anchor or Slot), Sticker (ButtonText `as="div"`), HotkeyIndicator key caps (LabelText `as="kbd"`), dialog title and description (HeadingText / BodyText `as` the Radix part, so Modal and Sheet), AITextPart, UserMessageHeader, AIToolPart, AITurnSummary (BodyText `as="div"`).
+  - **Leaf spans and divs:** AIThinkingPart (meta, label, both transcripts, and the shimmer label via `BodyText as={ShimmerText}`), ChatDivider, AIModelSelect detail.
+  - **Simple Tooltip:** its label is a BodyText inside the panel.
+  - **Recipes now hold no typography:** `buttonVariants`, `toggleOptionVariants` (= `tabTriggerVariants`), and `menuItemClassName`.
+  - **Stories:** Tabs content, the Input raw readout (MonoText), Icons labels (LabelText; was inline 12px), the Toggle and FancyToggle value readouts (BodyText), and the AnimatedText captions (`tracking-wide` → `letterSpacing="0.025em"`).
+- **Contract changes (commit separately, per AGENTS.md):**
+  - Button: new behaviour line; new constraint "typography only from the Text component"; the cn-registration constraint reworded.
+  - toggleOption: new constraint "never a text-style class in this recipe".
+  - DropdownMenuSearch: the constraint "keep typography on the input via `text-style-button`" now reads "it renders as ButtonText".
+  - fancyToggleOption: the label constraint is reworded, because the span no longer exists.
+  - CodeDigitInput: behaviour line.
+- **consumer impact / breaking: yes — v6.**
+  - `buttonVariants()` and `tabTriggerVariants()` no longer carry typography. A consumer who applied either to their own element (for example a router Link) gets no button text role.
+  - Fix: `<ButtonText as={Link} className={buttonVariants({ … })}>`, using `HeroButtonText` for `size` medium/big. Even simpler, `<Button asChild><Link/></Button>`, which needs no change.
+  - The component renders themselves are unchanged (see verified).
+- **Visible changes, all small:**
+  - CodeDigitInput's transparent input glyph now uses the body family, matching the visible glyph.
+  - The preset button lost its redundant inner span.
+  - The story readouts now use the DS faces instead of the page default.
+- **verified:**
+  - `npm run lint` exit 0. Scoreboard m11 0 and m12 0; nothing else moved; expression-check PASS.
+  - Snapshot of all 372 stories before and after, with typography now captured (font family, size, weight, line height, letter spacing, variation settings, numeric variant). Only the expected changes differ:
+    - Icons, Toggle and FancyToggle story readouts are now on the DS faces;
+    - the CodeDigitInput transparent glyph is now on the body family;
+    - the Calendar presets lost 7 redundant inner spans;
+    - the Tabs stories gained the BodyText inside the content.
+  - Two snapshot glitches were rechecked one by one: the typeable-triggers story (identical, 57 of 57 elements) and the streaming text story (a timed demo).
+  - Every other story is identical across all 27 properties: Button, SplitButton, Toggle, Tabs, menus, triggers, inputs, Sticker, hotkeys, chat parts.
+  - Overlays checked live, open: the simple Tooltip label is a BodyText span (14px Google Sans Flex) and the panel geometry is unchanged. The dialog title (heading role) and description (body role) and the toast buttons (button role) carry the role class on the same element as before.
+  - Patch: `_work/patches/11-text-components.patch`. It is based on round 4's tree, which equals the maintainer's commit 97a057c. It includes the maintainer's own FancyToggleSwitch label edit.
+- **docs owed:**
+  - The contribution skill's checklist line "Typography uses `text-style-*` composite utility classes" is the OPPOSITE of the rule. Replace it with the rule above.
+  - The codebase skill's "Components apply these directly" goes too.
+  - The `buttonVariants` / `tabTriggerVariants` break goes in the v6 migration skill.
+  - CHANGELOG Changed: "Text is always rendered through the Text components; the public class recipes no longer include typography."
+
+### 13 — FancyToggle label at the button role, 14px (maintainer decision, 2026-10-07)
+- The maintainer's own edit swapped the label from `text-style-hero-button` (16px) to `BaseText variant={TextVariant.button}` (14px). They confirmed it's intentional: the fancy toggle label is the 14px button role.
+- **docs owed:** any skill or story text saying the fancy toggle label is 16px or hero-button.

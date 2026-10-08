@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Input } from './Input';
 import { InputVariant } from './constants';
 import { TagIcon, UserIcon } from '../Icons';
+import { MonoText } from '../Text';
 
 const meta = {
   title: 'Inputs/Input',
@@ -124,7 +125,7 @@ function FormattedNumbers() {
         onValueChange={setRaw}
         data-testid="f-currency"
       />
-      <div className="text-style-mono">raw: {raw}</div>
+      <MonoText as="div">raw: {raw}</MonoText>
     </div>
   );
 }

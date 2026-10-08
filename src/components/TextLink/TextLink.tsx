@@ -1,6 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
 import { forwardRef, type AnchorHTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
+import { BodyText } from "../Text";
 
 export interface TextLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   asChild?: boolean;
@@ -15,10 +16,11 @@ const TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(
   ({ className, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "a";
     return (
-      <Comp
+      <BodyText
+        as={Comp}
         ref={ref}
         className={cn(
-          "text-style-body text-ghost-fg cursor-pointer",
+          "text-ghost-fg cursor-pointer",
           "ds-motion-state",
           "hover:text-ghost-fg-active active:text-ghost-fg-active",
           "ds-focus-visible-ring rounded-tight",

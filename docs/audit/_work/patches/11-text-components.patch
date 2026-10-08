@@ -1,0 +1,1495 @@
+diff --git a/src/components/AIChat/AIModelSelect.tsx b/src/components/AIChat/AIModelSelect.tsx
+index e7f89eb..95acdb7 100644
+--- a/src/components/AIChat/AIModelSelect.tsx
++++ b/src/components/AIChat/AIModelSelect.tsx
+@@ -72,9 +72,9 @@ const AIModelSelectTrigger = forwardRef<
+     {/* Keeps the model name on one line in the primary text tone; the detail span below uses the ghost tone. */}
+     <span className="whitespace-nowrap text-text">{children}</span>
+     {detail != null && detail !== false ? (
+-      <span className="whitespace-nowrap text-style-body text-ghost-fg">
++      <BodyText className="whitespace-nowrap text-ghost-fg">
+         {detail}
+-      </span>
++      </BodyText>
+     ) : null}
+     <DropdownIcon size={IconSize.rg} aria-hidden className="rotate-180" />
+   </Button>
+diff --git a/src/components/AIChat/AIPromptInput.tsx b/src/components/AIChat/AIPromptInput.tsx
+index 92c9514..897efd4 100644
+--- a/src/components/AIChat/AIPromptInput.tsx
++++ b/src/components/AIChat/AIPromptInput.tsx
+@@ -46,6 +46,7 @@ import {
+   type TextareaHTMLAttributes,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { BodyText } from "../Text";
+ import { useComposedRefs } from "../../utils/composeRefs";
+ import { Button } from "../Button";
+ import { ButtonSize, ButtonVariant } from "../Button/constants";
+@@ -197,7 +198,8 @@ const AIPromptInputTextarea = forwardRef<
+   }, [value, textareaRef]);
+ 
+   return (
+-    <textarea
++    <BodyText
++      as="textarea"
+       ref={composedRef}
+       rows={rows}
+       value={value}
+@@ -220,7 +222,7 @@ const AIPromptInputTextarea = forwardRef<
+       }}
+       className={cn(
+         "ds-chat-prompt-textarea w-full min-w-0 shrink-0 resize-none overflow-y-auto bg-transparent outline-none",
+-        "text-style-body text-text placeholder:text-text-tertiary",
++        "text-text placeholder:text-text-tertiary",
+         "ds-disabled-state",
+         className,
+       )}
+diff --git a/src/components/AIChat/AITextPart.tsx b/src/components/AIChat/AITextPart.tsx
+index 0e6209b..a4e5366 100644
+--- a/src/components/AIChat/AITextPart.tsx
++++ b/src/components/AIChat/AITextPart.tsx
+@@ -21,6 +21,7 @@
+  */
+ import { forwardRef, type HTMLAttributes } from "react";
+ import { cn } from "../../utils/cn";
++import { BodyText } from "../Text";
+ 
+ export interface AITextPartProps extends HTMLAttributes<HTMLDivElement> {
+   /** Animate blocks in as they arrive. True only while this part streams. */
+@@ -29,11 +30,12 @@ export interface AITextPartProps extends HTMLAttributes<HTMLDivElement> {
+ 
+ const AITextPart = forwardRef<HTMLDivElement, AITextPartProps>(
+   ({ className, streamingAnimation = false, ...props }, ref) => (
+-    <div
++    <BodyText
++      as="div"
+       ref={ref}
+       data-streaming-animation={streamingAnimation || undefined}
+       className={cn(
+-        "ds-chat-prose w-full min-w-0 px-sm text-style-body text-text wrap-break-word",
++        "ds-chat-prose w-full min-w-0 px-sm text-text wrap-break-word",
+         className,
+       )}
+       {...props}
+diff --git a/src/components/AIChat/AIThinkingPart.tsx b/src/components/AIChat/AIThinkingPart.tsx
+index f5befad..806302b 100644
+--- a/src/components/AIChat/AIThinkingPart.tsx
++++ b/src/components/AIChat/AIThinkingPart.tsx
+@@ -39,6 +39,7 @@ import {
+   type ReactNode,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { BodyText } from "../Text";
+ import { ShimmerText } from "../AnimatedText";
+ import { Button } from "../Button";
+ import { ButtonVariant } from "../Button/constants";
+@@ -96,9 +97,9 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+     const hasMeta = meta != null && meta !== false;
+ 
+     const metaNode = hasMeta ? (
+-      <span className="min-w-0 truncate whitespace-nowrap text-style-body text-text-secondary">
++      <BodyText className="min-w-0 truncate whitespace-nowrap text-text-secondary">
+         {meta}
+-      </span>
++      </BodyText>
+     ) : null;
+ 
+     if (isThinking) {
+@@ -114,32 +115,36 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+           {...props}
+         >
+           <div className="flex min-w-0 select-none items-center gap-rg">
+-            <ShimmerText className="ds-chat-thinking-shimmer shrink-0 whitespace-nowrap text-style-body">
++            <BodyText
++              as={ShimmerText}
++              className="ds-chat-thinking-shimmer shrink-0 whitespace-nowrap"
++            >
+               {label}
+-            </ShimmerText>
++            </BodyText>
+             {metaNode}
+           </div>
+           {hasTranscript ? (
+-            <div
++            <BodyText
++              as="div"
+               data-streaming-animation={streamingAnimation || undefined}
+-              className="ds-chat-prose min-w-0 pl-sm text-style-body text-text-tertiary wrap-break-word"
++              className="ds-chat-prose min-w-0 pl-sm text-text-tertiary wrap-break-word"
+             >
+               {children}
+-            </div>
++            </BodyText>
+           ) : null}
+         </div>
+       );
+     }
+ 
+     const labelNode = (
+-      <span
++      <BodyText
+         className={cn(
+-          "shrink-0 whitespace-nowrap text-style-body text-text-secondary",
++          "shrink-0 whitespace-nowrap text-text-secondary",
+           hasTranscript && "ds-chat-lift",
+         )}
+       >
+         {label}
+-      </span>
++      </BodyText>
+     );
+ 
+     if (!hasTranscript) {
+@@ -200,9 +205,12 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
+           <div>
+             {/* px-sm matches the row's own inset; pl-sm indents the transcript
+                 under the label, as the live variant does. */}
+-            <div className="ds-chat-prose mx-sm min-w-0 pb-xxs pl-sm pt-rg text-style-body text-text-secondary wrap-break-word">
++            <BodyText
++              as="div"
++              className="ds-chat-prose mx-sm min-w-0 pb-xxs pl-sm pt-rg text-text-secondary wrap-break-word"
++            >
+               {children}
+-            </div>
++            </BodyText>
+           </div>
+         </div>
+       </div>
+diff --git a/src/components/AIChat/AIToolPart.tsx b/src/components/AIChat/AIToolPart.tsx
+index af4fce7..38f35fc 100644
+--- a/src/components/AIChat/AIToolPart.tsx
++++ b/src/components/AIChat/AIToolPart.tsx
+@@ -24,6 +24,7 @@
+  */
+ import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+ import { cn } from "../../utils/cn";
++import { BodyText } from "../Text";
+ import { ShimmerText } from "../AnimatedText";
+ import { AIToolPartState, AIToolPartVariant } from "./constants";
+ 
+@@ -53,12 +54,13 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
+     const showMeta = !isSkill && meta != null && meta !== false;
+ 
+     return (
+-      <div
++      <BodyText
++        as="div"
+         ref={ref}
+         data-state={state}
+         data-variant={variant}
+         className={cn(
+-          "group/tool flex w-full min-w-0 select-none items-center gap-rg px-sm py-xxs text-style-body",
++          "group/tool flex w-full min-w-0 select-none items-center gap-rg px-sm py-xxs",
+           !isSkill && "ds-chat-reveal-root",
+           className,
+         )}
+@@ -89,7 +91,7 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
+             {meta}
+           </span>
+         ) : null}
+-      </div>
++      </BodyText>
+     );
+   },
+ );
+diff --git a/src/components/AIChat/AITurnSummary.tsx b/src/components/AIChat/AITurnSummary.tsx
+index a4b3b5c..ff22250 100644
+--- a/src/components/AIChat/AITurnSummary.tsx
++++ b/src/components/AIChat/AITurnSummary.tsx
+@@ -15,6 +15,7 @@
+  */
+ import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+ import { cn } from "../../utils/cn";
++import { BodyText } from "../Text";
+ import { CopyButton } from "../CopyButton";
+ import { CopyButtonVariant } from "../CopyButton/constants";
+ 
+@@ -32,10 +33,11 @@ export interface AITurnSummaryProps
+ 
+ const AITurnSummary = forwardRef<HTMLDivElement, AITurnSummaryProps>(
+   ({ label, meta, copyValue, copyLabel, className, ...props }, ref) => (
+-    <div
++    <BodyText
++      as="div"
+       ref={ref}
+       className={cn(
+-        "ds-chat-reveal-root flex h-button-sm w-full min-w-0 select-none items-center gap-rg px-sm text-style-body",
++        "ds-chat-reveal-root flex h-button-sm w-full min-w-0 select-none items-center gap-rg px-sm",
+         className,
+       )}
+       {...props}
+@@ -56,7 +58,7 @@ const AITurnSummary = forwardRef<HTMLDivElement, AITurnSummaryProps>(
+           className="ds-chat-reveal shrink-0"
+         />
+       ) : null}
+-    </div>
++    </BodyText>
+   ),
+ );
+ AITurnSummary.displayName = "AITurnSummary";
+diff --git a/src/components/AIChat/ChatDivider.tsx b/src/components/AIChat/ChatDivider.tsx
+index fb48b77..5e7f415 100644
+--- a/src/components/AIChat/ChatDivider.tsx
++++ b/src/components/AIChat/ChatDivider.tsx
+@@ -8,6 +8,7 @@
+  */
+ import { forwardRef, type HTMLAttributes } from "react";
+ import { cn } from "../../utils/cn";
++import { BodyText } from "../Text";
+ import { WavyDivider, WavyDividerVariant } from "../WavyDivider";
+ 
+ export type ChatDividerProps = HTMLAttributes<HTMLDivElement>;
+@@ -31,9 +32,9 @@ const ChatDivider = forwardRef<HTMLDivElement, ChatDividerProps>(
+         {...props}
+       >
+         {rule}
+-        <span className="shrink-0 whitespace-nowrap text-style-body text-text-secondary">
++        <BodyText className="shrink-0 whitespace-nowrap text-text-secondary">
+           {children}
+-        </span>
++        </BodyText>
+         {rule}
+       </div>
+     );
+diff --git a/src/components/AIChat/UserMessageHeader.tsx b/src/components/AIChat/UserMessageHeader.tsx
+index 8dfba34..019046f 100644
+--- a/src/components/AIChat/UserMessageHeader.tsx
++++ b/src/components/AIChat/UserMessageHeader.tsx
+@@ -9,15 +9,17 @@
+  */
+ import { forwardRef, type HTMLAttributes } from "react";
+ import { cn } from "../../utils/cn";
++import { BodyText } from "../Text";
+ 
+ export type UserMessageHeaderProps = HTMLAttributes<HTMLDivElement>;
+ 
+ const UserMessageHeader = forwardRef<HTMLDivElement, UserMessageHeaderProps>(
+   ({ className, ...props }, ref) => (
+-    <div
++    <BodyText
++      as="div"
+       ref={ref}
+       className={cn(
+-        "w-full min-w-0 rounded-tight border border-solid border-border-primary bg-surface-primary p-md shadow-standard text-style-body text-text wrap-break-word",
++        "w-full min-w-0 rounded-tight border border-solid border-border-primary bg-surface-primary p-md shadow-standard text-text wrap-break-word",
+         className,
+       )}
+       {...props}
+diff --git a/src/components/AnimatedText/AnimatedText.stories.tsx b/src/components/AnimatedText/AnimatedText.stories.tsx
+index 4d8527e..3835367 100644
+--- a/src/components/AnimatedText/AnimatedText.stories.tsx
++++ b/src/components/AnimatedText/AnimatedText.stories.tsx
+@@ -272,7 +272,7 @@ export const RollChangeAutoCyclingStatus: Story = {
+ 
+     return (
+       <div className="flex flex-col items-start gap-1">
+-        <LabelText className="uppercase tracking-wide opacity-40">
++        <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
+           Job status
+         </LabelText>
+         <RollChangeText changeKey={statuses[index]}>
+@@ -305,7 +305,7 @@ export const RollChangeDirectionUpVsDown: Story = {
+     return (
+       <div className="flex gap-12">
+         <div className="flex flex-col items-start gap-1">
+-          <LabelText className="uppercase tracking-wide opacity-40">
++          <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
+             Down (default)
+           </LabelText>
+           <RollChangeText changeKey={n} direction={RollDirection.down}>
+@@ -313,7 +313,7 @@ export const RollChangeDirectionUpVsDown: Story = {
+           </RollChangeText>
+         </div>
+         <div className="flex flex-col items-start gap-1">
+-          <LabelText className="uppercase tracking-wide opacity-40">
++          <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
+             Up
+           </LabelText>
+           <RollChangeText changeKey={n} direction={RollDirection.up}>
+@@ -347,7 +347,7 @@ export const RollChangeChangeKeyWithComplexChildren: Story = {
+ 
+     return (
+       <div className="flex flex-col items-start gap-1">
+-        <LabelText className="uppercase tracking-wide opacity-40">
++        <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
+           Selected model
+         </LabelText>
+         <RollChangeText changeKey={model.id}>
+@@ -379,7 +379,7 @@ export const FadeChangeAutoCyclingStatus: Story = {
+ 
+     return (
+       <div className="flex flex-col items-start gap-1">
+-        <LabelText className="uppercase tracking-wide opacity-40">
++        <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
+           Job status
+         </LabelText>
+         <FadeChangeText changeKey={statuses[index]} data-testid="fade-status">
+@@ -405,7 +405,7 @@ export const FadeChangeDirectionUp: Story = {
+ 
+     return (
+       <div className="flex flex-col items-start gap-1">
+-        <LabelText className="uppercase tracking-wide opacity-40">
++        <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
+           Job status
+         </LabelText>
+         <FadeChangeText
+@@ -445,7 +445,7 @@ export const FadeChangeVersusRoll: Story = {
+     return (
+       <div className="flex gap-12">
+         <div className="flex flex-col items-start gap-1">
+-          <LabelText className="uppercase tracking-wide opacity-40">
++          <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
+             FadeChangeText
+           </LabelText>
+           <FadeChangeText changeKey={model.id}>
+@@ -453,7 +453,7 @@ export const FadeChangeVersusRoll: Story = {
+           </FadeChangeText>
+         </div>
+         <div className="flex flex-col items-start gap-1">
+-          <LabelText className="uppercase tracking-wide opacity-40">
++          <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
+             RollChangeText
+           </LabelText>
+           <RollChangeText changeKey={model.id}>
+@@ -675,7 +675,7 @@ export const RevealChangeBreadcrumbWithRollChangeText: Story = {
+ 
+     return (
+       <div className="flex flex-col items-center gap-3">
+-        <LabelText className="tracking-wide uppercase opacity-40">
++        <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
+           Dashboard top bar
+         </LabelText>
+         <div className="flex w-96 flex-row items-center justify-center">
+diff --git a/src/components/Button/Button.tsx b/src/components/Button/Button.tsx
+index 09ab8b0..5cb0a50 100644
+--- a/src/components/Button/Button.tsx
++++ b/src/components/Button/Button.tsx
+@@ -11,6 +11,9 @@
+  *   off-scale padding tokens (`ds-px-button-medium` / `-big`) and the hero
+  *   button text role (16px). Every other size is `rounded-tight` with the
+  *   14px button role. Per-variant shadows are the same at every labelled size.
++ * - The root renders through `BaseText` (`as` = the button or Slot) with the
++ *   size's text role from `buttonTextVariant`. `buttonVariants` holds no
++ *   typography: colour, border, size and shape only.
+  *
+  * ## constraints
+  * - The pill sizes exist for `prominent`, `primary` and `secondary` only, and
+@@ -23,9 +26,15 @@
+  *   (./constants), never from cva's `VariantProps`: that admits `null`, which
+  *   cva reads as "no variant", so `variant={null}` would compile and render a
+  *   colourless, unsized button.
++ * - Typography comes only from the Text component the root renders through,
++ *   never from a `text-style-*` class in `buttonVariants` (maintainer rule:
++ *   text is always set by a Text component). Anything built on
++ *   `buttonVariants` (SplitButton, Toast) renders through `BaseText` too, or
++ *   its label loses the button role (ButtonText `as` the part).
+  * - `text-style-hero-button` must stay registered in `cn`'s `text-style`
+- *   group (src/utils/cn.ts). Unregistered, twMerge reads it as a text COLOUR
+- *   and drops the variant's `text-*-fg`, so medium/big labels lose their colour.
++ *   group (src/utils/cn.ts). BaseText merges the role class with this
++ *   recipe's `text-*-fg` in one cn() call; unregistered, twMerge reads the
++ *   role as a text COLOUR and drops one of them.
+  * - The `danger` variant paints the `--ui-color-danger-*` STATE family
+  *   (bg-danger / border-danger-border / text-danger-fg / ...), not the raw
+  *   `--ui-color-danger-primary`/`-secondary` palette. Those two are still the
+@@ -50,7 +59,8 @@ import {
+   type ReactElement,
+ } from "react";
+ import { cn } from "../../utils/cn";
+-import type { ButtonSize, ButtonVariant } from "./constants";
++import { BaseText, TextVariant } from "../Text";
++import { ButtonSize, type ButtonVariant } from "./constants";
+ 
+ const buttonVariants = cva(
+   [
+@@ -59,7 +69,6 @@ const buttonVariants = cva(
+     "ds-motion-state cursor-pointer select-none",
+     "ds-focus-visible-ring",
+     "ds-disabled-state",
+-    "text-style-button",
+   ],
+   {
+     variants: {
+@@ -103,9 +112,8 @@ const buttonVariants = cva(
+       // `rounded-tight` and `rounded-full` as one group, so a base radius would
+       // survive next to the pill one and win or lose on stylesheet order.
+       size: {
+-        big: "h-button-big ds-px-button-big rounded-full text-style-hero-button",
+-        medium:
+-          "h-button-medium ds-px-button-medium rounded-full text-style-hero-button",
++        big: "h-button-big ds-px-button-big rounded-full",
++        medium: "h-button-medium ds-px-button-medium rounded-full",
+         standard: "h-button px-md rounded-tight",
+         sm: "h-button-sm px-md rounded-tight",
+         icon: "size-button p-0 rounded-tight",
+@@ -128,6 +136,13 @@ const buttonVariants = cva(
+   },
+ );
+ 
++/** The text role a Button size renders with: the pill sizes take the hero-scale
++ * button role (16px), every other size the button role (14px). */
++const buttonTextVariant = (size?: ButtonSize): TextVariant =>
++  size === ButtonSize.big || size === ButtonSize.medium
++    ? TextVariant.heroButton
++    : TextVariant.button;
++
+ // ButtonVariant / ButtonSize (+ their types) live in ./constants — kept server-safe
+ // (no "use client") so RSC code can read the enum values. Re-exported via index.ts.
+ 
+@@ -172,8 +187,10 @@ const ButtonBase = forwardRef<HTMLElement, ButtonProps<"button">>(
+   ({ className, variant, size, asChild = false, ...props }, ref) => {
+     const Comp = (asChild ? Slot : "button") as ElementType;
+     return (
+-      <Comp
++      <BaseText
++        as={Comp}
+         ref={ref as ForwardedRef<HTMLElement>}
++        variant={buttonTextVariant(size)}
+         className={cn(buttonVariants({ variant, size }), className)}
+         {...props}
+       />
+diff --git a/src/components/CTAButton/CTAButton.tsx b/src/components/CTAButton/CTAButton.tsx
+index d4df82d..015f3d3 100644
+--- a/src/components/CTAButton/CTAButton.tsx
++++ b/src/components/CTAButton/CTAButton.tsx
+@@ -3,10 +3,8 @@
+  *
+  * ## behavior
+  * - The end mark is a FIXED shape per size: the eight-leaf clover at
+- *   `standard`, the puff at `big`. It never morphs. Hover rolls the label
+- *   (RollHoverText on the root `.group`) and, on hover and focus-visible,
+- *   tilts the shape by DropdownCaret's hover-nudge amount (13.5deg), on the
+- *   motion scale (`base`, `enter`) — CSS only, through `.ds-cta-shape-tilt`.
++ *   `standard`, the puff at `big`. It is static: hover only rolls the label
++ *   (RollHoverText on the root `.group`).
+  * - The shape is painted with the OPPOSITE button's background: a primary CTA
+  *   draws it in the secondary-button bg, a secondary CTA in the primary-button
+  *   bg. The icon on it takes that button's content colour.
+@@ -15,11 +13,9 @@
+  *   24 / 28px).
+  *
+  * ## constraints
+- * - The shape is chosen by `size`, never by a prop, and it never morphs. That
+- *   is the maintainer's decision (2026-10-03); a shape prop or a hover morph
+- *   is a design change, not a refactor. Its only motion is the hover tilt,
+- *   approved by the maintainer (2026-10-07): one named helper,
+- *   `.ds-cta-shape-tilt`, reusing the nudge token — no listeners, no state.
++ * - The shape is chosen by `size`, never by a prop and never animated. That is
++ *   the maintainer's decision (2026-10-03); a shape prop or a hover morph is a
++ *   design change, not a refactor.
+  * - The shapes are the `Shapes/` primitives, never re-drawn copies. Figma's
+  *   flattened end-mark SVGs are not the source of truth.
+  */
+@@ -129,9 +125,8 @@ type CTAButtonComponent = {
+ };
+ 
+ /**
+- * Padded-outline marketing CTA. The outline ring is primary-only; hover rolls
+- * the label (RollHoverText) and tilts the end shape (`.ds-cta-shape-tilt`), both
+- * keyed to the root `.group`. Radii stay fully round.
++ * Padded-outline marketing CTA. The outline ring is primary-only; hover response
++ * is label-only via RollHoverText on an ancestor `.group`. Radii stay fully round.
+  */
+ const CTAButtonBase = forwardRef<HTMLElement, CTAButtonProps>(
+   (
+@@ -178,7 +173,7 @@ const CTAButtonBase = forwardRef<HTMLElement, CTAButtonProps>(
+             <span
+               aria-hidden
+               className={cn(
+-                "ds-cta-shape-tilt absolute inset-0 flex items-center justify-center",
++                "absolute inset-0 flex items-center justify-center",
+                 paint.shape,
+               )}
+             >
+diff --git a/src/components/Calendar/CalendarPresetsPanel.tsx b/src/components/Calendar/CalendarPresetsPanel.tsx
+index 22099a1..0e21d22 100644
+--- a/src/components/Calendar/CalendarPresetsPanel.tsx
++++ b/src/components/Calendar/CalendarPresetsPanel.tsx
+@@ -58,7 +58,8 @@ const CalendarPresetItem = forwardRef<HTMLButtonElement, CalendarPresetItemProps
+       isSameDay(value.to, presetRange.to);
+ 
+     return (
+-      <button
++      <BodyText
++        as="button"
+         ref={ref}
+         type="button"
+         data-active={isActive ? "" : undefined}
+@@ -80,8 +81,8 @@ const CalendarPresetItem = forwardRef<HTMLButtonElement, CalendarPresetItemProps
+         )}
+         {...props}
+       >
+-        <BodyText>{preset.label}</BodyText>
+-      </button>
++        {preset.label}
++      </BodyText>
+     );
+   },
+ );
+diff --git a/src/components/DropdownTrigger/DropdownTrigger.tsx b/src/components/DropdownTrigger/DropdownTrigger.tsx
+index 42ca182..9cdaefd 100644
+--- a/src/components/DropdownTrigger/DropdownTrigger.tsx
++++ b/src/components/DropdownTrigger/DropdownTrigger.tsx
+@@ -12,6 +12,7 @@ import {
+   type Ref,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { BaseText, ButtonText, TextVariant } from "../Text";
+ import { useComposedRefs } from "../../utils/composeRefs";
+ import { DropdownCaret, DropdownCaretVariant } from "../DropdownCaret";
+ import { ChevronDownIcon, IconSize, SearchIcon } from "../Icons";
+@@ -54,14 +55,15 @@ const DropdownTriggerBase = forwardRef<
+ >(({ className, children, asChild = false, ...props }, ref) => {
+   const Comp = (asChild ? Slot : "button") as ElementType;
+   return (
+-    <Comp
++    <ButtonText
++      as={Comp}
+       ref={ref as ForwardedRef<HTMLElement>}
+       className={cn(
+         "inline-flex h-button items-center justify-center ds-gap-ui-sm",
+         "min-w-menu rounded-tight border border-solid border-border-primary",
+         "bg-secondary text-secondary-fg",
+         "ds-dropdown-caret-host ds-pl-ui-md",
+-        "text-style-button cursor-pointer select-none",
++        "cursor-pointer select-none",
+         "ds-motion-state",
+         "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-secondary",
+         "[&:not(:disabled):not([aria-disabled=true])]:active:bg-secondary-active",
+@@ -77,7 +79,7 @@ const DropdownTriggerBase = forwardRef<
+         {(child) => <span className="flex-1 text-left">{child}</span>}
+       </Slottable>
+       <DropdownCaret variant={DropdownCaretVariant.dropdown} />
+-    </Comp>
++    </ButtonText>
+   );
+ });
+ DropdownTriggerBase.displayName = "DropdownTrigger";
+@@ -238,7 +240,8 @@ const TypeableDropdownTrigger = forwardRef<
+         data-disabled={disabled ? "" : undefined}
+       >
+         <SearchIcon className={cn(disabled && "ds-opacity-disabled")} />
+-        <input
++        <ButtonText
++          as="input"
+           ref={setInputRef}
+           disabled={disabled}
+           placeholder={displayValue ?? placeholder}
+@@ -256,7 +259,7 @@ const TypeableDropdownTrigger = forwardRef<
+           minLength={minLength}
+           pattern={pattern}
+           className={cn(
+-            "h-full min-w-0 flex-1 bg-transparent text-left text-style-button text-text",
++            "h-full min-w-0 flex-1 bg-transparent text-left text-text",
+             "placeholder:text-text-tertiary outline-none",
+             displayValue !== undefined && "placeholder:text-text",
+             "ds-disabled-state",
+@@ -304,8 +307,12 @@ const TextDropdownTriggerBase = forwardRef<
+   ) => {
+     const Comp = (asChild ? Slot : "button") as ElementType;
+     return (
+-      <Comp
++      <BaseText
++        as={Comp}
+         ref={ref as ForwardedRef<HTMLElement>}
++        variant={
++          size === TextDropdownSize.sm ? TextVariant.label : TextVariant.button
++        }
+         className={cn(
+           "inline-flex items-center ds-gap-ui-sm",
+           "rounded-tight border border-transparent bg-transparent",
+@@ -313,9 +320,9 @@ const TextDropdownTriggerBase = forwardRef<
+           "ds-focus-visible-ring",
+           "ds-disabled-state",
+           size === TextDropdownSize.standard &&
+-            "h-text-trigger text-style-button text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
++            "h-text-trigger text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+           size === TextDropdownSize.sm &&
+-            "text-style-label text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
++            "text-ghost-fg [&:not(:disabled):not([aria-disabled=true])]:hover:text-ghost-fg-active",
+           className,
+         )}
+         {...props}
+@@ -328,7 +335,7 @@ const TextDropdownTriggerBase = forwardRef<
+             size === TextDropdownSize.sm ? IconSize.sm : IconSize.rg
+           }
+         />
+-      </Comp>
++      </BaseText>
+     );
+   },
+ );
+diff --git a/src/components/HotkeyIndicator/HotkeyIndicator.tsx b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+index bc2b7a1..0529316 100644
+--- a/src/components/HotkeyIndicator/HotkeyIndicator.tsx
++++ b/src/components/HotkeyIndicator/HotkeyIndicator.tsx
+@@ -1,5 +1,6 @@
+ import { forwardRef, type HTMLAttributes } from 'react';
+ import { cn } from '../../utils/cn';
++import { LabelText } from '../Text';
+ import { HotkeyIndicatorVariant } from './constants';
+ 
+ export interface HotkeyIndicatorProps extends HTMLAttributes<HTMLSpanElement> {
+@@ -28,12 +29,12 @@ const HotkeyIndicator = forwardRef<HTMLSpanElement, HotkeyIndicatorProps>(
+         {...props}
+       >
+         {keys.map((key, i) => (
+-          <kbd
++          <LabelText
++            as="kbd"
+             key={i}
+             className={cn(
+               'inline-flex items-center justify-center',
+               'rounded-tight border',
+-              'text-style-label',
+               'ds-motion-state',
+               'ds-px-ui-sm ds-py-ui-xxs',
+               keys.length === 1 && 'ds-min-size-kbd',
+@@ -48,7 +49,7 @@ const HotkeyIndicator = forwardRef<HTMLSpanElement, HotkeyIndicatorProps>(
+             )}
+           >
+             {key}
+-          </kbd>
++          </LabelText>
+         ))}
+       </span>
+     );
+diff --git a/src/components/Icons/Icons.stories.tsx b/src/components/Icons/Icons.stories.tsx
+index a72615e..73abd8e 100644
+--- a/src/components/Icons/Icons.stories.tsx
++++ b/src/components/Icons/Icons.stories.tsx
+@@ -177,7 +177,7 @@ export const Sizes: Story = {
+             }}
+           >
+             <SettingsBoltIcon size={size} />
+-            <span style={{ fontSize: 12 }}>{name}</span>
++            <LabelText>{name}</LabelText>
+           </div>
+         ),
+       )}
+diff --git a/src/components/Input/Input.stories.tsx b/src/components/Input/Input.stories.tsx
+index 70c17f8..afb0480 100644
+--- a/src/components/Input/Input.stories.tsx
++++ b/src/components/Input/Input.stories.tsx
+@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
+ import { Input } from './Input';
+ import { InputVariant } from './constants';
+ import { TagIcon, UserIcon } from '../Icons';
++import { MonoText } from '../Text';
+ 
+ const meta = {
+   title: 'Inputs/Input',
+@@ -124,7 +125,7 @@ function FormattedNumbers() {
+         onValueChange={setRaw}
+         data-testid="f-currency"
+       />
+-      <div className="text-style-mono">raw: {raw}</div>
++      <MonoText as="div">raw: {raw}</MonoText>
+     </div>
+   );
+ }
+diff --git a/src/components/Input/Input.tsx b/src/components/Input/Input.tsx
+index 7ed86cb..862f364 100644
+--- a/src/components/Input/Input.tsx
++++ b/src/components/Input/Input.tsx
+@@ -97,6 +97,7 @@ import {
+   type ReactElement,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { BaseText, ButtonText, TextVariant } from "../Text";
+ import { useComposedRefs } from "../../utils/composeRefs";
+ import { InputVariant } from "./constants";
+ 
+@@ -353,12 +354,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+ 
+     if (!isNumber && !hasIcon) {
+       return (
+-        <input
++        <ButtonText
++          as="input"
+           {...fieldProps}
+           className={cn(
+             "flex h-button w-full rounded-tight border border-solid border-border-primary bg-secondary",
+             "ds-pl-ui-md ds-pr-ui-rg",
+-            "text-style-button text-text placeholder:text-text-tertiary",
++            "text-text placeholder:text-text-tertiary",
+             "ds-motion-state ds-focus-ring-on-focus",
+             // `enabled:` keeps a disabled input from lifting; `not-focus:` keeps the
+             // focus border winning over the hover border, as the plain `hover:`
+@@ -374,10 +376,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+       );
+     }
+ 
+-    const fieldText = isNumber ? "text-style-mono" : "text-style-button";
++    const fieldRole = isNumber ? TextVariant.mono : TextVariant.button;
+     const innerInputClass = cn(
+       "min-w-0 bg-transparent outline-none",
+-      fieldText,
+       "text-text placeholder:text-text-tertiary ds-disabled-state",
+     );
+ 
+@@ -430,16 +431,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+         {hugs ? (
+           <span className="inline-grid min-w-0">
+             {/* Sizes the cell to the value — see the header. */}
+-            <span
++            <BaseText
+               aria-hidden
+-              className={cn(
+-                "invisible whitespace-pre [grid-area:1/1] pr-px",
+-                fieldText,
+-              )}
++              variant={fieldRole}
++              className="invisible whitespace-pre [grid-area:1/1] pr-px"
+             >
+               {mirrorText}
+-            </span>
+-            <input
++            </BaseText>
++            <BaseText
++              as="input"
++              variant={fieldRole}
+               {...fieldProps}
+               // w-0 + min-w-full: contributes nothing to the cell's size (its
+               // ~20ch intrinsic width would prop the cell open), then fills it.
+@@ -447,7 +448,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+             />
+           </span>
+         ) : (
+-          <input
++          <BaseText
++            as="input"
++            variant={fieldRole}
+             {...fieldProps}
+             className={cn("h-full flex-1", innerInputClass)}
+           />
+diff --git a/src/components/Menu/DropdownMenu.tsx b/src/components/Menu/DropdownMenu.tsx
+index b2e6abb..cfb6529 100644
+--- a/src/components/Menu/DropdownMenu.tsx
++++ b/src/components/Menu/DropdownMenu.tsx
+@@ -45,6 +45,7 @@ import {
+   type ReactNode,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { BodyText, LabelText } from "../Text";
+ import { Checkbox } from "../Checkbox/Checkbox";
+ import { CheckboxVariant } from "../Checkbox/constants";
+ import { CheckIcon } from "../Icons/CheckIcon";
+@@ -217,10 +218,12 @@ DropdownMenuContent.displayName = "DropdownMenuContent";
+  * Shared menu-item styling (Figma Menu Item). Exported so surfaces that cannot
+  * host a Radix `DropdownMenu.Item` — such as the calendar presets rail inside a
+  * Popover — render visually identical items. Carries NO width floor: the
+- * presets rail is 144px wide. Internal: not re-exported from src/index.ts.
++ * presets rail is 144px wide. Holds no typography: every item renders through
++ * BodyText (`as` the Radix part or element). Internal: not re-exported from
++ * src/index.ts.
+  */
+ export const menuItemClassName =
+-  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-rg rounded-tight px-sm ds-radix-data-disabled text-style-body text-ghost-fg-active outline-none ds-motion-state hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
++  "relative flex min-h-button w-full cursor-pointer select-none items-center gap-rg rounded-tight px-sm ds-radix-data-disabled text-ghost-fg-active outline-none ds-motion-state hover:bg-ghost-hover data-highlighted:bg-ghost-hover active:bg-ghost-active data-highlighted:active:bg-ghost-active data-disabled:hover:bg-transparent data-disabled:active:bg-transparent";
+ 
+ /** Dropdown items also hold the menu's 160px floor; sections and the panel hug them. */
+ const itemBase = cn(menuItemClassName, "ds-min-w-menu");
+@@ -230,7 +233,8 @@ const DropdownMenuSubTrigger = forwardRef<
+   ComponentRef<typeof DropdownMenuPrimitive.SubTrigger>,
+   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger>
+ >(({ className, children, ...props }, ref) => (
+-  <DropdownMenuPrimitive.SubTrigger
++  <BodyText
++    as={DropdownMenuPrimitive.SubTrigger}
+     ref={ref}
+     className={cn(itemBase, "data-[state=open]:bg-ghost-active", className)}
+     {...props}
+@@ -239,7 +243,7 @@ const DropdownMenuSubTrigger = forwardRef<
+     <span className="flex shrink-0" aria-hidden>
+       <ChevronRightIcon size={IconSize.rg} />
+     </span>
+-  </DropdownMenuPrimitive.SubTrigger>
++  </BodyText>
+ ));
+ DropdownMenuSubTrigger.displayName = "DropdownMenuSubTrigger";
+ 
+@@ -279,7 +283,8 @@ const DropdownMenuItem = forwardRef<
+   ComponentRef<typeof DropdownMenuPrimitive.Item>,
+   DropdownMenuItemProps
+ >(({ className, variant = DropdownMenuItemVariant.default, ...props }, ref) => (
+-  <DropdownMenuPrimitive.Item
++  <BodyText
++    as={DropdownMenuPrimitive.Item}
+     ref={ref}
+     className={cn(
+       itemBase,
+@@ -308,11 +313,12 @@ const DropdownMenuPlainItem = forwardRef<
+   HTMLDivElement,
+   HTMLAttributes<HTMLDivElement>
+ >(({ className, ...props }, ref) => (
+-  <div
++  <BodyText
++    as="div"
+     ref={ref}
+     className={cn(
+       "flex min-h-button w-full items-center gap-rg rounded-tight pl-sm ds-min-w-menu",
+-      "text-style-body text-ghost-fg-active",
++      "text-ghost-fg-active",
+       className,
+     )}
+     {...props}
+@@ -325,7 +331,8 @@ const DropdownMenuRadioSelectItem = forwardRef<
+   ComponentRef<typeof DropdownMenuPrimitive.RadioItem>,
+   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
+ >(({ className, children, ...props }, ref) => (
+-  <DropdownMenuPrimitive.RadioItem
++  <BodyText
++    as={DropdownMenuPrimitive.RadioItem}
+     ref={ref}
+     className={cn(
+       itemBase,
+@@ -343,7 +350,7 @@ const DropdownMenuRadioSelectItem = forwardRef<
+     <DropdownMenuPrimitive.ItemIndicator className="flex shrink-0">
+       <CheckIcon />
+     </DropdownMenuPrimitive.ItemIndicator>
+-  </DropdownMenuPrimitive.RadioItem>
++  </BodyText>
+ ));
+ DropdownMenuRadioSelectItem.displayName = "DropdownMenuRadioSelectItem";
+ 
+@@ -381,7 +388,8 @@ const DropdownMenuMultiSelectItem = forwardRef<
+   };
+ 
+   return (
+-    <DropdownMenuPrimitive.CheckboxItem
++    <BodyText
++      as={DropdownMenuPrimitive.CheckboxItem}
+       ref={ref}
+       checked={checked}
+       disabled={disabled}
+@@ -399,7 +407,7 @@ const DropdownMenuMultiSelectItem = forwardRef<
+       />
+       {/* flex-1 fills the row beside the leading checkbox, so the label takes the remaining width. */}
+       <span className="flex flex-1 items-center gap-rg">{children}</span>
+-    </DropdownMenuPrimitive.CheckboxItem>
++    </BodyText>
+   );
+ });
+ DropdownMenuMultiSelectItem.displayName = "DropdownMenuMultiSelectItem";
+@@ -408,11 +416,12 @@ const DropdownMenuLabel = forwardRef<
+   ComponentRef<typeof DropdownMenuPrimitive.Label>,
+   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label>
+ >(({ className, ...props }, ref) => (
+-  <DropdownMenuPrimitive.Label
++  <LabelText
++    as={DropdownMenuPrimitive.Label}
+     ref={ref}
+     className={cn(
+       "flex h-menu-label items-center px-sm",
+-      "text-style-label text-text-secondary",
++      "text-text-secondary",
+       className,
+     )}
+     {...props}
+diff --git a/src/components/Menu/DropdownMenuSearch.tsx b/src/components/Menu/DropdownMenuSearch.tsx
+index 1cf4bcd..8b3d621 100644
+--- a/src/components/Menu/DropdownMenuSearch.tsx
++++ b/src/components/Menu/DropdownMenuSearch.tsx
+@@ -18,9 +18,10 @@
+  * ## constraints
+  * - Do not mount this inside DropdownMenuContent by default — consumers opt
+  *   in; a menu that never asked for search would grow one.
+- * - Keep typography on the input via `text-style-button`; do not introduce bare
+- *   labeled HTML text nodes for the placeholder (placeholder attr is fine) —
+- *   a bare text node escapes the text-style system.
++ * - Keep typography on the input itself: it renders as ButtonText (`as`
++ *   "input"). Do not introduce bare labeled HTML text nodes for the
++ *   placeholder (placeholder attr is fine) — a bare text node escapes the
++ *   Text components.
+  */
+ "use client";
+ 
+@@ -30,6 +31,7 @@ import {
+   type KeyboardEvent,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { ButtonText } from "../Text";
+ import { HotkeyIndicator } from "../HotkeyIndicator/HotkeyIndicator";
+ import { HotkeyIndicatorVariant } from "../HotkeyIndicator/constants";
+ import { SearchIcon, IconSize } from "../Icons";
+@@ -81,13 +83,14 @@ const DropdownMenuSearch = forwardRef<HTMLInputElement, DropdownMenuSearchProps>
+           className="shrink-0 text-text-tertiary"
+           aria-hidden
+         />
+-        <input
++        <ButtonText
++          as="input"
+           ref={ref}
+           placeholder={placeholder}
+           onKeyDown={handleKeyDown}
+           className={cn(
+             "min-w-0 flex-1 bg-transparent outline-none",
+-            "text-style-button text-text placeholder:text-text-tertiary",
++            "text-text placeholder:text-text-tertiary",
+           )}
+           {...props}
+         />
+diff --git a/src/components/Modal/dialogShell.tsx b/src/components/Modal/dialogShell.tsx
+index 7e261b1..6ca7525 100644
+--- a/src/components/Modal/dialogShell.tsx
++++ b/src/components/Modal/dialogShell.tsx
+@@ -12,6 +12,7 @@ import {
+   type ReactNode,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { BodyText, HeadingText } from "../Text";
+ 
+ /** Backdrop base; the caller's className carries its open/close motion. */
+ export const DialogShellOverlay = forwardRef<
+@@ -30,9 +31,10 @@ export const DialogShellTitle = forwardRef<
+   ComponentRef<typeof DialogPrimitive.Title>,
+   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+ >(({ className, ...props }, ref) => (
+-  <DialogPrimitive.Title
++  <HeadingText
++    as={DialogPrimitive.Title}
+     ref={ref}
+-    className={cn("text-style-heading text-text", className)}
++    className={cn("text-text", className)}
+     {...props}
+   />
+ ));
+@@ -42,9 +44,10 @@ export const DialogShellDescription = forwardRef<
+   ComponentRef<typeof DialogPrimitive.Description>,
+   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+ >(({ className, ...props }, ref) => (
+-  <DialogPrimitive.Description
++  <BodyText
++    as={DialogPrimitive.Description}
+     ref={ref}
+-    className={cn("text-style-body text-text-secondary", className)}
++    className={cn("text-text-secondary", className)}
+     {...props}
+   />
+ ));
+diff --git a/src/components/OutlineButton/OutlineButton.tsx b/src/components/OutlineButton/OutlineButton.tsx
+index 0d89150..48ee253 100644
+--- a/src/components/OutlineButton/OutlineButton.tsx
++++ b/src/components/OutlineButton/OutlineButton.tsx
+@@ -12,6 +12,7 @@ import {
+   type ReactElement,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { ButtonText } from "../Text";
+ import { useComposedRefs } from "../../utils/composeRefs";
+ 
+ type OutlineButtonOwnProps = {
+@@ -151,14 +152,15 @@ const OutlineButtonBase = forwardRef<HTMLElement, OutlineButtonProps<"button">>(
+         )}
+       >
+         {/* Inner elevated button surface */}
+-        <Comp
++        <ButtonText
++          as={Comp}
+           ref={composedRef as ForwardedRef<HTMLElement>}
+           className={cn(
+             "group relative overflow-hidden",
+             "inline-flex items-center justify-center gap-sm",
+             "ds-size-outline-button px-md",
+             "border border-solid rounded-soft shadow-button",
+-            "text-style-button cursor-pointer select-none",
++            "cursor-pointer select-none",
+             "ds-motion-state",
+             "ds-focus-visible-ring",
+             "ds-disabled-state",
+@@ -274,7 +276,7 @@ const OutlineButtonBase = forwardRef<HTMLElement, OutlineButtonProps<"button">>(
+               </span>
+             )}
+           </Slottable>
+-        </Comp>
++        </ButtonText>
+       </div>
+     );
+   },
+diff --git a/src/components/SearchBox/SearchBox.tsx b/src/components/SearchBox/SearchBox.tsx
+index 0de7930..c65b0e0 100644
+--- a/src/components/SearchBox/SearchBox.tsx
++++ b/src/components/SearchBox/SearchBox.tsx
+@@ -1,5 +1,6 @@
+ import { forwardRef, type InputHTMLAttributes } from 'react';
+ import { cn } from '../../utils/cn';
++import { ButtonText } from '../Text';
+ import { HotkeyIndicator } from '../HotkeyIndicator/HotkeyIndicator';
+ import { IconSize, SearchIcon } from '../Icons';
+ 
+@@ -42,13 +43,14 @@ const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
+         <SearchIcon size={IconSize.md} className="shrink-0 text-text-tertiary" />
+ 
+         {/* Native input */}
+-        <input
++        <ButtonText
++          as="input"
+           ref={ref}
+           placeholder={placeholder}
+           disabled={disabled}
+           className={cn(
+             'flex-1 min-w-0 bg-transparent outline-none',
+-            'text-style-button text-text placeholder:text-text-tertiary',
++            'text-text placeholder:text-text-tertiary',
+           )}
+           {...props}
+         />
+diff --git a/src/components/SplitButton/SplitButton.tsx b/src/components/SplitButton/SplitButton.tsx
+index 68798e1..4b8d896 100644
+--- a/src/components/SplitButton/SplitButton.tsx
++++ b/src/components/SplitButton/SplitButton.tsx
+@@ -4,9 +4,11 @@ import { cn } from "../../utils/cn";
+ import { buttonVariants } from "../Button/Button";
+ import { ButtonSize, ButtonVariant } from "../Button/constants";
+ import { ChevronDownIcon } from "../Icons";
++import { ButtonText } from "../Text";
+ 
+ /* The split parts ARE secondary Buttons: paints, state guards, focus ring and
+- * disabled treatment come from buttonVariants. Only the split geometry is
++ * disabled treatment come from buttonVariants, and each part renders through
++ * ButtonText (the recipe holds no typography). Only the split geometry is
+  * local — one-sided radii, a single shared seam (the action drops its right
+  * border), and no per-part shadow (the group carries shadow-button). The
+  * one-sided `rounded-*-none` / `border-r-0` classes sit next to the recipe's
+@@ -26,7 +28,8 @@ export interface SplitButtonActionProps extends ButtonHTMLAttributes<HTMLButtonE
+ 
+ const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
+   ({ className, children, icon, ...props }, ref) => (
+-    <button
++    <ButtonText
++      as="button"
+       ref={ref}
+       className={cn(
+         buttonVariants({ variant: ButtonVariant.secondary, size: ButtonSize.standard }),
+@@ -39,7 +42,7 @@ const SplitButtonAction = forwardRef<HTMLButtonElement, SplitButtonActionProps>(
+     >
+       {icon && <span className="ds-size-icon-rg shrink-0">{icon}</span>}
+       {children}
+-    </button>
++    </ButtonText>
+   ),
+ );
+ SplitButtonAction.displayName = "SplitButtonAction";
+@@ -56,7 +59,8 @@ const SplitButtonTrigger = forwardRef<
+   HTMLButtonElement,
+   SplitButtonTriggerProps
+ >(({ className, "aria-label": ariaLabel, ...props }, ref) => (
+-  <button
++  <ButtonText
++    as="button"
+     ref={ref}
+     aria-label={ariaLabel ?? (props["aria-labelledby"] ? undefined : "More options")}
+     className={cn(
+@@ -68,7 +72,7 @@ const SplitButtonTrigger = forwardRef<
+     {...props}
+   >
+     <ChevronDownIcon />
+-  </button>
++  </ButtonText>
+ ));
+ SplitButtonTrigger.displayName = "SplitButtonTrigger";
+ 
+diff --git a/src/components/Sticker/Sticker.tsx b/src/components/Sticker/Sticker.tsx
+index 7d1eb90..b8be154 100644
+--- a/src/components/Sticker/Sticker.tsx
++++ b/src/components/Sticker/Sticker.tsx
+@@ -25,13 +25,14 @@
+ import { cva } from "class-variance-authority";
+ import { forwardRef, type HTMLAttributes } from "react";
+ import { cn } from "../../utils/cn";
++import { ButtonText } from "../Text";
+ import { resolveDsColor, type DsColor } from "../../utils/color";
+ import { StickerSize, StickerVariant } from "./constants";
+ 
+ const stickerVariants = cva(
+   [
+     "inline-flex w-fit items-center gap-sm overflow-clip",
+-    "px-rg text-style-button whitespace-nowrap",
++    "px-rg whitespace-nowrap",
+   ],
+   {
+     variants: {
+@@ -115,7 +116,8 @@ const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
+         : undefined;
+ 
+     return (
+-      <div
++      <ButtonText
++        as="div"
+         ref={ref}
+         className={cn(stickerVariants({ variant, size }), className)}
+         style={
+@@ -130,7 +132,7 @@ const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
+         {...props}
+       >
+         {children}
+-      </div>
++      </ButtonText>
+     );
+   },
+ );
+diff --git a/src/components/Tabs/Tabs.stories.tsx b/src/components/Tabs/Tabs.stories.tsx
+index 4d75dd9..56496c1 100644
+--- a/src/components/Tabs/Tabs.stories.tsx
++++ b/src/components/Tabs/Tabs.stories.tsx
+@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { Tabs, TabsContent, TabsList, TabsTrigger } from './Tabs';
+ import { TabSize, TabVariant } from './constants';
+ import { TableIcon, GraphIcon, InvoiceIcon } from '../Icons';
+-import { LabelText } from '../Text';
++import { BodyText, LabelText } from '../Text';
+ 
+ const meta = {
+   title: 'Navigation/Tabs',
+@@ -22,9 +22,9 @@ export const Ghost: Story = {
+         <TabsTrigger value="two" variant={TabVariant.ghost}>Second tab</TabsTrigger>
+         <TabsTrigger value="three" variant={TabVariant.ghost}>Third tab</TabsTrigger>
+       </TabsList>
+-      <TabsContent value="one" className="mt-4 text-style-body text-text">Content for first tab</TabsContent>
+-      <TabsContent value="two" className="mt-4 text-style-body text-text">Content for second tab</TabsContent>
+-      <TabsContent value="three" className="mt-4 text-style-body text-text">Content for third tab</TabsContent>
++      <TabsContent value="one" className="mt-lg"><BodyText className="text-text">Content for first tab</BodyText></TabsContent>
++      <TabsContent value="two" className="mt-lg"><BodyText className="text-text">Content for second tab</BodyText></TabsContent>
++      <TabsContent value="three" className="mt-lg"><BodyText className="text-text">Content for third tab</BodyText></TabsContent>
+     </Tabs>
+   ),
+ };
+@@ -37,9 +37,9 @@ export const Primary: Story = {
+         <TabsTrigger value="two" variant={TabVariant.primary}>Second tab</TabsTrigger>
+         <TabsTrigger value="three" variant={TabVariant.primary}>Third tab</TabsTrigger>
+       </TabsList>
+-      <TabsContent value="one" className="mt-4 text-style-body text-text">Content for first tab</TabsContent>
+-      <TabsContent value="two" className="mt-4 text-style-body text-text">Content for second tab</TabsContent>
+-      <TabsContent value="three" className="mt-4 text-style-body text-text">Content for third tab</TabsContent>
++      <TabsContent value="one" className="mt-lg"><BodyText className="text-text">Content for first tab</BodyText></TabsContent>
++      <TabsContent value="two" className="mt-lg"><BodyText className="text-text">Content for second tab</BodyText></TabsContent>
++      <TabsContent value="three" className="mt-lg"><BodyText className="text-text">Content for third tab</BodyText></TabsContent>
+     </Tabs>
+   ),
+ };
+diff --git a/src/components/Tabs/Tabs.tsx b/src/components/Tabs/Tabs.tsx
+index 2e83f41..bc9a7bf 100644
+--- a/src/components/Tabs/Tabs.tsx
++++ b/src/components/Tabs/Tabs.tsx
+@@ -5,6 +5,7 @@ import {
+   type ComponentRef,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { ButtonText } from "../Text";
+ import { toggleOptionVariants } from "../Toggle/toggleOption";
+ import type { TabSize, TabVariant } from "./constants";
+ 
+@@ -43,7 +44,8 @@ const TabsTrigger = forwardRef<
+   ComponentRef<typeof TabsPrimitive.Trigger>,
+   TabsTriggerProps
+ >(({ className, size, variant, ...props }, ref) => (
+-  <TabsPrimitive.Trigger
++  <ButtonText
++    as={TabsPrimitive.Trigger}
+     ref={ref}
+     className={cn(tabTriggerVariants({ size, variant }), className)}
+     {...props}
+diff --git a/src/components/Text/BaseText.tsx b/src/components/Text/BaseText.tsx
+index d6239a1..8296522 100644
+--- a/src/components/Text/BaseText.tsx
++++ b/src/components/Text/BaseText.tsx
+@@ -46,8 +46,10 @@ type BaseTextRenderProps = BaseTextOwnProps & { as?: ElementType } & Omit<
+   >;
+ 
+ /**
+- * BaseText — the typography primitive behind every role component and consumer
+- * text (DS controls such as Button apply `text-style-*` classes directly).
++ * BaseText — the typography primitive behind every role component, and the only
++ * way DS code sets text. A control whose root owns its text (Button, a menu
++ * item, an input) renders that root through a Text component with `as`; a
++ * `text-style-*` class never appears outside src/components/Text/.
+  *
+  * Three tiers decide the final typography, in this order:
+  *
+diff --git a/src/components/TextLink/TextLink.tsx b/src/components/TextLink/TextLink.tsx
+index bcdd01c..50187a9 100644
+--- a/src/components/TextLink/TextLink.tsx
++++ b/src/components/TextLink/TextLink.tsx
+@@ -1,6 +1,7 @@
+ import { Slot } from "@radix-ui/react-slot";
+ import { forwardRef, type AnchorHTMLAttributes } from "react";
+ import { cn } from "../../utils/cn";
++import { BodyText } from "../Text";
+ 
+ export interface TextLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+   asChild?: boolean;
+@@ -15,10 +16,11 @@ const TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(
+   ({ className, asChild = false, ...props }, ref) => {
+     const Comp = asChild ? Slot : "a";
+     return (
+-      <Comp
++      <BodyText
++        as={Comp}
+         ref={ref}
+         className={cn(
+-          "text-style-body text-ghost-fg cursor-pointer",
++          "text-ghost-fg cursor-pointer",
+           "ds-motion-state",
+           "hover:text-ghost-fg-active active:text-ghost-fg-active",
+           "ds-focus-visible-ring rounded-tight",
+diff --git a/src/components/Toast/Toast.tsx b/src/components/Toast/Toast.tsx
+index ca5a90e..836609a 100644
+--- a/src/components/Toast/Toast.tsx
++++ b/src/components/Toast/Toast.tsx
+@@ -151,8 +151,10 @@ const ToastAction = forwardRef<
+   ComponentRef<typeof ToastPrimitive.Action>,
+   ComponentPropsWithoutRef<typeof ToastPrimitive.Action>
+ >(({ className, ...props }, ref) => (
+-  <ToastPrimitive.Action
++  <BaseText
++    as={ToastPrimitive.Action}
+     ref={ref}
++    variant={TextVariant.button}
+     className={cn(
+       buttonVariants({
+         variant: ButtonVariant.primary,
+@@ -169,8 +171,10 @@ const ToastClose = forwardRef<
+   ComponentRef<typeof ToastPrimitive.Close>,
+   ComponentPropsWithoutRef<typeof ToastPrimitive.Close>
+ >(({ className, children, ...props }, ref) => (
+-  <ToastPrimitive.Close
++  <BaseText
++    as={ToastPrimitive.Close}
+     ref={ref}
++    variant={TextVariant.button}
+     className={cn(
+       buttonVariants({
+         variant: ButtonVariant.ghost,
+@@ -185,7 +189,7 @@ const ToastClose = forwardRef<
+     {...props}
+   >
+     {children ?? <CloseCancelIcon />}
+-  </ToastPrimitive.Close>
++  </BaseText>
+ ));
+ ToastClose.displayName = "ToastClose";
+ 
+@@ -193,8 +197,10 @@ const ToastDismiss = forwardRef<
+   ComponentRef<typeof ToastPrimitive.Close>,
+   ComponentPropsWithoutRef<typeof ToastPrimitive.Close>
+ >(({ className, ...props }, ref) => (
+-  <ToastPrimitive.Close
++  <BaseText
++    as={ToastPrimitive.Close}
+     ref={ref}
++    variant={TextVariant.button}
+     className={cn(
+       buttonVariants({
+         variant: ButtonVariant.ghost,
+diff --git a/src/components/Toggle/FancyToggleSwitch.stories.tsx b/src/components/Toggle/FancyToggleSwitch.stories.tsx
+index b7860e6..31b7cf8 100644
+--- a/src/components/Toggle/FancyToggleSwitch.stories.tsx
++++ b/src/components/Toggle/FancyToggleSwitch.stories.tsx
+@@ -1,6 +1,7 @@
+ import type { Meta, StoryObj } from '@storybook/react-vite';
+ import { useState } from 'react';
+ import { FancyToggleSwitch, FancyToggleSwitchItem } from './FancyToggleSwitch';
++import { BodyText } from '../Text';
+ import {
+   CreditCardIcon,
+   GraphIcon,
+@@ -84,7 +85,7 @@ export const Controlled: Story = {
+           <FancyToggleSwitchItem value="monthly" data-testid="ctl-monthly">Monthly</FancyToggleSwitchItem>
+           <FancyToggleSwitchItem value="yearly" data-testid="ctl-yearly">Yearly</FancyToggleSwitchItem>
+         </FancyToggleSwitch>
+-        <span data-testid="ctl-value">value: {JSON.stringify(plan)}</span>
++        <BodyText data-testid="ctl-value">value: {JSON.stringify(plan)}</BodyText>
+       </div>
+     );
+   },
+diff --git a/src/components/Toggle/Toggle.stories.tsx b/src/components/Toggle/Toggle.stories.tsx
+index c7c1976..6b0e348 100644
+--- a/src/components/Toggle/Toggle.stories.tsx
++++ b/src/components/Toggle/Toggle.stories.tsx
+@@ -3,6 +3,7 @@ import { useState } from 'react';
+ import { ToggleSwitch, ToggleSwitchItem } from './Toggle';
+ import { ToggleSize, ToggleVariant } from './constants';
+ import { CheckIcon, CloseCancelIcon } from '../Icons';
++import { BodyText } from '../Text';
+ 
+ const meta = {
+   title: 'Inputs/ToggleSwitch',
+@@ -83,7 +84,7 @@ export const Controlled: Story = {
+           <ToggleSwitchItem value="14" data-testid="ctl-14">14 Days</ToggleSwitchItem>
+           <ToggleSwitchItem value="7" data-testid="ctl-7">7 Days</ToggleSwitchItem>
+         </ToggleSwitch>
+-        <span data-testid="ctl-value">value: {JSON.stringify(range)}</span>
++        <BodyText data-testid="ctl-value">value: {JSON.stringify(range)}</BodyText>
+       </div>
+     );
+   },
+diff --git a/src/components/Toggle/Toggle.tsx b/src/components/Toggle/Toggle.tsx
+index b1df4ae..97c371f 100644
+--- a/src/components/Toggle/Toggle.tsx
++++ b/src/components/Toggle/Toggle.tsx
+@@ -34,6 +34,7 @@ import {
+   type ComponentRef,
+ } from "react";
+ import { cn } from "../../utils/cn";
++import { ButtonText } from "../Text";
+ 
+ // ToggleVariant / ToggleSize (+ their types) live in ./constants (server-safe),
+ // re-exported via index.ts; imported here for internal variant/size resolution.
+@@ -157,7 +158,8 @@ const ToggleSwitchItem = forwardRef<
+   const resolvedSize = size ?? presentation.size ?? ToggleSize.standard;
+ 
+   return (
+-    <ToggleGroup.Item
++    <ButtonText
++      as={ToggleGroup.Item}
+       ref={ref}
+       className={cn(
+         toggleOptionVariants({
+diff --git a/src/components/Toggle/fancyToggleOption.ts b/src/components/Toggle/fancyToggleOption.ts
+index 260bcc2..3283e3c 100644
+--- a/src/components/Toggle/fancyToggleOption.ts
++++ b/src/components/Toggle/fancyToggleOption.ts
+@@ -24,10 +24,11 @@
+  * - Neutral module (no "use client"): no client API here.
+  * - The 2px borders are a hardcoded `border-2` by maintainer decision
+  *   (2026-10-03); don't swap them for a token or for toggleOption's 1px border.
+- * - Keep `text-style-hero-button` out of any cn() call that also holds a
+- *   `text-*` colour: a text-style class cn's tailwind-merge doesn't register
+- *   (hero-button wasn't, 2026-10-03) is erased by a later colour class. The
+- *   label span carries the text style alone; the colour lives on the option.
++ * - The label is a Text component (FancyToggleSwitchItem's BaseText), never
++ *   a span with a `text-style-*` class, and its colour lives on the option,
++ *   not on the label: a role class that cn's tailwind-merge doesn't register
++ *   (hero-button wasn't, 2026-10-03) is erased by a colour class in the same
++ *   cn() call.
+  * - Indicator rules key off the named group `group/fancy-option`, never a bare
+  *   `group`, so an outer consumer `.group` with data-state=on can't paint
+  *   unselected indicators as selected.
+diff --git a/src/components/Toggle/toggleOption.ts b/src/components/Toggle/toggleOption.ts
+index a0244a9..503a534 100644
+--- a/src/components/Toggle/toggleOption.ts
++++ b/src/components/Toggle/toggleOption.ts
+@@ -14,11 +14,16 @@
+  *   no selected fill even when the option is the chosen one, hover/press
+  *   un-gated. It is for an option that must never read as selected.
+  * - Disabled drops any fill; opacity comes from ds-disabled-state.
++ * - No typography here: TabsTrigger and ToggleSwitchItem render through
++ *   ButtonText (`as` the Radix part), which sets the button role.
+  *
+  * ## constraints
+  * - Neutral module (no "use client"): consumed by client components only, but
+  *   holds no client API.
+  * - Never prefix a package class (h-button, size-*, ds-*) with a variant.
++ * - Never put a `text-style-*` class in this recipe. Text is set by a Text
++ *   component, so a consumer applying `tabTriggerVariants` to their own
++ *   element renders it through ButtonText too.
+  */
+ import { cva, type VariantProps } from "class-variance-authority";
+ 
+@@ -26,7 +31,7 @@ export const toggleOptionVariants = cva(
+   [
+     "inline-flex items-center justify-center gap-sm whitespace-nowrap",
+     "border border-transparent",
+-    "text-style-button text-text cursor-pointer select-none",
++    "text-text cursor-pointer select-none",
+     "ds-motion-state",
+     "ds-focus-visible-ring focus-visible:border-input-border-focus",
+     "ds-disabled-state",
+diff --git a/src/components/Tooltip/Tooltip.tsx b/src/components/Tooltip/Tooltip.tsx
+index b811769..4635cb3 100644
+--- a/src/components/Tooltip/Tooltip.tsx
++++ b/src/components/Tooltip/Tooltip.tsx
+@@ -47,6 +47,7 @@ const TooltipContent = forwardRef<
+       portal = true,
+       portalProps,
+       sideOffset = 6,
++      children,
+       ...props
+     },
+     ref,
+@@ -63,7 +64,7 @@ const TooltipContent = forwardRef<
+           "ds-motion-overlay",
+           tooltipThemeClass[themeInverse ? "inverse" : "matching"],
+           variant === TooltipVariant.simple &&
+-            "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-lg text-style-body",
++            "inline-flex h-button-sm items-center whitespace-nowrap rounded-tight border border-solid px-lg",
+           variant === TooltipVariant.rich &&
+             "flex ds-width-tooltip-rich flex-col gap-sm rounded-tight border border-solid px-md py-rg wrap-break-word",
+           variant === TooltipVariant.complex &&
+@@ -71,7 +72,13 @@ const TooltipContent = forwardRef<
+           className,
+         )}
+         {...props}
+-      />
++      >
++        {variant === TooltipVariant.simple ? (
++          <BaseText variant={TextVariant.body}>{children}</BaseText>
++        ) : (
++          children
++        )}
++      </TooltipPrimitive.Content>
+     );
+ 
+     if (!portal) {
+diff --git a/src/components/VerificationCode/CodeDigitInput.tsx b/src/components/VerificationCode/CodeDigitInput.tsx
+index d0cfbb5..febe614 100644
+--- a/src/components/VerificationCode/CodeDigitInput.tsx
++++ b/src/components/VerificationCode/CodeDigitInput.tsx
+@@ -5,7 +5,8 @@
+  * - 46px (`size-code-digit`), `rounded-tight`, secondary surface/border.
+  * - Digit glyph is always `BaseText` at `--ui-text-code-digit` (18px) /
+  *   medium (body role) — never SubheadingText and never a raw HTML text node.
+- *   The input's transparent glyph uses the same token (`text-code-digit`).
++ *   The input renders through the same BaseText setup (body role, code-digit
++ *   size, medium), so its transparent glyph matches the visible one.
+  * - `hasError` paints danger-primary border + text; `disabled` uses secondary
+  *   disabled tokens + `ds-radix-data-disabled` on the cell (the inner `<input>`
+  *   carries `disabled`); focus uses the prominent focus ring.
+@@ -76,8 +77,11 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
+         >
+           {filled ? value : "0"}
+         </BaseText>
+-        <input
++        <BaseText
++          as="input"
+           ref={ref}
++          fontSize="var(--ui-text-code-digit)"
++          fontWeight={FontWeights.medium}
+           type="text"
+           inputMode="numeric"
+           autoComplete="one-time-code"
+@@ -87,7 +91,7 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
+           aria-invalid={hasError || undefined}
+           className={cn(
+             "absolute inset-0 size-full appearance-none bg-transparent text-center",
+-            "text-code-digit font-medium text-transparent caret-transparent outline-none",
++            "text-transparent caret-transparent outline-none",
+             "selection:bg-transparent",
+           )}
+           onFocus={onFocus}
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index e120d54..5360b9b 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -463,19 +463,6 @@
+     filter: drop-shadow(var(--ui-shadow-cta));
+   }
+ 
+-  /* CTAButton end shape — hover/focus-visible tilt. The shape never morphs; it
+-   * only leans by the amount DropdownCaret's hover nudge does: the nudge token
+-   * is a fraction of one step (--ui-shape-morph-nudge, 0.15) and a step turns
+-   * 90deg (MorphRotationShape's M3 turn), so 0.15 * 90deg = 13.5deg clockwise.
+-   * Motion scale, like the nudge's own lean. The trigger is the root `.group`
+-   * (:where keeps specificity flat, as the outline-button orbs above do). */
+-  .ds-cta-shape-tilt {
+-    transition: rotate var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
+-  }
+-  .ds-cta-shape-tilt:is(:where(.group):is(:hover, :focus-visible) *) {
+-    rotate: calc(var(--ui-shape-morph-nudge) * 90deg);
+-  }
+-
+   .ds-size-cta-chip-standard {
+     width: var(--ui-size-cta-chip-standard);
+     height: var(--ui-size-cta-chip-standard);

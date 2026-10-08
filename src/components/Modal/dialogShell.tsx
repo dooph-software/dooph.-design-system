@@ -12,6 +12,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "../../utils/cn";
+import { BodyText, HeadingText } from "../Text";
 
 /** Backdrop base; the caller's className carries its open/close motion. */
 export const DialogShellOverlay = forwardRef<
@@ -30,9 +31,10 @@ export const DialogShellTitle = forwardRef<
   ComponentRef<typeof DialogPrimitive.Title>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title
+  <HeadingText
+    as={DialogPrimitive.Title}
     ref={ref}
-    className={cn("text-style-heading text-text", className)}
+    className={cn("text-text", className)}
     {...props}
   />
 ));
@@ -42,9 +44,10 @@ export const DialogShellDescription = forwardRef<
   ComponentRef<typeof DialogPrimitive.Description>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description
+  <BodyText
+    as={DialogPrimitive.Description}
     ref={ref}
-    className={cn("text-style-body text-text-secondary", className)}
+    className={cn("text-text-secondary", className)}
     {...props}
   />
 ));

@@ -9,15 +9,17 @@
  */
 import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
+import { BodyText } from "../Text";
 
 export type UserMessageHeaderProps = HTMLAttributes<HTMLDivElement>;
 
 const UserMessageHeader = forwardRef<HTMLDivElement, UserMessageHeaderProps>(
   ({ className, ...props }, ref) => (
-    <div
+    <BodyText
+      as="div"
       ref={ref}
       className={cn(
-        "w-full min-w-0 rounded-tight border border-solid border-border-primary bg-surface-primary p-md shadow-standard text-style-body text-text wrap-break-word",
+        "w-full min-w-0 rounded-tight border border-solid border-border-primary bg-surface-primary p-md shadow-standard text-text wrap-break-word",
         className,
       )}
       {...props}

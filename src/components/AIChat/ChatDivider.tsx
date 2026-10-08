@@ -8,6 +8,7 @@
  */
 import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
+import { BodyText } from "../Text";
 import { WavyDivider, WavyDividerVariant } from "../WavyDivider";
 
 export type ChatDividerProps = HTMLAttributes<HTMLDivElement>;
@@ -31,9 +32,9 @@ const ChatDivider = forwardRef<HTMLDivElement, ChatDividerProps>(
         {...props}
       >
         {rule}
-        <span className="shrink-0 whitespace-nowrap text-style-body text-text-secondary">
+        <BodyText className="shrink-0 whitespace-nowrap text-text-secondary">
           {children}
-        </span>
+        </BodyText>
         {rule}
       </div>
     );

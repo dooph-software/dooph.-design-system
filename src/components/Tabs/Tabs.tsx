@@ -5,6 +5,7 @@ import {
   type ComponentRef,
 } from "react";
 import { cn } from "../../utils/cn";
+import { ButtonText } from "../Text";
 import { toggleOptionVariants } from "../Toggle/toggleOption";
 import type { TabSize, TabVariant } from "./constants";
 
@@ -43,7 +44,8 @@ const TabsTrigger = forwardRef<
   ComponentRef<typeof TabsPrimitive.Trigger>,
   TabsTriggerProps
 >(({ className, size, variant, ...props }, ref) => (
-  <TabsPrimitive.Trigger
+  <ButtonText
+    as={TabsPrimitive.Trigger}
     ref={ref}
     className={cn(tabTriggerVariants({ size, variant }), className)}
     {...props}

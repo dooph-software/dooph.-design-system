@@ -24,6 +24,7 @@
  */
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../utils/cn";
+import { BodyText } from "../Text";
 import { ShimmerText } from "../AnimatedText";
 import { AIToolPartState, AIToolPartVariant } from "./constants";
 
@@ -53,12 +54,13 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
     const showMeta = !isSkill && meta != null && meta !== false;
 
     return (
-      <div
+      <BodyText
+        as="div"
         ref={ref}
         data-state={state}
         data-variant={variant}
         className={cn(
-          "group/tool flex w-full min-w-0 select-none items-center gap-rg px-sm py-xxs text-style-body",
+          "group/tool flex w-full min-w-0 select-none items-center gap-rg px-sm py-xxs",
           !isSkill && "ds-chat-reveal-root",
           className,
         )}
@@ -89,7 +91,7 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
             {meta}
           </span>
         ) : null}
-      </div>
+      </BodyText>
     );
   },
 );

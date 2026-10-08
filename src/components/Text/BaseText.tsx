@@ -46,8 +46,10 @@ type BaseTextRenderProps = BaseTextOwnProps & { as?: ElementType } & Omit<
   >;
 
 /**
- * BaseText — the typography primitive behind every role component and consumer
- * text (DS controls such as Button apply `text-style-*` classes directly).
+ * BaseText — the typography primitive behind every role component, and the only
+ * way DS code sets text. A control whose root owns its text (Button, a menu
+ * item, an input) renders that root through a Text component with `as`; a
+ * `text-style-*` class never appears outside src/components/Text/.
  *
  * Three tiers decide the final typography, in this order:
  *

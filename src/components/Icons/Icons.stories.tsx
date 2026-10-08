@@ -177,7 +177,7 @@ export const Sizes: Story = {
             }}
           >
             <SettingsBoltIcon size={size} />
-            <span style={{ fontSize: 12 }}>{name}</span>
+            <LabelText>{name}</LabelText>
           </div>
         ),
       )}

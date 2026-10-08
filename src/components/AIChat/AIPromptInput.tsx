@@ -46,6 +46,7 @@ import {
   type TextareaHTMLAttributes,
 } from "react";
 import { cn } from "../../utils/cn";
+import { BodyText } from "../Text";
 import { useComposedRefs } from "../../utils/composeRefs";
 import { Button } from "../Button";
 import { ButtonSize, ButtonVariant } from "../Button/constants";
@@ -197,7 +198,8 @@ const AIPromptInputTextarea = forwardRef<
   }, [value, textareaRef]);
 
   return (
-    <textarea
+    <BodyText
+      as="textarea"
       ref={composedRef}
       rows={rows}
       value={value}
@@ -220,7 +222,7 @@ const AIPromptInputTextarea = forwardRef<
       }}
       className={cn(
         "ds-chat-prompt-textarea w-full min-w-0 shrink-0 resize-none overflow-y-auto bg-transparent outline-none",
-        "text-style-body text-text placeholder:text-text-tertiary",
+        "text-text placeholder:text-text-tertiary",
         "ds-disabled-state",
         className,
       )}

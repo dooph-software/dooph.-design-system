@@ -72,9 +72,9 @@ const AIModelSelectTrigger = forwardRef<
     {/* Keeps the model name on one line in the primary text tone; the detail span below uses the ghost tone. */}
     <span className="whitespace-nowrap text-text">{children}</span>
     {detail != null && detail !== false ? (
-      <span className="whitespace-nowrap text-style-body text-ghost-fg">
+      <BodyText className="whitespace-nowrap text-ghost-fg">
         {detail}
-      </span>
+      </BodyText>
     ) : null}
     <DropdownIcon size={IconSize.rg} aria-hidden className="rotate-180" />
   </Button>

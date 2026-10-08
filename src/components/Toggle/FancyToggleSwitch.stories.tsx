@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { FancyToggleSwitch, FancyToggleSwitchItem } from './FancyToggleSwitch';
+import { BodyText } from '../Text';
 import {
   CreditCardIcon,
   GraphIcon,
@@ -84,7 +85,7 @@ export const Controlled: Story = {
           <FancyToggleSwitchItem value="monthly" data-testid="ctl-monthly">Monthly</FancyToggleSwitchItem>
           <FancyToggleSwitchItem value="yearly" data-testid="ctl-yearly">Yearly</FancyToggleSwitchItem>
         </FancyToggleSwitch>
-        <span data-testid="ctl-value">value: {JSON.stringify(plan)}</span>
+        <BodyText data-testid="ctl-value">value: {JSON.stringify(plan)}</BodyText>
       </div>
     );
   },

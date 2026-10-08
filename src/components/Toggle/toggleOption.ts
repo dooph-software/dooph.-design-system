@@ -14,11 +14,16 @@
  *   no selected fill even when the option is the chosen one, hover/press
  *   un-gated. It is for an option that must never read as selected.
  * - Disabled drops any fill; opacity comes from ds-disabled-state.
+ * - No typography here: TabsTrigger and ToggleSwitchItem render through
+ *   ButtonText (`as` the Radix part), which sets the button role.
  *
  * ## constraints
  * - Neutral module (no "use client"): consumed by client components only, but
  *   holds no client API.
  * - Never prefix a package class (h-button, size-*, ds-*) with a variant.
+ * - Never put a `text-style-*` class in this recipe. Text is set by a Text
+ *   component, so a consumer applying `tabTriggerVariants` to their own
+ *   element renders it through ButtonText too.
  */
 import { cva, type VariantProps } from "class-variance-authority";
 
@@ -26,7 +31,7 @@ export const toggleOptionVariants = cva(
   [
     "inline-flex items-center justify-center gap-sm whitespace-nowrap",
     "border border-transparent",
-    "text-style-button text-text cursor-pointer select-none",
+    "text-text cursor-pointer select-none",
     "ds-motion-state",
     "ds-focus-visible-ring focus-visible:border-input-border-focus",
     "ds-disabled-state",

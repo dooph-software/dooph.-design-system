@@ -34,6 +34,7 @@ import {
   type ComponentRef,
 } from "react";
 import { cn } from "../../utils/cn";
+import { ButtonText } from "../Text";
 
 // ToggleVariant / ToggleSize (+ their types) live in ./constants (server-safe),
 // re-exported via index.ts; imported here for internal variant/size resolution.
@@ -157,7 +158,8 @@ const ToggleSwitchItem = forwardRef<
   const resolvedSize = size ?? presentation.size ?? ToggleSize.standard;
 
   return (
-    <ToggleGroup.Item
+    <ButtonText
+      as={ToggleGroup.Item}
       ref={ref}
       className={cn(
         toggleOptionVariants({

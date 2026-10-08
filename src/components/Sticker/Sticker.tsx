@@ -25,13 +25,14 @@
 import { cva } from "class-variance-authority";
 import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
+import { ButtonText } from "../Text";
 import { resolveDsColor, type DsColor } from "../../utils/color";
 import { StickerSize, StickerVariant } from "./constants";
 
 const stickerVariants = cva(
   [
     "inline-flex w-fit items-center gap-sm overflow-clip",
-    "px-rg text-style-button whitespace-nowrap",
+    "px-rg whitespace-nowrap",
   ],
   {
     variants: {
@@ -115,7 +116,8 @@ const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
         : undefined;
 
     return (
-      <div
+      <ButtonText
+        as="div"
         ref={ref}
         className={cn(stickerVariants({ variant, size }), className)}
         style={
@@ -130,7 +132,7 @@ const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
         {...props}
       >
         {children}
-      </div>
+      </ButtonText>
     );
   },
 );

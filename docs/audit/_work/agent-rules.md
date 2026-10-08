@@ -59,3 +59,10 @@ Repo: `C:\Users\stick\Github\dooph\dooph-Design-System`. These rules are mandato
     - gets a "Practical" story with the component inside a `data-ds-expression="practical"` wrapper next to the default.
 
     Neutralised, the component must still be complete: no empty frame or gap where the detail was. Components never set expression tokens (no inline style, no arbitrary-property class, no `setProperty`). Run `node docs/audit/_work/scratch/expression-check.mjs` (also the last line of the scoreboard); it must PASS.
+13. **Text is always set by a Text component.** This is the maintainer's standing rule; breaking it has already been caught once. Use `ButtonText`, `BodyText`, `LabelText`, `HeadingText`, `MonoText`, `CTAText`, `HeroButtonText`…, or `BaseText` with `variant` and typography props.
+    - A span, div or p that holds text is a Text component (`<BodyText>`, `<BodyText as="div">`).
+    - A root that owns its text renders through one with `as`: a button, a menu item, an input or textarea, a link, a kbd, or a Radix part such as `DialogPrimitive.Title`. For example, `<ButtonText as={Comp}>` or `<BodyText as={DropdownMenuPrimitive.Item}>`.
+    - Typography is set once, on the element that owns the text. Descendants inherit it and never re-declare it.
+    - Never write a `text-style-*` class outside `src/components/Text/`. That includes class recipes (`buttonVariants`, `toggleOptionVariants`, `menuItemClassName`) and stories.
+    - Never set typography with utilities (`font-*`, `text-<size>`, `tracking-*`, `leading-*`) or inline `style={{ fontSize… }}`. Use the Text component's props (`fontSize`, `fontWeight`, `letterSpacing`, `lineHeight`, `axes`, `tabular`).
+    - Two scoreboard lines, "Text styled without a Text component", must stay at 0. `node docs/audit/_work/scratch/text-leaves.mjs` lists every element that renders text, so you can check the rest by hand.

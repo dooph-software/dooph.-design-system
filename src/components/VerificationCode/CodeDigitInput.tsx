@@ -5,7 +5,8 @@
  * - 46px (`size-code-digit`), `rounded-tight`, secondary surface/border.
  * - Digit glyph is always `BaseText` at `--ui-text-code-digit` (18px) /
  *   medium (body role) — never SubheadingText and never a raw HTML text node.
- *   The input's transparent glyph uses the same token (`text-code-digit`).
+ *   The input renders through the same BaseText setup (body role, code-digit
+ *   size, medium), so its transparent glyph matches the visible one.
  * - `hasError` paints danger-primary border + text; `disabled` uses secondary
  *   disabled tokens + `ds-radix-data-disabled` on the cell (the inner `<input>`
  *   carries `disabled`); focus uses the prominent focus ring.
@@ -76,8 +77,11 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
         >
           {filled ? value : "0"}
         </BaseText>
-        <input
+        <BaseText
+          as="input"
           ref={ref}
+          fontSize="var(--ui-text-code-digit)"
+          fontWeight={FontWeights.medium}
           type="text"
           inputMode="numeric"
           autoComplete="one-time-code"
@@ -87,7 +91,7 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
           aria-invalid={hasError || undefined}
           className={cn(
             "absolute inset-0 size-full appearance-none bg-transparent text-center",
-            "text-code-digit font-medium text-transparent caret-transparent outline-none",
+            "text-transparent caret-transparent outline-none",
             "selection:bg-transparent",
           )}
           onFocus={onFocus}

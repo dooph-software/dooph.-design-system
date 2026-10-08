@@ -16,6 +16,12 @@ const code = files.filter((f) => !isStory(f) && !isGenerated(f));
 const read = (f) => fs.readFileSync(f, 'utf8').replace(/__GENERATED_THEME_START__[\s\S]*?__GENERATED_THEME_END__/, '');
 const count = (list, re, skip = () => false) => { let n = 0; const where = {}; for (const f of list) { if (skip(f)) continue; const m = read(f).match(re); if (m) { n += m.length; where[f] = m.length; } } return { n, where }; };
 
+// Text-rule files: every .ts/.tsx under src/, stories included, minus the Text components themselves and the
+// tailwind-merge class registry (which must list the role classes). Counted with comments removed.
+const textFiles = files.filter((f) => /\.tsx?$/.test(f) && !isGenerated(f) && !f.startsWith('src/components/Text/') && f !== 'src/utils/twMergeTheme.ts' && f !== 'src/utils/cn.ts');
+const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:"'`])\/\/.*$/gm, '$1');
+const countCode = (list, re) => { let n = 0; const where = {}; for (const f of list) { const m = stripComments(read(f)).match(re); if (m) { n += m.length; where[f] = m.length; } } return { n, where }; };
+
 const metrics = [
   // [plain-English name, target, result]
   ['Motion timing hardcoded (duration-N, ease-*, cubic-bezier, Nms) outside tokens.css', 0,
@@ -40,6 +46,13 @@ const metrics = [
     count(code.filter((f) => /\.tsx?$/.test(f)), /\bon(?:Change|Select)\??:\s*\((?:value|date|range|code|v)\b/g)],
   ['Vestigial default exports in component modules', 0,
     count(code.filter((f) => /\.tsx?$/.test(f)), /^export default /gm)],
+  // Maintainer rule (2026-10-07): text is always set by a Text component (ButtonText, BodyText, … or BaseText with
+  // props; a root that owns its text renders through one with `as`). Stories count too: they are the usage examples.
+  // Comments are stripped, so a contract may still name a class.
+  ['Text styled without a Text component: text-style-* classes outside src/components/Text/', 0,
+    countCode(textFiles, /(?<![\w-])(?:[\w-]+:)*text-style-[\w-]+/g)],
+  ['Text styled without a Text component: font/size/tracking/leading utilities or inline font styles', 0,
+    countCode(textFiles, /(?<![\w-])(?:[\w-]+:)*(?:font-(?:body|button|heading|label|title|hero|mono|thin|light|normal|medium|semibold|bold|black|sans|serif)|text-(?:xs|sm|base|lg|xl|[2-9]xl|label|body|hero-body|hero-button|mono|subheading|code-digit|heading|title|hero|cta-standard|cta-big)|tracking-[\w-]+|leading-[\w-]+)(?![\w-])|style=\{\{[^}]*\b(?:fontSize|fontFamily|fontWeight|letterSpacing|lineHeight)\s*:/g)],
 ];
 
 const R = fs.existsSync('docs/audit/REMEDIATION.md') ? fs.readFileSync('docs/audit/REMEDIATION.md', 'utf8') : '';

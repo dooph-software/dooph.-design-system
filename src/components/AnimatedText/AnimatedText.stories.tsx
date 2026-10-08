@@ -272,7 +272,7 @@ export const RollChangeAutoCyclingStatus: Story = {
 
     return (
       <div className="flex flex-col items-start gap-1">
-        <LabelText className="uppercase tracking-wide opacity-40">
+        <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
           Job status
         </LabelText>
         <RollChangeText changeKey={statuses[index]}>
@@ -305,7 +305,7 @@ export const RollChangeDirectionUpVsDown: Story = {
     return (
       <div className="flex gap-12">
         <div className="flex flex-col items-start gap-1">
-          <LabelText className="uppercase tracking-wide opacity-40">
+          <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
             Down (default)
           </LabelText>
           <RollChangeText changeKey={n} direction={RollDirection.down}>
@@ -313,7 +313,7 @@ export const RollChangeDirectionUpVsDown: Story = {
           </RollChangeText>
         </div>
         <div className="flex flex-col items-start gap-1">
-          <LabelText className="uppercase tracking-wide opacity-40">
+          <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
             Up
           </LabelText>
           <RollChangeText changeKey={n} direction={RollDirection.up}>
@@ -347,7 +347,7 @@ export const RollChangeChangeKeyWithComplexChildren: Story = {
 
     return (
       <div className="flex flex-col items-start gap-1">
-        <LabelText className="uppercase tracking-wide opacity-40">
+        <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
           Selected model
         </LabelText>
         <RollChangeText changeKey={model.id}>
@@ -379,7 +379,7 @@ export const FadeChangeAutoCyclingStatus: Story = {
 
     return (
       <div className="flex flex-col items-start gap-1">
-        <LabelText className="uppercase tracking-wide opacity-40">
+        <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
           Job status
         </LabelText>
         <FadeChangeText changeKey={statuses[index]} data-testid="fade-status">
@@ -405,7 +405,7 @@ export const FadeChangeDirectionUp: Story = {
 
     return (
       <div className="flex flex-col items-start gap-1">
-        <LabelText className="uppercase tracking-wide opacity-40">
+        <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
           Job status
         </LabelText>
         <FadeChangeText
@@ -445,7 +445,7 @@ export const FadeChangeVersusRoll: Story = {
     return (
       <div className="flex gap-12">
         <div className="flex flex-col items-start gap-1">
-          <LabelText className="uppercase tracking-wide opacity-40">
+          <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
             FadeChangeText
           </LabelText>
           <FadeChangeText changeKey={model.id}>
@@ -453,7 +453,7 @@ export const FadeChangeVersusRoll: Story = {
           </FadeChangeText>
         </div>
         <div className="flex flex-col items-start gap-1">
-          <LabelText className="uppercase tracking-wide opacity-40">
+          <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
             RollChangeText
           </LabelText>
           <RollChangeText changeKey={model.id}>
@@ -675,7 +675,7 @@ export const RevealChangeBreadcrumbWithRollChangeText: Story = {
 
     return (
       <div className="flex flex-col items-center gap-3">
-        <LabelText className="tracking-wide uppercase opacity-40">
+        <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
           Dashboard top bar
         </LabelText>
         <div className="flex w-96 flex-row items-center justify-center">

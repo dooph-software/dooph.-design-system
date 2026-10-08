@@ -3,10 +3,8 @@
  *
  * ## behavior
  * - The end mark is a FIXED shape per size: the eight-leaf clover at
- *   `standard`, the puff at `big`. It never morphs. Hover rolls the label
- *   (RollHoverText on the root `.group`) and, on hover and focus-visible,
- *   tilts the shape by DropdownCaret's hover-nudge amount (13.5deg), on the
- *   motion scale (`base`, `enter`) — CSS only, through `.ds-cta-shape-tilt`.
+ *   `standard`, the puff at `big`. It is static: hover only rolls the label
+ *   (RollHoverText on the root `.group`).
  * - The shape is painted with the OPPOSITE button's background: a primary CTA
  *   draws it in the secondary-button bg, a secondary CTA in the primary-button
  *   bg. The icon on it takes that button's content colour.
@@ -15,11 +13,9 @@
  *   24 / 28px).
  *
  * ## constraints
- * - The shape is chosen by `size`, never by a prop, and it never morphs. That
- *   is the maintainer's decision (2026-10-03); a shape prop or a hover morph
- *   is a design change, not a refactor. Its only motion is the hover tilt,
- *   approved by the maintainer (2026-10-07): one named helper,
- *   `.ds-cta-shape-tilt`, reusing the nudge token — no listeners, no state.
+ * - The shape is chosen by `size`, never by a prop and never animated. That is
+ *   the maintainer's decision (2026-10-03); a shape prop or a hover morph is a
+ *   design change, not a refactor.
  * - The shapes are the `Shapes/` primitives, never re-drawn copies. Figma's
  *   flattened end-mark SVGs are not the source of truth.
  */
@@ -129,9 +125,8 @@ type CTAButtonComponent = {
 };
 
 /**
- * Padded-outline marketing CTA. The outline ring is primary-only; hover rolls
- * the label (RollHoverText) and tilts the end shape (`.ds-cta-shape-tilt`), both
- * keyed to the root `.group`. Radii stay fully round.
+ * Padded-outline marketing CTA. The outline ring is primary-only; hover response
+ * is label-only via RollHoverText on an ancestor `.group`. Radii stay fully round.
  */
 const CTAButtonBase = forwardRef<HTMLElement, CTAButtonProps>(
   (
@@ -178,7 +173,7 @@ const CTAButtonBase = forwardRef<HTMLElement, CTAButtonProps>(
             <span
               aria-hidden
               className={cn(
-                "ds-cta-shape-tilt absolute inset-0 flex items-center justify-center",
+                "absolute inset-0 flex items-center justify-center",
                 paint.shape,
               )}
             >

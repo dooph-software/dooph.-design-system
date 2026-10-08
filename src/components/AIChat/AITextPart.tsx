@@ -21,6 +21,7 @@
  */
 import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "../../utils/cn";
+import { BodyText } from "../Text";
 
 export interface AITextPartProps extends HTMLAttributes<HTMLDivElement> {
   /** Animate blocks in as they arrive. True only while this part streams. */
@@ -29,11 +30,12 @@ export interface AITextPartProps extends HTMLAttributes<HTMLDivElement> {
 
 const AITextPart = forwardRef<HTMLDivElement, AITextPartProps>(
   ({ className, streamingAnimation = false, ...props }, ref) => (
-    <div
+    <BodyText
+      as="div"
       ref={ref}
       data-streaming-animation={streamingAnimation || undefined}
       className={cn(
-        "ds-chat-prose w-full min-w-0 px-sm text-style-body text-text wrap-break-word",
+        "ds-chat-prose w-full min-w-0 px-sm text-text wrap-break-word",
         className,
       )}
       {...props}

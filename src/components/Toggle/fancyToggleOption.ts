@@ -24,10 +24,11 @@
  * - Neutral module (no "use client"): no client API here.
  * - The 2px borders are a hardcoded `border-2` by maintainer decision
  *   (2026-10-03); don't swap them for a token or for toggleOption's 1px border.
- * - Keep `text-style-hero-button` out of any cn() call that also holds a
- *   `text-*` colour: a text-style class cn's tailwind-merge doesn't register
- *   (hero-button wasn't, 2026-10-03) is erased by a later colour class. The
- *   label span carries the text style alone; the colour lives on the option.
+ * - The label is a Text component (FancyToggleSwitchItem's BaseText), never
+ *   a span with a `text-style-*` class, and its colour lives on the option,
+ *   not on the label: a role class that cn's tailwind-merge doesn't register
+ *   (hero-button wasn't, 2026-10-03) is erased by a colour class in the same
+ *   cn() call.
  * - Indicator rules key off the named group `group/fancy-option`, never a bare
  *   `group`, so an outer consumer `.group` with data-state=on can't paint
  *   unselected indicators as selected.

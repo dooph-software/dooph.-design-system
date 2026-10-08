@@ -39,6 +39,7 @@ import {
   type ReactNode,
 } from "react";
 import { cn } from "../../utils/cn";
+import { BodyText } from "../Text";
 import { ShimmerText } from "../AnimatedText";
 import { Button } from "../Button";
 import { ButtonVariant } from "../Button/constants";
@@ -96,9 +97,9 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
     const hasMeta = meta != null && meta !== false;
 
     const metaNode = hasMeta ? (
-      <span className="min-w-0 truncate whitespace-nowrap text-style-body text-text-secondary">
+      <BodyText className="min-w-0 truncate whitespace-nowrap text-text-secondary">
         {meta}
-      </span>
+      </BodyText>
     ) : null;
 
     if (isThinking) {
@@ -114,32 +115,36 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
           {...props}
         >
           <div className="flex min-w-0 select-none items-center gap-rg">
-            <ShimmerText className="ds-chat-thinking-shimmer shrink-0 whitespace-nowrap text-style-body">
+            <BodyText
+              as={ShimmerText}
+              className="ds-chat-thinking-shimmer shrink-0 whitespace-nowrap"
+            >
               {label}
-            </ShimmerText>
+            </BodyText>
             {metaNode}
           </div>
           {hasTranscript ? (
-            <div
+            <BodyText
+              as="div"
               data-streaming-animation={streamingAnimation || undefined}
-              className="ds-chat-prose min-w-0 pl-sm text-style-body text-text-tertiary wrap-break-word"
+              className="ds-chat-prose min-w-0 pl-sm text-text-tertiary wrap-break-word"
             >
               {children}
-            </div>
+            </BodyText>
           ) : null}
         </div>
       );
     }
 
     const labelNode = (
-      <span
+      <BodyText
         className={cn(
-          "shrink-0 whitespace-nowrap text-style-body text-text-secondary",
+          "shrink-0 whitespace-nowrap text-text-secondary",
           hasTranscript && "ds-chat-lift",
         )}
       >
         {label}
-      </span>
+      </BodyText>
     );
 
     if (!hasTranscript) {
@@ -200,9 +205,12 @@ const AIThinkingPart = forwardRef<HTMLDivElement, AIThinkingPartProps>(
           <div>
             {/* px-sm matches the row's own inset; pl-sm indents the transcript
                 under the label, as the live variant does. */}
-            <div className="ds-chat-prose mx-sm min-w-0 pb-xxs pl-sm pt-rg text-style-body text-text-secondary wrap-break-word">
+            <BodyText
+              as="div"
+              className="ds-chat-prose mx-sm min-w-0 pb-xxs pl-sm pt-rg text-text-secondary wrap-break-word"
+            >
               {children}
-            </div>
+            </BodyText>
           </div>
         </div>
       </div>

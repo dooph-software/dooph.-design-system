@@ -151,8 +151,10 @@ const ToastAction = forwardRef<
   ComponentRef<typeof ToastPrimitive.Action>,
   ComponentPropsWithoutRef<typeof ToastPrimitive.Action>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitive.Action
+  <BaseText
+    as={ToastPrimitive.Action}
     ref={ref}
+    variant={TextVariant.button}
     className={cn(
       buttonVariants({
         variant: ButtonVariant.primary,
@@ -169,8 +171,10 @@ const ToastClose = forwardRef<
   ComponentRef<typeof ToastPrimitive.Close>,
   ComponentPropsWithoutRef<typeof ToastPrimitive.Close>
 >(({ className, children, ...props }, ref) => (
-  <ToastPrimitive.Close
+  <BaseText
+    as={ToastPrimitive.Close}
     ref={ref}
+    variant={TextVariant.button}
     className={cn(
       buttonVariants({
         variant: ButtonVariant.ghost,
@@ -185,7 +189,7 @@ const ToastClose = forwardRef<
     {...props}
   >
     {children ?? <CloseCancelIcon />}
-  </ToastPrimitive.Close>
+  </BaseText>
 ));
 ToastClose.displayName = "ToastClose";
 
@@ -193,8 +197,10 @@ const ToastDismiss = forwardRef<
   ComponentRef<typeof ToastPrimitive.Close>,
   ComponentPropsWithoutRef<typeof ToastPrimitive.Close>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitive.Close
+  <BaseText
+    as={ToastPrimitive.Close}
     ref={ref}
+    variant={TextVariant.button}
     className={cn(
       buttonVariants({
         variant: ButtonVariant.ghost,

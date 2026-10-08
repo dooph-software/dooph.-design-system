@@ -12,10 +12,12 @@ Produced by `docs/audit/_work/scratch/scoreboard.mjs --record`. Every number sho
 - **m8** — JS timers/animation loops in components (rAF, setTimeout, setInterval) (minimise)
 - **m9** — Value callbacks not named onValueChange (onChange(value)/onSelect) (target 0)
 - **m10** — Vestigial default exports in component modules (target 0)
+- **m11** — Text styled without a Text component: text-style-* classes outside src/components/Text/, stories included (target 0). Added 2026-10-07. Audited baseline at b436647: 76; after the round-4 cleanup: 42.
+- **m12** — Text styled without a Text component: font/size/tracking/leading utilities or inline font styles, stories included (target 0). Added 2026-10-07. Audited baseline: 11; after round 4: 12.
 
-| date | HEAD | m1 | m2 | m3 | m4 | m5 | m6 | m7 | m8 | m9 | m10 | note |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 2026-10-01 | b436647 (audited) | 102 | 19 | 36 | 5 | 3 | 2 | 40 | 8 | 7 | 74 | baseline at the audit |
+| date | HEAD | m1 | m2 | m3 | m4 | m5 | m6 | m7 | m8 | m9 | m10 | m11 | m12 | note |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2026-10-01 | b436647 (audited) | 102 | 19 | 36 | 5 | 3 | 2 | 40 | 8 | 7 | 74 | 76 | 11 | baseline at the audit (m11/m12 measured 2026-10-07 from the b436647 tree) |
 | 2026-10-03 | b436647+dirty | 102 | 19 | 36 | 5 | 3 | 2 | 40 | 8 | 7 | 74 | after spacing rename + 6 fixes (2026-10-02/03) |
 | 2026-10-03 | b436647+dirty | 102 | 19 | 36 | 5 | 3 | 2 | 40 | 8 | 7 | 74 | after size-words/heights/ghost pass |
 
@@ -38,3 +40,4 @@ Note 2026-10-04: m3 no longer counts zero resets (`p-0`, `m-0`). Zero is not a s
 | 2026-10-04 | b436647+dirty | 0 | 0 | 0 | 0 | 0 | 0 | 27 | 5 | 0 | 0 | review round 2 |
 | 2026-10-04 | b436647+dirty | 0 | 0 | 0 | 0 | 0 | 0 | 27 | 5 | 0 | 0 | review round 3 |
 | 2026-10-07 | b436647+dirty | 0 | 0 | 0 | 0 | 0 | 0 | 27 | 5 | 0 | 0 | review round 4: expression system, PI gap, CTA tilt |
+| 2026-10-08 | 97a057c+dirty | 0 | 0 | 0 | 0 | 0 | 0 | 27 | 5 | 0 | 0 | 0 | 0 | 11 text components: text-style 42->0 (audited 76), raw font utilities 12->0 (audited 11); CTA tilt removed |

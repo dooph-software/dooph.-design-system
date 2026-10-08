@@ -463,19 +463,6 @@
     filter: drop-shadow(var(--ui-shadow-cta));
   }
 
-  /* CTAButton end shape — hover/focus-visible tilt. The shape never morphs; it
-   * only leans by the amount DropdownCaret's hover nudge does: the nudge token
-   * is a fraction of one step (--ui-shape-morph-nudge, 0.15) and a step turns
-   * 90deg (MorphRotationShape's M3 turn), so 0.15 * 90deg = 13.5deg clockwise.
-   * Motion scale, like the nudge's own lean. The trigger is the root `.group`
-   * (:where keeps specificity flat, as the outline-button orbs above do). */
-  .ds-cta-shape-tilt {
-    transition: rotate var(--ui-motion-duration-base) var(--ui-motion-ease-enter);
-  }
-  .ds-cta-shape-tilt:is(:where(.group):is(:hover, :focus-visible) *) {
-    rotate: calc(var(--ui-shape-morph-nudge) * 90deg);
-  }
-
   .ds-size-cta-chip-standard {
     width: var(--ui-size-cta-chip-standard);
     height: var(--ui-size-cta-chip-standard);

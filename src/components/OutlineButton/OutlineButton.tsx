@@ -12,6 +12,7 @@ import {
   type ReactElement,
 } from "react";
 import { cn } from "../../utils/cn";
+import { ButtonText } from "../Text";
 import { useComposedRefs } from "../../utils/composeRefs";
 
 type OutlineButtonOwnProps = {
@@ -151,14 +152,15 @@ const OutlineButtonBase = forwardRef<HTMLElement, OutlineButtonProps<"button">>(
         )}
       >
         {/* Inner elevated button surface */}
-        <Comp
+        <ButtonText
+          as={Comp}
           ref={composedRef as ForwardedRef<HTMLElement>}
           className={cn(
             "group relative overflow-hidden",
             "inline-flex items-center justify-center gap-sm",
             "ds-size-outline-button px-md",
             "border border-solid rounded-soft shadow-button",
-            "text-style-button cursor-pointer select-none",
+            "cursor-pointer select-none",
             "ds-motion-state",
             "ds-focus-visible-ring",
             "ds-disabled-state",
@@ -274,7 +276,7 @@ const OutlineButtonBase = forwardRef<HTMLElement, OutlineButtonProps<"button">>(
               </span>
             )}
           </Slottable>
-        </Comp>
+        </ButtonText>
       </div>
     );
   },
