@@ -73,8 +73,8 @@ export const WithDisabled: Story = {
 
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex flex-col gap-6 p-4">
-      <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-xxl p-lg">
+      <div className="flex flex-col gap-sm">
         <LabelText className="text-text-secondary">Ghost</LabelText>
         <Tabs defaultValue="a">
           <TabsList>
@@ -84,7 +84,7 @@ export const AllVariants: Story = {
           </TabsList>
         </Tabs>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-sm">
         <LabelText className="text-text-secondary">Primary</LabelText>
         <Tabs defaultValue="a">
           <TabsList>

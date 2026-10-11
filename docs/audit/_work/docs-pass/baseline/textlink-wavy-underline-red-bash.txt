@@ -1,0 +1,16 @@
+#10 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521" && pwd && ls -la src/components/TextLink/
+    | total 21
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:45 .
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:45 ..
+    | -rw-r--r-- 1 stick 197609 1354 Oct  8 20:45 TextLink.stories.tsx
+    | -rw-r--r-- 1 stick 197609 1093 Oct  8 20:45 TextLink.tsx
+    | -rw-r--r-- 1 stick 197609   88 Oct  8 20:45 index.ts
+#19 Bash: find "C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521" -type f -name "*.css" -o -name "*.scss" | head -20
+    | C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/scripts/check-conventions.fixtures/numeric-spacing.apply.css
+    | C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/scripts/check-conventions.fixtures/styles/tokens.css
+    | C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/src/styles/dooph-component-tokens.css
+    | C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/src/styles/index.css
+    | C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/src/styles/theme.css
+    | C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/src/styles/tokens.css
+#31 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521" && npx tsc --noEmit --pretty 2>&1 | head -20
+    | (Bash completed with no output)

@@ -49,9 +49,9 @@ const LinearProgressIndicator = forwardRef<
       max={safeMax}
       style={
         {
-          ...style,
           '--progress-pct': pct,
           '--ds-progress-color': resolveDsColor(color, DEFAULT_COLOR),
+          ...style,
         } as CSSProperties
       }
       className={cn('relative h-linear-progress w-full', className)}

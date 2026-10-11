@@ -21,22 +21,27 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
+/* Demo frame: a 120px square with the shape inset 11px. No token sizes a demo frame. */
+const FRAME = { width: 120, height: 120 } as const;
+const INSET = { inset: 11 } as const;
+
 function ControlledDemo({ shapes, restingAngle }: { shapes: MorphRotationShapeProps["shapes"]; restingAngle?: number }) {
   const [index, setIndex] = useState(0);
   const [landed, setLanded] = useState(0);
   return (
-    <div className="flex flex-col items-center gap-4">
-      <span className="relative block size-[120px] text-primary">
+    <div className="flex flex-col items-center gap-lg">
+      <span className="relative block text-primary" style={FRAME}>
         <MorphRotationShape
           mode={MorphRotationShapeMode.controlled}
           shapes={shapes}
           activeIndex={index}
           restingAngle={restingAngle}
           onStepComplete={setLanded}
-          className="absolute inset-[11px]"
+          className="absolute"
+          style={INSET}
         />
       </span>
-      <div className="flex gap-2">
+      <div className="flex gap-sm">
         <Button variant={ButtonVariant.secondary} onClick={() => setIndex((i) => i - 1)}>
           <ButtonText>Previous</ButtonText>
         </Button>
@@ -74,7 +79,7 @@ export const ShapeKeys: Story = {
 /** Contradicts the token defaults on purpose: a slow, linear step. */
 export const TimingOverride: Story = {
   render: () => (
-    <span className="relative block size-[120px] text-prominent">
+    <span className="relative block text-prominent" style={FRAME}>
       <MorphRotationShape
         mode={MorphRotationShapeMode.autoplay}
         shapes={[CloverShape, SquircleShape]}
@@ -95,14 +100,15 @@ function ForwardedRefDemo() {
   useEffect(() => setTag(ref.current?.tagName ?? "null"), []);
   return (
     <div className="flex flex-col items-center gap-lg">
-      <span className="relative block size-[120px] text-primary">
+      <span className="relative block text-primary" style={FRAME}>
         <MorphRotationShape
           ref={ref}
           mode={MorphRotationShapeMode.controlled}
           shapes={[CloverShape, PuffShape]}
           activeIndex={index}
           onStepComplete={() => setLanded((n) => n + 1)}
-          className="absolute inset-[11px]"
+          className="absolute"
+          style={INSET}
         />
       </span>
       <Button variant={ButtonVariant.secondary} onClick={() => setIndex((i) => i + 1)}>

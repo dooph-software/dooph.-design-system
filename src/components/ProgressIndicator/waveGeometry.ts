@@ -134,7 +134,8 @@ function splitCubicAtHalf(
  * Used by the wavy ProgressIndicator variant (not transitioned). The flat
  * variant draws the same track in CSS from one animated number — see
  * `.ds-progress-ring-track` in dooph-component-tokens.css; keep the two in
- * step (they agree at 0 and from 1 % up; flat ramps its gaps in below 1 %).
+ * step (at rest they agree at every value: no end gaps at 0, both gaps at
+ * any value above 0; flat switches its gaps at once, from the target).
  *
  * `offset` is the NEGATIVE start position (−(active + gap)), the same form
  * the flat CSS uses: it stays continuous with the full circle at 0 (offset 0),

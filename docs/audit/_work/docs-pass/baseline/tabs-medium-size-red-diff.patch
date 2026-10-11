@@ -1,0 +1,59 @@
+diff --git a/src/components/Tabs/constants.ts b/src/components/Tabs/constants.ts
+index 866ec31..c648791 100644
+--- a/src/components/Tabs/constants.ts
++++ b/src/components/Tabs/constants.ts
+@@ -8,6 +8,8 @@
+ export const TabSize = {
+   /** 38px — Figma `buttonSizes/buttonHeight`, `lg` (16px) horizontal padding. */
+   standard: "standard",
++  /** 46px — matches hero-section Button height for inline pairing. */
++  medium: "medium",
+   /** 34px — Figma `buttonSizes/smallButtonHeight`, `md` (12px) padding. */
+   sm: "sm",
+   /** 28px compact item — Figma Toggle Option "Micro", radius-mini. */
+@@ -19,6 +21,8 @@ export const TabSize = {
+   fill: "fill",
+   /** 38×38 icon-only tab. */
+   icon: "icon",
++  /** 46×46 icon-only tab, pairing with hero-section Buttons. */
++  iconMedium: "icon-medium",
+   /** 34×34 icon-only tab, pairing with the small variants. */
+   iconSm: "icon-sm",
+   /** 28×28 icon-only tab — Figma Micro icon (Tab Select "Container Icon"). */
+diff --git a/src/components/Toggle/toggleOption.ts b/src/components/Toggle/toggleOption.ts
+index 503a534..46b9dd3 100644
+--- a/src/components/Toggle/toggleOption.ts
++++ b/src/components/Toggle/toggleOption.ts
+@@ -53,6 +53,8 @@ export const toggleOptionVariants = cva(
+       size: {
+         /** 38px — Figma Standard. */
+         standard: "h-button rounded-tight px-rg",
++        /** 46px — matches hero-section Button height. */
++        medium: "h-button-medium rounded-tight px-rg",
+         /** 34px — Figma Small. */
+         sm: "h-button-sm rounded-tight px-rg",
+         /** 28px — Figma Micro, radius-mini. */
+@@ -61,6 +63,8 @@ export const toggleOptionVariants = cva(
+         fill: "h-full rounded-tight px-rg",
+         /** 38×38 icon-only. */
+         icon: "size-button p-0 rounded-tight",
++        /** 46×46 icon-only — matches hero-section Button height. */
++        "icon-medium": "size-button-medium p-0 rounded-tight",
+         /** 34×34 icon-only. */
+         "icon-sm": "size-button-sm p-0 rounded-tight",
+         /** 28×28 icon-only — Figma Micro icon. */
+diff --git a/src/styles/index.css b/src/styles/index.css
+index a329a73..6320334 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -416,6 +416,10 @@
+   .min-w-menu {
+     min-width: var(--ui-min-w-menu);
+   }
++  .size-button-medium {
++    width: var(--ui-height-button-medium);
++    height: var(--ui-height-button-medium);
++  }
+   .size-button-micro {
+     width: var(--ui-height-button-micro);
+     height: var(--ui-height-button-micro);

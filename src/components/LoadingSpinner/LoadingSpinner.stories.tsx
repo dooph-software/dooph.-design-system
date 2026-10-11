@@ -19,7 +19,7 @@ const meta = {
     },
     color: {
       control: "select",
-      options: [...Object.values(LoadingSpinnerColor), "#e05252"],
+      options: [...Object.values(LoadingSpinnerColor), "var(--ui-color-danger-primary)"],
     },
     size: {
       control: "select",
@@ -57,7 +57,7 @@ export const Star: Story = {
 
 export const AllSizes: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-lg">
       <LoadingSpinner size={LoadingSpinnerSize.sm} />
       <LoadingSpinner size={LoadingSpinnerSize.rg} />
       <LoadingSpinner size={LoadingSpinnerSize.md} />
@@ -68,7 +68,7 @@ export const AllSizes: Story = {
 
 export const AllSizesSpokes: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-lg">
       <LoadingSpinner
         variant={LoadingSpinnerVariant.spokes}
         size={LoadingSpinnerSize.sm}
@@ -130,7 +130,7 @@ export const StarStaysInBox: Story = {
 
 export const Colors: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-lg">
       <LoadingSpinner
         color={LoadingSpinnerColor.primary}
         size={LoadingSpinnerSize.md}
@@ -139,15 +139,15 @@ export const Colors: Story = {
         color={LoadingSpinnerColor.prominent}
         size={LoadingSpinnerSize.md}
       />
-      <LoadingSpinner color="#e05252" size={LoadingSpinnerSize.md} />
+      <LoadingSpinner color="var(--ui-color-danger-primary)" size={LoadingSpinnerSize.md} />
     </div>
   ),
 };
 
 export const AllVariantsAndColors: Story = {
   render: () => (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-4">
+    <div className="flex flex-col gap-xxl">
+      <div className="flex items-center gap-lg">
         <LabelText className="w-12 text-text-secondary">flat</LabelText>
         <LoadingSpinner
           variant={LoadingSpinnerVariant.flat}
@@ -160,7 +160,7 @@ export const AllVariantsAndColors: Story = {
           size={LoadingSpinnerSize.md}
         />
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-lg">
         <LabelText className="w-12 text-text-secondary">spokes</LabelText>
         <LoadingSpinner
           variant={LoadingSpinnerVariant.spokes}
@@ -188,7 +188,7 @@ export const AllVariantsAndColors: Story = {
         {/* `color` overriding the default with an arbitrary CSS colour */}
         <LoadingSpinner
           variant={LoadingSpinnerVariant.star}
-          color="#e05252"
+          color="var(--ui-color-danger-primary)"
           size={LoadingSpinnerSize.md}
         />
       </div>

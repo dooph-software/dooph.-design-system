@@ -1,0 +1,24 @@
+#12 Edit C:\Users\stick\Github\dooph\ds-sb-tabs-medium-size-red-20261008204340\src\styles\index.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-tabs-medium-size-red-20261008204340\\src\\styles\\index.css",
+  "old_string": "  .size-button-micro {\n    width: var(--ui-height-button-micro);\n    height: var(--ui-height-button-micro);\n  }",
+  "new_string": "  .size-button-medium {\n    width: var(--ui-height-button-medium);\n    height: var(--ui-height-button-medium);\n  }\n  .size-button-micro {\n    width: var(--ui-height-button-micro);\n    height: var(--ui-height-button-micro);\n  }"
+}
+
+#13 Edit C:\Users\stick\Github\dooph\ds-sb-tabs-medium-size-red-20261008204340\src\components\Toggle\toggleOption.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-tabs-medium-size-red-20261008204340\\src\\components\\Toggle\\toggleOption.ts",
+  "old_string": "      size: {\n        /** 38px — Figma Standard. */\n        standard: \"h-button rounded-tight px-rg\",\n        /** 34px — Figma Small. */\n        sm: \"h-button-sm rounded-tight px-rg\",\n        /** 28px — Figma Micro, radius-mini. */\n        micro: \"h-button-micro rounded-mini px-rg\",\n        /** Follows the parent's height (nested segmented rows). */\n        fill: \"h-full rounded-tight px-rg\",\n        /** 38×38 icon-only. */\n        icon: \"size-button p-0 rounded-tight\",\n        /** 34×34 icon-only. */\n        \"icon-sm\": \"size-button-sm p-0 rounded-tight\",\n        /** 28×28 icon-only — Figma Micro icon. */\n        \"icon-micro\": \"size-button-micro p-0 rounded-mini\",\n      },",
+  "new_string": "      size: {\n        /** 38px — Figma Standard. */\n        standard: \"h-button rounded-tight px-rg\",\n        /** 46px — matches hero-section Button height. */\n        medium: \"h-button-medium rounded-tight px-rg\",\n        /** 34px — Figma Small. */\n        sm: \"h-button-sm rounded-tight px-rg\",\n        /** 28px — Figma Micro, radius-mini. */\n        micro: \"h-button-micro rounded-mini px-rg\",\n        /** Follows the parent's height (nested segmented rows). */\n        fill: \"h-full rounded-tight px-rg\",\n        /** 38×38 icon-only. */\n        icon: \"size-button p-0 rounded-tight\",\n        /** 46×46 icon-only — matches hero-section Button height. */\n        \"icon-medium\": \"size-button-medium p-0 rounded-tight\",\n        /** 34×34 icon-only. */\n        \"icon-sm\": \"size-button-sm p-0 rounded-tight\",\n        /** 28×28 icon-only — Figma Micro icon. */\n        \"icon-micro\": \"size-button-micro p-0 rounded-mini\",\n      },"
+}
+
+#14 Edit C:\Users\stick\Github\dooph\ds-sb-tabs-medium-size-red-20261008204340\src\components\Tabs\constants.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-tabs-medium-size-red-20261008204340\\src\\components\\Tabs\\constants.ts",
+  "old_string": "export const TabSize = {\n  /** 38px — Figma `buttonSizes/buttonHeight`, `lg` (16px) horizontal padding. */\n  standard: \"standard\",\n  /** 34px — Figma `buttonSizes/smallButtonHeight`, `md` (12px) padding. */\n  sm: \"sm\",\n  /** 28px compact item — Figma Toggle Option \"Micro\", radius-mini. */\n  micro: \"micro\",\n  /**\n   * Height follows the parent instead of a fixed value — for a segmented row\n   * nested in a control whose own height is authoritative.\n   */\n  fill: \"fill\",\n  /** 38×38 icon-only tab. */\n  icon: \"icon\",\n  /** 34×34 icon-only tab, pairing with the small variants. */\n  iconSm: \"icon-sm\",\n  /** 28×28 icon-only tab — Figma Micro icon (Tab Select \"Container Icon\"). */\n  iconMicro: \"icon-micro\",\n} as const;",
+  "new_string": "export const TabSize = {\n  /** 38px — Figma `buttonSizes/buttonHeight`, `lg` (16px) horizontal padding. */\n  standard: \"standard\",\n  /** 46px — matches hero-section Button height for inline pairing. */\n  medium: \"medium\",\n  /** 34px — Figma `buttonSizes/smallButtonHeight`, `md` (12px) padding. */\n  sm: \"sm\",\n  /** 28px compact item — Figma Toggle Option \"Micro\", radius-mini. */\n  micro: \"micro\",\n  /**\n   * Height follows the parent instead of a fixed value — for a segmented row\n   * nested in a control whose own height is authoritative.\n   */\n  fill: \"fill\",\n  /** 38×38 icon-only tab. */\n  icon: \"icon\",\n  /** 46×46 icon-only tab, pairing with hero-section Buttons. */\n  iconMedium: \"icon-medium\",\n  /** 34×34 icon-only tab, pairing with the small variants. */\n  iconSm: \"icon-sm\",\n  /** 28×28 icon-only tab — Figma Micro icon (Tab Select \"Container Icon\"). */\n  iconMicro: \"icon-micro\",\n} as const;"
+}
+

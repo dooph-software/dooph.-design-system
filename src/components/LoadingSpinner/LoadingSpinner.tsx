@@ -27,9 +27,9 @@
  *   --ui-color-border-primary, never the indicator colour.
  *
  * ## constraints
- * - No duration, easing, timer or animation loop in this file (Rule 6). The
- *   clock is the --ui-spinner-* tokens; the sweep range and the per-size
- *   factor are geometry and reach CSS as plain numbers.
+ * - No duration, easing, timer or animation loop in this file (motion lives
+ *   in CSS, on tokens). The clock is the --ui-spinner-* tokens; the sweep
+ *   range and the per-size factor are geometry and reach CSS as plain numbers.
  * - The flat arcs share one OPEN path that runs TWO laps of the circle from
  *   one gap before 12 o'clock. The arc's tail travels almost a full turn per
  *   cycle and the track runs on past the arc's tail, so on a one-lap path or

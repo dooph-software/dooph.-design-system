@@ -1,8 +1,8 @@
 /*
- * The shape-morph spring. The ONLY place its constants live (architecture
- * Rule 6): generate-shape-morph-ease.mjs bakes it into the
- * --ui-shape-morph-duration / --ui-shape-morph-ease tokens, and no component
- * reads these values.
+ * The shape-morph spring. The ONLY place its constants live:
+ * generate-shape-morph-ease.mjs bakes it into the --ui-shape-morph-duration /
+ * --ui-shape-morph-ease tokens, because motion timing reaches components only
+ * through tokens. No component reads these values.
  *
  * Ports Jetpack Compose SpringSimulation.updateValues (analytic position) and
  * estimateAnimationDurationMillis (when Animatable declares a spring done and

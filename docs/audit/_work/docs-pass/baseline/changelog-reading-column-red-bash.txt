@@ -1,0 +1,65 @@
+#1 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/
+    | -rw-r--r-- 1 stick 197609   265 Oct  8 20:59 next.config.ts
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:09 node_modules
+    | -rw-r--r-- 1 stick 197609 99068 Oct  8 21:08 package-lock.json
+    | -rw-r--r-- 1 stick 197609   635 Oct  8 20:59 package.json
+    | -rw-r--r-- 1 stick 197609   666 Oct  8 20:59 tsconfig.json
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 vendor
+#4 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app -type f \( -name "*.tsx" -o -name "*.ts" -o -name "*.jsx" -o -name "*.js" -o -name "*.css" \) | head -50
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/dashboard/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/globals.css
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/layout.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/page.tsx
+#5 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/components -type f | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/components/theme-toggle.tsx
+#11 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/lib -type f
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/lib/plans.ts
+#13 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/vendor/
+    | total 548
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 21:09 ..
+    | -rw-r--r-- 1 stick 197609 554087 Oct  8 21:08 dooph-software-design-system-5.3.0.tgz
+#14 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app -type d
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/dashboard
+#16 Bash  [is_error]: tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | head -50
+    | This Bash command contains multiple operations. The following part requires approval: tar -tzf vendor/dooph-software-design-system-5.3.0.tgz
+#17 Bash  [is_error]: tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | head -80
+    | This Bash command contains multiple operations. The following part requires approval: tar -tzf vendor/dooph-software-design-system-5.3.0.tgz
+#18 Bash  [is_error]: tar -tzf vendor/dooph-software-design-system-5.3.0.tgz 2>&1 | head -100
+    | This Bash command contains multiple operations. The following part requires approval: tar -tzf vendor/dooph-software-design-system-5.3.0.tgz 2>&1
+#19 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules -name "*.css" -path "*design-system*" | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist/styles.css
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist/theme.css
+#22 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6 -name "tailwind.config.*" -o -name "tailwind.css"
+    | (Bash completed with no output)
+#23 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app -type f
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/dashboard/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/favicon.ico
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/globals.css
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/layout.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/page.tsx
+#25 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist -type f -name "*.d.ts" | head -30
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist/components/Avatar/constants.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist/components/Avatar/index.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist/components/Button/Button.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist/components/Button/constants.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist/components/Button/index.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist/components/Calendar/Calendar.d.ts
+#26 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist -name "index.d.ts" -not -path "*/components/*" -not -path "*/hooks/*" | head -5
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist/index.d.ts
+#29 Bash: grep -n "ui-color\|ui-spacing\|ui-radius\|ui-font" /c/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/node_modules/@dooph-software/design-system/dist/styles.css | head -100
+    | 978:    padding-top: var(--ui-spacing-rg);
+    | 981:    padding-top: var(--ui-spacing-sm);
+    | 984:    padding-top: var(--ui-spacing-toast-inset);
+    | 987:    padding-right: var(--ui-spacing-lg);
+    | 990:    padding-right: var(--ui-spacing-md);
+    | 996:    padding-right: var(--ui-spacing-sm);
+#32 Bash: mkdir -p "C:/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6/app/changelog"
+    | (Bash completed with no output)
+#35 Bash: cd "C:/Users/stick/Github/dooph/ds-consumer-sb-c847d62c17d6" && npm run typecheck 2>&1
+    | > ds-consumer-template@0.1.0 typecheck
+    | > next typegen && tsc --noEmit
+    | 
+    | Generating route types...
+    | ✓ Types generated successfully

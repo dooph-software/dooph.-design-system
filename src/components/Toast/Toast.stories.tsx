@@ -111,7 +111,7 @@ export const Persistent: Story = {
       const [activeId, setActiveId] = useState<string | null>(null);
 
       return (
-        <div className="flex gap-3">
+        <div className="flex gap-md">
           <Button
             variant={ButtonVariant.primary}
             onClick={() => {
@@ -148,7 +148,7 @@ export const Persistent: Story = {
 export const AllVariants: Story = {
   render: () => (
     <ToastProvider>
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-md">
         <ToastDemo label="Saved successfully" variant={ToastVariant.simple} />
         <ToastDemo label="Published" variant={ToastVariant.prominent} />
         <ToastDemo label="Upload failed" variant={ToastVariant.danger} />

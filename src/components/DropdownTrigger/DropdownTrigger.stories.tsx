@@ -112,7 +112,7 @@ export const TextAsChild: Story = {
 
 export const AllTriggers: Story = {
   render: () => (
-    <div className="flex flex-col gap-3 p-4 w-60">
+    <div className="flex flex-col gap-md p-lg w-60">
       <DropdownTrigger>Secondary trigger</DropdownTrigger>
       <TypeableDropdownTrigger placeholder="Typeable trigger" />
       <TextDropdownTrigger>Text trigger</TextDropdownTrigger>

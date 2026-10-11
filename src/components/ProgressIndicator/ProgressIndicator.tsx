@@ -1,3 +1,35 @@
+/*
+ * ProgressIndicator — determinate circular progress, flat or wavy.
+ *
+ * ## behavior
+ * - `progress` is 0–1; anything outside that range, or NaN, throws.
+ * - Renders `role="progressbar"` with `aria-valuenow` = round(progress × 100)
+ *   on a 0–100 range, named "Progress" by default. A consumer's `aria-label`
+ *   replaces that name; a consumer's `aria-labelledby` drops it.
+ * - Flat: the <svg> sets `--ds-pi-progress`, `--ds-pi-c`, `--ds-pi-gap` and
+ *   `--ds-pi-gap-on` inline, and `.ds-progress-ring` eases to a new value on
+ *   the motion scale. Wavy: nothing transitions; the consumer drives
+ *   `progress` gradually for motion.
+ * - The consumer's `style` merges last and wins.
+ *
+ * ## constraints
+ * - The flat ring animates exactly ONE value, `--ds-pi-progress`. Every dash
+ *   length, offset and opacity of both circles is a calc() of it in
+ *   `.ds-progress-ring-indicator` / `-track` (dooph-component-tokens.css).
+ *   Never transition `stroke-dasharray`, `stroke-dashoffset`, the gap or any
+ *   second property: when a new `progress` interrupts the motion, independent
+ *   transitions restart from their own mid-flight values and disagree, and
+ *   the track overlaps the indicator, slides backwards or vanishes.
+ * - The end gaps switch with `--ds-pi-gap-on`, a discrete 0 or 1 set inline
+ *   from the TARGET (`progress > 0`). It stays unregistered so it never
+ *   transitions. Never register it, transition it or derive it from the
+ *   animated `--ds-pi-progress`: an animated gap is a second moving value and
+ *   brings back the race above, and a gap read from the animated value ramps
+ *   in over the first 1 %, so small values stop matching the static ring.
+ * - Both flat circles stay mounted, and a zero-length arc fades through its
+ *   stroke-opacity. A zero-length round-capped dash still paints a dot, and
+ *   unmounting an arc mid-animation makes it reappear with no transition.
+ */
 // No "use client": the only hook here is useMemo, which React's server build
 // exports, so this module is neutral — it renders in either graph. Adding a
 // state/effect/ref hook would make it client-only again.
@@ -69,9 +101,7 @@ type InnerSvgProps = ComponentPropsWithoutRef<"svg"> & {
  * number (motion scale `slow` on `standard`). Every dash value of both arcs is
  * a calc() of it in `.ds-progress-ring-indicator` / `-track`, so every frame —
  * including frames of a transition interrupted by a new `progress` — is one
- * self-consistent drawing. Transitioning the dash properties themselves (the
- * earlier `.ds-progress-arc`) let four independent transitions restart from
- * their own mid-flight values, and the track slid backwards or vanished.
+ * self-consistent drawing (see the header's constraints).
  *
  * Both circles are always mounted: a zero-length round-capped dash still
  * paints a dot, so each arc's stroke-opacity drops to 0 when its length is
@@ -256,6 +286,9 @@ function WavyProgressIndicator({
  *
  * Throws if `progress` is outside [0, 1] or NaN — invalid values are always a bug.
  *
+ * Its accessible name is "Progress" unless you pass `aria-label` or
+ * `aria-labelledby`.
+ *
  * ```tsx
  * <ProgressIndicator progress={0.6} />
  * <ProgressIndicator progress={progress} variant={ProgressIndicatorVariant.wavy} />
@@ -292,6 +325,9 @@ export const ProgressIndicator = forwardRef<
       "aria-valuenow": Math.round(progress * 100),
       "aria-valuemin": 0,
       "aria-valuemax": 100,
+      // Default name; a consumer `aria-label` in `props` replaces it, and a
+      // consumer `aria-labelledby` names the bar instead, so none is set then.
+      "aria-label": props["aria-labelledby"] ? undefined : "Progress",
       className: cn(className),
       ref,
       ...props,

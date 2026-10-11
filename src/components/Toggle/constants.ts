@@ -11,7 +11,7 @@
  *              per item (<ToggleSwitchItem variant={ToggleVariant.unselected}>)
  *              for an option that must never read as chosen
  *
- * BREAKING (major): `secondary` was renamed `ghost` to match Figma.
+ * `ghost` is the Figma variant name.
  */
 export const ToggleVariant = {
   primary: "primary",
@@ -22,8 +22,8 @@ export type ToggleVariant = (typeof ToggleVariant)[keyof typeof ToggleVariant];
 
 /**
  * Named after the Figma Toggle Switch sizes.
- * default 38 · sm 34 · icon 38×38 · iconSm = Figma "Icon Small", the 28×28
- * MICRO icon option (not the 34×34 one).
+ * standard 38 · sm 34 · icon 38×38 · iconMicro 28×28 = Figma "Icon Small",
+ * the MICRO icon option (not the 34×34 one).
  */
 export const ToggleSize = {
   standard: "standard",

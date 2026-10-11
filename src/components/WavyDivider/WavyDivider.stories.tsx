@@ -51,8 +51,8 @@ export const HeavyStroke: Story = {
 
 export const BothVariants: Story = {
   render: () => (
-    <div className="flex w-80 flex-col gap-6">
-      <div className="flex flex-col gap-2">
+    <div className="flex w-80 flex-col gap-xxl">
+      <div className="flex flex-col gap-sm">
         <LabelText className="text-text-secondary">
           High frequency
         </LabelText>
@@ -61,7 +61,7 @@ export const BothVariants: Story = {
           className="text-border"
         />
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-sm">
         <LabelText className="text-text-secondary">
           Low frequency
         </LabelText>
@@ -73,7 +73,7 @@ export const BothVariants: Story = {
 
 export const Variants: Story = {
   render: () => (
-    <div className="flex w-80 flex-col gap-4">
+    <div className="flex w-80 flex-col gap-lg">
       <WavyDivider variant={WavyDividerVariant.high} className="text-primary" />
       <WavyDivider variant={WavyDividerVariant.high} className="text-prominent" />
       <WavyDivider variant={WavyDividerVariant.high} className="text-border" />
@@ -87,7 +87,7 @@ export const Variants: Story = {
 
 export const InContext: Story = {
   render: () => (
-    <div className="flex w-80 flex-col gap-4 rounded-normal border border-border-primary bg-surface-primary p-5">
+    <div className="flex w-80 flex-col gap-lg rounded-normal border border-border-primary bg-surface-primary p-xl">
       <BodyText as="p" className="text-text">
         Above the divider — some content goes here.
       </BodyText>

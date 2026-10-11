@@ -189,19 +189,19 @@ export const Colors: Story = {
   name: "Icon Colors",
   render: () => (
     <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
-      <LightModeIcon size={IconSize.md} color="var(--color-text)" />
+      <LightModeIcon size={IconSize.md} color="var(--ui-color-text)" />
       <LightModeIcon
         size={IconSize.md}
-        color="var(--color-text-secondary)"
+        color="var(--ui-color-text-secondary)"
       />
       <LightModeIcon
         size={IconSize.md}
-        color="var(--color-text-tertiary)"
+        color="var(--ui-color-text-tertiary)"
       />
-      <LightModeIcon size={IconSize.md} color="var(--color-prominent-color)" />
-      <HeartFillIcon size={IconSize.md} color="var(--color-prominent-color)" />
-      <StopFilledIcon size={IconSize.md} color="var(--color-prominent-color)" />
-      <TagIcon size={IconSize.md} color="var(--color-prominent-color)" />
+      <LightModeIcon size={IconSize.md} color="var(--ui-prominent-color)" />
+      <HeartFillIcon size={IconSize.md} color="var(--ui-prominent-color)" />
+      <StopFilledIcon size={IconSize.md} color="var(--ui-prominent-color)" />
+      <TagIcon size={IconSize.md} color="var(--ui-prominent-color)" />
     </div>
   ),
 };

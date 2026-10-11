@@ -1,0 +1,11 @@
+RUN OK
+subtype: success  is_error: false  turns: 6  cost_usd: 0.30440969999999995  duration_ms: 71978
+permission_denials (0):
+
+--- final text ---
+Done. I added three rules after the existing `pre code` reset:
+
+- **`.dark .ds-chat-prose pre`** and **`.dark .ds-chat-prose code`** — sets background to `#0e0e10` in dark mode only
+- **`.dark .ds-chat-prose pre code`** — keeps the nested `code` inside `pre` transparent so it doesn't double-up
+
+Light mode is untouched since none of these rules apply without the `.dark` ancestor.

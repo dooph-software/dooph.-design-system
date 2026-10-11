@@ -1,0 +1,6 @@
+/* Fixture: dark-mode rules or hex colours outside tokens.css, a stale
+ * allowlist entry. One violation: allowlists.json lists a mask stop line this
+ * file no longer has. */
+.ds-fixture-stale {
+  mask-image: linear-gradient(transparent, var(--ui-fixture-stop), transparent);
+}

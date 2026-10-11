@@ -1,0 +1,8 @@
+#24 Edit C:/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/styles/dooph-component-tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/styles/dooph-component-tokens.css",
+  "old_string": "  .ds-chat-prose pre code {\n    background-color: transparent;\n    padding: 0;\n    border-radius: 0;\n  }",
+  "new_string": "  .ds-chat-prose pre code {\n    background-color: transparent;\n    padding: 0;\n    border-radius: 0;\n  }\n  .dark .ds-chat-prose pre,\n  .dark .ds-chat-prose code {\n    background-color: #0e0e10;\n  }\n  .dark .ds-chat-prose pre code {\n    background-color: transparent;\n  }"
+}
+

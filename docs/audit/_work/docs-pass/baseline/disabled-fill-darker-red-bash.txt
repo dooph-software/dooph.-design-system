@@ -1,0 +1,9 @@
+#7 Bash: find /c/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114 -type f -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | head -30
+    | /c/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/node_modules/@babel/core/lib/config/helpers/config-api.js
+    | /c/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/node_modules/@babel/core/lib/config/helpers/deep-array.js
+    | /c/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/node_modules/@babel/core/lib/config/helpers/environment.js
+    | /c/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/node_modules/@babel/core/lib/config/index.js
+    | /c/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/node_modules/@babel/core/lib/config/item.js
+    | /c/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/node_modules/@babel/core/lib/config/partial.js
+#45 Bash: npx tsc --noEmit 2>&1 | head -20
+    | (Bash completed with no output)

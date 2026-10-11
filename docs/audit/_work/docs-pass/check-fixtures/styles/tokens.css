@@ -1,0 +1,39 @@
+/* Support file: a clean tokens file. Nothing here may be reported.
+ * The motion literal below proves tokens.css is exempt from motion timing. */
+@layer ds.tokens, ds.expression;
+
+@layer ds.tokens {
+:root,
+.light {
+  --ui-fixture-paint: #000000;
+  --ui-fixture-alias: var(--ui-fixture-paint);
+  --ui-motion-duration-fast: 150ms;
+}
+
+.dark {
+  --ui-fixture-paint: #ffffff;
+  --ui-fixture-alias: var(--ui-fixture-paint);
+}
+
+:root {
+  --ui-fixture-expr: 1; /* expression */
+}
+} /* @layer ds.tokens */
+
+@layer ds.expression {
+  [data-ds-expression="practical"] {
+    --ui-fixture-expr: 0;
+  }
+}
+
+.ds-expr-fixture {
+  transform: scale(var(--ui-fixture-expr));
+}
+
+/* Near-miss for dark-outside-tokens: tokens.css is scanned for
+ * prefers-color-scheme, and a reduced-motion query must not match. */
+@media (prefers-reduced-motion: reduce) {
+  .ds-expr-fixture {
+    transform: none;
+  }
+}

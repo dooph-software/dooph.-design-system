@@ -9,7 +9,7 @@ const meta = {
   parameters: { layout: "centered" },
   argTypes: {
     size: { control: "select", options: Object.values(LoadingSpinnerSize) },
-    color: { control: "select", options: [...Object.values(LoadingSpinnerColor), "#e05252"] },
+    color: { control: "select", options: [...Object.values(LoadingSpinnerColor), "var(--ui-color-danger-primary)"] },
   },
 } satisfies Meta<typeof ShapeMorphSpinner>;
 export default meta;
@@ -19,7 +19,7 @@ export const Default: Story = {};
 
 export const AllSizes: Story = {
   render: () => (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-xxl">
       {Object.values(LoadingSpinnerSize).map((s) => (
         <ShapeMorphSpinner key={s} size={s} />
       ))}
@@ -27,12 +27,12 @@ export const AllSizes: Story = {
   ),
 };
 
-/** Contradicts the default colour: prominent, then an arbitrary hex. */
+/** Contradicts the default colour: prominent, then any CSS colour (a token var() here). */
 export const Colors: Story = {
   render: () => (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-xxl">
       <ShapeMorphSpinner color={LoadingSpinnerColor.prominent} size={LoadingSpinnerSize.xl} />
-      <ShapeMorphSpinner color="#e05252" size={LoadingSpinnerSize.xl} />
+      <ShapeMorphSpinner color="var(--ui-color-danger-primary)" size={LoadingSpinnerSize.xl} />
     </div>
   ),
 };

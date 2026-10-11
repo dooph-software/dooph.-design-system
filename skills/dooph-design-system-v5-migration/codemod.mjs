@@ -4,19 +4,18 @@
  *
  * Two jobs, deliberately separated:
  *   AUTO   — pure renames, identical rendering. Applied with --write.
- *   REPORT — the danger palette, whose DEFAULTS were redesigned. It is not a
- *            rename, so this script refuses to guess and prints file:line for a
- *            human to eyeball instead.
+ *   REPORT — the danger palette, which was redesigned rather than renamed.
+ *            There is no correct mechanical mapping, so this script refuses to
+ *            guess and prints file:line for a human instead.
  *
  * Usage:
- *   node codemod.mjs [dir]            # dry run, prints everything
- *   node codemod.mjs [dir] --write    # apply the AUTO renames
+ *   node codemod.mjs [path]            # dry run, prints everything
+ *   node codemod.mjs [path] --write    # apply the AUTO renames
  *
- * The danger report is ADVISORY and does not fail the run: 5.4 reinstated every
- * --ui-color-danger* token under its v4 name, so a v4 override once again lands
- * in a real slot, and gating CI on its mere presence would fail correct code.
- * What changed is what those slots DEFAULT to — a visual check, which no exit
- * code can stand in for.
+ * Exit code (CI gates on it, so it must mean "work pending"):
+ *   1  a dry run found AUTO renames still to apply, or a REPORT item remains
+ *   2  the path could not be read (missing, or a folder under it unreadable)
+ *   0  otherwise
  */
 import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
@@ -41,18 +40,23 @@ const RENAMES = {
   BarChartIcon: "BarChartAxesIcon",
 };
 
-/* Removed in v5, reinstated in 5.4 under the SAME names. `ButtonVariant.danger`
- * is a secondary-surface button with danger-coloured text that fills on hover,
- * not v4's solid red one — so the slots line up but their defaults do not. */
+/* Removed in v5. `ButtonVariant.danger` is now a secondary-surface button with
+ * error-coloured text that fills on hover, not a solid red one — so these have
+ * no one-to-one replacement. */
 const DANGER_TOKEN = /--ui-color-danger(?:-[a-z-]+)?/g;
 const DANGER_CLASS =
   /(?<![\w-])(?:[a-z-]+:)*(?:bg|text|border|ring|outline|fill|stroke|from|via|to)-danger(?:-[a-z]+)*(?![\w-])/g;
+
+/* A path that cannot be read is reported and fails the run with 2. Swallowing
+ * it would let a typo'd path, or an unreadable folder, pass as "nothing to do". */
+const unreadable = [];
 
 function walk(dir, out = []) {
   let entries;
   try {
     entries = readdirSync(dir);
-  } catch {
+  } catch (err) {
+    unreadable.push({ path: dir, code: err.code ?? err.message });
     return out;
   }
   for (const name of entries) {
@@ -61,7 +65,12 @@ function walk(dir, out = []) {
     let st;
     try {
       st = statSync(p);
-    } catch {
+    } catch (err) {
+      // Only a source file we would have scanned fails the run; a dangling
+      // non-source symlink (a socket, a stale .env link) is not pending work.
+      if (EXT.has(extname(p))) {
+        unreadable.push({ path: p, code: err.code ?? err.message });
+      }
       continue;
     }
     if (st.isDirectory()) walk(p, out);
@@ -70,11 +79,26 @@ function walk(dir, out = []) {
   return out;
 }
 
+let rootStat;
+try {
+  rootStat = statSync(ROOT);
+} catch (err) {
+  console.error(`codemod: cannot read ${ROOT} (${err.code ?? err.message})`);
+  process.exit(2);
+}
+const files = rootStat.isDirectory() ? walk(ROOT) : [ROOT];
+
 const renamed = [];
 const manual = [];
 
-for (const file of walk(ROOT)) {
-  const before = readFileSync(file, "utf8");
+for (const file of files) {
+  let before;
+  try {
+    before = readFileSync(file, "utf8");
+  } catch (err) {
+    unreadable.push({ path: file, code: err.code ?? err.message });
+    continue;
+  }
   let after = before;
 
   for (const [from, to] of Object.entries(RENAMES)) {
@@ -90,7 +114,8 @@ for (const file of walk(ROOT)) {
   if (WRITE && after !== before) writeFileSync(file, after, "utf8");
 
   before.split("\n").forEach((line, i) => {
-    if (line.trimStart().startsWith("*")) return; // doc comments
+    // Doc-comment lines (` * …`, ` */`). Not a CSS universal selector (`* {`).
+    if (/^\s*\*(\s|\/|$)/.test(line) && !/^\s*\*\s*[{,>+~]/.test(line)) return;
     for (const [re, kind] of [
       [DANGER_TOKEN, "token"],
       [DANGER_CLASS, "class"],
@@ -113,7 +138,7 @@ for (const r of renamed) {
   console.log(`  ${r.file}  ${r.from} -> ${r.to}  (${plural(r.count, "use")})`);
 }
 
-console.log("\n== WORTH A LOOK: the danger palette was redesigned ==");
+console.log("\n== NEEDS A HUMAN: the danger palette was redesigned ==");
 if (!manual.length) {
   console.log("  none found");
 } else {
@@ -121,24 +146,29 @@ if (!manual.length) {
     console.log(`  ${m.file}:${m.line}  [${m.kind}]  ${m.text}`);
   }
   console.log(`
-  These tokens and classes EXIST again as of 5.4, under their v4 names — v5
-  removed them and 5.4 brought the whole family back. So nothing here is
-  broken, and this list is advisory rather than a failure.
+  The nine --ui-color-danger* tokens are gone, and so are the Tailwind classes
+  they generated. Overriding a token that no longer exists fails SILENTLY, and a
+  removed utility class produces no rule at all.
 
-  What changed is the DEFAULTS. v4's danger button was solid red; today's is a
-  secondary surface carrying danger-coloured text that fills on hover/active,
-  and every --ui-color-danger* token now defaults to an alias expressing that:
-    --ui-color-danger / -border / -disabled   alias the SECONDARY family
-    --ui-color-danger-hover                   aliases --ui-color-danger-secondary
-    --ui-color-danger-active / -foreground    alias --ui-color-danger-primary
+  v5's danger button is a secondary surface with error-coloured text that fills
+  on hover/active. Retune it through:
+    --ui-color-error-primary     the resting text colour and the active fill
+    --ui-color-error-secondary   the hover fill
+    --ui-color-secondary*        the surface and border it sits on
 
-  A v4 override therefore still lands in a real slot, but it is pinning one
-  step of a design that no longer looks the way it did. Open each occurrence
-  above, decide whether the override is still what you want, and check the
-  result in a browser.`);
+  For your own markup, the nearest equivalents are bg-error-primary /
+  text-error-primary / border-error-primary. There is no replacement for
+  *-danger-fg, *-danger-disabled, or the *-danger-border-* trio; decide those
+  against the new two-colour model rather than mapping them one to one.`);
 }
 
-if (!WRITE && renamed.length) {
+if (unreadable.length) {
+  console.error("\n== COULD NOT READ ==");
+  for (const u of unreadable) console.error(`  ${u.path}  (${u.code})`);
+}
+
+const renamesPending = !WRITE && renamed.length > 0;
+if (renamesPending) {
   console.log("\nRe-run with --write to apply the renames.");
 }
-process.exit(0);
+process.exit(unreadable.length ? 2 : renamesPending || manual.length ? 1 : 0);

@@ -1,274 +1,59 @@
 ---
 name: dooph-ds-loading-indicators
-description: Use when building, modifying, or debugging WavyDivider, LoadingSpinner, or ProgressIndicator. Covers spinner animation, Material-style rounded-wave geometry, shared sizing, and key constraints that prevent common mistakes.
+description: Use when editing or debugging LoadingSpinner, ShapeMorphSpinner, ProgressIndicator, WavyDivider or MorphRotationShape; when touching spinnerGeometry.ts, waveGeometry.ts, MorphRotationShape/engine, the .ds-spinner-*, .ds-progress-ring* or .ds-shape-morph CSS, the --ui-spinner-*, --ui-size-spinner-* or --ui-shape-morph-* tokens, or shapeMorphSpring.mjs; or when a spinner arc flashes, a track shows a stray dot or jumps back, or a morph snaps.
 ---
 
-# dooph Design System — Loading Indicators & WavyDivider
+# Loading indicators
 
-Four components form the M3E-inspired indicator family. `LoadingSpinner` and `ShapeMorphSpinner` are indeterminate (no `progress` prop), while `ProgressIndicator` is determinate and exclusively owns the circular rounded-wave geometry.
+Geometry lives in TypeScript as plain numbers in the SVG's user units; every clock lives in CSS, on tokens. The rendered size is always the `--ui-size-spinner-*` token.
 
----
+**Not for** LinearProgressIndicator (its own header contract), general motion and SVG rules (dooph-ds-styling), or editing tokens (dooph-ds-editing-tokens).
 
-## Component Map
+## The family
 
-| Component           | Variant          | Prop surface                                               |
-| ------------------- | ---------------- | ---------------------------------------------------------- |
-| `WavyDivider`       | `high` \| `low`  | `variant`, `strokeWeight`, `className` + SVG spread        |
-| `LoadingSpinner`    | `flat` \| `spokes` | `variant`, `color`, `size`, + SVG spread                  |
-| `ProgressIndicator` | `flat` \| `wavy` | `progress` (0–1), `variant`, `color`, `size`, + SVG spread |
-| `ShapeMorphSpinner` | —                | `size`, `color`, `shapes`, `timing`, + span spread        |
+| Component | Looks | What moves it |
+|---|---|---|
+| LoadingSpinner | `flat`, `spokes`, `star` | CSS only (`.ds-spinner-*`) |
+| ProgressIndicator | `flat`, `wavy` | flat: one transitioned number, `--ds-pi-progress`; wavy: the consumer's `progress` |
+| ShapeMorphSpinner | MorphRotationShape in `autoplay` | the shape-morph clock |
+| MorphRotationShape | `autoplay`, `controlled`, `embedded` | a CSS transition of `--ds-shape-morph-step`, sampled by a rAF loop (the only `"use client"` module here) |
+| WavyDivider | `high` (20px period), `low` (40px) | static |
 
-All enums follow the dot-accessible pattern required by architecture Rule 1:
+The three indicators share `LoadingSpinnerSize` (`sm` 16, `rg` 22 default, `md` 32, `xl` 40 px) and `color` (a DS colour name or any CSS colour, default `primary`). Tracks are always `--ui-color-border-primary`. ProgressIndicator throws on `progress` outside [0, 1] or NaN.
 
-```ts
-LoadingSpinnerVariant.flat / .spokes
-LoadingSpinnerColor.primary / .brand   // or arbitrary hex via color prop
-LoadingSpinnerSize.sm / .rg / .md / .xl  // 16px / 22px / 32px / 40px diameter
-WavyDividerVariant.high / .low
-```
+Formulas and numbers: [references/spinner-and-progress-geometry.md](references/spinner-and-progress-geometry.md), [references/shape-morph.md](references/shape-morph.md).
 
-`ProgressIndicator` imports `LoadingSpinnerVariant`, `LoadingSpinnerColor`, and `LoadingSpinnerSize` directly — the same const objects, not copies.
+## Rules
 
----
+1. **No duration, easing curve or timer in these files;** per-size factors reach CSS as plain numbers. The one loop is MorphRotationShape's allowlisted rAF sampler, which only reads transitioned values. *Prevents:* a JS clock that desyncs from its token and reduced motion. Lint checks: "motion timing literals outside tokens.css", "JS timers and animation loops outside their allowlist".
+2. **Size through the token, as CSS `width`/`height`;** the numeric diameter stays in the intrinsic attributes (and the `viewBox` for flat and ProgressIndicator). *Prevents:* dead size tokens. Lint check: "var() in SVG geometry attributes".
+3. **The flat spinner's arcs are dashes on one OPEN two-lap path**, never one lap, never a `<circle>`. *Prevents:* a dash crossing the seam, splitting and flashing its round caps.
+4. **Keep `1 − SPINNER_MAX_SWEEP − 2·gap/C > 0` at every size** (`sm` is tightest: 0.098 turn). *Prevents:* a zero-length track dash, which a round cap paints as a dot.
+5. **The flat ring transitions ONLY `--ds-pi-progress`;** every dash value is a `calc()` of it, and `--ds-pi-gap-on` stays unregistered, set from the target. *Prevents:* independent dash transitions restarting mid-flight, so the track slides back or vanishes.
+6. **A zero-length arc fades (flat) or is omitted (wavy: `null` track, no indicator at 0).** *Prevents:* a round-cap dot, or a remount mid-animation.
+7. **MorphRotationShape: React writes `d` and `transform` on the first render only.** *Prevents:* a re-render mid-step snapping the shape.
+8. **Never clamp the step or round a target;** the range comes from `widenRange`. *Prevents:* losing the backspin, drawing the wrong morph while overshooting, erasing a resting hover nudge.
+9. **Listen only on the shape's own span;** `embedded` gets state through inherited CSS. *Prevents:* a listener on a host the shape does not own, which breaks inside a consumer's custom trigger.
+10. **Retune the spring in `scripts/shapeMorphSpring.mjs`, then run `npm run generate-shape-morph-ease`.** *Prevents:* `npm run build` overwriting a hand-edited token.
+11. **Fix the vendored engine only in `engine/svgPath.ts`.** *Prevents:* a port that can no longer be diffed against upstream.
 
-## Sizes & Geometry
+## Common mistakes
 
-| Token                  | Size key | Diameter | Stroke width |
-| ---------------------- | -------- | -------- | ------------ |
-| `--ui-size-spinner-sm` | `sm`     | 16 px    | 2 px         |
-| `--ui-size-spinner-rg` | `rg`     | 22 px    | 2.5 px       |
-| `--ui-size-spinner-md` | `md`     | 32 px    | 3 px         |
-| `--ui-size-spinner-xl` | `xl`     | 40 px    | 3 px         |
+| Thought | Reality |
+|---|---|
+| "A `<circle>` with a dashoffset is simpler." | A one-lap path cuts a dash at the seam. |
+| "Transition the ring's dasharray and dashoffset." | Interrupted, four transitions disagree. |
+| "`SPINNER_DIAMETERS` is the rendered size." | It is the `viewBox` space. The token is the rendered size. |
+| "Clamp the overshoot, it looks like a glitch." | The ease peaks at ≈ 1.095 on purpose: that is the backspin. |
+| "Reduced motion should be 0ms." | 0ms fires no `transitionrun`, so the shape never samples. The global block uses 1ms. |
 
-Values live in both `tokens.css` (`--ui-size-spinner-*`) and `spinnerGeometry.ts` (`SPINNER_DIAMETERS`, `SPINNER_STROKE_WIDTHS`). **Keep them in sync.**
+## Verify
 
-**CRITICAL:** The CSS tokens are a consumer-facing contract, but the components render `<svg width={diameter}>` from the JS constants. **Changing tokens.css alone has no effect on rendered size.** You must update `SPINNER_DIAMETERS` (and `SPINNER_STROKE_WIDTHS`) in `spinnerGeometry.ts` to match.
+1. `npm run lint`.
+2. Storybook, under **Progress/**: LoadingSpinner `AllSizes`, `AllSizesSpokes`, `AllSizesStar`, `StarStaysInBox`; ProgressIndicator `Interactive` (drag fast), `WavyProgressSteps`; ShapeMorphSpinner `AllSizes`; MorphRotationShape `Controlled`, `RestingAngle`. WavyDivider is under **Bits & Pieces/**.
+3. A hidden browser pane freezes rAF and CSS animations: a stuck frame proves nothing. Step motion yourself: `el.getAnimations()`, `pause()`, set `currentTime`; for MorphRotationShape, swap `requestAnimationFrame` for a queue you pump.
+4. With reduced motion on, the flat arc rests at its longest from 12 o'clock, and the spokes, star and autoplay shape stand still.
 
-`getSpinnerGeometry(size: SpinnerSizeKey)` in `spinnerGeometry.ts` computes everything a component needs. **Never hardcode pixel values or recompute geometry in components.**
+## Related skills
 
-Key derived values:
-
-- `trackRadius = (diameter − strokeWidth) / 2`
-- `indicatorRadius = trackRadius` (same — visual separation comes from round linecaps)
-- `circumference = 2π × indicatorRadius`
-- `gapLength = strokeWidth × 2` — mathematical gap so visual gap ≈ strokeWidth with round linecaps
-
----
-
-## M3 Discrete Arc Pattern
-
-At non-zero progress, LoadingSpinner and both ProgressIndicator variants render two discrete arcs. ProgressIndicator deliberately renders a complete smooth circular track at 0%, then uses round-capped complementary track arcs above 0%.
-
-The M3 gap spec: visual space between indicator arc endpoints and track arc endpoints = one stroke width. Because `strokeLinecap="round"` extends each arc end by `strokeWidth/2`, the mathematical gap must be `2 × strokeWidth` to achieve the correct visual gap. This value is pre-computed as `gapLength` in `getSpinnerGeometry`.
-
-### Positioning formula
-
-For a dash of length `L` starting at path-length `D` using pattern `[L, G]` (period = `L + G`):
-
-```
-strokeDasharray  = `${L} ${G}`
-strokeDashoffset = L + G − D
-```
-
-**Why `L + G − D` and not `C − D`?** The incorrect `C − D` formula only works when the pattern period equals `C` (i.e., `[L, C−L]`). With pattern `[L, C]` (dash `L`, gap `C`), the period is `L + C`, so the offset must account for the full `L + C` period to correctly place the dash start at position `D`.
-
-### Track arc derivation
-
-```
-activeLength = sweepFraction × circumference        // or progress × circumference for determinate
-trackLength  = max(0, circumference − activeLength − 2 × gapLength)
-trackStart   = activeLength + gapLength
-// Correct formula: L + G − D where L=trackLength, G=circumference, D=trackStart
-trackOffset  = trackLength + circumference − trackStart
-```
-
-At 0% progress: ProgressIndicator special-cases the track to a complete smooth circle.
-At 100% progress: trackLength clamps to 0, track disappears.
-
----
-
-## ProgressIndicator Wave Geometry
-
-`src/components/ProgressIndicator/waveGeometry.ts` owns the wave. It ports the
-shape model used by Material's `CircularWavyProgressIndicator`: a rounded star
-with alternating outer and inner radii, not a sampled polar sine.
-
-- Wavelength is 15 user units; wave count is `max(5, round(2πr / 15))`.
-- The inner radius is `0.66 × outerRadius`; after corner rounding this keeps the
-  wave readable at component scale without sharpening the vertices.
-- Each alternating vertex is cut back along its adjoining edges and replaced
-  with a tangent cubic curve. Outer corners use Material's `0.35` radius /
-  `0.4` smoothing values; inner corners use the `0.5` radius.
-- The full closed path is stable across progress values. `<path pathLength={1}>`
-  plus a normalized dash reveals progress, avoiding changing point counts and
-  asymmetric partial polylines.
-- The first outer-corner cubic is split at its midpoint so the wave starts
-  exactly at its rounded peak at 12 o'clock and proceeds clockwise.
-- The empty/remainder track is always a separate smooth `<circle>` with round
-  linecaps; it is never a gray copy of the wave.
-
----
-
-## WavyDivider
-
-Pure SVG with a `<pattern>` element. No React state or animation.
-
-- `width="100%"` fills any container without JS.
-- `currentColor` for stroke — tint with `className="text-border"` or any text-color utility.
-- `strokeWeight` passes through to the repeated path's `strokeWidth` and defaults to `2` (px).
-- Tile widths match the Figma node exactly: `high` = 20px period, `low` = 40px period. Both render in a fixed 12px band (`HEIGHT`).
-- `AMPLITUDE` is a fixed `2.88` px (centerline peak from baseline, ~5.76px peak-to-peak) and is **not** a prop — keep it shallow per the Figma spec. The 12px band gives enough vertical headroom that strokes up to ~6px never clip the host container.
-- Two cubic bezier segments per tile form one trough + one crest; the control points overshoot by `4 / 3` so the curve's midpoint peak/trough reaches `AMPLITUDE` exactly (independent of control-point x positions).
-- `useId()` generates a unique pattern ID per instance. **Never use a static `id` string.**
-
----
-
-## LoadingSpinner — Animation Architecture
-
-### Flat variant (rAF-driven, `<path>`-based)
-
-Both arcs are `<path>` elements (`SVGPathElement` refs) whose `d` attribute is replaced every frame via `requestAnimationFrame` + direct `setAttribute`. **No `<circle>` elements, no `strokeDashoffset`.**
-
-**Why `<path>` and not `<circle>` + dashoffset:**
-SVG clips a dashed stroke at the path endpoint for `<circle>` elements. When the rotating arc position crosses 12 o'clock (the circle path's seam), the dash gets clipped to zero and re-appears on the other side as a new dash — producing a visual contraction/flash artefact with round linecaps. Direct arc coordinates have no seam.
-
-**`flatArcPath(cx, cy, r, startAngle, sweepAngle)`** (module-level helper in `LoadingSpinner.tsx`):
-```ts
-function flatArcPath(cx, cy, r, startAngle, sweepAngle) {
-  if (sweepAngle <= 0) return '';
-  const sweep = Math.min(sweepAngle, 2 * Math.PI - 0.0001); // avoid degenerate full-circle
-  const endAngle = startAngle + sweep;
-  const x1 = cx + r * Math.cos(startAngle), y1 = cy + r * Math.sin(startAngle);
-  const x2 = cx + r * Math.cos(endAngle),   y2 = cy + r * Math.sin(endAngle);
-  return `M ${x1} ${y1} A ${r} ${r} 0 ${sweep > Math.PI ? 1 : 0} 1 ${x2} ${y2}`;
-}
-```
-
-**Animation model (all angles, no path-lengths):**
-```ts
-const twoPi = 2 * Math.PI;
-const gapAngle = gapLength / trackRadius;            // arc-length ÷ r = subtended angle
-
-const sweepAngle = (MIN_SWEEP + (MAX_SWEEP - MIN_SWEEP) * easedPhase) * twoPi;
-const arcEndAngle = SPINNER_START_ANGLE + (elapsed / DURATION) * 2 * twoPi; // 2 revs/cycle
-const arcStartAngle = arcEndAngle - sweepAngle;
-
-activeRef.setAttribute('d', flatArcPath(cx, cy, r, arcStartAngle, sweepAngle));
-
-const trackSweep = twoPi - sweepAngle - 2 * gapAngle;
-if (trackSweep > 0) {
-  trackRef.setAttribute('d', flatArcPath(cx, cy, r, arcEndAngle + gapAngle, trackSweep));
-} else {
-  trackRef.setAttribute('d', '');
-}
-```
-
-useEffect deps: `[cx, cy, trackRadius, gapLength]`
-
-**Cleanup:** Always return `() => cancelAnimationFrame(frameId)` from `useEffect`. The rAF loop is infinite and leaks on unmount if not cancelled.
-
----
-
-## ProgressIndicator
-
-### Flat variant
-
-Indicator arc: standard `[C, C]` dasharray pattern — `strokeDashoffset = C × (1 − progress)` makes the visible dash cover `[0, progress × C]`. Both `<circle>` elements carry a `300ms cubic-bezier(0.4, 0, 0.2, 1)` CSS transition so they animate smoothly together on `progress` change.
-
-Track arc: computed in render (not rAF). Correct formula:
-```
-trackLength = max(0, circumference − activeLength − 2 × gapLength)
-trackOffset = trackLength + circumference − (activeLength + gapLength)
-```
-
-At `progress = 0`: dashoffset = C → nothing visible for indicator. Track covers almost full circle.
-At `progress = 1`: dashoffset = 0 → full-circle indicator. trackLength clamps to 0 → no track.
-
-### Wavy variant
-
-`createMaterialWaveGeometry(diameter, strokeWidth)` is memoized by those two
-values. Its stable full path uses `pathLength={1}` and
-`strokeDasharray="${progress} 1"` to reveal the active section.
-`getWavyTrackGeometry` computes the circular remainder and returns `null` at
-completion: a zero-length SVG dash with round linecaps still paints a dot, so
-the 100% state must omit the track element.
-
----
-
-## Color System
-
-```ts
-LoadingSpinnerColor.primary  → var(--ui-color-primary)
-LoadingSpinnerColor.brand    → var(--ui-color-brand)
-<LoadingSpinner color="#e05252" />  // arbitrary hex passes through
-```
-
-Track always uses `var(--ui-color-border-primary)` — never the indicator color.
-
----
-
-## CSS Notes
-
-`ds-spinner-rotate` in `src/styles/index.css` is the **only** loading-indicator keyframe. It is used by the spokes spinner. `ds-spinner-arc` was removed when `FlatSpinner` was converted to rAF. Do not re-add it.
-
-Four size tokens in `tokens.css` (not `@theme inline`):
-```css
---ui-size-spinner-sm: 16px;
---ui-size-spinner-rg: 22px;
---ui-size-spinner-md: 32px;
---ui-size-spinner-xl: 40px;
-```
-
----
-
-## Anti-Patterns
-
-- **Do not render the wavy track as a gray wave.** The track is always an independent smooth circle with round linecaps.
-- **Do not rebuild a partial wave path from sampled points.** Keep one closed rounded-star path and reveal it with the normalized dash.
-- **Do not move wave fields back into LoadingSpinner geometry.** LoadingSpinner has only flat and spokes variants; wave geometry belongs to ProgressIndicator.
-- **Do not use `<circle>` + `strokeDashoffset` for the flat spinner arcs.** SVG clips dashed strokes at the `<circle>` path endpoint (12 o'clock after rotate(-90)). When the rotating arc crosses this seam, the round-linecap ends produce a flash/contraction artefact. Use `<path>` elements with `flatArcPath()` instead.
-- **Do not add `animation` CSS to the flat spinner or its paths.** The flat spinner is fully rAF-driven; CSS animation on those elements will fight the rAF loop.
-- **Do not call `getSpinnerGeometry` multiple times per render.** Call once, destructure, pass as props.
-- **Do not use React `setState` in any rAF loop.** Use `ref.setAttribute` for frame-by-frame mutations.
-- **Do not forget `cancelAnimationFrame(frameId)` in every `useEffect` cleanup.**
-- **Do not use a static SVG `id` for `<pattern>` or `<defs>`.** Always `useId()`.
-
----
-
-## MorphRotationShape & ShapeMorphSpinner
-
-`MorphRotationShape` morphs between DS `Shapes` while turning (M3 Expressive
-LoadingIndicator). `ShapeMorphSpinner` is it in `autoplay` mode with
-`role="progressbar"` and the spinner size/colour scale.
-
-- **Engine:** `MorphRotationShape/engine/` is vendored shape-morph (MIT, a port
-  of androidx graphics-shapes). Keep it a faithful port; fixes go in
-  `engine/svgPath.ts`.
-- **Timing is CSS (Rule 6).** `--ds-shape-morph-step` is transitioned with
-  `--ui-shape-morph-ease`, a `linear()` spring GENERATED by
-  `scripts/generate-shape-morph-ease.mjs` from `scripts/shapeMorphSpring.mjs`.
-  Retune there, never in `tokens.css` by hand or in a component.
-- **Modes:** `autoplay` (clock animation, passive spinning, rotation-safe fit,
-  per-frame re-centre), `controlled` (`activeIndex`, forward-only, direct
-  morph), `embedded` (ancestor CSS sets `--ds-shape-morph-target`, e.g.
-  `group-data-[state=open]:[--ds-shape-morph-target:1]`).
-- **Frames:** controlled/embedded fill their box at the 24-unit viewBox scale
-  about a fixed centre, so at rest they match the static Shape exactly.
-  Rotation plus overshoot spill up to ~9% of the shape per side — reserve it as
-  padding (e.g. a 31px frame with `inset-[2.5px]` around a 26px shape) or leave
-  room around the frame. Never clip it.
-- **Anti-patterns:** clamping the step value (kills the backspin); normalizing
-  shapes by their bounds in frame modes (stretches Pentagon); writing `d` from
-  React after first render; transition-duration 0 under reduced motion (embedded
-  mode then never hears the change — use 1ms).
-- **Hover nudge:** the drawn value is `--ds-shape-morph-step` (whole stops,
-  spring) + `--ds-shape-morph-lean` (hover, `--ui-shape-morph-nudge-*`, no
-  overshoot). Set the unregistered inputs `--ds-shape-morph-target` and
-  `--ds-shape-morph-nudge`. Targets may be fractional; never round them.
-  `onStepComplete` fires only on whole stops.
-- **DropdownCaret** is this in embedded mode behind a chevron. It reads the
-  nearest `.ds-dropdown-caret-host` (trigger root) through CSS: open =
-  `[data-state="open"]`, hover = nudge, disabled = `:disabled` /
-  `[aria-disabled]` / `[data-disabled]`. Frame = height-button − spacing-rg;
-  the host uses `ds-pl-ui-rg` and no right padding. Colours are deliberate:
-  open = input focus border, disabled = secondary disabled border.
+dooph-ds-styling, dooph-ds-editing-tokens, dooph-ds-writing-components, dooph-ds-codebase-map.

@@ -1,0 +1,78 @@
+diff --git a/app/changelog/page.tsx b/app/changelog/page.tsx
+new file mode 100644
+index 0000000..9d1e128
+--- /dev/null
++++ b/app/changelog/page.tsx
+@@ -0,0 +1,58 @@
++import {
++  BodyText,
++  HeadingText,
++  LabelText,
++  TitleText,
++} from "@dooph-software/design-system";
++
++const entries = [
++  {
++    date: "2026-10-01",
++    title: "Team activity feed",
++    body: "The dashboard now shows a real-time activity feed so everyone can see what the team shipped today. Filter by project, person, or date range.",
++  },
++  {
++    date: "2026-09-18",
++    title: "Dark mode",
++    body: "Acme now supports dark mode with automatic system preference detection. Toggle it from the header or let your OS decide.",
++  },
++  {
++    date: "2026-09-04",
++    title: "Collaborative reviews",
++    body: "Invite teammates to review work directly inside Acme. Leave comments, request changes, and approve — all without leaving the app.",
++  },
++  {
++    date: "2026-08-20",
++    title: "Enterprise plan",
++    body: "Larger teams can now get custom pricing, SSO, and dedicated support. Reach out to our sales team to learn more.",
++  },
++  {
++    date: "2026-08-06",
++    title: "Launch",
++    body: "Acme is live! Start a free trial and bring your whole team along for the ride.",
++  },
++];
++
++export default function Changelog() {
++  return (
++    <main className="flex justify-center px-xl py-xxxl">
++      <div className="flex w-full max-w-[640px] flex-col gap-xxxl">
++        <TitleText as="h1">Changelog</TitleText>
++
++        <div className="flex flex-col gap-xxl">
++          {entries.map((entry) => (
++            <article key={entry.date} className="flex flex-col gap-sm">
++              <LabelText as="time" className="text-text-tertiary">
++                {entry.date}
++              </LabelText>
++              <HeadingText as="h2">{entry.title}</HeadingText>
++              <BodyText as="p" className="text-text-secondary">
++                {entry.body}
++              </BodyText>
++            </article>
++          ))}
++        </div>
++      </div>
++    </main>
++  );
++}
+diff --git a/app/layout.tsx b/app/layout.tsx
+index 610ee36..77c042a 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -55,6 +55,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
+               <Link href="/dashboard" className="text-text-secondary hover:text-text">
+                 <BodyText>Dashboard</BodyText>
+               </Link>
++              <Link href="/changelog" className="text-text-secondary hover:text-text">
++                <BodyText>Changelog</BodyText>
++              </Link>
+               <ThemeToggle />
+             </nav>
+           </header>

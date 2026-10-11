@@ -74,9 +74,9 @@ export const Composable: Story = {
         </Button>
       </TooltipTrigger>
       <TooltipContent variant={TooltipVariant.complex}>
-        <div className="flex items-center gap-3 p-3">
+        <div className="flex items-center gap-md p-md">
           <SettingsGearIcon />
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-xxs">
             <TooltipTitle>Settings</TooltipTitle>
             <HotkeyIndicator keys={["⌘", ","]} />
           </div>
@@ -88,7 +88,7 @@ export const Composable: Story = {
 
 export const AllSides: Story = {
   render: () => (
-    <div className="grid grid-cols-2 gap-8 p-12">
+    <div className="grid grid-cols-2 gap-xxl p-xxxl">
       {(["top", "right", "bottom", "left"] as const).map((side) => (
         <Tooltip key={side}>
           <TooltipTrigger asChild>

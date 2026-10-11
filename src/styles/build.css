@@ -1,0 +1,7 @@
+/* The shipped stylesheet's entry: scripts/emit-css.mjs compiles THIS file to
+ * dist/styles.css. It is index.css, unchanged, minus the stories: Storybook
+ * compiles index.css itself (stories included, so every story renders), while
+ * a utility that only a story writes is not part of the package and stays out
+ * of the shipped CSS. Everything else lives in index.css; add nothing here. */
+@import "./index.css";
+@source not "../**/*.stories.tsx";

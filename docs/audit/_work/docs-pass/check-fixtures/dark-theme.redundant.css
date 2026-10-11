@@ -1,0 +1,14 @@
+/* Fixture: redundant .dark lines. One violation: --ui-c repeats its :root value
+ * and is not an alias. Not reported: the alias --ui-e, which .dark must repeat. */
+:root,
+.light {
+  --ui-d: #000000;
+  --ui-c: 4px;
+  --ui-e: var(--ui-d);
+}
+
+.dark {
+  --ui-d: #ffffff;
+  --ui-c: 4px;
+  --ui-e: var(--ui-d);
+}

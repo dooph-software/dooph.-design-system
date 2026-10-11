@@ -1,0 +1,13 @@
+/* Fixture: dark-mode rules or hex colours outside tokens.css, an OS colour
+ * scheme query in a component stylesheet. One violation: prefers-color-scheme.
+ * Not reported: a reduced-motion query. */
+@media (prefers-color-scheme: dark) {
+  .ds-fixture-scheme {
+    color: var(--ui-color-text);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-fixture-scheme {
+    animation: none;
+  }
+}

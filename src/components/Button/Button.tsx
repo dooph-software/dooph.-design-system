@@ -42,8 +42,9 @@
  *   point: a consumer can retune the danger button without dragging every
  *   other danger-tinted surface along. Do not collapse it back to the raw
  *   tokens.
- * - `prominent` was called `brand` before 5.4, in both the variant key and the
- *   token family (`--ui-color-brand-*`). Neither spelling survives.
+ * - `prominent` is the only spelling, for both the variant key and the token
+ *   family (`--ui-color-prominent-*`). There is no `brand` key and no
+ *   `--ui-color-brand-*` token.
  * - Keep `ButtonVariant.prominent` in the API although the icon-size stories
  *   omit it — the stories are not the inventory, and dropping the key breaks
  *   every consumer's prominent call to action.
@@ -108,9 +109,9 @@ const buttonVariants = cva(
           "[&:not(:disabled):not([aria-disabled=true])]:active:text-ghost-fg-active",
         ],
       },
-      // Radius lives per size, not in the base: twMerge does not treat
-      // `rounded-tight` and `rounded-full` as one group, so a base radius would
-      // survive next to the pill one and win or lose on stylesheet order.
+      // Radius lives per size, not in the base: each size states its own
+      // corner (the pills `rounded-full`, every other size `rounded-tight`),
+      // so a size's shape reads in one place.
       size: {
         big: "h-button-big ds-px-button-big rounded-full",
         medium: "h-button-medium ds-px-button-medium rounded-full",

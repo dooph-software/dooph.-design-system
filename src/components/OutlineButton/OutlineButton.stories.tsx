@@ -62,7 +62,7 @@ export const Glowing: Story = {
 /** Per-orb color overrides. Both orbs default to `--ui-prominent-color-alt`. */
 export const CustomGlowColors: Story = {
   render: () => (
-    <OutlineButton glowColor1="#c084fc" glowColor2="#42e6f5">
+    <OutlineButton glowColor1="var(--ui-prominent-color)" glowColor2="var(--ui-prominent-color-ter)">
       <SearchIcon size={IconSize.md} />
       Custom glow
     </OutlineButton>
@@ -71,7 +71,7 @@ export const CustomGlowColors: Story = {
 
 export const CustomAccent: Story = {
   render: () => (
-    <div style={{ "--ui-prominent-color-alt": "#c084fc" } as React.CSSProperties}>
+    <div style={{ "--ui-prominent-color-alt": "var(--ui-prominent-color-ter)" } as React.CSSProperties}>
       <OutlineButton>
         <SearchIcon size={IconSize.md} />
         Custom accent token

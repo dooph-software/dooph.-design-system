@@ -11,7 +11,7 @@
  * What it does:
  *   1. Asks which agent skill directories to populate
  *   2. Copies skills/ from the installed package into those directories
- *   3. Prints the one import line needed to finish setup
+ *   3. Prints the stylesheet imports (JS or CSS entry) and points to the setup skill
  *
  * What it does NOT do:
  *   - Modify any project files
@@ -172,15 +172,19 @@ async function main() {
   console.log();
   console.log(dim("─".repeat(56)));
   console.log();
+  console.log(`  ${bold("Next")} — load the design system styles. In a JS entry:\n`);
   console.log(
-    `  ${bold("One more step")} — import the design system styles in your`,
-  );
-  console.log(`  project's CSS or JS entry point:\n`);
-  console.log(
-    `    ${cyan("import '@dooph-software/design-system/styles.css'")}`,
+    `    ${cyan("import '@dooph-software/design-system/styles.css';")}`,
   );
   console.log();
-  console.log(dim("  (app/globals.css, src/main.tsx, or equivalent)"));
+  console.log(`  or in a CSS entry (with Tailwind v4, theme.css after tailwindcss):\n`);
+  console.log(`    ${cyan('@import "tailwindcss";')}`);
+  console.log(`    ${cyan('@import "@dooph-software/design-system/styles.css";')}`);
+  console.log(`    ${cyan('@import "@dooph-software/design-system/theme.css";')}`);
+  console.log();
+  console.log(
+    dim("  Fonts, the Tailwind size names and \"use client\": see the dooph-design-system-setup skill."),
+  );
   console.log();
 
   rl.close();

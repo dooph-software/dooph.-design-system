@@ -1,0 +1,14 @@
+diff --git a/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx b/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
+index 7f3b65f..d6c1e7c 100644
+--- a/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
++++ b/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
+@@ -63,6 +63,9 @@ const SegmentedTabSelect = forwardRef<
+         <TabsList
+           className={cn(
+             'gap-xxs',
++            // When the caller stretches the shell (e.g. className="w-full"),
++            // distribute tab items equally across the available width.
++            '[&.w-full>*]:flex-1 [&.w-full>*]:min-w-0',
+             hasShell &&
+               // 28px items + xxs inset + 1px border = 38px; outer radius is
+               // radius-mini + xxs so it stays concentric with the items.

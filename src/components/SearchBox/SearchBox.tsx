@@ -30,7 +30,7 @@ const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
           'flex items-center gap-sm',
           'bg-secondary border border-solid border-border-primary',
           'rounded-soft',
-          'ds-pl-ui-lg ds-pr-ui-md ds-py-ui-md',
+          'pl-lg pr-md py-md',
           'ds-min-w-search-box',
           'ds-motion-state',
           '[&:not([data-disabled])]:hover:border-input-border-hover',

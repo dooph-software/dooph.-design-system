@@ -78,8 +78,9 @@ function Composer({
   stoppable?: boolean;
 }) {
   const [sent, setSent] = useState<string | null>(null);
+  // Demo width: Figma's 418px transcript width; no token sizes it.
   return (
-    <div className="flex w-[418px] flex-col gap-rg">
+    <div className="flex flex-col gap-rg" style={{ width: 418 }}>
       <AIPromptInput
         defaultValue={defaultValue}
         onSubmit={setSent}

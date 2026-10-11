@@ -53,9 +53,11 @@ type Story = StoryObj<typeof meta>;
 
 /* ── helpers ─────────────────────────────────────────────────────────── */
 
+/* Demo layout: a fixed label column (Row) and a readable note width (Section);
+ * no token sizes either. */
 const Row = ({ label, children }: { label: string; children: ReactNode }) => (
   <div className="flex items-baseline gap-lg border-b border-border-primary py-rg">
-    <LabelText className="w-[14rem] shrink-0 text-text-tertiary">
+    <LabelText className="shrink-0 text-text-tertiary" style={{ width: "14rem" }}>
       {label}
     </LabelText>
     <div className="min-w-0">{children}</div>
@@ -74,7 +76,7 @@ const Section = ({
   <section className="flex flex-col gap-sm pb-xxl">
     <HeadingText className="text-text">{title}</HeadingText>
     {note ? (
-      <BodyText className="max-w-[48rem] text-text-secondary">{note}</BodyText>
+      <BodyText className="text-text-secondary" style={{ maxWidth: "48rem" }}>{note}</BodyText>
     ) : null}
     <div className="pt-sm">{children}</div>
   </section>
@@ -311,8 +313,8 @@ export const Precedence: Story = {
           {SAMPLE}
         </BodyText>
       </Row>
-      <Row label={'className="tracking-[0.2em]"'}>
-        <BodyText className="tracking-[0.2em]">{SAMPLE}</BodyText>
+      <Row label={'className="tracking-widest"'}>
+        <BodyText className="tracking-widest">{SAMPLE}</BodyText>
       </Row>
       <Row label="style beats props">
         <BodyText fontSize={40} style={{ fontSize: 14 }}>

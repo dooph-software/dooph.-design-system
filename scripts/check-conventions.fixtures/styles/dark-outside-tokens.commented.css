@@ -1,0 +1,12 @@
+/* Fixture: dark-mode rules or hex colours outside tokens.css, a stale
+ * allowlist entry whose line survives only inside a comment. One violation:
+ * the entry is reported stale, because comments are blanked before matching. */
+.ds-fixture-commented {
+  mask-image: linear-gradient(
+    transparent,
+    /*
+    #000 var(--ui-fixture-old),
+    */
+    transparent
+  );
+}

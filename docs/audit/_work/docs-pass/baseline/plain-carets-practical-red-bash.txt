@@ -1,0 +1,132 @@
+#1 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58 -type f \( -name "*.tsx" -o -name "*.ts" -o -name "*.jsx" -o -name "*.js" \) | head -30
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-4MZ7YQL4.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-4P3HC2HD.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-4SMVL4Z3.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-4UNIM62Y.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-4YCMXWVK.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-5464FKLS.js
+#2 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58 -type d -name "components" | grep -v node_modules
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/components
+#3 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/components/
+    | total 8
+    | drwxr-xr-x 1 stick 197609   0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609   0 Oct  8 21:11 ..
+    | -rw-r--r-- 1 stick 197609 626 Oct  8 20:59 theme-toggle.tsx
+#4 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/ | head -20
+    | -rw-r--r-- 1 stick 197609  1066 Oct  8 21:10 LICENSE.txt
+    | -rw-r--r-- 1 stick 197609   114 Oct  8 21:10 README.md
+    | -rw-r--r-- 1 stick 197609 16566 Oct  8 21:10 THIRD_PARTY_NOTICES.md
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:10 bin
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:10 dist
+    | -rw-r--r-- 1 stick 197609  3503 Oct  8 21:10 package.json
+#6 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.d.ts" \) | grep -v chunk | head -50
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/CTAButton/constants.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/CTAButton/CTAButton.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/CTAButton/index.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/DatePicker/DatePicker.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/DatePicker/DatePickerSplitTrigger.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/DatePicker/DatePickerTrigger.d.ts
+#7 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system -type f -name "*.d.ts" | grep -i drop
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/DropdownTrigger/constants.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/DropdownTrigger/DropdownTrigger.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/DropdownTrigger/index.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Icons/DropdownIcon.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Menu/DropdownMenu.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Menu/DropdownMenuSearch.d.ts
+#8 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system -type f -name "*.d.ts" | xargs grep -l "morph" 2>/dev/null
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/MorphRotationShape/constants.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/MorphRotationShape/engine/morph.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/MorphRotationShape/geometry.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/MorphRotationShape/timing.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Text/BaseText.d.ts
+#11 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/MorphRotationShape/
+    | -rw-r--r-- 1 stick 197609 1637 Oct  8 21:10 geometry.d.cts
+    | -rw-r--r-- 1 stick 197609 1634 Oct  8 21:10 geometry.d.ts
+    | -rw-r--r-- 1 stick 197609  401 Oct  8 21:10 index.d.cts
+    | -rw-r--r-- 1 stick 197609  394 Oct  8 21:10 index.d.ts
+    | -rw-r--r-- 1 stick 197609  937 Oct  8 21:10 timing.d.cts
+    | -rw-r--r-- 1 stick 197609  937 Oct  8 21:10 timing.d.ts
+#17 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/MorphRotationShape/engine/
+    | -rw-r--r-- 1 stick 197609  211 Oct  8 21:10 svgPath.d.cts
+    | -rw-r--r-- 1 stick 197609  208 Oct  8 21:10 svgPath.d.ts
+    | -rw-r--r-- 1 stick 197609  851 Oct  8 21:10 symmetry.d.cts
+    | -rw-r--r-- 1 stick 197609  848 Oct  8 21:10 symmetry.d.ts
+    | -rw-r--r-- 1 stick 197609 2129 Oct  8 21:10 utils.d.cts
+    | -rw-r--r-- 1 stick 197609 2129 Oct  8 21:10 utils.d.ts
+#24 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist -type f \( -name "*.css" -o -name "*.scss" \) | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/styles.css
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/theme.css
+#25 Bash: grep -n "morph\|DropdownCaret\|shape-morph" /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/styles.css | head -100
+    | 3422:    --ds-shape-morph-clock: 0;
+    | 3425:    --ds-shape-morph-clock: 1;
+    | 3428:@keyframes ds-shape-morph-spin {
+    | 3795:      --ds-shape-morph-step: 0;
+    | 3796:      --ds-shape-morph-clock: 0;
+    | 3797:      --ds-shape-morph-lean: 0;
+#30 Bash: git remote -v
+    | (Bash completed with no output)
+#31 Bash: grep -A 5 "repository\|homepage" /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/package.json
+    |   "homepage": "https://github.com/dooph-software/dooph.-design-system#readme",
+    |   "publishConfig": {
+    |     "registry": "https://registry.npmjs.org/",
+    |     "access": "public"
+    |   },
+    |   "bin": {
+#32 Bash: grep -n "MorphRotationShape" /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/DropdownCaret/*.d.ts
+    | (Bash completed with no output)
+#34 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist -type f -name "*.d.ts" | grep -i shape | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/ShapeButton/ShapeButton.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/ShapeMorphSpinner/index.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/ShapeMorphSpinner/ShapeMorphSpinner.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Shapes/ArrowShape.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Shapes/BaseShape.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Shapes/CapsuleShape.d.ts
+#35 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Shapes -type f -name "*.d.ts" | sort
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Shapes/StarShape.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Shapes/TripleShape.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Shapes/constants.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Shapes/createShape.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Shapes/index.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/components/Shapes/shapePaths.d.ts
+#42 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system -name "*morph*ease*" -o -name "*shape*ease*" 2>/dev/null | head -10
+    | (Bash completed with no output)
+#43 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist -name "MorphRotationShape.js" -o -name "DropdownCaret.js" 2>/dev/null
+    | (Bash completed with no output)
+#45 Bash: grep -l "DropdownCaret\|MorphRotationShape" /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-*.js | head -10
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-DUM6NDA7.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-GW7JWBQL.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-NUW3LOVZ.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-P64MD7Y7.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-Q4ETNTGK.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-U4IROQV6.js
+#46 Bash: grep -n "DropdownCaret\|MorphRotationShape" /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-7AWNCDYX.js | head -20
+    | 82:    return /* @__PURE__ */ jsx(MorphRotationShapeInner, { ...props, forwardedRef: ref }, key);
+    | 85:MorphRotationShape.displayName = "MorphRotationShape";
+    | 86:var MorphRotationShapeInner = ({
+    | 103:  const isLoader = mode === MorphRotationShapeMode.autoplay;
+    | 104:  const isControlled = mode === MorphRotationShapeMode.controlled;
+    | 245:  MorphRotationShape
+#47 Bash: grep -n "DropdownCaret\|export.*DropdownCaret" /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-4SMVL4Z3.js | head -5
+    | (Bash completed with no output)
+#48 Bash: grep -n "export.*DropdownCaret" /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/chunk-*.js | head -10
+    | (Bash completed with no output)
+#50 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58 -name "*.tsx" -o -name "*.ts" | grep -v node_modules | grep -v ".next"
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/app/dashboard/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/app/layout.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/app/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/components/theme-toggle.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/lib/plans.ts
+#51 Bash: grep -n "ds-dropdown-caret\|DropdownCaret" /c/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/node_modules/@dooph-software/design-system/dist/styles.css | head -30
+    | 3377:  .ds-dropdown-caret-host[data-state="open"] .ds-dropdown-caret {
+    | 3381:  .ds-dropdown-caret-host[data-state="open"] .ds-dropdown-caret-chevron {
+    | 3384:  .ds-dropdown-caret-host:is(:disabled, [aria-disabled="true"], [data-disabled]) .ds-dropdown-caret {
+    | 3387:  .ds-dropdown-caret-host:is(:disabled, [aria-disabled="true"], [data-disabled]) .ds-dropdown-caret-chevron {
+    | 3390:  .ds-dropdown-caret-host:not(.ds-disabled-state):is(:disabled, [aria-disabled="true"], [data-disabled]) .ds-dropdown-caret-chevron {
+    | 3394:    .ds-dropdown-caret, .ds-dropdown-caret-chevron {
+#54 Bash: ls C:/Users/stick/Github/dooph/ds-consumer-sb-7f25004dae58/
+    | next.config.ts
+    | node_modules
+    | package-lock.json
+    | package.json
+    | tsconfig.json
+    | vendor

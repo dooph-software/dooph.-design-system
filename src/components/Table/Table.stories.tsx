@@ -34,10 +34,11 @@ const SortableHeader = () => {
 
   const [sort, setSort] = useState<TableSortDirection>(TableSortDirection.none);
 
+  // Demo height for the table frame; no token sizes it.
   return (
     <Table
       columns={COLUMNS}
-      className="h-[420px]"
+      style={{ height: 420 }}
     >
       <TableHeader>
         <TableHeaderCell
@@ -241,8 +242,9 @@ export const CellStackedContent: Story = {
 
 export const Placeholder: Story = {
   args: { columns: "1fr 1fr" },
+  // Demo height for the table frame; no token sizes it.
   render: () => (
-    <Table columns="1fr 1fr" className="h-[300px]">
+    <Table columns="1fr 1fr" style={{ height: 300 }}>
       <TableHeader>
         <TableHeaderCell>Name</TableHeaderCell>
         <TableHeaderCell>Status</TableHeaderCell>

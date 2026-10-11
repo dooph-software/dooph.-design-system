@@ -1,0 +1,128 @@
+# Claims: dooph-ds-loading-indicators
+
+One factual claim per line, with its evidence (file:line in the working tree of 2026-10-10). S = SKILL.md, G = references/spinner-and-progress-geometry.md, M = references/shape-morph.md. Abbreviations: LS = src/components/LoadingSpinner/LoadingSpinner.tsx, SG = src/components/LoadingSpinner/spinnerGeometry.ts, PI = src/components/ProgressIndicator/ProgressIndicator.tsx, WG = src/components/ProgressIndicator/waveGeometry.ts, WD = src/components/WavyDivider/WavyDivider.tsx, SMS = src/components/ShapeMorphSpinner/ShapeMorphSpinner.tsx, MRS = src/components/MorphRotationShape/MorphRotationShape.tsx, MG = src/components/MorphRotationShape/geometry.ts, IC = src/styles/index.css, CT = src/styles/dooph-component-tokens.css, TK = src/styles/tokens.css, CC = scripts/check-conventions.mjs. Computed numbers were produced by bundling the source with esbuild and calling `getSpinnerGeometry`, `createMaterialWaveGeometry` and the spring functions (scratch probe, not committed).
+
+## SKILL.md
+
+- S: Geometry is plain numbers in user units; clocks are CSS on tokens. Evidence: LS:7-9, 30-32; SG:12-13; MRS:33-38; IC:885-892.
+- S: Rendered size is the --ui-size-spinner-* token. Evidence: SG:38-43, 135-156; LS:157-161; PI:141-148, 243-247; SMS:66-67.
+- S: LinearProgressIndicator has its own header contract. Evidence: .agents/skills/dooph-ds-codebase-map/references/inventory.md:264 (behavior, constraints).
+- S: LoadingSpinner variants flat, spokes, star; CSS only via .ds-spinner-*. Evidence: src/components/LoadingSpinner/constants.ts:4-19; LS:7-9, 160, 163, 223, 259.
+- S: ProgressIndicator variants flat, wavy; flat transitions one number --ds-pi-progress; wavy dash not transitioned, consumer drives progress. Evidence: src/components/ProgressIndicator/constants.ts:9-18; PI:99-103, 151; CT:280-283; constants.ts:11-16 ("The dash is not transitioned, so drive `progress` gradually").
+- S: ShapeMorphSpinner is MorphRotationShape in autoplay. Evidence: SMS:57-59.
+- S: MorphRotationShape modes autoplay/controlled/embedded; CSS transition of --ds-shape-morph-step sampled by a rAF loop. Evidence: src/components/MorphRotationShape/constants.ts:3-10; MRS:9-12, 276-306; IC:856-862.
+- S: MorphRotationShape is the only "use client" module among the five. Evidence: MRS:56; LS:42-43 and no directive; PI:33-35; WD:1-2; SMS (no directive, :19-20); CC:181 (allowlist entry).
+- S: WavyDivider high = 20px period, low = 40px; static. Evidence: WD:14; src/components/WavyDivider/constants.ts:4-9; WD has no animation/transition (WD:55-95).
+- S: The three indicators share LoadingSpinnerSize sm 16, rg 22 (default), md 32, xl 40 px. Evidence: src/components/LoadingSpinner/constants.ts:28-37; TK:517-520; LS:283; PI:75, 307; SMS:34, 46.
+- S: color is a DS colour name or any CSS colour, default primary. Evidence: LS:68-73, 282, 290; PI:69-74, 306, 321; SMS:35-36, 47, 68; src/utils/color.ts:21-60.
+- S: Tracks are always --ui-color-border-primary. Evidence: LS:26-27, 171; PI:167, 256.
+- S: ProgressIndicator throws on progress outside [0,1] or NaN. Evidence: PI:313-318.
+- S rule 1: no duration, easing curve or timer in these files; per-size factors reach CSS as plain numbers. Evidence: LS:30-32 (header constraint); MRS:33-38 (header constraint); SG:68-79.
+- S rule 1: the one loop is MorphRotationShape's allowlisted rAF sampler, which only reads transitioned values. Evidence: MRS:276-306 (reads --ds-shape-morph-* with getComputedStyle, writes d/transform); CC:207-208 (timer allowlist entry, count 2). LoadingSpinner, ProgressIndicator, WavyDivider, ShapeMorphSpinner contain no requestAnimationFrame/setTimeout/setInterval (grep).
+- S rule 1 failure: JS clock desyncs and ignores reduced motion. Evidence: CC:417 ("skips the motion scale and its reduced-motion collapse"), CC:612.
+- S rule 1 lint check names. Evidence: CC:415, CC:611.
+- S rule 2: size via token as CSS width/height; numeric diameter stays in the intrinsic width/height attributes, and in the viewBox for flat spinner and ProgressIndicator (spokes and star use a fixed 24-unit viewBox). Evidence: LS:153-161 (flat), 202-207 (spokes, viewBox 0 0 24 24), 252-255 (star, STAR_VIEWBOX 24); SG:90, 102-107; PI:137-148, 239-247.
+- S rule 2 failure: dead size tokens. Evidence: SG:17-29 (rendering from the table directly "would make the tokens dead").
+- S rule 2 lint check name. Evidence: CC:537-538.
+- S rule 3: flat spinner arcs are dashes on one open two-lap path; never one lap or <circle>; seam split and cap flash. Evidence: LS:33-38 (header constraint); LS:95-112; IC:900-907.
+- S rule 4: 1 − SPINNER_MAX_SWEEP − 2·gap/C > 0 at every size; zero-length dash paints a dot. Evidence: LS:39-41 (header constraint).
+- S rule 4: sm is tightest at 0.098 turn. Evidence: computed from SG:31, 49, 66, 135-145 (sm 0.0981, rg 0.1168, md 0.1483, xl 0.1768); also docs/audit/CHANGES.md:4314 ("track never shorter than 0.098 turn").
+- S rule 5: flat ring transitions only --ds-pi-progress; dash values are calc()s of it; --ds-pi-gap-on unregistered and from the target. Evidence: CT:21-29, 260-295; PI:94-105, 151-156; PI:15-32 (header constraints, which name both failures).
+- S rule 5 failure: independent transitions restart mid-flight; track slides backwards or vanishes. Evidence: CT:264-267; PI:16-22 (header constraint).
+- S rule 6: zero-length arc fades on flat (stroke-opacity), wavy track omitted when getWavyTrackGeometry returns null and the wavy indicator not rendered at 0; round-cap dot, remount mid-animation. Evidence: PI:106-108, 249-263, 264-265; CT:276-279, 287, 294; WG:130-133, 158.
+- S rule 7: React writes d and transform on the first render only; re-render mid-step snaps. Evidence: MRS:39-41 (header constraint), 263-271, 362-363.
+- S rule 8: never clamp the step or round a target; range from widenRange; failures. Evidence: MRS:11-12 ("never clamped: that is the backspin"), MRS:47-50 (header constraint), MG:25-35 (widenRange).
+- S rule 9: listen only on own span; embedded via inherited CSS. Evidence: MRS:42-46 (header constraint), 311-329.
+- S rule 9 failure: a listener on a host breaks when the host is a consumer's custom trigger. Evidence: src/components/DropdownCaret/DropdownCaret.tsx:31-33 (the embedded host's contract).
+- S rule 10: retune spring in scripts/shapeMorphSpring.mjs, run npm run generate-shape-morph-ease; build overwrites the tokens. Evidence: TK:325-328; scripts/shapeMorphSpring.mjs:1-5; scripts/generate-shape-morph-ease.mjs:1-4, 26-27, 40; package.json:50, 57.
+- S rule 11: fix vendored engine only in engine/svgPath.ts; port must stay diffable. Evidence: src/components/MorphRotationShape/engine/cubic.ts:6-9; morph.ts:6-9; polygon.ts:6-9; utils.ts:6-9.
+- S mistakes: a one-lap path cuts a dash at the seam. Evidence: LS:33-38.
+- S mistakes: interrupted, four dash transitions disagree. Evidence: CT:264-267; PI:16-22 (header constraint).
+- S mistakes: SPINNER_DIAMETERS is viewBox space, token is rendered size. Evidence: SG:17-27.
+- S mistakes: ease peaks ≈ 1.095 on purpose (backspin). Evidence: TK:329 ("overshoots (~1.095) on purpose"); computed max of springValue 1.0948; MRS:11-12.
+- S mistakes: 0ms fires no transitionrun; global block uses 1ms. Evidence: TK:902-906, 923-928; IC:850-854.
+- S verify: story names under Progress/ and Bits & Pieces/. Evidence: src/components/LoadingSpinner/LoadingSpinner.stories.tsx:11, 58, 69, 92, 119; src/components/ProgressIndicator/ProgressIndicator.stories.tsx:13, 89, 106; src/components/ShapeMorphSpinner/ShapeMorphSpinner.stories.tsx:7, 20; src/components/MorphRotationShape/MorphRotationShape.stories.tsx:18, 58, 68; src/components/WavyDivider/WavyDivider.stories.tsx:7.
+- S verify: hidden pane freezes rAF and CSS animations; step with getAnimations/pause/currentTime; shim rAF. Evidence: maintainer memory note feedback_hidden_browser_pane_freezes_motion.md; docs/audit/CHANGES.md:4662-4663 ("animations stepped manually at 16.7 ms (hidden-pane rule)"). MRS:304-306 (the loop is rAF-driven).
+- S verify: reduced motion: flat arc rests at its longest from 12 o'clock; spokes, star, autoplay stand still. Evidence: LS:24-25; IC:973-983; IC:873-883.
+
+## references/spinner-and-progress-geometry.md
+
+- G: user units (diameter) go into viewBox and numeric width/height attributes; cssSize is the token applied in style. Evidence: SG:4-10, 17-27, 99-108; LS:153-161.
+- G: overriding the token resizes stroke, gaps, waves together. Evidence: SG:23-26.
+- G: ShapeMorphSpinner has no user-unit table; sets width/height to the token; MRS fills the box. Evidence: SMS:1-6, 65-67; MRS:29-30.
+- G: LoadingSpinner and ShapeMorphSpinner render role progressbar, no aria-valuenow, aria-label "Loading"; consumer props override both. Evidence: LS:22-23, 292-298; SMS:52, 62-63, 71 (rest spread last).
+- G: ProgressIndicator renders role progressbar, aria-valuenow round(progress × 100), aria-valuemin 0, aria-valuemax 100, and aria-label "Progress" by default; a consumer aria-label replaces it (props spread after it), a consumer aria-labelledby drops it. Evidence: PI:323-334 (default at :330, `...props` at :333); PI:5-8 (header behavior); verified in Storybook 2026-10-11 (accessible name "Progress" by default, the consumer label when given, no aria-label beside aria-labelledby).
+- G: r = (d − stroke)/2, C = 2πr, gap = 2 × stroke, visual gap one stroke width. Evidence: SG:118-125, 140-145.
+- G: table diameters 16/22/32/40 and strokes 2/2.5/3/3. Evidence: SG:31, 49.
+- G: table r, C, gap/C, flat track residual, factor, ms, wave count, ring-track threshold, star px. Evidence: computed by the probe from SG:31-166, WG:171-182, MG:5 (sm: r 7, C 43.982, gap/C 0.0909, residual 0.0981, factor 0.8528, 1535ms, waves 5, threshold 0.8181, star 12.67; rg: 9.75, 61.261, 0.0816, 0.1168, 1, 1800ms, 5, 0.8368, 17.42; md: 14.5, 91.106, 0.0659, 0.1483, 1.206, 2171ms, 6, 0.8683, 25.33; xl: 18.5, 116.239, 0.0516, 0.1768, 1.3484, 2427ms, 8, 0.8968, 31.67). Star px also matches docs/audit/CHANGES.md:1236-1237.
+- G: factor = (d/22)^0.5; turn = --ui-spinner-spokes-duration (1800ms) × factor, in CSS. Evidence: SG:68-79, 149-152; TK:232; IC:966-971.
+- G: ring track gone from p ≥ 1 − 2·gap/C (flat fades, wavy omits). Evidence: WG:153-158; CT:291, 294.
+- G: star = ACTIVE_INDICATOR_SCALE (38/48) of the box. Evidence: SG:81-93; MG:4-5.
+- G: flat path is open, two clockwise laps, four half-arc A commands, no Z, start angle −π/2 − gap/r. Evidence: LS:95-112, 134-142; SG:51-52.
+- G: inline numbers --ds-spinner-c = C, --ds-spinner-gap = gap/C, sweep-min 0.008, sweep-max 0.72. Evidence: LS:143-148; SG:58, 66.
+- G: --ds-spinner-grow/-tail registered <number>, inherited. Evidence: IC:61-78.
+- G: ds-spinner-dash over --ui-spinner-duration (1400ms) on --ui-motion-ease-standard; keyframes 0/50/100% grow 0/1/1, tail 0/0.118/0.985. Evidence: IC:916-919, 1162-1175; TK:230, 215.
+- G: rescaled from Material's dash 1→100→100, offset 0→−15→−125 on a 126.9-unit circle. Evidence: IC:1152-1156.
+- G: sweep, indicator and track dash formulas. Evidence: IC:926-964.
+- G: 1 − tail clip holds the head at the end of the first lap. Evidence: IC:898-900.
+- G: arc covers [gap+tail, gap+tail+sweep], track [tail+sweep+2gap, tail+1], strictly inside (0,2); dash gap 2C means no second dash. Evidence: IC:903-911.
+- G: .ds-spinner-flat-turn rotates one turn per --ui-spinner-rotate-duration (1400ms), linear, independent loop. Evidence: IC:893-894, 920-925; TK:231; IC:900-901 ("two independent loops").
+- G: reduced motion: animations stop; grow 1, tail 0; arc rests at 0.72 from 12 o'clock. Evidence: IC:973-983; LS:24-25; IC:927-934 (sweep = min(max, 1 − 0)).
+- G: spokes: eight stroked paths, 24-unit viewBox, stroke = var(--ui-icon-stroke-width), colour on stroke. Evidence: LS:207, 216-217, 224-231.
+- G: star: STAR_SHAPE_PATH bounds, filled with color, STAR_FIT_TRANSFORM scale about (12,12) ≈ 0.905; tips set bounds, stays in box at any angle. Evidence: SG:81-95; LS:19-21, 260; computed STAR_FIT_SCALE 0.90504.
+- G: spokes and star turn via .ds-spinner-spin, ds-spinner-rotate over spokes-duration × time-scale, linear; reduced motion no turn. Evidence: IC:966-971, 979-982; LS:196, 223, 246, 259.
+- G: flat ring svg carries .ds-progress-ring and inline --ds-pi-progress, -c, -gap (user units), -gap-on = progress > 0. Evidence: PI:144-158.
+- G: --ds-pi-progress registered <number>; only transitioned value, slow (300ms) on standard. Evidence: CT:21-29, 280-283; TK:207, 215.
+- G: --ds-pi-gap-on unregistered, switches at once from target. Evidence: CT:270-274; PI:154-156.
+- G: both circles rotated −90° and always mounted. Evidence: PI:161-185 (transform rotate(-90 …) at 170, 182; no condition).
+- G: indicator and track formulas incl. opacity clamp factor 1e6. Evidence: CT:284-295.
+- G: at p = 0 the track is the full circle; negative offset continuous with 0. Evidence: CT:290-293 with gapOn 0; WG:140-142.
+- G: reduced motion collapses slow to 1ms. Evidence: TK:923-928.
+- G: wavy indicator: one closed path, pathLength 1, dasharray "progress 1"; not rendered at p = 0; no transition. Evidence: PI:225-228, 264-276; src/components/ProgressIndicator/constants.ts:11-16.
+- G: wave: 2 × waveCount vertices alternating radius 1 and 0.66 from 12 o'clock; waveCount = max(5, round(2πr/15)). Evidence: WG:10-16, 177-191.
+- G: each vertex cut back along both edges by radius/tan(angle/2)×(1+smoothing) and replaced by a tangent cubic; outer radius 0.35, smoothing 0.4; inner radius 0.5, no smoothing. Evidence: WG:4-7, 13-15, 201-215, 228-242.
+- G: crossing cuts scaled together so lobes are identical. Evidence: WG:218-226.
+- G: rounded shape scaled so outer lobe midpoint reaches r; path starts at the first outer lobe's midpoint (12 o'clock). Evidence: WG:245-258.
+- G: wavy track via getWavyTrackGeometry: p=0 → (C, 0); else length max(0, C − Cp − 2gap), offset −(Cp + gap); null when length 0, not rendered. Evidence: WG:144-164; PI:230-263.
+- G: WavyDivider svg width 100% height 12, rect filled with userSpaceOnUse pattern; tiles without measuring. Evidence: WD:8-12, 45-50, 65-92.
+- G: pattern id from useId so dividers never collide. Evidence: WD:60-61.
+- G: tile width high 20, low 40; one trough then crest per tile, centred at y = 6. Evidence: WD:14-16, 22-32.
+- G: amplitude 2.88, control points at ±2.88 × 4/3, midpoint peaks exactly at 2.88. Evidence: WD:17-20, 25-30.
+- G: strokeWeight default 2 → path strokeWidth; currentColor; round caps; role presentation, aria-hidden. Evidence: WD:38-39, 57, 67-68, 86-88.
+
+## references/shape-morph.md
+
+- M: CSS owns every duration and curve; component samples and writes geometry. Evidence: IC:839-840; MRS:33-38.
+- M: --ds-shape-morph-target unregistered (inherits), set inline in controlled, by the clock handler in autoplay, by ancestor CSS in embedded. Evidence: IC:841-845; MRS:348, 320-324; MRS:6-8.
+- M: --ds-shape-morph-step registered <number>, inherits false, = var(target, 0), transitioned over --ui-shape-morph-duration on --ui-shape-morph-ease; integer = stop, fraction = progress. Evidence: IC:42-50, 856-861; MRS:9-10.
+- M: --ds-shape-morph-nudge unregistered hover input; --ds-shape-morph-lean registered, = var(nudge, 0), transitioned on base / enter. Evidence: IC:845, 56-60, 858-862.
+- M: --ds-shape-morph-clock registered, exists for autoplay's iterations. Evidence: IC:42-45, 51-55, 864-866, 1134-1141.
+- M: drawn v = step + lean; target = target + nudge. Evidence: MRS:287-288.
+- M: two properties because click-while-hovered and hover-while-open end in the same final style. Evidence: MRS:17-21.
+- M: loop starts on own transitionrun (step or lean) and, in autoplay, on animationstart/animationiteration of ds-shape-morph-clock, which increments target. Evidence: MRS:309-330.
+- M: one getComputedStyle per frame; widens range; draws; stops within 0.001 of target and previous frame. Evidence: MRS:86-87, 278-305; MRS:54.
+- M: onStepComplete only on landing on a new whole stop. Evidence: MRS:291-300; MRS:51.
+- M: controlled also starts the loop directly. Evidence: MRS:342-345.
+- M: widenRange keeps floor/ceil of every target and settled value, resets only on landing; segmentAt clamps floor(v) into [lo, hi−1]. Evidence: MG:13-35; MRS:289, 294-296.
+- M: morph = Morph(shape[segment], shape[segment+1]).asCubics(v − segment); angle linear between stops. Evidence: MRS:254-259; MG:19-23.
+- M: autoplay steps every --ui-shape-morph-interval, stops cycle shape indices, 90° turn. Evidence: IC:864-866; MRS:84-85, 230-231, 245-248; constants.ts:3-4.
+- M: controlled: integer activeIndex required; one stop per change, forward, direct. Evidence: MRS:13-14, 154-156, 205-216.
+- M: embedded: ancestor CSS sets target (DropdownCaret open sets 1); target two away passes through between; lower target reverses. Evidence: MRS:14-16; IC:1041-1042.
+- M: shapes accepts components or Shapes keys, at least two; keys for Server Components; changing elements remounts to stop 0 without animation. Evidence: MRS:91-95, 151-152, 159-174; MRS:52-53.
+- M: restingAngle turn = stepTurn(from, restingAngle, symmetry, 90); symmetry up to 12, tolerance 0.01, about (0.5, 0.5); nearest candidate to 90°, never 0; Pentagon steps 360°. Evidence: MRS:27-28, 245-248; src/components/MorphRotationShape/engine/symmetry.ts:18-24, 48-58; MorphRotationShape.stories.tsx:67.
+- M: paths in 0..100 units, 2 decimals, viewBox 0 0 100 100, overflow visible, fill currentColor. Evidence: engine/pathD.ts:3-10; MRS:361-364.
+- M: autoplay loader fit: bounds-normalized; rotationSafeScale = min over shapes of max(bw/mw, bh/mh); × ACTIVE_INDICATOR_SCALE 38/48; re-centred on frame bounds. Evidence: MRS:22-23, 139, 200; MG:4-5, 37-46, 63-73.
+- M: outer <g> spins once per --ui-shape-morph-passive-spin-duration in autoplay. Evidence: MRS:362; IC:867-872.
+- M: frame fit: 24-unit scale about a fixed centre, rotate(angle 50 50) only, pixel-identical at rest, ~9% spill reserved as padding. Evidence: MRS:23-26; MG:63-69; MorphRotationShape.stories.tsx:24-26, 33, 41 (an 11px inset in a 120px frame, as `style`).
+- M: polygonFromSvgPath normalizes by viewBox 24, centred at (0.5,0.5), never by bounds; Pentagon 23 units tall. Evidence: engine/svgPath.ts:9-15, 111, 127-128.
+- M: token defaults 498ms, linear() with 65 stops peaking ≈1.095, 650ms, 4666ms, 0.15. Evidence: TK:331-341; scripts/shapeMorphSpring.mjs:19, 75-87 (64 samples → 65 stops); computed max 1.0947.
+- M: timing prop writes inline custom properties; duration/ease in all modes; interval/passiveSpinDuration in autoplay; numbers are ms. Evidence: src/components/MorphRotationShape/timing.ts:1-30; MRS:102, 115, 121, 347.
+- M: SPRING damping 0.6, stiffness 200, threshold 0.1; SETTLE_MS 200; EASE_SAMPLES 64. Evidence: scripts/shapeMorphSpring.mjs:15-19.
+- M: ports Compose analytic spring and duration estimate; cut-off ≈298ms; Hermite settle replaces snap; total ≈498ms. Evidence: scripts/shapeMorphSpring.mjs:7-11, 45-68, 70-88; computed cut 297.66, total 498.
+- M: generator writes the two tokens between the markers; npm script; part of build. Evidence: scripts/generate-shape-morph-ease.mjs:1-27, 40; package.json:50, 57.
+- M: reduced motion: transitions shortened to --ui-motion-duration-fast (already 1ms); non-zero because 0ms fires no transitionrun; autoplay clock and passive spin stop. Evidence: IC:850-855, 873-883; TK:902-906, 926.
+- M: ShapeMorphSpinner rests on its first shape under reduced motion. Evidence: the target only advances in the clock handler (MRS:320-324) and IC:879-882 removes the clock animation; initial shape index 0 (MRS:206, 267).
+- M: ShapeMorphSpinner: autoplay, role progressbar, aria-label default "Loading", inline-block shrink-0, token size default rg, resolveDsColor default primary. Evidence: SMS:46-47, 52, 57-69.
+- M: default sequence cookie, clover, puff, squircle, pentagon, capsule as Shapes keys; exported as components in SHAPE_MORPH_SPINNER_SHAPES; keys keep the module free of "use client". Evidence: SMS:19-31, 48.
+- M: engine cubic/morph/polygon/utils vendored (shape-morph MIT, port of androidx.graphics.shapes Apache 2.0), THIRD_PARTY_NOTICES.md; faithful port; fixes in svgPath.ts. Evidence: engine/cubic.ts:1-9; morph.ts:1-9; polygon.ts:1-9; utils.ts:1-9; THIRD_PARTY_NOTICES.md exists.
+- M: svgPath re-derives sharp-corner convexity from tangents; without it Morph pairs a staircase's inner steps with outer ones; arcs throw. Evidence: engine/svgPath.ts:16-21, 51, 136.

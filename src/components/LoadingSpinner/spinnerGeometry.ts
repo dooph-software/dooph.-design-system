@@ -10,7 +10,7 @@
  * and every proportion inside it survives.
  *
  * Geometry only. No duration or easing belongs here: the spinner's clock is the
- * --ui-spinner-* tokens, read by the .ds-spinner-* CSS helpers (Rule 6).
+ * --ui-spinner-* tokens, read by the .ds-spinner-* CSS helpers.
  */
 import { ACTIVE_INDICATOR_SCALE } from "../MorphRotationShape/geometry";
 
@@ -25,9 +25,8 @@ import { ACTIVE_INDICATOR_SCALE } from "../MorphRotationShape/geometry";
  * it — stroke, wave amplitude, arc gaps — scales with it, because they are all
  * fractions of the same user-unit space.
  *
- * An earlier version rendered width/height from this table directly, which made
- * the tokens dead: they existed, they were documented as the contract, and
- * overriding one did nothing.
+ * Rendering width/height from this table directly would make the tokens dead:
+ * documented as the contract, yet overriding one would do nothing.
  */
 export const SPINNER_DIAMETERS = { sm: 16, rg: 22, md: 32, xl: 40 } as const;
 

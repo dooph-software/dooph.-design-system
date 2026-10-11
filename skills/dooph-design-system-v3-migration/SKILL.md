@@ -19,6 +19,14 @@ Assume the new version is already installed. Nothing here modifies the package �
 you're only updating your app's overrides and usages. Work top-to-bottom; the
 verification grep at the end is the done-check.
 
+This skill covers v2.x → v3.4.0, the last v3 release. Most changes landed in
+3.0.0; the few that landed in a later v3 minor are labelled with their version.
+
+> Landing on a later major? Do this migration first, then the later migration
+> skills in order: `dooph-design-system-v5-migration`, then the v6 migration
+> skill when it ships. The names below are v3's; v5 removes the danger family
+> (see the v5 migration skill).
+
 ## Prerequisite: import the Tailwind preset (mandatory)
 
 **If your app runs its own Tailwind v4 build, this step is required** — and it's
@@ -28,12 +36,12 @@ Tailwind (then you rely solely on the precompiled `styles.css` and this whole
 utility topic doesn't apply).
 
 Your app's Tailwind build doesn't know dooph's token scale on its own. Without
-the preset, authoring classes like `p-md`, `gap-rg`, `rounded-normal`,
+the preset, authoring classes like `p-md`, `gap-rg`, `rounded-standard`,
 `bg-primary`, or `font-label` **never generate** — you're forced into ugly
 arbitrary values (`gap-[var(--ui-spacing-rg)]`) or, worse, a same-named Tailwind
 default silently wins (`font-sans`, the numeric spacing scale). The package ships
 a preset (`@dooph-software/design-system/theme.css`) — a standalone
-`@theme inline` block that registers every `--ui-*` token into your Tailwind — to
+`@theme inline` block that registers dooph's `--ui-*` scales into your Tailwind — to
 fix exactly this.
 
 Import it in your Tailwind CSS entry, **in this order**:
@@ -55,7 +63,7 @@ Once imported, use the ergonomic utilities instead of arbitrary values:
 | Token family | Utilities you can now write |
 | --- | --- |
 | spacing (`xxs xs sm rg md lg xl xxl`) | `p-md`, `px-rg`, `gap-rg`, `m-xs`, `space-y-sm` |
-| radius (`tight normal soft`) | `rounded-tight`, `rounded-normal`, `rounded-soft` |
+| radius (`tight standard soft`) | `rounded-tight`, `rounded-standard`, `rounded-soft` |
 | color | `bg-primary`, `text-danger-fg`, `border-border-primary`, `bg-surface-primary` |
 | font role | `font-body`, `font-button`, `font-label`, `font-heading` |
 | font size | `text-body`, `text-label`, `text-heading`, `text-title`, `text-hero` |
@@ -92,44 +100,39 @@ Apply these renames to every `--ui-*` you override. A blanket
 | `--ui-color-destructive-border-hover` | `--ui-color-danger-border-hover` |
 | `--ui-color-destructive-border-active` | `--ui-color-danger-border-active` |
 | `--ui-color-destructive-border-disabled` | `--ui-color-danger-border-disabled` |
-| `--ui-color-destructive-focus-ring` | `--ui-color-focus-ring-danger` |
+| `--ui-color-destructive-focus-ring` | `--ui-color-focus-ring-error` |
 | `--ui-color-border` | `--ui-color-border-primary` |
 | `--ui-color-surface` | `--ui-color-surface-primary` |
-| `--ui-color-focus-ring` | `--ui-color-focus-ring-prominent` |
-| `--ui-color-logo` | `--ui-prominent-color` |
-| `--ui-accent-color` | `--ui-prominent-color-alt` |
+| `--ui-color-surface-page` | `--ui-color-page-background` |
+| `--ui-color-focus-ring` | `--ui-color-focus-ring-brand` |
+| `--ui-color-logo` | `--ui-brand-color` |
+| `--ui-accent-color` | `--ui-brand-color-alt` |
+| `--ui-width-toast` | `--ui-width-toast-simple` (since v3.1.0) |
+| `--ui-width-toast-action` | `--ui-width-toast-complex` (since v3.1.0) |
 
 **Removed with no direct replacement — delete these lines:**
 
 - `--ui-color-logo-alt` — gone. The alternate brand slot is now
-  `--ui-prominent-color-alt` (repurposed from the old accent). If you had distinct
+  `--ui-brand-color-alt` (repurposed from the old accent). If you had distinct
   logo-alt and accent values, you can only keep one; pick the one you need.
 - `--ui-color-avatar-bg` — gone. `Avatar` now derives its look from
   `--ui-color-surface-secondary` (background), `--ui-color-border-secondary`
-  (1px shell border), and `--ui-prominent-color` (icon/content tint). If you had a
+  (1px shell border), and `--ui-brand-color` (icon/content tint). If you had a
   custom avatar background, set `--ui-color-surface-secondary` to it (note that
   token is shared with other secondary surfaces) or accept the new derivation.
 
 **Unchanged — do NOT rename (these already had v3 names in v2):** all
-`--ui-color-primary*` / `--ui-color-secondary*` bg + border tokens,
-`--ui-color-surface-page`, `--ui-color-border-popovers`,
-`--ui-color-modal-surface` / `-backdrop`, `--ui-color-focus-ring-primary` (name
-unchanged; only its default value moved), `--ui-color-ghost-*`,
-`--ui-color-text*`, and all font / spacing / sizing tokens.
+`--ui-color-primary*` / `--ui-color-secondary*` / `--ui-color-brand*` bg + border
+tokens, `--ui-color-border-focus`, `--ui-color-trigger-border-hover`,
+`--ui-color-border-popovers`, `--ui-color-modal-surface` / `-backdrop`,
+`--ui-color-focus-ring-primary` (name unchanged; only its default value moved),
+`--ui-color-ghost-*`, `--ui-color-text*`, and all font / spacing / radius /
+sizing tokens except the two toast widths above.
 
 **New tokens you MAY set (optional — sensible defaults ship):**
-`--ui-color-border-secondary`, `--ui-color-input-border-danger-focus` (defaults
+`--ui-color-border-secondary`, `--ui-color-trigger-border-error-focus` (defaults
 to the danger border), the slider geometry tokens, and
 `--ui-shimmer-base` / `--ui-shimmer-highlight`.
-
-> **The target names above are the CURRENT (5.4) ones, not the literal v3
-> spellings.** Several were renamed again after v3 — `--ui-color-brand*` →
-> `--ui-color-prominent*`, `--ui-color-error*` → `--ui-color-danger*`,
-> `--ui-color-page-background` → `--ui-color-surface-page`,
-> `--ui-radius-standard` → `--ui-radius-normal`, and `--ui-color-border-focus` /
-> `--ui-color-trigger-border-*` → `--ui-color-input-border-*` — so this table
-> lands you on what the package reads today rather than on a name that has since
-> moved. `ButtonVariant.brand` is likewise `ButtonVariant.prominent` now.
 
 ## 2. Rename dooph utility classes in your JSX
 
@@ -143,8 +146,9 @@ Sweep your own components (not `node_modules`) for these class renames:
 | any other `*-destructive-*` | `*-danger-*` |
 | `border-border` (bare) | `border-border-primary` |
 | `bg-surface` (bare) | `bg-surface-primary` |
-| `text-logo` | `text-prominent-color` |
-| `shadow-focus-destructive` | `shadow-focus-danger` |
+| `bg-surface-page` | `bg-page-background` |
+| `text-logo` | `text-brand-color` |
+| `shadow-focus-destructive` | `shadow-focus-error` |
 
 Caution on two of them:
 - `border-border` — rename only the **bare** class. Do **not** touch
@@ -155,14 +159,31 @@ Caution on two of them:
 
 ## 3. Rename the component API (your TSX)
 
-Three things changed — the button variant, the text constants, and the sidebar
-icon set.
+Five things changed — the button variant, the toast variants, the text
+constants, the sidebar icon set, and one icon name.
 
 **Button variant** (find/replace):
 
 - `ButtonVariant.destructive` → `ButtonVariant.danger`
 
-**Text constants and props** (find/replace):
+**Toast variants** (since v3.1.0; same widths, renamed to match the new width
+tokens):
+
+- `ToastTypes.standard` → `ToastTypes.simple`
+- `ToastTypes.action` → `ToastTypes.complex`
+
+The Toast prop is `variant`. Rename its string form only there:
+`variant="standard"` or `variant: "standard"` in Toast or `toast()` calls becomes
+`"simple"`, and `"action"` becomes `"complex"`. Do not replace the bare strings
+`"standard"` / `"action"` across your code: form `action`s, reducer action types
+and the like use them too.
+
+**Icon rename** (removed in v3.2.0; identical glyph):
+
+- `ThinkingIcon` → `AIThinkingIcon` — whole word only (`\bThinkingIcon\b`), so a
+  second pass does not produce `AIAIThinkingIcon`.
+
+**Text constants and props** (since v3.4.0; find/replace):
 
 | v2 (deleted) | v3 |
 | --- | --- |
@@ -195,16 +216,17 @@ the open/closed affordance from the button. Either convey state another way
 deliberately. Use the `*HoverIcon` variants for hover, not for state.
 
 Those are the only changed exports — `ButtonSize`, every other variant enum, and
-all component names are unchanged.
+all other component names are unchanged.
 
 ## 4. Visual changes to expect (not bugs)
 
-- **Text has no line-height.** v2 pinned every text role to `line-height: 1`;
+- **Text has no line-height** (since v3.4.0). v2 pinned every text role to `line-height: 1`;
   v3 sets none and leaves leading to inherit, so copy that was set solid now
   renders at whatever your app's base line-height is (1.5 under Tailwind's
   preflight). Set a baseline in your app CSS — fixed-height controls (buttons,
   inputs) are unaffected either way.
-- **`leading-*` / `tracking-*` classNames on text components now apply.** In v2
+- **`leading-*` / `tracking-*` classNames on text components now apply** (since
+  v3.4.0). In v2
   the role class was emitted after your utilities and silently beat them; in v3
   it moved to the `components` layer, so overrides that looked dead suddenly
   take effect. Audit those call sites rather than assuming they were no-ops.
@@ -219,9 +241,9 @@ all component names are unchanged.
 
 Available to import now: `TextLink`, `CopyButton`, the `Slider` suite
 (`SliderContinuous` / `SliderStepped` / `SliderLabeled`), `LinearProgressIndicator`,
-`StarShape`, `ShimmerText`, `RollChangeText`, `RollHoverText`, plus
+`StarShape`, `ShimmerText`, `RollChangeText`, `RollHoverText` (since v3.3.0), plus
 `ButtonSize.iconMicro`, `ShapeButtons.star`, and `DropdownMenuVariant` for menu
-width. See the `dooph-design-system-usage` skill for how to use
+width (since v3.1.0). See the `dooph-design-system-usage` skill for how to use
 them. The new Radix deps (`@radix-ui/react-slider`, `@radix-ui/react-progress`)
 ship inside the package — they install transitively, nothing to add.
 
@@ -234,22 +256,22 @@ ripgrep doesn't support:
 **Pass A — unambiguous survivors (plain ripgrep):**
 
 ```
-rg -n -e "destructive|surface-page|accent-color|--ui-color-logo|avatar-bg|text-logo|shadow-focus-destructive"
+rg -n -e "destructive|surface-page|--ui-accent-color|--ui-color-logo|avatar-bg|text-logo|shadow-focus-destructive" .
 ```
 
 **Pass B — the bare border/surface tokens (needs PCRE2, the `-P` flag):**
 
 ```
-rg -nP -e "--ui-color-border(?![-\w])|--ui-color-surface(?![-\w])|bg-surface(?![-\w])"
+rg -nP -e "--ui-color-border(?![-\w])|--ui-color-surface(?![-\w])|bg-surface(?![-\w])" .
 ```
 
 The `-e` is required because the pattern begins with `--`, which ripgrep would
 otherwise read as a flag.
 
-If your ripgrep has no `-P` support, grep plain `--ui-color-border` and
-`bg-surface` instead and confirm by eye that every hit is an allowed longer name
-(`-primary`, `-secondary`, `-popovers`, `-focus`; `bg-surface-secondary`) rather
-than the bare token.
+If your ripgrep has no `-P` support, grep plain `--ui-color-border`,
+`--ui-color-surface` and `bg-surface` instead and confirm by eye that every hit
+is an allowed longer name (`-primary`, `-secondary`, `-popovers`, `-focus`;
+`bg-surface-primary`, `bg-surface-secondary`) rather than the bare token.
 
 Zero hits from both passes + a clean build = migration complete. This skill no
 longer applies to the project once that holds.

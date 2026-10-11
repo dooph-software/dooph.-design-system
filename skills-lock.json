@@ -1,12 +1,6 @@
 {
   "version": 1,
   "skills": {
-    "file-header-contracts": {
-      "source": "dooph-software/dooph-skills",
-      "sourceType": "github",
-      "skillPath": "skills/file-header-contracts/SKILL.md",
-      "computedHash": "2e730ceb437bc2fa3e6a00150f86e997f46d2e38ba6733ffdddb62030b546f30"
-    },
     "skill-creator": {
       "source": "anthropics/skills",
       "sourceType": "github",

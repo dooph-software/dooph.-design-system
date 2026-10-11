@@ -1,0 +1,25 @@
+RUN OK
+subtype: success  is_error: false  turns: 34  cost_usd: 1.0640538999999998  duration_ms: 349194
+permission_denials (0):
+
+--- final text ---
+Everything passes — type-check and build are clean. Here's what was added:
+
+**New files** in `src/components/ServiceStatus/`:
+
+- **`constants.ts`** — `ServiceStatusState` enum: `operational`, `degraded`, `down`, `unknown`
+- **`ServiceStatus.tsx`** — The component. Takes `url`, `label`, and optional `interval` (default 30s). Polls the endpoint with `fetch` + `setInterval`, maps the response to a Sticker variant:
+  - `operational` → `alternate` (green)
+  - `degraded` → `custom` amber (`#f59e0b`)
+  - `down` → `danger` (red)
+  - `unknown` (initial/error) → `tertiary` (neutral)
+  - A small filled circle dot before the label inherits the Sticker's content colour
+- **`index.ts`** — Exports `ServiceStatus`, `ServiceStatusProps`, `ServiceStatusState`
+- **`ServiceStatus.stories.tsx`** — Six stories under "Status/ServiceStatus":
+  - `Operational`, `Degraded`, `Down`, `Unknown` — static states via mocked fetch
+  - `LiveCycle` — cycles through all four states every 3s
+  - `DashboardRow` — three badges side by side
+
+**Modified:** `src/index.ts` — added the barrel export.
+
+The component has file-header contracts documenting the two key invariants: `status-no-cache` (fetch always hits origin) and `status-cleanup` (interval is cleared on unmount/dep change).

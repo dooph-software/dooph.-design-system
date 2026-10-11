@@ -1,0 +1,119 @@
+cwd: C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-red-20261008203859
+model: claude-opus-4-6
+permissionMode: acceptEdits
+claude_code_version: 2.1.96
+
+tools (24): Task, AskUserQuestion, Bash, CronCreate, CronDelete, CronList, Edit, EnterPlanMode, EnterWorktree, ExitPlanMode, ExitWorktree, Glob, Grep, NotebookEdit, Read, RemoteTrigger, Skill, TaskOutput, TaskStop, TodoWrite, ToolSearch, WebFetch, WebSearch, Write
+
+skills (7): update-config, debug, simplify, batch, loop, schedule, claude-api
+
+slash_commands (16): update-config, debug, simplify, batch, loop, schedule, claude-api, compact, context, cost, heapdump, init, review, security-review, extra-usage, insights
+
+agents (5): general-purpose, statusline-setup, Explore, Plan, claude-code-guide
+
+plugins (0): (none)
+
+mcp_servers (2): claude.ai Claude Docs, claude.ai Figma
+
+memory-related init keys: (none reported)
+
+--- init event, verbatim ---
+{
+  "type": "system",
+  "subtype": "init",
+  "cwd": "C:\\Users\\stick\\Github\\dooph\\ds-sb-checkbox-field-row-red-20261008203859",
+  "session_id": "86c678c6-96df-4abc-92d6-118c0291f382",
+  "tools": [
+    "Task",
+    "AskUserQuestion",
+    "Bash",
+    "CronCreate",
+    "CronDelete",
+    "CronList",
+    "Edit",
+    "EnterPlanMode",
+    "EnterWorktree",
+    "ExitPlanMode",
+    "ExitWorktree",
+    "Glob",
+    "Grep",
+    "NotebookEdit",
+    "Read",
+    "RemoteTrigger",
+    "Skill",
+    "TaskOutput",
+    "TaskStop",
+    "TodoWrite",
+    "ToolSearch",
+    "WebFetch",
+    "WebSearch",
+    "Write"
+  ],
+  "mcp_servers": [
+    {
+      "name": "claude.ai Claude Docs",
+      "status": "pending"
+    },
+    {
+      "name": "claude.ai Figma",
+      "status": "pending"
+    }
+  ],
+  "model": "claude-opus-4-6",
+  "permissionMode": "acceptEdits",
+  "slash_commands": [
+    "update-config",
+    "debug",
+    "simplify",
+    "batch",
+    "loop",
+    "schedule",
+    "claude-api",
+    "compact",
+    "context",
+    "cost",
+    "heapdump",
+    "init",
+    "review",
+    "security-review",
+    "extra-usage",
+    "insights"
+  ],
+  "apiKeySource": "none",
+  "claude_code_version": "2.1.96",
+  "output_style": "default",
+  "agents": [
+    "general-purpose",
+    "statusline-setup",
+    "Explore",
+    "Plan",
+    "claude-code-guide"
+  ],
+  "skills": [
+    "update-config",
+    "debug",
+    "simplify",
+    "batch",
+    "loop",
+    "schedule",
+    "claude-api"
+  ],
+  "plugins": [],
+  "uuid": "cb6eb11b-4138-4dae-b43d-5508eec9061a",
+  "fast_mode_state": "off"
+}
+
+--- auto-memory ---
+canary autoMemoryDirectory: C:/Users/stick/AppData/Local/Temp/claude/C--Users-stick-Github-dooph-dooph-Design-System/fb5b5c5d-cbc2-47a0-9157-b9f6db4d3431/scratchpad/baseline/checkbox-field-row-red-memory-canary
+canary absent after the run: auto-memory was off, no memory loaded
+debug-log memory activity lines: 0
+
+
+--- skill / plugin / CLAUDE.md loading, from checkbox-field-row-red-debug.log ---
+2026-10-09T02:39:07.631Z [DEBUG] Loaded 1 installed plugins from C:\Users\stick\.claude\plugins\installed_plugins.json
+2026-10-09T02:39:07.632Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2026-10-09T02:39:07.643Z [DEBUG] Loading skills from: managed=C:\Program Files\ClaudeCode\.claude\skills, user=C:\Users\stick\.claude\skills, project=[]
+2026-10-09T02:39:07.656Z [DEBUG] Loaded 0 unique skills (0 unconditional, 0 conditional, managed: 0, user: 0, project: 0, additional: 0, legacy commands: 0)
+2026-10-09T02:39:07.656Z [DEBUG] getSkills returning: 0 skill dir commands, 0 plugin skills, 8 bundled skills, 0 builtin plugin skills
+2026-10-09T02:39:07.894Z [DEBUG] Sending 6 skills via attachment (initial, 6 total sent)
+2026-10-09T02:39:20.167Z [DEBUG] Sending 6 skills via attachment (initial, 6 total sent)

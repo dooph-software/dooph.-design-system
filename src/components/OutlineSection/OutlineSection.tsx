@@ -20,7 +20,7 @@ const OutlineSection = forwardRef<HTMLDivElement, OutlineSectionProps>(
       className={cn(
         'inline-flex flex-col items-center justify-center',
         'border border-solid border-border-primary rounded-outline-frame',
-        'ds-p-ui-sm',
+        'p-sm',
         className
       )}
       {...props}

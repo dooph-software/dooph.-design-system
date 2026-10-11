@@ -1,0 +1,26 @@
+#2 Bash: find /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944 -type f -name "*.tsx" -o -name "*.ts" -o -name "*.jsx" -o -name "*.js" | head -20
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/node_modules/@babel/core/lib/config/config-descriptors.js
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/node_modules/@babel/core/lib/config/files/configuration.js
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/node_modules/@babel/core/lib/config/files/index-browser.js
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/node_modules/@babel/core/lib/config/files/index.js
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/node_modules/@babel/core/lib/config/files/module-types.js
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/node_modules/@babel/core/lib/config/files/package.js
+#3 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944
+    | -rw-r--r-- 1 stick 197609   3503 Oct  8 20:39 package.json
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:39 scripts
+    | -rw-r--r-- 1 stick 197609    803 Oct  8 20:39 skills-lock.json
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:39 src
+    | -rw-r--r-- 1 stick 197609    487 Oct  8 20:39 tsconfig.json
+    | -rw-r--r-- 1 stick 197609   3749 Oct  8 20:39 tsup.config.ts
+#10 Bash: find /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src -type f \( -name "*.tsx" -o -name "*.ts" -o -name "*.css" \) | grep -i dropdown
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/DropdownTrigger/DropdownTrigger.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/DropdownTrigger/index.ts
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/Icons/DropdownIcon.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/Menu/DropdownMenu.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/Menu/DropdownMenu.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/Menu/DropdownMenuSearch.tsx
+#19 Bash: find /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src -name "*MorphRotationShape*" -type f
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/MorphRotationShape/MorphRotationShape.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/MorphRotationShape/MorphRotationShape.tsx
+#37 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944" && npx tsc --noEmit --pretty 2>&1 | head -30
+    | (Bash completed with no output)

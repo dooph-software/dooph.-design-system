@@ -1,0 +1,24 @@
+#27 Edit C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/src/components/TextLink/TextLink.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/src/components/TextLink/TextLink.tsx",
+  "old_string": "/**\n * TextLink — body text that acts as a link. Ghost foreground at rest,\n * primary text on hover/active (Figma 554-927; color change only, no underline).\n * For Next.js: <TextLink asChild><Link href=\"…\">Changelog</Link></TextLink>\n */",
+  "new_string": "/**\n * TextLink — body text that acts as a link. Ghost foreground at rest,\n * primary text on hover/active. Always shows a wavy underline in the\n * link's current text colour.\n * For Next.js: <TextLink asChild><Link href=\"…\">Changelog</Link></TextLink>\n */"
+}
+
+#28 Edit C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/src/components/TextLink/TextLink.tsx  (tool error)
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/src/components/TextLink/TextLink.tsx",
+  "old_string": "          \"text-ghost-fg cursor-pointer\",\n24\t          \"ds-motion-state\",\n25\t          \"hover:text-ghost-fg-active active:text-ghost-fg-active\",\n26\t          \"ds-focus-visible-ring rounded-tight\",",
+  "new_string": "          \"text-ghost-fg cursor-pointer\",\n          \"underline decoration-wavy decoration-current underline-offset-[0.2em]\",\n          \"ds-motion-state\",\n          \"hover:text-ghost-fg-active active:text-ghost-fg-active\",\n          \"ds-focus-visible-ring rounded-tight\","
+}
+
+#29 Edit C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/src/components/TextLink/TextLink.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-red-20261008204521/src/components/TextLink/TextLink.tsx",
+  "old_string": "          \"text-ghost-fg cursor-pointer\",\n          \"ds-motion-state\",\n          \"hover:text-ghost-fg-active active:text-ghost-fg-active\",\n          \"ds-focus-visible-ring rounded-tight\",",
+  "new_string": "          \"text-ghost-fg cursor-pointer\",\n          \"underline decoration-wavy decoration-current underline-offset-[0.2em]\",\n          \"ds-motion-state\",\n          \"hover:text-ghost-fg-active active:text-ghost-fg-active\",\n          \"ds-focus-visible-ring rounded-tight\","
+}
+

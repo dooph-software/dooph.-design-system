@@ -499,10 +499,6 @@
     gap: var(--ui-spacing-cta-content-big);
   }
 
-  .ds-px-ui-rg {
-    padding-inline: var(--ui-spacing-rg);
-  }
-
   /* Toast sizing — fixed design widths capped to the available viewport. */
   .ds-toast-viewport {
     width: min(
@@ -586,35 +582,14 @@
   }
 
   /* spacing — semantic names mirror token stems */
-  .ds-gap-ui-sm {
-    gap: var(--ui-spacing-sm);
-  }
   .ds-p-ui-sm {
     padding: var(--ui-spacing-sm);
   }
   .ds-px-ui-sm {
     padding-inline: var(--ui-spacing-sm);
   }
-  .ds-py-ui-sm {
-    padding-block: var(--ui-spacing-sm);
-  }
   .ds-py-ui-xxs {
     padding-block: var(--ui-spacing-xxs);
-  }
-  .ds-py-ui-md {
-    padding-block: var(--ui-spacing-md);
-  }
-  .ds-pl-ui-lg {
-    padding-left: var(--ui-spacing-lg);
-  }
-  .ds-pl-ui-md {
-    padding-left: var(--ui-spacing-md);
-  }
-  .ds-pr-ui-md {
-    padding-right: var(--ui-spacing-md);
-  }
-  .ds-pr-ui-rg {
-    padding-right: var(--ui-spacing-rg);
   }
 
   /* Button medium / big — the pill sizes' off-scale horizontal padding. */

@@ -8,9 +8,9 @@
 // Running here — after tsup has flushed the real files to disk — is reliable.
 //
 // How it decides which outputs to stamp:
-// 1. Scan src/ for modules whose directive prologue (after any header comment,
-//    which R11.9 puts first) carries "use client". A "use client" line anywhere
-//    else fails the build.
+// 1. Scan src/ for modules whose directive prologue carries "use client". Only
+//    comments (a header contract comes first in the file) and other directives
+//    may precede it; a "use client" line anywhere else fails the build.
 // 2. Read tsup's emitted metafiles (dist/metafile-esm.json + metafile-cjs.json),
 //    which map every output chunk to the exact input modules bundled into it.
 // 3. Any output whose inputs include a client source gets the directive prepended
@@ -86,7 +86,7 @@ function collectClientSources(dir, acc) {
         acc.add(toPosix(path.relative(cwd, full)));
       } else if (DIRECTIVE_LINE.test(contents)) {
         throw new Error(
-          `[add-use-client] ${toPosix(path.relative(cwd, full))} has a "use client" line outside its directive prologue (only comments may precede it).`,
+          `[add-use-client] ${toPosix(path.relative(cwd, full))} has a "use client" line outside its directive prologue (only comments and other directives may precede it).`,
         );
       }
     }

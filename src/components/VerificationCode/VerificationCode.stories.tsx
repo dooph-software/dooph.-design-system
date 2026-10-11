@@ -47,7 +47,7 @@ export const Controlled: Story = {
   render: () => {
     const [value, setValue] = useState("");
     return (
-      <div className="flex flex-col items-start gap-lg p-4">
+      <div className="flex flex-col items-start gap-lg p-lg">
         <VerificationCodeInput value={value} onValueChange={setValue} />
         <LabelText className="text-text-secondary">
           Value: {value || "(empty)"}
@@ -63,7 +63,7 @@ export const Controlled: Story = {
  * instead. Interactive entry is covered by the group stories above. */
 export const SingleDigitStates: Story = {
   render: () => (
-    <div className="flex items-center gap-lg p-4">
+    <div className="flex items-center gap-lg p-lg">
       <CodeDigitInput value="" readOnly aria-label="Empty" />
       <CodeDigitInput value="1" readOnly aria-label="Filled" />
       <CodeDigitInput value="1" readOnly hasError aria-label="Error" />
@@ -89,8 +89,9 @@ export const PreRolledSection: Story = {
       );
       return () => window.clearTimeout(id);
     }, []);
+    // Demo width: a typical form column; no token sizes it.
     return (
-      <div className="flex w-[360px] flex-col items-start gap-lg p-6">
+      <div className="flex flex-col items-start gap-lg p-xxl" style={{ width: 360 }}>
         <HeadingText>Enter verification code</HeadingText>
         <BodyText className="text-text-secondary">
           We sent a 6-digit code to your email. Enter it below to continue.

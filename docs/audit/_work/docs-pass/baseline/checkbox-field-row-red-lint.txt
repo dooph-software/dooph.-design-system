@@ -1,0 +1,11 @@
+
+> @dooph-software/design-system@5.3.0 lint
+> tsc --noEmit && node scripts/check-conventions.mjs
+
+FAIL numeric Tailwind spacing: src/components/CheckboxField/CheckboxField.tsx:43 gap-2
+FAIL numeric Tailwind spacing: src/components/CheckboxField/CheckboxField.tsx:55 gap-0.5
+
+why (numeric Tailwind spacing): p-2 or gap-4 is Tailwind's default scale, not the DS spacing tokens, so it ignores token overrides (zero resets like p-0 are allowed).
+
+conventions: 1 of 25 checks failed
+lint exit: 1

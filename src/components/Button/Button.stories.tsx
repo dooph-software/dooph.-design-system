@@ -80,7 +80,7 @@ export const AsChild: Story = {
 
 export const AllVariants: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-3 p-4">
+    <div className="flex flex-wrap gap-md p-lg">
       {Object.values(ButtonVariant).map((v) => (
         <Button key={v} variant={v}>
           {v}
@@ -92,7 +92,7 @@ export const AllVariants: Story = {
 
 export const AllSizes: Story = {
   render: () => (
-    <div className="flex items-center gap-3 p-4">
+    <div className="flex items-center gap-md p-lg">
       <Button variant={ButtonVariant.primary} size={ButtonSize.big}>
         Big
       </Button>
@@ -114,7 +114,7 @@ export const AllSizes: Story = {
 
 export const DisabledAll: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-3 p-4">
+    <div className="flex flex-wrap gap-md p-lg">
       {(
         Object.values(ButtonVariant).filter(
           (v) => v !== ButtonVariant.text,
@@ -130,20 +130,20 @@ export const DisabledAll: Story = {
 
 export const IconSizeComparison: Story = {
   render: () => (
-    <div className="flex flex-col gap-6 p-4">
+    <div className="flex flex-col gap-xxl p-lg">
       {[ButtonVariant.ghost, ButtonVariant.secondary, ButtonVariant.primary].map(
         (variant) => (
-          <div key={variant} className="flex items-center gap-4">
+          <div key={variant} className="flex items-center gap-lg">
             <div className="w-20">
               <LabelText className="text-text-secondary">{variant}</LabelText>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-md">
               <Button variant={variant} size={ButtonSize.icon}>
                 <SidebarLeftIcon size={IconSize.rg} />
               </Button>
               <LabelText className="text-text-secondary">icon (38px)</LabelText>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-md">
               <Button variant={variant} size={ButtonSize.iconSm}>
                 <SidebarLeftIcon size={IconSize.rg} />
               </Button>
@@ -151,7 +151,7 @@ export const IconSizeComparison: Story = {
                 icon-sm (34px)
               </LabelText>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-md">
               <Button variant={variant} size={ButtonSize.iconMicro}>
                 <SidebarLeftIcon size={IconSize.rg} />
               </Button>

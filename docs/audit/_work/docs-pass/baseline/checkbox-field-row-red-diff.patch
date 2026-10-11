@@ -1,0 +1,231 @@
+diff --git a/src/components/CheckboxField/CheckboxField.stories.tsx b/src/components/CheckboxField/CheckboxField.stories.tsx
+new file mode 100644
+index 0000000..d93a264
+--- /dev/null
++++ b/src/components/CheckboxField/CheckboxField.stories.tsx
+@@ -0,0 +1,118 @@
++import { useState } from 'react';
++import type { Meta, StoryObj } from '@storybook/react-vite';
++import { CheckboxField } from './CheckboxField';
++import {
++  CheckboxChecked,
++  CheckboxVariant,
++  type CheckboxChecked as CheckboxCheckedValue,
++} from '../Checkbox/constants';
++
++const meta = {
++  title: 'Inputs/CheckboxField',
++  component: CheckboxField,
++  parameters: { layout: 'centered' },
++  tags: ['autodocs'],
++  argTypes: {
++    variant: {
++      control: 'select',
++      options: Object.values(CheckboxVariant),
++    },
++  },
++} satisfies Meta<typeof CheckboxField>;
++
++export default meta;
++type Story = StoryObj<typeof meta>;
++
++export const Default: Story = {
++  args: {
++    label: 'Enable notifications',
++  },
++};
++
++export const WithHint: Story = {
++  args: {
++    label: 'Enable notifications',
++    hint: 'Receive email alerts when someone mentions you.',
++  },
++};
++
++export const Checked: Story = {
++  args: {
++    label: 'Accept terms and conditions',
++    defaultChecked: true,
++  },
++};
++
++export const CheckedWithHint: Story = {
++  args: {
++    label: 'Dark mode',
++    hint: 'Use a darker color scheme that reduces eye strain.',
++    defaultChecked: true,
++  },
++};
++
++export const PrimaryVariant: Story = {
++  args: {
++    label: 'Remember me',
++    hint: 'Stay signed in on this device.',
++    defaultChecked: true,
++    variant: CheckboxVariant.primary,
++  },
++};
++
++export const Disabled: Story = {
++  args: {
++    label: 'Admin access',
++    hint: 'Only organization owners can enable this setting.',
++    disabled: true,
++  },
++};
++
++export const DisabledChecked: Story = {
++  args: {
++    label: 'Two-factor authentication',
++    hint: 'Required by your organization policy.',
++    disabled: true,
++    checked: CheckboxChecked.checked,
++  },
++};
++
++export const Controlled: Story = {
++  args: {
++    label: 'Send me marketing emails',
++  },
++  render: (args) => {
++    const [checked, setChecked] = useState<CheckboxCheckedValue>(
++      CheckboxChecked.unchecked,
++    );
++
++    return (
++      <CheckboxField
++        {...args}
++        hint={
++          checked === CheckboxChecked.checked
++            ? 'You will receive occasional product updates.'
++            : 'You will not receive marketing emails.'
++        }
++        checked={checked}
++        onCheckedChange={setChecked}
++      />
++    );
++  },
++};
++
++export const LongContent: Story = {
++  args: {
++    label:
++      'I agree to the terms of service, privacy policy, and community guidelines',
++    hint: 'By checking this box you acknowledge that you have read and agree to all of the above documents. You can review them at any time from your account settings.',
++    defaultChecked: true,
++  },
++  decorators: [
++    (Story) => (
++      <div className="max-w-sm">
++        <Story />
++      </div>
++    ),
++  ],
++};
+diff --git a/src/components/CheckboxField/CheckboxField.tsx b/src/components/CheckboxField/CheckboxField.tsx
+new file mode 100644
+index 0000000..547be84
+--- /dev/null
++++ b/src/components/CheckboxField/CheckboxField.tsx
+@@ -0,0 +1,81 @@
++/*
++ * CheckboxField — a checkbox with a label and optional hint text, laid out as
++ * a single clickable row.
++ *
++ * ## behavior
++ * - Clicking anywhere on the row (label, hint, or checkbox) toggles the
++ *   checkbox. The entire row is wrapped in a `<label>`.
++ * - When `hint` is provided, a secondary line of body text appears below the
++ *   label. The hint is linked to the checkbox via `aria-describedby`.
++ * - Disabled state dims both the checkbox and the text.
++ *
++ * ## constraints
++ * - The inner Checkbox is not independently styled — pass `variant` or
++ *   `className` through CheckboxField props; do not reach into the DOM.
++ * - `children` is reserved for the label content (ReactNode). Use `hint` for
++ *   the description line.
++ */
++import { forwardRef, useId, type ComponentRef } from "react";
++import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
++import { Checkbox, type CheckboxProps } from "../Checkbox/Checkbox";
++import { BodyText, LabelText } from "../Text";
++import { cn } from "../../utils/cn";
++
++export interface CheckboxFieldProps extends CheckboxProps {
++  /** Primary label displayed next to the checkbox. */
++  label: React.ReactNode;
++  /** Optional hint text rendered below the label in a smaller, secondary style. */
++  hint?: React.ReactNode;
++}
++
++const CheckboxField = forwardRef<
++  ComponentRef<typeof CheckboxPrimitive.Root>,
++  CheckboxFieldProps
++>(({ label, hint, className, id, disabled, ...checkboxProps }, ref) => {
++  const autoId = useId();
++  const checkboxId = id ?? autoId;
++  const hintId = hint ? `${checkboxId}-hint` : undefined;
++
++  return (
++    <label
++      htmlFor={checkboxId}
++      className={cn(
++        "group/field inline-flex cursor-pointer items-start gap-2",
++        disabled && "pointer-events-none",
++        className,
++      )}
++    >
++      <Checkbox
++        ref={ref}
++        id={checkboxId}
++        disabled={disabled}
++        aria-describedby={hintId}
++        {...checkboxProps}
++      />
++      <span className="flex min-w-0 flex-col gap-0.5">
++        <LabelText
++          className={cn(
++            "cursor-pointer select-none",
++            disabled && "text-text-disabled",
++          )}
++        >
++          {label}
++        </LabelText>
++        {hint && (
++          <BodyText
++            id={hintId}
++            className={cn(
++              "text-text-secondary",
++              disabled && "text-text-disabled",
++            )}
++          >
++            {hint}
++          </BodyText>
++        )}
++      </span>
++    </label>
++  );
++});
++CheckboxField.displayName = "CheckboxField";
++
++export { CheckboxField };
+diff --git a/src/components/CheckboxField/index.ts b/src/components/CheckboxField/index.ts
+new file mode 100644
+index 0000000..1f99178
+--- /dev/null
++++ b/src/components/CheckboxField/index.ts
+@@ -0,0 +1,2 @@
++export { CheckboxField } from './CheckboxField';
++export type { CheckboxFieldProps } from './CheckboxField';
+diff --git a/src/index.ts b/src/index.ts
+index 3833ba6..47d7019 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -5,6 +5,7 @@ export * from './components/CopyButton';
+ export * from './components/Avatar';
+ export * from './components/Sticker';
+ export * from './components/Checkbox';
++export * from './components/CheckboxField';
+ export * from './components/HotkeyIndicator';
+ export * from './components/Icons';
+ export * from './components/SidebarWithHoverIcon';

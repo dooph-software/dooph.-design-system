@@ -1,0 +1,18 @@
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index 55fcef8..9982ca5 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -949,6 +949,13 @@
+     padding: 0;
+     border-radius: 0;
+   }
++  .dark .ds-chat-prose pre,
++  .dark .ds-chat-prose code {
++    background-color: #0e0e10;
++  }
++  .dark .ds-chat-prose pre code {
++    background-color: transparent;
++  }
+   .ds-chat-prose table {
+     border-collapse: collapse;
+   }

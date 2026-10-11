@@ -1,0 +1,6 @@
+
+> @dooph-software/design-system@5.3.0 lint
+> tsc --noEmit && node scripts/check-conventions.mjs
+
+conventions: 25 checks passed
+lint exit: 0

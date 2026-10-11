@@ -1,0 +1,19 @@
+RUN OK
+subtype: success  is_error: false  turns: 33  cost_usd: 0.6055053000000001  duration_ms: 161724
+permission_denials (0):
+
+--- final text ---
+TypeScript compiles clean. Here's a summary of the changes:
+
+**New token** `--ui-color-input-fill-disabled: #ececec` (light mode) — darker than the previous `#f5f5f5` from the shared secondary-disabled token. Dark mode aliases the existing secondary-disabled value so it stays unchanged.
+
+**Files changed:**
+- `src/styles/tokens.css` — added `--ui-color-input-fill-disabled` in both light and dark mode
+- `src/styles/theme.css` / `src/styles/index.css` — added `--color-input-fill-disabled` Tailwind alias
+- `src/components/Input/Input.tsx` — both disabled paths now use `bg-input-fill-disabled`
+- `src/components/DropdownTrigger/DropdownTrigger.tsx` — editable (input-like) trigger variant updated
+- `src/components/SearchBox/SearchBox.tsx` — updated
+- `src/components/VerificationCode/CodeDigitInput.tsx` — updated
+- `src/components/DatePicker/DatePickerSplitTrigger.tsx` — updated
+
+Button and Checkbox disabled fills are left on the shared `bg-secondary-disabled` since those aren't inputs.

@@ -59,10 +59,10 @@ const DropdownTriggerBase = forwardRef<
       as={Comp}
       ref={ref as ForwardedRef<HTMLElement>}
       className={cn(
-        "inline-flex h-button items-center justify-center ds-gap-ui-sm",
+        "inline-flex h-button items-center justify-center gap-sm",
         "min-w-menu rounded-tight border border-solid border-border-primary",
         "bg-secondary text-secondary-fg",
-        "ds-dropdown-caret-host ds-pl-ui-md",
+        "ds-dropdown-caret-host pl-md",
         "cursor-pointer select-none",
         "ds-motion-state",
         "[&:not(:disabled):not([aria-disabled=true])]:hover:bg-secondary-hover [&:not(:disabled):not([aria-disabled=true])]:hover:shadow-button-secondary",
@@ -186,9 +186,9 @@ const TypeableDropdownTrigger = forwardRef<
       <div
         ref={ref}
         className={cn(
-          "inline-flex h-button items-center ds-gap-ui-sm",
+          "inline-flex h-button items-center gap-sm",
           "min-w-menu rounded-tight border border-solid border-border-primary",
-          "bg-secondary ds-dropdown-caret-host ds-pl-ui-md",
+          "bg-secondary ds-dropdown-caret-host pl-md",
           "ds-motion-state",
           "cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-secondary-disabled data-[disabled]:border-secondary-border-disabled",
           "[&:hover:not(:focus-within):not([data-disabled])]:border-input-border-hover [&:hover:not(:focus-within):not([data-disabled])]:shadow-button-secondary",
@@ -314,7 +314,7 @@ const TextDropdownTriggerBase = forwardRef<
           size === TextDropdownSize.sm ? TextVariant.label : TextVariant.button
         }
         className={cn(
-          "inline-flex items-center ds-gap-ui-sm",
+          "inline-flex items-center gap-sm",
           "rounded-tight border border-transparent bg-transparent",
           "cursor-pointer select-none ds-motion-state",
           "ds-focus-visible-ring",

@@ -5,10 +5,9 @@
  * Figma Tab Select — variant × size.
  * Usage: <SegmentedTabSelect variant={SegmentedVariant.ghost} size={SegmentedSize.containerIcon} />
  *
- * BREAKING (major): the flat keys ghostSmall, micro, secondary,
- * secondarySmall and primarySmall were removed; combine variant and size.
- * The no-prop default also changed, from secondary (shell + ghost) to
- * primary + container — a silent visual change for no-prop callers.
+ * Variant and size are separate props: combine them (there are no combined
+ * keys such as ghostSmall). With neither prop the tab select is primary +
+ * container.
  */
 export const SegmentedVariant = {
   primary: 'primary',

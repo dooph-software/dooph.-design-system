@@ -67,7 +67,7 @@ export const DisabledChecked: Story = {
 
 export const WithLabel: Story = {
   render: () => (
-    <label className="flex items-center gap-2">
+    <label className="flex items-center gap-sm">
       <Checkbox defaultChecked />
       <LabelText>Accept terms</LabelText>
     </label>
@@ -81,7 +81,7 @@ export const Controlled: Story = {
     );
 
     return (
-      <label className="flex items-center gap-2">
+      <label className="flex items-center gap-sm">
         <Checkbox checked={checked} onCheckedChange={setChecked} />
         <LabelText>
           {checked === CheckboxChecked.checked ? 'Enabled' : 'Disabled'}
@@ -93,9 +93,9 @@ export const Controlled: Story = {
 
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-lg p-lg">
       {Object.values(CheckboxVariant).map((variant) => (
-        <div key={variant} className="flex items-center gap-4">
+        <div key={variant} className="flex items-center gap-lg">
           <LabelText className="w-14 capitalize text-text-secondary">
             {variant}
           </LabelText>

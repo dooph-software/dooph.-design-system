@@ -1,0 +1,108 @@
+#1 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964 -type f -name "package.json" | head -5
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@alloc/quick-lru/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@floating-ui/core/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@floating-ui/dom/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@floating-ui/react-dom/package.json
+#3 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964 | grep -E "^d"
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:07 .git
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 app
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 components
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 lib
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:07 node_modules
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 vendor
+#4 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/app -type f -name "*.tsx" -o -name "*.ts" | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/app/dashboard/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/app/layout.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/app/page.tsx
+#5 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/components -type f -name "*.tsx" -o -name "*.ts"
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/components/theme-toggle.tsx
+#10 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964 -name "tailwind.config.*" -o -name "tsconfig.json"
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/tsconfig.json
+#12 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964 | grep -E "tailwind|next"
+    | -rw-r--r-- 1 stick 197609   265 Oct  8 20:59 next.config.ts
+#14 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964 -name "tailwind.config.*" 2>/dev/null
+    | (Bash completed with no output)
+#15 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/vendor/
+    | total 548
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 21:07 ..
+    | -rw-r--r-- 1 stick 197609 554100 Oct  8 21:06 dooph-software-design-system-5.3.0.tgz
+#16 Bash  [is_error]: tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | head -30
+    | This Bash command contains multiple operations. The following part requires approval: tar -tzf vendor/dooph-software-design-system-5.3.0.tgz
+#17 Bash  [is_error]: tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | head -40
+    | This Bash command contains multiple operations. The following part requires approval: tar -tzf vendor/dooph-software-design-system-5.3.0.tgz
+#18 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/
+    | -rw-r--r-- 1 stick 197609  1066 Oct  8 21:07 LICENSE.txt
+    | -rw-r--r-- 1 stick 197609   114 Oct  8 21:07 README.md
+    | -rw-r--r-- 1 stick 197609 16566 Oct  8 21:07 THIRD_PARTY_NOTICES.md
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:07 bin
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:07 dist
+    | -rw-r--r-- 1 stick 197609  3503 Oct  8 21:07 package.json
+#19 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist -type f -name "*.css" -o -name "*.d.ts" -o -name "*.js" | head -30
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/chunk-5HXI5BX7.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/chunk-5JHQ5UH6.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/chunk-5LQLNJUU.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/chunk-65IUMLK2.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/chunk-6C6DUA3F.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/chunk-6J4ZBHM3.js
+#20 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system -name "*.css"
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/styles.css
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/theme.css
+#24 Bash: grep -n "dark\|:root\|--ui-color" /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/styles.css | head -100
+    | 1379:    border-color: var(--ui-color-danger-border-disabled);
+    | 1382:    border-color: var(--ui-color-primary-border-disabled);
+    | 1385:    border-color: var(--ui-color-prominent-border-disabled);
+    | 1388:    border-color: var(--ui-color-secondary-border-disabled);
+    | 1391:    background-color: var(--ui-color-danger-disabled);
+    | 1394:    background-color: var(--ui-color-primary-disabled);
+#25 Bash: grep -n "^:root\|^\.dark\|--ui-color\|--ui-font\|--ui-spacing" /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/styles.css | tail -300 | head -100
+    | 2109:    --ui-spacing-xxl: 26px;
+    | 2110:    --ui-spacing-xxxl: 42px;
+    | 2111:    --ui-spacing-toast-inset: 14px;
+    | 2112:    --ui-spacing-table-placeholder-y: 32px;
+    | 2122:    --ui-radius-outline-frame: calc(var(--ui-radius-soft) + var(--ui-spacing-sm));
+    | 2134:    --ui-shadow-focus-prominent: 0 0 0 4px var(--ui-color-focus-ring-prominent);
+#26 Bash: grep -n "\.dark\|@media.*prefers-color-scheme" /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/styles.css | head -20
+    | 2221:  .dark {
+#29 Bash: head -200 /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/index.d.ts
+    | export { DateMatcher } from './components/Calendar/dateUtils.js';
+    | export { DatePicker, DatePickerProps } from './components/DatePicker/DatePicker.js';
+    | export { DatePickerTrigger, DatePickerTriggerProps } from './components/DatePicker/DatePickerTrigger.js';
+    | export { DatePickerSplitTrigger, DatePickerSplitTriggerProps } from './components/DatePicker/DatePickerSplitTrigger.js';
+    | export { DS_TW_MERGE_CONFIG, cn } from './utils/cn.js';
+    | export { DS_COLOR_TOKENS, DsColor, DsColorToken, resolveDsColor } from './utils/color.js';
+#30 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist -name "*.d.ts" | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/components/AnimatedText/index.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/components/AnimatedText/RevealChangeText.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/components/AnimatedText/RollChangeText.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/components/AnimatedText/RollHoverText.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/components/AnimatedText/rollingDigitsModel.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/components/AnimatedText/RollingDigitsText.d.ts
+#35 Bash: grep -A 50 "buttonVariants" /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/index.js 2>/dev/null | head -80
+    |   cn,
+    |   resolveDsColor,
+    |   tabTriggerVariants,
+    |   useToast
+    | };
+    | //# sourceMappingURL=index.js.map
+#36 Bash: head -200 /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/chunk-MHG4I32K.js
+    | 
+    | export {
+    |   buttonVariants,
+    |   Button
+    | };
+    | //# sourceMappingURL=chunk-MHG4I32K.js.map
+#37 Bash: grep -n "rounded-soft\|border-border-primary\|bg-surface-primary" /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/node_modules/@dooph-software/design-system/dist/styles.css | head -20
+    | 702:  .rounded-soft {
+    | 782:  .border-border-primary {
+    | 878:  .bg-surface-primary {
+    | 1246:  .group-data-\[pressed\]\/hotkey\:border-border-primary:is(:where(.group\/hotkey)[data-pressed] *) {
+    | 1632:    .data-\[state\=unchecked\]\:hover\:border-border-primary[data-state="unchecked"]:hover {
+#42 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964 -type f \( -name "*.tsx" -o -name "*.ts" -o -name "*.css" -o -name "*.json" \) ! -path "*/node_modules/*" ! -path "*/.next/*" ! -path "*/.git/*"
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/components/theme-toggle.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/lib/plans.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/next.config.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/package-lock.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fa2679657964/tsconfig.json

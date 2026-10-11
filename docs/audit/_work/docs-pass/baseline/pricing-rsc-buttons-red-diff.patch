@@ -1,0 +1,85 @@
+diff --git a/app/pricing/page.tsx b/app/pricing/page.tsx
+new file mode 100644
+index 0000000..c24740c
+--- /dev/null
++++ b/app/pricing/page.tsx
+@@ -0,0 +1,52 @@
++import Link from "next/link";
++import {
++  BodyText,
++  Button,
++  ButtonVariant,
++  HeadingText,
++  LabelText,
++  SubheadingText,
++  TitleText,
++} from "@dooph-software/design-system";
++import { getPlans } from "@/lib/plans";
++import { TalkToSalesButton } from "./talk-to-sales-button";
++
++export default async function PricingPage() {
++  const plans = await getPlans();
++
++  return (
++    <main className="flex flex-col items-center gap-xl px-xl py-xxxl">
++      <div className="flex flex-col items-center gap-sm text-center">
++        <TitleText as="h2">Pricing</TitleText>
++        <BodyText as="p" className="text-text-secondary">
++          Start free. Upgrade when your team grows.
++        </BodyText>
++      </div>
++
++      <div className="grid w-full grid-cols-1 gap-lg md:grid-cols-3">
++        {plans.map((plan) => (
++          <article
++            key={plan.id}
++            className="flex flex-col gap-md rounded-soft border border-border-primary bg-surface-primary p-xl shadow-standard"
++          >
++            <LabelText as="h3">{plan.name}</LabelText>
++            <HeadingText as="p">
++              {plan.price}
++              {plan.price.startsWith("$") ? (
++                <SubheadingText className="text-text-tertiary"> / month</SubheadingText>
++              ) : null}
++            </HeadingText>
++            <BodyText as="p" className="text-text-secondary">
++              {plan.blurb}
++            </BodyText>
++            <Button variant={ButtonVariant.primary} asChild>
++              <Link href={`/checkout?plan=${plan.id}`}>Choose plan</Link>
++            </Button>
++          </article>
++        ))}
++      </div>
++
++      <TalkToSalesButton />
++    </main>
++  );
++}
+diff --git a/app/pricing/talk-to-sales-button.tsx b/app/pricing/talk-to-sales-button.tsx
+new file mode 100644
+index 0000000..05b11ed
+--- /dev/null
++++ b/app/pricing/talk-to-sales-button.tsx
+@@ -0,0 +1,21 @@
++"use client";
++
++import { Button, ButtonVariant, ButtonSize } from "@dooph-software/design-system";
++
++declare global {
++  interface Window {
++    Intercom: (command: string) => void;
++  }
++}
++
++export function TalkToSalesButton() {
++  return (
++    <Button
++      variant={ButtonVariant.secondary}
++      size={ButtonSize.big}
++      onClick={() => window.Intercom("show")}
++    >
++      Talk to sales
++    </Button>
++  );
++}

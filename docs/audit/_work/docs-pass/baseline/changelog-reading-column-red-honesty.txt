@@ -1,0 +1,8 @@
+DENIED Bash: {"command":"tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | head -50"}
+DENIED Bash: {"command":"tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | head -80"}
+DENIED Bash: {"command":"tar -tzf vendor/dooph-software-design-system-5.3.0.tgz 2>&1 | head -100"}
+
+--- consumer checks ---
+#16 VENDOR-TARBALL Bash: {"command":"tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | head -50"}
+#17 VENDOR-TARBALL Bash: {"command":"tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | head -80"}
+#18 VENDOR-TARBALL Bash: {"command":"tar -tzf vendor/dooph-software-design-system-5.3.0.tgz 2>&1 | head -100"}

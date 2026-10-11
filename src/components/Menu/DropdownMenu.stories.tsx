@@ -80,11 +80,13 @@ export const WithTypeableTrigger: Story = {
 /** Typeable trigger beside other controls — mirrors dense toolbar layouts in consuming apps. */
 export const TypeableInToolbar: Story = {
   render: () => (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-sm">
       <Button variant={ButtonVariant.secondary}>Save</Button>
+      {/* Demo width: a wider toolbar field (192px) than the trigger's own
+          min-w-menu; no token sizes it. */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <TypeableDropdownTrigger placeholder="Filter…" className="min-w-48" />
+          <TypeableDropdownTrigger placeholder="Filter…" style={{ minWidth: 192 }} />
         </DropdownMenuTrigger>
         <DropdownMenuContent focusOnOpen={false}>
           <DropdownMenuSection>
@@ -410,13 +412,13 @@ export const ComplexWithoutSearch: Story = {
         <DropdownMenuSection width="var(--ui-min-w-menu-complex)">
           <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
           <DropdownMenuItem>
-            <div className="flex flex-col gap-[2px]">
+            <div className="flex flex-col gap-xxxs">
               <BodyText>Mark up drawings with tolerances</BodyText>
               <BodyText className="text-ghost-fg">sakai.dwg</BodyText>
             </div>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <div className="flex flex-col gap-[2px]">
+            <div className="flex flex-col gap-xxxs">
               <BodyText>Architectural measurements</BodyText>
               <BodyText className="text-ghost-fg">dreter-street-mock.dwg</BodyText>
             </div>
@@ -440,20 +442,20 @@ export const ComplexWithSearch: Story = {
         <DropdownMenuSection width="var(--ui-min-w-menu-complex)">
           <DropdownMenuLabel>Recent Chats</DropdownMenuLabel>
           <DropdownMenuItem>
-            <div className="flex flex-col gap-[2px]">
+            <div className="flex flex-col gap-xxxs">
               <BodyText>Mark up drawings with tolerances</BodyText>
               <BodyText className="text-ghost-fg">sakai.dwg</BodyText>
             </div>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <div className="flex flex-col gap-[2px]">
+            <div className="flex flex-col gap-xxxs">
               <BodyText>Architectural measurements</BodyText>
               <BodyText className="text-ghost-fg">dreter-street-mock.dwg</BodyText>
             </div>
           </DropdownMenuItem>
           <DropdownMenuLabel>Yesterday</DropdownMenuLabel>
           <DropdownMenuItem>
-            <div className="flex flex-col gap-[2px]">
+            <div className="flex flex-col gap-xxxs">
               <BodyText>Deburring requirement</BodyText>
               <BodyText className="text-ghost-fg">bracket-left.dwg</BodyText>
             </div>

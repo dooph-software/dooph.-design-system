@@ -66,7 +66,7 @@ export const WavyVariant: Story = {
 export const AllSizes: Story = {
   args: { progress: 0.6 },
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-lg">
       <ProgressIndicator progress={0.6} size={LoadingSpinnerSize.sm} />
       <ProgressIndicator progress={0.6} size={LoadingSpinnerSize.rg} />
       <ProgressIndicator progress={0.6} size={LoadingSpinnerSize.md} />
@@ -78,7 +78,7 @@ export const AllSizes: Story = {
 export const ProgressSteps: Story = {
   args: { progress: 0 },
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-lg">
       {[0, 0.25, 0.5, 0.75, 1].map((p) => (
         <ProgressIndicator key={p} progress={p} size={LoadingSpinnerSize.md} />
       ))}
@@ -89,7 +89,7 @@ export const ProgressSteps: Story = {
 export const WavyProgressSteps: Story = {
   args: { progress: 0 },
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-lg">
       {[0, 0.1, 0.3, 0.5, 0.8, 1].map((p) => (
         <ProgressIndicator
           key={p}
@@ -109,8 +109,8 @@ export const Interactive: Story = {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const [value, setValue] = useState(0.5);
     return (
-      <div className="flex flex-col items-center gap-4">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col items-center gap-lg">
+        <div className="flex items-center gap-lg">
           <ProgressIndicator progress={value} size={LoadingSpinnerSize.md} />
           <ProgressIndicator
             progress={value}

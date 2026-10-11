@@ -1,0 +1,4 @@
+DENIED Bash: {"command":"awk '/\\.dark \\{/,/^  \\}/' /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css | grep -i \"prominent\" | head -20"}
+
+--- consumer checks ---
+no flags: no template path, no tarball reads, no other sandbox, no DS registry commands, no network

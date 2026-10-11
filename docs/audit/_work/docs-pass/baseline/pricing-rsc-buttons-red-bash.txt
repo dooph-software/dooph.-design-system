@@ -1,0 +1,49 @@
+#1 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a -type f -name "package.json" | head -5
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/node_modules/@alloc/quick-lru/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/node_modules/@dooph-software/design-system/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/node_modules/@floating-ui/core/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/node_modules/@floating-ui/dom/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/node_modules/@floating-ui/react-dom/package.json
+#3 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a | head -20
+    | -rw-r--r-- 1 stick 197609   265 Oct  8 20:59 next.config.ts
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:09 node_modules
+    | -rw-r--r-- 1 stick 197609 99068 Oct  8 21:08 package-lock.json
+    | -rw-r--r-- 1 stick 197609   635 Oct  8 20:59 package.json
+    | -rw-r--r-- 1 stick 197609   666 Oct  8 20:59 tsconfig.json
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 vendor
+#4 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/app -type f | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/app/dashboard/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/app/favicon.ico
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/app/globals.css
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/app/layout.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/app/page.tsx
+#5 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/lib/
+    | total 5
+    | drwxr-xr-x 1 stick 197609   0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609   0 Oct  8 21:09 ..
+    | -rw-r--r-- 1 stick 197609 644 Oct  8 20:59 plans.ts
+#9 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/components -type f
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/components/theme-toggle.tsx
+#12 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a -type f \( -name "*checkout*" -o -name "*pricing*" -o -name "*billing*" -o -name "*plan*" \)
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/.git/hooks/push-to-checkout.sample
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/lib/plans.ts
+#14 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/app/
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:09 ..
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 dashboard
+    | -rw-r--r-- 1 stick 197609 15086 Oct  8 20:59 favicon.ico
+    | -rw-r--r-- 1 stick 197609   883 Oct  8 20:59 globals.css
+    | -rw-r--r-- 1 stick 197609  1966 Oct  8 20:59 layout.tsx
+    | -rw-r--r-- 1 stick 197609  2274 Oct  8 20:59 page.tsx
+#17 Bash: ls "C:/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/app/"
+    | dashboard
+    | favicon.ico
+    | globals.css
+    | layout.tsx
+    | page.tsx
+#18 Bash: mkdir -p "C:/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a/app/pricing"
+    | (Bash completed with no output)
+#23 Bash: cd "C:/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a" && npx tsc --noEmit 2>&1 | head -30
+    | app/layout.tsx(38,50): error TS2304: Cannot find name 'LayoutProps'.
+    | app/pricing/talk-to-sales-button.tsx(10,29): error TS2339: Property 'Intercom' does not exist on type 'Window & typeof globalThis'.
+#25 Bash: cd "C:/Users/stick/Github/dooph/ds-consumer-sb-61f40a33273a" && npx tsc --noEmit 2>&1 | grep pricing
+    | (Bash completed with no output)

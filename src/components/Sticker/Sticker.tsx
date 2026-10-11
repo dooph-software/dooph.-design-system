@@ -12,7 +12,8 @@
  *   `gap-*` or child selectors on `className` reach them.
  * - `custom` has no paints of its own. `color` (inline, so it beats class
  *   order) is the content colour, and the wash is that colour at
- *   `--ui-sticker-bg-opacity`.
+ *   `--ui-sticker-bg-opacity`. The consumer's `style` merges after both and
+ *   wins.
  *
  * ## constraints
  * - Do not bake the wash alpha into a hex. `custom` has to retint an arbitrary
@@ -123,9 +124,9 @@ const StickerBase = forwardRef<HTMLDivElement, StickerBaseProps>(
         style={
           customColor
             ? {
-                ...style,
                 color: customColor,
                 backgroundColor: `color-mix(in srgb, ${customColor} var(--ui-sticker-bg-opacity), transparent)`,
+                ...style,
               }
             : style
         }

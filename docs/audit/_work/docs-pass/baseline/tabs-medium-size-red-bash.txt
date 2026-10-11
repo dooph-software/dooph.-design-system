@@ -1,0 +1,2 @@
+#16 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-tabs-medium-size-red-20261008204340" && npx tsc --noEmit 2>&1 | head -30
+    | (Bash completed with no output)

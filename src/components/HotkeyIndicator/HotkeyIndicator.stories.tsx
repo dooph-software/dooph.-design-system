@@ -25,16 +25,16 @@ export const Menu: Story = { args: { keys: ['Esc'], variant: HotkeyIndicatorVari
 export const AllStates: Story = {
   args: { keys: [] },
   render: () => (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-col gap-lg p-lg">
+      <div className="flex items-center gap-sm">
         <LabelText className="text-ghost-fg w-20">Single</LabelText>
         <HotkeyIndicator keys={['⌘']} />
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-sm">
         <LabelText className="text-ghost-fg w-20">Multiple</LabelText>
         <HotkeyIndicator keys={['⌘', 'K']} />
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-sm">
         <LabelText className="text-ghost-fg w-20">Pressed</LabelText>
         <HotkeyIndicator keys={['Esc']} pressed />
       </div>

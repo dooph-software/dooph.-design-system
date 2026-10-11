@@ -146,7 +146,7 @@ const OutlineButtonBase = forwardRef<HTMLElement, OutlineButtonProps<"button">>(
         className={cn(
           "inline-flex flex-col items-center justify-center",
           "border border-solid border-border-primary rounded-outline-frame",
-          "ds-p-ui-sm",
+          "p-sm",
           themeInverse && "border-primary",
           className,
         )}
@@ -175,8 +175,7 @@ const OutlineButtonBase = forwardRef<HTMLElement, OutlineButtonProps<"button">>(
           {glowing ? (
             /*
              * Controlled mode — bottom-anchored, always lit.
-             * Orbs sit at the bottom of the frame exactly as they did before cursor
-             * tracking was introduced. Placement, opacity and blur come from
+             * Orbs sit at the bottom of the frame. Placement, opacity and blur come from
              * the ds-outline-button-glow-* classes (--ui-outline-button-*);
              * only the consumer's colour is inline. The ds-outline-orb-* class
              * transitions opacity if `glowing` flips at runtime.

@@ -1,0 +1,16 @@
+RUN OK
+subtype: success  is_error: false  turns: 18  cost_usd: 0.262496  duration_ms: 75830
+permission_denials (0):
+
+--- final text ---
+Type-check passes. SegmentedTabSelect has its own size enum and doesn't need changes here.
+
+Done. Here's what was added:
+
+**New `medium` size (46px)** across three files:
+
+- **`src/styles/index.css`** — added `.size-button-medium` utility (width + height from `--ui-height-button-medium`)
+- **`src/components/Toggle/toggleOption.ts`** — added `medium` (`h-button-medium`) and `icon-medium` (`size-button-medium`) size variants to the shared cva recipe
+- **`src/components/Tabs/constants.ts`** — added `TabSize.medium` and `TabSize.iconMedium` enum entries
+
+Usage: `<TabsTrigger size={TabSize.medium} />` or `size="medium"` for a 46px tab that pairs with hero-section Buttons.

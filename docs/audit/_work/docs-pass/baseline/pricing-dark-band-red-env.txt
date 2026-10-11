@@ -1,0 +1,110 @@
+cwd: C:\Users\stick\Github\dooph\ds-consumer-sb-fa2679657964
+model: claude-opus-4-6
+permissionMode: acceptEdits
+claude_code_version: 2.1.96
+
+tools (24): Task, AskUserQuestion, Bash, CronCreate, CronDelete, CronList, Edit, EnterPlanMode, EnterWorktree, ExitPlanMode, ExitWorktree, Glob, Grep, NotebookEdit, Read, RemoteTrigger, Skill, TaskOutput, TaskStop, TodoWrite, ToolSearch, WebFetch, WebSearch, Write
+
+skills (7): update-config, debug, simplify, batch, loop, schedule, claude-api
+
+slash_commands (16): update-config, debug, simplify, batch, loop, schedule, claude-api, compact, context, cost, heapdump, init, review, security-review, extra-usage, insights
+
+agents (5): general-purpose, statusline-setup, Explore, Plan, claude-code-guide
+
+plugins (0): (none)
+
+mcp_servers (0): (none)
+
+memory-related init keys: (none reported)
+
+--- init event, verbatim ---
+{
+  "type": "system",
+  "subtype": "init",
+  "cwd": "C:\\Users\\stick\\Github\\dooph\\ds-consumer-sb-fa2679657964",
+  "session_id": "90be7517-70ee-4852-bc48-6c236b332ad0",
+  "tools": [
+    "Task",
+    "AskUserQuestion",
+    "Bash",
+    "CronCreate",
+    "CronDelete",
+    "CronList",
+    "Edit",
+    "EnterPlanMode",
+    "EnterWorktree",
+    "ExitPlanMode",
+    "ExitWorktree",
+    "Glob",
+    "Grep",
+    "NotebookEdit",
+    "Read",
+    "RemoteTrigger",
+    "Skill",
+    "TaskOutput",
+    "TaskStop",
+    "TodoWrite",
+    "ToolSearch",
+    "WebFetch",
+    "WebSearch",
+    "Write"
+  ],
+  "mcp_servers": [],
+  "model": "claude-opus-4-6",
+  "permissionMode": "acceptEdits",
+  "slash_commands": [
+    "update-config",
+    "debug",
+    "simplify",
+    "batch",
+    "loop",
+    "schedule",
+    "claude-api",
+    "compact",
+    "context",
+    "cost",
+    "heapdump",
+    "init",
+    "review",
+    "security-review",
+    "extra-usage",
+    "insights"
+  ],
+  "apiKeySource": "none",
+  "claude_code_version": "2.1.96",
+  "output_style": "default",
+  "agents": [
+    "general-purpose",
+    "statusline-setup",
+    "Explore",
+    "Plan",
+    "claude-code-guide"
+  ],
+  "skills": [
+    "update-config",
+    "debug",
+    "simplify",
+    "batch",
+    "loop",
+    "schedule",
+    "claude-api"
+  ],
+  "plugins": [],
+  "uuid": "dafd426c-689e-4448-bcc5-179957af04c2",
+  "fast_mode_state": "off"
+}
+
+--- auto-memory ---
+canary autoMemoryDirectory: C:/Users/stick/AppData/Local/Temp/claude/C--Users-stick-Github-dooph-dooph-Design-System/fb5b5c5d-cbc2-47a0-9157-b9f6db4d3431/scratchpad/baseline/pricing-dark-band-red-memory-canary
+canary absent after the run: auto-memory was off, no memory loaded
+debug-log memory activity lines: 0
+
+
+--- skill / plugin / CLAUDE.md loading, from pricing-dark-band-red-debug.log ---
+2026-10-09T03:07:10.962Z [DEBUG] Loaded 1 installed plugins from C:\Users\stick\.claude\plugins\installed_plugins.json
+2026-10-09T03:07:10.962Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2026-10-09T03:07:10.972Z [DEBUG] Loading skills from: managed=C:\Program Files\ClaudeCode\.claude\skills, user=C:\Users\stick\.claude\skills, project=[]
+2026-10-09T03:07:10.982Z [DEBUG] Loaded 0 unique skills (0 unconditional, 0 conditional, managed: 0, user: 0, project: 0, additional: 0, legacy commands: 0)
+2026-10-09T03:07:10.983Z [DEBUG] getSkills returning: 0 skill dir commands, 0 plugin skills, 8 bundled skills, 0 builtin plugin skills
+2026-10-09T03:07:11.179Z [DEBUG] Sending 6 skills via attachment (initial, 6 total sent)
+2026-10-09T03:07:19.177Z [DEBUG] Sending 6 skills via attachment (initial, 6 total sent)

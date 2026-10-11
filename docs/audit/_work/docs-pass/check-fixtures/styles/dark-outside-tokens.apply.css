@@ -1,0 +1,5 @@
+/* Fixture: dark-mode rules or hex colours outside tokens.css, a dark: variant
+ * in an @apply line. One violation: dark:bg-primary. */
+.ds-fixture-apply {
+  @apply bg-secondary dark:bg-primary;
+}

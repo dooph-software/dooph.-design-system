@@ -1,0 +1,11 @@
+/* Fixture: hardcoded font families. One violation: Arial.
+ * Not reported: a token read, and inherit. */
+.fixture-font-a {
+  font-family: var(--ui-font-body);
+}
+.fixture-font-b {
+  font-family: inherit;
+}
+.fixture-font-c {
+  font-family: Arial, sans-serif;
+}

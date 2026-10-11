@@ -9,8 +9,8 @@
  * multi  — DropdownMenuMultiSelectItem keeps the menu open; plain items still
  *          close. Triggers receive it as data-select-type.
  *
- * BREAKING (major): DropdownMenuVariant (standard/action/complex) was removed.
- * Items hold the 160px floor; set DropdownMenuSection `width` for wider menus.
+ * There is no menu variant: items hold the 160px floor; set
+ * DropdownMenuSection `width` for wider menus.
  */
 export const DropdownMenuSelectType = {
   single: "single",

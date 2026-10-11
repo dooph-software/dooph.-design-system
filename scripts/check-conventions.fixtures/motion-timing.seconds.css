@@ -1,0 +1,8 @@
+/* Fixture: motion timing literals outside tokens.css, a seconds literal in CSS.
+ * One violation: 0.2s. Not reported: a class name ending in -2s, an alpha
+ * value, and the motion-scale read. */
+.fixture-fade-2s {
+  transition: opacity 0.2s ease;
+  color: rgb(0 0 0 / 0.5);
+  transition-duration: var(--ui-motion-duration-fast);
+}

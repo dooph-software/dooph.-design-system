@@ -1,0 +1,11 @@
+RUN OK
+subtype: success  is_error: false  turns: 5  cost_usd: 0.18212174999999997  duration_ms: 84844
+permission_denials (0):
+
+--- final text ---
+The fix adds two Tailwind arbitrary-variant classes to the `TabsList`:
+
+- **`[&.w-full>*]:flex-1`** — when the list itself has `w-full`, its children grow equally to fill the space.
+- **`[&.w-full>*]:min-w-0`** — prevents items from overflowing when labels are long.
+
+These only activate when `w-full` is present on the element, so the default `inline-flex` hugging behavior is unchanged.

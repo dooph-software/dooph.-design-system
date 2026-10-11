@@ -12,8 +12,9 @@
  * ## constraints
  * - The package takes NO dependency on a markdown renderer. Do not import one
  *   here; the renderer is the consumer's choice, as is its streaming memo.
- * - No wrapper around `children` (architecture Rule 3): the prose selectors are
- *   written against this element's own descendants.
+ * - No wrapper around `children` (a wrapper goes in only where the layout
+ *   needs one): the prose selectors are written against this element's own
+ *   descendants.
  * - Pass `streamingAnimation` only while THIS part is streaming. It animates
  *   blocks as they mount, so leaving it on for history would blur every block
  *   of every message in on load. Turning it off mid-flight settles any block

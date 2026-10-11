@@ -34,7 +34,7 @@ export const Disabled: Story = {
 
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-3 p-4">
+    <div className="flex flex-col gap-md p-lg">
       <SearchBox placeholder="Default" />
       <SearchBox placeholder="With shortcut" shortcut={['⌘', 'K']} />
       <SearchBox placeholder="Disabled" shortcut={['⌘', 'K']} disabled />

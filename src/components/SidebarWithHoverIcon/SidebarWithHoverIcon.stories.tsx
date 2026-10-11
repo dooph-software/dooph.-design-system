@@ -68,7 +68,7 @@ function SidebarToggle({
  * outward direction is interpolated rather than branched on. */
 export const Toggle: Story = {
   render: () => (
-    <div className="flex flex-col items-center gap-lg p-4">
+    <div className="flex flex-col items-center gap-lg p-lg">
       <SidebarToggle />
       <BodyText className="max-w-[42ch] text-center text-text-secondary">
         Hover to pull the rail into a chevron pointing where the panel will go.
@@ -93,15 +93,16 @@ export const HeldHovered: Story = {
  * SidebarLeftHoverIcon / SidebarRightHoverIcon paths. */
 export const MatchesStaticPoses: Story = {
   render: () => (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-lg p-lg">
       {(
         [
           [SidebarIconSide.left, SidebarLeftIcon, SidebarLeftHoverIcon],
           [SidebarIconSide.right, SidebarRightIcon, SidebarRightHoverIcon],
         ] as const
       ).map(([side, Rest, Hover]) => (
-        <div key={side} className="flex items-center gap-6">
-          <LabelText className="w-[3.5rem] text-text-secondary">
+        <div key={side} className="flex items-center gap-xxl">
+          {/* Demo label column width; no token sizes it. */}
+          <LabelText className="text-text-secondary" style={{ width: "3.5rem" }}>
             {side}
           </LabelText>
           {(
@@ -110,7 +111,7 @@ export const MatchesStaticPoses: Story = {
               ["hover", <Hover key="h" size={IconSize.md} />, true],
             ] as const
           ).map(([label, staticIcon, hovered]) => (
-            <div key={label} className="flex items-center gap-2">
+            <div key={label} className="flex items-center gap-sm">
               {staticIcon}
               <SidebarWithHoverIcon
                 side={side}
@@ -130,7 +131,7 @@ export const MatchesStaticPoses: Story = {
  * entirely on rendered size. This row is where to judge that. */
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-end gap-6 p-4">
+    <div className="flex items-end gap-xxl p-lg">
       {(
         [
           [IconSize.sm, "sm · 12"],
@@ -141,7 +142,7 @@ export const Sizes: Story = {
           [40, "40"],
         ] as const
       ).map(([size, label]) => (
-        <div key={label} className="flex flex-col items-center gap-2">
+        <div key={label} className="flex flex-col items-center gap-sm">
           <SidebarToggle size={size} />
           <LabelText className="text-text-secondary">{label}</LabelText>
         </div>

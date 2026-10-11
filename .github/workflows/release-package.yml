@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
       # ── Preferred: npm Trusted Publishing (OIDC, no long-lived token) ──────────
       # Provenance attestation is generated automatically.
       # Requires one-time setup on npmjs.com before the first automated publish:

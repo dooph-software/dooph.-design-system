@@ -34,9 +34,8 @@ import { RevealDirection, RollDirection } from "./constants";
  * children, not just text.
  *
  * `meta` names no `component`, because there are seven. Stories are therefore
- * untyped `StoryObj` and every one is `render`-based — none reads `args`, so
- * the old per-file `args: { children: ... }` placeholders (which existed only
- * to satisfy `StoryObj<typeof meta>`) are gone.
+ * untyped `StoryObj` and every one is `render`-based: none reads `args`, so
+ * no story needs `args: { children: ... }` placeholders.
  *
  * Export names stay prefixed so colliding story ids survive the merge.
  * The docs page (`AnimatedTextDocs`) is what labels each group — story
@@ -107,7 +106,7 @@ export const ShimmerToggleOnOff: Story = {
   render: function ToggleOnOffStory() {
     const [active, setActive] = useState(true);
     return (
-      <div className="flex flex-col items-start gap-4">
+      <div className="flex flex-col items-start gap-lg">
         {active ? (
           <ShimmerText>
             <ButtonText>Working on it…</ButtonText>
@@ -191,8 +190,9 @@ export const RollHoverLargeDisplayType: Story = {
 
 export const RollHoverInBodyCopy: Story = {
   name: "In body copy (wrapping + descenders)",
+  // Demo width: narrow enough to wrap the copy; no token sizes it.
   render: () => (
-    <div className="max-w-[18rem]">
+    <div style={{ maxWidth: "18rem" }}>
       <BodyText>
         Inline in a paragraph the roll must never break a word across lines, and
         it must not clip descenders — hover{" "}
@@ -215,7 +215,7 @@ export const RollHoverDirectionUpVsDown: Story = {
     },
   },
   render: () => (
-    <div className="flex gap-12">
+    <div className="flex gap-xxxl">
       <HeroText>
         <RollHoverText direction={RollDirection.up}>Upward</RollHoverText>
       </HeroText>
@@ -231,7 +231,7 @@ export const RollHoverControlledActive: Story = {
   render: function ControlledActiveStory() {
     const [active, setActive] = useState(false);
     return (
-      <div className="flex flex-col items-start gap-4">
+      <div className="flex flex-col items-start gap-lg">
         <ButtonText>
           <RollHoverText active={active}>Deploy now</RollHoverText>
         </ButtonText>
@@ -271,7 +271,7 @@ export const RollChangeAutoCyclingStatus: Story = {
     }, []);
 
     return (
-      <div className="flex flex-col items-start gap-1">
+      <div className="flex flex-col items-start gap-xxs">
         <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
           Job status
         </LabelText>
@@ -303,8 +303,8 @@ export const RollChangeDirectionUpVsDown: Story = {
     }, []);
 
     return (
-      <div className="flex gap-12">
-        <div className="flex flex-col items-start gap-1">
+      <div className="flex gap-xxxl">
+        <div className="flex flex-col items-start gap-xxs">
           <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
             Down (default)
           </LabelText>
@@ -312,7 +312,7 @@ export const RollChangeDirectionUpVsDown: Story = {
             <BodyText>{n}</BodyText>
           </RollChangeText>
         </div>
-        <div className="flex flex-col items-start gap-1">
+        <div className="flex flex-col items-start gap-xxs">
           <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
             Up
           </LabelText>
@@ -346,7 +346,7 @@ export const RollChangeChangeKeyWithComplexChildren: Story = {
     const model = models[index];
 
     return (
-      <div className="flex flex-col items-start gap-1">
+      <div className="flex flex-col items-start gap-xxs">
         <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
           Selected model
         </LabelText>
@@ -378,7 +378,7 @@ export const FadeChangeAutoCyclingStatus: Story = {
     }, []);
 
     return (
-      <div className="flex flex-col items-start gap-1">
+      <div className="flex flex-col items-start gap-xxs">
         <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
           Job status
         </LabelText>
@@ -404,7 +404,7 @@ export const FadeChangeDirectionUp: Story = {
     }, []);
 
     return (
-      <div className="flex flex-col items-start gap-1">
+      <div className="flex flex-col items-start gap-xxs">
         <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
           Job status
         </LabelText>
@@ -443,8 +443,8 @@ export const FadeChangeVersusRoll: Story = {
     const model = models[index];
 
     return (
-      <div className="flex gap-12">
-        <div className="flex flex-col items-start gap-1">
+      <div className="flex gap-xxxl">
+        <div className="flex flex-col items-start gap-xxs">
           <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
             FadeChangeText
           </LabelText>
@@ -452,7 +452,7 @@ export const FadeChangeVersusRoll: Story = {
             <BodyText>{model.name}</BodyText>
           </FadeChangeText>
         </div>
-        <div className="flex flex-col items-start gap-1">
+        <div className="flex flex-col items-start gap-xxs">
           <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
             RollChangeText
           </LabelText>
@@ -498,7 +498,7 @@ export const RevealChangeRevealAndCollapse: Story = {
     const [shown, setShown] = useState(true);
 
     return (
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-lg">
         <div className="flex flex-row items-center">
           <RevealChangeText changeKey={shown ? "Projects" : null}>
             <BodyText className="text-text-secondary">Projects</BodyText>
@@ -572,8 +572,8 @@ export const RevealChangeDirectionLeftVsRight: Story = {
     const [shown, setShown] = useState(true);
 
     return (
-      <div className="flex flex-col items-center gap-4">
-        <div className="flex flex-col gap-3">
+      <div className="flex flex-col items-center gap-lg">
+        <div className="flex flex-col gap-md">
           <div className="flex flex-row items-center">
             <RevealChangeText
               changeKey={shown ? "Projects" : null}
@@ -674,7 +674,7 @@ export const RevealChangeBreadcrumbWithRollChangeText: Story = {
     }, [pending, route.title]);
 
     return (
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-md">
         <LabelText letterSpacing="0.025em" className="uppercase opacity-40">
           Dashboard top bar
         </LabelText>
@@ -721,7 +721,7 @@ function Values({
   onPick: (next: string) => void;
 }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-sm">
       {values.map((v) => (
         <Button
           key={v}
@@ -749,7 +749,7 @@ function Demo({
 }) {
   const [value, setValue] = useState(values[0]);
   return (
-    <div className="flex flex-col items-start gap-lg p-4">
+    <div className="flex flex-col items-start gap-lg p-lg">
       <BaseText fontSize={28} fontWeight={FontWeights.medium}>
         {smallDecimals ? (
           <RollingDigitsText smallDecimals smallDecimalsComponent={LabelText}>
@@ -795,8 +795,8 @@ export const RollingDigitsDigitCountChange: Story = {
 };
 
 /* Decimals are their own strip, reconciled independently — a change confined to
- * one side must leave the other alone. Losing them entirely is the case that
- * used to unmount the group before it could animate. */
+ * one side must leave the other alone. Losing them entirely must not unmount
+ * the group before it can animate. */
 export const RollingDigitsDecimalsAppearAndLeave: Story = {
   name: "Decimals appear and leave",
   render: () => (
@@ -848,9 +848,9 @@ const FORMATS: Array<{ value: string; note: string }> = [
 export const RollingDigitsFormats: Story = {
   name: "Formats",
   render: () => (
-    <div className="flex flex-col items-start gap-rg p-4">
+    <div className="flex flex-col items-start gap-rg p-lg">
       {FORMATS.map((f) => (
-        <div key={f.value} className="flex items-baseline gap-4">
+        <div key={f.value} className="flex items-baseline gap-lg">
           <BaseText
             fontSize={18}
             fontWeight={FontWeights.medium}
@@ -873,7 +873,7 @@ export const RollingDigitsScales: Story = {
   render: () => {
     const [value, setValue] = useState("$982.10");
     return (
-      <div className="flex flex-col items-start gap-lg p-4">
+      <div className="flex flex-col items-start gap-lg p-lg">
         <LabelText>
           <RollingDigitsText>{value}</RollingDigitsText>
         </LabelText>
@@ -909,7 +909,7 @@ export const RollingDigitsTableScrub: Story = {
   render: () => {
     const [amount, setAmount] = useState(TOTAL);
     return (
-      <div className="flex flex-col items-start gap-lg p-4">
+      <div className="flex flex-col items-start gap-lg p-lg">
         <BaseText fontSize={28} fontWeight={FontWeights.medium}>
           <RollingDigitsText smallDecimals smallDecimalsComponent={LabelText}>
             {amount}
@@ -922,7 +922,7 @@ export const RollingDigitsTableScrub: Story = {
           {ROWS.map((r) => (
             <BodyText
               key={r.label}
-              className="cursor-default px-2 py-1"
+              className="cursor-default px-sm py-xxs"
               onMouseEnter={() => setAmount(r.amount)}
             >
               {r.label}
@@ -959,7 +959,7 @@ export const RollingDigitsLiveTicker: Story = {
       currency: "USD",
     });
     return (
-      <div className="flex flex-col items-start gap-lg p-4">
+      <div className="flex flex-col items-start gap-lg p-lg">
         <Figure>{value}</Figure>
         <BodyText className="max-w-[46ch] text-text-secondary">
           Random walk every 700ms, wide enough to cross magnitudes. Watch the
@@ -1001,7 +1001,7 @@ export const UnderlineLinkThickness: Story = {
     },
   },
   render: () => (
-    <div className="flex flex-col items-start gap-4">
+    <div className="flex flex-col items-start gap-lg">
       <BodyText>
         <UnderlineLinkText>Default</UnderlineLinkText>
       </BodyText>
@@ -1032,7 +1032,7 @@ export const UnderlineLinkOffset: Story = {
     },
   },
   render: () => (
-    <div className="flex flex-col items-start gap-4">
+    <div className="flex flex-col items-start gap-lg">
       <BodyText>
         <UnderlineLinkText offset={0}>offset 0</UnderlineLinkText>
       </BodyText>
@@ -1089,8 +1089,9 @@ export const UnderlineLinkLargeDisplayType: Story = {
 
 export const UnderlineLinkInBodyCopy: Story = {
   name: "In body copy (wrapping + descenders)",
+  // Demo width: narrow enough to wrap the copy; no token sizes it.
   render: () => (
-    <div className="max-w-[18rem]">
+    <div style={{ maxWidth: "18rem" }}>
       <BodyText>
         Inline in a paragraph the underline must wrap cleanly across lines and
         never clip the tails of descenders — hover{" "}
@@ -1108,7 +1109,7 @@ export const UnderlineLinkControlledActive: Story = {
   render: function ControlledActiveStory() {
     const [active, setActive] = useState(false);
     return (
-      <div className="flex flex-col items-start gap-4">
+      <div className="flex flex-col items-start gap-lg">
         <BodyText>
           <UnderlineLinkText active={active}>Changelog</UnderlineLinkText>
         </BodyText>

@@ -58,7 +58,7 @@ const meta = {
   args: {
     size: 160,
     strokeColor: "transparent",
-    fillColor: "var(--color-primary)",
+    fillColor: "var(--ui-color-primary)",
     strokeWeight: 1,
   },
 } satisfies Meta<ShapeProps>;
@@ -70,14 +70,14 @@ const ShapeCell = ({
   label,
   Shape,
   size = 160,
-  fillColor = "var(--color-primary)",
+  fillColor = "var(--ui-color-primary)",
 }: {
   label: string;
   Shape: ComponentType<ShapeProps>;
   size?: number;
   fillColor?: string;
 }) => (
-  <div className="flex flex-col items-center gap-3 rounded-normal border border-border-primary bg-surface-primary p-4">
+  <div className="flex flex-col items-center gap-md rounded-normal border border-border-primary bg-surface-primary p-lg">
     <Shape size={size} strokeColor="transparent" fillColor={fillColor} />
     <LabelText className="text-text-secondary">{label}</LabelText>
   </div>
@@ -137,7 +137,7 @@ export const Triple: Story = {
 
 export const AllShapes: Story = {
   render: () => (
-    <div className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-3">
+    <div className="grid grid-cols-2 gap-lg p-lg sm:grid-cols-3">
       {shapes.map(({ label, component: Shape }) => (
         <ShapeCell key={label} label={label} Shape={Shape} />
       ))}
@@ -147,13 +147,13 @@ export const AllShapes: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-end gap-6 p-4">
+    <div className="flex items-end gap-xxl p-lg">
       {[96, 144, 192].map((size) => (
-        <div key={size} className="flex flex-col items-center gap-3">
+        <div key={size} className="flex flex-col items-center gap-md">
           <SquircleShape
             size={size}
             strokeColor="transparent"
-            fillColor="var(--color-primary)"
+            fillColor="var(--ui-color-primary)"
           />
           <LabelText className="text-text-secondary">{size}px</LabelText>
         </div>
@@ -164,14 +164,14 @@ export const Sizes: Story = {
 
 export const Colors: Story = {
   render: () => (
-    <div className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-3">
+    <div className="grid grid-cols-2 gap-lg p-lg sm:grid-cols-3">
       {shapes.map(({ label, component: Shape }, index) => (
         <ShapeCell
           key={label}
           label={label}
           Shape={Shape}
           fillColor={
-            index % 2 === 0 ? "var(--color-primary)" : "var(--color-prominent-color-alt)"
+            index % 2 === 0 ? "var(--ui-color-primary)" : "var(--ui-prominent-color-alt)"
           }
         />
       ))}
@@ -182,8 +182,8 @@ export const Colors: Story = {
 export const DefinedFillAndStroke: Story = {
   args: {
     size: 160,
-    strokeColor: "var(--color-prominent-color-alt)",
-    fillColor: "var(--color-primary)",
+    strokeColor: "var(--ui-prominent-color-alt)",
+    fillColor: "var(--ui-color-primary)",
     strokeWeight: 2,
   },
   render: (args) => <SquircleShape {...args} />,

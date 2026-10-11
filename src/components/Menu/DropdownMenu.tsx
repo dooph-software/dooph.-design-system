@@ -113,7 +113,7 @@ const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 /** Panel chrome shared by DropdownMenuContent and DropdownMenuSubContent. */
 const menuPanelClassName = [
   "z-50 flex flex-col gap-sm overflow-hidden rounded-normal border border-solid border-border-popovers bg-modal-surface",
-  "ds-py-ui-sm",
+  "py-sm",
   "shadow-menu",
   "ds-radix-dropdown-content-origin",
   "data-[state=open]:animate-in data-[state=open]:fade-in-0",
@@ -355,8 +355,7 @@ const DropdownMenuRadioSelectItem = forwardRef<
 DropdownMenuRadioSelectItem.displayName = "DropdownMenuRadioSelectItem";
 
 /**
- * Figma Checkbox Menu Item. Renamed from DropdownMenuCheckboxItem
- * (BREAKING, major).
+ * Figma Checkbox Menu Item.
  *
  * The leading checkbox is the package's own Checkbox rendered INERT: it
  * mirrors the item's checked/disabled, is unfocusable and aria-hidden (the
@@ -477,8 +476,8 @@ const DropdownMenuSection = forwardRef<HTMLDivElement, DropdownMenuSectionProps>
   ({ className, width, style, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("flex flex-col ds-px-ui-sm", className)}
-      style={width === undefined ? style : { ...style, width }}
+      className={cn("flex flex-col px-sm", className)}
+      style={width === undefined ? style : { width, ...style }}
       {...props}
     />
   ),

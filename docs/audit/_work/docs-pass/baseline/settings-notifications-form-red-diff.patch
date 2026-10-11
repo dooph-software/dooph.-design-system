@@ -1,0 +1,162 @@
+diff --git a/app/layout.tsx b/app/layout.tsx
+index 610ee36..e47b2d4 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -55,6 +55,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
+               <Link href="/dashboard" className="text-text-secondary hover:text-text">
+                 <BodyText>Dashboard</BodyText>
+               </Link>
++              <Link href="/settings/notifications" className="text-text-secondary hover:text-text">
++                <BodyText>Settings</BodyText>
++              </Link>
+               <ThemeToggle />
+             </nav>
+           </header>
+diff --git a/app/settings/notifications/page.tsx b/app/settings/notifications/page.tsx
+new file mode 100644
+index 0000000..d92bc1a
+--- /dev/null
++++ b/app/settings/notifications/page.tsx
+@@ -0,0 +1,142 @@
++"use client";
++
++import { useState } from "react";
++import {
++  BodyText,
++  Button,
++  ButtonVariant,
++  Checkbox,
++  CheckboxIndicator,
++  Input,
++  LabelText,
++  SubheadingText,
++  TitleText,
++  ToggleSwitch,
++  ToggleSwitchItem,
++} from "@dooph-software/design-system";
++
++const NOTIFICATION_TYPES = [
++  {
++    id: "mentions",
++    label: "Mentions",
++    description: "Get notified when someone mentions you in a comment or task.",
++  },
++  {
++    id: "replies",
++    label: "Replies",
++    description:
++      "Get notified when someone replies to a thread you're participating in.",
++  },
++  {
++    id: "product_updates",
++    label: "Product updates",
++    description:
++      "Receive announcements about new features, improvements, and tips.",
++  },
++] as const;
++
++type NotificationId = (typeof NOTIFICATION_TYPES)[number]["id"];
++
++export default function NotificationsSettingsPage() {
++  const [email, setEmail] = useState("");
++  const [weeklyDigest, setWeeklyDigest] = useState("off");
++  const [enabled, setEnabled] = useState<Record<NotificationId, boolean>>({
++    mentions: true,
++    replies: true,
++    product_updates: false,
++  });
++  const [saving, setSaving] = useState(false);
++
++  async function handleSave() {
++    setSaving(true);
++    try {
++      await fetch("/api/settings/notifications", {
++        method: "POST",
++        headers: { "Content-Type": "application/json" },
++        body: JSON.stringify({
++          email,
++          weeklyDigest: weeklyDigest === "on",
++          notifications: enabled,
++        }),
++      });
++    } finally {
++      setSaving(false);
++    }
++  }
++
++  return (
++    <main className="flex flex-col gap-xl px-xl py-xxl" style={{ maxWidth: 640 }}>
++      <div className="flex flex-col gap-xs">
++        <TitleText as="h1">Notifications</TitleText>
++        <BodyText as="p" className="text-text-secondary">
++          Choose how and when you want to be notified.
++        </BodyText>
++      </div>
++
++      {/* Email */}
++      <div className="flex flex-col gap-sm">
++        <LabelText as="label" htmlFor="notif-email">
++          Email address
++        </LabelText>
++        <Input
++          id="notif-email"
++          type="email"
++          placeholder="you@example.com"
++          value={email}
++          onChange={(e) => setEmail(e.target.value)}
++        />
++      </div>
++
++      {/* Weekly digest */}
++      <div className="flex flex-col gap-sm">
++        <LabelText>Weekly digest</LabelText>
++        <ToggleSwitch value={weeklyDigest} onValueChange={setWeeklyDigest}>
++          <ToggleSwitchItem value="on">On</ToggleSwitchItem>
++          <ToggleSwitchItem value="off">Off</ToggleSwitchItem>
++        </ToggleSwitch>
++      </div>
++
++      {/* Notification types */}
++      <div className="flex flex-col gap-md">
++        <SubheadingText>Notification types</SubheadingText>
++
++        {NOTIFICATION_TYPES.map((type) => (
++          <label
++            key={type.id}
++            className="flex items-start gap-md rounded-soft border border-border-primary px-lg py-md cursor-pointer"
++          >
++            <Checkbox
++              checked={enabled[type.id]}
++              onCheckedChange={(checked) =>
++                setEnabled((prev) => ({ ...prev, [type.id]: checked === true }))
++              }
++              className="mt-0.5"
++            >
++              <CheckboxIndicator />
++            </Checkbox>
++            <div className="flex flex-col gap-xs">
++              <LabelText>{type.label}</LabelText>
++              <BodyText className="text-text-secondary">
++                {type.description}
++              </BodyText>
++            </div>
++          </label>
++        ))}
++      </div>
++
++      {/* Actions */}
++      <div className="flex gap-md">
++        <Button
++          variant={ButtonVariant.prominent}
++          onClick={handleSave}
++          disabled={saving}
++        >
++          {saving ? "Saving..." : "Save"}
++        </Button>
++        <Button variant={ButtonVariant.secondary} onClick={() => history.back()}>
++          Cancel
++        </Button>
++      </div>
++    </main>
++  );
++}

@@ -1,0 +1,19 @@
+RUN OK
+ds tarball: /c/Users/stick/Github/dooph/ds-consumer-template/vendor/dooph-software-design-system-5.3.0.tgz sha256 783c0f2d0678e2632f2778a53a2e42700ea8ed61e6606dc4791bcfcc4c0f32e2
+installed tarball sha256: be970d61ceaaccd3cafd241545afb8f92140e0e0f928bae1701e854183e06bf8 (RED repack: no skills/, stub README)
+subtype: success  is_error: false  turns: 11  cost_usd: 0.4020751999999999  duration_ms: 113934
+permission_denials (1):
+  Bash: {"command":"awk '/\\.dark \\{/,/^  \\}/' /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css | grep -i \"prominent\" | head -20"}
+
+--- final text ---
+Done. Here's what was added to `app/globals.css`:
+
+| Variable | DS default | Brand override |
+|---|---|---|
+| `--ui-color-prominent` | `#340fd9` | `#6d28d9` |
+| `--ui-color-prominent-hover` | `#2406ac` | `#5b21b6` |
+| `--ui-color-prominent-active` | `#1a0189` | `#4c1d95` |
+| `--ui-color-focus-ring-prominent` | `rgba(36,6,172,0.35)` | `rgba(109,40,217,0.35)` |
+| `--ui-prominent-color` | `#390ef8` | `#7c3aed` |
+
+The overrides are scoped to `:root, .light` so dark mode remains untouched. Border and shadow variables that reference these via `var()` will inherit the new values automatically.

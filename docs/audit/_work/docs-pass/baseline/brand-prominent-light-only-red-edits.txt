@@ -1,0 +1,8 @@
+#39 Edit C:/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/app/globals.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/app/globals.css",
+  "old_string": "/* Map the fonts loaded in app/layout.tsx (next/font) onto the DS role tokens. */\n:root {",
+  "new_string": "/* Override the DS prominent colour with our brand purple (light mode only). */\n:root,\n.light {\n  --ui-color-prominent: #6d28d9;\n  --ui-color-prominent-border: var(--ui-color-prominent);\n  --ui-color-prominent-hover: #5b21b6;\n  --ui-color-prominent-border-hover: var(--ui-color-prominent-hover);\n  --ui-color-prominent-active: #4c1d95;\n  --ui-color-prominent-border-active: var(--ui-color-prominent-active);\n  --ui-color-focus-ring-prominent: rgba(109, 40, 217, 0.35);\n  --ui-prominent-color: #7c3aed;\n}\n\n/* Map the fonts loaded in app/layout.tsx (next/font) onto the DS role tokens. */\n:root {"
+}
+

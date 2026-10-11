@@ -1,0 +1,22 @@
+RUN OK
+subtype: success  is_error: false  turns: 28  cost_usd: 0.8630941  duration_ms: 238043
+permission_denials (0):
+
+--- final text ---
+Done. Here's what was added:
+
+**Installed:** `@radix-ui/react-collapsible`
+
+**New files:**
+
+- `src/components/Collapsible/Collapsible.tsx` — Three exports:
+  - **`Collapsible`** — pass-through to `CollapsiblePrimitive.Root`
+  - **`CollapsibleTrigger`** — styled trigger with a `label` prop and a `ChevronDownIcon` that rotates from `-90deg` (closed) to `0deg` (open) using the DS motion tokens
+  - **`CollapsibleContent`** — force-mounted content panel animated via `grid-template-rows: 0fr↔1fr` (same technique as the existing `ds-chat-disclosure`)
+- `src/components/Collapsible/index.ts` — barrel exports
+- `src/components/Collapsible/Collapsible.stories.tsx` — five stories: Default, DefaultOpen, Controlled, CustomTrigger, Multiple
+
+**Modified files:**
+
+- `src/styles/dooph-component-tokens.css` — added `.ds-collapsible-content` CSS class (grid-rows slide + opacity transition using `--ui-motion-duration-base` / `--ui-motion-ease-standard`)
+- `src/index.ts` — added `export * from './components/Collapsible'`

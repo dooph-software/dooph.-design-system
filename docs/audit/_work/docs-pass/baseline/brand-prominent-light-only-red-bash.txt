@@ -1,0 +1,74 @@
+#1 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b -type f -name "*.config.*" -o -name "tailwind.config.*" -o -name "next.config.*" | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/next.config.ts
+#2 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/ | head -30
+    | -rw-r--r-- 1 stick 197609   265 Oct  8 20:59 next.config.ts
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:06 node_modules
+    | -rw-r--r-- 1 stick 197609 99068 Oct  8 21:06 package-lock.json
+    | -rw-r--r-- 1 stick 197609   635 Oct  8 20:59 package.json
+    | -rw-r--r-- 1 stick 197609   666 Oct  8 20:59 tsconfig.json
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 vendor
+#8 Bash: grep -n "ui-color-primary:" /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css | head -20
+    | 1871:    --ui-color-primary: #171717;
+    | 2222:    --ui-color-primary: #f9f9f9;
+#9 Bash: grep -n "@media (prefers-color-scheme" /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css
+    | (Bash completed with no output)
+#10 Bash: grep -n "dark\|light" /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css | head -30
+    | 2324:    :root, .light {
+    | 2508:  .ds-slider-dot[data-highlighted] {
+    | 2512:  [data-dragging] .ds-slider-dot[data-highlighted] {
+    | 2726:    --ui-shimmer-highlight: var(--ui-chat-tool-shimmer-highlight);
+    | 2730:    --ui-shimmer-highlight: var(--ui-chat-thinking-shimmer-highlight);
+    | 3126:    background: linear-gradient( 100deg, var(--ui-shimmer-base) 40%, var(--ui-shimmer-highlight) 50%, var(--ui-shimmer-base) 60% );
+#13 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/app -type f -name "*.tsx" -o -name "*.ts" -o -name "*.jsx" -o -name "*.js"
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/app/dashboard/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/app/layout.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/app/page.tsx
+#16 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b -maxdepth 2 -name "tailwind.config.*" -type f
+    | (Bash completed with no output)
+#17 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/
+    | -rw-r--r-- 1 stick 197609  1066 Oct  8 21:06 LICENSE.txt
+    | -rw-r--r-- 1 stick 197609   114 Oct  8 21:06 README.md
+    | -rw-r--r-- 1 stick 197609 16566 Oct  8 21:06 THIRD_PARTY_NOTICES.md
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:06 bin
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:06 dist
+    | -rw-r--r-- 1 stick 197609  3503 Oct  8 21:06 package.json
+#19 Bash: grep -n "ui-prominent-color" /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css | head -20
+    | 2172:    --ui-color-sticker-alternate: var(--ui-prominent-color-alt);
+    | 2173:    --ui-color-sticker-tertiary: var(--ui-prominent-color-ter);
+    | 2194:    --ui-color-sticker-bg-alternate: var(--ui-prominent-color-alt);
+    | 2198:    var(--ui-prominent-color-alt) var(--ui-sticker-bg-opacity),
+    | 2202:    --ui-color-sticker-bg-tertiary: var(--ui-prominent-color-ter);
+    | 2206:    var(--ui-prominent-color-ter) var(--ui-sticker-bg-opacity),
+#20 Bash: grep -A 5 "\.dark {" /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css | grep "prominent"
+    | (Bash completed with no output)
+#22 Bash  [is_error]: awk '/\.dark \{/,/^  \}/' /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css | grep -i "prominent" | head -20
+    | This Bash command contains multiple operations. The following part requires approval: awk '/\.dark \{/,/^  \}/' /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css
+#23 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/vendor/
+    | total 548
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 21:06 ..
+    | -rw-r--r-- 1 stick 197609 554104 Oct  8 21:06 dooph-software-design-system-5.3.0.tgz
+#24 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b -maxdepth 3 \( -name "tailwind*" -o -name "*.config.*" \) -type f | grep -v node_modules
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/next.config.ts
+#26 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/components -type f
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/components/theme-toggle.tsx
+#27 Bash: grep -n "ui-prominent-color:" /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css
+    | 1944:    --ui-prominent-color: #390ef8;
+#28 Bash: grep -n "ui-color-prominent:" /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css
+    | 1889:    --ui-color-prominent: #340fd9;
+#30 Bash: grep "prominent.*#\|#.*prominent" /c/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css
+    |     --ui-color-prominent-active: #1a0189;
+    |     --ui-color-prominent-foreground: #ffffff;
+    |     --ui-prominent-color: #390ef8;
+    |     --ui-prominent-color-alt: #13c29f;
+    |     --ui-prominent-color-ter: #44c0e5;
+    |     --ui-color-sticker-prominent: #8c7bff;
+#32 Bash: grep -n "prominent" "C:/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css" | head -40
+    | 1396:  .aria-disabled\:bg-prominent-disabled[aria-disabled="true"] {
+    | 1397:    background-color: var(--ui-color-prominent-disabled);
+    | 1458:  .data-\[state\=checked\]\:border-prominent[data-state="checked"] {
+    | 1459:    border-color: var(--ui-color-prominent);
+    | 1467:  .data-\[state\=checked\]\:bg-prominent[data-state="checked"] {
+    | 1468:    background-color: var(--ui-color-prominent);
+#33 Bash: grep -n "prominent" "C:/Users/stick/Github/dooph/ds-consumer-sb-46a92ca8138b/node_modules/@dooph-software/design-system/dist/styles.css" | grep -E "^\s*\d+:\s+--ui" | head -30
+    | (Bash completed with no output)

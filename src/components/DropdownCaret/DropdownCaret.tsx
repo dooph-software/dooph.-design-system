@@ -19,7 +19,7 @@
  *   .ds-expr-caret-shape / .ds-expr-caret-nudge helpers on the root. Under
  *   [data-ds-expression="practical"] both are 0: no shape, no frame, no lean,
  *   and the root shrinks to a plain chevron in the trigger's text colour with
- *   a trailing inset matching the host's ds-pl-ui-md.
+ *   a trailing inset matching the host's leading `pl-md` (spacing-md).
  *
  * ## constraints
  * - The root's -my-px -mr-px pulls it over the host's 1px border so the
@@ -28,8 +28,9 @@
  * - Colours live in the .ds-dropdown-caret CSS, including the deliberate
  *   non-obvious token choices; do not move them into props or classes here —
  *   a prop or class bypasses the CSS's light/dark token choices.
- * - No state props and no listeners (Rule 7): hosts drive it through CSS only
- *   — a listener on the host breaks when the host is a consumer's custom trigger.
+ * - No state props and no listeners (a component owns only its own subtree):
+ *   hosts drive it through CSS only — a listener on the host breaks when the
+ *   host is a consumer's custom trigger.
  * - The shape and the nudge must stay neutralisable by the practical preset:
  *   they are read only from --ui-caret-* via the .ds-expr-caret-* helpers, and
  *   nothing here (no inline style, no className, no prop) may set those tokens

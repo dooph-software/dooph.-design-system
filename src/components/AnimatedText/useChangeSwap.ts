@@ -15,10 +15,10 @@
  *
  * ## constraints
  * - This file holds no duration, no timer, no `requestAnimationFrame` and no
- *   `transitionend`. Each half is retired by its OWN `animationend`; an earlier
- *   RollChangeText ran a `setTimeout(300)` mirroring the CSS, which is the mirror
- *   that desyncs the moment either side is retuned. Timing lives in each
- *   wrapper's CSS classes, on the motion scale (architecture Rule 6).
+ *   `transitionend`. Each half is retired by its OWN `animationend`; a
+ *   `setTimeout` mirroring the CSS duration desyncs the moment either side is
+ *   retuned. Timing lives in each
+ *   wrapper's CSS classes, on the motion scale (motion lives in CSS, on tokens).
  * - The swap is reconciled during RENDER, never in an effect. An effect runs
  *   after paint, so the browser painted one frame of the new content at rest
  *   before the animations yanked it back to their `from` pose — that frame read

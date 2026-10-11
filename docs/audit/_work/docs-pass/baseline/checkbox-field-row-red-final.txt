@@ -1,0 +1,29 @@
+RUN OK
+subtype: success  is_error: false  turns: 17  cost_usd: 0.69870265  duration_ms: 200353
+permission_denials (0):
+
+--- final text ---
+Clean type-check. Here's a summary of what was added:
+
+**New component: `CheckboxField`** — a settings-row primitive that combines a checkbox, a label, and optional hint text.
+
+### Files created
+
+- **`src/components/CheckboxField/CheckboxField.tsx`** — The component. Wraps the existing `Checkbox` in a `<label>` with a `LabelText` and an optional `BodyText` hint underneath. Handles `aria-describedby` for the hint, auto-generates an `id` via `useId`, and passes through all `CheckboxProps` (variant, checked, disabled, etc.).
+
+- **`src/components/CheckboxField/CheckboxField.stories.tsx`** — Stories under `Inputs/CheckboxField`: Default, WithHint, Checked, CheckedWithHint, PrimaryVariant, Disabled, DisabledChecked, Controlled (dynamic hint), and LongContent (wrapping behavior).
+
+- **`src/components/CheckboxField/index.ts`** — Barrel export.
+
+### Files modified
+
+- **`src/index.ts`** — Added `export * from './components/CheckboxField'`.
+
+### Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `label` | `ReactNode` | **Required.** Primary label next to the checkbox. |
+| `hint` | `ReactNode` | Optional secondary text below the label. |
+| `variant` | `CheckboxVariant` | Passed through to `Checkbox`. |
+| ...rest | `CheckboxProps` | All Radix checkbox props (`checked`, `onCheckedChange`, `disabled`, `defaultChecked`, etc.). |

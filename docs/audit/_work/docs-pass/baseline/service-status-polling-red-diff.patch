@@ -1,0 +1,312 @@
+diff --git a/src/components/ServiceStatus/ServiceStatus.stories.tsx b/src/components/ServiceStatus/ServiceStatus.stories.tsx
+new file mode 100644
+index 0000000..c17fe1f
+--- /dev/null
++++ b/src/components/ServiceStatus/ServiceStatus.stories.tsx
+@@ -0,0 +1,142 @@
++import { useEffect, useState } from "react";
++import type { Meta, StoryObj } from "@storybook/react-vite";
++import { ServiceStatus } from "./ServiceStatus";
++import { ServiceStatusState } from "./constants";
++
++/* ---------------------------------------------------------------------------
++ * Mock handler — intercepts fetch to a fake URL so stories work without a real
++ * endpoint.
++ * ----------------------------------------------------------------------- */
++const MOCK_URL = "https://status.example.com/api/status";
++
++const meta = {
++  title: "Status/ServiceStatus",
++  component: ServiceStatus,
++  parameters: { layout: "centered" },
++  tags: ["autodocs"],
++  args: { url: MOCK_URL, label: "Service", interval: 60_000 },
++} satisfies Meta<typeof ServiceStatus>;
++
++export default meta;
++type Story = StoryObj<typeof meta>;
++
++function useMockFetch(state: ServiceStatusState) {
++  useEffect(() => {
++    const original = window.fetch;
++    window.fetch = async (input, init) => {
++      if (typeof input === "string" && input === MOCK_URL) {
++        return new Response(JSON.stringify({ status: state }), {
++          status: 200,
++          headers: { "Content-Type": "application/json" },
++        });
++      }
++      return original(input, init);
++    };
++    return () => {
++      window.fetch = original;
++    };
++  }, [state]);
++}
++
++/* --- Static states ------------------------------------------------------ */
++
++export const Operational: Story = {
++  render: function OperationalStory() {
++    useMockFetch(ServiceStatusState.operational);
++    return (
++      <ServiceStatus
++        url={MOCK_URL}
++        label="API Gateway"
++        interval={60_000}
++      />
++    );
++  },
++};
++
++export const Degraded: Story = {
++  render: function DegradedStory() {
++    useMockFetch(ServiceStatusState.degraded);
++    return (
++      <ServiceStatus
++        url={MOCK_URL}
++        label="Search Index"
++        interval={60_000}
++      />
++    );
++  },
++};
++
++export const Down: Story = {
++  render: function DownStory() {
++    useMockFetch(ServiceStatusState.down);
++    return (
++      <ServiceStatus
++        url={MOCK_URL}
++        label="Payment Service"
++        interval={60_000}
++      />
++    );
++  },
++};
++
++export const Unknown: Story = {
++  render: function UnknownStory() {
++    useMockFetch(ServiceStatusState.unknown);
++    return (
++      <ServiceStatus
++        url={MOCK_URL}
++        label="Telemetry"
++        interval={60_000}
++      />
++    );
++  },
++};
++
++/* --- Live cycling demo -------------------------------------------------- */
++
++const CYCLE: ServiceStatusState[] = [
++  ServiceStatusState.operational,
++  ServiceStatusState.degraded,
++  ServiceStatusState.down,
++  ServiceStatusState.unknown,
++];
++
++export const LiveCycle: Story = {
++  render: function LiveCycleStory() {
++    const [index, setIndex] = useState(0);
++    const state = CYCLE[index];
++
++    useMockFetch(state);
++
++    useEffect(() => {
++      const id = setInterval(
++        () => setIndex((i) => (i + 1) % CYCLE.length),
++        3000,
++      );
++      return () => clearInterval(id);
++    }, []);
++
++    return (
++      <ServiceStatus
++        url={MOCK_URL}
++        label="All Services"
++        interval={1000}
++      />
++    );
++  },
++};
++
++/* --- Dashboard row ------------------------------------------------------ */
++
++export const DashboardRow: Story = {
++  render: function DashboardRowStory() {
++    useMockFetch(ServiceStatusState.operational);
++    return (
++      <div className="flex flex-wrap items-center gap-rg">
++        <ServiceStatus url={MOCK_URL} label="API" interval={60_000} />
++        <ServiceStatus url={MOCK_URL} label="Auth" interval={60_000} />
++        <ServiceStatus url={MOCK_URL} label="CDN" interval={60_000} />
++      </div>
++    );
++  },
++};
+diff --git a/src/components/ServiceStatus/ServiceStatus.tsx b/src/components/ServiceStatus/ServiceStatus.tsx
+new file mode 100644
+index 0000000..66e61a8
+--- /dev/null
++++ b/src/components/ServiceStatus/ServiceStatus.tsx
+@@ -0,0 +1,116 @@
++/*
++ * ServiceStatus — a live badge that polls a status endpoint and shows the
++ * result as a coloured Sticker.
++ *
++ * ## behavior
++ * - On mount and every `interval` ms (default 30 000) the component fetches
++ *   `url`, expecting `{ status: "operational" | "degraded" | "down" }`.
++ * - The response is mapped to a Sticker variant:
++ *     operational → alternate, degraded → custom #f59e0b, down → danger,
++ *     unknown (initial / error) → tertiary.
++ * - A small filled circle before the label echoes the Sticker's content colour.
++ * - The poll is cleared on unmount and restarted when `url` or `interval`
++ *   changes.
++ *
++ * ## constraints
++ * - status-no-cache: fetch must set `cache: "no-store"` so every poll hits the
++ *   origin. Serving stale data defeats the purpose of a live badge.
++ * - status-cleanup: the interval must be cleared on unmount and on dependency
++ *   change. Leaking timers causes ghost requests after the component is gone.
++ */
++import { forwardRef, useEffect, useState, type HTMLAttributes } from "react";
++import { cn } from "../../utils/cn";
++import { ButtonText } from "../Text";
++import { Sticker } from "../Sticker/Sticker";
++import { StickerVariant } from "../Sticker/constants";
++import { ServiceStatusState } from "./constants";
++
++const STATUS_COLOR_DEGRADED = "#f59e0b";
++
++function stickerPropsForStatus(status: ServiceStatusState) {
++  switch (status) {
++    case ServiceStatusState.operational:
++      return { variant: StickerVariant.alternate } as const;
++    case ServiceStatusState.degraded:
++      return {
++        variant: StickerVariant.custom,
++        color: STATUS_COLOR_DEGRADED,
++      } as const;
++    case ServiceStatusState.down:
++      return { variant: StickerVariant.danger } as const;
++    default:
++      return { variant: StickerVariant.tertiary } as const;
++  }
++}
++
++export type ServiceStatusProps = Omit<
++  HTMLAttributes<HTMLDivElement>,
++  "children" | "color"
++> & {
++  /** Endpoint URL that returns `{ status: "operational" | "degraded" | "down" }`. */
++  url: string;
++  /** Visible label shown beside the status dot. */
++  label: string;
++  /** Polling interval in milliseconds. @default 30000 */
++  interval?: number;
++};
++
++const ServiceStatus = forwardRef<HTMLDivElement, ServiceStatusProps>(
++  ({ url, label, interval = 30_000, className, ...props }, ref) => {
++    const [status, setStatus] = useState<ServiceStatusState>(
++      ServiceStatusState.unknown,
++    );
++
++    useEffect(() => {
++      let active = true;
++
++      async function poll() {
++        try {
++          const res = await fetch(url, { cache: "no-store" });
++          const json = (await res.json()) as { status?: string };
++          if (!active) return;
++
++          const value = json.status;
++          if (
++            value === ServiceStatusState.operational ||
++            value === ServiceStatusState.degraded ||
++            value === ServiceStatusState.down
++          ) {
++            setStatus(value);
++          } else {
++            setStatus(ServiceStatusState.unknown);
++          }
++        } catch {
++          if (active) setStatus(ServiceStatusState.unknown);
++        }
++      }
++
++      poll();
++      const id = setInterval(poll, interval);
++      return () => {
++        active = false;
++        clearInterval(id);
++      };
++    }, [url, interval]);
++
++    const stickerProps = stickerPropsForStatus(status);
++
++    return (
++      <Sticker
++        ref={ref}
++        className={cn(className)}
++        {...stickerProps}
++        {...props}
++      >
++        <span
++          className="inline-block size-2 shrink-0 rounded-full bg-current"
++          aria-hidden="true"
++        />
++        <ButtonText>{label}</ButtonText>
++      </Sticker>
++    );
++  },
++);
++ServiceStatus.displayName = "ServiceStatus";
++
++export { ServiceStatus };
+diff --git a/src/components/ServiceStatus/constants.ts b/src/components/ServiceStatus/constants.ts
+new file mode 100644
+index 0000000..491f8b7
+--- /dev/null
++++ b/src/components/ServiceStatus/constants.ts
+@@ -0,0 +1,15 @@
++// Server-safe constants — no client APIs, intentionally NO "use client" directive
++// so these dot-accessible enums can be read from React Server Components.
++
++/**
++ * The three states a status endpoint can return, plus `unknown` for the initial
++ * fetch and network errors.
++ */
++export const ServiceStatusState = {
++  operational: "operational",
++  degraded: "degraded",
++  down: "down",
++  unknown: "unknown",
++} as const;
++export type ServiceStatusState =
++  (typeof ServiceStatusState)[keyof typeof ServiceStatusState];
+diff --git a/src/components/ServiceStatus/index.ts b/src/components/ServiceStatus/index.ts
+new file mode 100644
+index 0000000..50488b1
+--- /dev/null
++++ b/src/components/ServiceStatus/index.ts
+@@ -0,0 +1,3 @@
++export { ServiceStatus } from "./ServiceStatus";
++export type { ServiceStatusProps } from "./ServiceStatus";
++export { ServiceStatusState } from "./constants";
+diff --git a/src/index.ts b/src/index.ts
+index 3833ba6..60db55f 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -42,6 +42,7 @@ export * from './components/LinearProgressIndicator';
+ export * from './components/VerificationCode';
+ export * from './components/Calendar';
+ export * from './components/DatePicker';
++export * from './components/ServiceStatus';
+ 
+ // Utilities
+ export { cn, DS_TW_MERGE_CONFIG } from './utils/cn';

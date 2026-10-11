@@ -1,0 +1,16 @@
+#17 Bash: grep -rn "surface-secondary\|code-radius" "/c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/styles/" --include="*.css"
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/styles/index.css:136:  --color-surface-secondary: var(--ui-color-surface-secondary);
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/styles/theme.css:66:  --color-surface-secondary: var(--ui-color-surface-secondary);
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/styles/tokens.css:111:  /* Surfaces (Figma: surface-page / surface-primary / surface-secondary) */
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/styles/tokens.css:114:  --ui-color-surface-secondary: #fcfcfc;
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/styles/tokens.css:278:  --ui-chat-prose-code-radius: 4px;
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/styles/tokens.css:788:  --ui-color-surface-secondary: #242425;
+#19 Bash: find "/c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src" -name "*.tsx" -o -name "*.ts" | xargs grep -l "ds-chat-prose\|code\|pre" | head -20
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/components/Calendar/CalendarCaption.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/components/Calendar/CalendarGrid.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/components/Calendar/CalendarPresetsPanel.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/components/Calendar/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/components/Calendar/dateFormat.ts
+    | xargs: grep: terminated by signal 13
+#20 Bash: find "/c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-red-20261008204159/src/components/AIChat" -type f \( -name "*.css" -o -name "*.scss" -o -name "*.module.css" \)
+    | (Bash completed with no output)

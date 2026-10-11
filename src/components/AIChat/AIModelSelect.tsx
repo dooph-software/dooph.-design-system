@@ -97,10 +97,10 @@ const AIModelSelectItem = forwardRef<
     ref={ref}
     style={
       {
-        ...style,
         ...(color
           ? { "--ds-chat-model-color": resolveDsColor(color, "") }
           : {}),
+        ...style,
       } as CSSProperties
     }
     {...props}
@@ -251,10 +251,10 @@ const AIModelTooltipContent = forwardRef<
       className={cn("ds-width-chat-model-tooltip", className)}
       style={
         {
-          ...style,
           ...(color
             ? { "--ds-chat-model-color": resolveDsColor(color, "") }
             : {}),
+          ...style,
         } as CSSProperties
       }
       {...props}

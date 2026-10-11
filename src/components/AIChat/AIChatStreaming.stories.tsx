@@ -543,8 +543,12 @@ function FauxChat({ autoSend }: { autoSend?: string }) {
     else turns[turns.length - 1].push(m);
   }
 
+  // A fixed demo frame the size of a chat side panel; no token sizes it.
   return (
-    <div className="flex h-[720px] w-[460px] flex-col overflow-hidden rounded-normal border border-solid border-border-primary bg-surface-page">
+    <div
+      className="flex flex-col overflow-hidden rounded-normal border border-solid border-border-primary bg-surface-page"
+      style={{ width: 460, height: 720 }}
+    >
       <div
         ref={scrollRef}
         onScroll={(e) => {

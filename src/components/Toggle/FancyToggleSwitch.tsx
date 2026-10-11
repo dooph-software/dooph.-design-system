@@ -10,7 +10,7 @@
  * ## behavior
  * - Radix ToggleGroup wiring, like ToggleSwitch. Options sit 12px apart (md).
  * - Single select only, the same behaviour as ToggleSwitch (maintainer
- *   decision 2026-10-04: multi-select was removed). `value` is a string and
+ *   decision: there is no multi-select). `value` is a string and
  *   selection can never be cleared — Radix's "" on a second click is dropped.
  *   This is ToggleSwitch's own code, not a copy: both call
  *   `useNeverClearedValue` from ./Toggle. Controlled (`value` +

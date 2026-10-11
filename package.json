@@ -58,7 +58,7 @@
     "build:watch": "npm run generate-icon-exports && npm run generate-shape-morph-ease && npm run sync-tokens && node --max-old-space-size=8192 node_modules/tsup/dist/cli-default.js --watch",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "lint": "tsc --noEmit",
+    "lint": "tsc --noEmit && node scripts/check-conventions.mjs",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {

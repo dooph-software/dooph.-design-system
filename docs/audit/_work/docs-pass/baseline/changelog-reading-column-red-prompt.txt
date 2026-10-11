@@ -1,0 +1,1 @@
+Add a /changelog page: a centred reading column about 640px wide, a page title, then a list of entries (date, title, a short paragraph each), nicely spaced. Make it match the rest of the app.

@@ -1,0 +1,12 @@
+/* Fixture: numeric Tailwind spacing, in a stylesheet @apply. One violation: p-2.
+ * Not reported: a DS scale name in @apply, and a selector that merely contains
+ * p-2 (only @apply lines are utilities). */
+.fixture-apply {
+  @apply p-2 gap-sm;
+}
+.fixture-apply-ok {
+  @apply px-md;
+}
+.fixture-p-2 {
+  color: inherit;
+}

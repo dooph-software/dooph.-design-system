@@ -1,0 +1,1 @@
+Small polish on SearchBox: when you hover the box, the magnifier icon should lean a little, like the dropdown caret does on hover. Keep it subtle.

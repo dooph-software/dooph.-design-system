@@ -23,8 +23,9 @@
  *
  * ## constraints
  * - No transport, no hotkeys beyond Enter. A global "focus the prompt" shortcut
- *   is document-level, so it is the consumer's (architecture Rule 7) — the
- *   textarea forwards its ref for exactly that.
+ *   is document-level, and a component owns only its own subtree, so the
+ *   shortcut is the consumer's — the textarea forwards its ref for exactly
+ *   that.
  * - Every submit state renders ButtonSize.iconSm. Keep them one
  *   size: a send button that changes size between Empty and Filled grows the
  *   whole composer on the first keystroke and shrinks it again on send.

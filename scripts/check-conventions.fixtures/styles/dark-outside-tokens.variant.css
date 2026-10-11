@@ -1,0 +1,5 @@
+/* Fixture: dark-mode rules or hex colours outside tokens.css, a redefined
+ * Tailwind dark variant in a component stylesheet. One violation: the
+ * @custom-variant dark line. Not reported: a variant named darker. */
+@custom-variant dark (&:where([data-theme="night"] *));
+@custom-variant darker (&:where([data-tone="darker"]));

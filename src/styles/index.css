@@ -1,5 +1,5 @@
-@import "tailwindcss";
-/* Scan design-system source so dist/styles.css always includes every utility used in components. */
+@import "tailwindcss" source(none);
+/* Scan ONLY the design system's own src/ so the CSS includes every utility the components use. source(none) stops Tailwind's automatic detection from pulling class-like words out of docs, skills and README text into the shipped CSS. Stories are scanned here because Storybook compiles this file; the shipped dist/styles.css is compiled from build.css, which leaves story-only utilities out. */
 @source "../**/*.{js,ts,jsx,tsx}";
 @import "./tokens.css";
 @import "./dooph-component-tokens.css";
@@ -232,13 +232,14 @@
  * Composite text-style classes — the full typographic intent of a role in one
  * class, including font-variation-settings, which has no Tailwind utility.
  *
- * Deliberately in `components`, NOT `utilities`. BaseText applies these as role
- * DEFAULTS, and a layer that loses to `utilities` is exactly what lets a
- * consumer's own utility (leading-*, tracking-*, text-2xl) override a role.
- * Explicit BaseText props outrank both, because they are written inline.
+ * Deliberately in `components`, NOT `utilities`: BaseText applies these as role
+ * DEFAULTS, the ambient layer under everything else. Typography changes go
+ * through BaseText props, which are written inline and so outrank the role
+ * class; typography utilities are not a supported override, in DS code or in a
+ * consuming app.
  *
- * Nothing here sets line-height: leading is left to inherit so it can be set by
- * the consuming app or per instance via the lineHeight prop.
+ * Nothing here sets line-height: leading is left to inherit, and the consuming
+ * app sets it per instance with the lineHeight prop.
  */
 @layer components {
   /* .ds-chat-prose (dooph-component-tokens.css) re-spells four of these roles
@@ -765,13 +766,13 @@
    * `will-change` is here because the roll animates `filter: blur()` over text,
    * which is re-rasterized every frame. Without the hint the compositor promotes
    * the node only once the animation is already running, and the cost of that
-   * first raster lands inside the first frame or two — which is precisely where
-   * the roll used to hitch. Both classes are removed the moment their animation
+   * first raster lands inside the first frame or two, where the roll would
+   * visibly hitch. Both classes are removed the moment their animation
    * ends (the out node unmounts, the in node drops the class), so neither
    * strands a layer on settled content. */
   /* The soft clip shared by RollChangeText and FadeChangeText (ChangeSwapShell).
-   * A vertical mask fades the rolling face out at the top and bottom instead of
-   * the old hard `overflow: hidden` slicing glyphs and their blur halo. The box
+   * A vertical mask fades the rolling face out at the top and bottom; a hard
+   * `overflow: hidden` would slice the glyphs and their blur halo. The box
    * gets --ui-roll-change-breathe of padding top and bottom, cancelled by an
    * equal negative margin: its margin box (and so its outer size and baseline
    * position in the line) is exactly what it was without either. The fade
@@ -882,8 +883,8 @@
     }
   }
 
-  /* LoadingSpinner — CSS owns the clock (architecture Rule 6); the component
-   * owns geometry only, written as inline custom properties on the <svg>:
+  /* LoadingSpinner — CSS owns the clock; the component owns geometry only,
+   * written as inline custom properties on the <svg>:
    *   --ds-spinner-c            circumference of the arc path, user units
    *   --ds-spinner-gap          visual-gap allowance between the arcs,
    *                             as a fraction of one turn
@@ -1004,7 +1005,7 @@
    *      the primary FOREGROUND, because it sits on the shape.
    *   0  a plain chevron: no frame (the shape fills the frame, so it draws
    *      nothing), the root shrinks to the chevron plus a trailing inset that
-   *      mirrors the host's leading ds-pl-ui-md (+1px for the -mr-px pull over
+   *      mirrors the host's leading pl-md (+1px for the -mr-px pull over
    *      the border), and the chevron takes the trigger's text colour.
    * Values in between interpolate; 0 and 1 are the designed settings. The
    * frame may be narrower than the chevron: it overflows centred, and the

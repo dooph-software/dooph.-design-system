@@ -359,12 +359,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {...fieldProps}
           className={cn(
             "flex h-button w-full rounded-tight border border-solid border-border-primary bg-secondary",
-            "ds-pl-ui-md ds-pr-ui-rg",
+            "pl-md pr-rg",
             "text-text placeholder:text-text-tertiary",
             "ds-motion-state ds-focus-ring-on-focus",
             // `enabled:` keeps a disabled input from lifting; `not-focus:` keeps the
-            // focus border winning over the hover border, as the plain `hover:`
-            // did by coming earlier in the sheet.
+            // focus border winning over the hover border while the field is
+            // both hovered and focused.
             "enabled:hover:not-focus:border-input-border-hover enabled:hover:shadow-button-secondary",
             "focus:border-input-border-focus",
             "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled ds-disabled-state",
@@ -400,14 +400,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           "h-button items-center rounded-tight border border-solid border-border-primary bg-secondary",
           "ds-motion-state ds-focus-within-ring",
           hugs
-            ? "inline-flex min-w-button justify-center ds-pl-ui-md ds-pr-ui-md"
+            ? "inline-flex min-w-button justify-center pl-md pr-md"
             : isNumber
-              ? "flex w-full min-w-button ds-pl-ui-md ds-pr-ui-md"
-              : "flex w-full ds-pl-ui-md ds-pr-ui-rg",
+              ? "flex w-full min-w-button pl-md pr-md"
+              : "flex w-full pl-md pr-rg",
           hasIcon && (isNumber ? "gap-xxs" : "gap-sm"),
           "cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-secondary-disabled",
-          // The error border wins over the disabled one here, as it did when
-          // this was a class ternary (the error classes came later in cn).
+          // The error border wins over the disabled one: the disabled border
+          // applies only when there is no error.
           !showError && "data-[disabled]:border-secondary-border-disabled",
           !showError &&
             "[&:hover:not(:focus-within):not([data-disabled])]:border-input-border-hover [&:hover:not(:focus-within):not([data-disabled])]:shadow-button-secondary",

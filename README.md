@@ -1,189 +1,24 @@
-# dooph Design System
+# @dooph-software/design-system
 
-React component primitives and tokenized CSS in our bespoke design language. Opinionated design and tokens but framework-agnostic at runtime: use it from Next.js, Vite, or any React shell of your choice.
+The dooph. design system: React components, the `--ui-*` design tokens they are
+built on, and a Tailwind v4 preset that makes those tokens usable in your own
+classes. It also ships agent skills that teach setup, usage and theming.
 
-Use defaults or override tokens on an individual basis in your consuming project for a custom look!
+- Storybook: <https://dooph-software.github.io/dooph.-design-system/>
+- npm: <https://www.npmjs.com/package/@dooph-software/design-system>
 
-**Component Catalog:** [Storybook](https://dooph-software.github.io/dooph.-design-system/)
+## Install
 
-*This is a read-only publication of the design system we use at dooph. Licensed with MIT. Usage of this design system never grants you access or rights to dooph intellectual property including but not limited to the trade name "dooph." or any variation therein, brand names of dooph. products, wordmarks and logomarks associated with any and all dooph. intellectual property, and anything else reasonably attributed to the company or brand.*
-
-## Installation
-
-```bash
+```sh
 npm install @dooph-software/design-system
 ```
 
-_(optional, for agents)_
+React 19 or later is a peer dependency (`react` and `react-dom`).
 
-```bash
-npx @dooph-software/design-system init-skills
-```
+## Set up
 
-```tsx
-import { Button } from "@dooph-software/design-system";
-import "@dooph-software/design-system/styles.css";
-```
-
-## React Server Components (Next.js App Router)
-
-RSC support is built in. Interactive components ship a per-module `"use client"`
-directive that is preserved into the published bundle, so you can import directly
-from a **Server Component** — no local `"use client"` re-export wrapper barrel is
-needed:
-
-```tsx
-// app/page.tsx — a Server Component (note: no "use client")
-import { Button, Tooltip, DropdownMenu } from "@dooph-software/design-system";
-
-export default function Page() {
-  return <Button>Works in an RSC build</Button>;
-}
-```
-
-`next build` runs with no `createContext is not a function` error. Pure,
-presentational exports (text, icons, shapes, variant enums, the `cn` helper) stay
-server-safe and render in the RSC layer; everything interactive is a client
-boundary automatically. Non-Next frameworks (Vite, Storybook, plain
-Rollup/webpack) are unaffected — the directive is inert outside an RSC bundler.
-
-## Initialize (agent skills)
-
-If you want your agent to implement stuff from this design system more accurately, you can run a command to copy agent skills into your project:
-
-```bash
-npx @dooph-software/design-system init-skills
-```
-
-This copies the bundled skills into the agent directories of your choice (`.agents/`, `.claude/`, `.agent/`). No project files are modified. The styles import above is still required separately.
-
-## Font Contract
-
-This package does **not** ship font files or load remote fonts. It defines default font-family tokens only — one per text role, so each role can be overridden independently:
-
-```css
---ui-font-body: "Google Sans Flex", system-ui, sans-serif;
---ui-font-button: "Google Sans Flex", system-ui, sans-serif;
---ui-font-heading: "Google Sans Flex", system-ui, sans-serif;
---ui-font-label: "Host Grotesk", system-ui, sans-serif;
---ui-font-title: "Bricolage Grotesque", system-ui, sans-serif;
---ui-font-hero: "Bricolage Grotesque", system-ui, sans-serif;
-```
-
-Consuming apps are responsible for loading fonts and mapping loaded font variables or family names into the `--ui-font-*` role tokens above. Override only the roles you want to change — e.g. set just `--ui-font-button` to give buttons a different face while body text keeps its default.
-
-This keeps the package framework-agnostic and lets each app choose `next/font`, local files, provider CSS, or system fallbacks.
-
-## Next.js Font Example
-
-Use `next/font/google` where available, assign CSS variables, then map those variables to dooph tokens in app CSS.
-
-```tsx
-// app/layout.tsx
-import "@dooph-software/design-system/styles.css";
-import "./theme.css";
-import {
-  Google_Sans_Flex,
-  Host_Grotesk,
-  Bricolage_Grotesque,
-} from "next/font/google";
-
-const googleSansFlex = Google_Sans_Flex({
-  subsets: ["latin"],
-  variable: "--font-google-sans-flex",
-  display: "swap",
-  axes: ["GRAD", "ROND", "wdth"],
-});
-
-const hostGrotesk = Host_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-host-grotesk",
-  display: "swap",
-});
-
-const bricolageGrotesque = Bricolage_Grotesque({
-  subsets: ["latin"],
-  variable: "--font-bricolage-grotesque",
-  display: "swap",
-});
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html
-      lang="en"
-      className={`${googleSansFlex.variable} ${hostGrotesk.variable} ${bricolageGrotesque.variable}`}
-    >
-      <body>{children}</body>
-    </html>
-  );
-}
-```
-
-```css
-/* app/theme.css */
-:root {
-  --ui-font-body: var(--font-google-sans-flex), system-ui, sans-serif;
-  --ui-font-button: var(--font-google-sans-flex), system-ui, sans-serif;
-  --ui-font-heading: var(--font-google-sans-flex), system-ui, sans-serif;
-  --ui-font-label: var(--font-host-grotesk), system-ui, sans-serif;
-  --ui-font-title:
-    var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui,
-    sans-serif;
-  --ui-font-hero:
-    var(--font-bricolage-grotesque), var(--font-google-sans-flex), system-ui,
-    sans-serif;
-}
-```
-
-If a specific Google font is not supported by the installed Next.js version, load it with `next/font/local` or provider CSS and keep the same `--ui-font-*` mapping.
-
-## Vite Font Example
-
-Load fonts with `@font-face`, provider CSS, or a `<link>` in the app shell, then map families to dooph tokens.
-
-```css
-@import "@dooph-software/design-system/styles.css";
-@import "./theme.css";
-```
-
-```css
-/* src/theme.css */
-@font-face {
-  font-family: "Host Grotesk";
-  src: url("/fonts/host-grotesk.woff2") format("woff2");
-  font-weight: 400 700;
-  font-display: swap;
-}
-
-:root {
-  --ui-font-body: "Google Sans Flex", system-ui, sans-serif;
-  --ui-font-button: "Google Sans Flex", system-ui, sans-serif;
-  --ui-font-heading: "Google Sans Flex", system-ui, sans-serif;
-  --ui-font-label: "Host Grotesk", system-ui, sans-serif;
-  --ui-font-title:
-    "Bricolage Grotesque", "Google Sans Flex", system-ui, sans-serif;
-  --ui-font-hero:
-    "Bricolage Grotesque", "Google Sans Flex", system-ui, sans-serif;
-}
-```
-
-## Tailwind v4 Consumer Contract
-
-`styles.css` is **compiled** Tailwind. It contains the design-system tokens plus
-the exact utility classes the dooph components use internally — but your own
-Tailwind build has no knowledge of the dooph token namespace. So when you write
-`p-md`, `gap-sm`, `rounded-standard`, or `font-label` in **your** code, your
-Tailwind never generates them, and same-named Tailwind defaults (`font-sans`,
-the numeric spacing scale, etc.) silently win.
-
-If your app runs its own Tailwind v4 build, import the shipped **theme preset**
-so your Tailwind learns every `--ui-*` token. Order matters — Tailwind first,
-then the package styles, then the preset:
+**Styles.** If your app runs its own Tailwind v4 build, import these in your
+CSS entry, in this order:
 
 ```css
 @import "tailwindcss";
@@ -191,19 +26,78 @@ then the package styles, then the preset:
 @import "@dooph-software/design-system/theme.css";
 ```
 
-That single import makes every dooph utility (`bg-primary`, `text-text`,
-`rounded-soft`, `p-md`, `gap-sm`, `font-label`, …) generate in your build and
-overrides colliding defaults. Token **values** still resolve from `styles.css`
-at runtime, so overriding `--ui-*` in your own CSS keeps working. No manual
-`@theme inline` remap is needed.
+Without Tailwind, import only the stylesheet: from your JS entry
+(`app/layout.tsx`, `src/main.tsx` or similar),
 
-Apps that do **not** use Tailwind can ignore `theme.css` and just import
-`styles.css`.
+```ts
+import "@dooph-software/design-system/styles.css";
+```
 
-Keep branded values in `--ui-*` overrides, not in one-off component classes or
-inline styles.
+or with `@import "@dooph-software/design-system/styles.css";` in your global CSS.
 
-## License
+**The Tailwind preset takes over the size names.** `theme.css` registers the
+design system's tokens in your Tailwind build, so classes such as `p-md` and
+`bg-primary` resolve to them. It also registers the spacing names `xs`, `sm`,
+`md`, `lg` and `xl`, which Tailwind reads before its container widths. In an
+existing app, `max-w-md` becomes 12px instead of 28rem, and the same happens
+to `w-*`, `min-w-*`, `basis-*`, `inline-*`, `min-inline-*` and `max-inline-*`
+with those names. `font-mono` becomes the Google Sans Code stack. Check those
+classes before you add the preset.
 
-MIT — see [LICENSE](./LICENSE) for the full text.  
-The "dooph" name and logo are not covered by the MIT license and remain trademarks of dooph software.
+**Fonts.** The package loads no fonts; your app does. The default faces are
+[Google Sans Flex](https://fonts.google.com/specimen/Google+Sans+Flex) (body,
+button, heading), [Host Grotesk](https://fonts.google.com/specimen/Host+Grotesk)
+(label), [Bricolage Grotesque](https://fonts.google.com/specimen/Bricolage+Grotesque)
+(title, hero) and [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code)
+(mono). Load each face with its variable axes (Google Sans Flex: GRAD, ROND,
+opsz, slnt, wdth, wght; Bricolage Grotesque: opsz; Google Sans Code: MONO, which `MonoText` sets to its
+fixed-pitch cut); the setup skill has the details. Each role is a
+`--ui-font-*` token you can override.
+
+**Dark mode** follows a `dark` class on `<html>`, which your app sets. To turn
+off the expressive details inside everyday components (such as the dropdown
+caret's shape), put `data-ds-expression="practical"` on `<html>`.
+
+```tsx
+import { Button, ButtonVariant } from "@dooph-software/design-system";
+
+<Button variant={ButtonVariant.primary}>Save</Button>;
+```
+
+The setup skill below covers the font axes, server components and how to check
+your app.
+
+## Agent skills
+
+```sh
+npx @dooph-software/design-system init-skills
+```
+
+This copies the package's skills into your project's `.agents/skills`,
+`.claude/skills` and `.agent/skills`, asking about each directory first.
+`--yes` installs into all three without asking. It changes no other files.
+
+- [dooph-design-system-setup](skills/dooph-design-system-setup/SKILL.md): install,
+  stylesheets, fonts, the Tailwind preset, server components.
+- [dooph-design-system-usage](skills/dooph-design-system-usage/SKILL.md): building
+  UI with the components, with a full component reference.
+- [dooph-design-system-theming](skills/dooph-design-system-theming/SKILL.md):
+  overriding tokens, dark mode, the expression preset, with the full token list.
+- [dooph-design-system-v3-migration](skills/dooph-design-system-v3-migration/SKILL.md)
+  and [dooph-design-system-v5-migration](skills/dooph-design-system-v5-migration/SKILL.md):
+  upgrading across those major versions.
+
+Release notes are in the [CHANGELOG](CHANGELOG.md).
+
+## Licence
+
+MIT. See [LICENSE.txt](LICENSE.txt). Third-party icon sources and bundled
+dependencies are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+The dooph. name and logo are not covered by the MIT licence and remain
+trademarks of Dooph LLC.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Agents working in this repository
+should read [AGENTS.md](AGENTS.md) first.

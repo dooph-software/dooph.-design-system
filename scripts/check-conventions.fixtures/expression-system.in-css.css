@@ -1,0 +1,9 @@
+/* Fixture: the expression system, in CSS. One violation: a rule outside the
+ * tokens.css default and the practical preset sets an expression token.
+ * Not reported: the read inside a .ds-expr-* rule. */
+.fixture-island {
+  --ui-fixture-expr: 0.5;
+}
+.ds-expr-fixture-2 {
+  opacity: var(--ui-fixture-expr);
+}

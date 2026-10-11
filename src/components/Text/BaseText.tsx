@@ -51,15 +51,18 @@ type BaseTextRenderProps = BaseTextOwnProps & { as?: ElementType } & Omit<
  * item, an input) renders that root through a Text component with `as`; a
  * `text-style-*` class never appears outside src/components/Text/.
  *
- * Three tiers decide the final typography, in this order:
+ * Two sources decide the final typography, in this order:
  *
  *   1. props        — written as inline style, so they beat everything
- *   2. className    — the consumer's own utilities (leading-*, text-2xl, …)
- *   3. role class   — `.text-style-*`, in the `components` layer so utilities win
+ *   2. role class   — `.text-style-*`, the role's defaults, in the
+ *                     `components` layer
  *
- * That ordering is the whole point of the design: a prop is explicit and must
- * never lose to cascade order, while a role default is ambient and must stay
- * overridable. `style` still outranks props, as the last-resort escape hatch.
+ * Props are the one supported way to change typography, in DS code and in
+ * consuming apps alike: a prop is explicit and never loses to cascade order,
+ * and the consts below keep values on the token scale. `className` carries
+ * colour and layout, never typography (no `text-<size>`, `font-*`,
+ * `leading-*` or `tracking-*` utilities). `style` still outranks props, as the
+ * last-resort escape hatch.
  *
  * Values come from the dot-accessible constants (`Fonts`, `FontSizes`,
  * `FontWeights`, `Tracking`), which resolve to `var(--ui-*)` so a consuming

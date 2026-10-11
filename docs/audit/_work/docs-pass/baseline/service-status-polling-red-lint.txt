@@ -1,0 +1,12 @@
+
+> @dooph-software/design-system@5.3.0 lint
+> tsc --noEmit && node scripts/check-conventions.mjs
+
+FAIL hex colour literals in components: src/components/ServiceStatus/ServiceStatus.tsx:28 #f59e0b
+FAIL JS timers and animation loops outside their allowlist: src/components/ServiceStatus/ServiceStatus.tsx:89 setInterval( — not on the timer allowlist
+
+why (hex colour literals in components): A hex literal never follows the theme, so it breaks in dark mode and under consumer token overrides.
+why (JS timers and animation loops outside their allowlist): A JS timer that mirrors a CSS duration desyncs the moment either is retuned; motion timing lives in CSS on the motion scale, so each timer or rAF loop is listed with its reason.
+
+conventions: 2 of 25 checks failed
+lint exit: 1

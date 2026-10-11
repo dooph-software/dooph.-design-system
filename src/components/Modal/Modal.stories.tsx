@@ -22,20 +22,25 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/* Demo widths for a typical and a large dialog. ModalContent has no width of
+ * its own and no token sizes one: the consumer sizes it, as these stories do. */
+const DEMO_WIDTH = { width: 400 } as const;
+const DEMO_WIDTH_LARGE = { width: 560 } as const;
+
 export const Default: Story = {
   render: () => (
     <Modal>
       <ModalTrigger asChild>
         <Button variant={ButtonVariant.primary}>Open modal</Button>
       </ModalTrigger>
-      <ModalContent className="w-[400px]">
-        <div className="flex flex-col gap-4 p-6">
+      <ModalContent style={DEMO_WIDTH}>
+        <div className="flex flex-col gap-lg p-xxl">
           <ModalTitle>Modal title</ModalTitle>
           <ModalDescription>
             This is the raw modal primitive. No internal padding or flex is added by
             the component — you compose it directly.
           </ModalDescription>
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-sm">
             <ModalClose asChild>
               <Button variant={ButtonVariant.secondary}>Cancel</Button>
             </ModalClose>
@@ -55,18 +60,18 @@ export const LargerContent: Story = {
       <ModalTrigger asChild>
         <Button variant={ButtonVariant.secondary}>Open large modal</Button>
       </ModalTrigger>
-      <ModalContent className="w-[560px]">
-        <div className="flex flex-col gap-4 p-6">
+      <ModalContent style={DEMO_WIDTH_LARGE}>
+        <div className="flex flex-col gap-lg p-xxl">
           <ModalTitle>Larger modal</ModalTitle>
           <ModalDescription>
             The width and padding are entirely up to the consumer. The primitive
             only provides the surface, border, backdrop, and animation.
           </ModalDescription>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-sm">
             {['First item', 'Second item', 'Third item'].map((item) => (
               <div
                 key={item}
-                className="flex items-center justify-between rounded-normal border border-border-primary px-4 py-3"
+                className="flex items-center justify-between rounded-normal border border-border-primary px-lg py-md"
               >
                 <ButtonText className="text-text">{item}</ButtonText>
                 <Button variant={ButtonVariant.ghost} size={ButtonSize.sm}>Select</Button>
@@ -88,13 +93,13 @@ export const Controlled: Story = {
   render: () => {
     const [open, setOpen] = useState(false);
     return (
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-lg">
         <Button variant={ButtonVariant.primary} onClick={() => setOpen(true)}>
           Open controlled
         </Button>
         <Modal open={open} onOpenChange={setOpen}>
-          <ModalContent className="w-[400px]">
-            <div className="flex flex-col gap-4 p-6">
+          <ModalContent style={DEMO_WIDTH}>
+            <div className="flex flex-col gap-lg p-xxl">
               <ModalTitle>Controlled modal</ModalTitle>
               <ModalDescription>
                 Open/close state is managed externally via the{' '}
@@ -119,8 +124,8 @@ export const NoOverlay: Story = {
       <ModalTrigger asChild>
         <Button variant={ButtonVariant.secondary}>Open (no backdrop)</Button>
       </ModalTrigger>
-      <ModalContent withOverlay={false} className="w-[400px]">
-        <div className="flex flex-col gap-4 p-6">
+      <ModalContent withOverlay={false} style={DEMO_WIDTH}>
+        <div className="flex flex-col gap-lg p-xxl">
           <ModalTitle>No backdrop</ModalTitle>
           <ModalDescription>
             Rendered without the fullscreen overlay. Useful for in-page panels or

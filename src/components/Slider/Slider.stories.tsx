@@ -35,9 +35,9 @@ const VALUES = [0, 25, 50, 75, 100];
 
 export const Continuous: Story = {
   render: () => (
-    <div className="flex w-64 flex-col gap-4">
+    <div className="flex w-64 flex-col gap-lg">
       {VALUES.map((v) => (
-        <div key={v} className="flex items-center gap-3">
+        <div key={v} className="flex items-center gap-md">
           <LabelText className="w-8 text-text-tertiary">{v}</LabelText>
           <SliderContinuous defaultValue={[v]} />
         </div>
@@ -50,9 +50,9 @@ const STEP_VALUES = [0, 1, 2, 3, 4];
 
 export const Stepped: Story = {
   render: () => (
-    <div className="flex w-64 flex-col gap-4">
+    <div className="flex w-64 flex-col gap-lg">
       {STEP_VALUES.map((v) => (
-        <div key={v} className="flex items-center gap-3">
+        <div key={v} className="flex items-center gap-md">
           <LabelText className="w-8 text-text-tertiary">{v}</LabelText>
           <SliderStepped min={0} max={4} step={1} defaultValue={[v]} />
         </div>
@@ -77,13 +77,13 @@ export const Variants: Story = {
     },
   },
   render: () => (
-    <div className="flex w-64 flex-col gap-6">
+    <div className="flex w-64 flex-col gap-xxl">
       {/* The two BUILT-IN palettes. `custom` is deliberately absent: it has no
           palette of its own, so it cannot be mapped over without a colour —
           `Object.values(SliderVariant)` here is a compile error, which is the
           discriminated union doing its job. */}
       {([SliderVariant.primary, SliderVariant.prominent] as const).map((v) => (
-        <div key={v} className="flex flex-col gap-2">
+        <div key={v} className="flex flex-col gap-sm">
           <LabelText className="text-text-tertiary">{v}</LabelText>
           <SliderContinuous variant={v} defaultValue={[60]} />
           <SliderStepped
@@ -112,42 +112,42 @@ export const CustomVariant: Story = {
           'lands in. `stepColor` completes the palette; left off, the step dot ' +
           'falls back to primary’s so the slider still reads correctly. ' +
           '**Watch the dots on the filled side of the handle** — the first two ' +
-          'rows are the same orange track and differ only in `stepColor`. The ' +
-          'magenta is deliberately garish: the point is to make the knob ' +
+          'rows are the same cyan track and differ only in `stepColor`. The ' +
+          'violet is deliberately strong: the point is to make the knob ' +
           'obvious, not to suggest a palette.',
       },
     },
   },
   render: () => (
-    <div className="flex w-64 flex-col gap-6">
-      <div className="flex flex-col gap-2">
+    <div className="flex w-64 flex-col gap-xxl">
+      <div className="flex flex-col gap-sm">
         <LabelText className="text-text-tertiary">
           color only — dots fall back to primary
         </LabelText>
         <SliderStepped
           variant={SliderVariant.custom}
-          color="#e48844"
+          color="var(--ui-prominent-color-ter)"
           min={0}
           max={6}
           step={1}
           defaultValue={[5]}
         />
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-sm">
         <LabelText className="text-text-tertiary">
-          same track, stepColor=&quot;#ff00b8&quot;
+          same track, stepColor=&quot;var(--ui-prominent-color)&quot;
         </LabelText>
         <SliderStepped
           variant={SliderVariant.custom}
-          color="#e48844"
-          stepColor="#ff00b8"
+          color="var(--ui-prominent-color-ter)"
+          stepColor="var(--ui-prominent-color)"
           min={0}
           max={6}
           step={1}
           defaultValue={[5]}
         />
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-sm">
         <LabelText className="text-text-tertiary">
           stepColor takes token names too
         </LabelText>
@@ -179,7 +179,7 @@ export const VariantWithColorOverride: Story = {
     },
   },
   render: () => (
-    <div className="flex w-64 flex-col gap-6">
+    <div className="flex w-64 flex-col gap-xxl">
       <SliderStepped
         variant={SliderVariant.prominent}
         min={0}
@@ -189,7 +189,7 @@ export const VariantWithColorOverride: Story = {
       />
       <SliderStepped
         variant={SliderVariant.prominent}
-        color="#e48844"
+        color="var(--ui-prominent-color-ter)"
         min={0}
         max={4}
         step={1}
@@ -210,20 +210,20 @@ export const Colors: Story = {
     },
   },
   render: () => (
-    <div className="flex w-64 flex-col gap-4">
+    <div className="flex w-64 flex-col gap-lg">
       {(['primary', 'prominent', 'text', 'danger-primary'] as const).map((c) => (
-        <div key={c} className="flex items-center gap-3">
+        <div key={c} className="flex items-center gap-md">
           <LabelText className="w-16 text-text-tertiary">{c}</LabelText>
           <SliderContinuous color={c} defaultValue={[60]} />
         </div>
       ))}
-      <div className="flex items-center gap-3">
-        <LabelText className="w-16 text-text-tertiary">#7c5cff</LabelText>
-        <SliderContinuous color="#7c5cff" defaultValue={[60]} />
+      <div className="flex items-center gap-md">
+        <LabelText className="w-16 text-text-tertiary">var()</LabelText>
+        <SliderContinuous color="var(--ui-prominent-color)" defaultValue={[60]} />
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-md">
         <LabelText className="w-16 text-text-tertiary">stepped</LabelText>
-        <SliderStepped color="#22a06b" min={0} max={4} step={1} defaultValue={[2]} />
+        <SliderStepped color="var(--ui-prominent-color-alt)" min={0} max={4} step={1} defaultValue={[2]} />
       </div>
     </div>
   ),
@@ -231,7 +231,7 @@ export const Colors: Story = {
 
 export const Labeled: Story = {
   render: () => (
-    <div className="flex w-64 flex-col gap-6">
+    <div className="flex w-64 flex-col gap-xxl">
       <SliderLabeled
         defaultValue={[50]}
         labels={{ start: 'Faster', end: 'Smarter' }}
@@ -253,7 +253,7 @@ export const Controlled: Story = {
   render: () => {
     const [value, setValue] = useState([50]);
     return (
-      <div className="flex w-64 items-center gap-3">
+      <div className="flex w-64 items-center gap-md">
         <SliderContinuous value={value} onValueChange={setValue} />
         <LabelText className="w-8 text-text-tertiary">{value[0]}</LabelText>
       </div>
@@ -274,7 +274,7 @@ export const ControlledStepped: Story = {
   render: () => {
     const [value, setValue] = useState([2]);
     return (
-      <div className="flex w-64 items-center gap-3">
+      <div className="flex w-64 items-center gap-md">
         <SliderStepped
           min={0}
           max={4}
@@ -351,8 +351,8 @@ export const HighlightedStep: Story = {
         <LabelText className="text-text-tertiary">custom</LabelText>
         <SliderStepped
           variant={SliderVariant.custom}
-          color="#e48844"
-          stepColor="#ff00b8"
+          color="var(--ui-prominent-color-ter)"
+          stepColor="var(--ui-prominent-color)"
           min={0}
           max={6}
           step={1}
@@ -361,7 +361,7 @@ export const HighlightedStep: Story = {
         />
         <SliderStepped
           variant={SliderVariant.custom}
-          color="#e48844"
+          color="var(--ui-prominent-color-ter)"
           min={0}
           max={6}
           step={1}
@@ -437,7 +437,7 @@ export const HighlightedStepPreviousValue: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <div className="flex w-64 flex-col gap-4">
+    <div className="flex w-64 flex-col gap-lg">
       <SliderContinuous defaultValue={[50]} disabled />
       <SliderStepped min={0} max={4} step={1} defaultValue={[2]} disabled />
     </div>
@@ -455,7 +455,7 @@ export const KeyboardInteraction: Story = {
     },
   },
   render: () => (
-    <div className="flex w-64 flex-col gap-4">
+    <div className="flex w-64 flex-col gap-lg">
       <SliderContinuous defaultValue={[50]} />
       <SliderStepped min={0} max={4} step={1} defaultValue={[2]} />
     </div>

@@ -1,0 +1,10 @@
+
+> @dooph-software/design-system@5.3.0 lint
+> tsc --noEmit && node scripts/check-conventions.mjs
+
+FAIL generated theme out of date: src/utils/twMergeTheme.ts:1 out of date; run node scripts/sync-theme.mjs
+
+why (generated theme out of date): index.css's @theme block, theme.css and twMergeTheme.ts are generated from tokens.css by sync-theme.mjs; stale output ships utilities and cn() merges that disagree with the tokens.
+
+conventions: 1 of 25 checks failed
+lint exit: 1

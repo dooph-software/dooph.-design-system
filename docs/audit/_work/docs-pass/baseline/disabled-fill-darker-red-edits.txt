@@ -1,0 +1,80 @@
+#30 Edit C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/styles/tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/styles/tokens.css",
+  "old_string": "  --ui-color-input-border-hover: #b4b4b4;\n  --ui-color-input-border-danger-focus: var(--ui-color-danger-primary);",
+  "new_string": "  --ui-color-input-fill-disabled: #ececec;\n  --ui-color-input-border-hover: #b4b4b4;\n  --ui-color-input-border-danger-focus: var(--ui-color-danger-primary);"
+}
+
+#31 Edit C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/styles/tokens.css
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/styles/tokens.css",
+  "old_string": "  --ui-color-input-border-hover: #3a3b3f;",
+  "new_string": "  --ui-color-input-fill-disabled: var(--ui-color-secondary-disabled);\n  --ui-color-input-border-hover: #3a3b3f;"
+}
+
+#32 Edit C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/styles/theme.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/styles/theme.css",
+  "old_string": "  --color-input-border-hover: var(--ui-color-input-border-hover);",
+  "new_string": "  --color-input-fill-disabled: var(--ui-color-input-fill-disabled);\n  --color-input-border-hover: var(--ui-color-input-border-hover);"
+}
+
+#33 Edit C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/styles/index.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/styles/index.css",
+  "old_string": "  --color-input-border-hover: var(--ui-color-input-border-hover);",
+  "new_string": "  --color-input-fill-disabled: var(--ui-color-input-fill-disabled);\n  --color-input-border-hover: var(--ui-color-input-border-hover);"
+}
+
+#34 Edit C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/Input/Input.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/Input/Input.tsx",
+  "old_string": "\"disabled:bg-secondary-disabled disabled:border-secondary-border-disabled ds-disabled-state\",",
+  "new_string": "\"disabled:bg-input-fill-disabled disabled:border-secondary-border-disabled ds-disabled-state\","
+}
+
+#35 Edit C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/Input/Input.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/Input/Input.tsx",
+  "old_string": "\"cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-secondary-disabled\",",
+  "new_string": "\"cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-input-fill-disabled\","
+}
+
+#38 Edit C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/DropdownTrigger/DropdownTrigger.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/DropdownTrigger/DropdownTrigger.tsx",
+  "old_string": "\"cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-secondary-disabled data-[disabled]:border-secondary-border-disabled\",",
+  "new_string": "\"cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-input-fill-disabled data-[disabled]:border-secondary-border-disabled\","
+}
+
+#42 Edit C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/SearchBox/SearchBox.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/SearchBox/SearchBox.tsx",
+  "old_string": "'ds-radix-data-disabled data-[disabled]:bg-secondary-disabled data-[disabled]:border-secondary-border-disabled',",
+  "new_string": "'ds-radix-data-disabled data-[disabled]:bg-input-fill-disabled data-[disabled]:border-secondary-border-disabled',"
+}
+
+#43 Edit C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/VerificationCode/CodeDigitInput.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/VerificationCode/CodeDigitInput.tsx",
+  "old_string": "\"border-secondary-border-disabled bg-secondary-disabled ds-radix-data-disabled\",",
+  "new_string": "\"border-secondary-border-disabled bg-input-fill-disabled ds-radix-data-disabled\","
+}
+
+#44 Edit C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/DatePicker/DatePickerSplitTrigger.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-red-20261008204114/src/components/DatePicker/DatePickerSplitTrigger.tsx",
+  "old_string": "\"bg-secondary-disabled border-secondary-border-disabled\",",
+  "new_string": "\"bg-input-fill-disabled border-secondary-border-disabled\","
+}
+

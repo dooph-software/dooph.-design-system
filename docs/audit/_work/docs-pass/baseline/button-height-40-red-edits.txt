@@ -1,0 +1,80 @@
+#16 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-red-20261008204601\src\styles\tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-red-20261008204601\\src\\styles\\tokens.css",
+  "old_string": "  --ui-height-button: 38px;",
+  "new_string": "  --ui-height-button: 40px;"
+}
+
+#17 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-red-20261008204601\src\components\Button\Button.stories.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-red-20261008204601\\src\\components\\Button\\Button.stories.tsx",
+  "old_string": "icon (38px)",
+  "new_string": "icon (40px)"
+}
+
+#18 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-red-20261008204601\src\components\Tabs\constants.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-red-20261008204601\\src\\components\\Tabs\\constants.ts",
+  "old_string": "  /** 38px — Figma `buttonSizes/buttonHeight`, `lg` (16px) horizontal padding. */",
+  "new_string": "  /** 40px — Figma `buttonSizes/buttonHeight`, `lg` (16px) horizontal padding. */"
+}
+
+#19 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-red-20261008204601\src\components\Tabs\constants.ts
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-red-20261008204601\\src\\components\\Tabs\\constants.ts",
+  "old_string": "  /** 38×38 icon-only tab. */",
+  "new_string": "  /** 40×40 icon-only tab. */"
+}
+
+#20 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-red-20261008204601\src\components\Toggle\toggleOption.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-red-20261008204601\\src\\components\\Toggle\\toggleOption.ts",
+  "old_string": "        /** 38px — Figma Standard. */",
+  "new_string": "        /** 40px — Figma Standard. */"
+}
+
+#21 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-red-20261008204601\src\components\Toggle\toggleOption.ts
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-red-20261008204601\\src\\components\\Toggle\\toggleOption.ts",
+  "old_string": "        /** 38×38 icon-only. */",
+  "new_string": "        /** 40×40 icon-only. */"
+}
+
+#22 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-red-20261008204601\src\components\Toggle\constants.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-red-20261008204601\\src\\components\\Toggle\\constants.ts",
+  "old_string": " * default 38 · sm 34 · icon 38×38 · iconSm = Figma \"Icon Small\", the 28×28",
+  "new_string": " * default 40 · sm 34 · icon 40×40 · iconSm = Figma \"Icon Small\", the 28×28"
+}
+
+#23 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-red-20261008204601\src\components\SegmentedTabSelect\constants.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-red-20261008204601\\src\\components\\SegmentedTabSelect\\constants.ts",
+  "old_string": " * container      — bordered shell, 28px micro text items (38px overall)\n * standard       — no shell, 38px text items",
+  "new_string": " * container      — bordered shell, 28px micro text items (40px overall)\n * standard       — no shell, 40px text items"
+}
+
+#24 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-red-20261008204601\src\components\SegmentedTabSelect\constants.ts
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-red-20261008204601\\src\\components\\SegmentedTabSelect\\constants.ts",
+  "old_string": " * icon           — no shell, 38×38 icon items",
+  "new_string": " * icon           — no shell, 40×40 icon items"
+}
+
+#25 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-red-20261008204601\src\components\SegmentedTabSelect\SegmentedTabSelect.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-red-20261008204601\\src\\components\\SegmentedTabSelect\\SegmentedTabSelect.tsx",
+  "old_string": "              // 28px items + xxs inset + 1px border = 38px; outer radius is",
+  "new_string": "              // 28px items + xxs inset + 1px border inside 40px; outer radius is"
+}
+

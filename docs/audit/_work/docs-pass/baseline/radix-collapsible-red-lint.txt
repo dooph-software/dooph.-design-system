@@ -1,0 +1,14 @@
+
+> @dooph-software/design-system@5.3.0 lint
+> tsc --noEmit && node scripts/check-conventions.mjs
+
+FAIL raw var(--ui-*) in className brackets: src/components/Collapsible/Collapsible.tsx:39 [var(--ui-
+FAIL raw var(--ui-*) in className brackets: src/components/Collapsible/Collapsible.tsx:39 [var(--ui-
+FAIL text-style classes outside Text components: src/components/Collapsible/Collapsible.stories.tsx:73 text-style-label
+FAIL text-style classes outside Text components: src/components/Collapsible/Collapsible.tsx:28 text-style-label
+
+why (raw var(--ui-*) in className brackets): A token belongs behind its theme utility (bg-primary, p-md); an arbitrary var() class hides it from tailwind-merge, so cn() cannot resolve conflicts with it.
+why (text-style classes outside Text components): Text is set by a Text component (BodyText, ButtonText, … or BaseText, with `as` for a root); a bare class skips the role's element and font wiring and drifts when roles change.
+
+conventions: 2 of 25 checks failed
+lint exit: 1

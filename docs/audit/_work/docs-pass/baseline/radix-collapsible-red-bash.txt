@@ -1,0 +1,79 @@
+#1 Bash: find /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340 -type f -name "package.json" | head -5
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/node_modules/@adobe/css-tools/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/node_modules/@babel/code-frame/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/node_modules/@babel/compat-data/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/node_modules/@babel/core/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/node_modules/@babel/generator/package.json
+#3 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340 | grep -v node_modules
+    | -rw-r--r-- 1 stick 197609   3503 Oct  8 20:43 package.json
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:43 scripts
+    | -rw-r--r-- 1 stick 197609    803 Oct  8 20:43 skills-lock.json
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:43 src
+    | -rw-r--r-- 1 stick 197609    487 Oct  8 20:43 tsconfig.json
+    | -rw-r--r-- 1 stick 197609   3749 Oct  8 20:43 tsup.config.ts
+#4 Bash: find /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src -type f -name "*.tsx" -o -name "*.ts" | head -30
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/AnimatedText/RollingDigitsText.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/AnimatedText/ShimmerText.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/AnimatedText/UnderlineLinkText.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/AnimatedText/useChangeSwap.ts
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/Avatar/Avatar.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/Avatar/Avatar.tsx
+#5 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/ | head -40
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:43 SplitButton
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:43 Sticker
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:43 Table
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:43 Tabs
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:43 Text
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:43 TextLink
+#6 Bash: grep -r "@radix-ui" /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components --include="*.tsx" -l | head -20
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/Tabs/Tabs.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/TextLink/TextLink.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/Toast/Toast.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/Toggle/FancyToggleSwitch.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/Toggle/Toggle.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/Tooltip/Tooltip.tsx
+#7 Bash: find /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components -type d -name "*ollapsible*" -o -name "*Collapsible*"
+    | (Bash completed with no output)
+#9 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/Modal/
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:43 .
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:43 ..
+    | -rw-r--r-- 1 stick 197609 5538 Oct  8 20:43 Modal.stories.tsx
+    | -rw-r--r-- 1 stick 197609 3815 Oct  8 20:43 Modal.tsx
+    | -rw-r--r-- 1 stick 197609 3285 Oct  8 20:43 dialogShell.tsx
+    | -rw-r--r-- 1 stick 197609   25 Oct  8 20:43 index.ts
+#14 Bash: find /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src -type f \( -name "*.css" -o -name "*theme*" -o -name "*token*" \) | grep -v node_modules
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/styles/dooph-component-tokens.css
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/styles/index.css
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/styles/theme.css
+    | /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/styles/tokens.css
+#17 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/.storybook/
+    | total 20
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:43 .
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:43 ..
+    | -rw-r--r-- 1 stick 197609 1159 Oct  8 20:43 main.ts
+    | -rw-r--r-- 1 stick 197609 1318 Oct  8 20:43 preview-head.html
+    | -rw-r--r-- 1 stick 197609 1581 Oct  8 20:43 preview.ts
+#29 Bash: find /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src -name "tailwind.config.*" -o -name "tailwind.*"
+    | (Bash completed with no output)
+#30 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/ | grep tailwind
+    | (Bash completed with no output)
+#36 Bash: ls "C:/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/"
+    | TextLink
+    | Toast
+    | Toggle
+    | Tooltip
+    | VerificationCode
+    | WavyDivider
+#46 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340" && npm install @radix-ui/react-collapsible
+    | npm warn allow-scripts 3 packages have install scripts not yet covered by allowScripts:
+    | npm warn allow-scripts   @parcel/watcher@2.5.1 (install: node-gyp rebuild)
+    | npm warn allow-scripts   esbuild@0.27.7 (postinstall: node install.js)
+    | npm warn allow-scripts   esbuild@0.25.12 (postinstall: node install.js)
+    | npm warn allow-scripts
+    | npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.
+#47 Bash: mkdir -p "C:/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340/src/components/Collapsible"
+    | (Bash completed with no output)
+#54 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340" && npx tsc --noEmit --pretty 2>&1 | head -30
+    | (Bash completed with no output)
+#57 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-radix-collapsible-red-20261008204340" && npx tsc --noEmit --pretty 2>&1 | head -30
+    | (Bash completed with no output)

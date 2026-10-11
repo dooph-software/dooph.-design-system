@@ -1,0 +1,24 @@
+#28 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/SearchBox/SearchBox.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/SearchBox/SearchBox.tsx",
+  "old_string": "        <SearchIcon size={IconSize.md} className=\"shrink-0 text-text-tertiary\" />",
+  "new_string": "        <SearchIcon\n          size={IconSize.md}\n          className=\"shrink-0 text-text-tertiary ds-motion-state group-hover/searchbox:group-[&:not([data-disabled])]/searchbox:-rotate-[8deg]\"\n        />"
+}
+
+#29 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/SearchBox/SearchBox.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/SearchBox/SearchBox.tsx",
+  "old_string": "          'ds-motion-state',",
+  "new_string": "          'group/searchbox ds-motion-state',"
+}
+
+#35 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/SearchBox/SearchBox.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-red-20261008203944/src/components/SearchBox/SearchBox.tsx",
+  "old_string": "          className=\"shrink-0 text-text-tertiary ds-motion-state group-hover/searchbox:group-[&:not([data-disabled])]/searchbox:-rotate-[8deg]\"",
+  "new_string": "          className=\"shrink-0 text-text-tertiary ds-motion-state group-hover/searchbox:-rotate-[8deg] group-data-[disabled]/searchbox:!rotate-0\""
+}
+

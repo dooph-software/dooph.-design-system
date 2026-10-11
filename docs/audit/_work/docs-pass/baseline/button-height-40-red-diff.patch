@@ -1,0 +1,114 @@
+diff --git a/src/components/Button/Button.stories.tsx b/src/components/Button/Button.stories.tsx
+index d1d9705..d7e826d 100644
+--- a/src/components/Button/Button.stories.tsx
++++ b/src/components/Button/Button.stories.tsx
+@@ -141,7 +141,7 @@ export const IconSizeComparison: Story = {
+               <Button variant={variant} size={ButtonSize.icon}>
+                 <SidebarLeftIcon size={IconSize.rg} />
+               </Button>
+-              <LabelText className="text-text-secondary">icon (38px)</LabelText>
++              <LabelText className="text-text-secondary">icon (40px)</LabelText>
+             </div>
+             <div className="flex items-center gap-3">
+               <Button variant={variant} size={ButtonSize.iconSm}>
+diff --git a/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx b/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
+index 7f3b65f..e248d76 100644
+--- a/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
++++ b/src/components/SegmentedTabSelect/SegmentedTabSelect.tsx
+@@ -64,7 +64,7 @@ const SegmentedTabSelect = forwardRef<
+           className={cn(
+             'gap-xxs',
+             hasShell &&
+-              // 28px items + xxs inset + 1px border = 38px; outer radius is
++              // 28px items + xxs inset + 1px border inside 40px; outer radius is
+               // radius-mini + xxs so it stays concentric with the items.
+               'h-button p-xxs border border-solid border-border-primary bg-surface-primary ds-radius-mini-outset-xxs',
+             className
+diff --git a/src/components/SegmentedTabSelect/constants.ts b/src/components/SegmentedTabSelect/constants.ts
+index b3fd639..00965bc 100644
+--- a/src/components/SegmentedTabSelect/constants.ts
++++ b/src/components/SegmentedTabSelect/constants.ts
+@@ -18,10 +18,10 @@ export type SegmentedVariant =
+   (typeof SegmentedVariant)[keyof typeof SegmentedVariant];
+ 
+ /**
+- * container      — bordered shell, 28px micro text items (38px overall)
+- * standard       — no shell, 38px text items
++ * container      — bordered shell, 28px micro text items (40px overall)
++ * standard       — no shell, 40px text items
+  * containerIcon  — bordered shell, 28×28 micro icon items
+- * icon           — no shell, 38×38 icon items
++ * icon           — no shell, 40×40 icon items
+  */
+ export const SegmentedSize = {
+   container: 'container',
+diff --git a/src/components/Tabs/constants.ts b/src/components/Tabs/constants.ts
+index 866ec31..df97b48 100644
+--- a/src/components/Tabs/constants.ts
++++ b/src/components/Tabs/constants.ts
+@@ -6,7 +6,7 @@
+  * Usage: <TabsTrigger size={TabSize.icon} />
+  */
+ export const TabSize = {
+-  /** 38px — Figma `buttonSizes/buttonHeight`, `lg` (16px) horizontal padding. */
++  /** 40px — Figma `buttonSizes/buttonHeight`, `lg` (16px) horizontal padding. */
+   standard: "standard",
+   /** 34px — Figma `buttonSizes/smallButtonHeight`, `md` (12px) padding. */
+   sm: "sm",
+@@ -17,7 +17,7 @@ export const TabSize = {
+    * nested in a control whose own height is authoritative.
+    */
+   fill: "fill",
+-  /** 38×38 icon-only tab. */
++  /** 40×40 icon-only tab. */
+   icon: "icon",
+   /** 34×34 icon-only tab, pairing with the small variants. */
+   iconSm: "icon-sm",
+diff --git a/src/components/Toggle/constants.ts b/src/components/Toggle/constants.ts
+index 4ae20eb..f47b2f9 100644
+--- a/src/components/Toggle/constants.ts
++++ b/src/components/Toggle/constants.ts
+@@ -22,7 +22,7 @@ export type ToggleVariant = (typeof ToggleVariant)[keyof typeof ToggleVariant];
+ 
+ /**
+  * Named after the Figma Toggle Switch sizes.
+- * default 38 · sm 34 · icon 38×38 · iconSm = Figma "Icon Small", the 28×28
++ * default 40 · sm 34 · icon 40×40 · iconSm = Figma "Icon Small", the 28×28
+  * MICRO icon option (not the 34×34 one).
+  */
+ export const ToggleSize = {
+diff --git a/src/components/Toggle/toggleOption.ts b/src/components/Toggle/toggleOption.ts
+index 503a534..a685149 100644
+--- a/src/components/Toggle/toggleOption.ts
++++ b/src/components/Toggle/toggleOption.ts
+@@ -51,7 +51,7 @@ export const toggleOptionVariants = cva(
+         unselected: "enabled:hover:bg-ghost-hover enabled:active:bg-ghost-active",
+       },
+       size: {
+-        /** 38px — Figma Standard. */
++        /** 40px — Figma Standard. */
+         standard: "h-button rounded-tight px-rg",
+         /** 34px — Figma Small. */
+         sm: "h-button-sm rounded-tight px-rg",
+@@ -59,7 +59,7 @@ export const toggleOptionVariants = cva(
+         micro: "h-button-micro rounded-mini px-rg",
+         /** Follows the parent's height (nested segmented rows). */
+         fill: "h-full rounded-tight px-rg",
+-        /** 38×38 icon-only. */
++        /** 40×40 icon-only. */
+         icon: "size-button p-0 rounded-tight",
+         /** 34×34 icon-only. */
+         "icon-sm": "size-button-sm p-0 rounded-tight",
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index d635c8f..c69ade9 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -481,7 +481,7 @@
+ 
+   /* ── Sizing ──────────────────────────────────────────────────────────── */
+ 
+-  --ui-height-button: 38px;
++  --ui-height-button: 40px;
+   --ui-height-button-sm: 34px;
+   --ui-height-button-medium: 46px;
+   --ui-height-button-big: 54px;

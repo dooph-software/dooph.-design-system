@@ -1,0 +1,10 @@
+/* Support file: listed in allowlists.json (stylesheetHex) and still true. The
+ * #000 stops are mask-image stops: a mask reads only alpha. Nothing here may be
+ * reported. */
+.ds-fixture-mask {
+  mask-image: linear-gradient(
+    transparent,
+    #000 var(--ui-fixture-fade),
+    transparent
+  );
+}

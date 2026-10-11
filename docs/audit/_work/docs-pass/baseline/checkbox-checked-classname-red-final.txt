@@ -1,0 +1,22 @@
+RUN OK
+subtype: success  is_error: false  turns: 4  cost_usd: 0.0681905  duration_ms: 15276
+permission_denials (0):
+
+--- final text ---
+The file header has a constraint: "Style states via Radix `data-[state]` / `data-[disabled]` only — no JS class toggling for checked/disabled."
+
+A `checkedClassName` prop that gets applied "when the box is checked" would require JS class toggling based on checked state, which directly contradicts this constraint.
+
+**This task contradicts the file contract.** The constraint at line 14–15 explicitly prohibits JS class toggling for checked/disabled states:
+
+> Style states via Radix `data-[state]` / `data-[disabled]` only — no JS class toggling for checked/disabled.
+
+A `checkedClassName` prop that conditionally applies a class when checked is exactly the JS class toggling this constraint forbids.
+
+**Consumers can already achieve checked-only styling** without a new prop by using the Radix data attribute in their own class:
+
+```tsx
+<Checkbox className="data-[state=checked]:bg-red-500" />
+```
+
+This works because Radix sets `data-state="checked"` on the element, and Tailwind's arbitrary data-attribute selector targets it — no JS toggling needed, fully aligned with the constraint.

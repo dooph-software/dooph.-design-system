@@ -1,0 +1,15 @@
+RUN OK
+subtype: success  is_error: false  turns: 14  cost_usd: 0.38444770000000006  duration_ms: 99542
+permission_denials (0):
+
+--- final text ---
+TypeScript compiles cleanly. Here's what changed:
+
+**`src/components/TextLink/TextLink.tsx`** — added one line of Tailwind classes:
+
+- `underline` — always-visible underline (no hover gate)
+- `decoration-wavy` — wavy style (`text-decoration-style: wavy`)
+- `decoration-current` — colour matches `currentColor`, so the underline tracks the text colour through rest → hover → active states
+- `underline-offset-[0.2em]` — small offset so the wave doesn't clip descenders
+
+The underline inherits the ghost-fg colour at rest and switches to ghost-fg-active on hover/active, matching the text automatically.

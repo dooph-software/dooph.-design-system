@@ -1,0 +1,88 @@
+#1 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530 -type f -name "package.json" | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules/@next/env/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules/@next/swc-win32-x64-msvc/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules/@radix-ui/number/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules/@radix-ui/primitive/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules/@radix-ui/react-arrow/package.json
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules/@radix-ui/react-checkbox/package.json
+#3 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530 -type f \( -name "*.tsx" -o -name "*.ts" -o -name "*.jsx" -o -name "*.js" \) -not -path "*/node_modules/*" -not -path "*/.next/*" | head -50
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/dashboard/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/layout.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/components/theme-toggle.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/lib/plans.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/next.config.ts
+#4 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/ | grep -v node_modules
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 lib
+    | -rw-r--r-- 1 stick 197609   265 Oct  8 20:59 next.config.ts
+    | -rw-r--r-- 1 stick 197609 99068 Oct  8 21:05 package-lock.json
+    | -rw-r--r-- 1 stick 197609   635 Oct  8 20:59 package.json
+    | -rw-r--r-- 1 stick 197609   666 Oct  8 20:59 tsconfig.json
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 vendor
+#12 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530 -name "globals.css" -o -name "tailwind.config.*" | grep -v node_modules
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/globals.css
+#14 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules/@dooph-software/design-system/ 2>/dev/null | head -50
+    | -rw-r--r-- 1 stick 197609  1066 Oct  8 21:05 LICENSE.txt
+    | -rw-r--r-- 1 stick 197609   114 Oct  8 21:05 README.md
+    | -rw-r--r-- 1 stick 197609 16566 Oct  8 21:05 THIRD_PARTY_NOTICES.md
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:05 bin
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 21:05 dist
+    | -rw-r--r-- 1 stick 197609  3503 Oct  8 21:05 package.json
+#15 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules/@dooph-software/design-system/dist/ 2>/dev/null
+    | -rw-r--r-- 1 stick 197609     42 Oct  8 21:05 chunk-3BN5O6B2.js
+    | -rw-r--r-- 1 stick 197609     71 Oct  8 21:05 chunk-3BN5O6B2.js.map
+    | -rw-r--r-- 1 stick 197609    416 Oct  8 21:05 chunk-3C36HKQB.js
+    | -rw-r--r-- 1 stick 197609    501 Oct  8 21:05 chunk-3C36HKQB.js.map
+    | ...
+    | </persisted-output>
+#16 Bash: ls /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules/@dooph-software/design-system/dist/ | grep -E "^(index|main)" | head -5
+    | index.cjs
+    | index.d.cts
+    | index.d.ts
+    | index.js
+    | index.js.map
+#19 Bash: grep -r "api\|API\|request" /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530 --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" 2>/dev/null | grep -v node_modules | head -20
+    | (Bash completed with no output)
+#20 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app -type f -name "*.tsx" -o -name "*.ts" | grep -v node_modules
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/dashboard/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/layout.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/page.tsx
+#21 Bash: grep -r "Input\|Form\|Checkbox\|Toggle\|Switch" /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app --include="*.tsx" 2>/dev/null
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/layout.tsx:import { ThemeToggle } from "@/components/theme-toggle";
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/layout.tsx:              <ThemeToggle />
+#23 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530 -type d -not -path "*/node_modules/*" -not -path "*/.next/*" -not -path "*/.git/*"
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/dashboard
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/components
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/lib
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/vendor
+#24 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/vendor/
+    | total 548
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 21:05 ..
+    | -rw-r--r-- 1 stick 197609 554095 Oct  8 21:05 dooph-software-design-system-5.3.0.tgz
+#27 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530 -name "*.css" -not -path "*/node_modules/*" -not -path "*/.next/*" | xargs ls -la 2>/dev/null
+    | -rw-r--r-- 1 stick 197609 883 Oct  8 20:59 /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/globals.css
+#28 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530 -name "tailwind.config.*" -not -path "*/node_modules/*"
+    | (Bash completed with no output)
+#29 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app -type f -name "route.*" 2>/dev/null
+    | (Bash completed with no output)
+#30 Bash  [is_error]: git log --oneline | head -20
+    | Permission to use Bash with command git log --oneline has been denied.
+#31 Bash: grep -h "export {" /c/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/node_modules/@dooph-software/design-system/dist/index.d.ts | head -40
+    | export { BugReportIcon } from './components/Icons/BugReportIcon.js';
+    | export { CalendarIcon } from './components/Icons/CalendarIcon.js';
+    | export { ChangelogIcon } from './components/Icons/ChangelogIcon.js';
+    | export { CheckIcon } from './components/Icons/CheckIcon.js';
+    | export { ChevronDownIcon } from './components/Icons/ChevronDownIcon.js';
+    | export { ChevronLeftIcon } from './components/Icons/ChevronLeftIcon.js';
+#41 Bash: mkdir -p "C:/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530/app/settings/notifications"
+    | (Bash completed with no output)
+#44 Bash: cd "C:/Users/stick/Github/dooph/ds-consumer-sb-ffde7493c530" && npx next build 2>&1 | tail -20
+    | ├ ○ /_not-found
+    | ├ ○ /dashboard
+    | └ ○ /settings/notifications
+    | 
+    | 
+    | ○  (Static)  prerendered as static content

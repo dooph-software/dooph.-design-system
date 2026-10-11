@@ -1,3 +1,12 @@
+/*
+ * Writes src/components/Icons/index.ts: one export line per `<Name>Icon.tsx`
+ * in that folder, after the BaseIcon exports.
+ * Run: npm run generate-icon-exports (also runs as part of `npm run build`).
+ * Check only: node scripts/generate-icon-exports.mjs --check builds the file in
+ * memory, writes NOTHING, prints `stale src/components/Icons/index.ts` and
+ * exits 1 when it differs from disk (CRLF and LF count as equal), else exits 0.
+ * scripts/check-conventions.mjs runs it inside `npm run lint`.
+ */
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -10,7 +19,7 @@ const iconFilePattern = /^[A-Z][A-Za-z0-9]*Icon\.tsx$/;
 
 const files = (await readdir(iconsDir))
   .filter((fileName) => iconFilePattern.test(fileName) && fileName !== 'BaseIcon.tsx')
-  .sort((a, b) => a.localeCompare(b));
+  .sort((a, b) => a.localeCompare(b, "en"));
 
 const exportLines = [];
 const invalidIcons = [];
@@ -43,6 +52,17 @@ const contents = `${[
   '',
   ...exportLines,
 ].join('\n')}\n`;
+
+if (process.argv.includes('--check')) {
+  const current = await readFile(indexPath, 'utf8').catch(() => null);
+  if (current === null || current.replace(/\r\n/g, '\n') !== contents) {
+    console.log(`stale ${path.relative(rootDir, indexPath).split(path.sep).join('/')}`);
+    console.log('generate-icon-exports --check: the icon barrel is out of date; run `npm run generate-icon-exports`.');
+    process.exit(1);
+  }
+  console.log('generate-icon-exports --check: the icon barrel is fresh.');
+  process.exit(0);
+}
 
 await writeFile(indexPath, contents);
 

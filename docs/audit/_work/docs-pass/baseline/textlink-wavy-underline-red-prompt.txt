@@ -1,0 +1,1 @@
+Give TextLink our wavy underline — always visible, in the link's colour.

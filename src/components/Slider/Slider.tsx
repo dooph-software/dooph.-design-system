@@ -365,7 +365,6 @@ const SliderBase = forwardRef<
           data-dragging={dragging || undefined}
           style={
             {
-              ...style,
               '--ds-slider-pct': pct,
               '--ds-slider-color': resolveDsColor(color, paints.color),
               '--ds-slider-track-opacity': paints.trackOpacity,
@@ -374,6 +373,7 @@ const SliderBase = forwardRef<
                 paints.stepActive,
               ),
               '--ds-slider-pad': showSteps ? 'var(--ui-spacing-sm)' : '0px',
+              ...style,
             } as CSSProperties
           }
           className={cn(

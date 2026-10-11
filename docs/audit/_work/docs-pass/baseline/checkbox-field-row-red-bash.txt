@@ -1,0 +1,114 @@
+#1 Bash: find /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859 -type f -name "*.json" | head -20
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/node_modules/@babel/helper-compilation-targets/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/node_modules/@babel/helper-globals/data/browser-upper.json
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/node_modules/@babel/helper-globals/data/builtin-lower.json
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/node_modules/@babel/helper-globals/data/builtin-upper.json
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/node_modules/@babel/helper-globals/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/node_modules/@babel/helper-module-imports/package.json
+#2 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/ | grep -v node_modules
+    | -rw-r--r-- 1 stick 197609   3503 Oct  8 20:39 package.json
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:39 scripts
+    | -rw-r--r-- 1 stick 197609    803 Oct  8 20:39 skills-lock.json
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:39 src
+    | -rw-r--r-- 1 stick 197609    487 Oct  8 20:39 tsconfig.json
+    | -rw-r--r-- 1 stick 197609   3749 Oct  8 20:39 tsup.config.ts
+#3 Bash: find /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src -type d | head -30
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/Popover
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/ProgressIndicator
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/SearchBox
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/SegmentedTabSelect
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/ShapeButton
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/ShapeMorphSpinner
+#4 Bash: find /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src -type d | tail -30
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/Toggle
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/Tooltip
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/VerificationCode
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/WavyDivider
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/styles
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/utils
+#6 Bash: find /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components -name "*Field*" -o -name "*field*"
+    | (Bash completed with no output)
+#9 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/Checkbox/
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 .
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 ..
+    | -rw-r--r-- 1 stick 197609 2728 Oct  8 20:39 Checkbox.stories.tsx
+    | -rw-r--r-- 1 stick 197609 5999 Oct  8 20:39 Checkbox.tsx
+    | -rw-r--r-- 1 stick 197609  547 Oct  8 20:39 constants.ts
+    | -rw-r--r-- 1 stick 197609  171 Oct  8 20:39 index.ts
+#14 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/Input/
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:39 .
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:39 ..
+    | -rw-r--r-- 1 stick 197609  6686 Oct  8 20:39 Input.stories.tsx
+    | -rw-r--r-- 1 stick 197609 19633 Oct  8 20:39 Input.tsx
+    | -rw-r--r-- 1 stick 197609   875 Oct  8 20:39 constants.ts
+    | -rw-r--r-- 1 stick 197609   120 Oct  8 20:39 index.ts
+#17 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/Text/
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:39 ..
+    | -rw-r--r-- 1 stick 197609 14852 Oct  8 20:39 BaseText.stories.tsx
+    | -rw-r--r-- 1 stick 197609  7378 Oct  8 20:39 BaseText.tsx
+    | -rw-r--r-- 1 stick 197609  5958 Oct  8 20:39 constants.ts
+    | -rw-r--r-- 1 stick 197609   826 Oct  8 20:39 index.ts
+    | -rw-r--r-- 1 stick 197609  4414 Oct  8 20:39 textStyle.ts
+#19 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/SearchBox/
+    | total 25
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 .
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 ..
+    | -rw-r--r-- 1 stick 197609 1174 Oct  8 20:39 SearchBox.stories.tsx
+    | -rw-r--r-- 1 stick 197609 2692 Oct  8 20:39 SearchBox.tsx
+    | -rw-r--r-- 1 stick 197609   29 Oct  8 20:39 index.ts
+#21 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/styles/
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:39 .
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:39 ..
+    | -rw-r--r-- 1 stick 197609 38126 Oct  8 20:39 dooph-component-tokens.css
+    | -rw-r--r-- 1 stick 197609 54354 Oct  8 20:39 index.css
+    | -rw-r--r-- 1 stick 197609  8548 Oct  8 20:39 theme.css
+    | -rw-r--r-- 1 stick 197609 50334 Oct  8 20:39 tokens.css
+#23 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/VerificationCode/
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 .
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 ..
+    | -rw-r--r-- 1 stick 197609 3907 Oct  8 20:39 CodeDigitInput.tsx
+    | -rw-r--r-- 1 stick 197609 4130 Oct  8 20:39 VerificationCode.stories.tsx
+    | -rw-r--r-- 1 stick 197609 6584 Oct  8 20:39 VerificationCodeInput.tsx
+    | -rw-r--r-- 1 stick 197609  252 Oct  8 20:39 index.ts
+#25 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/Toggle/
+    | -rw-r--r-- 1 stick 197609 5297 Oct  8 20:39 Toggle.stories.tsx
+    | -rw-r--r-- 1 stick 197609 5416 Oct  8 20:39 Toggle.tsx
+    | -rw-r--r-- 1 stick 197609 1288 Oct  8 20:39 constants.ts
+    | -rw-r--r-- 1 stick 197609 3808 Oct  8 20:39 fancyToggleOption.ts
+    | -rw-r--r-- 1 stick 197609  370 Oct  8 20:39 index.ts
+    | -rw-r--r-- 1 stick 197609 3582 Oct  8 20:39 toggleOption.ts
+#27 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/.storybook/
+    | total 20
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 .
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 ..
+    | -rw-r--r-- 1 stick 197609 1159 Oct  8 20:39 main.ts
+    | -rw-r--r-- 1 stick 197609 1318 Oct  8 20:39 preview-head.html
+    | -rw-r--r-- 1 stick 197609 1581 Oct  8 20:39 preview.ts
+#30 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/Button/
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:39 .
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:39 ..
+    | -rw-r--r-- 1 stick 197609  6056 Oct  8 20:39 Button.stories.tsx
+    | -rw-r--r-- 1 stick 197609 11181 Oct  8 20:39 Button.tsx
+    | -rw-r--r-- 1 stick 197609  1047 Oct  8 20:39 constants.ts
+    | -rw-r--r-- 1 stick 197609   153 Oct  8 20:39 index.ts
+#33 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/DatePicker/
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 ..
+    | -rw-r--r-- 1 stick 197609 4470 Oct  8 20:39 DatePicker.stories.tsx
+    | -rw-r--r-- 1 stick 197609 6231 Oct  8 20:39 DatePicker.tsx
+    | -rw-r--r-- 1 stick 197609 6230 Oct  8 20:39 DatePickerSplitTrigger.tsx
+    | -rw-r--r-- 1 stick 197609 3087 Oct  8 20:39 DatePickerTrigger.tsx
+    | -rw-r--r-- 1 stick 197609  364 Oct  8 20:39 index.ts
+#35 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/TextLink/
+    | total 21
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 .
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:39 ..
+    | -rw-r--r-- 1 stick 197609 1354 Oct  8 20:39 TextLink.stories.tsx
+    | -rw-r--r-- 1 stick 197609 1093 Oct  8 20:39 TextLink.tsx
+    | -rw-r--r-- 1 stick 197609   88 Oct  8 20:39 index.ts
+#47 Bash: mkdir -p "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859/src/components/CheckboxField"
+    | (Bash completed with no output)
+#52 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859" && npx tsc --noEmit 2>&1 | head -30
+    | src/components/CheckboxField/CheckboxField.stories.tsx(80,14): error TS2322: Type '{ render: () => JSX.Element; }' is not assignable to type 'StoryAnnotations$1<ReactRenderer, { label: ReactNode; hint?: ReactNode; variant?: CheckboxVariant | undefined; title?: string | undefined; ... 292 more ...; ref?: Ref<...> | undefined; }, { ...; }>'.
+    |   Property 'args' is missing in type '{ render: () => JSX.Element; }' but required in type '{ args: { label: ReactNode; hint?: ReactNode; variant?: CheckboxVariant | undefined; title?: string | undefined; content?: string | undefined; ... 291 more ...; ref?: Ref<...> | undefined; }; }'.
+#54 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-red-20261008203859" && npx tsc --noEmit 2>&1 | head -30
+    | (Bash completed with no output)

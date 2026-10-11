@@ -41,7 +41,7 @@ export const ErrorFocused: Story = { render: () => <FocusedErrorInput /> };
 
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-3 w-60 p-4">
+    <div className="flex flex-col gap-md w-60 p-lg">
       <Input placeholder="Default" />
       <Input defaultValue="With value" />
       <Input placeholder="Disabled" disabled />
@@ -57,7 +57,7 @@ export const AllStates: Story = {
  */
 export const Variants: Story = {
   render: () => (
-    <div className="grid grid-cols-[160px_160px_160px_160px] items-center gap-4 p-4">
+    <div className="grid grid-cols-[160px_160px_160px_160px] items-center gap-lg p-lg">
       <Input placeholder="Username" data-testid="v-text" />
       <Input variant={InputVariant.number} placeholder="123.45" data-testid="v-number" />
       <Input variant={InputVariant.iconText} icon={<UserIcon />} placeholder="Username" data-testid="v-icon-text" />
@@ -84,7 +84,7 @@ export const Variants: Story = {
 /** Number variants are fixed width by default: they fill the container, content left-aligned. */
 export const NumberFixedWidth: Story = {
   render: () => (
-    <div className="flex w-60 flex-col gap-4 p-4">
+    <div className="flex w-60 flex-col gap-lg p-lg">
       <Input variant={InputVariant.number} defaultValue="1" data-testid="n-short" />
       <Input variant={InputVariant.number} defaultValue="1,240,000.00" data-testid="n-long" />
       <Input variant={InputVariant.iconNumber} icon={<TagIcon />} defaultValue="7" />
@@ -96,7 +96,7 @@ export const NumberFixedWidth: Story = {
 /** `autoWidth` opts back in to hugging: a single digit is a square; the field grows as you type. */
 export const NumberAutoWidth: Story = {
   render: () => (
-    <div className="flex items-center gap-4 p-4">
+    <div className="flex items-center gap-lg p-lg">
       <Input variant={InputVariant.number} autoWidth defaultValue="1" data-testid="n-short" />
       <Input variant={InputVariant.number} autoWidth defaultValue="1,240,000.00" data-testid="n-long" />
       <Input variant={InputVariant.iconNumber} autoWidth icon={<TagIcon />} defaultValue="7" />
@@ -113,7 +113,7 @@ export const NumberAutoWidth: Story = {
 function FormattedNumbers() {
   const [raw, setRaw] = useState('1234567.89');
   return (
-    <div className="flex w-60 flex-col gap-4 p-4">
+    <div className="flex w-60 flex-col gap-lg p-lg">
       <Input variant={InputVariant.number} format locale="en-US" defaultValue="1234567" data-testid="f-en" />
       <Input variant={InputVariant.number} format locale="de-DE" defaultValue="1234567.5" data-testid="f-de" />
       <Input
@@ -141,7 +141,7 @@ export const NumberFormatted: Story = { render: () => <FormattedNumbers /> };
 export const NumberRange: Story = {
   name: 'Number — range',
   render: () => (
-    <div className="flex w-60 flex-col gap-4 p-4">
+    <div className="flex w-60 flex-col gap-lg p-lg">
       <Input variant={InputVariant.number} min={0} max={100} defaultValue="150" data-testid="r-out" />
       <Input variant={InputVariant.number} min={0} max={100} defaultValue="50" data-testid="r-in" />
       <Input variant={InputVariant.number} min={0} max={100} defaultValue="150" hasError={false} data-testid="r-suppressed" />

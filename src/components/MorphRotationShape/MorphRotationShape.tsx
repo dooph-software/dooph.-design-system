@@ -30,7 +30,7 @@
  *   an inset.
  *
  * ## constraints
- * - Motion belongs to CSS, geometry belongs here (architecture Rule 6).
+ * - Motion belongs to CSS, geometry belongs here.
  *   The step's duration and easing are --ui-shape-morph-* tokens, overridable
  *   per instance through `timing` (inline custom properties); the lean's are
  *   the shared motion scale (`--ui-motion-*`). Nothing in this file
@@ -41,8 +41,9 @@
  *   snaps the shape.
  * - Sampling starts from this element's OWN transitionrun / animationstart /
  *   animationiteration events and stops when the value lands. Never listen on
- *   an ancestor (Rule 7): `embedded` works because the ancestor's state reaches
- *   this element through CSS inheritance, not a listener.
+ *   an ancestor (a component owns only its own subtree): `embedded` works
+ *   because the ancestor's state reaches this element through CSS
+ *   inheritance, not a listener.
  * - The motion range comes from widenRange (floor/ceil of every target seen)
  *   and resets only on landing. Deriving the segment from floor(value) alone
  *   draws the wrong morph while overshooting past the far stop, and rounding
@@ -80,7 +81,7 @@ import {
   timingVars,
 } from "./timing";
 
-/** Turn per step, degrees. Geometry, so it may live here (Rule 6). M3: 90. */
+/** Turn per step, degrees. Geometry, so it may live here; Material 3 uses 90. */
 const NOMINAL_TURN_DEG = 90;
 /** Below this the transitioned value has landed. */
 const EPSILON = 0.001;

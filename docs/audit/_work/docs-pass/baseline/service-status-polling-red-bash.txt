@@ -1,0 +1,115 @@
+#1 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029 -type f -name "package.json" | head -20
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/node_modules/@babel/parser/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/node_modules/@babel/runtime/helpers/esm/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/node_modules/@babel/runtime/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/node_modules/@babel/template/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/node_modules/@babel/traverse/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/node_modules/@babel/types/package.json
+#3 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src -type d -name "components" | head -5
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components
+#4 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/ | head -30
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 Popover
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 ProgressIndicator
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 SearchBox
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 SegmentedTabSelect
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 ShapeButton
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 ShapeMorphSpinner
+#5 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/ | tail -20
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 TextLink
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 Toast
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 Toggle
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 Tooltip
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 VerificationCode
+    | drwxr-xr-x 1 stick 197609 0 Oct  8 20:40 WavyDivider
+#6 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Sticker -type f
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Sticker/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Sticker/index.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Sticker/Sticker.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Sticker/Sticker.tsx
+#7 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Button -type f
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Button/Button.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Button/Button.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Button/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Button/index.ts
+#13 Bash: grep -r "setInterval\|useEffect\|useState" /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components --include="*.tsx" -l | head -10
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/AIChat/AIPromptInput.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/AIChat/AIThinkingPart.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/AnimatedText/AnimatedText.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/AnimatedText/RevealChangeText.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/AnimatedText/RollingDigitsText.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/Calendar/Calendar.stories.tsx
+#17 Bash: grep -r "setInterval\|useInterval" /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src --include="*.ts" --include="*.tsx" -A 3 | head -60
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/AnimatedText/AnimatedText.stories.tsx-            Math.max(80, Math.round(c * (1 + (Math.random() - 0.48) * 0.35))),
+    | --
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx:      const interval = setInterval(() => {
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx-        setValue((prev) => (prev >= 100 ? 0 : prev + 5));
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx-      }, 300);
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/LinearProgressIndicator/LinearProgressIndicator.stories.tsx-
+#19 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/ | grep -v node_modules
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:40 .
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:40 ..
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:40 components
+    | -rw-r--r-- 1 stick 197609 1928 Oct  8 20:40 index.ts
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:40 styles
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:40 utils
+#21 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/utils -type f -name "*.ts"
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/utils/cn.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/utils/color.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/utils/composeRefs.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/utils/length.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/utils/twMergeTheme.ts
+#23 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029 -maxdepth 1 -type f \( -name "tsconfig.json" -o -name ".storybook" -o -name "vite.config.ts" -o -name "tailwind.config.ts" \)
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/tsconfig.json
+#24 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029 -maxdepth 2 -type d -name ".storybook"
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/.storybook
+#26 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/.storybook/
+    | total 20
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:40 .
+    | drwxr-xr-x 1 stick 197609    0 Oct  8 20:40 ..
+    | -rw-r--r-- 1 stick 197609 1159 Oct  8 20:40 main.ts
+    | -rw-r--r-- 1 stick 197609 1318 Oct  8 20:40 preview-head.html
+    | -rw-r--r-- 1 stick 197609 1581 Oct  8 20:40 preview.ts
+#27 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029 -maxdepth 1 -type f -name "*.config.*"
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/tsup.config.ts
+#30 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/LoadingSpinner -type f
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/LoadingSpinner/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/LoadingSpinner/index.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/LoadingSpinner/LoadingSpinner.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/LoadingSpinner/LoadingSpinner.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/LoadingSpinner/spinnerGeometry.ts
+#31 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/ProgressIndicator -type f
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/ProgressIndicator/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/ProgressIndicator/index.ts
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/ProgressIndicator/ProgressIndicator.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/ProgressIndicator/ProgressIndicator.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/ProgressIndicator/waveGeometry.ts
+#33 Bash: find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/styles -type f -name "*.css" | head -5
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/styles/dooph-component-tokens.css
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/styles/index.css
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/styles/theme.css
+    | /c/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/styles/tokens.css
+#46 Bash: mkdir -p "C:/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029/src/components/ServiceStatus"
+    | (Bash completed with no output)
+#59 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029" && npx tsc --noEmit 2>&1 | head -30
+    | src/components/ServiceStatus/ServiceStatus.tsx(99,8): error TS2322: Type '{ children: Element[]; title?: string | undefined; content?: string | undefined; translate?: "no" | "yes" | undefined; color?: string | undefined; prefix?: string | undefined; ... 273 more ...; className: string; } | { ...; } | { ...; } | { ...; }' is not assignable to type 'IntrinsicAttributes & (StickerProps & RefAttributes<HTMLDivElement>)'.
+    |   Type '{ children: Element[]; title?: string | undefined; content?: string | undefined; translate?: "no" | "yes" | undefined; color?: string | undefined; prefix?: string | undefined; ... 273 more ...; className: string; }' is not assignable to type 'IntrinsicAttributes & (StickerProps & RefAttributes<HTMLDivElement>)'.
+    |     Type '{ children: Element[]; title?: string | undefined; content?: string | undefined; translate?: "no" | "yes" | undefined; color?: string | undefined; prefix?: string | undefined; ... 273 more ...; className: string; }' is not assignable to type '{ variant?: "alternate" | "secondary" | "prominent" | "danger" | "tertiary" | undefined; color?: undefined; }'.
+    |       Types of property 'color' are incompatible.
+    |         Type 'string | undefined' is not assignable to type 'undefined'.
+    |           Type 'string' is not assignable to type 'undefined'.
+#64 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029" && npx tsc --noEmit 2>&1 | head -20
+    | (Bash completed with no output)
+#65 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029" && npm run build 2>&1 | tail -10
+    | [32mDTS[39m [1mdist\components\Text\index.d.cts                                      [22m[32m694.00 B[39m
+    | [32mDTS[39m [1mdist\components\TextLink\index.d.cts                                  [22m[32m74.00 B[39m
+    | [32mDTS[39m [1mdist\components\Toast\index.d.cts                                     [22m[32m417.00 B[39m
+    | [32mDTS[39m [1mdist\components\Tabs\index.d.cts                                      [22m[32m252.00 B[39m
+    | [32mDTS[39m [1mdist\components\Tooltip\index.d.cts                                   [22m[32m370.00 B[39m
+    | [32mDTS[39m [1mdist\components\WavyDivider\index.d.cts                               [22m[32m137.00 B[39m
+#66 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-service-status-polling-red-20261008204029" && ls dist/components/ServiceStatus/ 2>&1
+    | constants.js.map
+    | index.cjs
+    | index.d.cts
+    | index.d.ts
+    | index.js
+    | index.js.map

@@ -6,9 +6,9 @@
  * Usage: <TabsTrigger size={TabSize.icon} />
  */
 export const TabSize = {
-  /** 38px — Figma `buttonSizes/buttonHeight`, `lg` (16px) horizontal padding. */
+  /** 38px — Figma `buttonSizes/buttonHeight`, `rg` (10px) horizontal padding. */
   standard: "standard",
-  /** 34px — Figma `buttonSizes/smallButtonHeight`, `md` (12px) padding. */
+  /** 34px — Figma `buttonSizes/smallButtonHeight`, `rg` (10px) padding. */
   sm: "sm",
   /** 28px compact item — Figma Toggle Option "Micro", radius-mini. */
   micro: "micro",

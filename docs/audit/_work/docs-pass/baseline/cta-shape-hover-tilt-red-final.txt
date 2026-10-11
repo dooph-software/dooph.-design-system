@@ -1,0 +1,14 @@
+RUN OK
+subtype: success  is_error: false  turns: 4  cost_usd: 0.34836755  duration_ms: 97929
+permission_denials (0):
+
+--- final text ---
+This change contradicts a constraint in the CTAButton file header.
+
+**Constraint** (`CTAButton.tsx:16-18`):
+
+> The shape is chosen by `size`, never by a prop and **never animated**. That is the maintainer's decision (2026-10-03); a shape prop or a hover morph is a design change, not a refactor.
+
+A hover tilt on the end-mark shape is an animation of that shape, which the constraint explicitly forbids. Per the project's file-contract rules, I can't edit around it.
+
+If you want to proceed, the constraint needs to be removed (or amended to allow rotation) in its own commit with the reasoning stated, and then I can add the tilt in a follow-up. Want me to do that?

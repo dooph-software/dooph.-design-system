@@ -95,12 +95,12 @@ export const Danger: Story = {
 };
 
 /** `custom` has no palette — `color` is required, and the wash is that colour
- * at `--ui-sticker-bg-opacity`. This story uses a raw hex so it cannot be
- * mistaken for one of the built-in variants. */
+ * at `--ui-sticker-bg-opacity`. This story uses the text colour token,
+ * which no built-in variant uses, so it cannot be mistaken for one. */
 export const Custom: Story = {
   args: {
     variant: StickerVariant.custom,
-    color: "#ff7700",
+    color: "var(--ui-color-text)",
     children: (
       <>
         <AISkillIcon size={IconSize.md} />
@@ -159,7 +159,7 @@ export const AllVariants: Story = {
         {label("Loss")}
         <ArrowDownRightIcon size={IconSize.md} />
       </Sticker>
-      <Sticker variant={StickerVariant.custom} color="#ff7700">
+      <Sticker variant={StickerVariant.custom} color="var(--ui-color-text)">
         <AISkillIcon size={IconSize.md} />
         {label("Skills")}
       </Sticker>

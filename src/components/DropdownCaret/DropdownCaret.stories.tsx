@@ -13,7 +13,7 @@ type Story = StoryObj;
 /** A stand-in host: any element with the host class, a 1px border and the trigger height. */
 const Host = ({ state, disabled, variant }: { state: "open" | "closed"; disabled?: boolean; variant: DropdownCaretVariant }) => (
   <div
-    className="ds-dropdown-caret-host inline-flex h-button min-w-40 items-center justify-end rounded-tight border border-solid border-border-primary bg-secondary"
+    className="ds-dropdown-caret-host inline-flex h-button min-w-menu items-center justify-end rounded-tight border border-solid border-border-primary bg-secondary"
     data-state={state}
     data-disabled={disabled ? "" : undefined}
   >
@@ -24,9 +24,9 @@ const Host = ({ state, disabled, variant }: { state: "open" | "closed"; disabled
 /** Figma 887:1825: every State × Color × TriggerVariant. Hover any closed/open host to see the nudge. */
 export const AllStates: Story = {
   render: () => (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-lg">
       {Object.values(DropdownCaretVariant).map((variant) => (
-        <div key={variant} className="flex flex-col gap-3">
+        <div key={variant} className="flex flex-col gap-md">
           <ButtonText>{variant}</ButtonText>
           <Host variant={variant} state="closed" />
           <Host variant={variant} state="open" />
@@ -40,7 +40,7 @@ export const AllStates: Story = {
 function InteractiveDemo() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-lg">
       <Host variant={DropdownCaretVariant.typeable} state={open ? "open" : "closed"} />
       <Button variant={ButtonVariant.secondary} onClick={() => setOpen((o) => !o)}>
         <ButtonText>{open ? "Close" : "Open"}</ButtonText>

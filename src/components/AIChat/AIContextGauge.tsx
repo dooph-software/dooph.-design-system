@@ -7,6 +7,8 @@
  *   design value (a DS colour name — DS_COLOR_TOKENS key — or any CSS
  *   colour), so warning tiers are a consumer's call:
  *   `color={ratio > 0.9 ? "danger" : undefined}`.
+ * - Its accessible name is "Context used" by default. A consumer's
+ *   `aria-label` replaces it; a consumer's `aria-labelledby` drops it.
  *
  * ## constraints
  * - Deliberately NOT clamped. A gauge that quietly pins at full would disagree
@@ -42,6 +44,9 @@ const AIContextGauge = forwardRef<SVGSVGElement, AIContextGaugeProps>(
       progress={budget > 0 ? used / budget : 0}
       variant={ProgressIndicatorVariant.flat}
       size={size}
+      // Default name; a consumer `aria-label` in `props` replaces it, and a
+      // consumer `aria-labelledby` names the gauge instead, so none is set then.
+      aria-label={props["aria-labelledby"] ? undefined : "Context used"}
       {...props}
     />
   ),

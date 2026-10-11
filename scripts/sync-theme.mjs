@@ -9,6 +9,11 @@
  * Run manually:  node scripts/sync-theme.mjs
  * Wired into:    npm run sync-tokens (which npm run build and build:watch run
  *                first; see package.json)
+ * Check only:    node scripts/sync-theme.mjs --check
+ *                computes all three outputs in memory, writes NOTHING, prints
+ *                `stale <path>` for each file that differs from disk (CRLF and
+ *                LF count as equal) and exits 1 (0 when all are fresh). scripts/check-conventions.mjs runs it
+ *                inside `npm run lint`.
  *
  * HOW IT WORKS
  * ─────────────
@@ -23,8 +28,14 @@
  *
  * HOW TO ADD A NEW TOKEN
  * ──────────────────────
- * 1. Add --ui-color-foo (or --ui-shadow-foo etc.) to tokens.css :root (add a
- *    .dark override only when the value differs)
+ * 1. Add --ui-color-foo (or --ui-shadow-foo etc.) to tokens.css :root. Give it
+ *    a .dark line only when its RESOLVED value differs in dark: a literal that
+ *    changes, or an alias (var(--ui-…)) of a token .dark changes. Such an alias
+ *    is repeated word for word in .dark, because an alias resolves where it is
+ *    declared and a nested .dark island would otherwise keep the light value.
+ *    Never repeat a non-alias value that is the same in both: that line blocks
+ *    a consumer's :root override inside .dark. Lint enforces both halves
+ *    ("dark aliases missing from .dark, and redundant .dark lines").
  * 2. Run `node scripts/sync-theme.mjs`  — done.
  *
  * If the automatic name derivation is wrong (e.g. you want --color-bar instead of
@@ -32,7 +43,7 @@
  */
 
 import { readFileSync, writeFileSync } from "fs";
-import { dirname, resolve } from "path";
+import { dirname, relative, resolve, sep } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -42,6 +53,25 @@ const INDEX_PATH = resolve(__dirname, "../src/styles/index.css");
 const THEME_PRESET_PATH = resolve(__dirname, "../src/styles/theme.css");
 // tailwind-merge lists read by src/utils/cn.ts (see § twMergeTheme.ts below).
 const TW_MERGE_THEME_PATH = resolve(__dirname, "../src/utils/twMergeTheme.ts");
+
+// --check: compare instead of write (see header). Default mode writes exactly as before.
+const CHECK = process.argv.includes("--check");
+const staleOutputs = [];
+function emit(path, content) {
+  if (!CHECK) {
+    writeFileSync(path, content, "utf8");
+    return;
+  }
+  let current = null;
+  try {
+    current = readFileSync(path, "utf8");
+  } catch {
+    // missing file counts as stale
+  }
+  // Line endings are not content: a CRLF checkout (git autocrlf) is fresh.
+  const lf = (s) => s.replace(/\r\n/g, "\n");
+  if (current === null || lf(current) !== lf(content)) staleOutputs.push(path);
+}
 
 const GEN_START = "/* __GENERATED_THEME_START__ */";
 const GEN_END = "/* __GENERATED_THEME_END__ */";
@@ -320,7 +350,7 @@ if (!indexCss.includes(GEN_START)) {
   );
 }
 
-writeFileSync(INDEX_PATH, indexCss, "utf8");
+emit(INDEX_PATH, indexCss);
 
 // ── Emit the standalone consumer preset: src/styles/theme.css ─────────────────
 // Apps that run their OWN Tailwind v4 build import this file so that THEIR
@@ -353,7 +383,7 @@ const themePreset = [
   "",
 ].join("\n");
 
-writeFileSync(THEME_PRESET_PATH, themePreset, "utf8");
+emit(THEME_PRESET_PATH, themePreset);
 
 // ── Emit the tailwind-merge lists: src/utils/twMergeTheme.ts ──────────────────
 // cn() (src/utils/cn.ts) must know every DS class name, or tailwind-merge
@@ -424,7 +454,19 @@ const twMergeThemeTs = [
   "",
 ].join("\n");
 
-writeFileSync(TW_MERGE_THEME_PATH, twMergeThemeTs, "utf8");
+emit(TW_MERGE_THEME_PATH, twMergeThemeTs);
+
+if (CHECK) {
+  const rel = (p) => relative(resolve(__dirname, ".."), p).split(sep).join("/");
+  for (const p of staleOutputs) console.log(`stale ${rel(p)}`);
+  if (staleOutputs.length) {
+    console.log("sync-theme --check: generated theme is out of date; run `npm run sync-tokens`.");
+    process.exit(1);
+  }
+  console.log("sync-theme --check: index.css, theme.css and utils/twMergeTheme.ts are fresh.");
+  process.exit(0);
+}
+
 console.log(
   `✓  @theme inline regenerated — ${entries.length} tokens mapped (index.css + theme.css + utils/twMergeTheme.ts).`,
 );

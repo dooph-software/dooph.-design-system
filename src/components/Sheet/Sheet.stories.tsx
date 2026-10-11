@@ -25,17 +25,17 @@ type Story = StoryObj<typeof meta>;
 
 const DemoBody = ({ side }: { side: SheetSide }) => (
   <>
-    <div className="flex h-full flex-col gap-4 p-6">
+    <div className="flex h-full flex-col gap-lg p-xxl">
       <SheetTitle>Sheet from {side}</SheetTitle>
       <SheetDescription>
         The sheet slides in from the {side} edge with a gentle ease while the
         backdrop fades in. Click outside or press Escape to dismiss.
       </SheetDescription>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-sm">
         {['First item', 'Second item', 'Third item'].map((item) => (
           <div
             key={item}
-            className="flex items-center justify-between rounded-normal border border-border-primary px-4 py-3"
+            className="flex items-center justify-between rounded-normal border border-border-primary px-lg py-md"
           >
             <ButtonText className="text-text">{item}</ButtonText>
             <Button variant={ButtonVariant.ghost} size={ButtonSize.sm}>
@@ -44,7 +44,7 @@ const DemoBody = ({ side }: { side: SheetSide }) => (
           </div>
         ))}
       </div>
-      <div className="mt-auto flex justify-end gap-2">
+      <div className="mt-auto flex justify-end gap-sm">
         <SheetClose asChild>
           <Button variant={ButtonVariant.secondary}>Cancel</Button>
         </SheetClose>
@@ -112,13 +112,13 @@ export const Controlled: Story = {
   render: () => {
     const [open, setOpen] = useState(false);
     return (
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-lg">
         <Button variant={ButtonVariant.primary} onClick={() => setOpen(true)}>
           Open controlled
         </Button>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetContent side={SheetSide.right}>
-            <div className="flex flex-col gap-4 p-6">
+            <div className="flex flex-col gap-lg p-xxl">
               <SheetTitle>Controlled sheet</SheetTitle>
               <SheetDescription>
                 Open/close state is managed externally via the{' '}
@@ -152,12 +152,14 @@ export const CustomWidth: Story = {
       <SheetTrigger asChild>
         <Button variant={ButtonVariant.secondary}>Open wide sheet</Button>
       </SheetTrigger>
-      <SheetContent side={SheetSide.right} className="w-[540px] max-w-none">
-        <div className="flex flex-col gap-4 p-6">
+      {/* Demo width wider than the default; no token sizes it. */}
+      <SheetContent side={SheetSide.right} className="max-w-none" style={{ width: 540 }}>
+        <div className="flex flex-col gap-lg p-xxl">
           <SheetTitle>Custom width</SheetTitle>
           <SheetDescription>
-            Cross-axis size is overridable via className — override max-w-* along
-            with the width, since the default caps it at max-w-96.
+            Cross-axis size is overridable: this story sets the width in style
+            and lifts the default max-w-96 cap with className=&quot;max-w-none&quot;.
+            A width alone stays capped at max-w-96.
           </SheetDescription>
         </div>
       </SheetContent>

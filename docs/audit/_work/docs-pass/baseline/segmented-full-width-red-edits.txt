@@ -1,0 +1,8 @@
+#3 Edit C:\Users\stick\Github\dooph\ds-sb-segmented-full-width-red-20261008204421\src\components\SegmentedTabSelect\SegmentedTabSelect.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-segmented-full-width-red-20261008204421\\src\\components\\SegmentedTabSelect\\SegmentedTabSelect.tsx",
+  "old_string": "          className={cn(\n            'gap-xxs',\n            hasShell &&\n              // 28px items + xxs inset + 1px border = 38px; outer radius is\n              // radius-mini + xxs so it stays concentric with the items.\n              'h-button p-xxs border border-solid border-border-primary bg-surface-primary ds-radius-mini-outset-xxs',\n            className\n          )}",
+  "new_string": "          className={cn(\n            'gap-xxs',\n            // When the caller stretches the shell (e.g. className=\"w-full\"),\n            // distribute tab items equally across the available width.\n            '[&.w-full>*]:flex-1 [&.w-full>*]:min-w-0',\n            hasShell &&\n              // 28px items + xxs inset + 1px border = 38px; outer radius is\n              // radius-mini + xxs so it stays concentric with the items.\n              'h-button p-xxs border border-solid border-border-primary bg-surface-primary ds-radius-mini-outset-xxs',\n            className\n          )}"
+}
+

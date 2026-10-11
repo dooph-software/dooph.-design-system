@@ -1,0 +1,5 @@
+/* Fixture: motion timing literals outside tokens.css, an animation shorthand.
+ * One violation: 1s. Not reported: the keyframes name spin2s. */
+.fixture-spinner {
+  animation: spin2s 1s linear infinite;
+}

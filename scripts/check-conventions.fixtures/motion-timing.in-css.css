@@ -1,0 +1,7 @@
+/* Fixture: motion timing literals outside tokens.css, in CSS. One violation: 120ms.
+ * The motion-scale reads below are allowed. */
+.fixture-motion {
+  transition-duration: var(--ui-motion-duration-fast);
+  transition-timing-function: var(--ui-motion-ease-standard);
+  animation-delay: 120ms;
+}

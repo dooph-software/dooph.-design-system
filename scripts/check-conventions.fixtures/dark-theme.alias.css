@@ -1,0 +1,11 @@
+/* Fixture: dark aliases missing from .dark. One violation: --ui-b aliases
+ * --ui-a, which .dark changes, but .dark does not repeat --ui-b. */
+:root,
+.light {
+  --ui-a: #000000;
+  --ui-b: var(--ui-a);
+}
+
+.dark {
+  --ui-a: #ffffff;
+}

@@ -2,7 +2,7 @@
 
 /*
  * ToggleSwitch — Figma "Toggle Switch": a single-select row of Toggle Options
- * (two or more). Renamed from TwoWayToggle / TwoWayToggleItem (BREAKING, major).
+ * (two or more).
  *
  * ## behavior
  * - Selection can never be cleared by the user. Radix ToggleGroup type="single"

@@ -1,0 +1,17 @@
+{
+  "useClient": [
+    { "file": "use-client.stale.tsx", "needs": ["useState"], "reason": "fixture: listed, but the file no longer carries the directive" },
+    { "file": "use-client.stale-reason.tsx", "needs": ["useState"], "reason": "fixture: listed for useState, which the file no longer uses" },
+    { "file": "use-client.ok.tsx", "needs": ["useState"], "reason": "fixture: listed and still true, so it must not be reported" }
+  ],
+  "timers": [
+    { "file": "js-timers.stale.tsx", "count": 1, "reason": "fixture: listed with one call site, but the file has none" },
+    { "file": "js-timers.extra.tsx", "count": 1, "reason": "fixture: listed with one call site, but the file has two" },
+    { "file": "js-timers.ok.tsx", "count": 1, "reason": "fixture: listed with one call site and still true, so it must not be reported" }
+  ],
+  "stylesheetHex": [
+    { "file": "styles/dark-outside-tokens.ok.css", "line": "#000 var(--ui-fixture-fade),", "needs": ["mask-image"], "reason": "fixture: a mask-image stop, listed and still true, so it must not be reported" },
+    { "file": "styles/dark-outside-tokens.stale.css", "line": "#000 var(--ui-fixture-stop),", "needs": ["mask-image"], "reason": "fixture: listed, but the file no longer has this line" },
+    { "file": "styles/dark-outside-tokens.commented.css", "line": "#000 var(--ui-fixture-old),", "needs": ["mask-image"], "reason": "fixture: listed, but the line survives only inside a comment" }
+  ]
+}

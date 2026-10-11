@@ -52,11 +52,11 @@ export const Disabled: Story = {
 
 export const AllShapes: Story = {
   render: () => (
-    <div className="flex flex-col gap-6 p-4">
+    <div className="flex flex-col gap-xxl p-lg">
       {Object.values(ShapeButtonVariant).map((variant) => (
-        <div key={variant} className="flex items-center gap-4">
+        <div key={variant} className="flex items-center gap-lg">
           {Object.entries(ShapeButtons).map(([label, shape]) => (
-            <div key={shape} className="flex flex-col items-center gap-2">
+            <div key={shape} className="flex flex-col items-center gap-sm">
               <ShapeButton shape={shape} variant={variant}>
                 <SendIcon />
               </ShapeButton>
@@ -71,10 +71,10 @@ export const AllShapes: Story = {
 
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-6 p-4">
+    <div className="flex flex-col gap-xxl p-lg">
       {Object.values(ShapeButtonVariant).map((variant) => (
-        <div key={variant} className="flex items-center gap-4">
-          <div className="flex flex-col items-center gap-2">
+        <div key={variant} className="flex items-center gap-lg">
+          <div className="flex flex-col items-center gap-sm">
             <ShapeButton shape={ShapeButtons.diamond} variant={variant}>
               <SendIcon />
             </ShapeButton>
@@ -82,7 +82,7 @@ export const AllStates: Story = {
               {variant} · default
             </LabelText>
           </div>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-sm">
             <ShapeButton shape={ShapeButtons.diamond} variant={variant} disabled>
               <SendIcon />
             </ShapeButton>

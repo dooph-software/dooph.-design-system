@@ -18,7 +18,7 @@ import { UserMessageHeader } from "./UserMessageHeader";
 /* Every part at Figma's 418px transcript width. The copy in these stories is
  * the STORY's — the components render only what they are handed. */
 const Column = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex w-[418px] flex-col gap-md">{children}</div>
+  <div className="flex flex-col gap-md" style={{ width: 418 }}>{children}</div>
 );
 
 const meta = {

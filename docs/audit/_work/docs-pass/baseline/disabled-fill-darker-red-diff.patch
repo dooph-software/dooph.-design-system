@@ -1,0 +1,118 @@
+diff --git a/src/components/DatePicker/DatePickerSplitTrigger.tsx b/src/components/DatePicker/DatePickerSplitTrigger.tsx
+index aafd8a2..e1b8e41 100644
+--- a/src/components/DatePicker/DatePickerSplitTrigger.tsx
++++ b/src/components/DatePicker/DatePickerSplitTrigger.tsx
+@@ -138,7 +138,7 @@ const DatePickerSplitTrigger = forwardRef<
+             "rounded-l-none rounded-r-tight",
+             "border border-solid border-border-primary bg-secondary",
+             disabled &&
+-              "bg-secondary-disabled border-secondary-border-disabled",
++              "bg-input-fill-disabled border-secondary-border-disabled",
+           )}
+         >
+           <SegmentedTabSelect
+diff --git a/src/components/DropdownTrigger/DropdownTrigger.tsx b/src/components/DropdownTrigger/DropdownTrigger.tsx
+index 9cdaefd..0f5bf85 100644
+--- a/src/components/DropdownTrigger/DropdownTrigger.tsx
++++ b/src/components/DropdownTrigger/DropdownTrigger.tsx
+@@ -190,7 +190,7 @@ const TypeableDropdownTrigger = forwardRef<
+           "min-w-menu rounded-tight border border-solid border-border-primary",
+           "bg-secondary ds-dropdown-caret-host ds-pl-ui-md",
+           "ds-motion-state",
+-          "cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-secondary-disabled data-[disabled]:border-secondary-border-disabled",
++          "cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-input-fill-disabled data-[disabled]:border-secondary-border-disabled",
+           "[&:hover:not(:focus-within):not([data-disabled])]:border-input-border-hover [&:hover:not(:focus-within):not([data-disabled])]:shadow-button-secondary",
+           "focus-within:border-input-border-focus ds-focus-within-ring",
+           // The ring carries its state in its own selector — a
+diff --git a/src/components/Input/Input.tsx b/src/components/Input/Input.tsx
+index 862f364..a907538 100644
+--- a/src/components/Input/Input.tsx
++++ b/src/components/Input/Input.tsx
+@@ -367,7 +367,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+             // did by coming earlier in the sheet.
+             "enabled:hover:not-focus:border-input-border-hover enabled:hover:shadow-button-secondary",
+             "focus:border-input-border-focus",
+-            "disabled:bg-secondary-disabled disabled:border-secondary-border-disabled ds-disabled-state",
++            "disabled:bg-input-fill-disabled disabled:border-secondary-border-disabled ds-disabled-state",
+             showError &&
+               "border-danger-primary focus:border-input-border-danger-focus ds-focus-ring-danger-on-focus",
+             className,
+@@ -405,7 +405,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
+               ? "flex w-full min-w-button ds-pl-ui-md ds-pr-ui-md"
+               : "flex w-full ds-pl-ui-md ds-pr-ui-rg",
+           hasIcon && (isNumber ? "gap-xxs" : "gap-sm"),
+-          "cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-secondary-disabled",
++          "cursor-text data-[disabled]:cursor-not-allowed data-[disabled]:bg-input-fill-disabled",
+           // The error border wins over the disabled one here, as it did when
+           // this was a class ternary (the error classes came later in cn).
+           !showError && "data-[disabled]:border-secondary-border-disabled",
+diff --git a/src/components/SearchBox/SearchBox.tsx b/src/components/SearchBox/SearchBox.tsx
+index c65b0e0..add5226 100644
+--- a/src/components/SearchBox/SearchBox.tsx
++++ b/src/components/SearchBox/SearchBox.tsx
+@@ -35,7 +35,7 @@ const SearchBox = forwardRef<HTMLInputElement, SearchBoxProps>(
+           'ds-motion-state',
+           '[&:not([data-disabled])]:hover:border-input-border-hover',
+           'focus-within:border-input-border-focus ds-focus-within-ring',
+-          'ds-radix-data-disabled data-[disabled]:bg-secondary-disabled data-[disabled]:border-secondary-border-disabled',
++          'ds-radix-data-disabled data-[disabled]:bg-input-fill-disabled data-[disabled]:border-secondary-border-disabled',
+           className
+         )}
+       >
+diff --git a/src/components/VerificationCode/CodeDigitInput.tsx b/src/components/VerificationCode/CodeDigitInput.tsx
+index febe614..025ffd1 100644
+--- a/src/components/VerificationCode/CodeDigitInput.tsx
++++ b/src/components/VerificationCode/CodeDigitInput.tsx
+@@ -55,7 +55,7 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
+           // Error border yields to the disabled border, as the old class order did.
+           "data-[error]:text-danger-primary [&[data-error]:not([data-disabled])]:border-danger-primary",
+           disabled &&
+-            "border-secondary-border-disabled bg-secondary-disabled ds-radix-data-disabled",
++            "border-secondary-border-disabled bg-input-fill-disabled ds-radix-data-disabled",
+           !disabled && "ds-focus-within-ring",
+           !disabled && !hasError && "focus-within:border-input-border-focus",
+           !disabled && hasError && "ds-focus-within-ring-danger",
+diff --git a/src/styles/index.css b/src/styles/index.css
+index a329a73..3f386ff 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -149,6 +149,7 @@
+   --color-border-popovers: var(--ui-color-border-popovers);
+   --color-input-border-focus: var(--ui-color-input-border-focus);
+   --color-border-cta: var(--ui-color-border-cta);
++  --color-input-fill-disabled: var(--ui-color-input-fill-disabled);
+   --color-input-border-hover: var(--ui-color-input-border-hover);
+   --color-input-border-danger-focus: var(--ui-color-input-border-danger-focus);
+   --color-text: var(--ui-color-text);
+diff --git a/src/styles/theme.css b/src/styles/theme.css
+index caae9a7..225252c 100644
+--- a/src/styles/theme.css
++++ b/src/styles/theme.css
+@@ -79,6 +79,7 @@
+   --color-border-popovers: var(--ui-color-border-popovers);
+   --color-input-border-focus: var(--ui-color-input-border-focus);
+   --color-border-cta: var(--ui-color-border-cta);
++  --color-input-fill-disabled: var(--ui-color-input-fill-disabled);
+   --color-input-border-hover: var(--ui-color-input-border-hover);
+   --color-input-border-danger-focus: var(--ui-color-input-border-danger-focus);
+   --color-text: var(--ui-color-text);
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index d635c8f..73a965e 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -145,6 +145,7 @@
+   --ui-color-input-border-focus: var(--ui-color-prominent-border-hover);
+   /* CTAButton padded outline ring (primary variant only) */
+   --ui-color-border-cta: rgba(56, 56, 56, 0.5);
++  --ui-color-input-fill-disabled: #ececec;
+   --ui-color-input-border-hover: #b4b4b4;
+   --ui-color-input-border-danger-focus: var(--ui-color-danger-primary);
+ 
+@@ -794,6 +795,7 @@
+   --ui-color-border-secondary: #3e3f42;
+   --ui-color-border-popovers: #36363b;
+   --ui-color-border-cta: rgba(255, 255, 255, 0.35);
++  --ui-color-input-fill-disabled: var(--ui-color-secondary-disabled);
+   --ui-color-input-border-hover: #3a3b3f;
+ 
+   --ui-color-ai-openai: #ffffff;

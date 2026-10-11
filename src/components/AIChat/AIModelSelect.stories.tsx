@@ -155,8 +155,9 @@ export const FullMenu: Story = {
   render: function Render() {
     const [modelId, setModelId] = useState<StoryModelId>("opus-5");
     const [effort, setEffort] = useState("medium");
+    // Demo height: room below the trigger for the open menu; no token sizes it.
     return (
-      <div className="flex h-[560px] items-start">
+      <div className="flex items-start" style={{ height: 560 }}>
         <StoryModelSelect
           modelId={modelId}
           onModelChange={setModelId}
@@ -180,8 +181,9 @@ export const Trigger: Story = {
 export const ThinkingEffort: Story = {
   render: function Render() {
     const [effort, setEffort] = useState("medium");
+    // Demo width: the selector's width in the Figma frame; no token sizes it.
     return (
-      <div className="flex w-[234px] flex-col gap-lg">
+      <div className="flex flex-col gap-lg" style={{ width: 234 }}>
         <AIThinkingEffortSelector
           label="Thinking"
           labels={{ start: "Faster", end: "Smarter" }}
@@ -206,7 +208,8 @@ export const ThinkingEffort: Story = {
 export const ModelTooltip: Story = {
   render: () => (
     <TooltipProvider>
-      <div className="flex h-[200px] items-start">
+      {/* Demo height: room for the pinned-open tooltip; no token sizes it. */}
+      <div className="flex items-start" style={{ height: 200 }}>
         <Tooltip open>
           <TooltipTrigger asChild>
             <BodyText className="text-text">Claude Sonnet 5</BodyText>
@@ -228,7 +231,8 @@ export const ModelTooltip: Story = {
 export const ModelTooltipInverse: Story = {
   render: () => (
     <TooltipProvider>
-      <div className="flex h-[200px] items-start">
+      {/* Demo height: room for the pinned-open tooltip; no token sizes it. */}
+      <div className="flex items-start" style={{ height: 200 }}>
         <Tooltip open>
           <TooltipTrigger asChild>
             <BodyText className="text-text">Claude Sonnet 5</BodyText>

@@ -2,12 +2,11 @@
  * Resolution of BaseText's typography props into an inline style object.
  * Server-safe (no "use client") — pure functions over plain values.
  *
- * Why inline instead of classes (which is what this replaced): a class-based
- * prop only wins if it happens to be emitted after the role's own class, which
- * depends on bundler and import order. That bet was being lost — the old
- * fontSize/fontFamily props emitted `text-hero`/`font-hero`, both of which sit
- * ~50kB earlier in the compiled sheet than `.text-style-body`, so they did
- * nothing. Inline style outranks every layer, so a prop that is set always wins.
+ * Why inline instead of classes: a class-based prop only wins if it happens to
+ * be emitted after the role's own class, which depends on bundler and import
+ * order. Utilities such as `text-hero`/`font-hero` sit ~50kB before
+ * `.text-style-body` in the compiled sheet, so as props they would do nothing.
+ * Inline style outranks every layer, so a prop that is set always wins.
  */
 
 import type { CSSProperties } from 'react';

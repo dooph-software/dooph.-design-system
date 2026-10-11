@@ -71,8 +71,8 @@ type CalendarRangeProps = CalendarSharedProps & {
 export type CalendarProps = CalendarSingleProps | CalendarRangeProps;
 
 /**
- * A missing or malformed value warns in development and renders NOTHING
- * (research:576, D-12). It must never reach the date maths in CalendarView,
+ * A missing or malformed value warns in development and renders NOTHING.
+ * It must never reach the date maths in CalendarView,
  * which would crash with an incidental TypeError instead. An unknown `mode` is
  * malformed too: it would otherwise run the range branch silently.
  */

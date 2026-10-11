@@ -52,7 +52,7 @@ const CodeDigitInput = forwardRef<HTMLInputElement, CodeDigitInputProps>(
           "rounded-tight border border-solid",
           "ds-motion-state",
           "group/code-digit border-secondary-border bg-secondary text-text",
-          // Error border yields to the disabled border, as the old class order did.
+          // Error border yields to the disabled border.
           "data-[error]:text-danger-primary [&[data-error]:not([data-disabled])]:border-danger-primary",
           disabled &&
             "border-secondary-border-disabled bg-secondary-disabled ds-radix-data-disabled",
