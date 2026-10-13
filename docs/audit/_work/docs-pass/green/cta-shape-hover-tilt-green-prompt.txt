@@ -1,0 +1,1 @@
+Can you make the CTAButton's end shape tilt a little on hover, like the dropdown caret's nudge? Subtle, on the motion scale.

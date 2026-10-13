@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-segmented-full-width-green-20261011172421 (with-skills)
+snapshot tree: d47f1f8c221e00c9b5c7a6054a68790103be88a6 (main working tree)
+start tree:    8e9145d6a2d05680b3dc13b1610d093d7f5d085d (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-segmented-full-width-green-20261011172421/sandbox-start-tree)

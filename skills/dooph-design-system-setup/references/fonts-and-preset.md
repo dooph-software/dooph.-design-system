@@ -87,7 +87,7 @@ Text rendered through the DS Text components sets its own role font regardless.
 
 ## What `theme.css` changes in an existing Tailwind app
 
-`theme.css` is `@theme inline` source for the app's own Tailwind v4 build. It maps every DS token to a utility, so the names resolve to `var(--ui-…)` and follow token overrides at runtime. Where a DS name equals a Tailwind default name, the DS wins:
+`theme.css` is `@theme inline` source for the app's own Tailwind v4 build. It maps the DS's colour, font-family, text-size, radius, shadow and spacing tokens to utilities (not every token: weights, font axes, tracking, icon sizes and component-only tokens have no utility), so those names resolve to `var(--ui-…)` and follow token overrides at runtime. Where a DS name equals a Tailwind default name, the DS wins:
 
 | Utility (each with `xs`, `sm`, `md`, `lg`, `xl`) | Without the preset | With the preset |
 |---|---|---|

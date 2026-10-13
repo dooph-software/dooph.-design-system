@@ -1,0 +1,24 @@
+diff --git a/src/components/Sticker/Sticker.tsx b/src/components/Sticker/Sticker.tsx
+index b6ace77..3f82864 100644
+--- a/src/components/Sticker/Sticker.tsx
++++ b/src/components/Sticker/Sticker.tsx
+@@ -8,7 +8,7 @@
+  * - `size` is the shell. `standard` hugs its label. `micro` is a fixed
+  *   `--ui-height-button-micro` chip with the mini radius. Paints do not change.
+  * - Children are the content and sit directly in the root, which is the
+- *   row: `gap-sm` on the root spaces an icon and a text node, so a consumer's
++ *   row: `gap-xs` on the root spaces an icon and a text node, so a consumer's
+  *   `gap-*` or child selectors on `className` reach them.
+  * - `custom` has no paints of its own. `color` (inline, so it beats class
+  *   order) is the content colour, and the wash is that colour at
+@@ -32,8 +32,8 @@ import { StickerSize, StickerVariant } from "./constants";
+ 
+ const stickerVariants = cva(
+   [
+-    "inline-flex w-fit items-center gap-sm overflow-clip",
+-    "px-rg whitespace-nowrap",
++    "inline-flex w-fit items-center gap-xs overflow-clip",
++    "px-sm whitespace-nowrap",
+   ],
+   {
+     variants: {

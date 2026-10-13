@@ -16,6 +16,9 @@ export interface TableProps extends HTMLAttributes<HTMLDivElement> {
   rowHeight?: string;
 }
 
+/** A table of ARIA-role `div`s: `columns` is the CSS grid template, and your
+ * `style` merges after the grid variables. Sorting lives on `TableHeaderCell`
+ * (`sortDirection` sets its `aria-sort`). */
 const Table = forwardRef<HTMLDivElement, TableProps>(
   ({ className, columns, rowHeight, style, ...props }, ref) => (
     <div
@@ -56,6 +59,7 @@ TableHeader.displayName = "TableHeader";
 /* ── TableHeaderCell ───────────────────────────────────────────────────── */
 
 export interface TableHeaderCellProps extends HTMLAttributes<HTMLDivElement> {
+  /** Makes the header sortable: it renders a sort button and sets `aria-sort` from this value. */
   sortDirection?: TableSortDirection;
   onSort?: () => void;
   /** Props for the sort button (sortable headers only): `aria-*`, `id`,

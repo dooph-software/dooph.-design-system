@@ -1,0 +1,58 @@
+#39 Write C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119\src\components\CheckboxField\CheckboxField.tsx  FIRST
+{
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-checkbox-field-row-green-20261011171119\\src\\components\\CheckboxField\\CheckboxField.tsx",
+  "content": "import {\n  forwardRef,\n  type ComponentPropsWithoutRef,\n  type ComponentRef,\n  type ReactNode,\n} from \"react\";\nimport * as CheckboxPrimitive from \"@radix-ui/react-checkbox\";\nimport { cn } from \"../../utils/cn\";\nimport { Checkbox, type CheckboxProps } from \"../Checkbox/Checkbox\";\nimport { BodyText, LabelText } from \"../Text\";\nimport type { CheckboxVariant } from \"../Checkbox/constants\";\n\nexport interface CheckboxFieldProps\n  extends Omit<ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>, \"children\"> {\n  /** Text rendered beside the checkbox. */\n  label: ReactNode;\n  /** Smaller line of text below the label. */\n  hint?: ReactNode;\n  /** Checked / indeterminate fill passed to the inner Checkbox. Defaults to `prominent`. */\n  variant?: CheckboxVariant;\n  /** Extra classes on the outer `<label>` wrapper. */\n  className?: string;\n}\n\nconst CheckboxField = forwardRef<\n  ComponentRef<typeof CheckboxPrimitive.Root>,\n  CheckboxFieldProps\n>(({ label, hint, variant, className, disabled, ...checkboxProps }, ref) => (\n  <label\n    className={cn(\n      \"flex cursor-pointer items-start gap-sm\",\n      disabled && \"cursor-not-allowed\",\n      className,\n    )}\n  >\n    <Checkbox\n      ref={ref}\n      variant={variant}\n      disabled={disabled}\n      className=\"mt-xxs shrink-0\"\n      {...checkboxProps}\n    />\n    <span className=\"flex min-w-0 flex-col gap-xxs\">\n      <LabelText\n        className={cn(\n          disabled && \"text-text-disabled\",\n        )}\n      >\n        {label}\n      </LabelText>\n      {hint != null && (\n        <BodyText\n          className={cn(\n            \"text-text-secondary\",\n            disabled && \"text-text-disabled\",\n          )}\n        >\n          {hint}\n        </BodyText>\n      )}\n    </span>\n  </label>\n));\nCheckboxField.displayName = \"CheckboxField\";\n\nexport { CheckboxField };\n"
+}
+
+#40 Write C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119\src\components\CheckboxField\index.ts  FIRST
+{
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-checkbox-field-row-green-20261011171119\\src\\components\\CheckboxField\\index.ts",
+  "content": "export { CheckboxField } from \"./CheckboxField\";\nexport type { CheckboxFieldProps } from \"./CheckboxField\";\n"
+}
+
+#41 Write C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119\src\components\CheckboxField\CheckboxField.stories.tsx  FIRST
+{
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-checkbox-field-row-green-20261011171119\\src\\components\\CheckboxField\\CheckboxField.stories.tsx",
+  "content": "import { useState } from \"react\";\nimport type { Meta, StoryObj } from \"@storybook/react-vite\";\nimport { CheckboxField } from \"./CheckboxField\";\nimport {\n  CheckboxChecked,\n  CheckboxVariant,\n  type CheckboxChecked as CheckboxCheckedValue,\n} from \"../Checkbox/constants\";\n\nconst meta = {\n  title: \"Inputs/CheckboxField\",\n  component: CheckboxField,\n  parameters: { layout: \"centered\" },\n  tags: [\"autodocs\"],\n  argTypes: {\n    variant: {\n      control: \"select\",\n      options: Object.values(CheckboxVariant),\n    },\n  },\n} satisfies Meta<typeof CheckboxField>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  args: {\n    label: \"Enable notifications\",\n  },\n};\n\nexport const WithHint: Story = {\n  args: {\n    label: \"Enable notifications\",\n    hint: \"You will receive an email when something important happens.\",\n  },\n};\n\nexport const Checked: Story = {\n  args: {\n    label: \"Accept terms and conditions\",\n    hint: \"By checking this box you agree to our terms of service.\",\n    defaultChecked: true,\n  },\n};\n\nexport const Primary: Story = {\n  args: {\n    label: \"Remember me\",\n    variant: CheckboxVariant.primary,\n    defaultChecked: true,\n  },\n};\n\nexport const Disabled: Story = {\n  args: {\n    label: \"This option is unavailable\",\n    hint: \"Contact support for access.\",\n    disabled: true,\n  },\n};\n\nexport const DisabledChecked: Story = {\n  args: {\n    label: \"Required setting\",\n    hint: \"This setting cannot be changed.\",\n    disabled: true,\n    checked: CheckboxChecked.checked,\n  },\n};\n\nexport const Controlled: Story = {\n  render: function ControlledStory() {\n    const [checked, setChecked] = useState<CheckboxCheckedValue>(\n      CheckboxChecked.unchecked,\n    );\n\n    return (\n      <CheckboxField\n        label={\n          checked === CheckboxChecked.checked\n            ? \"Notifications on\"\n            : \"Notifications off\"\n        }\n        hint=\"Toggle to change your notification preference.\"\n        checked={checked}\n        onCheckedChange={setChecked}\n      />\n    );\n  },\n};\n\nexport const AllVariants: Story = {\n  render: () => (\n    <div className=\"flex flex-col gap-xl\">\n      {Object.values(CheckboxVariant).map((variant) => (\n        <CheckboxField\n          key={variant}\n          variant={variant}\n          defaultChecked\n          label={`${variant} variant`}\n          hint={`This field uses the ${variant} checkbox fill.`}\n        />\n      ))}\n    </div>\n  ),\n};\n"
+}
+
+#42 Edit C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119\src\index.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-checkbox-field-row-green-20261011171119\\src\\index.ts",
+  "old_string": "export * from './components/Checkbox';",
+  "new_string": "export * from './components/Checkbox';\nexport * from './components/CheckboxField';"
+}
+
+#45 Edit C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119\CHANGELOG.md  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-checkbox-field-row-green-20261011171119\\CHANGELOG.md",
+  "old_string": "- **Components**\n  - AI chat parts:",
+  "new_string": "- **Components**\n  - `CheckboxField`: a labeled checkbox row with optional `hint` text below the label, for settings screens. Wraps `Checkbox` in a `<label>` with `LabelText` and `BodyText`.\n  - AI chat parts:"
+}
+
+#49 Edit C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119\src\components\CheckboxField\CheckboxField.tsx
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-checkbox-field-row-green-20261011171119\\src\\components\\CheckboxField\\CheckboxField.tsx",
+  "old_string": "import { cn } from \"../../utils/cn\";\nimport { Checkbox, type CheckboxProps } from \"../Checkbox/Checkbox\";\nimport { BodyText, LabelText } from \"../Text\";\nimport type { CheckboxVariant } from \"../Checkbox/constants\";",
+  "new_string": "import { cn } from \"../../utils/cn\";\nimport { Checkbox } from \"../Checkbox/Checkbox\";\nimport { BodyText, LabelText } from \"../Text\";\nimport type { CheckboxVariant } from \"../Checkbox/constants\";"
+}
+
+#50 Edit C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119\src\components\CheckboxField\CheckboxField.stories.tsx
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-checkbox-field-row-green-20261011171119\\src\\components\\CheckboxField\\CheckboxField.stories.tsx",
+  "old_string": "export const Controlled: Story = {\n  render: function ControlledStory() {",
+  "new_string": "export const Controlled: Story = {\n  args: {\n    label: \"Notifications off\",\n  },\n  render: function ControlledStory() {"
+}
+
+#51 Edit C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119\src\components\CheckboxField\CheckboxField.stories.tsx
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-checkbox-field-row-green-20261011171119\\src\\components\\CheckboxField\\CheckboxField.stories.tsx",
+  "old_string": "export const AllVariants: Story = {\n  render: () => (",
+  "new_string": "export const AllVariants: Story = {\n  args: {\n    label: \"Variant showcase\",\n  },\n  render: () => ("
+}
+

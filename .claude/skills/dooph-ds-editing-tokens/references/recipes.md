@@ -1,37 +1,37 @@
 # Token recipes
 
-## 1. One surface changes in dark mode only
+## 1. One place changes in dark mode only
 
-The request: make the chat code-block well darker in dark mode, and keep light mode and every other `surface-secondary` user as they are.
+The request: make the table-cell borders in chat answers stronger in dark mode, and keep light mode and every other `border-primary` user as they are.
 
-`.ds-chat-prose pre` paints `var(--ui-color-surface-secondary)`. So do inline `code` in the same prose, Avatar's `bg-surface-secondary`, and the `surface-secondary` name in `DS_COLOR_TOKENS`. Retuning the shared token would repaint all of them. A `.dark .ds-chat-prose pre { background: #… }` rule would hard-wire the look. Add a token instead:
+`.ds-chat-prose :is(td, th)` draws its borders in `var(--ui-color-border-primary)`. So do the prose's link underline, blockquote rule and `hr`, the `border-border-primary` utility across many component files, and the `border-primary` name in `DS_COLOR_TOKENS`. Retuning the shared token would repaint all of them. A `.dark .ds-chat-prose td { border-color: #… }` rule would hard-wire the look. Add a token instead (`--ui-color-chat-table-border` is a hypothetical name for this example; it does not exist in tokens.css):
 
 ```css
 /* tokens.css, light block `:root, .light`, beside the other chat-prose tokens */
-  /* Code-block well inside ds-chat-prose. */
-  --ui-color-chat-code-surface: var(--ui-color-surface-secondary);
+  /* Table-cell borders inside ds-chat-prose. */
+  --ui-color-chat-table-border: var(--ui-color-border-primary);
 
 /* tokens.css, `.dark` block, with the other dark paints (NOT the alias group) */
-  --ui-color-chat-code-surface: <the dark value you were given>;
+  --ui-color-chat-table-border: <the dark value you were given>;
 ```
 
 ```css
-/* dooph-component-tokens.css: point only the block well at it */
-  .ds-chat-prose pre {
-    background-color: var(--ui-color-chat-code-surface);
+/* dooph-component-tokens.css: point only the table cells at it */
+  .ds-chat-prose :is(td, th) {
+    border: 1px solid var(--ui-color-chat-table-border);
   }
 ```
 
-- Light resolves exactly as before, through the alias, and follows any consumer retune of `surface-secondary`.
+- Light resolves exactly as before, through the alias, and follows any consumer retune of `border-primary`.
 - `.dark` declares its own value. The alias therefore needs no copy in the alias group, and the dark check is satisfied.
-- Scope: the request names code *blocks*, so inline `code` keeps `surface-secondary`. Say so in the report.
-- A `--ui-color-*` token maps to a `--color-chat-code-surface` theme key, which would generate `bg-chat-code-surface` and the other colour utilities. Only CSS reads this token, so add `"ui-color-chat-code-surface"` to `EXCLUDED` in `scripts/sync-theme.mjs`, beside the other raw-var colours such as the slider paints.
+- Scope: the request names table cells, so the blockquote rule, `hr` and link underline keep `border-primary`. Say so in the report.
+- A `--ui-color-*` token maps to a `--color-chat-table-border` theme key, which would generate `border-chat-table-border` and the other colour utilities. Only CSS reads this token, so add `"ui-color-chat-table-border"` to `EXCLUDED` in `scripts/sync-theme.mjs`, beside the other raw-var colours such as the slider paints.
 - If no dark value was given, ask for one, or name it as an open question in the report. Never invent one.
-- Run `npm run sync-tokens`, `node scripts/generate-docs.mjs` and `npm run lint`. Then, in Storybook with Theme set to Dark, read `--ui-color-chat-code-surface` on a `pre` inside the prose.
+- Run `npm run sync-tokens`, `node scripts/generate-docs.mjs`, `node scripts/sync-skills.mjs` and `npm run lint`, in that order. Then, in Storybook with Theme set to Dark, read `--ui-color-chat-table-border` on a `td` inside the prose.
 
 ## 2. An expression token, end to end
 
-An expressive detail inside a practical component, such as "like the caret does" or "our wavy underline", gets a token that the practical preset can switch off. The dropdown caret is the working precedent: `--ui-caret-shape-scale` and `--ui-caret-nudge`.
+An expressive detail inside a practical component, such as "like the caret does" or "our signature notch", gets a token that the practical preset can switch off. The dropdown caret is the working precedent: `--ui-caret-shape-scale` and `--ui-caret-nudge`.
 
 1. **Default**, in the `:root`-only block at the end of `@layer ds.tokens`. Put the whole declaration and its marker on ONE line, because lint finds the marker only when it follows the `;` on the same line:
    ```css

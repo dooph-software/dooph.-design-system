@@ -5,7 +5,7 @@ description: Use when editing src/styles/tokens.css or the EXCLUDED/ALIASES list
 
 # Editing tokens.css
 
-`src/styles/tokens.css` holds every `--ui-*` value, one block per mode and preset. The theme utilities, `theme.css`, cn's merge lists and the token contract are generated from it. A look that differs by mode or place is a token here, never a selector elsewhere.
+`src/styles/tokens.css` defines every `--ui-*` token, one block per mode and preset. Elsewhere in `src/styles`, only the ShimmerText re-bases in `dooph-component-tokens.css` set one: they point `--ui-shimmer-*` at the chat's own tokens. The theme utilities, `theme.css` and the token contract are generated from tokens.css, and so are cn's merge lists, together with the class rules in `index.css`. A look that differs by mode or place is a token here, never a selector elsewhere.
 
 **Not for:** how components consume tokens (see dooph-ds-styling), or consumer overrides (see dooph-design-system-theming).
 
@@ -25,13 +25,13 @@ Authority comes from the layers: consumer (unlayered) > expression preset > DS d
 
 1. **A dark-only look is a `.dark` token line.** Never write a `.dark` selector, a `dark:` variant or a hex paint outside tokens.css, nor `prefers-color-scheme` anywhere, tokens.css included: system mode is the app's job. *Prevents:* a paint that still reaches a `.light` island under `<html class="dark">` and that no consumer token override reaches. Lint checks: "dark-mode rules or hex colours outside tokens.css" (a `.dark` selector, a dark variant or hex in a component stylesheet, `prefers-color-scheme` in any stylesheet, a `dark:` variant in a class string) and "hex colour literals in components and stories".
 2. **To change one place, add a token and leave the shared one alone.** Declare `--ui-new: var(--ui-shared)` in light, so light is unchanged, and give it its own `.dark` value. *Prevents:* the false choice between repainting every user and hard-wiring.
-3. **Retuning an existing token? Report its blast radius**: aliases, utility, raw `var()` reads, `DS_COLOR_TOKENS` entry. *Prevents:* repainting components nobody asked to change.
+3. **Retuning an existing token? Report its blast radius**: aliases, utility, raw `var()` reads, `DS_COLOR_TOKENS` entry (recipes, section 3). Then grep the old literal across `src/`. Update every comment that only restates the old value, header contracts included (code and contract ship together). A comment whose sum no longer balances is a design decision: flag it in the hand-back, never reword it to balance. *Prevents:* repainting components nobody asked to change, stale values left in comments and contracts, and a sum quietly rewritten to hide the slack the new value leaves.
 4. **Add a `.dark` line only when the *resolved* value changes.** An alias (or `color-mix()`, shadow) reaching a token `.dark` changes is repeated verbatim in the alias group; a literal equal to its light value is deleted. *Prevents:* dark islands keeping light values, or pinning a consumer's `:root` override out of `.dark` islands. The lint check is "dark aliases missing from .dark, and redundant .dark lines".
 5. **Never hand-edit generated output. Run `npm run sync-tokens`.** It writes index.css's `__GENERATED_THEME_*__` block, `src/styles/theme.css` and `src/utils/twMergeTheme.ts`. *Prevents:* drift from the generator. The lint check is "generated theme out of date".
 6. **Decide whether the token gets a utility.** Only the `--ui-color-*`, `-shadow-*`, `-radius-*`, `-font-<role>`, `-text-*` and `-spacing-*` families (plus the names in `ALIASES`) map to theme keys. If CSS reads one of these only through `var()`, add it to `EXCLUDED`. *Prevents:* a utility nothing should use.
-7. **Build an expression token end to end** (recipes, section 2). *Prevents:* a detail the practical preset cannot switch off. The lint check is "expression tokens set or read outside the expression system".
+7. **Build an expression token end to end, all four steps** (recipes, section 2): the declaration and its `/* expression */` marker on one line in the `:root` expression block; its neutral value in the practical preset; its name in the "Expression tokens" group of `EXCLUDED` in `scripts/sync-theme.mjs`; a read only in a `.ds-expr-*` rule. *Prevents:* a detail the practical preset cannot switch off, and an `EXCLUDED` group that no longer lists every expression token (no lint check sees that one). The lint check is "expression tokens set or read outside the expression system".
 8. **Motion stays on the scale.** A component's own motion token is only for a loop, a stagger or the generated spring. A new scale step or stagger goes in the reduced-motion block; a loop cycle time never does (its own reduce rule stops it). Never edit the lines between the `__SHAPE_MORPH_EASE_*__` markers; run `npm run generate-shape-morph-ease`. *Prevents:* motion that drifts from the scale or ignores reduced motion. The lint check is "motion timing literals outside tokens.css".
-9. **Write the comment above a token for consumers:** it is published in the token contract. *Prevents:* a misleading consumer reference. Run `node scripts/generate-docs.mjs`. The lint check is "generated doc references out of date".
+9. **Write the comment above a token for consumers:** it is published in the token contract. *Prevents:* a misleading consumer reference. Run `node scripts/generate-docs.mjs`, then `node scripts/sync-skills.mjs`. The lint check is "generated doc references out of date".
 10. **Leave the PLACEHOLDER values alone unless asked.** Values marked PLACEHOLDER in tokens.css are the maintainer's to tune, pending the dark pass. *Prevents:* overwriting tuning the maintainer owns.
 
 Recipes: [references/recipes.md](references/recipes.md). Every token by block: [token-contract.md](../../../skills/dooph-design-system-theming/references/token-contract.md).
@@ -40,7 +40,7 @@ Recipes: [references/recipes.md](references/recipes.md). Every token by block: [
 
 | Agent said | Reality |
 |---|---|
-| "I shouldn't change the token itself. Instead, I should add a dark-mode-specific override for `.ds-chat-prose pre` and `.ds-chat-prose code` backgrounds." | Third option: a new token in both blocks. |
+| "I shouldn't change the token itself. Instead, I should add a dark-mode-specific override for the component's selectors." | Third option: a new token in both blocks. |
 | "the cleanest approach is to override the background directly … inside a `.dark` selector." | A bypass; lint stays green, so nothing pushes back. |
 | "Light mode is untouched since none of these rules apply without the `.dark` ancestor." | A light-block alias leaves light untouched too, and stays overridable. |
 | "Now add the Tailwind aliases in both theme.css and index.css." | Those are generated. Run `npm run sync-tokens`. |
@@ -49,8 +49,8 @@ Recipes: [references/recipes.md](references/recipes.md). Every token by block: [
 
 ## Verify
 
-1. Run `npm run sync-tokens`, then `node scripts/generate-docs.mjs`.
-2. Run `npm run lint`. It must pass. Never report "clean" from tsc alone.
+1. Run `npm run sync-tokens`, then `node scripts/generate-docs.mjs`, then `node scripts/sync-skills.mjs` (generate-docs rewrites the codebase-map skill's inventory, so the skill mirrors go stale).
+2. Run `npm run lint`. It must exit 0; paste its last line (`conventions: N checks passed`) in the hand-back. Never report "clean" from tsc alone.
 3. In Storybook (`npm run storybook`), the Theme toolbar's Dark toggles `.dark` on `<html>`. Read `getComputedStyle(el).getPropertyValue('--ui-…')` in light, dark, a `<div class="dark">` island, and (expression tokens) under `data-ds-expression="practical"`.
 4. Report each token added or changed, its light/dark values and its blast radius.
 

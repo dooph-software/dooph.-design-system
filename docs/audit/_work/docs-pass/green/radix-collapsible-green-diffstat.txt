@@ -1,0 +1,13 @@
+M	.agent/skills/dooph-ds-codebase-map/references/inventory.md
+M	.agents/skills/dooph-ds-codebase-map/references/inventory.md
+M	.claude/skills/dooph-ds-codebase-map/references/inventory.md
+M	CHANGELOG.md
+M	package-lock.json
+M	package.json
+M	skills/dooph-design-system-setup/references/client-references.md
+M	skills/dooph-design-system-usage/references/components.md
+A	src/components/Collapsible/Collapsible.stories.tsx
+A	src/components/Collapsible/Collapsible.tsx
+A	src/components/Collapsible/index.ts
+M	src/index.ts
+M	src/styles/dooph-component-tokens.css

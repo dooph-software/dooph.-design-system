@@ -1,0 +1,12 @@
+diff --git a/app/layout.tsx b/app/layout.tsx
+index 610ee36..57df4e2 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -39,6 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
+   return (
+     <html
+       lang="en"
++      data-ds-expression="practical"
+       className={`${googleSansFlex.variable} ${hostGrotesk.variable} ${bricolageGrotesque.variable} antialiased`}
+       suppressHydrationWarning
+     >

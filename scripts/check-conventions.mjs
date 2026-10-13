@@ -500,7 +500,7 @@ const CHECKS = [
   {
     id: "raw-ui-var-class",
     name: "raw var(--ui-*) in className brackets or (--ui-*) shorthand",
-    why: "A token belongs behind its theme utility (bg-primary, p-md); an arbitrary var() class, or its Tailwind v4 shorthand p-(--ui-…), hides it from tailwind-merge, so cn() cannot resolve conflicts with it.",
+    why: "A token belongs behind its theme utility (bg-primary, p-md) or a ds-* helper; an arbitrary var() class, or its Tailwind v4 shorthand p-(--ui-…), wires the raw token name into the component, and where the prefix is ambiguous (text-[var(--ui-text-body)]) tailwind-merge files a size as a colour, so cn() erases it.",
     // p-[var(--ui-x)], and the shorthand p-(--ui-x) or p-(length:--ui-x).
     run: (ctx) => scan(codeTs(ctx), /\[[^\]\s"'`]*var\(--ui-|-\((?:[\w-]+:)?--ui-/g),
   },
@@ -593,7 +593,7 @@ const CHECKS = [
   {
     id: "svg-var-attribute",
     name: "var() in SVG geometry attributes",
-    why: "SVG geometry attributes (width, r, cx …) do not resolve var(), so the shape falls back to its default size; set the value through style or a class.",
+    why: "SVG 2 parses a presentation attribute as a value, not a declaration, so var() in a geometry attribute (width, r, cx …) is not specified: Chromium draws it, but its SVG DOM reads the length as 0; keep a plain number attribute and set the token through style or a class.",
     run: (ctx) => {
       // Only host elements (lowercase tags) carry SVG attributes; <DropdownMenuSection width="var(…)">
       // is a component PROP. The attribute pattern skips quoted strings and {…} expressions.
@@ -629,7 +629,7 @@ const CHECKS = [
   {
     id: "size-key-name",
     name: "size keys named default or small",
-    why: "Every size scale names its sizes standard and sm, so the same size reads the same on every component; only SIZE keys are held to this, not variant keys.",
+    why: "A size scale calls its default size standard and its small size sm, never default or small, so the same size reads the same on every component; only size scales (…Size consts and cva size groups) are held to this, not variant keys.",
     run: (ctx) => {
       const v = [];
       for (const f of codeTs(ctx)) {
@@ -649,13 +649,13 @@ const CHECKS = [
   {
     id: "expression-system",
     name: "expression tokens set or read outside the expression system",
-    why: "Expression tokens are set only by the tokens.css default and the practical preset and read only by .ds-expr-* rules; anything else stops the practical preset from switching them.",
+    why: "Expression tokens are set only by the tokens.css :root default and the practical preset, and read only by .ds-expr-* rules: a set anywhere else overrides the preset in that subtree, so practical stops switching it; a read anywhere else scatters the detail where the next edit cannot find it; and a marked token missing from the preset is one practical cannot switch off.",
     run: expressionSystem,
   },
   {
     id: "dark-theme",
     name: "dark aliases missing from .dark, and redundant .dark lines",
-    why: "An alias resolves where it is declared, so a nested .dark island keeps the light value unless .dark repeats the alias; a .dark line that repeats a non-alias :root value blocks consumer :root overrides inside .dark.",
+    why: "An alias resolves where it is declared, so a nested .dark island keeps the light value unless .dark repeats the alias; a .dark line that repeats a non-alias :root value re-declares the DS value on every nested .dark island, so a consumer's :root override never reaches them.",
     run: darkTheme,
   },
   {

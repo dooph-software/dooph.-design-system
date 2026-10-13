@@ -1,0 +1,36 @@
+RUN OK
+subtype: success  is_error: false  turns: 20  cost_usd: 0.35671325  duration_ms: 127097
+permission_denials (0):
+
+--- final text ---
+Lint passes. Here's the summary:
+
+---
+
+**Token changed**
+
+| Token | Old | New |
+|---|---|---|
+| `--ui-height-button` | 38px | 40px |
+
+**Blast radius** — every element using `h-button`, `size-button`, `min-h-button`, `min-w-button`, or `var(--ui-height-button)` directly (Button, Tabs, Toggle, SegmentedTabSelect, DropdownCaret, Table stories, etc.). `--ui-size-avatar` (38px) is independent and unchanged.
+
+**Comments that state the old value — flagged, not reworded:**
+
+| File | Line | Comment | Issue |
+|---|---|---|---|
+| `Button/Button.stories.tsx` | 144 | `icon (38px)` | States old value |
+| `SegmentedTabSelect/SegmentedTabSelect.tsx` | 67 | `28px items + xxs inset + 1px border = 38px` | **Arithmetic no longer balances** — now 40px, leaving 2px slack |
+| `SegmentedTabSelect/constants.ts` | 20 | `28px micro text items (38px overall)` | Sum no longer balances (same 2px slack) |
+| `SegmentedTabSelect/constants.ts` | 21 | `38px text items` | States old value |
+| `SegmentedTabSelect/constants.ts` | 23 | `38×38 icon items` | States old value |
+| `Tabs/constants.ts` | 9 | `38px — Figma buttonSizes/buttonHeight` | States old value |
+| `Tabs/constants.ts` | 20 | `38×38 icon-only tab` | States old value |
+| `Toggle/toggleOption.ts` | 54 | `38px — Figma Standard` | States old value |
+| `Toggle/toggleOption.ts` | 62 | `38×38 icon-only` | States old value |
+| `Toggle/constants.ts` | 25 | `standard 38` | States old value |
+| `DropdownCaret/DropdownCaret.tsx` | 14 | `height-button minus spacing-md (26px at defaults)` | **Arithmetic no longer balances** — 40 − 12 = 28, not 26 |
+
+The two arithmetic comments (SegmentedTabSelect container and DropdownCaret frame) reveal 2px of new slack each — design decisions on whether padding/insets should absorb it or inner sizes should grow.
+
+`conventions: 30 checks passed`

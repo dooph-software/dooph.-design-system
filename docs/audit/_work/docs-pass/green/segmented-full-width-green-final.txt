@@ -1,0 +1,29 @@
+RUN OK
+subtype: success  is_error: false  turns: 26  cost_usd: 0.7826820000000002  duration_ms: 298474
+permission_denials (0):
+
+--- final text ---
+All 30 checks passed. Here's the hand-back:
+
+---
+
+**Changed:** `src/components/SegmentedTabSelect/SegmentedTabSelect.tsx`, `SegmentedTabSelect.stories.tsx`, plus regenerated docs/skill mirrors.
+
+**What it does:** Added a `fullWidth` boolean prop to `SegmentedTabSelectProps`. When true, the TabsList gets `w-full [&>*]:flex-1` — the shell stretches to its container and every tab item gets equal width (`flex: 1 1 0%`). When omitted/false, nothing changes — the `inline-flex` TabsList hugs its content as before.
+
+Consumer usage:
+```tsx
+<SegmentedTabSelect fullWidth>
+```
+instead of `className="w-full"` (which only stretched the shell without distributing width to children).
+
+**Decisions:**
+- `fullWidth` prop rather than auto-detecting `w-full` in `className` — explicit, predictable, no string-sniffing. Open if you'd prefer a different name.
+- `[&>*]:flex-1` (equal widths) rather than `[&>*]:grow` (proportional fill) — "share the width equally" reads as equal columns. Settled.
+- `w-full` applied by the component when `fullWidth` is set, so the consumer doesn't need both. Settled.
+
+**Also affected:** None — no shared recipe or constant changed.
+
+**Flagged:** None.
+
+**Lint:** `conventions: 30 checks passed`

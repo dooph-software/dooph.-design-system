@@ -1,0 +1,48 @@
+#41 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642\src\styles\tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011172642\\src\\styles\\tokens.css",
+  "old_string": "  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */\n}",
+  "new_string": "  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */\n  /* TextLink wavy underline stroke weight; 0 = no visible underline.\n   * Uses text-decoration, so it tracks currentColor automatically. */\n  --ui-textlink-underline-thickness: 0.08em; /* expression */\n}"
+}
+
+#42 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642\src\styles\tokens.css
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011172642\\src\\styles\\tokens.css",
+  "old_string": "    --ui-caret-nudge: 0;\n  }",
+  "new_string": "    --ui-caret-nudge: 0;\n    --ui-textlink-underline-thickness: 0;\n  }"
+}
+
+#43 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642\src\styles\index.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011172642\\src\\styles\\index.css",
+  "old_string": "  /* RollingDigitsText — 2D cash-register digit roll (no blur, no 3D).",
+  "new_string": "  /* TextLink — always-visible wavy underline in the link's own colour.\n   * Controlled by --ui-textlink-underline-thickness (expression token;\n   * the practical preset sets it to 0, hiding the underline). */\n  .ds-expr-textlink-underline {\n    text-decoration-line: underline;\n    text-decoration-style: wavy;\n    text-decoration-color: currentColor;\n    text-decoration-thickness: var(--ui-textlink-underline-thickness);\n    text-underline-offset: var(--ui-underline-link-offset);\n  }\n\n  /* RollingDigitsText — 2D cash-register digit roll (no blur, no 3D)."
+}
+
+#44 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642\src\components\TextLink\TextLink.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011172642\\src\\components\\TextLink\\TextLink.tsx",
+  "old_string": "/**\n * TextLink — body text that acts as a link. Ghost foreground at rest,\n * primary text on hover/active (Figma 554-927; color change only, no underline).\n * For Next.js: <TextLink asChild><Link href=\"…\">Changelog</Link></TextLink>\n */",
+  "new_string": "/**\n * ## behaviour\n * TextLink — body text that acts as a link. Ghost foreground at rest,\n * primary text on hover/active. Always-visible wavy underline in the link's\n * colour, controlled by `--ui-textlink-underline-thickness` (expression token)\n * through the `.ds-expr-textlink-underline` helper.\n *\n * For Next.js: <TextLink asChild><Link href=\"…\">Changelog</Link></TextLink>\n *\n * ## constraints\n * - The wavy underline must stay neutralisable by the practical preset.\n *   Prevents: a practical product still showing the decorative underline.\n */"
+}
+
+#45 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642\src\components\TextLink\TextLink.tsx
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011172642\\src\\components\\TextLink\\TextLink.tsx",
+  "old_string": "          \"ds-motion-state\",",
+  "new_string": "          \"ds-motion-state ds-expr-textlink-underline\","
+}
+
+#46 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642\src\components\TextLink\TextLink.stories.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011172642\\src\\components\\TextLink\\TextLink.stories.tsx",
+  "old_string": "export const InlineSentence: Story = {\n  name: \"Inline in sentence\",\n  render: () => (\n    <BodyText>\n      Learn more about our{\" \"}\n      <TextLink href=\"#\">design principles</TextLink> in the documentation.\n    </BodyText>\n  ),\n};",
+  "new_string": "export const InlineSentence: Story = {\n  name: \"Inline in sentence\",\n  render: () => (\n    <BodyText>\n      Learn more about our{\" \"}\n      <TextLink href=\"#\">design principles</TextLink> in the documentation.\n    </BodyText>\n  ),\n};\n\nexport const Practical: Story = {\n  name: \"Practical\",\n  render: () => (\n    <div className=\"flex gap-xl\">\n      <div>\n        <BodyText as=\"p\" className=\"text-ghost-fg-active mb-xs\">\n          Default (signature)\n        </BodyText>\n        <TextLink href=\"#\">Read the changelog</TextLink>\n      </div>\n      <div data-ds-expression=\"practical\">\n        <BodyText as=\"p\" className=\"text-ghost-fg-active mb-xs\">\n          Practical\n        </BodyText>\n        <TextLink href=\"#\">Read the changelog</TextLink>\n      </div>\n    </div>\n  ),\n};"
+}
+

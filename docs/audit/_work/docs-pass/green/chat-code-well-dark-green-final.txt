@@ -1,0 +1,19 @@
+RUN OK
+subtype: success  is_error: false  turns: 23  cost_usd: 0.4763279999999999  duration_ms: 126806
+permission_denials (0):
+
+--- final text ---
+All clean. Here's the summary:
+
+**Token added:** `--ui-chat-prose-code-well`
+- **Light:** `var(--ui-color-surface-secondary)` — resolves identically to before, no visual change.
+- **Dark:** `#0e0e10` — a darker well so code blocks don't blend into the surrounding surface.
+
+**Files changed:**
+| File | What |
+|---|---|
+| `src/styles/tokens.css` | New token in light block (line ~280) and dark block (line ~852) |
+| `src/styles/dooph-component-tokens.css` | `.ds-chat-prose pre` background now reads the new token |
+| `skills/dooph-design-system-theming/references/token-contract.md` | Regenerated (includes new token) |
+
+**Blast radius:** Only `.ds-chat-prose pre` reads this token. Inline `<code>` chips still use `--ui-color-surface-secondary` unchanged.

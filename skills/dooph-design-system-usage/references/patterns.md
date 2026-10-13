@@ -86,7 +86,7 @@ export function NotificationsForm({ initial }: { initial: Settings }) {
 Points to copy:
 - `Input` puts `id`, `ref` and every other prop on the `<input>`, so `htmlFor` reaches it. `className` goes on the field chrome. `onValueChange` receives the raw string.
 - `Checkbox` is a Radix checkbox, so it takes `checked` / `onCheckedChange` and draws its own indicator. Its `id` sits on the box, so the label's `htmlFor` toggles it.
-- A Server Component cannot pass a function (`onClick`, `onCheckedChange`) to anything. If a handler is needed, that subtree is a client leaf.
+- A Server Component cannot pass an event handler or other plain function (`onClick`, `onCheckedChange`) to a client component or DOM element; a Server Action (`"use server"`) is the exception. If a handler is needed, that subtree is a client leaf.
 - A Server Component can render DS components with plain props (strings, numbers, elements, dot consts), as the page does with `TitleText`.
 
 ## 2. Links and navigation
@@ -104,7 +104,7 @@ import { Button, ButtonVariant, TextLink } from "@dooph-software/design-system";
 </TextLink>
 ```
 
-With `asChild`, your element becomes the root and receives the DS classes, handlers and `ref`. The child must be exactly one element. Don't put a `<Link>` inside a `<Button>` without `asChild`: that nests a link in a button. `CTAButton`, `OutlineButton`, `ShapeButton`, `DropdownTrigger` and `TextDropdownTrigger` take `asChild` the same way. The Radix triggers (`ModalTrigger`, `SheetTrigger`, `PopoverTrigger`, `TooltipTrigger`, `DropdownMenuTrigger`) take it from Radix.
+With `asChild`, your element becomes the root and receives the DS classes, handlers and `ref`. The child must be exactly one element. Don't put a `<Link>` inside a `<Button>` without `asChild`: that nests a link in a button. `ShapeButton`, `DropdownTrigger` and `TextDropdownTrigger` take `asChild` the same way. `CTAButton` takes it too but supplies its own content: pass `text` and `icon` and leave the child empty (`<CTAButton asChild text="See pricing" icon={…}><Link href="/pricing" /></CTAButton>`). `OutlineButton` slots its inner button: your element gets the handlers and `ref`, while `className` still styles the outer frame `<div>`. The Radix triggers (`ModalTrigger`, `SheetTrigger`, `PopoverTrigger`, `TooltipTrigger`, `DropdownMenuTrigger`) take it from Radix.
 
 A link-only screen needs no `"use client"`. `Button` and `TextLink` render from a Server Component.
 
@@ -166,7 +166,7 @@ DS controls set their own text role, so they take plain strings. Containers that
 </Table>
 ```
 
-`TableHeaderCell` sets the button role on its own label. `TableCell`, `ModalContent`, `SheetContent`, `PopoverContent` and `OutlineSection` set no text role, and `ModalContent` / `SheetContent` add no padding either. `ModalTitle` and `SheetTitle` render as `HeadingText`; their descriptions render as `BodyText`.
+`TableHeaderCell` sets the button text role (`ButtonText`) on its own label. `TableCell`, `ModalContent`, `SheetContent`, `PopoverContent` and `OutlineSection` set no text role, and `ModalContent` / `SheetContent` add no padding either. `ModalTitle` and `SheetTitle` render as `HeadingText`; their descriptions render as `BodyText`.
 
 ## 5. Toasts
 
@@ -205,3 +205,42 @@ export const twMerge = extendTailwindMerge<"text-style">(DS_TW_MERGE_CONFIG);
 ## 7. Without Tailwind
 
 The tokens are CSS custom properties from `styles.css`, so plain CSS reads them directly: `gap: var(--ui-spacing-sm)`, `color: var(--ui-color-text-secondary)`, `border-radius: var(--ui-radius-tight)`. The token names and values are in [token-contract.md](../../dooph-design-system-theming/references/token-contract.md).
+
+## 8. AI chat
+
+The chat parts draw a conversation your app runs: transport, streaming state, timers and copy ("Thought for 26s") are yours. Render the composer from the client component that owns the chat state.
+
+```tsx
+"use client";
+
+import {
+  AIPromptInput,
+  AIPromptInputSubmit,
+  AIPromptInputTextarea,
+  AIPromptInputToolbar,
+  AIPromptInputToolbarEnd,
+} from "@dooph-software/design-system";
+
+export function Composer({ responding, send, abort }: {
+  responding: boolean;
+  send: (text: string) => void;
+  abort: () => void;
+}) {
+  return (
+    <AIPromptInput onSubmit={send} responding={responding} onStop={abort}>
+      <AIPromptInputTextarea placeholder="Ask anything" />
+      <AIPromptInputToolbar>
+        <AIPromptInputToolbarEnd>
+          <AIPromptInputSubmit
+            onClick={(event) => {
+              if (responding && !window.confirm("Stop the response?")) event.preventDefault();
+            }}
+          />
+        </AIPromptInputToolbarEnd>
+      </AIPromptInputToolbar>
+    </AIPromptInput>
+  );
+}
+```
+
+`AIPromptInputSubmit` sends while idle and stops while `responding`. Your `onClick` runs before `onStop`, and `event.preventDefault()` in it cancels the stop. The submit forwards its other props, so it works under `<TooltipTrigger asChild>`.

@@ -1,0 +1,28 @@
+RUN OK
+subtype: success  is_error: false  turns: 33  cost_usd: 0.7843425500000001  duration_ms: 250736
+permission_denials (0):
+
+--- final text ---
+Lint passes (30/30 checks). Here's a summary of what was done and the design decisions to surface:
+
+## Changes
+
+**Token** (`src/styles/tokens.css`)
+- Added `--ui-searchbox-icon-lean: -6deg` (expression token) — rotates the magnifier counter-clockwise on hover.
+- Practical preset neutralises it to `0deg`.
+
+**CSS rule** (`src/styles/index.css`)
+- `.ds-searchbox-host:not([data-disabled]):hover .ds-expr-searchbox-icon-lean` sets `rotate: var(--ui-searchbox-icon-lean)`. State is in the selector, matching the caret pattern.
+
+**Component** (`src/components/SearchBox/SearchBox.tsx`)
+- Outer `<div>` gets `ds-searchbox-host` class (the hover anchor).
+- `<SearchIcon>` gets `ds-motion-state ds-expr-searchbox-icon-lean` (transition + expression class).
+- JSDoc updated; constraint added ("must stay neutralisable by the practical preset").
+
+**Story** (`src/components/SearchBox/SearchBox.stories.tsx`)
+- Added `Practical` story showing signature vs. practical side by side.
+
+## Design decisions to surface
+
+- **Angle: `-6deg`** — I chose a small counter-clockwise tilt. The spec didn't name a value. If you want a different angle or direction, just change `--ui-searchbox-icon-lean` in tokens.css.
+- **Transition** uses `ds-motion-state`, which transitions `rotate` at `--ui-motion-duration-fast` — same mechanism as other state transitions. The caret's own lean uses the morph engine spring; this is simpler since the magnifier has no shape-morph.

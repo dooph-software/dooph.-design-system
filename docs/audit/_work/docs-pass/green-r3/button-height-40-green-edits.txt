@@ -1,0 +1,80 @@
+#17 Edit C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/styles/tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/styles/tokens.css",
+  "old_string": "  --ui-height-button: 38px;",
+  "new_string": "  --ui-height-button: 40px;"
+}
+
+#18 Edit C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/DropdownCaret/DropdownCaret.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/DropdownCaret/DropdownCaret.tsx",
+  "old_string": " *   the frame inside is height-button minus spacing-md (26px at defaults). The",
+  "new_string": " *   the frame inside is height-button minus spacing-md (28px at defaults). The"
+}
+
+#19 Edit C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Toggle/toggleOption.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Toggle/toggleOption.ts",
+  "old_string": "        /** 38px — Figma Standard. */",
+  "new_string": "        /** 40px — Figma Standard. */"
+}
+
+#20 Edit C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Toggle/toggleOption.ts
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Toggle/toggleOption.ts",
+  "old_string": "        /** 38×38 icon-only. */",
+  "new_string": "        /** 40×40 icon-only. */"
+}
+
+#21 Edit C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Tabs/constants.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Tabs/constants.ts",
+  "old_string": "  /** 38px — Figma `buttonSizes/buttonHeight`, `rg` (10px) horizontal padding. */",
+  "new_string": "  /** 40px — Figma `buttonSizes/buttonHeight`, `rg` (10px) horizontal padding. */"
+}
+
+#22 Edit C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Tabs/constants.ts
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Tabs/constants.ts",
+  "old_string": "  /** 38×38 icon-only tab. */",
+  "new_string": "  /** 40×40 icon-only tab. */"
+}
+
+#23 Edit C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Button/Button.stories.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Button/Button.stories.tsx",
+  "old_string": "              <LabelText className=\"text-text-secondary\">icon (38px)</LabelText>",
+  "new_string": "              <LabelText className=\"text-text-secondary\">icon (40px)</LabelText>"
+}
+
+#24 Edit C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Toggle/constants.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/Toggle/constants.ts",
+  "old_string": " * standard 38 · sm 34 · icon 38×38 · iconMicro 28×28 = Figma \"Icon Small\",",
+  "new_string": " * standard 40 · sm 34 · icon 40×40 · iconMicro 28×28 = Figma \"Icon Small\","
+}
+
+#25 Edit C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/SegmentedTabSelect/constants.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/SegmentedTabSelect/constants.ts",
+  "old_string": " * standard       — no shell, 38px text items",
+  "new_string": " * standard       — no shell, 40px text items"
+}
+
+#26 Edit C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/SegmentedTabSelect/constants.ts
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-button-height-40-green-20261011213620/src/components/SegmentedTabSelect/constants.ts",
+  "old_string": " * icon           — no shell, 38×38 icon items",
+  "new_string": " * icon           — no shell, 40×40 icon items"
+}
+

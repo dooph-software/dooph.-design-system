@@ -1,0 +1,9 @@
+M	.agent/skills/dooph-ds-codebase-map/references/inventory.md
+M	.agents/skills/dooph-ds-codebase-map/references/inventory.md
+M	.claude/skills/dooph-ds-codebase-map/references/inventory.md
+M	scripts/sync-theme.mjs
+M	skills/dooph-design-system-theming/references/token-contract.md
+M	src/components/TextLink/TextLink.stories.tsx
+M	src/components/TextLink/TextLink.tsx
+M	src/styles/index.css
+M	src/styles/tokens.css

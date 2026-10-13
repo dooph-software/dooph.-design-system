@@ -10,9 +10,12 @@
  *   @import "@dooph-software/design-system/styles.css";
  *   @import "@dooph-software/design-system/theme.css";
  *
- * This registers every --ui-* token in your Tailwind build so utilities like
- * p-md, gap-sm, rounded-normal, font-label and bg-primary all generate and
- * resolve to design-system tokens. Token VALUES still come from styles.css at
+ * This registers the design system's color, shadow, radius, font, text-size and
+ * spacing tokens (plus a few named aliases) in your Tailwind build, so utilities
+ * like p-md, gap-sm, rounded-normal, font-label and bg-primary all generate and
+ * resolve to design-system tokens. Other tokens (weights, font axes, tracking,
+ * icon sizes, component-only tokens) get no utility; use var(--ui-…) for them.
+ * Token VALUES still come from styles.css at
  * runtime (these are `inline` var() references), so overriding --ui-* in your
  * own CSS keeps working. Apps that do not use Tailwind can ignore this file.
  */

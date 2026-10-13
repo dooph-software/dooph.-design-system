@@ -1,0 +1,1 @@
+Disabled inputs are hard to see in light mode. Make the disabled input fill a bit darker, #ececec.

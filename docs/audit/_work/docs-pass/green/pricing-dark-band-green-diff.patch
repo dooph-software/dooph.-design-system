@@ -1,0 +1,13 @@
+diff --git a/app/page.tsx b/app/page.tsx
+index 3eb393d..c4b319e 100644
+--- a/app/page.tsx
++++ b/app/page.tsx
+@@ -32,7 +32,7 @@ export default async function Home() {
+         </div>
+       </section>
+ 
+-      <section id="pricing" className="flex flex-col items-center gap-xl px-xl py-xxxl">
++      <section id="pricing" className="dark flex flex-col items-center gap-xl px-xl py-xxxl bg-surface-primary">
+         <div className="flex flex-col items-center gap-sm text-center">
+           <TitleText as="h2">Pricing</TitleText>
+           <BodyText as="p" className="text-text-secondary">

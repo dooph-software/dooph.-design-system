@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011204205 (with-skills)
+snapshot tree: b74355042afb2f49739de117e5f734ba77580495 (main working tree)
+start tree:    6df086d6c5e1a0963bf9fe62d2f56248b87292b2 (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-textlink-wavy-underline-green-20261011204205/sandbox-start-tree)

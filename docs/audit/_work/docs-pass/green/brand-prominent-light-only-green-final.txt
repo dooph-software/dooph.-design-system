@@ -1,0 +1,15 @@
+RUN OK
+ds tarball: C:/Users/stick/AppData/Local/Temp/claude/C--Users-stick-Github-dooph-dooph-Design-System/fb5b5c5d-cbc2-47a0-9157-b9f6db4d3431/scratchpad/green-pack/dooph-software-design-system-5.3.0.tgz sha256 28e32adb71755921aec6b79b2f58a9f4efdaf7e5439b6df8b018714387391195
+installed tarball sha256: 28e32adb71755921aec6b79b2f58a9f4efdaf7e5439b6df8b018714387391195
+subtype: success  is_error: false  turns: 8  cost_usd: 0.18922354999999996  duration_ms: 56946
+permission_denials (0):
+
+--- final text ---
+Done. Here's what was added to `app/globals.css`:
+
+- **Light mode** (`:root:not(.dark), .light`): prominent set to `#6d28d9`, with darker hover (`#5b21b6`) and active (`#4c1d95`) states. Border aliases restated so they resolve correctly.
+- **Dark mode** (`.dark`): pinned to the DS defaults (`#340fd9`, `#2406ac`, `#1a0189`) so the brand purple doesn't leak into dark mode or dark islands.
+
+The `.dark` pin is needed because all prominent tokens have Dark = `same` — without it, a dark island inside a light page would inherit the brand purple.
+
+**Candidates not touched** (mention per skill guidance): `--ui-prominent-color` (the text-on-prominent token) and the focus ring. If the brand purple needs contrast adjustments for either of those, let me know.

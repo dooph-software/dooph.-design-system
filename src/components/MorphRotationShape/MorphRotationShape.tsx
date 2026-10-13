@@ -23,7 +23,8 @@
  *   on each frame's bounds (Compose processPath). `controlled`/`embedded` fill
  *   the box at the 24-unit viewBox scale about a FIXED centre, so at rest the
  *   shape is pixel-identical to the static Shapes component; rotation and
- *   overshoot then spill ~9% past the box, which frames reserve as padding.
+ *   overshoot then spill past the box (rotation alone up to 13.5% for the
+ *   widest shapes, more with overshoot), which frames reserve as padding.
  * - `restingAngle` derives each step's turn from the target shape's measured
  *   rotational symmetry so every rest pose lands on that angle.
  * - It fills the box it is given and sizes nothing itself: give it a size or

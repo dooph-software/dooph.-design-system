@@ -73,3 +73,56 @@ functions): exit 0; a negative control (`<Button variant="danger" size="big">`, 
 - M: Usage example padding `p-lg`. (Fixed: the old example used numeric `p-6`.)
 - M: Elements can cross into a client component from a Server Component; functions cannot. Evidence: RSC serialisation rule. (Added.)
 - M: Crossing the breakpoint unmounts one root; controlled `open` survives; third `useSyncExternalStore` argument is the server snapshot. Evidence: React semantics; unchanged.
+
+## Fix round 1 (2026-10-11)
+
+Changed or added claims after review and two maintainer decisions (typography is props only, for consumers too; responsive type is not supported).
+
+- S: Typography is props only, Text components included: `fontSize={FontSizes.subheading}`, `fontWeight={FontWeights.semibold}`, `letterSpacing={Tracking.label}`, `lineHeight`, `tabular`. Evidence: maintainer decision (fix round 1); props at src/components/Text/textStyle.ts:43, :61 and components.md BaseText table (`fontSize`, `fontWeight`, `letterSpacing`, `lineHeight`, `tabular`); consts at src/components/Text/constants.ts (FontSizes.subheading, FontWeights.semibold, Tracking.label). Replaces the earlier "half a role" failure text.
+- S: Props are inline, so they beat every class (only `style` outranks them); the consts keep sizes on the token scale; a class loses to a prop, and `text-sm` is off the scale. Evidence: BaseText.tsx:107-111 (typography written as inline `style`, with `style` spread after it); constants.ts values are `var(--ui-*)`; src/styles/index.css role classes sit in `@layer components`; `text-sm` is Tailwind's default size, not a `--ui-text-*` token (theme.css registers no `--text-sm`).
+- S: Line height is the app's, set with the `lineHeight` prop. Evidence: src/styles/index.css comment above `@layer components` (roles set no line-height).
+- S: Responsive type isn't supported: props only, and the props take no per-breakpoint values; the props accept any CSS string, but a viewport-driven string (`clamp()`, `vw`, a media-query `var()`) is off the role scale and breaks the rule. Evidence: maintainer decision B; prop types at src/components/Text/constants.ts:142-150 (`(string & {})` arms), src/utils/length.ts:1-3 (strings pass through); no prop accepts a breakpoint map (textStyle.ts).
+- S: `CTAText` is a role. Evidence: BaseText.tsx `export const CTAText`; src/components/Text/index.ts.
+- S: On some components `className` styles a different element from the one that gets `ref`, `style` and the other props (Input, SearchBox, OutlineButton, SegmentedTabSelect, the Sliders among them); check the components.md entry and the JSDoc. Evidence: components.md:908 (Input), :1428 (SegmentedTabSelect), :1725, :1737, :1752 (Sliders); SearchBox.tsx:19; OutlineButton.tsx:62-63. components.md shows only a description's first sentence, so SearchBox and OutlineButton placement is in the JSDoc only; DropdownMenuSearch.tsx:10-11 and CodeDigitInput.tsx:13-14 split the same way ("among them").
+- S: Tooltip needs a `TooltipProvider` ancestor; Radix throws without one. Evidence: src/components/Tooltip/Tooltip.tsx:14 (`Tooltip = TooltipPrimitive.Root`); node_modules/@radix-ui/react-tooltip/dist/index.mjs:29 (provider context) and @radix-ui/react-context `must be used within` throw.
+- S: AI chat includes `ChatDivider` and `UserMessageHeader`. Evidence: src/components/AIChat/index.ts.
+- S: Second rationalization quote restored verbatim with backticks. Evidence: SCORES.md (e) settings-notifications-form ("Client components would use `"use client"` and fetch/axios on client side").
+- S: Verification grep extended (`font-[`, `text-[`, bracketed hex) and labelled partial. Evidence: rerun on 16 bad and 7 good sample lines: all 16 bad lines hit; one good-intent line (`text-[color:var(--app-x)]`) also hits, which is why it says "should print nothing" and "read the diff too".
+- P1: Server Components cannot pass an event handler or other plain function to a client component or DOM element; a Server Action is the exception. Evidence: matches skills/dooph-design-system-setup/SKILL.md rule 4 and references/client-references.md:8.
+- P2: OutlineButton `asChild` slots the inner button; `className` styles the outer frame. Evidence: src/components/OutlineButton/OutlineButton.tsx:62-63, :90.
+- P4: TableHeaderCell sets the button text role (`ButtonText`). Evidence: Table.tsx:104, :118.
+- P8: AIPromptInput takes `onSubmit`, `responding`, `onStop`; AIPromptInputSubmit sends when idle and stops while responding; a consumer `onClick` runs before `onStop` and `event.preventDefault()` cancels the stop; it forwards other props, so `TooltipTrigger asChild` works. Evidence: src/components/AIChat/AIPromptInput.tsx:292-297 (JSDoc); components.md AIPromptInput table; CHANGES.md:2211 docs owed and consumer impact line; tsc (chat.tsx, exit 0).
+- DS comments (comment-only): src/components/Text/BaseText.tsx JSDoc and src/styles/index.css role-layer comment reworded so they no longer invite consumer typography utilities. Kept: roles sit in `@layer components`; props are inline and win; line height is set with the `lineHeight` prop.
+
+## Fix round 2 (2026-10-11)
+
+Removed from SKILL.md (for length; nothing removed was false):
+- The Red flags line. Its LabelText item is folded into the Text rule ("a label beside its control always takes `as="label"`"; evidence: SCORES.md (e) "Weekly digest" bare LabelText). The other items stay covered by the rules (smallest-leaf, spacing, Text) and the verification grep.
+- The Related section (line 10 names both siblings and components.md; token-contract.md is the theming skill's).
+- The overview's Text/tokens sentence; the className row's per-component examples and its Input sentence (Input's placement stays in patterns.md P1; it is not in components.md, see report); the Table `columns` parenthetical (now in the Table JSDoc, so components.md carries it); the Menu row's `DropdownMenuTrigger asChild` clause (patterns.md P3 keeps it); `<TextLink asChild>` and the second plain-string example; `ProgressIndicator (0–1)` (components.md carries `progress`); the call-to-action note on `ButtonVariant.prominent`.
+- Reworded, same facts: the Text-rule failure ("gets none of the role's type tokens"), the typography failure, the Tooltip note ("needs a `TooltipProvider` ancestor"), the partial-grep note, and the "use client" check.
+
+Added to src (JSDoc and story text only; each now appears in components.md):
+- SliderContinuous / SliderStepped / SliderLabeled first sentence: single thumb, only `value[0]` drawn and edited. Evidence: Slider.tsx:45-46 (`SliderProps` JSDoc), :197-200 (Radix handed only `value[0]`); components.md:1723, :1735, :1750.
+- SplitButtonTrigger `aria-label`: '"More options" unless `aria-labelledby` is passed'. Evidence: SplitButton.tsx:65 (`ariaLabel ?? (props["aria-labelledby"] ? undefined : "More options")`); components.md:1811.
+- BaseIcon `aria-hidden`: hidden by default; with `aria-label`/`aria-labelledby` not hidden unless passed. Evidence: BaseIcon.tsx:101-103; the file's behavior header lines 9-10 say the same; components.md:857 and other icon/shape tables.
+- Table: ARIA-role divs, `columns` is the grid template, `aria-sort` follows `sortDirection`, `style` merges after the grid variables. Evidence: Table.tsx roles (`role="table"`, `"row"`, `"columnheader"`, `"cell"`), `--table-cols` then `...style`, `aria-sort={ARIA_SORT[sortDirection]}`; components.md:1868.
+- TableHeaderCell `sortDirection`: makes the header sortable, renders a sort button and sets `aria-sort`. Evidence: Table.tsx branch `if (sortDirection !== undefined)` rendering `Button` with `onClick={onSort}` and `aria-sort`; components.md:1891.
+- BaseText.stories.tsx docs description and Precedence note, plus BaseText.tsx `unstyled` JSDoc: props-only wording (maintainer decision). Kept facts: props are inline and beat the role class (only `style` outranks them); roles sit in `@layer components`.
+
+## Fix round 3 (2026-10-11)
+
+- Input component JSDoc: `className` on the field chrome (the `<input>` for the text variant, the wrapper otherwise); `ref`, `style` and other props on the `<input>`. Evidence: Input.tsx behavior header lines 5-9; `style` is not destructured in Input.tsx, so it reaches the `<input>` with the rest props; components.md:908. SKILL.md "When `className` lands off the root, components.md says where" now covers Input, SegmentedTabSelect (components.md:1426) and the sliders.
+- BaseText.stories.tsx Precedence rows now use props only (`FontSizes.hero`, `Tracking.hero`).
+
+## Fix round 4 (2026-10-11, claim-check batch 6)
+
+- P: `ShapeButton`, `DropdownTrigger` and `TextDropdownTrigger` take `asChild` the way `Button` does; `CTAButton` takes it but supplies its own content: pass `text` and `icon`, leave the child empty. Evidence: `Slottable child={children}` at ShapeButton.tsx:148, DropdownTrigger.tsx:78, :332; CTAButton.tsx:77-80 (`text`, `icon` required), :84-93 (JSDoc), :215-218 (`cloneElement(children, undefined, content)`).
+- BaseText.tsx JSDoc precedence list: props beat every class, only the `style` prop outranks them. Evidence: BaseText.tsx:107-111 (`{ ...typography, ...style }`).
+- BaseText.stories.tsx component description: props beat the role class; only `style` outranks them. Evidence: as above; Precedence story row "style beats props".
+- BaseText.stories.tsx Unstyled note: props alone set typography; className carries colour and layout. Evidence: BaseText.tsx:17 (`unstyled` styles from props alone), :64-66 (className never typography).
+- src/styles/index.css hero-pair comment: role classes are spelled out because BaseText applies exactly one role class per element. Evidence: BaseText.tsx:93, :103 (`cn(role && TEXT_VARIANT_CLASS[role], className)`, one role or none when `unstyled`). The comment sits outside the generated theme block (markers end at index.css:229).
+
+## Fix round 5 (2026-10-11, consumer GREEN skill gaps)
+
+- S: Verification step 1 (SKILL.md:64) names the app's own `npm run typecheck` and `npm run build`, never raw `tsc`; in Next.js, raw `tsc` reporting `Cannot find name 'LayoutProps'` means `next typegen` was skipped, not a pre-existing error. Evidence: agrees with dooph-design-system-setup SKILL.md:37 (Verify 1: the app's own typecheck script, never raw `tsc`; `next typegen && tsc --noEmit` on Next 15.5+; the `LayoutProps` reading) and :47 (Rationalization "The layout error is pre-existing."); ../ds-consumer-template/package.json:7 (`"build": "next build"`), :9 (`"typecheck": "next typegen && tsc --noEmit"`). Baseline failure: SCORES-consumer.md settings-notifications-form and changelog-reading-column (raw `npx tsc --noEmit` → `Cannot find name 'LayoutProps'`, called pre-existing; the post-run `npm run typecheck` exits 0).

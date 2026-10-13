@@ -1,0 +1,24 @@
+#12 Edit C:\Users\stick\Github\dooph\ds-sb-chat-code-well-dark-green-20261011171640\src\styles\tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-chat-code-well-dark-green-20261011171640\\src\\styles\\tokens.css",
+  "old_string": "  /* Inline code inside ds-chat-prose. */\n  --ui-chat-prose-code-radius: 4px;",
+  "new_string": "  /* Inline code inside ds-chat-prose. */\n  --ui-chat-prose-code-radius: 4px;\n  /* Code-block well background inside ds-chat-prose. */\n  --ui-chat-prose-code-well: var(--ui-color-surface-secondary);"
+}
+
+#14 Edit C:\Users\stick\Github\dooph\ds-sb-chat-code-well-dark-green-20261011171640\src\styles\tokens.css
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-chat-code-well-dark-green-20261011171640\\src\\styles\\tokens.css",
+  "old_string": "  --ui-color-sticker-prominent: #8c7bff;\n\n  /* ── Alias re-declarations",
+  "new_string": "  --ui-color-sticker-prominent: #8c7bff;\n\n  --ui-chat-prose-code-well: #0e0e10;\n\n  /* ── Alias re-declarations"
+}
+
+#15 Edit C:\Users\stick\Github\dooph\ds-sb-chat-code-well-dark-green-20261011171640\src\styles\dooph-component-tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-chat-code-well-dark-green-20261011171640\\src\\styles\\dooph-component-tokens.css",
+  "old_string": "  .ds-chat-prose pre {\n    overflow-x: auto;\n    border-radius: var(--ui-radius-tight);\n    background-color: var(--ui-color-surface-secondary);\n    padding: var(--ui-spacing-rg);",
+  "new_string": "  .ds-chat-prose pre {\n    overflow-x: auto;\n    border-radius: var(--ui-radius-tight);\n    background-color: var(--ui-chat-prose-code-well);\n    padding: var(--ui-spacing-rg);"
+}
+

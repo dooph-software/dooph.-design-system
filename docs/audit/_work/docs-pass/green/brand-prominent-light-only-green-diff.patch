@@ -1,0 +1,31 @@
+diff --git a/app/globals.css b/app/globals.css
+index 3e4892c..2c4dcef 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -16,6 +16,26 @@
+     sans-serif;
+ }
+ 
++/* Brand purple as the prominent colour in light mode only. */
++:root:not(.dark),
++.light {
++  --ui-color-prominent: #6d28d9;
++  --ui-color-prominent-hover: #5b21b6;
++  --ui-color-prominent-active: #4c1d95;
++  --ui-color-prominent-border: var(--ui-color-prominent);
++  --ui-color-prominent-border-hover: var(--ui-color-prominent-hover);
++  --ui-color-prominent-border-active: var(--ui-color-prominent-active);
++}
++
++.dark {
++  --ui-color-prominent: #340fd9;
++  --ui-color-prominent-hover: #2406ac;
++  --ui-color-prominent-active: #1a0189;
++  --ui-color-prominent-border: var(--ui-color-prominent);
++  --ui-color-prominent-border-hover: var(--ui-color-prominent-hover);
++  --ui-color-prominent-border-active: var(--ui-color-prominent-active);
++}
++
+ @layer base {
+   body {
+     background-color: var(--ui-color-surface-page);

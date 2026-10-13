@@ -1,0 +1,50 @@
+#40 Write C:\Users\stick\Github\dooph\ds-sb-radix-collapsible-green-20261011210529\src\components\Collapsible\Collapsible.tsx  FIRST
+{
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-radix-collapsible-green-20261011210529\\src\\components\\Collapsible\\Collapsible.tsx",
+  "content": "import * as CollapsiblePrimitive from \"@radix-ui/react-collapsible\";\nimport {\n  forwardRef,\n  type ComponentPropsWithoutRef,\n  type ComponentRef,\n} from \"react\";\nimport { cn } from \"../../utils/cn\";\nimport { ButtonText } from \"../Text\";\nimport { ChevronDownIcon, IconSize } from \"../Icons\";\n\nconst Collapsible = CollapsiblePrimitive.Root;\n\n/* CollapsibleTrigger */\n\nexport type CollapsibleTriggerProps = ComponentPropsWithoutRef<\n  typeof CollapsiblePrimitive.Trigger\n>;\n\n/**\n * A trigger that shows its children as a label with a chevron that flips when the collapsible is open.\n *\n * `className` and `ref` land on the trigger root.\n */\nconst CollapsibleTrigger = forwardRef<\n  ComponentRef<typeof CollapsiblePrimitive.Trigger>,\n  CollapsibleTriggerProps\n>(({ className, children, ...props }, ref) => (\n  <CollapsiblePrimitive.Trigger\n    ref={ref}\n    className={cn(\n      \"group inline-flex items-center gap-sm\",\n      \"cursor-pointer select-none\",\n      \"ds-motion-state\",\n      \"ds-focus-visible-ring\",\n      \"ds-disabled-state\",\n      className,\n    )}\n    {...props}\n  >\n    <ButtonText as=\"span\">{children}</ButtonText>\n    <ChevronDownIcon\n      size={IconSize.rg}\n      aria-hidden\n      className={cn(\n        \"ds-motion-state\",\n        \"group-data-[state=open]:rotate-180\",\n      )}\n    />\n  </CollapsiblePrimitive.Trigger>\n));\nCollapsibleTrigger.displayName = \"CollapsibleTrigger\";\n\n/* CollapsibleContent */\n\nexport type CollapsibleContentProps = ComponentPropsWithoutRef<\n  typeof CollapsiblePrimitive.Content\n>;\n\n/**\n * The collapsible content panel. Animates open and closed using the Radix-provided content height.\n *\n * `className` and `ref` land on the content root.\n */\nconst CollapsibleContent = forwardRef<\n  ComponentRef<typeof CollapsiblePrimitive.Content>,\n  CollapsibleContentProps\n>(({ className, ...props }, ref) => (\n  <CollapsiblePrimitive.Content\n    ref={ref}\n    className={cn(\n      \"overflow-hidden\",\n      \"data-[state=open]:animate-in data-[state=closed]:animate-out\",\n      \"data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0\",\n      \"ds-collapsible-content\",\n      className,\n    )}\n    {...props}\n  />\n));\nCollapsibleContent.displayName = \"CollapsibleContent\";\n\nexport { Collapsible, CollapsibleContent, CollapsibleTrigger };\n"
+}
+
+#41 Write C:\Users\stick\Github\dooph\ds-sb-radix-collapsible-green-20261011210529\src\components\Collapsible\index.ts  FIRST
+{
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-radix-collapsible-green-20261011210529\\src\\components\\Collapsible\\index.ts",
+  "content": "export {\n  Collapsible,\n  CollapsibleContent,\n  CollapsibleTrigger,\n} from \"./Collapsible\";\nexport type {\n  CollapsibleContentProps,\n  CollapsibleTriggerProps,\n} from \"./Collapsible\";\n"
+}
+
+#48 Edit C:\Users\stick\Github\dooph\ds-sb-radix-collapsible-green-20261011210529\src\styles\dooph-component-tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-radix-collapsible-green-20261011210529\\src\\styles\\dooph-component-tokens.css",
+  "old_string": "  /* Disabled / inactive (native :disabled + aria-disabled=\"true\") */",
+  "new_string": "  /* Collapsible content — height slides via @keyframes that read\n   * --radix-collapsible-content-height (set by Radix). Using keyframes\n   * (not a transition) so Radix Presence can keep the node mounted for\n   * the close animation and unmount on animationend. */\n  .ds-collapsible-content[data-state=\"open\"] {\n    animation-name: ds-collapsible-open;\n    animation-duration: var(--ui-motion-duration-fast);\n    animation-timing-function: var(--ui-motion-ease-enter);\n  }\n  .ds-collapsible-content[data-state=\"closed\"] {\n    animation-name: ds-collapsible-close;\n    animation-duration: var(--ui-motion-duration-fast);\n    animation-timing-function: var(--ui-motion-ease-exit);\n  }\n\n  /* Disabled / inactive (native :disabled + aria-disabled=\"true\") */"
+}
+
+#49 Edit C:\Users\stick\Github\dooph\ds-sb-radix-collapsible-green-20261011210529\src\styles\index.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-radix-collapsible-green-20261011210529\\src\\styles\\index.css",
+  "old_string": "/* UnderlineLinkText sweep.",
+  "new_string": "/* Collapsible content — slide height from 0 to the Radix-measured value and\n * back. Radix sets --radix-collapsible-content-height on the content element\n * before mounting/unmounting. Keyframes, not transitions, because Presence\n * unmounts on animationend (transitions are ignored). Fade is handled\n * separately by animate-in / animate-out on the same element. */\n@keyframes ds-collapsible-open {\n  from {\n    height: 0;\n  }\n  to {\n    height: var(--radix-collapsible-content-height);\n  }\n}\n@keyframes ds-collapsible-close {\n  from {\n    height: var(--radix-collapsible-content-height);\n  }\n  to {\n    height: 0;\n  }\n}\n\n/* UnderlineLinkText sweep."
+}
+
+#52 Write C:\Users\stick\Github\dooph\ds-sb-radix-collapsible-green-20261011210529\src\components\Collapsible\Collapsible.stories.tsx  FIRST
+{
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-radix-collapsible-green-20261011210529\\src\\components\\Collapsible\\Collapsible.stories.tsx",
+  "content": "import { useState } from \"react\";\nimport type { Meta, StoryObj } from \"@storybook/react-vite\";\nimport { BodyText } from \"../Text\";\nimport {\n  Collapsible,\n  CollapsibleContent,\n  CollapsibleTrigger,\n} from \"./Collapsible\";\n\nconst meta: Meta<typeof Collapsible> = {\n  title: \"Bits & Pieces/Collapsible\",\n  component: Collapsible,\n  parameters: { layout: \"centered\" },\n};\nexport default meta;\n\ntype Story = StoryObj<typeof Collapsible>;\n\nexport const Default: Story = {\n  render: () => (\n    <Collapsible className=\"flex w-72 flex-col gap-sm\">\n      <CollapsibleTrigger>More details</CollapsibleTrigger>\n      <CollapsibleContent>\n        <BodyText className=\"text-text-secondary\">\n          Here is some additional content that was hidden. It slides open and\n          closed with an animation.\n        </BodyText>\n      </CollapsibleContent>\n    </Collapsible>\n  ),\n};\n\nexport const DefaultOpen: Story = {\n  render: () => (\n    <Collapsible defaultOpen className=\"flex w-72 flex-col gap-sm\">\n      <CollapsibleTrigger>Collapse me</CollapsibleTrigger>\n      <CollapsibleContent>\n        <BodyText className=\"text-text-secondary\">\n          This section starts open. Click the trigger to collapse it.\n        </BodyText>\n      </CollapsibleContent>\n    </Collapsible>\n  ),\n};\n\nexport const Disabled: Story = {\n  render: () => (\n    <Collapsible disabled className=\"flex w-72 flex-col gap-sm\">\n      <CollapsibleTrigger>Cannot expand</CollapsibleTrigger>\n      <CollapsibleContent>\n        <BodyText className=\"text-text-secondary\">\n          This content is never visible because the collapsible is disabled.\n        </BodyText>\n      </CollapsibleContent>\n    </Collapsible>\n  ),\n};\n\n/** A controlled collapsible where the parent owns the open state. */\nexport const Controlled: Story = {\n  render: function ControlledStory() {\n    const [open, setOpen] = useState(false);\n\n    return (\n      <Collapsible\n        open={open}\n        onOpenChange={setOpen}\n        className=\"flex w-72 flex-col gap-sm\"\n      >\n        <CollapsibleTrigger>\n          {open ? \"Hide settings\" : \"Show settings\"}\n        </CollapsibleTrigger>\n        <CollapsibleContent>\n          <BodyText className=\"text-text-secondary\">\n            The parent controls whether this is open. Current state:{\" \"}\n            {open ? \"open\" : \"closed\"}.\n          </BodyText>\n        </CollapsibleContent>\n      </Collapsible>\n    );\n  },\n};\n"
+}
+
+#54 Edit C:\Users\stick\Github\dooph\ds-sb-radix-collapsible-green-20261011210529\src\index.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-radix-collapsible-green-20261011210529\\src\\index.ts",
+  "old_string": "export * from './components/Popover';",
+  "new_string": "export * from './components/Collapsible';\nexport * from './components/Popover';"
+}
+
+#58 Edit C:\Users\stick\Github\dooph\ds-sb-radix-collapsible-green-20261011210529\CHANGELOG.md  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-radix-collapsible-green-20261011210529\\CHANGELOG.md",
+  "old_string": "- **Components**\n  - AI chat parts:",
+  "new_string": "- **Components**\n  - `Collapsible`, `CollapsibleTrigger`, `CollapsibleContent`: a disclosure\n    widget wrapping `@radix-ui/react-collapsible`. The trigger shows a label\n    and a chevron that flips when open; the content panel animates height and\n    opacity on open/close.\n  - AI chat parts:"
+}
+

@@ -1,0 +1,34 @@
+#14 Bash  [is_error]: npm run lint 2>&1
+    | FAIL generated doc references out of date: .agents/skills/dooph-ds-codebase-map/references/inventory.md:1 out of date; run node scripts/generate-docs.mjs
+    | 
+    | why (arbitrary px/rem/em/deg in classNames): An arbitrary length or angle bypasses the token scale, so it never follows a token change or a consumer override. Stories are checked too; a story that needs a fixed demo width with no token sets it in style={{ width }} with a short comment.
+    | why (generated doc references out of date): components.md, token-contract.md, the codebase inventory and the client-references list are generated from src/ by generate-docs.mjs and read as the truth by agents and consumers; a stale one documents props, defaults, tokens, files or client boundaries that no longer match the code.
+    | 
+    | conventions: 2 of 30 checks failed
+#16 Bash: node scripts/generate-docs.mjs 2>&1
+    | generate-docs: wrote skills/dooph-design-system-usage/references/components.md, .agents/skills/dooph-ds-codebase-map/references/inventory.md
+#17 Bash  [is_error]: npm run lint 2>&1
+    | src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx(67,65): error TS1109: Expression expected.
+    | src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx(68,16): error TS1005: ',' expected.
+    | src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx(75,5): error TS1128: Declaration or statement expected.
+    | src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx(76,3): error TS1109: Expression expected.
+    | src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx(76,4): error TS1128: Declaration or statement expected.
+    | src/components/SegmentedTabSelect/SegmentedTabSelect.stories.tsx(77,1): error TS1128: Declaration or statement expected.
+#20 Bash  [is_error]: npm run lint 2>&1
+    | FAIL skill mirrors out of sync with .agents/skills: .agent/skills/dooph-ds-codebase-map/references/inventory.md:1 out of date; run node scripts/sync-skills.mjs
+    | 
+    | why (generated doc references out of date): components.md, token-contract.md, the codebase inventory and the client-references list are generated from src/ by generate-docs.mjs and read as the truth by agents and consumers; a stale one documents props, defaults, tokens, files or client boundaries that no longer match the code.
+    | why (skill mirrors out of sync with .agents/skills): agents load skills from .claude/skills and .agent/skills, which are real copies of .agents/skills made by sync-skills.mjs; a stale, missing or symlinked mirror makes an agent follow an outdated skill or none at all.
+    | 
+    | conventions: 2 of 30 checks failed
+#21 Bash: node scripts/generate-docs.mjs 2>&1 && node scripts/sync-skills.mjs 2>&1
+    | generate-docs: wrote .agents/skills/dooph-ds-codebase-map/references/inventory.md
+    | updated .claude/skills/dooph-ds-codebase-map/references/inventory.md
+    | updated .agent/skills/dooph-ds-codebase-map/references/inventory.md
+    | 
+    | synced 9 skills into .claude/skills and .agent/skills (2 changes)
+#22 Bash: npm run lint 2>&1
+    | > @dooph-software/design-system@5.3.0 lint
+    | > tsc --noEmit && node scripts/check-conventions.mjs
+    | 
+    | conventions: 30 checks passed

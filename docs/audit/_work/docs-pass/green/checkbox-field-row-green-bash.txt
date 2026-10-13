@@ -1,0 +1,30 @@
+#22 Bash: ls -la C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119/src/components/ | grep -i field
+    | (Bash completed with no output)
+#24 Bash: find C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119/src/components -type d | head -20
+    | C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119/src/components/Input
+    | C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119/src/components/LinearProgressIndicator
+    | C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119/src/components/LoadingSpinner
+    | C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119/src/components/Menu
+    | C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119/src/components/Modal
+    | C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119/src/components/MorphRotationShape
+#38 Bash: mkdir -p "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119/src/components/CheckboxField"
+    | (Bash completed with no output)
+#46 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119" && node scripts/generate-docs.mjs 2>&1
+    | generate-docs: wrote skills/dooph-design-system-usage/references/components.md, .agents/skills/dooph-ds-codebase-map/references/inventory.md, skills/dooph-design-system-setup/references/client-references.md
+#47 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119" && node scripts/sync-skills.mjs 2>&1
+    | updated .claude/skills/dooph-ds-codebase-map/references/inventory.md
+    | updated .agent/skills/dooph-ds-codebase-map/references/inventory.md
+    | 
+    | synced 9 skills into .claude/skills and .agent/skills (2 changes)
+#48 Bash  [is_error]: cd "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119" && npm run lint 2>&1
+    | 
+    | src/components/CheckboxField/CheckboxField.stories.tsx(72,14): error TS2322: Type '{ render: () => Element; }' is not assignable to type 'StoryAnnotations$1<ReactRenderer, { label: ReactNode; hint?: ReactNode; variant?: CheckboxVariant | undefined; className?: string | undefined; ... 291 more ...; ref?: Ref<...> | undefined; }, { ...; }>'.
+    |   Property 'args' is missing in type '{ render: () => Element; }' but required in type '{ args: { label: ReactNode; hint?: ReactNode; variant?: CheckboxVariant | undefined; className?: string | undefined; title?: string | undefined; ... 290 more ...; ref?: Ref<...> | undefined; }; }'.
+    | src/components/CheckboxField/CheckboxField.stories.tsx(93,14): error TS2322: Type '{ render: () => JSX.Element; }' is not assignable to type 'StoryAnnotations$1<ReactRenderer, { label: ReactNode; hint?: ReactNode; variant?: CheckboxVariant | undefined; className?: string | undefined; ... 291 more ...; ref?: Ref<...> | undefined; }, { ...; }>'.
+    |   Property 'args' is missing in type '{ render: () => JSX.Element; }' but required in type '{ args: { label: ReactNode; hint?: ReactNode; variant?: CheckboxVariant | undefined; className?: string | undefined; title?: string | undefined; ... 290 more ...; ref?: Ref<...> | undefined; }; }'.
+    | src/components/CheckboxField/CheckboxField.tsx(9,25): error TS6133: 'CheckboxProps' is declared but its value is never read.
+#52 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011171119" && npm run lint 2>&1
+    | > @dooph-software/design-system@5.3.0 lint
+    | > tsc --noEmit && node scripts/check-conventions.mjs
+    | 
+    | conventions: 30 checks passed

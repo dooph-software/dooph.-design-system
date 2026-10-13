@@ -1,0 +1,132 @@
+cwd: C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119
+model: claude-opus-4-6
+permissionMode: acceptEdits
+claude_code_version: 2.1.96
+
+tools (24): Task, AskUserQuestion, Bash, CronCreate, CronDelete, CronList, Edit, EnterPlanMode, EnterWorktree, ExitPlanMode, ExitWorktree, Glob, Grep, NotebookEdit, Read, RemoteTrigger, Skill, TaskOutput, TaskStop, TodoWrite, ToolSearch, WebFetch, WebSearch, Write
+
+skills (16): update-config, debug, simplify, batch, loop, schedule, claude-api, dooph-ds-adding-a-component, dooph-ds-codebase-map, dooph-ds-editing-tokens, dooph-ds-loading-indicators, dooph-ds-styling, dooph-ds-writing-components, dooph-ds-writing-version-migrations, skill-creator, using-airbnb-visx-lib
+
+slash_commands (25): update-config, debug, simplify, batch, loop, schedule, claude-api, dooph-ds-adding-a-component, dooph-ds-codebase-map, dooph-ds-editing-tokens, dooph-ds-loading-indicators, dooph-ds-styling, dooph-ds-writing-components, dooph-ds-writing-version-migrations, skill-creator, using-airbnb-visx-lib, compact, context, cost, heapdump, init, review, security-review, extra-usage, insights
+
+agents (5): general-purpose, statusline-setup, Explore, Plan, claude-code-guide
+
+plugins (0): (none)
+
+mcp_servers (0): (none)
+
+memory-related init keys: (none reported)
+
+--- init event, verbatim ---
+{
+  "type": "system",
+  "subtype": "init",
+  "cwd": "C:\\Users\\stick\\Github\\dooph\\ds-sb-checkbox-field-row-green-20261011171119",
+  "session_id": "b35cc88c-b26f-4b28-99f0-5a221e52745a",
+  "tools": [
+    "Task",
+    "AskUserQuestion",
+    "Bash",
+    "CronCreate",
+    "CronDelete",
+    "CronList",
+    "Edit",
+    "EnterPlanMode",
+    "EnterWorktree",
+    "ExitPlanMode",
+    "ExitWorktree",
+    "Glob",
+    "Grep",
+    "NotebookEdit",
+    "Read",
+    "RemoteTrigger",
+    "Skill",
+    "TaskOutput",
+    "TaskStop",
+    "TodoWrite",
+    "ToolSearch",
+    "WebFetch",
+    "WebSearch",
+    "Write"
+  ],
+  "mcp_servers": [],
+  "model": "claude-opus-4-6",
+  "permissionMode": "acceptEdits",
+  "slash_commands": [
+    "update-config",
+    "debug",
+    "simplify",
+    "batch",
+    "loop",
+    "schedule",
+    "claude-api",
+    "dooph-ds-adding-a-component",
+    "dooph-ds-codebase-map",
+    "dooph-ds-editing-tokens",
+    "dooph-ds-loading-indicators",
+    "dooph-ds-styling",
+    "dooph-ds-writing-components",
+    "dooph-ds-writing-version-migrations",
+    "skill-creator",
+    "using-airbnb-visx-lib",
+    "compact",
+    "context",
+    "cost",
+    "heapdump",
+    "init",
+    "review",
+    "security-review",
+    "extra-usage",
+    "insights"
+  ],
+  "apiKeySource": "none",
+  "claude_code_version": "2.1.96",
+  "output_style": "default",
+  "agents": [
+    "general-purpose",
+    "statusline-setup",
+    "Explore",
+    "Plan",
+    "claude-code-guide"
+  ],
+  "skills": [
+    "update-config",
+    "debug",
+    "simplify",
+    "batch",
+    "loop",
+    "schedule",
+    "claude-api",
+    "dooph-ds-adding-a-component",
+    "dooph-ds-codebase-map",
+    "dooph-ds-editing-tokens",
+    "dooph-ds-loading-indicators",
+    "dooph-ds-styling",
+    "dooph-ds-writing-components",
+    "dooph-ds-writing-version-migrations",
+    "skill-creator",
+    "using-airbnb-visx-lib"
+  ],
+  "plugins": [],
+  "uuid": "fe6faa85-fd9d-45ae-afb4-765cc2a3a966",
+  "fast_mode_state": "off"
+}
+
+--- auto-memory ---
+canary autoMemoryDirectory: C:/Users/stick/Github/dooph/dooph-Design-System/docs/audit/_work/docs-pass/green/checkbox-field-row-green-memory-canary
+canary absent after the run: auto-memory was off, no memory loaded
+debug-log memory activity lines: 0
+
+
+--- skill / plugin / CLAUDE.md loading, from checkbox-field-row-green-debug.log ---
+2026-10-11T23:11:29.919Z [DEBUG] Loaded 1 installed plugins from C:\Users\stick\.claude\plugins\installed_plugins.json
+2026-10-11T23:11:29.919Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2026-10-11T23:11:29.932Z [DEBUG] Loading skills from: managed=C:\Program Files\ClaudeCode\.claude\skills, user=C:\Users\stick\.claude\skills, project=[C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119\.claude\skills]
+2026-10-11T23:11:29.978Z [DEBUG] Loaded 9 unique skills (9 unconditional, 0 conditional, managed: 0, user: 0, project: 9, additional: 0, legacy commands: 0)
+2026-10-11T23:11:29.978Z [DEBUG] getSkills returning: 9 skill dir commands, 0 plugin skills, 8 bundled skills, 0 builtin plugin skills
+2026-10-11T23:11:32.101Z [DEBUG] Sending 15 skills via attachment (initial, 15 total sent)
+2026-10-11T23:11:49.818Z [DEBUG] Sending 15 skills via attachment (initial, 15 total sent)
+2026-10-11T23:14:04.401Z [DEBUG] Loading skills from: managed=C:\Program Files\ClaudeCode\.claude\skills, user=C:\Users\stick\.claude\skills, project=[C:\Users\stick\Github\dooph\ds-sb-checkbox-field-row-green-20261011171119\.claude\skills]
+2026-10-11T23:14:04.404Z [DEBUG] Loaded 9 unique skills (9 unconditional, 0 conditional, managed: 0, user: 0, project: 9, additional: 0, legacy commands: 0)
+2026-10-11T23:14:04.404Z [DEBUG] getSkills returning: 9 skill dir commands, 0 plugin skills, 8 bundled skills, 0 builtin plugin skills
+2026-10-11T23:14:13.324Z [DEBUG] Sending 15 skills via attachment (initial, 15 total sent)

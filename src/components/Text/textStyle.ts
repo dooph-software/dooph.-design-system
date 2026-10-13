@@ -6,7 +6,8 @@
  * be emitted after the role's own class, which depends on bundler and import
  * order. Utilities such as `text-hero`/`font-hero` sit ~50kB before
  * `.text-style-body` in the compiled sheet, so as props they would do nothing.
- * Inline style outranks every layer, so a prop that is set always wins.
+ * Inline style outranks every layer, so a prop that is set beats any class;
+ * only the consumer's own `style`, merged after it, overrides it.
  */
 
 import type { CSSProperties } from 'react';

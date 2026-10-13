@@ -87,7 +87,7 @@ TRUE 39 · FALSE 17 · UNVERIFIABLE 4 (60 claims). FALSE claims were all fixed i
 
 - TRUE — v2 pinned every text role to `line-height: 1`; v3 sets none. Evidence: `line-height: 1;` appears 6 times in index.css through v3.3.0, 0 times at v3.4.0.
 - TRUE — 1.5 under Tailwind preflight. (Tailwind preflight sets `line-height: 1.5` on `html`.)
-- UNVERIFIABLE — Fixed-height controls are unaffected. Needs a browser check.
+- TRUE (narrowed, see the claim-check fixes below) — `Button` and `Input` keep their fixed height; their text stays centred to within half a pixel. Evidence: render of v3.3.0 vs v3.4.0 CSS.
 - TRUE — The role class moved to the `components` layer. Evidence: `.text-style-*` inside `@layer components` at v3.4.0 (6 rules), inside `@layer utilities` through v3.3.0.
 - TRUE — Danger button text is dark in light mode, white in dark mode. Evidence: v3.0.0 tokens.css:60 `--ui-color-danger-foreground: #161616; /* Figma: Text/primaryText */` (same value as `--ui-color-text`), :253 `#ffffff`; v2.1.0 `#ffffff` in light.
 - TRUE — The default danger red shifted `#e93b3b` → `#ec5555`. Evidence: v2.1.0 tokens.css:56, v3.0.0 tokens.css:54.
@@ -109,8 +109,18 @@ TRUE 39 · FALSE 17 · UNVERIFIABLE 4 (60 claims). FALSE claims were all fixed i
 
 - v2 helper classes removed by v3.x and not named: `.ds-font-weight-regular/-medium/-semibold/-bold` (v2 BaseText's weight classes), `.ds-toast-width`, `.ds-toast-action-width`. `.ds-focus-ring-destructive-on-focus` is caught by Pass A's `destructive`.
 - v2 utilities from removed theme keys not in the class table: `*-accent` (`--color-accent`), `*-logo-alt`, `*-avatar-bg`. Pass A catches `avatar-bg` and `text-logo-alt` (substring of `text-logo`), not `bg-accent` / `text-accent`.
-- The v3 → v4 step has no migration skill, but v4.4.0 removed `FundingIcon` and `ReviewQueueIcon`. A compile error, so `tsc` finds it; no skill tells the consumer what to use instead.
+- The v3 → v4 step has no migration skill. `FundingIcon` and `ReviewQueueIcon` left the published package in v4.2.0 (files deleted in commit a042a60; the build regenerates `Icons/index.ts` from the folder, though the tracked file kept the export lines until v4.4.0). Now covered by the v5 skill's step 4.
 
 ## Forward compatibility (for whoever writes the v6 skill)
 
 This file ships in the v6 tarball. At HEAD, several v3 targets are renamed again (table at top), and `--ui-color-surface-page` comes back as a current name. A consumer who runs this skill's done-check after the v6 migration gets hits on the current name. The forward note says to run this migration first, then the later skills in order; the v6 skill must list the v3 targets above as its before-names (writing-version-migrations, migration-skill-shape.md §5.3).
+
+## Claim-check fixes (batch 8)
+
+Re-verified each finding from docs/audit/_work/docs-pass/claim-check/batch-8-migrations-v3-v5.md before editing.
+
+- FALSE → fixed — Intro: "a mechanical rename sweep across three surfaces … 3. `ButtonVariant.destructive`". Step 3 lists five changes, and the sidebar icons are a semantic change. Now: "mostly a rename sweep … 3. The component API in your TSX (`ButtonVariant.destructive`, `ToastTypes`, the Text constants, and some icon names). One of these, the sidebar icons, is a semantic change, not a rename (step 3)."
+- FALSE → fixed — Done-check: Pass A + Pass B missed `--ui-color-focus-ring`, `--ui-width-toast`, `--ui-width-toast-action` and bare `border-border` (all removed: focus-ring at v3.0.0, toast widths at v3.1.0, theme key `--color-border` at v3.0.0). Pass B now greps all four with lookaheads; tested on a scratch fixture (removed names hit; v3.4.0 longer names `-brand/-error/-primary`, `-simple/-complex/-viewport`, `border-border-primary/-secondary/-popovers`, `bg-surface-primary/-secondary` do not). The fallback list names the allowed longer names per family (v3.4.0 tokens.css: `--ui-width-toast-viewport` also exists). The section now says a clean build proves nothing, since both failure modes are silent.
+- FALSE → fixed — Danger text "uses the primary text token". v3.0.0 and v3.4.0 tokens.css:60 `--ui-color-danger-foreground: #161616;` is a literal, not `var(--ui-color-text)`. Now: "`#161616`, the same colour as the primary text token but set separately, so retuning `--ui-color-text` does not move it".
+- FALSE → fixed — Typography utilities recommended (`font-label`, the font role and font size rows, the `text-style-button` aside, "Audit those call sites"). The facts were true, but the advice contradicts the usage skill. Not needed for the step: v2.1.0 and v3.4.0 theme.css have the same `--font-*` / `--text-*` keys, so nothing was renamed. Rows, aside and the `font-label` example removed; one paragraph says typography goes through Text component props (exist since v3.4.0: BaseText `font`, `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`) and points to `dooph-design-system-v6-migration` for later majors. `leading-*` / `tracking-*` bullet now says delete or move to the `lineHeight` / `letterSpacing` prop.
+- UNVERIFIABLE → verified and narrowed — "fixed-height controls (buttons, inputs) are unaffected". Built v3.3.0 and v3.4.0 `src/styles/index.css` with the Tailwind CLI in the scratchpad, rendered the v3.4.0 `buttonVariants` default and `sm` classes and the `Input` classes in Chromium: heights 38 / 34 / 38 px in both versions; line-height 14px → 21px; button text box moved 0.5px (top inset 10 → 9.5, 8 → 7.5); screenshots identical by eye. Now: "`Button` and `Input` keep their fixed height either way, and their text stays centred to within half a pixel."

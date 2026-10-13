@@ -1,0 +1,49 @@
+#2 Bash: find . -type f -name "next.config.*" -o -name "tsconfig.json" -o -name "vite.config.*" -o -name "webpack.config.*" | head -20
+    | ./next.config.ts
+    | ./tsconfig.json
+#3 Bash: ls -la
+    | -rw-r--r-- 1 stick 197609   265 Oct  8 20:59 next.config.ts
+    | drwxr-xr-x 1 stick 197609     0 Oct 11 20:51 node_modules
+    | -rw-r--r-- 1 stick 197609 99068 Oct 11 20:51 package-lock.json
+    | -rw-r--r-- 1 stick 197609   635 Oct  8 20:59 package.json
+    | -rw-r--r-- 1 stick 197609   666 Oct  8 20:59 tsconfig.json
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 vendor
+#6 Bash: find app -type f -name "*.tsx" -o -name "*.ts" -o -name "*.css" | head -30
+    | app/dashboard/page.tsx
+    | app/globals.css
+    | app/layout.tsx
+    | app/page.tsx
+#7 Bash: find components -type f -name "*.tsx" -o -name "*.ts" -o -name "*.css" | head -30
+    | components/theme-toggle.tsx
+#13 Bash: ls -la lib/
+    | total 5
+    | drwxr-xr-x 1 stick 197609   0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609   0 Oct 11 20:51 ..
+    | -rw-r--r-- 1 stick 197609 644 Oct  8 20:59 plans.ts
+#14 Bash: find lib -type f -name "*.ts" -o -name "*.tsx"
+    | lib/plans.ts
+#16 Bash: cat README.md
+    | npm run dev        # http://localhost:3000
+    | npm run build      # production build
+    | npm run typecheck  # route types + tsc --noEmit
+    | ```
+    | 
+    | The design system is installed from a pre-release tarball in `vendor/`.
+#17 Bash: find app -type f | sort
+    | app/dashboard/page.tsx
+    | app/favicon.ico
+    | app/globals.css
+    | app/layout.tsx
+    | app/page.tsx
+#18 Bash: find components -type f | sort
+    | components/theme-toggle.tsx
+#19 Bash: find . -name "tailwind.config.*" -o -name ".tailwindrc*" 2>/dev/null | head -10
+    | (Bash completed with no output)
+#24 Bash: cd "C:/Users/stick/Github/dooph/ds-consumer-sb-bbee1cdb5843" && npm run typecheck 2>&1
+    | > ds-consumer-template@0.1.0 typecheck
+    | > next typegen && tsc --noEmit
+    | 
+    | Generating route types...
+    | ✓ Types generated successfully
+#25 Bash: cd "C:/Users/stick/Github/dooph/ds-consumer-sb-bbee1cdb5843" && grep -nE '\b(font-[a-z[]|tracking-|leading-|text-style-|text-(xs|sm|base|lg|[0-9]?xl|body|label|title|heading|subheading|hero|mono)\b|text-\[|(p|m)[xytrbl]?-(0\.|[1-9])|gap(-[xy])?-[0-9]|space-[xy]-[0-9]|(bg|text|border)-(white|black|(gray|slate|zinc|neutral|stone|red|blue|green)-))|\[#[0-9a-fA-F]{3,8}\]' app/changelog/page.tsx || echo "Clean"
+    | Clean

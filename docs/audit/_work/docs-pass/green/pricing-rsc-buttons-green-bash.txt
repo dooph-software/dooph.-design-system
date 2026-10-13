@@ -1,0 +1,43 @@
+#1 Bash: find . -maxdepth 2 -type f -name "package.json" | head -5
+    | ./package.json
+#3 Bash: ls -la "C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385" | head -20
+    | -rw-r--r-- 1 stick 197609   265 Oct  8 20:59 next.config.ts
+    | drwxr-xr-x 1 stick 197609     0 Oct 11 17:52 node_modules
+    | -rw-r--r-- 1 stick 197609 99068 Oct 11 17:52 package-lock.json
+    | -rw-r--r-- 1 stick 197609   635 Oct  8 20:59 package.json
+    | -rw-r--r-- 1 stick 197609   666 Oct  8 20:59 tsconfig.json
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 vendor
+#4 Bash: ls -la "C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/app"
+    | drwxr-xr-x 1 stick 197609     0 Oct 11 17:52 ..
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 dashboard
+    | -rw-r--r-- 1 stick 197609 15086 Oct  8 20:59 favicon.ico
+    | -rw-r--r-- 1 stick 197609   883 Oct  8 20:59 globals.css
+    | -rw-r--r-- 1 stick 197609  1966 Oct  8 20:59 layout.tsx
+    | -rw-r--r-- 1 stick 197609  2274 Oct  8 20:59 page.tsx
+#5 Bash: ls -la "C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/lib"
+    | total 5
+    | drwxr-xr-x 1 stick 197609   0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609   0 Oct 11 17:52 ..
+    | -rw-r--r-- 1 stick 197609 644 Oct  8 20:59 plans.ts
+#6 Bash: find "C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/app" -type f -name "*.tsx" -o -name "*.ts" | head -20
+    | C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/app/dashboard/page.tsx
+    | C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/app/layout.tsx
+    | C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/app/page.tsx
+#11 Bash: ls -la "C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/components"
+    | total 8
+    | drwxr-xr-x 1 stick 197609   0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609   0 Oct 11 17:52 ..
+    | -rw-r--r-- 1 stick 197609 626 Oct  8 20:59 theme-toggle.tsx
+#15 Bash: ls "C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/app/pricing" 2>/dev/null || echo "directory does not exist"
+    | directory does not exist
+#16 Bash: mkdir -p "C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/app/pricing"
+    | (Bash completed with no output)
+#20 Bash: cd "C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385" && npx next build 2>&1 | tail -20
+    | ├ ○ /_not-found
+    | ├ ○ /dashboard
+    | └ ○ /pricing
+    | 
+    | 
+    | ○  (Static)  prerendered as static content
+#21 Bash: grep -nE '\b(font-[a-z[]|tracking-|leading-|text-style-|text-(xs|sm|base|lg|[0-9]?xl|body|label|title|heading|subheading|hero|mono)\b|text-\[|(p|m)[xytrbl]?-(0\.|[1-9])|gap(-[xy])?-[0-9]|space-[xy]-[0-9]|(bg|text|border)-(white|black|(gray|slate|zinc|neutral|stone|red|blue|green)-))|\[#[0-9a-fA-F]{3,8}\]' "C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/app/pricing/page.tsx" "C:/Users/stick/Github/dooph/ds-consumer-sb-b6934a4a0385/app/pricing/talk-to-sales-button.tsx" || echo "No violations found"
+    | No violations found

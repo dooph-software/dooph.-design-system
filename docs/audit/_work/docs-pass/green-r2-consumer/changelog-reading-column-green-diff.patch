@@ -1,0 +1,93 @@
+diff --git a/app/changelog/page.tsx b/app/changelog/page.tsx
+new file mode 100644
+index 0000000..bc8ab34
+--- /dev/null
++++ b/app/changelog/page.tsx
+@@ -0,0 +1,73 @@
++import type { Metadata } from "next";
++import {
++  TitleText,
++  HeadingText,
++  LabelText,
++  BodyText,
++} from "@dooph-software/design-system";
++
++export const metadata: Metadata = {
++  title: "Changelog – Acme",
++  description: "What's new in Acme.",
++};
++
++const entries = [
++  {
++    date: "2026-10-10",
++    title: "Smarter review assignments",
++    body: "Reviews now auto-assign based on recent file ownership and current workload, so the right person sees the diff without a manual pick.",
++  },
++  {
++    date: "2026-09-26",
++    title: "Inline release notes",
++    body: "Draft release notes directly from the merge screen. Acme pulls commit messages into a template you can edit before publishing.",
++  },
++  {
++    date: "2026-09-12",
++    title: "Dashboard activity feed",
++    body: "The workspace dashboard now streams live activity — merges, deploys and review comments — so you can follow progress without switching tabs.",
++  },
++  {
++    date: "2026-08-30",
++    title: "Dark mode",
++    body: "Acme respects your system preference and adds a manual toggle in the header. Every surface, chart and diff view adapts automatically.",
++  },
++  {
++    date: "2026-08-14",
++    title: "Plan comparison cards",
++    body: "A new side-by-side view on the pricing page makes it easier to compare what each plan includes before you commit.",
++  },
++];
++
++function formatDate(iso: string) {
++  return new Date(iso).toLocaleDateString("en-US", {
++    year: "numeric",
++    month: "long",
++    day: "numeric",
++  });
++}
++
++export default function ChangelogPage() {
++  return (
++    <main className="mx-auto max-w-[40rem] px-xl py-xxxl">
++      <TitleText as="h1">Changelog</TitleText>
++      <BodyText as="p" className="mt-sm text-text-secondary">
++        New updates and improvements to Acme.
++      </BodyText>
++
++      <div className="mt-xxl flex flex-col gap-xxl">
++        {entries.map((entry) => (
++          <article key={entry.date} className="flex flex-col gap-xs">
++            <LabelText as="time" className="text-text-secondary">
++              {formatDate(entry.date)}
++            </LabelText>
++            <HeadingText as="h2">{entry.title}</HeadingText>
++            <BodyText as="p" className="text-text-secondary">
++              {entry.body}
++            </BodyText>
++          </article>
++        ))}
++      </div>
++    </main>
++  );
++}
+diff --git a/app/layout.tsx b/app/layout.tsx
+index 610ee36..77c042a 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -55,6 +55,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
+               <Link href="/dashboard" className="text-text-secondary hover:text-text">
+                 <BodyText>Dashboard</BodyText>
+               </Link>
++              <Link href="/changelog" className="text-text-secondary hover:text-text">
++                <BodyText>Changelog</BodyText>
++              </Link>
+               <ThemeToggle />
+             </nav>
+           </header>

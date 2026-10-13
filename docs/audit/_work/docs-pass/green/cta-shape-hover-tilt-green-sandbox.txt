@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-cta-shape-hover-tilt-green-20261011171800 (with-skills)
+snapshot tree: 20b06fa60d9742bb6e52d31e795abc2969b8b385 (main working tree)
+start tree:    9235b7c5715879ab439dac49aca2131f7600604e (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-cta-shape-hover-tilt-green-20261011171800/sandbox-start-tree)

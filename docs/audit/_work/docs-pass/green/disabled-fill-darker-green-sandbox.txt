@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-disabled-fill-darker-green-20261011171600 (with-skills)
+snapshot tree: 8c84237ea334faad92fd6c564fd8b1c241d1eb88 (main working tree)
+start tree:    bcbe78e04584849f0df9a3e577e19060b421f593 (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-disabled-fill-darker-green-20261011171600/sandbox-start-tree)

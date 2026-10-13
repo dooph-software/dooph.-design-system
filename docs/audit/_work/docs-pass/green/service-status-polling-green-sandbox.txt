@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-service-status-polling-green-20261011171519 (with-skills)
+snapshot tree: 5eec7a1f03f0cd6c403e60d4629233a38aac761d (main working tree)
+start tree:    bcbe78e04584849f0df9a3e577e19060b421f593 (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-service-status-polling-green-20261011171519/sandbox-start-tree)

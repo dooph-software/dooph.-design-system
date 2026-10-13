@@ -1,0 +1,48 @@
+#10 Edit C:\Users\stick\Github\dooph\ds-sb-segmented-full-width-green-20261011172421\src\components\SegmentedTabSelect\SegmentedTabSelect.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-segmented-full-width-green-20261011172421\\src\\components\\SegmentedTabSelect\\SegmentedTabSelect.tsx",
+  "old_string": "export interface SegmentedTabSelectProps\n  extends ComponentPropsWithoutRef<typeof TabsPrimitive.Root> {\n  variant?: SegmentedVariant;\n  size?: SegmentedSize;\n}",
+  "new_string": "export interface SegmentedTabSelectProps\n  extends ComponentPropsWithoutRef<typeof TabsPrimitive.Root> {\n  variant?: SegmentedVariant;\n  size?: SegmentedSize;\n  /** Stretch to the container and give every tab equal width. */\n  fullWidth?: boolean;\n}"
+}
+
+#11 Edit C:\Users\stick\Github\dooph\ds-sb-segmented-full-width-green-20261011172421\src\components\SegmentedTabSelect\SegmentedTabSelect.tsx
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-segmented-full-width-green-20261011172421\\src\\components\\SegmentedTabSelect\\SegmentedTabSelect.tsx",
+  "old_string": ">(({ className, variant = SegmentedVariant.primary, size = SegmentedSize.container, children, ...props }, ref) => {",
+  "new_string": ">(({ className, variant = SegmentedVariant.primary, size = SegmentedSize.container, fullWidth, children, ...props }, ref) => {"
+}
+
+#12 Edit C:\Users\stick\Github\dooph\ds-sb-segmented-full-width-green-20261011172421\src\components\SegmentedTabSelect\SegmentedTabSelect.tsx
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-segmented-full-width-green-20261011172421\\src\\components\\SegmentedTabSelect\\SegmentedTabSelect.tsx",
+  "old_string": "            'gap-xxs',\n            hasShell &&\n              // 28px items + xxs inset + 1px border = 38px; outer radius is\n              // radius-mini + xxs so it stays concentric with the items.\n              'h-button p-xxs border border-solid border-border-primary bg-surface-primary ds-radius-mini-outset-xxs',\n            className",
+  "new_string": "            'gap-xxs',\n            hasShell &&\n              // 28px items + xxs inset + 1px border = 38px; outer radius is\n              // radius-mini + xxs so it stays concentric with the items.\n              'h-button p-xxs border border-solid border-border-primary bg-surface-primary ds-radius-mini-outset-xxs',\n            fullWidth && 'w-full [&>*]:flex-1',\n            className"
+}
+
+#13 Edit C:\Users\stick\Github\dooph\ds-sb-segmented-full-width-green-20261011172421\src\components\SegmentedTabSelect\SegmentedTabSelect.stories.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-segmented-full-width-green-20261011172421\\src\\components\\SegmentedTabSelect\\SegmentedTabSelect.stories.tsx",
+  "old_string": "/** Items contradict the inherited variant and size. */",
+  "new_string": "/** fullWidth stretches the shell and gives every tab equal width. */\nexport const FullWidth: Story = {\n  render: () => (\n    <div className=\"flex w-[360px] flex-col gap-lg\">\n      {variants.map((variant) => (\n        <SegmentedTabSelect key={variant} defaultValue=\"funding\" variant={variant} fullWidth>\n          <SegmentedTabItem value=\"funding\">Funding</SegmentedTabItem>\n          <SegmentedTabItem value=\"pnl\">Profit &amp; Loss</SegmentedTabItem>\n          <SegmentedTabItem value=\"tx\">Transactions</SegmentedTabItem>\n        </SegmentedTabSelect>\n      ))}\n    </div>\n  ),\n};\n\n/** Items contradict the inherited variant and size. */"
+}
+
+#15 Edit C:\Users\stick\Github\dooph\ds-sb-segmented-full-width-green-20261011172421\src\components\SegmentedTabSelect\SegmentedTabSelect.stories.tsx
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-segmented-full-width-green-20261011172421\\src\\components\\SegmentedTabSelect\\SegmentedTabSelect.stories.tsx",
+  "old_string": "    <div className=\"flex w-[360px] flex-col gap-lg\">",
+  "new_string": "    {/* 360px: approximate mobile-sheet width for the demo */}\n    <div className=\"flex flex-col gap-lg\" style={{ width: 360 }}>"
+}
+
+#19 Edit C:\Users\stick\Github\dooph\ds-sb-segmented-full-width-green-20261011172421\src\components\SegmentedTabSelect\SegmentedTabSelect.stories.tsx
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-segmented-full-width-green-20261011172421\\src\\components\\SegmentedTabSelect\\SegmentedTabSelect.stories.tsx",
+  "old_string": "  render: () => (\n    {/* 360px: approximate mobile-sheet width for the demo */}\n    <div className=\"flex flex-col gap-lg\" style={{ width: 360 }}>",
+  "new_string": "  render: () => (\n    // 360px: approximate mobile-sheet width for the demo\n    <div className=\"flex flex-col gap-lg\" style={{ width: 360 }}>"
+}
+

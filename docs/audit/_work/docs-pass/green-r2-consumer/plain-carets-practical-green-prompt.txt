@@ -1,0 +1,1 @@
+Our enterprise customers find the morphing shapes behind dropdown chevrons too playful. Make every dropdown in the app show a plain chevron.

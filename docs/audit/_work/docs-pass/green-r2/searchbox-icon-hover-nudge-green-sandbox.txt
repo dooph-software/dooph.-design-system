@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400 (with-skills)
+snapshot tree: 04f56384cc914976b219b5e9a9b6761f836208fa (main working tree)
+start tree:    355b9b2394143823b1e7c000ca299d21cfd75657 (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/sandbox-start-tree)

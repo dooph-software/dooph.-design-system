@@ -1,0 +1,10 @@
+RUN OK
+subtype: success  is_error: false  turns: 10  cost_usd: 0.16628175  duration_ms: 53387
+permission_denials (0):
+
+--- final text ---
+Lint passes clean. Here's what changed in `Sticker.tsx`:
+
+- **Gap** (icon ↔ label): `gap-sm` (8px) → `gap-xs` (6px)
+- **Horizontal padding**: `px-rg` (10px) → `px-sm` (8px)
+- Updated the behavior header to reflect `gap-xs`.

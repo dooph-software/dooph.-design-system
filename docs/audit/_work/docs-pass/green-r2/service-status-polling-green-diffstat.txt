@@ -1,0 +1,11 @@
+M	.agent/skills/dooph-ds-codebase-map/references/inventory.md
+M	.agents/skills/dooph-ds-codebase-map/references/inventory.md
+M	.claude/skills/dooph-ds-codebase-map/references/inventory.md
+M	CHANGELOG.md
+M	skills/dooph-design-system-setup/references/client-references.md
+M	skills/dooph-design-system-usage/references/components.md
+A	src/components/ServiceStatusBadge/ServiceStatusBadge.stories.tsx
+A	src/components/ServiceStatusBadge/ServiceStatusBadge.tsx
+A	src/components/ServiceStatusBadge/constants.ts
+A	src/components/ServiceStatusBadge/index.ts
+M	src/index.ts

@@ -1,0 +1,6 @@
+RUN OK
+subtype: success  is_error: false  turns: 1  cost_usd: 1.4360573  duration_ms: 4991
+permission_denials (0):
+
+--- final text ---
+Background research confirmed my implementation — no existing wavy underline patterns existed, and the approach matches the DropdownCaret mechanism exactly. Everything is already in place and lint passes.

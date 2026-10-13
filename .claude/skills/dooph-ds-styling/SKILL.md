@@ -12,7 +12,7 @@ Every visual value comes from a token, through a theme utility or a `ds-*` helpe
 **Test:** would a product on `data-ds-expression="practical"` expect it gone?
 
 - **Base look:** state feedback that the spec defines, such as hover, pressed and open colours, borders, the focus ring and the disabled fade. Build it with utilities and helpers.
-- **Expressive detail:** anything beyond that on a practical component (SearchBox, TextLink, a trigger, an input), such as a lean, tilt, nudge, decoration or shape. A request that says "like the caret does", "our X" or "signature" also means one.
+- **Expressive detail:** anything beyond that on a practical component (an input, a link, a trigger, a menu item), such as a lean, tilt, nudge, decoration or shape. A request that says "like the caret does", "our X" or "signature" also means one.
 - **Unsure:** ask the maintainer.
 
 Expressive *components* (OutlineButton, CTAButton, shapes) are opt-in by use and are never switched.
@@ -23,7 +23,7 @@ To build an expressive detail, copy DropdownCaret's mechanism:
 2. Read the token only in a `.ds-expr-<detail>` rule in `src/styles/index.css`. Any state goes in that rule's selector.
 3. The component only adds the class. It never sets the token: no inline style, arbitrary-property class, `setProperty` or prop.
 4. At the neutral value, the component must still be complete, with no empty frame or gap.
-5. Add a header-contract line ("must stay neutralisable by the practical preset") and a Practical story.
+5. Add a header-contract line ("must stay neutralisable by the practical preset") and a Practical story. The contract is a block comment that opens the file, never the component's JSDoc, which is published to components.md.
 
 This applies even when the file has no header. Lint checks only tokens that are already marked, so a hard-wired utility passes it. For the full recipe and a sketch, see [references/expressive-details.md](references/expressive-details.md).
 
@@ -36,8 +36,8 @@ This applies even when the file has no header. Lint checks only tokens that are 
 - **Focus and disabled looks come from the helpers.** Hand-rolled ones drift, and they double-fade nested controls. "hand-rolled focus rings", "hand-rolled disabled looks".
 - **Variants go through cva, with `className` last in `cn(…)`**, so the consumer's class wins. cn() learns class names from generated lists. After adding a `.text-style-*` or `.h-*`/`.size-*`/`.min-w-*` … rule, run `npm run sync-tokens`. Otherwise cn() misfiles the class and can erase a role as a colour. "generated theme out of date".
 - **Never put a Tailwind variant on a package class** (`hover:ds-*`). It emits no rule. Put the state in the helper's selector. "Tailwind variant on a DS package class".
-- **SVG geometry attributes (`width`, `r`, `cx`…) cannot resolve `var()`.** Use `style` or a class instead. `fill` and `stroke` are fine. "var() in SVG geometry attributes".
-- **CSS goes in `src/styles/`**, with helpers in `@layer utilities`. A `.css` under `src/components` never ships, because emit-css compiles only `src/styles/build.css`, which imports `index.css`. Text roles sit in `@layer components`, so a consumer's utility beats a role.
+- **Never put `var()` in an SVG geometry attribute (`width`, `r`, `cx`…).** SVG 2 parses a presentation attribute as a value, not a declaration, so `var()` there is not specified. Chromium draws it, but its SVG DOM reads the length as 0 (`circle.r.baseVal.value`). Keep a plain number attribute and set the token through `style` or a class. `fill` and `stroke` may take `var()`. "var() in SVG geometry attributes".
+- **CSS goes in `src/styles/`**, with helpers in `@layer utilities`. A `.css` under `src/components` never ships, because emit-css compiles only `src/styles/build.css`, which imports `index.css`. Text roles sit in `@layer components`, so a utility would beat a role; typography still goes only through Text props (dooph-ds-writing-components).
 - **Text goes through Text components** (dooph-ds-writing-components). "text-style classes outside Text components".
 
 ## Quick reference
@@ -57,7 +57,7 @@ This applies even when the file has no header. Lint checks only tokens that are 
 | Said in baseline | Reality |
 |---|---|
 | "a simple CSS rotation on hover would be more appropriate" | Simple is the bug: no preset can remove a utility. |
-| "The simplest approach: add `underline decoration-wavy` Tailwind classes to TextLink." | Same bug. "Our X" exists: find it, or ask. |
+| "The simplest approach: add the decoration's Tailwind classes to the component." | Same bug. "Our X" exists: find it, or ask. |
 | "No contract header." | The rule applies across the repo. |
 | "The effect mirrors the dropdown caret's hover lean" | It copied the look, not the token or the `.ds-expr-*` rule. |
 
@@ -68,7 +68,7 @@ This applies even when the file has no header. Lint checks only tokens that are 
 
 ## Verify
 
-Run `npm run lint`. It must exit 0, and `tsc` passing on its own is not "clean". In Storybook (`npm run storybook`), check every variant and state in both themes, then check the Practical story for any trace of the detail.
+If you added a token or a `.text-style-*`, `.h-*`, `.size-*` or `.min-w-*` rule, run `npm run sync-tokens`, then `node scripts/generate-docs.mjs`, then `node scripts/sync-skills.mjs`. Then run `npm run lint`. It must exit 0; paste its last line (`conventions: N checks passed`) in the hand-back. `tsc` passing on its own is not "clean". In Storybook (`npm run storybook`), check every variant and state in both themes, then check the Practical story for any trace of the detail.
 
 ## Related
 

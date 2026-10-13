@@ -1,0 +1,37 @@
+#4 Bash: ls -la "C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb" | head -30
+    | -rw-r--r-- 1 stick 197609   265 Oct  8 20:59 next.config.ts
+    | drwxr-xr-x 1 stick 197609     0 Oct 11 20:49 node_modules
+    | -rw-r--r-- 1 stick 197609 99068 Oct 11 20:48 package-lock.json
+    | -rw-r--r-- 1 stick 197609   635 Oct  8 20:59 package.json
+    | -rw-r--r-- 1 stick 197609   666 Oct  8 20:59 tsconfig.json
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 vendor
+#5 Bash: find "C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb" -maxdepth 2 -type d -name "app" -o -name "pages" -o -name "src" | head -20
+    | C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb/app
+#6 Bash: find "C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb/app" -type f | head -30
+    | C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb/app/dashboard/page.tsx
+    | C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb/app/favicon.ico
+    | C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb/app/globals.css
+    | C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb/app/layout.tsx
+    | C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb/app/page.tsx
+#7 Bash: ls -la "C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb/components"
+    | total 8
+    | drwxr-xr-x 1 stick 197609   0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609   0 Oct 11 20:49 ..
+    | -rw-r--r-- 1 stick 197609 626 Oct  8 20:59 theme-toggle.tsx
+#13 Bash: find "C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb/lib" -type f
+    | C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb/lib/plans.ts
+#22 Bash: ls C:/Users/stick/Github/dooph/ds-consumer-sb-e1d3e28a71fb/lib/
+    | plans.ts
+#23 Bash: ls C:/Users/stick/Github/dooph/ds-consumer-sb-e1d3e28a71fb/app/settings/ 2>/dev/null || echo "no settings dir"
+    | no settings dir
+#25 Bash: mkdir -p C:/Users/stick/Github/dooph/ds-consumer-sb-e1d3e28a71fb/app/settings/notifications && mkdir -p C:/Users/stick/Github/dooph/ds-consumer-sb-e1d3e28a71fb/app/api/settings/notifications
+    | (Bash completed with no output)
+#31 Bash: cd C:/Users/stick/Github/dooph/ds-consumer-sb-e1d3e28a71fb && npm run build 2>&1 | tail -30
+    | ├ ○ /dashboard
+    | └ ○ /settings/notifications
+    | 
+    | 
+    | ○  (Static)   prerendered as static content
+    | ƒ  (Dynamic)  server-rendered on demand
+#32 Bash: grep -nE '\b(font-[a-z[]|tracking-|leading-|text-style-|text-(xs|sm|base|lg|[0-9]?xl|body|label|title|heading|subheading|hero|mono)\b|text-\[|(p|m)[xytrbl]?-(0\.|[1-9])|gap(-[xy])?-[0-9]|space-[xy]-[0-9]|(bg|text|border)-(white|black|(gray|slate|zinc|neutral|stone|red|blue|green)-))|\[#[0-9a-fA-F]{3,8}\]' C:/Users/stick/Github/dooph/ds-consumer-sb-e1d3e28a71fb/app/settings/notifications/page.tsx C:/Users/stick/Github/dooph/ds-consumer-sb-e1d3e28a71fb/app/settings/notifications/notifications-form.tsx || echo "No violations found"
+    | No violations found

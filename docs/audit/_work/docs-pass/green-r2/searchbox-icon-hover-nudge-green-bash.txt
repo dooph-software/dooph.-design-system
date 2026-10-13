@@ -1,0 +1,34 @@
+#5 Bash: find /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src -type f -name "*constants*" | head -20
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/MorphRotationShape/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/ProgressIndicator/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SegmentedTabSelect/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/ShapeButton/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/Shapes/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/Sheet/constants.ts
+#6 Bash: find /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox -type f
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/index.ts
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.tsx
+#40 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400" && npm run sync-tokens 2>&1
+    | > @dooph-software/design-system@5.3.0 sync-tokens
+    | > node scripts/sync-theme.mjs
+    | 
+    | ✓  @theme inline regenerated — 137 tokens mapped (index.css + theme.css + utils/twMergeTheme.ts).
+#41 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400" && node scripts/generate-docs.mjs 2>&1 && node scripts/sync-skills.mjs 2>&1
+    | generate-docs: wrote skills/dooph-design-system-theming/references/token-contract.md, .agents/skills/dooph-ds-codebase-map/references/inventory.md
+    | updated .claude/skills/dooph-ds-codebase-map/references/inventory.md
+    | updated .agent/skills/dooph-ds-codebase-map/references/inventory.md
+    | 
+    | synced 9 skills into .claude/skills and .agent/skills (2 changes)
+#42 Bash  [is_error]: cd "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400" && npm run lint 2>&1
+    | FAIL typography utilities or inline font styles: src/components/SearchBox/SearchBox.stories.tsx:50 text-sm
+    | FAIL typography utilities or inline font styles: src/components/SearchBox/SearchBox.stories.tsx:54 text-sm
+    | 
+    | why (typography utilities or inline font styles): Font, size, tracking and leading belong to the Text component's role; a utility or inline style overrides the role piecemeal.
+    | 
+    | conventions: 1 of 30 checks failed
+#47 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400" && npm run lint 2>&1
+    | > @dooph-software/design-system@5.3.0 lint
+    | > tsc --noEmit && node scripts/check-conventions.mjs
+    | 
+    | conventions: 30 checks passed

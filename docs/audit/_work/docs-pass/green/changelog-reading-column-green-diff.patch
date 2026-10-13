@@ -1,0 +1,76 @@
+diff --git a/app/changelog/page.tsx b/app/changelog/page.tsx
+new file mode 100644
+index 0000000..f8051a4
+--- /dev/null
++++ b/app/changelog/page.tsx
+@@ -0,0 +1,56 @@
++import {
++  BodyText,
++  HeadingText,
++  LabelText,
++  TitleText,
++} from "@dooph-software/design-system";
++
++const entries = [
++  {
++    date: "2026-10-10",
++    title: "Workspace-level permissions",
++    body: "Admins can now set default permissions at the workspace level. Individual project overrides still apply, but new projects inherit the workspace baseline automatically.",
++  },
++  {
++    date: "2026-09-26",
++    title: "Faster review assignments",
++    body: "Review requests are now routed using team availability and recent workload, cutting median assignment time from twelve minutes to under two.",
++  },
++  {
++    date: "2026-09-12",
++    title: "Release timeline view",
++    body: "A new timeline on the Releases page shows every deploy across your environments on a single horizontal axis. Hover any marker to see the commit range and who triggered it.",
++  },
++  {
++    date: "2026-08-30",
++    title: "Markdown in comments",
++    body: "Comments on plans and reviews now support full Markdown, including fenced code blocks with syntax highlighting. Existing plain-text comments are unaffected.",
++  },
++  {
++    date: "2026-08-14",
++    title: "Guest collaborators",
++    body: "Invite people outside your organisation to individual projects as guests. Guests can view and comment but cannot change settings or merge.",
++  },
++];
++
++export default function ChangelogPage() {
++  return (
++    <main className="mx-auto flex w-full max-w-[40rem] flex-col gap-xxxl px-xl py-xxxl">
++      <TitleText as="h1">Changelog</TitleText>
++
++      <div className="flex flex-col gap-xxl">
++        {entries.map((entry) => (
++          <article key={entry.date} className="flex flex-col gap-xs">
++            <LabelText as="time" className="text-text-tertiary">
++              {entry.date}
++            </LabelText>
++            <HeadingText as="h2">{entry.title}</HeadingText>
++            <BodyText as="p" className="text-text-secondary">
++              {entry.body}
++            </BodyText>
++          </article>
++        ))}
++      </div>
++    </main>
++  );
++}
+diff --git a/app/layout.tsx b/app/layout.tsx
+index 610ee36..77c042a 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -55,6 +55,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
+               <Link href="/dashboard" className="text-text-secondary hover:text-text">
+                 <BodyText>Dashboard</BodyText>
+               </Link>
++              <Link href="/changelog" className="text-text-secondary hover:text-text">
++                <BodyText>Changelog</BodyText>
++              </Link>
+               <ThemeToggle />
+             </nav>
+           </header>

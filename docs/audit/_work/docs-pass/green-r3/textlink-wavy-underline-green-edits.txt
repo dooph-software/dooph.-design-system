@@ -1,0 +1,88 @@
+#40 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\src\styles\tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\src\\styles\\tokens.css",
+  "old_string": "  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */\n}",
+  "new_string": "  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */\n  /* TextLink wavy underline: `wavy` = the always-visible wavy decoration in\n   * the link's own colour; `none` = no decoration (the practical neutral). */\n  --ui-textlink-underline-style: wavy; /* expression */\n}"
+}
+
+#41 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\src\styles\tokens.css
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\src\\styles\\tokens.css",
+  "old_string": "    --ui-caret-nudge: 0;\n  }",
+  "new_string": "    --ui-caret-nudge: 0;\n    --ui-textlink-underline-style: none;\n  }"
+}
+
+#42 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\scripts\sync-theme.mjs  FIRST  (tool error)
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\scripts\\sync-theme.mjs",
+  "old_string": "  \"ui-caret-nudge\",",
+  "new_string": "  \"ui-caret-nudge\",\n  \"ui-textlink-underline-style\","
+}
+
+#44 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\scripts\sync-theme.mjs
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\scripts\\sync-theme.mjs",
+  "old_string": "  \"ui-caret-nudge\",\n  // Rolling digits",
+  "new_string": "  \"ui-caret-nudge\",\n  \"ui-textlink-underline-style\",\n  // Rolling digits"
+}
+
+#45 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\src\styles\index.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\src\\styles\\index.css",
+  "old_string": "  /* RevealChangeText — a slot that slides its content out from one edge and",
+  "new_string": "  /* Expressive detail: TextLink wavy underline, read from\n   * --ui-textlink-underline-style (an expression token; the practical preset\n   * sets it to `none`). Always visible, in the link's own colour. */\n  .ds-expr-textlink-underline {\n    text-decoration-line: underline;\n    text-decoration-style: var(--ui-textlink-underline-style);\n    text-decoration-color: currentColor;\n    text-underline-offset: 0.15em;\n    text-decoration-thickness: from-font;\n  }\n\n  /* RevealChangeText — a slot that slides its content out from one edge and"
+}
+
+#46 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\src\styles\tokens.css
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\src\\styles\\tokens.css",
+  "old_string": "  /* TextLink wavy underline: `wavy` = the always-visible wavy decoration in\n   * the link's own colour; `none` = no decoration (the practical neutral). */\n  --ui-textlink-underline-style: wavy; /* expression */",
+  "new_string": "  /* TextLink wavy underline: `underline` = the always-visible wavy decoration\n   * in the link's own colour; `none` = no decoration (the practical neutral).\n   * The wavy style is hardcoded in the helper; this token switches the line\n   * on and off. */\n  --ui-textlink-underline: underline; /* expression */"
+}
+
+#47 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\src\styles\tokens.css
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\src\\styles\\tokens.css",
+  "old_string": "    --ui-textlink-underline-style: none;",
+  "new_string": "    --ui-textlink-underline: none;"
+}
+
+#48 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\scripts\sync-theme.mjs
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\scripts\\sync-theme.mjs",
+  "old_string": "  \"ui-textlink-underline-style\",",
+  "new_string": "  \"ui-textlink-underline\","
+}
+
+#49 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\src\styles\index.css
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\src\\styles\\index.css",
+  "old_string": "  /* Expressive detail: TextLink wavy underline, read from\n   * --ui-textlink-underline-style (an expression token; the practical preset\n   * sets it to `none`). Always visible, in the link's own colour. */\n  .ds-expr-textlink-underline {\n    text-decoration-line: underline;\n    text-decoration-style: var(--ui-textlink-underline-style);\n    text-decoration-color: currentColor;\n    text-underline-offset: 0.15em;\n    text-decoration-thickness: from-font;\n  }",
+  "new_string": "  /* Expressive detail: TextLink wavy underline, read from\n   * --ui-textlink-underline (an expression token; the practical preset sets it\n   * to `none`). Always visible, in the link's own colour via currentColor.\n   * The wavy style is hardcoded: when the token is `none` text-decoration-style\n   * is inert. */\n  .ds-expr-textlink-underline {\n    text-decoration-line: var(--ui-textlink-underline);\n    text-decoration-style: wavy;\n    text-decoration-color: currentColor;\n    text-underline-offset: 0.15em;\n    text-decoration-thickness: from-font;\n  }"
+}
+
+#50 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\src\components\TextLink\TextLink.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\src\\components\\TextLink\\TextLink.tsx",
+  "old_string": "import { Slot } from \"@radix-ui/react-slot\";\nimport { forwardRef, type AnchorHTMLAttributes } from \"react\";\nimport { cn } from \"../../utils/cn\";\nimport { BodyText } from \"../Text\";\n\nexport interface TextLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {\n  asChild?: boolean;\n}\n\n/**\n * TextLink — body text that acts as a link. Ghost foreground at rest,\n * primary text on hover/active (Figma 554-927; color change only, no underline).\n * For Next.js: <TextLink asChild><Link href=\"…\">Changelog</Link></TextLink>\n */\nconst TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(\n  ({ className, asChild = false, ...props }, ref) => {\n    const Comp = asChild ? Slot : \"a\";\n    return (\n      <BodyText\n        as={Comp}\n        ref={ref}\n        className={cn(\n          \"text-ghost-fg cursor-pointer\",\n          \"ds-motion-state\",\n          \"hover:text-ghost-fg-active active:text-ghost-fg-active\",\n          \"ds-focus-visible-ring rounded-tight\",\n          className,\n        )}\n        {...props}\n      />\n    );\n  },\n);\nTextLink.displayName = \"TextLink\";\nexport { TextLink };",
+  "new_string": "/*\n * ## behavior\n * TextLink renders body text styled as a link. Ghost foreground at rest,\n * active foreground on hover/active. By default it carries a wavy underline\n * (`.ds-expr-textlink-underline`, reading `--ui-textlink-underline`) in the\n * link's own colour via currentColor. The practical preset sets the token to\n * `none`, removing the underline and leaving a plain colour-change link.\n *\n * ## constraints\n * - The wavy underline must stay neutralisable by the practical preset\n *   (`--ui-textlink-underline: none`). Failure: a practical product still\n *   shows the wavy decoration.\n */\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { forwardRef, type AnchorHTMLAttributes } from \"react\";\nimport { cn } from \"../../utils/cn\";\nimport { BodyText } from \"../Text\";\n\nexport interface TextLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {\n  asChild?: boolean;\n}\n\n/**\n * TextLink — body text that acts as a link. Ghost foreground at rest,\n * active foreground on hover/active, with an always-visible wavy underline\n * in the link's colour.\n * For Next.js: <TextLink asChild><Link href=\"…\">Changelog</Link></TextLink>\n */\nconst TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(\n  ({ className, asChild = false, ...props }, ref) => {\n    const Comp = asChild ? Slot : \"a\";\n    return (\n      <BodyText\n        as={Comp}\n        ref={ref}\n        className={cn(\n          \"text-ghost-fg cursor-pointer\",\n          \"ds-motion-state\",\n          \"hover:text-ghost-fg-active active:text-ghost-fg-active\",\n          \"ds-focus-visible-ring rounded-tight\",\n          \"ds-expr-textlink-underline\",\n          className,\n        )}\n        {...props}\n      />\n    );\n  },\n);\nTextLink.displayName = \"TextLink\";\nexport { TextLink };"
+}
+
+#51 Edit C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029\src\components\TextLink\TextLink.stories.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-textlink-wavy-underline-green-20261011221029\\src\\components\\TextLink\\TextLink.stories.tsx",
+  "old_string": "export const InlineSentence: Story = {\n  name: \"Inline in sentence\",\n  render: () => (\n    <BodyText>\n      Learn more about our{\" \"}\n      <TextLink href=\"#\">design principles</TextLink> in the documentation.\n    </BodyText>\n  ),\n};",
+  "new_string": "export const InlineSentence: Story = {\n  name: \"Inline in sentence\",\n  render: () => (\n    <BodyText>\n      Learn more about our{\" \"}\n      <TextLink href=\"#\">design principles</TextLink> in the documentation.\n    </BodyText>\n  ),\n};\n\nexport const Practical: Story = {\n  name: \"Practical\",\n  render: () => (\n    <div className=\"flex gap-xl\">\n      <div>\n        <BodyText as=\"p\" className=\"text-ghost-fg mb-sm\">\n          Default (signature)\n        </BodyText>\n        <TextLink href=\"#\">Read the changelog</TextLink>\n      </div>\n      <div data-ds-expression=\"practical\">\n        <BodyText as=\"p\" className=\"text-ghost-fg mb-sm\">\n          Practical\n        </BodyText>\n        <TextLink href=\"#\">Read the changelog</TextLink>\n      </div>\n    </div>\n  ),\n};"
+}
+

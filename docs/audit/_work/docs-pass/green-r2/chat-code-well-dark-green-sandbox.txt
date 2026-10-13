@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250 (with-skills)
+snapshot tree: 4ba704156f2066bd8c7b83a9b4baeb28431aecb1 (main working tree)
+start tree:    9a0db446f9218fd83544c9b3acea889c1ac0afe8 (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-chat-code-well-dark-green-20261011211250/sandbox-start-tree)

@@ -13,8 +13,8 @@ Detail behind the codebase map. Every line is read from `package.json`, `tsup.co
 | `storybook` | `storybook dev -p 6006` | Local Storybook |
 | `build-storybook` | `storybook build` | Static Storybook in `storybook-static/` (gitignored) |
 | `build` | the three generators above, then `build:js` | Scratch worktree only: rewrites tracked files |
-| `build:js` | tsup through `node --max-old-space-size=8192` | Scratch worktree only |
-| `build:css` | `node scripts/emit-css.mjs` | CSS-only rebuild of `dist/`; scratch worktree only |
+| `build:js` | tsup through `node --max-old-space-size=8192` | Writes only gitignored `dist/` |
+| `build:css` | `node scripts/emit-css.mjs` | CSS-only rebuild of `dist/` (gitignored) |
 | `build:watch` | the three generators, then tsup `--watch` | Scratch worktree only |
 | `prepublishOnly` | `npm run build` | npm runs it before `npm publish` |
 | `prep-release:patch` / `:minor` / `:major` | `npm version …`, `npm run build`, `git push --follow-tags` | The maintainer's release. Never run by an agent |
@@ -69,7 +69,7 @@ The build never runs lint, `generate-docs.mjs` or `sync-skills.mjs`.
 
 ## init-skills (`bin/init.mjs`)
 
-From a consuming project, `npx @dooph-software/design-system init-skills` copies the package's `skills/` into `.agents/skills`, `.claude/skills` and `.agent/skills`. It asks Y/n for each, merges into a directory that already exists, and after copying prints the `styles.css` import line. If every target is deselected it copies nothing and prints no import line. `--yes` / `-y` answers yes to every prompt. With no input (stdin closed), every prompt takes its default, which is yes. It changes nothing else in the project.
+From a consuming project, `npx @dooph-software/design-system init-skills` copies the package's `skills/` into `.agents/skills`, `.claude/skills` and `.agent/skills`. It asks Y/n for each, merges into a directory that already exists, and after copying prints the stylesheet imports: a JS-entry `styles.css` import, or a CSS-entry block of `tailwindcss`, `styles.css` and `theme.css`. It then points to the setup skill. If every target is deselected it copies nothing and prints no imports. `--yes` / `-y` answers yes to every prompt. With no input (stdin closed), every prompt takes its default, which is yes. It changes nothing else in the project.
 
 ## Skill mirrors (`scripts/sync-skills.mjs`)
 

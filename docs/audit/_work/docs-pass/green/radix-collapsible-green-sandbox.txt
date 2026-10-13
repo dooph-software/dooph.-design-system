@@ -1,0 +1,5 @@
+Preparing worktree (detached HEAD 8493906)
+Updating files:  94% (2229/2362)Updating files:  95% (2244/2362)Updating files:  96% (2268/2362)Updating files:  97% (2292/2362)Updating files:  98% (2315/2362)Updating files:  99% (2339/2362)Updating files: 100% (2362/2362)Updating files: 100% (2362/2362), done.
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-radix-collapsible-green-20261011171920 (with-skills)
+snapshot tree: 228fe6c7f4234552874265a901bd839c93bb4cf5 (main working tree)
+start tree:    118508b3b109f9fecde26783f7cb75432de1c20c (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-radix-collapsible-green-20261011171920/sandbox-start-tree)

@@ -1,0 +1,1 @@
+Settings screens in our apps keep hand-building the same row: a checkbox, a label next to it, and an optional line of hint text under the label. Add a `CheckboxField` component to the design system for that, with a story.

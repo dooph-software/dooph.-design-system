@@ -1,0 +1,8 @@
+#68 Edit C:/Users/stick/Github/dooph/ds-consumer-sb-f20818f6219f/app/layout.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-consumer-sb-f20818f6219f/app/layout.tsx",
+  "old_string": "    <html\n      lang=\"en\"\n      className={`${googleSansFlex.variable} ${hostGrotesk.variable} ${bricolageGrotesque.variable} antialiased`}\n      suppressHydrationWarning\n    >",
+  "new_string": "    <html\n      lang=\"en\"\n      data-ds-expression=\"practical\"\n      className={`${googleSansFlex.variable} ${hostGrotesk.variable} ${bricolageGrotesque.variable} antialiased`}\n      suppressHydrationWarning\n    >"
+}
+

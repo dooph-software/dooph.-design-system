@@ -1,0 +1,1 @@
+Our brand purple is #6d28d9. Make the DS's prominent colour our brand purple in light mode. Dark mode should stay exactly as the DS ships it.

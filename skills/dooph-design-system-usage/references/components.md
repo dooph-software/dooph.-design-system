@@ -2,7 +2,7 @@
 
 # Components and exports
 
-Every export of the package entry (`src/index.ts`), grouped by the folder it is declared in. Generated from source by `scripts/generate-docs.mjs`; `npm run lint` fails when this file is out of date.
+Every export of `@dooph-software/design-system`, grouped by the component family (or utility) that declares it.
 
 How to read it:
 
@@ -10,15 +10,15 @@ How to read it:
 - `name?` marks an optional prop. A type with ` / ` between parts means the prop is declared differently in different variants of the props (a union of prop shapes, or several call signatures).
 - **Default** is the default written in the component's render function, as source (`size = ButtonSize.standard`), never an evaluated value. `(cva: fooVariants)` marks a default that comes from the `defaultVariants` of the class function the prop is passed to. `(from Inner)` marks a default of another component in this package that the props are spread into unchanged. A blank default means none of these exists; the prop may still fall back in code (`??`, React context, or a wrapped Radix primitive).
 - **Description** is the first sentence of the prop's JSDoc.
-- Components in one folder with identical props are listed together.
+- Components in one group with identical props are listed together.
 
 ## Contents
 
-[AIChat](#aichat) · [AnimatedText](#animatedtext) · [Avatar](#avatar) · [Button](#button) · [CTAButton](#ctabutton) · [Calendar](#calendar) · [Checkbox](#checkbox) · [CopyButton](#copybutton) · [DatePicker](#datepicker) · [DropdownCaret](#dropdowncaret) · [DropdownTrigger](#dropdowntrigger) · [HotkeyIndicator](#hotkeyindicator) · [Icons](#icons) · [Input](#input) · [LinearProgressIndicator](#linearprogressindicator) · [LoadingSpinner](#loadingspinner) · [Menu](#menu) · [Modal](#modal) · [MorphRotationShape](#morphrotationshape) · [OutlineButton](#outlinebutton) · [OutlineSection](#outlinesection) · [Popover](#popover) · [ProgressIndicator](#progressindicator) · [SearchBox](#searchbox) · [SegmentedTabSelect](#segmentedtabselect) · [ShapeButton](#shapebutton) · [ShapeMorphSpinner](#shapemorphspinner) · [Shapes](#shapes) · [Sheet](#sheet) · [SidebarWithHoverIcon](#sidebarwithhovericon) · [Slider](#slider) · [SplitButton](#splitbutton) · [Sticker](#sticker) · [Table](#table) · [Tabs](#tabs) · [Text](#text) · [TextLink](#textlink) · [Toast](#toast) · [Toggle](#toggle) · [Tooltip](#tooltip) · [VerificationCode](#verificationcode) · [WavyDivider](#wavydivider) · [utils/cn](#utilscn) · [utils/color](#utilscolor)
+[AIChat](#aichat) · [AnimatedText](#animatedtext) · [Avatar](#avatar) · [Button](#button) · [CTAButton](#ctabutton) · [Calendar](#calendar) · [Checkbox](#checkbox) · [CopyButton](#copybutton) · [DatePicker](#datepicker) · [DropdownCaret](#dropdowncaret) · [DropdownTrigger](#dropdowntrigger) · [HotkeyIndicator](#hotkeyindicator) · [Icons](#icons) · [Input](#input) · [LinearProgressIndicator](#linearprogressindicator) · [LoadingSpinner](#loadingspinner) · [Menu](#menu) · [Modal](#modal) · [MorphRotationShape](#morphrotationshape) · [OutlineButton](#outlinebutton) · [OutlineSection](#outlinesection) · [Popover](#popover) · [ProgressIndicator](#progressindicator) · [SearchBox](#searchbox) · [SegmentedTabSelect](#segmentedtabselect) · [ShapeButton](#shapebutton) · [ShapeMorphSpinner](#shapemorphspinner) · [Shapes](#shapes) · [Sheet](#sheet) · [SidebarWithHoverIcon](#sidebarwithhovericon) · [Slider](#slider) · [SplitButton](#splitbutton) · [Sticker](#sticker) · [Table](#table) · [Tabs](#tabs) · [Text](#text) · [TextLink](#textlink) · [Toast](#toast) · [Toggle](#toggle) · [Tooltip](#tooltip) · [VerificationCode](#verificationcode) · [WavyDivider](#wavydivider) · [Utility: cn](#utility-cn) · [Utility: color](#utility-color)
 
 ## AIChat
 
-`src/components/AIChat/` — 17 components, 3 consts, 19 types.
+17 components, 3 consts, 19 types.
 
 ### AIContextGauge
 
@@ -238,7 +238,7 @@ Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| unde
 
 ## AnimatedText
 
-`src/components/AnimatedText/` — 7 components, 2 consts, 9 types.
+7 components, 2 consts, 9 types.
 
 ### FadeChangeText
 
@@ -350,7 +350,7 @@ Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLSpanElement> \| und
 
 ## Avatar
 
-`src/components/Avatar/` — 1 component, 1 const, 2 types.
+1 component, 1 const, 2 types.
 
 ### Avatar
 
@@ -376,7 +376,7 @@ Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| unde
 
 ## Button
 
-`src/components/Button/` — 1 component, 2 consts, 3 types, 1 function.
+1 component, 2 consts, 3 types, 1 function.
 
 ### Button
 
@@ -426,7 +426,7 @@ Inherits 289 more props from `@types/react`. `ref`: `Ref<HTMLButtonElement> \| u
 
 ## CTAButton
 
-`src/components/CTAButton/` — 1 component, 2 consts, 3 types.
+1 component, 2 consts, 3 types.
 
 ### CTAButton
 
@@ -467,7 +467,7 @@ Inherits 287 more props from `@types/react`. `ref`: `Ref<HTMLElement> \| undefin
 
 ## Calendar
 
-`src/components/Calendar/` — 5 components, 4 consts, 11 types.
+5 components, 4 consts, 11 types.
 
 ### Calendar
 
@@ -604,7 +604,7 @@ Inherits 279 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| unde
 
 ## Checkbox
 
-`src/components/Checkbox/` — 2 components, 2 consts, 3 types.
+2 components, 2 consts, 3 types.
 
 ### Checkbox
 
@@ -645,7 +645,7 @@ Inherits 282 more props from `@radix-ui/react-checkbox`, `@radix-ui/react-primit
 
 ## CopyButton
 
-`src/components/CopyButton/` — 1 component, 1 const, 2 types.
+1 component, 1 const, 2 types.
 
 ### CopyButton
 
@@ -673,7 +673,7 @@ Inherits 288 more props from `@types/react`. `ref`: `Ref<HTMLButtonElement> \| u
 
 ## DatePicker
 
-`src/components/DatePicker/` — 3 components, 3 types.
+3 components, 3 types.
 
 ### DatePicker
 
@@ -734,7 +734,7 @@ Inherits 288 more props from `@types/react`. `ref`: `Ref<HTMLButtonElement> \| u
 
 ## DropdownCaret
 
-`src/components/DropdownCaret/` — 1 component, 1 const, 2 types.
+1 component, 1 const, 2 types.
 
 ### DropdownCaret
 
@@ -759,7 +759,7 @@ Inherits 288 more props from `@types/react`. `ref`: `Ref<HTMLButtonElement> \| u
 
 ## DropdownTrigger
 
-`src/components/DropdownTrigger/` — 4 components, 1 const, 5 types.
+4 components, 1 const, 5 types.
 
 ### DropdownTrigger
 
@@ -818,7 +818,7 @@ Inherits 288 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| unde
 
 ## HotkeyIndicator
 
-`src/components/HotkeyIndicator/` — 1 component, 1 const, 2 types.
+1 component, 1 const, 2 types.
 
 ### HotkeyIndicator
 
@@ -846,7 +846,7 @@ Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLSpanElement> \| und
 
 ## Icons
 
-`src/components/Icons/` — 89 components, 1 const, 2 types.
+89 components, 1 const, 2 types.
 
 ### AIContextIcon and 87 more, same props
 
@@ -854,7 +854,7 @@ Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLSpanElement> \| und
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `aria-hidden?` | `boolean \| "true" \| "false"` |  |  |
+| `aria-hidden?` | `boolean \| "true" \| "false"` |  | Hidden by default; an icon with `aria-label` or `aria-labelledby` is not hidden unless you pass this. |
 | `children?` | `ReactNode` |  |  |
 | `className?` | `string` |  |  |
 | `color?` | `string` |  |  |
@@ -872,7 +872,7 @@ BaseIcon — render any SVG icon by passing path(s) as children.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `aria-hidden?` | `boolean \| "true" \| "false"` |  |  |
+| `aria-hidden?` | `boolean \| "true" \| "false"` |  | Hidden by default; an icon with `aria-label` or `aria-labelledby` is not hidden unless you pass this. |
 | `children?` | `ReactNode` |  |  |
 | `className?` | `string` |  |  |
 | `color?` | `string` |  |  |
@@ -901,9 +901,11 @@ Inherits 483 more props from `@types/react`. `ref`: `Ref<SVGSVGElement> \| undef
 
 ## Input
 
-`src/components/Input/` — 1 component, 1 const, 2 types.
+1 component, 1 const, 2 types.
 
 ### Input
+
+Text or number field whose `className` lands on the field chrome (the `<input>` itself for the text variant, the wrapper otherwise), while `ref`, `style` and every other prop land on the `<input>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -937,7 +939,7 @@ Inherits 308 more props from `@types/react`. `ref`: `Ref<HTMLInputElement> \| un
 
 ## LinearProgressIndicator
 
-`src/components/LinearProgressIndicator/` — 1 component, 1 type.
+1 component, 1 type.
 
 ### LinearProgressIndicator
 
@@ -954,7 +956,7 @@ Inherits 282 more props from `@radix-ui/react-primitive`, `@radix-ui/react-progr
 
 ## LoadingSpinner
 
-`src/components/LoadingSpinner/` — 1 component, 3 consts, 4 types.
+1 component, 3 consts, 4 types.
 
 ### LoadingSpinner
 
@@ -1004,7 +1006,7 @@ Inherits 485 more props from `@types/react`. `ref`: `Ref<SVGSVGElement> \| undef
 
 ## Menu
 
-`src/components/Menu/` — 18 components, 3 consts, 9 types.
+18 components, 3 consts, 9 types.
 
 ### DropdownMenu
 
@@ -1183,7 +1185,7 @@ Inherits 291 more props from `@radix-ui/react-primitive`, `@types/react`. `ref`:
 
 ## Modal
 
-`src/components/Modal/` — 8 components, 1 type.
+8 components, 1 type.
 
 ### Modal
 
@@ -1241,7 +1243,7 @@ Inherits 281 more props from `@radix-ui/react-primitive`, `@types/react`. `ref`:
 
 ## MorphRotationShape
 
-`src/components/MorphRotationShape/` — 1 component, 1 const, 5 types.
+1 component, 1 const, 5 types.
 
 ### MorphRotationShape
 
@@ -1276,7 +1278,7 @@ Inherits 279 more props from `@types/react`. `ref`: `Ref<HTMLSpanElement> \| und
 
 ## OutlineButton
 
-`src/components/OutlineButton/` — 1 component, 1 type.
+1 component, 1 type.
 
 ### OutlineButton
 
@@ -1300,7 +1302,7 @@ Inherits 288 more props from `@types/react`. `ref`: `Ref<HTMLButtonElement> \| u
 
 ## OutlineSection
 
-`src/components/OutlineSection/` — 1 component, 1 type.
+1 component, 1 type.
 
 ### OutlineSection
 
@@ -1316,7 +1318,7 @@ Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| unde
 
 ## Popover
 
-`src/components/Popover/` — 6 components, 1 type.
+6 components, 1 type.
 
 ### Popover
 
@@ -1359,7 +1361,7 @@ Inherits 3 more props from `@radix-ui/react-popover`.
 
 ## ProgressIndicator
 
-`src/components/ProgressIndicator/` — 1 component, 1 const, 2 types.
+1 component, 1 const, 2 types.
 
 ### ProgressIndicator
 
@@ -1391,7 +1393,7 @@ Inherits 485 more props from `@types/react`. `ref`: `Ref<SVGSVGElement> \| undef
 
 ## SearchBox
 
-`src/components/SearchBox/` — 1 component, 1 type.
+1 component, 1 type.
 
 ### SearchBox
 
@@ -1410,7 +1412,7 @@ Inherits 309 more props from `@types/react`. `ref`: `Ref<HTMLInputElement> \| un
 
 ## SegmentedTabSelect
 
-`src/components/SegmentedTabSelect/` — 2 components, 2 consts, 4 types.
+2 components, 2 consts, 4 types.
 
 ### SegmentedTabItem
 
@@ -1459,7 +1461,7 @@ Inherits 285 more props from `@radix-ui/react-primitive`, `@radix-ui/react-tabs`
 
 ## ShapeButton
 
-`src/components/ShapeButton/` — 1 component, 2 consts, 3 types.
+1 component, 2 consts, 3 types.
 
 ### ShapeButton
 
@@ -1501,7 +1503,7 @@ Inherits 289 more props from `@types/react`. `ref`: `Ref<HTMLButtonElement> \| u
 
 ## ShapeMorphSpinner
 
-`src/components/ShapeMorphSpinner/` — 1 component, 1 const, 1 type.
+1 component, 1 const, 1 type.
 
 ### ShapeMorphSpinner
 
@@ -1524,7 +1526,7 @@ Inherits 278 more props from `@types/react`. `ref`: `Ref<HTMLSpanElement> \| und
 
 ## Shapes
 
-`src/components/Shapes/` — 15 components, 15 consts, 3 types.
+15 components, 15 consts, 3 types.
 
 ### ArrowShape and 12 more, same props
 
@@ -1532,7 +1534,7 @@ Inherits 278 more props from `@types/react`. `ref`: `Ref<HTMLSpanElement> \| und
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `aria-hidden?` | `boolean \| "true" \| "false"` |  |  |
+| `aria-hidden?` | `boolean \| "true" \| "false"` |  | Hidden by default; an icon with `aria-label` or `aria-labelledby` is not hidden unless you pass this. |
 | `className?` | `string` |  |  |
 | `fillColor?` | `string` | `"currentColor"` |  |
 | `ref?` | `Ref<SVGSVGElement>` |  |  |
@@ -1546,7 +1548,7 @@ Inherits 482 more props from `@types/react`. `ref`: `Ref<SVGSVGElement> \| undef
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `aria-hidden?` | `boolean \| "true" \| "false"` |  |  |
+| `aria-hidden?` | `boolean \| "true" \| "false"` |  | Hidden by default; an icon with `aria-label` or `aria-labelledby` is not hidden unless you pass this. |
 | `children?` | `ReactNode` |  |  |
 | `className?` | `string` |  |  |
 | `fillColor?` | `string` |  |  |
@@ -1607,7 +1609,7 @@ Inherits 482 more props from `@types/react`. `ref`: `Ref<SVGSVGElement> \| undef
 
 ## Sheet
 
-`src/components/Sheet/` — 8 components, 1 const, 2 types.
+8 components, 1 const, 2 types.
 
 ### Sheet
 
@@ -1680,13 +1682,13 @@ Inherits 281 more props from `@radix-ui/react-primitive`, `@types/react`. `ref`:
 
 ## SidebarWithHoverIcon
 
-`src/components/SidebarWithHoverIcon/` — 1 component, 1 const, 2 types.
+1 component, 1 const, 2 types.
 
 ### SidebarWithHoverIcon
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `aria-hidden?` | `boolean \| "true" \| "false"` |  |  |
+| `aria-hidden?` | `boolean \| "true" \| "false"` |  | Hidden by default; an icon with `aria-label` or `aria-labelledby` is not hidden unless you pass this. |
 | `children?` | `ReactNode` |  |  |
 | `className?` | `string` |  |  |
 | `color?` | `string` |  |  |
@@ -1716,11 +1718,11 @@ Inherits 482 more props from `@types/react`. `ref`: `Ref<SVGSVGElement> \| undef
 
 ## Slider
 
-`src/components/Slider/` — 3 components, 1 const, 4 types.
+3 components, 1 const, 4 types.
 
 ### SliderContinuous
 
-`className` styles the outer box, which owns the width; `ref`, `style` and every other prop go to the Radix Root inside it.
+Continuous single-thumb slider (only `value[0]` is drawn and edited); `className` styles the outer box, which owns the width, and `ref`, `style` and every other prop go to the Radix Root inside it.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -1732,7 +1734,7 @@ Inherits 292 more props from `@radix-ui/react-primitive`, `@radix-ui/react-slide
 
 ### SliderLabeled
 
-`className` styles the outer column (track + labels); `ref`, `style` and every other prop go to the slider's Radix Root.
+Single-thumb slider with start and end labels (only `value[0]` is drawn and edited); `className` styles the outer column (track + labels), and `ref`, `style` and every other prop go to the slider's Radix Root.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -1747,7 +1749,7 @@ Inherits 292 more props from `@radix-ui/react-primitive`, `@radix-ui/react-slide
 
 ### SliderStepped
 
-`className` styles the outer box, which owns the width and the end-dot inset; `ref`, `style` and every other prop go to the Radix Root inside it.
+Stepped single-thumb slider (only `value[0]` is drawn and edited); `className` styles the outer box, which owns the width and the end-dot inset, and `ref`, `style` and every other prop go to the Radix Root inside it.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -1777,7 +1779,7 @@ Inherits 292 more props from `@radix-ui/react-primitive`, `@radix-ui/react-slide
 
 ## SplitButton
 
-`src/components/SplitButton/` — 4 components, 4 types.
+4 components, 4 types.
 
 ### SplitButton
 
@@ -1808,7 +1810,7 @@ Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| unde
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `aria-label?` | `string` |  | Accessible name of the icon-only trigger. |
+| `aria-label?` | `string` |  | Accessible name of the icon-only trigger; "More options" unless `aria-labelledby` is passed. |
 
 Inherits 289 more props from `@types/react`. `ref`: `Ref<HTMLButtonElement> \| undefined`.
 
@@ -1821,7 +1823,7 @@ Inherits 289 more props from `@types/react`. `ref`: `Ref<HTMLButtonElement> \| u
 
 ## Sticker
 
-`src/components/Sticker/` — 1 component, 2 consts, 3 types.
+1 component, 2 consts, 3 types.
 
 ### Sticker
 
@@ -1861,9 +1863,11 @@ Inherits 279 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| unde
 
 ## Table
 
-`src/components/Table/` — 6 components, 1 const, 3 types.
+6 components, 1 const, 3 types.
 
 ### Table
+
+A table of ARIA-role `div`s: `columns` is the CSS grid template, and your `style` merges after the grid variables.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -1886,7 +1890,7 @@ Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| unde
 | --- | --- | --- | --- |
 | `buttonProps?` | `Omit<ButtonProps, "size" \| "variant" \| "children" \| "onClick" \| "asChild">` |  | Props for the sort button (sortable headers only): `aria-*`, `id`, `onKeyDown`, `className`, … The click is always `onSort`, and the header owns the button's `variant`/`size`. |
 | `onSort?` | `() => void` |  |  |
-| `sortDirection?` | `TableSortDirection` |  |  |
+| `sortDirection?` | `TableSortDirection` |  | Makes the header sortable: it renders a sort button and sets `aria-sort` from this value. |
 
 Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| undefined`.
 
@@ -1908,7 +1912,7 @@ Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| unde
 
 ## Tabs
 
-`src/components/Tabs/` — 4 components, 2 consts, 3 types, 1 function.
+4 components, 2 consts, 3 types, 1 function.
 
 ### Tabs
 
@@ -1971,7 +1975,7 @@ Inherits 291 more props from `@radix-ui/react-primitive`, `@radix-ui/react-tabs`
 
 ## Text
 
-`src/components/Text/` — 12 components, 6 consts, 26 types.
+12 components, 6 consts, 26 types.
 
 ### BaseText
 
@@ -1988,7 +1992,7 @@ BaseText — the typography primitive behind every role component, and the only 
 | `lineHeight?` | `LineHeightValue` |  |  |
 | `ref?` | `ComponentPropsWithRef<TElement>["ref"]` |  |  |
 | `tabular?` | `boolean` |  | Fixed-advance figures (`font-variant-numeric: tabular-nums`). |
-| `unstyled?` | `boolean` | `false` | Drop the role class entirely and style from props/className alone. |
+| `unstyled?` | `boolean` | `false` | Drop the role class entirely and style from props alone. |
 | `variant?` | `TextVariant` | `TextVariant.body` | Role providing the defaults. |
 
 Inherits 279 more props from `@types/react`. `ref`: `Ref<HTMLSpanElement> \| undefined`. Generic (polymorphic); inherited props are counted at the default element.
@@ -2008,7 +2012,7 @@ Inherits 279 more props from `@types/react`. `ref`: `Ref<HTMLSpanElement> \| und
 | `lineHeight?` | `LineHeightValue` |  |  |
 | `ref?` | `ComponentPropsWithRef<TElement>["ref"]` |  |  |
 | `tabular?` | `boolean` |  | Fixed-advance figures (`font-variant-numeric: tabular-nums`). |
-| `unstyled?` | `boolean` | `false` (from BaseText) | Drop the role class entirely and style from props/className alone. |
+| `unstyled?` | `boolean` | `false` (from BaseText) | Drop the role class entirely and style from props alone. |
 
 Inherits 279 more props from `@types/react`. `ref`: `Ref<HTMLSpanElement> \| undefined`. Generic (polymorphic); inherited props are counted at the default element.
 
@@ -2118,7 +2122,7 @@ Inherits 279 more props from `@types/react`. `ref`: `Ref<HTMLSpanElement> \| und
 
 ## TextLink
 
-`src/components/TextLink/` — 1 component, 1 type.
+1 component, 1 type.
 
 ### TextLink
 
@@ -2136,7 +2140,7 @@ Inherits 288 more props from `@types/react`. `ref`: `Ref<HTMLAnchorElement> \| u
 
 ## Toast
 
-`src/components/Toast/` — 7 components, 1 const, 6 types, 1 function.
+7 components, 1 const, 6 types, 1 function.
 
 ### ToastAction
 
@@ -2164,7 +2168,7 @@ Inherits 291 more props from `@radix-ui/react-primitive`, `@types/react`. `ref`:
 | `letterSpacing?` | `LetterSpacingValue` |  |  |
 | `lineHeight?` | `LineHeightValue` |  |  |
 | `tabular?` | `boolean` |  | Fixed-advance figures (`font-variant-numeric: tabular-nums`). |
-| `unstyled?` | `boolean` | `false` (from BaseText) | Drop the role class entirely and style from props/className alone. |
+| `unstyled?` | `boolean` | `false` (from BaseText) | Drop the role class entirely and style from props alone. |
 
 Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLElement> \| undefined`.
 
@@ -2218,7 +2222,7 @@ Inherits 286 more props from `@radix-ui/react-primitive`, `@radix-ui/react-toast
 
 ## Toggle
 
-`src/components/Toggle/` — 4 components, 2 consts, 6 types.
+4 components, 2 consts, 6 types.
 
 ### FancyToggleSwitch
 
@@ -2289,7 +2293,7 @@ Inherits 291 more props from `@radix-ui/react-primitive`, `@radix-ui/react-toggl
 
 ## Tooltip
 
-`src/components/Tooltip/` — 6 components, 1 const, 4 types.
+6 components, 1 const, 4 types.
 
 ### Tooltip
 
@@ -2311,7 +2315,7 @@ Inherits 6 more props from `@radix-ui/react-tooltip`.
 | `letterSpacing?` | `LetterSpacingValue` |  |  |
 | `lineHeight?` | `LineHeightValue` |  |  |
 | `tabular?` | `boolean` |  | Fixed-advance figures (`font-variant-numeric: tabular-nums`). |
-| `unstyled?` | `boolean` | `false` (from BaseText) | Drop the role class entirely and style from props/className alone. |
+| `unstyled?` | `boolean` | `false` (from BaseText) | Drop the role class entirely and style from props alone. |
 
 Inherits 280 more props from `@types/react`. `ref`: `Ref<HTMLElement> \| undefined`.
 
@@ -2357,7 +2361,7 @@ Inherits 291 more props from `@radix-ui/react-primitive`, `@types/react`. `ref`:
 
 ## VerificationCode
 
-`src/components/VerificationCode/` — 2 components, 2 types.
+2 components, 2 types.
 
 ### CodeDigitInput
 
@@ -2390,7 +2394,7 @@ Inherits 277 more props from `@types/react`. `ref`: `Ref<HTMLDivElement> \| unde
 
 ## WavyDivider
 
-`src/components/WavyDivider/` — 1 component, 1 const, 2 types.
+1 component, 1 const, 2 types.
 
 ### WavyDivider
 
@@ -2418,9 +2422,9 @@ Inherits 486 more props from `@types/react`. `ref`: `Ref<SVGSVGElement> \| undef
 - `WavyDividerProps`
 - `WavyDividerVariant` = `"high" \| "low"`
 
-## utils/cn
+## Utility: cn
 
-`src/utils/cn.ts` — 1 const, 1 function.
+1 const, 1 function.
 
 ### Consts
 
@@ -2430,9 +2434,9 @@ Inherits 486 more props from `@types/react`. `ref`: `Ref<SVGSVGElement> \| undef
 
 - `cn(...inputs: ClassValue[]): string`
 
-## utils/color
+## Utility: color
 
-`src/utils/color.ts` — 1 const, 2 types, 1 function.
+1 const, 2 types, 1 function.
 
 ### Consts
 

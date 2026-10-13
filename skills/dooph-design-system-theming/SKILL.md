@@ -1,11 +1,11 @@
 ---
 name: dooph-design-system-theming
-description: Use when an app on @dooph-software/design-system needs a --ui-* token overridden, a brand colour changed, something different in light or dark mode only, a dark or light section, an app CSS variable that points at a DS token, a motion retune, or the practical expression; or when an override shows up in the wrong mode, is ignored inside a .dark or .light section, or changes nothing.
+description: 'Use when an app on @dooph-software/design-system needs a --ui-* token overridden, a brand colour changed, something different in light or dark mode only, a dark or light section, an app CSS variable that points at a DS token, a motion retune, or the practical expression (dropdown carets or chevrons without the morphing shape or hover lean, a plainer or less playful look); or when an override shows up in the wrong mode, is ignored inside a .dark or .light section, or changes nothing.'
 ---
 
 # Theming the dooph design system
 
-Every DS colour, size and motion value is a `--ui-*` custom property in `@dooph-software/design-system/styles.css`. Theme an app by overriding them in your global CSS. `references/token-contract.md` lists every token.
+The DS's colours, type, spacing, radii, shadows, component sizes and motion are `--ui-*` custom properties in `@dooph-software/design-system/styles.css` (hairline borders and a few fixed offsets are not). Theme an app by overriding them in your global CSS. `references/token-contract.md` lists every token.
 
 **Not for:** imports, fonts and the Tailwind preset (see dooph-design-system-setup), or tokens in `className` (see dooph-design-system-usage).
 
@@ -23,6 +23,7 @@ The DS's tokens sit in two cascade layers, `ds.tokens` (defaults, dark, reduced 
 
 - **Dark is the `dark` class on `<html>`, and your theme provider toggles it.** The DS has no `prefers-color-scheme` rule, so following the OS setting is the provider's job.
 - **`className="dark"` on any element makes its subtree dark.** `className="light"` does the reverse inside a dark page.
+- **Give the island element its own background and text colour: `className="dark bg-surface-page text-text"`.** Its tokens re-resolve, but the `color` it inherits was computed outside it, on your `<body>`. *Prevents:* every Text component with no colour class keeping the page's text colour: dark text on a dark band, or light on light.
 - **Portalled content leaves the island.** Modal, Sheet, Popover, menu and Tooltip content mounts in `<body>`. Pass `portalProps={{ container }}` with an element inside the island, or `portal={false}`. Putting the island's class (`dark` or `light`) on the content's `className` misses the Modal and Sheet backdrop, which renders beside the content.
 
 ## Override recipes
@@ -36,7 +37,7 @@ The DS's tokens sit in two cascade layers, `ds.tokens` (defaults, dark, reduced 
 | Per mode | `:root:not(.dark), .light { --ui-x: a; }` `.dark { --ui-x: b; }` |
 | Every mode | `:root, .light, .dark { --ui-x: v; }` (for motion tokens, see Motion) |
 
-**The alias rule.** A token that reads another one (Alias `alias` or `derived`) resolves where the DS declares it: in `:root, .light`, and again in `.dark` when marked `repeated`. Anywhere else it inherits the colour it already resolved to, so a new fill gets the old border. Restate the readers of the token you override, using the DS's own text (for example `--ui-color-prominent-border: var(--ui-color-prominent);`):
+**The alias rule.** A token that reads another one (Alias `alias` or `derived`) resolves where the DS declares it: in `:root, .light`, and again in `.dark` when marked `repeated`. Anywhere else it inherits the colour it already resolved to, so a new fill gets the old border. One alias is declared on `:root` only: `--ui-caret-nudge`, which reads `--ui-shape-morph-nudge`. It resolves on `<html>` alone, so a `--ui-shape-morph-nudge` override on any element below `<html>` doesn't move the caret's hover lean. Restate the readers of the token you override, using the DS's own text (for example `--ui-color-prominent-border: var(--ui-color-prominent);`):
 
 - in a `.dark` rule, every reader whose Dark column says `same`. Those marked `repeated` follow on their own.
 - in a rule on any other element (a wrapper class), every reader, `repeated` ones included.
@@ -82,6 +83,8 @@ In the browser, read the token four times: on `<html>` in light, after toggling 
 ```js
 getComputedStyle(document.documentElement).getPropertyValue("--ui-color-prominent")
 ```
+
+For an island, also read `getComputedStyle(heading).color` on a heading inside it. It should be the island's text colour, not the page's.
 
 `references/overrides.md` holds the measured matrix behind these rules.
 

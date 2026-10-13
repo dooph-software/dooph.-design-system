@@ -136,8 +136,8 @@ function FlatProgressIndicator({
       {...rest}
       /* Numeric width/height stay as ATTRIBUTES so the drawing has an
        * intrinsic size before CSS lands; the token then overrides them via
-       * style, because an SVG attribute cannot resolve var(). The viewBox
-       * keeps the user-unit space, so the whole drawing scales to the token. */
+       * style, because `var()` in an SVG attribute is not specified (Chromium
+       * draws it, but the SVG DOM reads it as 0). The viewBox keeps the user-unit space, so the whole drawing scales to the token. */
       width={diameter}
       height={diameter}
       viewBox={`0 0 ${diameter} ${diameter}`}
@@ -238,8 +238,8 @@ function WavyProgressIndicator({
       {...rest}
       /* Numeric width/height stay as ATTRIBUTES so the drawing has an
        * intrinsic size before CSS lands; the token then overrides them via
-       * style, because an SVG attribute cannot resolve var(). The viewBox
-       * keeps the user-unit space, so the whole drawing scales to the token. */
+       * style, because `var()` in an SVG attribute is not specified (Chromium
+       * draws it, but the SVG DOM reads it as 0). The viewBox keeps the user-unit space, so the whole drawing scales to the token. */
       width={diameter}
       height={diameter}
       viewBox={`0 0 ${diameter} ${diameter}`}

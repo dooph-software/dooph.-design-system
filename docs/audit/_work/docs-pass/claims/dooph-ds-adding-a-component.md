@@ -15,6 +15,7 @@ Maintainer-intent claims cite the brief/constraints, since they are instructions
 - S step 2: a new dependency is added only with the maintainer's go-ahead — maintainer intent: `docs/audit/_work/agent-rules.md:5` ("Install nothing and add no dependency"); reviewer instruction, fix round 1
 - S step 3: a family member goes in the family's folder and barrel: FancyToggleSwitch in Toggle/ — `src/components/Toggle/FancyToggleSwitch.tsx`, `src/components/Toggle/index.ts:4-8`
 - S step 3: a standalone component gets its own folder — `src/components/CTAButton/`, `src/components/Popover/`, `src/components/DatePicker/` (ls)
+- S step 4 (Prevents): a .css under a component folder never ships because emit-css compiles only src/styles/build.css (scripts/emit-css.mjs:22; src/styles/build.css:6-7); whether it would work in Storybook is not claimed.
 - S step 4: no .css file under component folders — `find src/components -name "*.css"` returns nothing
 - S step 4: the build compiles only src/styles/build.css, which imports index.css — `scripts/emit-css.mjs:22` (`npx tailwindcss -i src/styles/build.css -o dist/styles.css`); `src/styles/build.css:6` (`@import "./index.css"`); index.css pulls in only tokens.css and dooph-component-tokens.css: `src/styles/index.css:4-5`
 - S step 5: the barrel names the component, its *Props type and its consts — `src/components/CTAButton/index.ts:1-3`; `src/components/Toggle/index.ts:1-8`; `src/components/AIChat/index.ts:1-46`
@@ -82,3 +83,4 @@ Maintainer-intent claims cite the brief/constraints, since they are instructions
 - R: a component with required props needs `args` on every story, `render` stories included — `src/components/CTAButton/CTAButton.stories.tsx:86-91` (`AllVariants` sets `text`, `href`, `icon` beside its `render`); `CTAButtonProps` requires `text` and `icon`: `src/components/CTAButton/CTAButton.tsx:78,80`
 - R: story text through Text components — `src/components/DropdownCaret/DropdownCaret.stories.tsx:30,60`; `src/components/Sticker/Sticker.stories.tsx:35`
 - R (verification of the templates): the five code blocks, completed with a cva recipe and a `Column` helper, type-check with the repo's tsc and settings and trip no code check in `check-conventions.mjs --fixtures` (scratch run, see report)
+- S step 10: the verify order starts with `npm run sync-tokens` when tokens or a `.text-style-*`/`.h-*`/`.size-*` rule changed (task 11, 2026-10-11) — scripts/sync-theme.mjs:386-397 (those rules feed cn's lists); scripts/check-conventions.mjs:681 ("generated theme out of date")

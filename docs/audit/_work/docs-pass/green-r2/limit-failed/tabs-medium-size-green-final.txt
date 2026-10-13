@@ -1,0 +1,6 @@
+RUN ERROR: claude exited 1; result is_error: You've hit your limit · resets 8:40pm (America/Denver)
+subtype: success  is_error: true  turns: 1  cost_usd: 0  duration_ms: 201
+permission_denials (0):
+
+--- final text ---
+You've hit your limit · resets 8:40pm (America/Denver)

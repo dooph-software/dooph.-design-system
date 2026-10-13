@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-radix-collapsible-green-20261011180402 (with-skills)
+snapshot tree: 272e23200aa64f10e18c0053b040148223a71db7 (main working tree)
+start tree:    6df086d6c5e1a0963bf9fe62d2f56248b87292b2 (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-radix-collapsible-green-20261011180402/sandbox-start-tree)

@@ -1,7 +1,9 @@
 # Component recipes
 
-Worked shapes for the rules in SKILL.md. Each one copies a real file; open the
-cited file for the full version.
+Worked shapes for the rules in SKILL.md. Recipes 1-7 come from real files; open the
+cited file for the full version. Recipes 8 and 9 are worked requests:
+`UnreadCount` and `TextDropdownSize.medium` are **hypothetical** and do not
+exist in `src/`.
 
 ## Contents
 1. Option consts in `constants.ts`
@@ -44,29 +46,48 @@ export interface TabsTriggerProps
 
 ## 2. A thin Radix wrapper
 
-From `src/components/Checkbox/Checkbox.tsx`: no directive, no state, a
-`forwardRef` with `displayName`, the ref typed from the primitive, the recipe
-first and `className` last, states styled from Radix's `data-*` attributes.
+From `src/components/Popover/Popover.tsx`: no directive, no state, a
+`forwardRef` with `displayName`, the ref typed from the primitive, the
+component's classes first and `className` last, states styled from Radix's
+`data-*` attributes.
 
 ```tsx
-const Checkbox = forwardRef<
-  ComponentRef<typeof CheckboxPrimitive.Root>,
-  CheckboxProps
->(({ className, variant, children, ...props }, ref) => (
-  <CheckboxPrimitive.Root
-    ref={ref}
-    className={cn(checkboxVariants({ variant }), className)}
-    {...props}
-  >
-    {children ?? <CheckboxIndicator />}
-  </CheckboxPrimitive.Root>
-));
-Checkbox.displayName = "Checkbox";
+const PopoverContent = forwardRef<
+  ComponentRef<typeof PopoverPrimitive.Content>,
+  PopoverContentProps
+>(({ className, align = "start", /* … */ portal = true, portalProps, ...props }, ref) => {
+  const content = (
+    <PopoverPrimitive.Content
+      ref={ref}
+      align={align}
+      className={cn(
+        "z-50 overflow-hidden rounded-normal …",
+        "data-[state=open]:animate-in data-[state=closed]:animate-out",
+        "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
+        "ds-motion-overlay",
+        "ds-radix-popover-content-origin",
+        className,
+      )}
+      {...props}
+    />
+  );
+  // … the portal switch: recipe 6
+});
+PopoverContent.displayName = "PopoverContent";
 ```
 
-The recipe reads state as `data-[state=checked]:bg-prominent`, never a class
-the component toggles. Parts that add nothing are re-exported as they are:
-`const PopoverTrigger = PopoverPrimitive.Trigger;` (`Popover/Popover.tsx`).
+The open and closed looks read Radix's `data-[state=…]`, never a class the
+component toggles. Parts that add nothing are re-exported as they are:
+`const PopoverTrigger = PopoverPrimitive.Trigger;`.
+
+A part that mounts through Radix's Presence (overlay content, or any part that
+unmounts when closed) animates open and close with CSS `@keyframes`, never a
+transition. Presence keeps a closing part mounted only while a new
+`animation-name` runs, and unmounts it on `animationend`; it never waits for a
+transition, so a transition-only close is cut off. Here the keyframes are
+tailwindcss-animate's `animate-in`/`animate-out`, timed by `ds-motion-overlay`.
+Size or place the animation from the `--radix-*` variables the part exposes:
+`ds-radix-popover-content-origin` reads `--radix-popover-content-transform-origin`.
 
 A part whose root owns its text renders through a Text component with `as`:
 
@@ -112,8 +133,6 @@ Say where each goes in the props JSDoc. Real examples:
   and `ref`, land on the `<input>`.
 - `OutlineButton`: `className` styles the outer pill frame `<div>`; `ref`,
   `style`, handlers and every other prop go to the inner button.
-- `SegmentedTabSelect`: props, `ref` and `style` go to the Radix Tabs Root;
-  `className` styles the inner TabsList.
 
 A consumer `style` merges after the component's own values, as BaseText does:
 `style={{ ...typography, ...style }}`.
@@ -142,11 +161,11 @@ names; lint fails an entry whose file no longer uses them.
 | The module itself… | Directive | Real example |
 |---|---|---|
 | holds its own UI state in `useState` / `useRef` / effects | yes | `Slider/Slider.tsx` (uncontrolled value, drag state) |
-| creates or reads a context | yes | `SegmentedTabSelect/SegmentedTabSelect.tsx` |
+| creates or reads a context | yes | `Menu/DropdownMenu.tsx` |
 | touches a browser API | yes | `CopyButton/CopyButton.tsx` (`navigator.clipboard`) |
 | builds an inline handler closure on an element | yes | `Calendar/CalendarGrid.tsx` (per-day `onClick`) |
 | forwards a function prop into a client component | yes | `DatePicker/DatePicker.tsx` (`onValueChange` into Calendar) |
-| calls only `useCallback` | no | `src/utils/composeRefs.ts` |
+| calls only `useCallback`, `useMemo` or `useId` (they run in React's server build) | no | `src/utils/composeRefs.ts`, `ProgressIndicator/ProgressIndicator.tsx`, `WavyDivider/WavyDivider.tsx` |
 | wraps a Radix part with `forwardRef`, `cn` and a spread | no | `Checkbox`, `Tabs`, `Popover`, `Tooltip` |
 | holds consts or a cva recipe | no | `Button/constants.ts`, `Toggle/toggleOption.ts` |
 
@@ -158,50 +177,40 @@ its call count. Each existing entry is a UI concern: CopyButton reverts its own
 
 ## 8. Consumer-owned data: the polling request
 
-Request: "a status badge that polls our health endpoint every 30s."
+(`UnreadCount` is hypothetical; the DS has no such component.)
 
-The DS side is presentational. It takes the state as a prop, has no hooks, no
+Request: "an unread-messages count for the nav that refreshes from our inbox
+endpoint every minute."
+
+The DS side is presentational. It takes the count as a prop, has no hooks, no
 directive, no URL and no interval:
 
-```ts
-// ServiceStatus/constants.ts
-export const ServiceStatusVariant = {
-  operational: "operational",
-  degraded: "degraded",
-  down: "down",
-} as const;
-export type ServiceStatusVariant =
-  (typeof ServiceStatusVariant)[keyof typeof ServiceStatusVariant];
-```
-
 ```tsx
-// ServiceStatus/ServiceStatus.tsx
+// UnreadCount/UnreadCount.tsx
 import { forwardRef, type HTMLAttributes } from "react";
-import { Sticker, StickerVariant } from "../Sticker";
-import { ServiceStatusVariant } from "./constants";
+import { cn } from "../../utils/cn";
+import { LabelText } from "../Text";
 
-// A design decision: name this mapping in the hand-back. `satisfies` keeps
-// the literal types, so Sticker's `custom` arm (which requires `color`) is
-// never reachable.
-const PAINT = {
-  operational: StickerVariant.secondary,
-  degraded: StickerVariant.alternate,
-  down: StickerVariant.danger,
-} as const satisfies Record<ServiceStatusVariant, StickerVariant>;
-
-export interface ServiceStatusProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, "color"> {
-  variant: ServiceStatusVariant;
+export interface UnreadCountProps
+  extends Omit<HTMLAttributes<HTMLSpanElement>, "children"> {
+  count: number;
 }
 
-const ServiceStatus = forwardRef<HTMLDivElement, ServiceStatusProps>(
-  ({ variant, ...props }, ref) => (
-    <Sticker ref={ref} variant={PAINT[variant]} {...props} />
+const UnreadCount = forwardRef<HTMLSpanElement, UnreadCountProps>(
+  ({ count, className, ...props }, ref) => (
+    <LabelText
+      ref={ref}
+      className={cn("rounded-full bg-prominent px-xs text-prominent-fg", className)}
+      {...props}
+    >
+      {/* A design decision: name the "99+" cap in the hand-back. */}
+      {count > 99 ? "99+" : count}
+    </LabelText>
   ),
 );
-ServiceStatus.displayName = "ServiceStatus";
+UnreadCount.displayName = "UnreadCount";
 
-export { ServiceStatus };
+export { UnreadCount };
 ```
 
 The app owns the polling. Put this in the hand-back for the requester:
@@ -209,58 +218,69 @@ The app owns the polling. Put this in the hand-back for the requester:
 ```tsx
 "use client";
 import { useEffect, useState } from "react";
-import { ServiceStatus, ServiceStatusVariant } from "@dooph-software/design-system";
+import { UnreadCount } from "@dooph-software/design-system";
 
-export function ApiStatus() {
-  const [variant, setVariant] = useState<ServiceStatusVariant>(
-    ServiceStatusVariant.operational,
-  );
+export function InboxCount() {
+  const [count, setCount] = useState(0);
   useEffect(() => {
     const poll = async () => {
       try {
-        const res = await fetch("/api/health", { cache: "no-store" });
-        setVariant(res.ok ? ServiceStatusVariant.operational : ServiceStatusVariant.degraded);
+        const res = await fetch("/api/inbox/unread", { cache: "no-store" });
+        if (res.ok) setCount((await res.json()).count);
       } catch {
-        setVariant(ServiceStatusVariant.down);
+        // keep the last count; how an outage looks is the app's call
       }
     };
     poll();
-    const id = setInterval(poll, 30_000);
+    const id = setInterval(poll, 60_000);
     return () => clearInterval(id);
   }, []);
-  return <ServiceStatus variant={variant}>API</ServiceStatus>;
+  // A plain span cannot carry a name: label the control around the count.
+  return (
+    <a href="/inbox" aria-label={`Inbox, ${count} unread`}>
+      Inbox <UnreadCount count={count} />
+    </a>
+  );
 }
 ```
 
 And say it plainly: "Fetching and polling belong to your app, so the component
-takes `variant` and the polling code above lives in your app."
+takes `count` and the polling code above lives in your app."
 
 ## 9. Surfacing a decision: a worked hand-back
 
-Request: "add a medium size to Tabs, to sit next to a medium Button."
+(`TextDropdownSize.medium` is hypothetical; today the const has only
+`standard` and `sm`.)
+
+Request: "add a medium size to TextDropdownTrigger, for a title row that sits
+beside a medium Button."
 
 Facts the change runs into:
 - Button `medium` is `h-button-medium ds-px-button-medium rounded-full` and
   renders the hero button text role (`Button/Button.tsx`).
-- Every tab size is `rounded-tight` or `rounded-mini` with `px-rg` or `p-0`,
-  and TabsTrigger renders `ButtonText` (`Toggle/toggleOption.ts`, `Tabs/Tabs.tsx`).
-- `toggleOptionVariants` is shared by TabsTrigger and ToggleSwitchItem.
-  ToggleSwitch reaches it only through its own `ToggleSize` and `OPTION_SIZE`
-  map (`Toggle/Toggle.tsx`), so a new recipe size is not a new Toggle size
-  until those change.
-- The TabSize JSDoc gives each size's height and its `rg` (10px) horizontal
-  padding (`Tabs/constants.ts`), matching the recipe. Had a comment disagreed
-  with the recipe, it would go under Flagged: never silently fix or copy it.
+- Both TextDropdownTrigger sizes are `rounded-tight` with no horizontal
+  padding. `standard` is `h-text-trigger` (30px) with the button text role and
+  the `rg` chevron; `sm` has no height of its own, the label role and the `sm`
+  chevron (`DropdownTrigger/DropdownTrigger.tsx`).
+- The text role and the chevron are picked by `size === sm ? … : …`, so a new
+  size silently gets the standard's. The class lines test each size by name,
+  so `medium` has no height and no text colour until it gets a line of its own.
+- CalendarCaption renders `TextDropdownSize.sm` only, so it does not change.
+- The `TextDropdownSize` JSDoc names no heights, so no comment goes stale. Had
+  a comment disagreed with the code, it would go under Flagged: never silently
+  fix or copy it.
 
 The hand-back:
 
 ```
-Changed: Tabs/constants.ts (TabSize.medium), Toggle/toggleOption.ts (size.medium).
+Changed: DropdownTrigger/constants.ts (TextDropdownSize.medium), DropdownTrigger/DropdownTrigger.tsx (a medium class line).
 Decisions:
-- Radius: rounded-tight, like the other tabs. Alternative: rounded-full, like Button medium. Open.
-- Padding: px-rg, like the other tabs. Alternative: ds-px-button-medium (22px), like Button medium. Open.
-- Text role: ButtonText (14px), like the other tabs. Alternative: the hero button role (16px), like Button medium. Open.
-Also affected: ToggleSwitchItem shares the recipe; ToggleSize is unchanged, so Toggle does not offer medium.
-Flagged: none (the TabSize JSDoc matches the recipe).
+- Height: h-button-medium (46px), to match the Button beside it. Settled by the request.
+- Radius: rounded-tight, like the other sizes. Alternative: rounded-full, like Button medium. Open.
+- Padding: none, like the other sizes. Alternative: ds-px-button-medium, like Button medium. Open.
+- Text role: the button role (14px), which the size check gives every size but sm. Alternative: the hero button role (16px), like Button medium. Open.
+- Chevron: IconSize.rg, from the same check. Open.
+Also affected: CalendarCaption uses sm only; unchanged.
+Flagged: none (no comment states a TextDropdownTrigger height).
 Lint: conventions: N checks passed (the line lint printed)
 ```

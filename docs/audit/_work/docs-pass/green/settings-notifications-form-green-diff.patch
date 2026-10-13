@@ -1,0 +1,156 @@
+diff --git a/app/settings/notifications/notifications-form.tsx b/app/settings/notifications/notifications-form.tsx
+new file mode 100644
+index 0000000..5478ff1
+--- /dev/null
++++ b/app/settings/notifications/notifications-form.tsx
+@@ -0,0 +1,128 @@
++"use client";
++
++import { useState } from "react";
++import {
++  BodyText,
++  Button,
++  ButtonVariant,
++  Checkbox,
++  HeadingText,
++  Input,
++  LabelText,
++} from "@dooph-software/design-system";
++
++const notificationTypes = [
++  {
++    id: "mentions",
++    label: "Mentions",
++    description: "Someone mentions you in a comment or discussion.",
++  },
++  {
++    id: "replies",
++    label: "Replies",
++    description: "Someone replies to a thread you're part of.",
++  },
++  {
++    id: "productUpdates",
++    label: "Product updates",
++    description: "New features, improvements, and release notes.",
++  },
++] as const;
++
++type NotificationKey = (typeof notificationTypes)[number]["id"];
++
++export function NotificationsForm() {
++  const [email, setEmail] = useState("");
++  const [weeklyDigest, setWeeklyDigest] = useState(false);
++  const [checks, setChecks] = useState<Record<NotificationKey, boolean>>({
++    mentions: true,
++    replies: true,
++    productUpdates: false,
++  });
++  const [saving, setSaving] = useState(false);
++
++  async function save() {
++    setSaving(true);
++    try {
++      await fetch("/api/settings/notifications", {
++        method: "POST",
++        headers: { "Content-Type": "application/json" },
++        body: JSON.stringify({ email, weeklyDigest, ...checks }),
++      });
++    } finally {
++      setSaving(false);
++    }
++  }
++
++  return (
++    <form
++      className="flex flex-col gap-xl"
++      onSubmit={(e) => {
++        e.preventDefault();
++        void save();
++      }}
++    >
++      {/* Email */}
++      <div className="flex flex-col gap-xs">
++        <LabelText as="label" htmlFor="notif-email">
++          Email address
++        </LabelText>
++        <Input
++          id="notif-email"
++          type="email"
++          placeholder="you@example.com"
++          value={email}
++          onValueChange={setEmail}
++        />
++      </div>
++
++      {/* Weekly digest */}
++      <div className="flex items-center gap-sm">
++        <Checkbox
++          id="notif-weekly-digest"
++          checked={weeklyDigest}
++          onCheckedChange={(checked) => setWeeklyDigest(checked === true)}
++        />
++        <LabelText as="label" htmlFor="notif-weekly-digest">
++          Weekly digest
++        </LabelText>
++      </div>
++
++      {/* Notification types */}
++      <div className="flex flex-col gap-md">
++        <HeadingText as="h2">Notification types</HeadingText>
++
++        {notificationTypes.map((type) => (
++          <div key={type.id} className="flex items-start gap-sm">
++            <Checkbox
++              id={`notif-${type.id}`}
++              checked={checks[type.id]}
++              onCheckedChange={(checked) =>
++                setChecks((prev) => ({ ...prev, [type.id]: checked === true }))
++              }
++              className="mt-xxs"
++            />
++            <div className="flex flex-col gap-xxxs">
++              <LabelText as="label" htmlFor={`notif-${type.id}`}>
++                {type.label}
++              </LabelText>
++              <BodyText as="p" className="text-text-secondary">
++                {type.description}
++              </BodyText>
++            </div>
++          </div>
++        ))}
++      </div>
++
++      {/* Actions */}
++      <div className="flex gap-sm">
++        <Button type="submit" variant={ButtonVariant.prominent} disabled={saving}>
++          {saving ? "Saving…" : "Save"}
++        </Button>
++        <Button type="reset" variant={ButtonVariant.secondary}>
++          Cancel
++        </Button>
++      </div>
++    </form>
++  );
++}
+diff --git a/app/settings/notifications/page.tsx b/app/settings/notifications/page.tsx
+new file mode 100644
+index 0000000..e363888
+--- /dev/null
++++ b/app/settings/notifications/page.tsx
+@@ -0,0 +1,16 @@
++import { BodyText, TitleText } from "@dooph-software/design-system";
++import { NotificationsForm } from "./notifications-form";
++
++export default function NotificationsPage() {
++  return (
++    <main className="mx-auto flex max-w-[40rem] flex-col gap-xl px-xl py-xxl">
++      <div className="flex flex-col gap-xs">
++        <TitleText as="h1">Notifications</TitleText>
++        <BodyText as="p" className="text-text-secondary">
++          Choose how and when you'd like to be notified.
++        </BodyText>
++      </div>
++      <NotificationsForm />
++    </main>
++  );
++}

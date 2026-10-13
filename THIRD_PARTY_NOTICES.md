@@ -45,8 +45,9 @@ this notice covers the libraries collectively.
 
 ## npm Dependencies
 
-The following runtime npm packages are bundled or linked in distributed builds.
-Each is used under its stated open-source license.
+The following runtime npm packages are dependencies of the published package. They
+are installed from npm and imported at runtime, not copied into its files. Each is
+used under its stated open-source license.
 
 | Package | License | Source |
 |---------|---------|--------|
@@ -64,6 +65,75 @@ Each is used under its stated open-source license.
 | class-variance-authority | Apache-2.0 | https://github.com/joe-bell/cva |
 | clsx | MIT | https://github.com/lukeed/clsx |
 | tailwind-merge | MIT | https://github.com/dcastil/tailwind-merge |
+
+---
+
+## Compiled-in CSS
+
+`dist/styles.css` is compiled from `src/styles/build.css`. Its output includes
+Tailwind CSS's own base stylesheet (preflight) and the utility classes that
+`tailwindcss-animate` generates (`animate-in`, `fade-in` and the like), so both
+projects' licences are reproduced here.
+
+### Tailwind CSS
+- **License:** MIT
+- **Copyright:** Copyright (c) Tailwind Labs, Inc.
+- **Source:** https://github.com/tailwindlabs/tailwindcss
+- **License text** (verbatim from the `tailwindcss` package's `LICENSE`):
+
+```text
+MIT License
+
+Copyright (c) Tailwind Labs, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+### tailwindcss-animate
+- **License:** MIT
+- **Copyright:** Copyright (c) 2020 Jamie Kyle
+- **Source:** https://github.com/jamiebuilds/tailwindcss-animate
+- **License text** (verbatim from the `tailwindcss-animate` package's `LICENSE`):
+
+```text
+MIT License
+
+Copyright (c) 2020 Jamie Kyle
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
 
 ---
 

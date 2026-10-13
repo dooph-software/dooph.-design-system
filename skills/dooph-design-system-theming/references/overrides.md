@@ -1,6 +1,6 @@
 # Token overrides: the measured matrix
 
-Every rule in the theming skill was checked in a browser against the built `styles.css`. The test used an unlayered consumer stylesheet and three places for each token: `<html>`, a `class="dark"` element inside a light page, and a `class="light"` element inside a dark page. This file gives the results, so you can see why each selector is or is not enough.
+The theming skill's cascade rules (selectors, islands, layers, aliases, reduced motion and the expression preset's token values) were checked in a browser against the built `styles.css`. Three things were not. The portal remedies (`portalProps={{ container }}`, `portal={false}`, and the backdrop staying on the page's theme) and the `1ms`-not-`0ms` rule follow from the component code. The caret was measured as token values, not as a rendered shape. The browser test used an unlayered consumer stylesheet and three places for each token: `<html>`, a `class="dark"` element inside a light page, and a `class="light"` element inside a dark page. This file gives the results, so you can see why each selector is or is not enough.
 
 ## Why the obvious selectors fail
 
@@ -25,7 +25,7 @@ The `.light` column holds for every token, not just colours. A `:root`-only over
 
 ## Aliases resolve where they are declared
 
-A value such as `var(--ui-color-prominent)` is resolved on the element that declares it, and descendants inherit the finished colour. The DS declares its aliases in its light block (`:root` and `.light`). It repeats in `.dark` only the aliases whose targets change in dark; those rows say `repeated`.
+A value such as `var(--ui-color-prominent)` is resolved on the element that declares it, and descendants inherit the finished colour. The DS declares its aliases in its light block (`:root` and `.light`), except `--ui-caret-nudge`, which sits on `:root` only with the other expression token, so it re-resolves only on `<html>`. It repeats in `.dark` only the aliases whose targets change in dark; those rows say `repeated`.
 
 So a DS token that reads one you override re-resolves only on an element where the DS declares it again:
 
@@ -76,6 +76,17 @@ To find the tokens that read a token you override, search token-contract.md for 
 | `:root` | light value (wrong) | dark value (wrong) |
 | `:root, .dark` | correct | dark value (wrong) |
 | `:root, .light, .dark` | correct | correct |
+
+## Text colour inside an island
+
+An island's tokens re-resolve, but the `color` it inherits does not. `body { color: var(--ui-color-text) }` resolves on `<body>`, and the island inherits the finished colour. Measured with a title-role heading that has no colour class:
+
+| Island element | Its background | Heading `color` | Same island plus `text-text` |
+|---|---|---|---|
+| `dark bg-surface-page` in a light page | `rgb(19, 28, 29)` | `rgb(22, 22, 22)`, the page's | `rgb(255, 255, 255)` |
+| `light bg-surface-page` in a dark page | `rgb(253, 254, 255)` | `rgb(255, 255, 255)`, the page's | `rgb(22, 22, 22)` |
+
+Inside the island, `--ui-color-text` itself reads the island's value (`#ffffff` in the dark one). Only the inherited property is stale.
 
 ## Motion under reduced motion
 

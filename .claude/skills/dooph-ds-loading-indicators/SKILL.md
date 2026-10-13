@@ -5,7 +5,7 @@ description: Use when editing or debugging LoadingSpinner, ShapeMorphSpinner, Pr
 
 # Loading indicators
 
-Geometry lives in TypeScript as plain numbers in the SVG's user units; every clock lives in CSS, on tokens. The rendered size is always the `--ui-size-spinner-*` token.
+Geometry lives in TypeScript as plain numbers in the SVG's user units; every clock lives in CSS, on tokens. The rendered size of LoadingSpinner, ProgressIndicator and ShapeMorphSpinner is always the `--ui-size-spinner-*` token.
 
 **Not for** LinearProgressIndicator (its own header contract), general motion and SVG rules (dooph-ds-styling), or editing tokens (dooph-ds-editing-tokens).
 

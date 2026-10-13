@@ -101,9 +101,9 @@ export interface SpinnerGeometry {
   diameter: number;
   /**
    * Rendered size: `var(--ui-size-spinner-*)`. Apply it as a CSS width/height
-   * (never as an SVG attribute — attributes cannot resolve `var()`), leaving the
-   * numeric `diameter` to the viewBox so the drawing scales to whatever the
-   * token says.
+   * (never as an SVG attribute — `var()` there is not specified, and the SVG DOM
+   * reads it as 0), leaving the numeric `diameter` to the viewBox so the
+   * drawing scales to whatever the token says.
    */
   cssSize: string;
   strokeWidth: number;

@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-checkbox-checked-classname-green-20261011211130 (with-skills)
+snapshot tree: a80391d83f2a1060bcec03d2733e838f96bfe8ec (main working tree)
+start tree:    9a0db446f9218fd83544c9b3acea889c1ac0afe8 (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-checkbox-checked-classname-green-20261011211130/sandbox-start-tree)

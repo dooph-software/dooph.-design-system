@@ -1,0 +1,1 @@
+On the home page, make the Pricing section an always-dark band — dark background, and the DS buttons and cards inside it should look like they do in dark mode — even when the rest of the site is light.

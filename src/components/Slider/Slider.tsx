@@ -460,16 +460,19 @@ const SliderBase = forwardRef<
 );
 SliderBase.displayName = 'SliderBase';
 
-/** `className` styles the outer box, which owns the width; `ref`, `style` and
- * every other prop go to the Radix Root inside it. */
+/** Continuous single-thumb slider (only `value[0]` is drawn and edited);
+ * `className` styles the outer box, which owns the width, and `ref`, `style`
+ * and every other prop go to the Radix Root inside it. */
 const SliderContinuous = forwardRef<
   ComponentRef<typeof SliderPrimitive.Root>,
   SliderProps
 >((props, ref) => <SliderBase ref={ref} showSteps={false} {...props} />);
 SliderContinuous.displayName = 'SliderContinuous';
 
-/** `className` styles the outer box, which owns the width and the end-dot
- * inset; `ref`, `style` and every other prop go to the Radix Root inside it. */
+/** Stepped single-thumb slider (only `value[0]` is drawn and edited);
+ * `className` styles the outer box, which owns the width and the end-dot
+ * inset, and `ref`, `style` and every other prop go to the Radix Root inside
+ * it. */
 const SliderStepped = forwardRef<
   ComponentRef<typeof SliderPrimitive.Root>,
   SliderSteppedProps
@@ -487,8 +490,9 @@ export type SliderLabeledProps = SliderProps & {
   highlightedStep?: number;
 };
 
-/** `className` styles the outer column (track + labels); `ref`, `style` and
- * every other prop go to the slider's Radix Root. */
+/** Single-thumb slider with start and end labels (only `value[0]` is drawn
+ * and edited); `className` styles the outer column (track + labels), and
+ * `ref`, `style` and every other prop go to the slider's Radix Root. */
 const SliderLabeled = forwardRef<
   ComponentRef<typeof SliderPrimitive.Root>,
   SliderLabeledProps

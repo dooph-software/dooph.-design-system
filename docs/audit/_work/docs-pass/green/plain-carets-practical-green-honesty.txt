@@ -1,0 +1,4 @@
+no flags: no git-history reads, no main-checkout paths, no deleted paths, no denials
+
+--- consumer checks ---
+#22 VENDOR-TARBALL Bash: {"command":"find /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/vendor -name \"*.tgz\" 2>/dev/null | head -5"}

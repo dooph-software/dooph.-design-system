@@ -1,0 +1,83 @@
+#3 Bash: find /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204 -type f -name "*.css" -o -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | head -20
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/node_modules/@babel/core/lib/config/config-descriptors.js
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/node_modules/@babel/core/lib/config/files/configuration.js
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/node_modules/@babel/core/lib/config/files/index-browser.js
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/node_modules/@babel/core/lib/config/files/index.js
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/node_modules/@babel/core/lib/config/files/module-types.js
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/node_modules/@babel/core/lib/config/files/package.js
+#4 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/components/ 2>/dev/null || echo "Directory not found"
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 17:12 TextLink
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 17:12 Toast
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 17:12 Toggle
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 17:12 Tooltip
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 17:12 VerificationCode
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 17:12 WavyDivider
+#5 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/components/SearchBox/
+    | total 25
+    | drwxr-xr-x 1 stick 197609    0 Oct 11 17:12 .
+    | drwxr-xr-x 1 stick 197609    0 Oct 11 17:12 ..
+    | -rw-r--r-- 1 stick 197609 1176 Oct 11 17:12 SearchBox.stories.tsx
+    | -rw-r--r-- 1 stick 197609 2674 Oct 11 17:12 SearchBox.tsx
+    | -rw-r--r-- 1 stick 197609   29 Oct 11 17:12 index.ts
+#6 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/components/DropdownCaret/
+    | drwxr-xr-x 1 stick 197609    0 Oct 11 17:12 .
+    | drwxr-xr-x 1 stick 197609    0 Oct 11 17:12 ..
+    | -rw-r--r-- 1 stick 197609 3355 Oct 11 17:12 DropdownCaret.stories.tsx
+    | -rw-r--r-- 1 stick 197609 3895 Oct 11 17:12 DropdownCaret.tsx
+    | -rw-r--r-- 1 stick 197609  390 Oct 11 17:12 constants.ts
+    | -rw-r--r-- 1 stick 197609  160 Oct 11 17:12 index.ts
+#7 Bash: find /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles -name "*.css" -type f
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles/build.css
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles/dooph-component-tokens.css
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles/index.css
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles/theme.css
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles/tokens.css
+#14 Bash: find /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/components/SearchBox -type f | sort
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/components/SearchBox/SearchBox.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/components/SearchBox/SearchBox.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/components/SearchBox/index.ts
+#15 Bash: grep -n "ds-expr-caret" /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles/index.css | head -20
+    | 1002:   * lives in a .ds-expr-caret-shape rule.
+    | 1013:  .ds-expr-caret-shape {
+    | 1023:  .ds-expr-caret-shape .ds-dropdown-caret-frame {
+    | 1027:  .ds-expr-caret-shape .ds-dropdown-caret-chevron {
+    | 1039:    .ds-expr-caret-nudge {
+#17 Bash: grep -n "\.ds-dropdown-caret[^-]" /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles/dooph-component-tokens.css | head -20
+    | (Bash completed with no output)
+#18 Bash: grep -n "ds-dropdown-caret {" /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles/dooph-component-tokens.css
+    | (Bash completed with no output)
+#19 Bash: grep -n "dropdown-caret" /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles/dooph-component-tokens.css
+    | (Bash completed with no output)
+#21 Bash: grep -n "\.ds-dropdown-caret" /c/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011171204/src/styles/index.css
+    | 1058:  .ds-dropdown-caret-host:is(:disabled, [aria-disabled="true"], [data-disabled])
+    | 1059:    .ds-dropdown-caret-chevron {
+    | 1064:  .ds-dropdown-caret-host:not(.ds-disabled-state):is(:disabled, [aria-disabled="true"], [data-disabled])
+    | 1065:    .ds-dropdown-caret-chevron {
+    | 1072:    .ds-dropdown-caret,
+    | 1073:    .ds-dropdown-caret-chevron {
+#34 Bash: wc -l "C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\src\styles\index.css"
+    | 1257 C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\src\styles\index.css
+#45 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204" && npm run sync-tokens 2>&1
+    | > @dooph-software/design-system@5.3.0 sync-tokens
+    | > node scripts/sync-theme.mjs
+    | 
+    | ✓  @theme inline regenerated — 137 tokens mapped (index.css + theme.css + utils/twMergeTheme.ts).
+#46 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204" && node scripts/generate-docs.mjs 2>&1
+    | generate-docs: wrote skills/dooph-design-system-theming/references/token-contract.md, .agents/skills/dooph-ds-codebase-map/references/inventory.md
+#47 Bash  [is_error]: cd "C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204" && npm run lint 2>&1
+    | FAIL skill mirrors out of sync with .agents/skills: .claude/skills/dooph-ds-codebase-map/references/inventory.md:1 out of date; run node scripts/sync-skills.mjs
+    | FAIL skill mirrors out of sync with .agents/skills: .agent/skills/dooph-ds-codebase-map/references/inventory.md:1 out of date; run node scripts/sync-skills.mjs
+    | 
+    | why (skill mirrors out of sync with .agents/skills): agents load skills from .claude/skills and .agent/skills, which are real copies of .agents/skills made by sync-skills.mjs; a stale, missing or symlinked mirror makes an agent follow an outdated skill or none at all.
+    | 
+    | conventions: 1 of 30 checks failed
+#48 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204" && node scripts/sync-skills.mjs 2>&1
+    | updated .claude/skills/dooph-ds-codebase-map/references/inventory.md
+    | updated .agent/skills/dooph-ds-codebase-map/references/inventory.md
+    | 
+    | synced 9 skills into .claude/skills and .agent/skills (2 changes)
+#49 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204" && npm run lint 2>&1
+    | > @dooph-software/design-system@5.3.0 lint
+    | > tsc --noEmit && node scripts/check-conventions.mjs
+    | 
+    | conventions: 30 checks passed

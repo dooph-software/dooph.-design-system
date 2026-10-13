@@ -1,0 +1,96 @@
+#26 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/styles/tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/styles/tokens.css",
+  "old_string": "  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */\n}",
+  "new_string": "  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */\n  /* SearchBox magnifier: how far the icon leans on hover; 0deg = no lean. */\n  --ui-search-icon-lean: -8deg; /* expression */\n}"
+}
+
+#27 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/styles/tokens.css
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/styles/tokens.css",
+  "old_string": "    --ui-caret-nudge: 0;\n  }\n}",
+  "new_string": "    --ui-caret-nudge: 0;\n    --ui-search-icon-lean: 0deg;\n  }\n}"
+}
+
+#28 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/scripts/sync-theme.mjs  FIRST  (tool error)
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/scripts/sync-theme.mjs",
+  "old_string": "  \"ui-caret-shape-scale\",\n  \"ui-caret-nudge\",",
+  "new_string": "  \"ui-caret-shape-scale\",\n  \"ui-caret-nudge\",\n  \"ui-search-icon-lean\","
+}
+
+#30 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/scripts/sync-theme.mjs
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/scripts/sync-theme.mjs",
+  "old_string": "  \"ui-caret-shape-scale\",\n  \"ui-caret-nudge\",",
+  "new_string": "  \"ui-caret-shape-scale\",\n  \"ui-caret-nudge\",\n  \"ui-search-icon-lean\","
+}
+
+#34 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/styles/index.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/styles/index.css",
+  "old_string": "  /* RevealChangeText — a slot that slides its content out from one edge and",
+  "new_string": "  /* Expressive detail: SearchBox magnifier hover lean, read from\n   * --ui-search-icon-lean (expression token; the practical preset sets it\n   * to 0deg). */\n  .ds-search-box:not([data-disabled]):hover .ds-expr-search-icon-lean {\n    rotate: var(--ui-search-icon-lean);\n  }\n\n  /* RevealChangeText — a slot that slides its content out from one edge and"
+}
+
+#35 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.tsx",
+  "old_string": "import { forwardRef, type InputHTMLAttributes } from 'react';",
+  "new_string": "/*\n * ## behavior\n * The magnifier icon leans slightly on hover (--ui-search-icon-lean), timed on\n * the motion scale through ds-motion-state. The lean is an expressive detail\n * read only by the .ds-expr-search-icon-lean helper in index.css.\n *\n * ## constraints\n * - The lean must stay neutralisable by the practical preset. Failure: a\n *   practical product still shows a tilting icon on hover.\n */\nimport { forwardRef, type InputHTMLAttributes } from 'react';"
+}
+
+#36 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.tsx",
+  "old_string": " * Twin of `DropdownMenuSearch` (same icon + input + hotkey row, no menu): apply row fixes to both.\n * `className` styles the bordered field `<div>`; `ref`, `style` and every other prop go to the `<input>`.",
+  "new_string": " * The magnifier icon leans subtly on hover (expression detail, neutralised by\n * the practical preset). Twin of `DropdownMenuSearch` (same icon + input +\n * hotkey row, no menu): apply row fixes to both.\n * `className` styles the bordered field `<div>`; `ref`, `style` and every other prop go to the `<input>`."
+}
+
+#37 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.tsx",
+  "old_string": "        className={cn(\n          'flex items-center gap-sm',\n          'bg-secondary border border-solid border-border-primary',\n          'rounded-soft',\n          'pl-lg pr-md py-md',\n          'ds-min-w-search-box',\n          'ds-motion-state',",
+  "new_string": "        className={cn(\n          'ds-search-box flex items-center gap-sm',\n          'bg-secondary border border-solid border-border-primary',\n          'rounded-soft',\n          'pl-lg pr-md py-md',\n          'ds-min-w-search-box',\n          'ds-motion-state',"
+}
+
+#38 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.tsx",
+  "old_string": "        <SearchIcon size={IconSize.md} className=\"shrink-0 text-text-tertiary\" />",
+  "new_string": "        <SearchIcon size={IconSize.md} className=\"ds-motion-state ds-expr-search-icon-lean shrink-0 text-text-tertiary\" />"
+}
+
+#39 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.stories.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.stories.tsx",
+  "old_string": "export const AllStates: Story = {\n  render: () => (\n    <div className=\"flex flex-col gap-md p-lg\">\n      <SearchBox placeholder=\"Default\" />\n      <SearchBox placeholder=\"With shortcut\" shortcut={['⌘', 'K']} />\n      <SearchBox placeholder=\"Disabled\" shortcut={['⌘', 'K']} disabled />\n    </div>\n  ),\n};",
+  "new_string": "export const AllStates: Story = {\n  render: () => (\n    <div className=\"flex flex-col gap-md p-lg\">\n      <SearchBox placeholder=\"Default\" />\n      <SearchBox placeholder=\"With shortcut\" shortcut={['⌘', 'K']} />\n      <SearchBox placeholder=\"Disabled\" shortcut={['⌘', 'K']} disabled />\n    </div>\n  ),\n};\n\n/** Shows the default (signature) look beside the practical preset. */\nexport const Practical: Story = {\n  render: () => (\n    <div className=\"flex flex-col gap-xl p-lg\">\n      <div>\n        <div className=\"text-text-secondary text-sm mb-sm\">Default (signature)</div>\n        <SearchBox placeholder=\"Hover me\" shortcut={['⌘', 'K']} />\n      </div>\n      <div data-ds-expression=\"practical\">\n        <div className=\"text-text-secondary text-sm mb-sm\">Practical</div>\n        <SearchBox placeholder=\"Hover me\" shortcut={['⌘', 'K']} />\n      </div>\n    </div>\n  ),\n};"
+}
+
+#45 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.stories.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.stories.tsx",
+  "old_string": "import type { Meta, StoryObj } from '@storybook/react-vite';\nimport { SearchBox } from './SearchBox';",
+  "new_string": "import type { Meta, StoryObj } from '@storybook/react-vite';\nimport { SearchBox } from './SearchBox';\nimport { ButtonText } from '../Text';"
+}
+
+#46 Edit C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.stories.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-searchbox-icon-hover-nudge-green-20261011175400/src/components/SearchBox/SearchBox.stories.tsx",
+  "old_string": "/** Shows the default (signature) look beside the practical preset. */\nexport const Practical: Story = {\n  render: () => (\n    <div className=\"flex flex-col gap-xl p-lg\">\n      <div>\n        <div className=\"text-text-secondary text-sm mb-sm\">Default (signature)</div>\n        <SearchBox placeholder=\"Hover me\" shortcut={['⌘', 'K']} />\n      </div>\n      <div data-ds-expression=\"practical\">\n        <div className=\"text-text-secondary text-sm mb-sm\">Practical</div>\n        <SearchBox placeholder=\"Hover me\" shortcut={['⌘', 'K']} />\n      </div>\n    </div>\n  ),\n};",
+  "new_string": "/**\n * The magnifier's hover lean is an expressive detail. Under\n * `data-ds-expression=\"practical\"` (normally on <html>, nested here only to\n * compare) the icon stays still on hover.\n */\nexport const Practical: Story = {\n  render: () => (\n    <div className=\"flex flex-col gap-xl p-lg\">\n      <div className=\"flex flex-col gap-sm\">\n        <ButtonText>Default (signature)</ButtonText>\n        <SearchBox placeholder=\"Hover me\" shortcut={['⌘', 'K']} />\n      </div>\n      <div data-ds-expression=\"practical\" className=\"flex flex-col gap-sm\">\n        <ButtonText>Practical</ButtonText>\n        <SearchBox placeholder=\"Hover me\" shortcut={['⌘', 'K']} />\n      </div>\n    </div>\n  ),\n};"
+}
+

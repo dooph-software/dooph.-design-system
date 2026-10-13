@@ -152,8 +152,8 @@ function FlatSpinner({ geo, color, svgProps }: VariantProps) {
       {...rest}
       /* Numeric width/height stay as ATTRIBUTES so the drawing has an
        * intrinsic size before CSS lands; the token then overrides them via
-       * style, because an SVG attribute cannot resolve var(). The viewBox
-       * keeps the user-unit space, so the whole drawing scales to the token. */
+       * style, because `var()` in an SVG attribute is not specified (Chromium
+       * draws it, but the SVG DOM reads it as 0). The viewBox keeps the user-unit space, so the whole drawing scales to the token. */
       width={diameter}
       height={diameter}
       viewBox={`0 0 ${diameter} ${diameter}`}
@@ -200,8 +200,9 @@ function SpokesSpinner({ geo, color, svgProps }: VariantProps) {
       {...rest}
       xmlns="http://www.w3.org/2000/svg"
       /* Attribute = intrinsic size before CSS lands; the token below overrides
-       * it, since an SVG attribute cannot resolve var(). This variant is drawn
-       * in a fixed 24-unit space, so it scales with the rendered size. */
+       * it, because `var()` in an SVG attribute is not specified (Chromium
+       * draws it, but the SVG DOM reads it as 0). This variant is drawn in a
+       * fixed 24-unit space, so it scales with the rendered size. */
       width={diameter}
       height={diameter}
       viewBox="0 0 24 24"

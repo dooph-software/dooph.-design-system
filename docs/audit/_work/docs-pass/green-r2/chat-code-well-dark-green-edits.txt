@@ -1,0 +1,32 @@
+#29 Edit C:\Users\stick\Github\dooph\ds-sb-chat-code-well-dark-green-20261011211250\src\styles\tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-chat-code-well-dark-green-20261011211250\\src\\styles\\tokens.css",
+  "old_string": "  /* Inline code inside ds-chat-prose. */\n  --ui-chat-prose-code-radius: 4px;",
+  "new_string": "  /* Inline code inside ds-chat-prose. */\n  --ui-chat-prose-code-radius: 4px;\n  /* Code-block well inside ds-chat-prose (pre). */\n  --ui-color-chat-code-well: var(--ui-color-surface-secondary);"
+}
+
+#30 Edit C:\Users\stick\Github\dooph\ds-sb-chat-code-well-dark-green-20261011211250\src\styles\tokens.css
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-chat-code-well-dark-green-20261011211250\\src\\styles\\tokens.css",
+  "old_string": "  --ui-color-surface-secondary: #242425;\n\n  --ui-color-modal-surface:",
+  "new_string": "  --ui-color-surface-secondary: #242425;\n\n  --ui-color-chat-code-well: #0e0e10;\n\n  --ui-color-modal-surface:"
+}
+
+#31 Edit C:\Users\stick\Github\dooph\ds-sb-chat-code-well-dark-green-20261011211250\src\styles\dooph-component-tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-chat-code-well-dark-green-20261011211250\\src\\styles\\dooph-component-tokens.css",
+  "old_string": "    background-color: var(--ui-color-surface-secondary);\n    padding: var(--ui-spacing-rg);\n    box-shadow: var(--ui-shadow-button);",
+  "new_string": "    background-color: var(--ui-color-chat-code-well);\n    padding: var(--ui-spacing-rg);\n    box-shadow: var(--ui-shadow-button);"
+}
+
+#38 Edit C:\Users\stick\Github\dooph\ds-sb-chat-code-well-dark-green-20261011211250\scripts\sync-theme.mjs  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-chat-code-well-dark-green-20261011211250\\scripts\\sync-theme.mjs",
+  "old_string": "  // Focus ring colors — used inside shadow values and by the ds-focus-* outline\n  // helpers\n  \"ui-color-focus-ring-prominent\",\n  \"ui-color-focus-ring-primary\",\n  \"ui-color-focus-ring-danger\",\n]);",
+  "new_string": "  // Focus ring colors — used inside shadow values and by the ds-focus-* outline\n  // helpers\n  \"ui-color-focus-ring-prominent\",\n  \"ui-color-focus-ring-primary\",\n  \"ui-color-focus-ring-danger\",\n  // Chat code-block well — raw var() in ds-chat-prose pre only\n  \"ui-color-chat-code-well\",\n]);"
+}
+

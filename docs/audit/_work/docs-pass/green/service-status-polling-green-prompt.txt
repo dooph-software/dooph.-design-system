@@ -1,0 +1,1 @@
+We need a ServiceStatus badge in the DS for our dashboards. You give it the URL of a status endpoint (it returns `{ status: "operational" | "degraded" | "down" }`), it polls every 30 seconds and shows the state as a coloured Sticker with a label. Please add it with a story.

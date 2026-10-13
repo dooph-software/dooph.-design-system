@@ -1,0 +1,1 @@
+In dark mode the code blocks inside AI chat answers blend into the background. Give them a darker well, #0e0e10, in dark mode only. Light mode must look exactly as it does now.

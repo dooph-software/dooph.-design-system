@@ -31,7 +31,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Every visible string renders through BaseText. Typography resolves in three tiers: **props** (written inline, always win) → **className** (the consumer’s own utilities) → **role class** (`.text-style-*`, in the `components` layer so utilities can override it). Prop values come from the dot-accessible constants, which resolve to `var(--ui-*)` so a consuming project’s token overrides still apply — or from raw CSS values and numbers.',
+          'Every visible string renders through BaseText. Typography comes from **props** (written inline, so they beat the role class; only `style` outranks them) over the **role class** (`.text-style-*`, the role’s defaults, in the `components` layer). Props are the one supported way to change typography; `className` carries colour and layout, never typography. Prop values come from the dot-accessible constants, which resolve to `var(--ui-*)` so a consuming project’s token overrides still apply — or from raw CSS values and numbers.',
       },
     },
   },
@@ -300,21 +300,16 @@ export const Precedence: Story = {
   render: () => (
     <Section
       title="Precedence"
-      note="prop > className > role. The role class sits in the components layer, so a consumer utility beats it; props are inline, so they beat the utility. That is what makes leading-* and text-* usable as an escape hatch without props ever losing."
+      note="prop > role. Props are written inline, so they beat the role class (which sits in the components layer); a style prop still beats both because it merges last. Typography is set with props, never className or style."
     >
       <Row label="role only">
         <BodyText>{SAMPLE}</BodyText>
       </Row>
-      <Row label={'className="text-hero"'}>
-        <BodyText className="text-hero">{SAMPLE}</BodyText>
+      <Row label="fontSize={FontSizes.hero}">
+        <BodyText fontSize={FontSizes.hero}>{SAMPLE}</BodyText>
       </Row>
-      <Row label="className + fontSize={20}">
-        <BodyText className="text-hero" fontSize={20}>
-          {SAMPLE}
-        </BodyText>
-      </Row>
-      <Row label={'className="tracking-widest"'}>
-        <BodyText className="tracking-widest">{SAMPLE}</BodyText>
+      <Row label="letterSpacing={Tracking.hero}">
+        <BodyText letterSpacing={Tracking.hero}>{SAMPLE}</BodyText>
       </Row>
       <Row label="style beats props">
         <BodyText fontSize={40} style={{ fontSize: 14 }}>
@@ -396,7 +391,7 @@ export const Unstyled: Story = {
   render: () => (
     <Section
       title="unstyled"
-      note="Drops the role class entirely — no family, size, weight, tracking or axes. Props and className still apply, so it is the starting point for typography the system does not describe."
+      note="Drops the role class entirely — no family, size, weight, tracking or axes. Props still apply, so props alone set typography the system does not describe; className still carries colour and layout."
     >
       <Row label="BodyText">
         <BodyText>{SAMPLE}</BodyText>

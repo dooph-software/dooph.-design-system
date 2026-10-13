@@ -1,0 +1,8 @@
+DENIED Bash: {"command":"ls -la \"C:\\Users\\stick\\Github\\dooph\\ds-consumer-sb-e1ef27a76569\\\" | head -30"}
+DENIED Bash: {"command":"cd \"C:/Users/stick/Github/dooph/ds-consumer-sb-e1ef27a76569\" && tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | grep -E \"index\\.(d\\.ts|js)$\" | head -20"}
+DENIED Bash: {"command":"tar -tzf \"C:/Users/stick/Github/dooph/ds-consumer-sb-e1ef27a76569/vendor/dooph-software-design-system-5.3.0.tgz\" | head -100"}
+
+--- consumer checks ---
+#25 VENDOR-TARBALL Bash: {"command":"cd \"C:/Users/stick/Github/dooph/ds-consumer-sb-e1ef27a76569\" && tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | grep -E \"index\\.(d\\.ts|js)$\" | head -20"}
+#26 VENDOR-TARBALL Bash: {"command":"cd \"C:/Users/stick/Github/dooph/ds-consumer-sb-e1ef27a76569\" && tar -tzf vendor/dooph-software-design-system-5.3.0.tgz | grep -v node_modules | head -50"}
+#27 VENDOR-TARBALL Bash: {"command":"tar -tzf \"C:/Users/stick/Github/dooph/ds-consumer-sb-e1ef27a76569/vendor/dooph-software-design-system-5.3.0.tgz\" | head -100"}

@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011204645 (with-skills)
+snapshot tree: 2280687533e73bcb1485dea364c6c2f0c86d2ecb (main working tree)
+start tree:    365a155314610055140a2ee54a6e3a4146c23a4e (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-tabs-medium-size-green-20261011204645/sandbox-start-tree)

@@ -1,0 +1,1 @@
+Build /settings/notifications: an email field, a weekly digest on/off setting, three notification types (Mentions, Replies, Product updates) each with a checkbox and a one-line description, and Save / Cancel buttons. Save should POST to /api/settings/notifications. Use our design system.

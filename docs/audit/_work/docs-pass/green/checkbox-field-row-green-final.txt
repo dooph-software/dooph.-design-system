@@ -1,0 +1,38 @@
+RUN OK
+subtype: success  is_error: false  turns: 38  cost_usd: 0.9157374  duration_ms: 202906
+permission_denials (0):
+
+--- final text ---
+Lint passes. Here's the hand-back:
+
+```
+Lint:              npm run lint → exit 0, "conventions: 30 checks passed"
+Generated docs:    node scripts/generate-docs.mjs → wrote components.md, inventory.md, client-references.md
+Skill mirrors:     node scripts/sync-skills.mjs → updated inventory.md in .claude/skills and .agent/skills (2 changes)
+Stories:           Default (label only), WithHint (label + hint), Checked (defaultChecked with hint),
+                   Primary (primary variant checked), Disabled (disabled unchecked with hint),
+                   DisabledChecked (disabled + checked), Controlled (useState toggle),
+                   AllVariants (prominent and primary side by side)
+Header contract:   none — the component is a thin composition of Checkbox + Text with no
+                   invariant a reasonable edit would break
+Design decisions:
+  - Root element is <label>, so clicking the label text toggles the checkbox (standard
+    accessibility pattern matching the existing Checkbox WithLabel story).
+  - Checkbox is vertically nudged with mt-xxs to align its center with the first line
+    of label text, rather than sitting at the top of the flex row. Alternative: no nudge
+    (checkbox sits at the exact flex start). Open question: whether this alignment looks
+    right at every text size — verify in Storybook.
+  - Hint text uses BodyText with text-text-secondary, matching the "smaller supporting
+    line" pattern. Alternative: LabelText at a lighter weight. Settled: BodyText is the
+    standard secondary-info role.
+  - gap-sm between checkbox and text column, gap-xxs between label and hint — matches
+    the spacing the Checkbox WithLabel story already uses for the first gap.
+  - Disabled state adds text-text-disabled to label and hint text, and cursor-not-allowed
+    on the outer label. The Checkbox itself handles its own disabled styling via
+    ds-radix-data-disabled.
+  - The ref forwards to the inner Radix Checkbox root (not the label), so consumers
+    can call .click() or focus the control.
+  - No "use client" directive: the component calls no hooks and uses no browser APIs.
+    The inner Checkbox module already carries its own directive.
+New dependency / allowlist entry: none
+```

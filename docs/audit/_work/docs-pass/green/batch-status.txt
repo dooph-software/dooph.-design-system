@@ -1,0 +1,22 @@
+checkbox-field-row exit=0
+service-status-polling exit=0
+searchbox-icon-hover-nudge exit=0
+disabled-fill-darker exit=0
+chat-code-well-dark exit=3
+cta-shape-hover-tilt exit=3
+checkbox-checked-classname exit=0
+tabs-medium-size exit=0
+radix-collapsible exit=0
+sticker-tighter exit=0
+segmented-full-width exit=0
+textlink-wavy-underline exit=0
+button-height-40 exit=0
+ALL-DONE
+ALL-DONE
+settings-notifications-form exit=3
+brand-prominent-light-only exit=0
+pricing-dark-band exit=3
+changelog-reading-column exit=3
+pricing-rsc-buttons exit=3
+plain-carets-practical exit=3
+ALL-DONE

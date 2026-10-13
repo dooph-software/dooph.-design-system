@@ -1,0 +1,34 @@
+#1 Bash: find . -type f -name "package.json" | head -20
+    | ./node_modules/@next/env/package.json
+    | ./node_modules/@next/swc-win32-x64-msvc/package.json
+    | ./node_modules/@radix-ui/number/package.json
+    | ./node_modules/@radix-ui/primitive/package.json
+    | ./node_modules/@radix-ui/react-arrow/package.json
+    | ./node_modules/@radix-ui/react-checkbox/package.json
+#3 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/ 2>/dev/null | grep -v node_modules
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 lib
+    | -rw-r--r-- 1 stick 197609   265 Oct  8 20:59 next.config.ts
+    | -rw-r--r-- 1 stick 197609 99068 Oct 11 17:49 package-lock.json
+    | -rw-r--r-- 1 stick 197609   635 Oct  8 20:59 package.json
+    | -rw-r--r-- 1 stick 197609   666 Oct  8 20:59 tsconfig.json
+    | drwxr-xr-x 1 stick 197609     0 Oct  8 20:59 vendor
+#4 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/app -type f -name "*.tsx" -o -name "*.ts" -o -name "*.css" | sort
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/app/dashboard/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/app/globals.css
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/app/layout.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/app/page.tsx
+#5 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/components -type f -name "*.tsx" -o -name "*.ts" -o -name "*.css" | sort
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/components/theme-toggle.tsx
+#13 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/lib -type f | sort
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/lib/plans.ts
+#15 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac -maxdepth 1 -name "tailwind.config.*" -o -name "*.config.ts" | grep -v node_modules
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/next.config.ts
+#18 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/app -type d | sort
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/app
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/app/dashboard
+#19 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac/ | grep -E "tailwind|postcss"
+    | (Bash completed with no output)
+#24 Bash: cd "C:/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac" && grep -nE '\b(font-[a-z[]|tracking-|leading-|text-style-|text-(xs|sm|base|lg|[0-9]?xl|body|label|title|heading|subheading|hero|mono)\b|text-\[|(p|m)[xytrbl]?-(0\.|[1-9])|gap(-[xy])?-[0-9]|space-[xy]-[0-9]|(bg|text|border)-(white|black|(gray|slate|zinc|neutral|stone|red|blue|green)-))|\[#[0-9a-fA-F]{3,8}\]' app/changelog/page.tsx || echo "Clean"
+    | Clean
+#25 Bash: cd "C:/Users/stick/Github/dooph/ds-consumer-sb-5f6ae6ba86ac" && npx tsc --noEmit 2>&1 | head -30
+    | app/layout.tsx(38,50): error TS2304: Cannot find name 'LayoutProps'.

@@ -1,0 +1,26 @@
+diff --git a/skills/dooph-design-system-theming/references/token-contract.md b/skills/dooph-design-system-theming/references/token-contract.md
+index b2a2889..6deea98 100644
+--- a/skills/dooph-design-system-theming/references/token-contract.md
++++ b/skills/dooph-design-system-theming/references/token-contract.md
+@@ -352,7 +352,7 @@ Declared in `:root, .light`.
+ 
+ | Token | Light | Dark | Alias | Expression | Comment |
+ | --- | --- | --- | --- | --- | --- |
+-| `--ui-height-button` | `38px` | same |  |  |  |
++| `--ui-height-button` | `40px` | same |  |  |  |
+ | `--ui-height-button-sm` | `34px` | same |  |  |  |
+ | `--ui-height-button-medium` | `46px` | same |  |  |  |
+ | `--ui-height-button-big` | `54px` | same |  |  |  |
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index 7abe3f5..d2de6a6 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -481,7 +481,7 @@
+ 
+   /* ── Sizing ──────────────────────────────────────────────────────────── */
+ 
+-  --ui-height-button: 38px;
++  --ui-height-button: 40px;
+   --ui-height-button-sm: 34px;
+   --ui-height-button-medium: 46px;
+   --ui-height-button-big: 54px;

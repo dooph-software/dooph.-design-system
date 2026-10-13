@@ -1,0 +1,31 @@
+RUN OK
+subtype: success  is_error: false  turns: 33  cost_usd: 0.453181  duration_ms: 2019852
+permission_denials (0):
+
+--- final text ---
+Lint passes — `conventions: 30 checks passed`.
+
+---
+
+**Change summary**
+
+| What | Old | New |
+|---|---|---|
+| `--ui-height-button` in `tokens.css` | `38px` | `40px` |
+
+**Blast radius** — everything reading `var(--ui-height-button)`:
+- `index.css`: `.h-button`, `.size-button`, `.min-h-button`, `.min-w-button` utilities, `.ds-dropdown-caret` frame calc, `.ds-expr-caret-shape` width calc — all read the token, no code change needed.
+- Components using those utilities: Button, Tabs, Toggle, SegmentedTabSelect, DropdownTrigger, Input, Table (stories only).
+- `--ui-size-avatar: 38px` is **not** affected (separate token, left unchanged).
+
+**Comments updated** (restated the old value):
+- `DropdownCaret.tsx:14` — resolved frame `26px` → `28px`
+- `Toggle/toggleOption.ts:54,62` — `38px` / `38×38` → `40px` / `40×40`
+- `Toggle/constants.ts:25` — `38` / `38×38` → `40` / `40×40`
+- `Tabs/constants.ts:9,20` — `38px` / `38×38` → `40px` / `40×40`
+- `SegmentedTabSelect/constants.ts:21,23` — `38px` / `38×38` → `40px` / `40×40`
+- `Button.stories.tsx:144` — label `(38px)` → `(40px)`
+
+**Design decision to flag — SegmentedTabSelect container sum no longer balances:**
+
+`SegmentedTabSelect.tsx:67` has the comment `28px items + xxs inset + 1px border = 38px`. The arithmetic was 28 + 4 + 4 + 1 + 1 = 38. With `h-button` now 40px the container shell is 40px but the content still sums to 38px — there is 2px of slack. The items, inset, or border would need to grow to fill it, or the container variant intentionally no longer packs tight. I've left this comment as-is for you to decide.

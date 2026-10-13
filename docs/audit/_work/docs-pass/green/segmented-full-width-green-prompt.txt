@@ -1,0 +1,1 @@
+On mobile we render `<SegmentedTabSelect className="w-full">` in a settings sheet. The shell stretches, but the tabs stay bunched on the left. Make the tabs share the width equally when it's stretched; the normal hugging look must not change.

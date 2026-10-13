@@ -1,0 +1,14 @@
+#3 Bash: find /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011175820 -type f -name "*.tsx" -o -name "*.ts" -o -name "*.css" -o -name "*.md" | head -50
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011175820/.agent/skills/using-airbnb-visx-lib/references/packages/point.md
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011175820/.agent/skills/using-airbnb-visx-lib/references/packages/react-spring.md
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011175820/.agent/skills/using-airbnb-visx-lib/references/packages/responsive.md
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011175820/.agent/skills/using-airbnb-visx-lib/references/packages/sankey.md
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011175820/.agent/skills/using-airbnb-visx-lib/references/packages/scale.md
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011175820/.agent/skills/using-airbnb-visx-lib/references/packages/shape.md
+#19 Bash: grep -n "expression" /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011175820/src/styles/tokens.css | head -30
+    | 943:  --ui-caret-shape-scale: 1; /* expression */
+    | 946:  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */
+    | 953: * `<html data-ds-expression="practical">` in a Next.js app/layout.tsx, or
+    | 955: * discouraged. Every expression-marked token above MUST appear here with
+    | 957:@layer ds.expression {
+    | 958:  [data-ds-expression="practical"] {

@@ -52,6 +52,7 @@ type IconOwnProps = {
   fillColor?: string;
   className?: string;
   children?: ReactNode;
+  /** Hidden by default; an icon with `aria-label` or `aria-labelledby` is not hidden unless you pass this. */
   "aria-hidden"?: boolean | "true" | "false";
 };
 

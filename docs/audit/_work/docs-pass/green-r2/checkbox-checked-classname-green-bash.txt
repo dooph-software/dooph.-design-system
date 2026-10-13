@@ -1,0 +1,13 @@
+#4 Bash: find /c/Users/stick/Github/dooph/ds-sb-checkbox-checked-classname-green-20261011211130 -type f -name "*checkbox*" -o -name "*Checkbox*" | head -50
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-checked-classname-green-20261011211130/node_modules/aria-query/lib/etc/roles/literal/checkboxRole.js
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-checked-classname-green-20261011211130/node_modules/aria-query/lib/etc/roles/literal/menuitemcheckboxRole.js
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-checked-classname-green-20261011211130/node_modules/caniuse-lite/data/features/indeterminate-checkbox.js
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-checked-classname-green-20261011211130/src/components/Checkbox
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-checked-classname-green-20261011211130/src/components/Checkbox/Checkbox.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-checked-classname-green-20261011211130/src/components/Checkbox/Checkbox.tsx
+#6 Bash: ls -la "/c/Users/stick/Github/dooph/ds-sb-checkbox-checked-classname-green-20261011211130/src/components/Checkbox/" 2>/dev/null | grep -v "^d"
+    | total 26
+    | -rw-r--r-- 1 stick 197609 2705 Oct 11 21:11 Checkbox.stories.tsx
+    | -rw-r--r-- 1 stick 197609 5999 Oct 11 21:11 Checkbox.tsx
+    | -rw-r--r-- 1 stick 197609  547 Oct 11 21:11 constants.ts
+    | -rw-r--r-- 1 stick 197609  171 Oct 11 21:11 index.ts

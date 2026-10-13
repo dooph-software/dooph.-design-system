@@ -63,13 +63,13 @@ One factual claim per line, with its evidence. S = `.agents/skills/dooph-ds-code
 - S: agents never run prep-release (policy). Evidence: .superpowers/sdd/docs-pass-plan/constraints.md:3; docs/audit/_work/agent-rules.md:5.
 - S: a mirror edit is overwritten by the next sync. Evidence: scripts/sync-skills.mjs:32-33.
 - S: the blast-radius greps live in dooph-ds-editing-tokens. Evidence: .agents/skills/dooph-ds-editing-tokens/SKILL.md:28.
-- S: `// 28px items + xxs inset + 1px border = 38px` is an inline comment in SegmentedTabSelect.tsx, a file with no header contract. Evidence: src/components/SegmentedTabSelect/SegmentedTabSelect.tsx:67; inventory.md SegmentedTabSelect row (no header contract).
+- S: the example is now generic ("an inline sum of parts that adds up to the old value, in a file with no header contract") (task 11, 2026-10-11). A real instance: `// 28px items + xxs inset + 1px border = 38px`, src/components/SegmentedTabSelect/SegmentedTabSelect.tsx:67; inventory.md SegmentedTabSelect row (no header contract).
 - S: grepping the old literal finds comments a token grep misses: the same 38px is stated in JSDoc at src/components/SegmentedTabSelect/constants.ts:20-21, src/components/Tabs/constants.ts:9 and src/components/Toggle/toggleOption.ts:54. Evidence: `grep -rn 38px src --include=*.ts --include=*.tsx`.
 - S: flag broken arithmetic and never reword it (judgement). Evidence: baseline SCORES.md:315, 357 (button-height-40 reworded the comment instead of flagging it).
 - S: the quote "Now add the Tailwind aliases in both theme.css and index.css." Evidence: docs/audit/_work/docs-pass/baseline/SCORES.md:157 (disabled-fill-darker).
 - S: the quote "Everything passes — type-check and build are clean." Evidence: SCORES.md:137, 384 (service-status).
 - S: the quote "Type-check passes." Evidence: SCORES.md:249, 386 (tabs).
-- S: the quote "I should update the comment to reflect 40px instead of 38px". Evidence: SCORES.md:315, 357 (button-height-40).
+- S: the quote "I should update the comment to reflect the new value", stripped of the scenario's numbers (task 11, 2026-10-11). Evidence: SCORES.md:315, 357 (button-height-40).
 - S: `npm run lint` is `tsc --noEmit` followed by `scripts/check-conventions.mjs`. Evidence: package.json:61.
 - S: `check-conventions.mjs --fixtures`. Evidence: scripts/check-conventions.mjs:11-17; scripts/check-conventions.fixtures/README.txt:1.
 - S: `npm pack --dry-run` is the tarball check. Evidence: package.json:35-47 (`files` decides the tarball); docs/audit/CHANGES.md:2583 (the method used to verify the tarball).
@@ -127,7 +127,7 @@ One factual claim per line, with its evidence. S = `.agents/skills/dooph-ds-code
 - R: init-skills copies skills/ into .agents/skills, .claude/skills and .agent/skills. Evidence: bin/init.mjs:29, 80-96, 151-158.
 - R: it asks Y/n for each. Evidence: bin/init.mjs:131-142.
 - R: it merges into an existing dir. Evidence: bin/init.mjs:133, 155.
-- R: after copying, it prints the styles.css import; if every target is deselected it copies nothing and prints no import line. Evidence: bin/init.mjs:144-148, 175-181.
+- R: after copying, it prints the stylesheet imports (a JS-entry styles.css import, or a CSS-entry block of tailwindcss, styles.css and theme.css) and points to the setup skill; if every target is deselected it copies nothing and prints no imports. Evidence: bin/init.mjs:144-148, 175-188.
 - R: `--yes`/`-y` answers yes to every prompt. Evidence: bin/init.mjs:44, 60-63.
 - R: with no input, every prompt takes its default (yes). Evidence: bin/init.mjs:54-57, 65-68, 138.
 - R: it changes nothing else in the project. Evidence: bin/init.mjs:16-19.

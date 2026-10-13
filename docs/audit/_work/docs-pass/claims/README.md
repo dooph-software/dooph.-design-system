@@ -51,3 +51,10 @@ One factual claim per line, with its evidence. R = `README.md` at the repo root.
 ## Links checked
 Relative (exist on disk): skills/dooph-design-system-usage/SKILL.md, skills/dooph-design-system-theming/SKILL.md, skills/dooph-design-system-v3-migration/SKILL.md, skills/dooph-design-system-v5-migration/SKILL.md, CHANGELOG.md, LICENSE.txt, THIRD_PARTY_NOTICES.md, CONTRIBUTING.md, AGENTS.md. NOT YET: skills/dooph-design-system-setup/SKILL.md (sibling task writes it).
 External (browser): Storybook, npm page, four Google Fonts specimens. All load.
+
+## IP disclaimer (added by the AGENTS, CONTRIBUTING and SECURITY task)
+- R:10 the italic disclaimer reserving the trade name, brand names, wordmarks and logomarks. Evidence: `git show 0dac153:README.md` line 9, copied verbatim except the owning entity: "we use at dooph." became "we use at Dooph LLC.", "rights to dooph intellectual property" became "rights to Dooph LLC intellectual property", and "any and all dooph. intellectual property" became "any and all Dooph LLC intellectual property". The trade name "dooph." and "dooph. products" are brand names, not the entity, so they stay. The entity matches the README trademark line ("trademarks of Dooph LLC"), which the maintainer chose to keep.
+
+## Claim-check fix (batch 5)
+
+- R:96-97 (reworded): third-party icon sources, runtime npm dependencies and vendored or compiled-in code are listed in THIRD_PARTY_NOTICES.md. Evidence: the 14 npm packages are `dependencies`, imported from node_modules (not bundled); the vendored shape-morph engine is listed; `dist/styles.css` starts with `/*! tailwindcss v4.3.3 | MIT License */` and carries tailwindcss-animate utilities (`animate-in` etc., from `@plugin "tailwindcss-animate"` in src/styles/index.css:14), so THIRD_PARTY_NOTICES.md now has a "Compiled-in CSS" section with both MIT licence texts (copied from node_modules/tailwindcss/LICENSE and node_modules/tailwindcss-animate/LICENSE). No other third-party CSS is imported by src/styles/*.css.

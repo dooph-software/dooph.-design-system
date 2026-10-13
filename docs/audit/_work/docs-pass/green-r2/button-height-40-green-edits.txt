@@ -1,0 +1,8 @@
+#13 Edit C:\Users\stick\Github\dooph\ds-sb-button-height-40-green-20261011210248\src\styles\tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-button-height-40-green-20261011210248\\src\\styles\\tokens.css",
+  "old_string": "  --ui-height-button: 38px;",
+  "new_string": "  --ui-height-button: 40px;"
+}
+

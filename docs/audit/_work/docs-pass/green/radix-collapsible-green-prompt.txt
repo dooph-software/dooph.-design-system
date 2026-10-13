@@ -1,0 +1,1 @@
+Add a Collapsible to the DS, wrapping Radix Collapsible (`@radix-ui/react-collapsible`, go ahead and install it): Root, a Trigger that shows a label and a chevron that flips when open, and a Content panel that animates open and closed. Add stories.

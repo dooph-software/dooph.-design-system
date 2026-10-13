@@ -1,0 +1,21 @@
+RUN OK
+subtype: success  is_error: false  turns: 27  cost_usd: 0.7508025  duration_ms: 207599
+permission_denials (0):
+
+--- final text ---
+`conventions: 30 checks passed`
+
+---
+
+**Changed:** `TextLink.tsx`, `tokens.css`, `index.css`, `TextLink.stories.tsx` (+ generated mirrors)
+
+**Decisions:**
+- **Thickness `0.08em`** — matches the existing `--ui-underline-link-thickness` token used by UnderlineLinkText. Alternative: a heavier stroke (wavy lines can look thin at `0.08em`); open if you want to tune it.
+- **Offset `var(--ui-underline-link-offset)`** — reuses the existing `0.05em` offset token so both underline styles sit at the same position. Alternative: a dedicated token.
+- **Neutral at thickness `0`** — at `0` the `text-decoration` line is invisible; no empty frame or gap remains.
+
+**Also affected:** none — new token, new helper class, no shared constant changed.
+
+**Flagged:** none.
+
+**Lint:** `conventions: 30 checks passed`

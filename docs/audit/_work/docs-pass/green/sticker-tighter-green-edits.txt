@@ -1,0 +1,16 @@
+#5 Edit C:/Users/stick/Github/dooph/ds-sb-sticker-tighter-green-20261011172521/src/components/Sticker/Sticker.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-sticker-tighter-green-20261011172521/src/components/Sticker/Sticker.tsx",
+  "old_string": "    \"inline-flex w-fit items-center gap-sm overflow-clip\",\n    \"px-rg whitespace-nowrap\",",
+  "new_string": "    \"inline-flex w-fit items-center gap-xs overflow-clip\",\n    \"px-sm whitespace-nowrap\","
+}
+
+#6 Edit C:/Users/stick/Github/dooph/ds-sb-sticker-tighter-green-20261011172521/src/components/Sticker/Sticker.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-sticker-tighter-green-20261011172521/src/components/Sticker/Sticker.tsx",
+  "old_string": " *   row: `gap-sm` on the root spaces an icon and a text node, so a consumer's",
+  "new_string": " *   row: `gap-xs` on the root spaces an icon and a text node, so a consumer's"
+}
+

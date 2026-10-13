@@ -1,0 +1,25 @@
+RUN OK
+subtype: success  is_error: false  turns: 35  cost_usd: 1.01653285  duration_ms: 226570
+permission_denials (0):
+
+--- final text ---
+Lint passes. Here's a summary of what was done:
+
+---
+
+**Changes:**
+
+| File | What |
+|---|---|
+| `src/styles/tokens.css` | Added `--ui-search-icon-lean: -8deg` (expression token, `:root` block); neutral `0deg` in the practical preset |
+| `scripts/sync-theme.mjs` | Added `"ui-search-icon-lean"` to the Expression tokens group in `EXCLUDED` |
+| `src/styles/index.css` | Added `.ds-search-box:not([data-disabled]):hover .ds-expr-search-icon-lean { rotate: var(--ui-search-icon-lean); }` |
+| `src/components/SearchBox/SearchBox.tsx` | Added header contract; `ds-search-box` class on container; `ds-motion-state ds-expr-search-icon-lean` on the SearchIcon; updated JSDoc |
+| `src/components/SearchBox/SearchBox.stories.tsx` | Added `Practical` story showing signature vs practical side by side |
+| Generated files | Re-synced via `sync-tokens`, `generate-docs`, `sync-skills` |
+
+**Design decision to surface:** I used `-8deg` for the lean angle (a subtle counter-clockwise tilt, as if the magnifier tips toward the input). This is a placeholder — let me know if you'd prefer a different angle or direction.
+
+`conventions: 30 checks passed`
+
+I haven't been able to check the Practical story in Storybook visually, so I can't confirm the practical column shows no trace of the lean — flagging that per the recipe.

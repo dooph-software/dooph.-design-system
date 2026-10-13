@@ -1,0 +1,46 @@
+  init-skills | 
+  init-skills | dooph Design System · init-skills
+  init-skills | 
+  init-skills |   6 skill(s) available: dooph-design-system-setup, dooph-design-system-theming, dooph-design-system-usage, dooph-design-system-v3-migration, dooph-design-system-v5-migration, dooph-design-system-v6-migration
+  init-skills | 
+  init-skills |   Which directories should skills be installed to?
+  init-skills |   Press Enter (or y) to install, n to skip.
+  init-skills | 
+  init-skills |   .agents/   — Cursor Agent Skills
+  init-skills |   [Y/n]: y (--yes)
+  init-skills | 
+  init-skills |   .claude/   — Claude CLI / Projects
+  init-skills |   [Y/n]: y (--yes)
+  init-skills | 
+  init-skills |   .agent/    — other agent framework
+  init-skills |   [Y/n]: y (--yes)
+  init-skills | 
+  init-skills |   Results:
+  init-skills | 
+  init-skills |   ✓ .agents/skills
+  init-skills |     Open Cursor and the skills will be available to agents automatically.
+  init-skills |   ✓ .claude/skills
+  init-skills |     Skills are picked up by Claude CLI when running in this project directory.
+  init-skills |   ✓ .agent/skills
+  init-skills | 
+  init-skills | ────────────────────────────────────────────────────────
+  init-skills | 
+  init-skills |   Next — load the design system styles. In a JS entry:
+  init-skills | 
+  init-skills |     import '@dooph-software/design-system/styles.css';
+  init-skills | 
+  init-skills |   or in a CSS entry (with Tailwind v4, theme.css after tailwindcss):
+  init-skills | 
+  init-skills |     @import "tailwindcss";
+  init-skills |     @import "@dooph-software/design-system/styles.css";
+  init-skills |     @import "@dooph-software/design-system/theme.css";
+  init-skills | 
+  init-skills |   Fonts, the Tailwind size names and "use client": see the dooph-design-system-setup skill.
+  init-skills | 
+sandbox:          /c/Users/stick/Github/dooph/ds-consumer-sb-f20818f6219f (with-skills)
+installed-tgz-sha256: 15b1b2783898dc8de6a06ef82ee68441a6dc5dd49f9285e90f281726d15780ac
+template commit:  c48344d1f1b73dcec5227139df86eaf940339f3b (/c/Users/stick/Github/dooph/ds-consumer-template)
+hand-over commit: 09d920dba187d7d4a315cfd7744f42bd851a53af (diff base)
+DS tarball:       C:/Users/stick/AppData/Local/Temp/claude/C--Users-stick-Github-dooph-dooph-Design-System/fb5b5c5d-cbc2-47a0-9157-b9f6db4d3431/scratchpad/green-pack-r2/dooph-software-design-system-5.3.0.tgz -> vendor/dooph-software-design-system-5.3.0.tgz
+DS skills dir:    dooph-design-system-setup dooph-design-system-theming dooph-design-system-usage dooph-design-system-v3-migration dooph-design-system-v5-migration dooph-design-system-v6-migration 
+project skills:   dooph-design-system-setup dooph-design-system-theming dooph-design-system-usage dooph-design-system-v3-migration dooph-design-system-v5-migration dooph-design-system-v6-migration 

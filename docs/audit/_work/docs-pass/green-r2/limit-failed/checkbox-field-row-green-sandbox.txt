@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011180201 (with-skills)
+snapshot tree: f1bfdd4868255b8d2beaebd2084c1ea7b81ebab0 (main working tree)
+start tree:    844f2424c3b41d980844e69a820d46e418fcf149 (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-checkbox-field-row-green-20261011180201/sandbox-start-tree)

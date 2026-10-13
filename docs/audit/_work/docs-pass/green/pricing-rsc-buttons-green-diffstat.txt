@@ -1,0 +1,2 @@
+A	app/pricing/page.tsx
+A	app/pricing/talk-to-sales-button.tsx

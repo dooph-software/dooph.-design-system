@@ -1,0 +1,186 @@
+#1 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e -type f -name "*.ts" -o -name "*.tsx" -o -name "*.jsx" -o -name "*.js" -o -name "*.json" | head -50
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-6M54Q3N2.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-6NKGINX6.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-6S44WH3F.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-6UE7PJC4.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-6X2FZ7YI.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-6YTND6HS.js
+#2 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e -path "*/node_modules" -prune -o -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.jsx" -o -name "*.js" \) -print | head -30
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/app/dashboard/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/app/layout.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/app/page.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/components/theme-toggle.tsx
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/lib/plans.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/next.config.ts
+#13 Bash: grep -n "DropdownCaret\|chevron\|icon.*rotate" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/.claude/skills/dooph-design-system-usage/references/components.md | head -50
+    | 737:`src/components/DropdownCaret/` — 1 component, 1 const, 2 types.
+    | 739:### DropdownCaret
+    | 744:| `variant?` | `DropdownCaretVariant` | `DropdownCaretVariant.dropdown` |  |
+    | 748:- `DropdownCaretVariant` (also a type)
+    | 757:- `DropdownCaretProps`
+    | 758:- `DropdownCaretVariant` = `"dropdown" \| "typeable"`
+#14 Bash: grep -n "DropdownMenu\|DropdownTrigger" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/.claude/skills/dooph-design-system-usage/references/components.md | head -30
+    | 1058:### DropdownMenuPlainItem
+    | 1066:### DropdownMenuPortal
+    | 1072:### DropdownMenuRadioGroup
+    | 1078:### DropdownMenuRadioSelectItem
+    | 1080:Figma Single Select Menu Item — use inside DropdownMenuRadioGroup.
+    | 1086:### DropdownMenuSearch
+#15 Bash: grep -n "MorphRotationShape\|ShapeMorphSpinner" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/.claude/skills/dooph-design-system-usage/references/components.md | head -30
+    | 1277:- `MorphRotationShapeStepTiming`
+    | 1504:## ShapeMorphSpinner
+    | 1506:`src/components/ShapeMorphSpinner/` — 1 component, 1 const, 1 type.
+    | 1508:### ShapeMorphSpinner
+    | 1515:| `timing?` | `MorphRotationShapeAutoplayTiming` |  |  |
+    | 1525:- `ShapeMorphSpinnerProps`
+#16 Bash: grep -A 20 "## MorphRotationShape" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/.claude/skills/dooph-design-system-usage/references/components.md
+    | - `MorphRotationShapeMode` (also a type)
+    | 
+    |   | Key | Value |
+    |   | --- | --- |
+    |   | `autoplay` | `"autoplay"` |
+    |   | `controlled` | `"controlled"` |
+#17 Bash: grep -A 20 "## ShapeMorphSpinner" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/.claude/skills/dooph-design-system-usage/references/components.md
+    | 
+    | ### Types
+    | 
+    | - `ShapeMorphSpinnerProps`
+    | 
+    | ## Shapes
+#18 Bash: grep -B 5 -A 15 "## Icons" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/.claude/skills/dooph-design-system-usage/references/components.md | head -50
+    | | `aria-hidden?` | `boolean \| "true" \| "false"` |  | Hidden by default; an icon with `aria-label` or `aria-labelledby` is not hidden unless you pass this. |
+    | | `children?` | `ReactNode` |  |  |
+    | | `className?` | `string` |  |  |
+    | | `color?` | `string` |  |  |
+    | | `fillColor?` | `string` |  |  |
+    | | `ref?` | `Ref<SVGSVGElement>` |  |  |
+#19 Bash: grep "IconChevron\|ChevronIcon\|Icon.*Chevron" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/.claude/skills/dooph-design-system-usage/references/components.md
+    | `AIContextIcon`, `AIPlanIcon`, `AIPowerIcon`, `AISkillIcon`, `AISpeedIcon`, `AIThinkingIcon`, `AIToolActionIcon`, `AIToolReadIcon`, `ArrowDownIcon`, `ArrowDownLeftIcon`, `ArrowDownRightIcon`, `ArrowLeftIcon`, `ArrowRightIcon`, `ArrowUpIcon`, `ArrowUpLeftIcon`, `ArrowUpRightIcon`, `AttachFileIcon`, `BarChartAxesIcon`, `BarChartIcon`, `BugReportIcon`, `CalendarIcon`, `ChangelogIcon`, `CheckIcon`, `ChevronDownIcon`, `ChevronLeftIcon`, `ChevronRightIcon`, `ChevronUpIcon`, `ChevronsDownUpIcon`, `ChevronsLeftRightIcon`, `ChevronsRightIcon`, `ChevronsRightLeftIcon`, `ChevronsUpDownIcon`, `ClearFilterFunnelIcon`, `ClipboardIcon`, `CloseCancelIcon`, `CreditCardIcon`, `DarkModeIcon`, `DiscPlatterDBIcon`, `DownloadIcon`, `DropdownIcon`, `ErrorAlternativeIcon`, `ErrorIcon`, `ExtensionsIcon`, `FilterFunnelIcon`, `FilterLinesIcon`, `FiltersSlidersIcon`, `GraphIcon`, `HeartFillIcon`, `HelpIcon`, `HideMoneyIcon`, `InfoIcon`, `InvoiceIcon`, `KeyIcon`, `LightModeIcon`, `LoadingSpinnerIcon`, `LogOutIcon`, `ManyUsersIcon`, `ManyUsersRoundedIcon`, `NewChatIcon`, `OrganizationIcon`, `OverviewIcon`, `PlaceholderIcon`, `PlusIcon`, `RecentsIcon`, `SaveAlternativeIcon`, `SaveIcon`, `SearchIcon`, `SendIcon`, `SettingsBoltIcon`, `SettingsGearIcon`, `ShowMoneyIcon`, `SidebarLeftHoverIcon`, `SidebarLeftIcon`, `SidebarRightHoverIcon`, `SidebarRightIcon`, `SortAscendingIcon`, `SortDescendingIcon`, `StopAlternativeIcon`, `StopFilledIcon`, `StopIcon`, `SystemThemeIcon`, `TableIcon`, `TagIcon`, `ThreeColumnsIcon`, `ThreeDotsIcon`, `UserIcon`, `UserRoundedIcon`, `WarningIcon`
+#21 Bash: grep -n "dropdown\|Dropdown\|chevron\|Chevron" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/.claude/skills/dooph-design-system-usage/references/patterns.md | head -30
+    | 136:            variant={DropdownMenuItemVariant.danger}
+    | 140:          </DropdownMenuItem>
+    | 141:        </DropdownMenuSection>
+    | 142:      </DropdownMenuContent>
+    | 143:    </DropdownMenu>
+    | 148:`renameFile` and `deleteFile` are your app's functions. Items sit in a `DropdownMenuSection`, which gives them their inset. The menu is non-modal by default; pass `modal` for dialog-like focus trapping. For a value picker, use `DropdownMenuRadioGroup` + `DropdownMenuRadioSelectItem`, or `selectType={DropdownMenuSelectType.multi}` with `DropdownMenuMultiSelectItem`.
+#22 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/vendor -name "*.tgz" 2>/dev/null | head -5
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/vendor/dooph-software-design-system-5.3.0.tgz
+#23 Bash: ls -la /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/vendor/ 2>/dev/null | head -20
+    | total 680
+    | drwxr-xr-x 1 stick 197609      0 Oct  8 20:59 .
+    | drwxr-xr-x 1 stick 197609      0 Oct 11 17:55 ..
+    | -rw-r--r-- 1 stick 197609 689173 Oct 11 17:54 dooph-software-design-system-5.3.0.tgz
+#24 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system -name "*.d.ts" -type f 2>/dev/null | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/AnimatedText/index.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/AnimatedText/RevealChangeText.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/AnimatedText/RollChangeText.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/AnimatedText/RollHoverText.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/AnimatedText/rollingDigitsModel.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/AnimatedText/RollingDigitsText.d.ts
+#25 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system -name "*[Dd]ropdown*" -o -name "*[Cc]hevron*" 2>/dev/null
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/Icons/DropdownIcon.d.cts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/Icons/DropdownIcon.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/Menu/DropdownMenu.d.cts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/Menu/DropdownMenu.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/Menu/DropdownMenuSearch.d.cts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/Menu/DropdownMenuSearch.d.ts
+#29 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist -name "*Morph*" -o -name "*morph*" 2>/dev/null
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/MorphRotationShape/engine/morph.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/MorphRotationShape/MorphRotationShape.d.cts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/MorphRotationShape/MorphRotationShape.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/ShapeMorphSpinner
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/ShapeMorphSpinner/ShapeMorphSpinner.d.cts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/ShapeMorphSpinner/ShapeMorphSpinner.d.ts
+#30 Bash: grep -r "DropdownCaret" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/DropdownTrigger -A 3 -B 3 2>/dev/null | head -50
+    | (Bash completed with no output)
+#31 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/DropdownCaret -type f
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/DropdownCaret/constants.d.cts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/DropdownCaret/constants.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/DropdownCaret/DropdownCaret.d.cts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/DropdownCaret/DropdownCaret.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/DropdownCaret/index.d.cts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/DropdownCaret/index.d.ts
+#35 Bash: grep -l "DropdownCaret\|dropdown.*caret\|caret.*dropdown" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/*.js 2>/dev/null | head -5
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-DV673MC2.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-HXDE7RC5.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-Q4ETNTGK.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/index.js
+#36 Bash: grep "DropdownCaret" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/index.d.ts
+    | export { DropdownCaret, DropdownCaretProps } from './components/DropdownCaret/DropdownCaret.js';
+    | export { DropdownCaretVariant } from './components/DropdownCaret/constants.js';
+#37 Bash: grep -A 20 "DropdownCaret" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-DV673MC2.js | head -50
+    |     name,
+    |     autoComplete,
+    | --
+    |           /* @__PURE__ */ jsx(DropdownCaret, { variant: DropdownCaretVariant.typeable })
+    |         ]
+    |       }
+#38 Bash: grep -B 5 -A 20 "squircle\|pixircle\|clover\|puff" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-DV673MC2.js | head -80
+    | (Bash completed with no output)
+#39 Bash: grep -B 10 -A 30 "function DropdownCaret\|const DropdownCaret" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-HXDE7RC5.js | head -80
+    | (Bash completed with no output)
+#40 Bash: grep -l "MorphRotationShape\|morph\|squircle\|pixircle\|clover\|puff" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-*.js 2>/dev/null | head -5
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-4M4QAFR2.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-4NPDOA3I.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-4SMVL4Z3.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-7G26V5WR.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-D6FYSG3M.js
+#41 Bash: grep "squircle\|pixircle\|clover\|puff" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-*.js 2>/dev/null | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-W67D7S4F.js:  squircle: "squircle"
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-WLJXAOXI.js:  [Shapes.clover]: [CloverShape, CLOVER_SHAPE_PATH],
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-WLJXAOXI.js:  [Shapes.pixircle]: [PixircleShape, PIXIRCLE_SHAPE_PATH],
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-WLJXAOXI.js:  [Shapes.puff]: [PuffShape, PUFF_SHAPE_PATH],
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-WLJXAOXI.js:  [Shapes.squircle]: [SquircleShape, SQUIRCLE_SHAPE_PATH],
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-XBO5M7XU.js:  Shapes.clover,
+#42 Bash: grep -B 5 -A 15 "dropdown.*\[Shapes\.squircle.*pixircle\]\|typeable.*\[Shapes\.clover" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-HXDE7RC5.js
+    |     children: /* @__PURE__ */ jsxs("span", { className: "ds-dropdown-caret-frame relative inline-flex items-center justify-center", children: [
+    |       /* @__PURE__ */ jsx(
+    |         MorphRotationShape,
+    |         {
+    |           mode: MorphRotationShapeMode.embedded,
+    |           shapes: CARET_SHAPES[variant],
+#43 Bash: grep -B 10 -A 30 "DropdownCaretVariant" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-HXDE7RC5.js
+    | );
+    | 
+    | export {
+    |   DropdownCaret
+    | };
+    | //# sourceMappingURL=chunk-HXDE7RC5.js.map
+#44 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/components/MorphRotationShape -name "*.d.ts" -exec basename {} \;
+    | symmetry.d.ts
+    | utils.d.ts
+    | geometry.d.ts
+    | index.d.ts
+    | MorphRotationShape.d.ts
+    | timing.d.ts
+#46 Bash: grep -r "ui-shape-morph\|ui-color.*chevron\|dropdown.*caret.*anim" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e --include="*.css" --include="*.md" 2>/dev/null | head -30
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/styles.css:    --ui-shape-morph-duration: 498ms;
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/styles.css:    --ui-shape-morph-ease: linear(0, 0.0058 1.56%, 0.0221 3.13%, 0.0475 4.69%, 0.0805 6.25%, 0.1198 7.81%, 0.1643 9.38%, 0.2127 10.94%, 0.2640 12.50%, 0.3173 14.06%, 0.3718 15.63%, 0.4266 17.19%, 0.4811 18.75%, 0.5348 20.31%, 0.5871 21.88%, 0.6376 23.44%, 0.6860 25.00%, 0.7319 26.56%, 0.7752 28.13%, 0.8157 29.69%, 0.8533 31.25%, 0.8878 32.81%, 0.9194 34.38%, 0.9480 35.94%, 0.9736 37.50%, 0.9964 39.06%, 1.0164 40.63%, 1.0337 42.19%, 1.0486 43.75%, 1.0610 45.31%, 1.0712 46.88%, 1.0793 48.44%, 1.0856 50.00%, 1.0901 51.56%, 1.0930 53.13%, 1.0945 54.69%, 1.0947 56.25%, 1.0939 57.81%, 1.0921 59.38%, 1.0895 60.94%, 1.0865 62.50%, 1.0832 64.06%, 1.0795 65.63%, 1.0755 67.19%, 1.0713 68.75%, 1.0669 70.31%, 1.0623 71.88%, 1.0576 73.44%, 1.0528 75.00%, 1.0480 76.56%, 1.0432 78.13%, 1.0384 79.69%, 1.0338 81.25%, 1.0292 82.81%, 1.0249 84.38%, 1.0207 85.94%, 1.0168 87.50%, 1.0132 89.06%, 1.0100 90.63%, 1.0071 92.19%, 1.0047 93.75%, 1.0027 95.31%, 1.0012 96.88%, 1.0003 98.44%, 1 100%);
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/styles.css:    --ui-shape-morph-interval: 650ms;
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/styles.css:    --ui-shape-morph-passive-spin-duration: 4666ms;
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/styles.css:    --ui-shape-morph-nudge: 0.15;
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/styles.css:    --ui-caret-nudge: var(--ui-shape-morph-nudge);
+#47 Bash: grep "ui-shape-morph" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/.claude/skills/dooph-design-system-theming/references/token-contract.md
+    | | `--ui-shape-morph-duration` | `498ms` | same |  |  |  |
+    | | `--ui-shape-morph-ease` | `linear(0, 0.0058 1.56%, 0.0221 3.13%, 0.0475 4.69%, 0.0805 6.25%, 0.1198 7.81%, 0.1643 9.38%, 0.2127 10.94%, 0.2640 12.50%, 0.3173 14.06%, 0.3718 15.63%, 0.4266 17.19%, 0.4811 18.75%, 0.5348 20.31%, 0.5871 21.88%, 0.6376 23.44%, 0.6860 25.00%, 0.7319 26.56%, 0.7752 28.13%, 0.8157 29.69%, 0.8533 31.25%, 0.8878 32.81%, 0.9194 34.38%, 0.9480 35.94%, 0.9736 37.50%, 0.9964 39.06%, 1.0164 40.63%, 1.0337 42.19%, 1.0486 43.75%, 1.0610 45.31%, 1.0712 46.88%, 1.0793 48.44%, 1.0856 50.00%, 1.0901 51.56%, 1.0930 53.13%, 1.0945 54.69%, 1.0947 56.25%, 1.0939 57.81%, 1.0921 59.38%, 1.0895 60.94%, 1.0865 62.50%, 1.0832 64.06%, 1.0795 65.63%, 1.0755 67.19%, 1.0713 68.75%, 1.0669 70.31%, 1.0623 71.88%, 1.0576 73.44%, 1.0528 75.00%, 1.0480 76.56%, 1.0432 78.13%, 1.0384 79.69%, 1.0338 81.25%, 1.0292 82.81%, 1.0249 84.38%, 1.0207 85.94%, 1.0168 87.50%, 1.0132 89.06%, 1.0100 90.63%, 1.0071 92.19%, 1.0047 93.75%, 1.0027 95.31%, 1.0012 96.88%, 1.0003 98.44%, 1 100%)` | same |  |  |  |
+    | | `--ui-shape-morph-interval` | `650ms` | same |  |  |  |
+    | | `--ui-shape-morph-passive-spin-duration` | `4666ms` | same |  |  |  |
+    | | `--ui-shape-morph-nudge` | `0.15` | same |  |  | Hover nudge: how far a hovered shape leans toward the next stop (a fraction of one step, applied to morph AND turn). |
+    | | `--ui-caret-nudge` | `var(--ui-shape-morph-nudge)` | same | `0` | alias | yes | DropdownCaret hover lean (a fraction of one step, like --ui-shape-morph-nudge, which it follows by default); 0 = no lean. |
+#48 Bash: grep -A 30 "## Shapes" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/.claude/skills/dooph-design-system-usage/references/components.md | head -50
+    | | `children?` | `ReactNode` |  |  |
+    | | `className?` | `string` |  |  |
+    | | `fillColor?` | `string` |  |  |
+    | | `ref?` | `Ref<SVGSVGElement>` |  |  |
+    | | `size` | `string \| number` |  | px number, or any CSS length — e.g. a `var(--ui-size-*)` token. |
+    | | `strokeColor?` | `string` |  |  |
+#49 Bash: grep "eightLeafClover\|pixircle" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-MI2MAMST.js
+    |   eightLeafClover: "eightLeafClover",
+    |   pixircle: "pixircle",
+#50 Bash: grep -B 10 -A 40 "DropdownTriggerBase\|function DropdownTrigger\|const DropdownTrigger" /c/Users/stick/Github/dooph/ds-consumer-sb-fab3f9f67a1e/node_modules/@dooph-software/design-system/dist/chunk-DV673MC2.js | head -100
+    |     className,
+    |     children,
+    |     size = TextDropdownSize.standard,
+    |     asChild = false,
+    |     ...props
+    |   }, ref) => {

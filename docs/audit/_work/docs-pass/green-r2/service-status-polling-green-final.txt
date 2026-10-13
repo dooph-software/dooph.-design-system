@@ -1,0 +1,68 @@
+RUN OK
+subtype: success  is_error: false  turns: 45  cost_usd: 1.3628331000000002  duration_ms: 390240
+permission_denials (1):
+  Bash: {"command":"find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-green-20261011205547/src/components -type d -maxdepth 1 | xargs -I {} basename {} | sort"}
+
+--- final text ---
+Done. Here's the hand-back:
+
+---
+
+```
+Lint:              npm run lint → exit 0, "conventions: 30 checks passed"
+Generated docs:    node scripts/generate-docs.mjs → components.md, inventory.md, client-references.md
+Skill mirrors:     node scripts/sync-skills.mjs → updated inventory.md in .claude/ and .agent/ (2 changes)
+Stories:           Operational (alternate/green sticker), Degraded (prominent/purple),
+                   Down (danger/red), CustomLabel ("API Gateway"), Micro (micro size),
+                   AllStatuses (all three in a column), Sizes (standard + micro)
+Header contract:   none — no invariant a reasonable edit would break; the status-to-variant
+                   map is a straightforward lookup with no hidden geometry or constraint
+New dependency / allowlist entry: none
+```
+
+**Design decisions (all open for your review):**
+
+| Decision | Chosen | Alternative | Status |
+|---|---|---|---|
+| Status dot | 6px (`size-xs`) circle with `bg-current` (inherits sticker text colour) | An icon, or no dot | Open — no Figma spec |
+| `operational` → variant | `alternate` (teal #13c29f) | `tertiary` (blue), or a custom colour | Open |
+| `degraded` → variant | `prominent` (purple #340fd9) | No amber/yellow token exists in the DS; a new token or `custom` with a new colour would be needed for a true warning hue | **Open — most likely to need revision** |
+| `down` → variant | `danger` (red #ea3f3f) | n/a — natural fit | Settled |
+| Default labels | "Operational" / "Degraded" / "Down" | Different wording, or require `label` | Open |
+| `children` excluded from props | Enforced via `Omit<…, "children">` so the badge controls its own content | Allow arbitrary children | Settled |
+
+**Polling belongs to your app.** Here's the consumer-side snippet the component was designed for:
+
+```tsx
+"use client";
+import { useEffect, useState } from "react";
+import {
+  ServiceStatusBadge,
+  ServiceStatusBadgeStatus,
+} from "@dooph-software/design-system";
+
+export function LiveServiceStatus({ url }: { url: string }) {
+  const [status, setStatus] = useState<ServiceStatusBadgeStatus>(
+    ServiceStatusBadgeStatus.operational,
+  );
+
+  useEffect(() => {
+    const poll = async () => {
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (res.ok) {
+          const data: { status: ServiceStatusBadgeStatus } = await res.json();
+          setStatus(data.status);
+        }
+      } catch {
+        // keep the last status; how an outage looks is the app's call
+      }
+    };
+    poll();
+    const id = setInterval(poll, 30_000);
+    return () => clearInterval(id);
+  }, [url]);
+
+  return <ServiceStatusBadge status={status} />;
+}
+```

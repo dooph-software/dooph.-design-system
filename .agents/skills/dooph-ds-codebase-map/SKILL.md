@@ -43,7 +43,7 @@ Everything in `dist/` is compiled from `src/`, and parts of `src/` are generated
 - **Never run `npm run build`, `build:watch` or `prepublishOnly` in the main checkout.** They rewrite `Icons/index.ts`, `tokens.css`, `index.css`, `theme.css` and `twMergeTheme.ts`, and run no lint. Prevents: a "verification" that churns tracked files and checks nothing. Run them in a scratch worktree; `build:js`, `build:css` and `build-storybook` write only gitignored output.
 - **Never run `prep-release:*`.** It bumps the version, builds and pushes tags. Prevents: an unplanned release.
 - **Edit skills in `.agents/skills/` only**, then sync. Prevents: a mirror edit the next sync overwrites.
-- **After a value change, check every comment that states the old value.** Find the uses with the blast-radius greps in dooph-ds-editing-tokens, and also grep the old literal (e.g. `38px`) across `src/`. Read every comment near each use: inline, JSDoc or header contract. Flag broken arithmetic in the hand-back; never quietly reword it. Prevents: an inline sum like `// 28px items + xxs inset + 1px border = 38px` (`SegmentedTabSelect.tsx`, no header contract) going silently false.
+- **After a value change, check every comment that states the old value.** Find the uses with the blast-radius greps in dooph-ds-editing-tokens, and also grep the old literal (the old pixel value, say) across `src/`. Read every comment near each use: inline, JSDoc or header contract. Flag broken arithmetic in the hand-back; never quietly reword it. Prevents: an inline sum of parts that adds up to the old value, in a file with no header contract, going silently false.
 
 ## Common mistakes
 
@@ -52,7 +52,7 @@ Everything in `dist/` is compiled from `src/`, and parts of `src/` are generated
 | "Now add the Tailwind aliases in both theme.css and index.css." | Both are generated. Run `npm run sync-tokens`. |
 | "Everything passes — type-check and build are clean." | A build is not lint, and it rewrites tracked files. Run `npm run lint`. |
 | "Type-check passes." | `npm run lint` = `tsc --noEmit`, then `check-conventions.mjs`. tsc alone checks no convention. |
-| "I should update the comment to reflect 40px instead of 38px" | A comment whose sum no longer balances is a design question. Flag it in the hand-back with the slack it reveals; don't reword it. |
+| "I should update the comment to reflect the new value" | A comment whose sum no longer balances is a design question. Flag it in the hand-back with the slack it reveals; don't reword it. |
 
 ## Verification
 

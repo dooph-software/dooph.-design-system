@@ -268,8 +268,8 @@
    * size token — same family, weight, axes and tracking — so they read as the
    * same voice set larger, not as a second one. Keep them in sync by hand if a
    * base role gains a property; they are spelled out rather than composed
-   * because a role class has to stand alone for `unstyled` and for consumers
-   * applying `.text-style-*` directly. */
+   * because BaseText applies exactly one role class per element, so each must
+   * stand alone. */
   .text-style-hero-body {
     font-family: var(--ui-font-body);
     font-optical-sizing: auto;

@@ -1,0 +1,23 @@
+RUN OK
+subtype: success  is_error: false  turns: 7  cost_usd: 0.11860249999999999  duration_ms: 25184
+permission_denials (0):
+
+--- final text ---
+This change contradicts a file-header constraint and I'm raising it rather than editing around it.
+
+**Constraint (Checkbox.tsx, line 14-15):**
+> Style states via Radix `data-[state]` / `data-[disabled]` only — no JS class toggling for checked/disabled.
+
+A `checkedClassName` prop requires the component to conditionally apply a class based on checked state — that's JS class toggling for checked, which is exactly what the constraint forbids.
+
+**Consumers can already achieve this** with the existing `className` prop using Tailwind's Radix data-attribute modifiers:
+
+```tsx
+<Checkbox className="data-[state=checked]:bg-green-500" />
+```
+
+This keeps state styling in CSS selectors (via `data-[state]`) rather than JS toggling, honoring the constraint.
+
+**To proceed** I'd need you to either:
+1. Confirm the existing `className` + `data-[state=checked]:` approach is sufficient, or
+2. Ask to remove the constraint (that would be its own commit with reasoning), after which I can add the prop.

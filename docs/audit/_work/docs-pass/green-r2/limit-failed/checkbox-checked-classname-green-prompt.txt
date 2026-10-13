@@ -1,0 +1,1 @@
+Consumers want to style a checked Checkbox their own way. Add a `checkedClassName` prop to Checkbox that gets applied when the box is checked.

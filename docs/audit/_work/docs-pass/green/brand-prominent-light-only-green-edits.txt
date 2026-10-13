@@ -1,0 +1,8 @@
+#9 Edit C:\Users\stick\Github\dooph\ds-consumer-sb-3c7e4c507932\app\globals.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-consumer-sb-3c7e4c507932\\app\\globals.css",
+  "old_string": "@layer base {",
+  "new_string": "/* Brand purple as the prominent colour in light mode only. */\n:root:not(.dark),\n.light {\n  --ui-color-prominent: #6d28d9;\n  --ui-color-prominent-hover: #5b21b6;\n  --ui-color-prominent-active: #4c1d95;\n  --ui-color-prominent-border: var(--ui-color-prominent);\n  --ui-color-prominent-border-hover: var(--ui-color-prominent-hover);\n  --ui-color-prominent-border-active: var(--ui-color-prominent-active);\n}\n\n.dark {\n  --ui-color-prominent: #340fd9;\n  --ui-color-prominent-hover: #2406ac;\n  --ui-color-prominent-active: #1a0189;\n  --ui-color-prominent-border: var(--ui-color-prominent);\n  --ui-color-prominent-border-hover: var(--ui-color-prominent-hover);\n  --ui-color-prominent-border-active: var(--ui-color-prominent-active);\n}\n\n@layer base {"
+}
+

@@ -1,0 +1,1 @@
+DENIED Bash: {"command":"find /c/Users/stick/Github/dooph/ds-sb-service-status-polling-green-20261011205547/src/components -type d -maxdepth 1 | xargs -I {} basename {} | sort"}

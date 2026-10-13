@@ -1,0 +1,4 @@
+Preparing worktree (detached HEAD 8493906)
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-sticker-tighter-green-20261011172521 (with-skills)
+snapshot tree: 9f7bdcbdd9d152fc47a52dd90331f13ae380e622 (main working tree)
+start tree:    8e9145d6a2d05680b3dc13b1610d093d7f5d085d (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-sticker-tighter-green-20261011172521/sandbox-start-tree)

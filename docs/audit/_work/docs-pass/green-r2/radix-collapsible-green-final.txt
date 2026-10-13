@@ -1,0 +1,38 @@
+RUN OK
+subtype: success  is_error: false  turns: 54  cost_usd: 1.6813777499999998  duration_ms: 331497
+permission_denials (0):
+
+--- final text ---
+All passing. Here's the hand-back:
+
+---
+
+```
+Lint:              npm run lint → exit 0, "conventions: 30 checks passed"
+Generated docs:    node scripts/generate-docs.mjs → components.md, inventory.md, client-references.md
+Skill mirrors:     node scripts/sync-skills.mjs → 2 changes (inventory.md in .claude/ and .agent/)
+Stories:           Default (collapsed, click to open), DefaultOpen (starts open),
+                   Disabled (trigger disabled, content hidden), Controlled (parent owns open/onOpenChange)
+Header contract:   none — the component is a thin Radix wrapper with no invariant a reasonable edit would break
+Design decisions:
+  - Chevron: ChevronDownIcon at IconSize.rg (14px), matching TextDropdownTrigger's standard size. Alternative: IconSize.sm (12px) or IconSize.md (16px). Settled: rg is the DS's default chevron size.
+  - Chevron flip: CSS rotate-180 via group-data-[state=open], transitioned by ds-motion-state (fast, standard ease). Alternative: a separate keyframe animation. Settled: transition is simpler and interruptible.
+  - Trigger text role: ButtonText (the button role, 14px). Alternative: LabelText or BodyText. Open.
+  - Content animation: height keyframes (ds-collapsible-open / ds-collapsible-close) reading --radix-collapsible-content-height, plus fade via animate-in / animate-out. Timing: fast duration with enter/exit eases, matching ds-motion-overlay. Alternative: base duration. Settled: fast matches the other small disclosures.
+  - Content forceMount: not exposed — Radix's Presence handles mount/unmount. If a consumer needs always-mounted content they can pass forceMount directly. Open.
+  - Story frame width: 288px (w-72) set in style with no token, because it is a demo constraint, not a component dimension.
+New dependency: @radix-ui/react-collapsible — a Radix primitive, same family as the existing Radix deps. Every consumer gains this transitive dependency.
+Allowlist entry: none — no "use client", no timers.
+```
+
+**Files created/changed:**
+
+| File | What |
+|---|---|
+| `src/components/Collapsible/Collapsible.tsx` | Root (pass-through), Trigger (label + flipping chevron), Content (animated height + fade) |
+| `src/components/Collapsible/index.ts` | Barrel: exports components + props types |
+| `src/components/Collapsible/Collapsible.stories.tsx` | Default, DefaultOpen, Disabled, Controlled |
+| `src/styles/index.css` | `@keyframes ds-collapsible-open` / `ds-collapsible-close` |
+| `src/styles/dooph-component-tokens.css` | `.ds-collapsible-content` helper (duration + ease per state) |
+| `src/index.ts` | `export * from './components/Collapsible'` |
+| `CHANGELOG.md` | Entry under `### Added > Components` |

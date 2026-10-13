@@ -1,0 +1,15 @@
+RUN OK
+subtype: success  is_error: false  turns: 18  cost_usd: 0.2913655  duration_ms: 85050
+permission_denials (0):
+
+--- final text ---
+Lint passes (tsc + 30 convention checks).
+
+**Change:** `--ui-color-secondary-disabled` retuned from `#f5f5f5` → `#ececec` (light block only; dark value `#222224` unchanged).
+
+**Blast radius** — every disabled surface uses this token:
+- **Direct aliases:** `--ui-color-primary-disabled`, `--ui-color-prominent-disabled`, `--ui-color-danger-disabled` (all point to `secondary-disabled`)
+- **Utility:** `bg-secondary-disabled`
+- **Components:** Input, DropdownTrigger (both standard and typeable), Button, Checkbox (unchecked), VerificationCode, SearchBox, DatePickerSplitTrigger, ShapeButton
+
+All disabled fills across all variants will be slightly darker in light mode, improving contrast.

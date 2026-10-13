@@ -64,7 +64,7 @@ The `1 − tail` clip holds the head at the end of the first lap while the tail 
 ## LoadingSpinner, spokes and star
 
 - Spokes: eight stroked paths in a 24-unit viewBox, stroke = `var(--ui-icon-stroke-width)`, colour on `stroke`.
-- Star: `STAR_SHAPE_PATH` (24-unit box, bounds x 1.5–22.4936, y 1.5064–22.4937), filled with `color`, transformed by `STAR_FIT_TRANSFORM` = scale `STAR_FIT_SCALE` (≈ 0.905 = 0.79 × 24 / 20.99) about (12, 12). Its tips are both its farthest points from the centre and its bounds, so it stays in the box at any angle (story `StarStaysInBox`).
+- Star: `STAR_SHAPE_PATH` (24-unit box, bounds x 1.5–22.4936, y 1.5064–22.4937), filled with `color`, transformed by `STAR_FIT_TRANSFORM` = scale `STAR_FIT_SCALE` (≈ 0.905 = (38/48) × 24 / 20.9936) about (12, 12). Its tips are both its farthest points from the centre and its bounds, so it stays in the box at any angle (story `StarStaysInBox`).
 - Both turn an inner `<g>` with `.ds-spinner-spin`: `ds-spinner-rotate` over `--ui-spinner-spokes-duration × --ds-spinner-time-scale`, linear. Reduced motion: no turn.
 
 ## ProgressIndicator, flat

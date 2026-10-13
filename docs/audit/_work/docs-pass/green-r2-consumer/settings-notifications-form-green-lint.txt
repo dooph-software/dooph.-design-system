@@ -1,0 +1,48 @@
+
+> ds-consumer-template@0.1.0 typecheck
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+typecheck exit: 0
+
+> ds-consumer-template@0.1.0 build
+> next build
+
+▲ Next.js 16.4.0 (Turbopack)
+⚠ Warning: Next.js ignored package-lock.json in C:\Users\stick\Github because it is outside the current Git repository (C:\Users\stick\Github\dooph\ds-consumer-sb-e1d3e28a71fb).
+ To use this directory, set `turbopack.root` in your Next.js config.
+
+✓ Running next.config.ts took 25ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 291ms
+  Running TypeScript ...
+  Finished TypeScript in 942ms ...
+  Collecting page data using 8 workers ...
+  Generating static pages using 8 workers (0/7) ...
+  Generating static pages using 8 workers (1/7) 
+  Generating static pages using 8 workers (3/7) 
+  Generating static pages using 8 workers (5/7) 
+✓ Generating static pages using 8 workers (7/7) in 508ms
+Turbopack build encountered 1 warning:
+./
+Warning: Failed to find font override values for font `Google Sans Flex`
+Skipping generating a fallback font.
+
+
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/settings/notifications
+├ ○ /dashboard
+└ ○ /settings/notifications
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+build exit: 0
+lint exit: 0

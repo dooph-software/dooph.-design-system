@@ -50,8 +50,7 @@ SplitButtonAction.displayName = "SplitButtonAction";
 /* SplitButtonTrigger (chevron) */
 
 export interface SplitButtonTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Accessible name of the icon-only trigger. Defaults to "More options"
-   * unless `aria-labelledby` is passed; pass a localised label to override. */
+  /** Accessible name of the icon-only trigger; "More options" unless `aria-labelledby` is passed. */
   "aria-label"?: string;
 }
 

@@ -1,0 +1,64 @@
+#15 Bash: grep -r "h-button-medium\|--button-height-medium\|46px" "/c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src" | head -20
+    | /c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/VerificationCode/CodeDigitInput.tsx: * - 46px (`size-code-digit`), `rounded-tight`, secondary surface/border.
+    | /c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/index.css:  .h-button-medium {
+    | /c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/tokens.css:  --ui-height-button-medium: 46px;
+    | /c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/tokens.css:  --ui-size-code-digit: 46px;
+    | /c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/tokens.css:  --ui-size-shape-button: 46px;
+    | /c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/tokens.css:  --ui-size-cta-chip-standard: 46px;
+#16 Bash: grep -A 5 -B 5 "h-button\|--ui-height-button" "/c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/tokens.css" | head -40
+    |   --ui-height-button-micro: 28px;
+    |   --ui-size-checkbox: 18px;
+    |   /* The check / indeterminate glyph box inside the checkbox (`.size-checkbox-icon`). */
+    |   --ui-size-checkbox-icon: 10px;
+    |   --ui-size-code-digit: 46px;
+    |   /* Avatar frame per size (`.size-avatar` / `.size-avatar-sm`). */
+#19 Bash: grep -n "size:" "/c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Button/Button.tsx" | head -20
+    | 127:      { variant: "secondary", size: "icon-sm", className: "shadow-none" },
+    | 128:      { variant: "secondary", size: "icon-micro", className: "shadow-none" },
+    | 129:      { variant: "danger", size: "icon", className: "shadow-none" },
+    | 130:      { variant: "danger", size: "icon-sm", className: "shadow-none" },
+    | 131:      { variant: "danger", size: "icon-micro", className: "shadow-none" },
+    | 135:      size: "standard",
+#21 Bash: grep -A 2 "\.h-button" "/c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/index.css"
+    |     height: var(--ui-height-button-big);
+    |   }
+    | --
+    |   .h-button-micro {
+    |     height: var(--ui-height-button-micro);
+    |   }
+#22 Bash: grep -r "h-button-medium\|size-button-medium\|icon-medium" "/c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components" --include="*.ts" --include="*.tsx" | grep -v node_modules
+    | /c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Button/Button.tsx:        medium: "h-button-medium ds-px-button-medium rounded-full",
+#23 Bash: grep -r "size-button-medium\|--ui-size-button-medium\|icon.*46\|46.*icon" "/c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src" --include="*.ts" --include="*.tsx" --include="*.css" | head -20
+    | (Bash completed with no output)
+#24 Bash: grep -E "\.size-button|\.h-button" "/c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/dooph-component-tokens.css"
+    | (Bash completed with no output)
+#26 Bash: grep "size-button" "/c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/index.css"
+    |   .size-button {
+    |   .size-button-sm {
+    |   .size-button-micro {
+#27 Bash: grep -A 3 "\.size-button" "/c/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/index.css"
+    |   }
+    | --
+    |   .size-button-micro {
+    |     width: var(--ui-height-button-micro);
+    |     height: var(--ui-height-button-micro);
+    |   }
+#54 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021" && npm run sync-tokens 2>&1
+    | > @dooph-software/design-system@5.3.0 sync-tokens
+    | > node scripts/sync-theme.mjs
+    | 
+    | ✓  @theme inline regenerated — 137 tokens mapped (index.css + theme.css + utils/twMergeTheme.ts).
+#55 Bash  [is_error]: cd "C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021" && npm run lint 2>&1
+    | 
+    | FAIL generated doc references out of date: skills/dooph-design-system-usage/references/components.md:1 out of date; run node scripts/generate-docs.mjs
+    | 
+    | why (generated doc references out of date): components.md, token-contract.md, the codebase inventory and the client-references list are generated from src/ by generate-docs.mjs and read as the truth by agents and consumers; a stale one documents props, defaults, tokens, files or client boundaries that no longer match the code.
+    | 
+    | conventions: 1 of 30 checks failed
+#56 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021" && node scripts/generate-docs.mjs 2>&1
+    | generate-docs: wrote skills/dooph-design-system-usage/references/components.md
+#57 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021" && npm run lint 2>&1
+    | > @dooph-software/design-system@5.3.0 lint
+    | > tsc --noEmit && node scripts/check-conventions.mjs
+    | 
+    | conventions: 30 checks passed

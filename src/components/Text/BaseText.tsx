@@ -14,7 +14,7 @@ import { buildTextStyle, type TextStyleProps } from "./textStyle";
 type BaseTextOwnProps = TextStyleProps & {
   /** Role providing the defaults. Ignored when `unstyled`. */
   variant?: TextVariant;
-  /** Drop the role class entirely and style from props/className alone. */
+  /** Drop the role class entirely and style from props alone. */
   unstyled?: boolean;
 };
 
@@ -53,7 +53,8 @@ type BaseTextRenderProps = BaseTextOwnProps & { as?: ElementType } & Omit<
  *
  * Two sources decide the final typography, in this order:
  *
- *   1. props        — written as inline style, so they beat everything
+ *   1. props        — written as inline style, so they beat every class
+ *                     (only the `style` prop outranks them)
  *   2. role class   — `.text-style-*`, the role's defaults, in the
  *                     `components` layer
  *
@@ -61,8 +62,8 @@ type BaseTextRenderProps = BaseTextOwnProps & { as?: ElementType } & Omit<
  * consuming apps alike: a prop is explicit and never loses to cascade order,
  * and the consts below keep values on the token scale. `className` carries
  * colour and layout, never typography (no `text-<size>`, `font-*`,
- * `leading-*` or `tracking-*` utilities). `style` still outranks props, as the
- * last-resort escape hatch.
+ * `leading-*` or `tracking-*` utilities). `style` merges last, so it still
+ * outranks props, but it is not a typography path: set typography with props.
  *
  * Values come from the dot-accessible constants (`Fonts`, `FontSizes`,
  * `FontWeights`, `Tracking`), which resolve to `var(--ui-*)` so a consuming

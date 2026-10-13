@@ -1,0 +1,40 @@
+#42 Edit C:\Users\stick\Github\dooph\ds-sb-tabs-medium-size-green-20261011204645\src\components\Tabs\constants.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-tabs-medium-size-green-20261011204645\\src\\components\\Tabs\\constants.ts",
+  "old_string": "  /** 28px compact item — Figma Toggle Option \"Micro\", radius-mini. */\n  micro: \"micro\",",
+  "new_string": "  /** 46px — matches the hero section's 46px Buttons (`h-button-medium`). */\n  medium: \"medium\",\n  /** 28px compact item — Figma Toggle Option \"Micro\", radius-mini. */\n  micro: \"micro\","
+}
+
+#43 Edit C:\Users\stick\Github\dooph\ds-sb-tabs-medium-size-green-20261011204645\src\components\Tabs\constants.ts
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-tabs-medium-size-green-20261011204645\\src\\components\\Tabs\\constants.ts",
+  "old_string": "  /** 38×38 icon-only tab. */\n  icon: \"icon\",",
+  "new_string": "  /** 46×46 icon-only tab, pairing with the medium text variant. */\n  iconMedium: \"icon-medium\",\n  /** 38×38 icon-only tab. */\n  icon: \"icon\","
+}
+
+#44 Edit C:\Users\stick\Github\dooph\ds-sb-tabs-medium-size-green-20261011204645\src\components\Toggle\toggleOption.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-tabs-medium-size-green-20261011204645\\src\\components\\Toggle\\toggleOption.ts",
+  "old_string": "        /** 28px — Figma Micro, radius-mini. */\n        micro: \"h-button-micro rounded-mini px-rg\",",
+  "new_string": "        /** 46px — matches the hero section's 46px Buttons. */\n        medium: \"h-button-medium rounded-tight px-rg\",\n        /** 28px — Figma Micro, radius-mini. */\n        micro: \"h-button-micro rounded-mini px-rg\","
+}
+
+#45 Edit C:\Users\stick\Github\dooph\ds-sb-tabs-medium-size-green-20261011204645\src\components\Toggle\toggleOption.ts
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-tabs-medium-size-green-20261011204645\\src\\components\\Toggle\\toggleOption.ts",
+  "old_string": "        /** 38×38 icon-only. */\n        icon: \"size-button p-0 rounded-tight\",",
+  "new_string": "        /** 46×46 icon-only. */\n        \"icon-medium\": \"size-button-medium p-0 rounded-tight\",\n        /** 38×38 icon-only. */\n        icon: \"size-button p-0 rounded-tight\","
+}
+
+#46 Edit C:\Users\stick\Github\dooph\ds-sb-tabs-medium-size-green-20261011204645\src\styles\index.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-tabs-medium-size-green-20261011204645\\src\\styles\\index.css",
+  "old_string": "  .size-button-micro {\n    width: var(--ui-height-button-micro);\n    height: var(--ui-height-button-micro);\n  }",
+  "new_string": "  .size-button-medium {\n    width: var(--ui-height-button-medium);\n    height: var(--ui-height-button-medium);\n  }\n  .size-button-micro {\n    width: var(--ui-height-button-micro);\n    height: var(--ui-height-button-micro);\n  }"
+}
+

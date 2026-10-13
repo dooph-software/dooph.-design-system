@@ -1,0 +1,44 @@
+#42 Bash: grep -n "ds-disabled-state\|ds-motion-state\|ds-focus-visible\|ds-focus-ring\|ds-focus-within\|ds-opacity-disabled\|ds-radix-data-disabled" "/c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639/src/styles/index.css" | head -100
+    | 1063:   * A host carrying ds-disabled-state already fades as a whole. */
+    | 1064:  .ds-dropdown-caret-host:not(.ds-disabled-state):is(:disabled, [aria-disabled="true"], [data-disabled])
+#43 Bash: find "/c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639/src/styles" -name "*.css" -type f
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639/src/styles/build.css
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639/src/styles/dooph-component-tokens.css
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639/src/styles/index.css
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639/src/styles/theme.css
+    | /c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639/src/styles/tokens.css
+#44 Bash: grep -n "ds-disabled-state\|ds-motion-state\|ds-focus-visible\|ds-focus-ring\|ds-focus-within\|ds-opacity-disabled\|ds-radix-data-disabled" "/c/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639/src/styles/dooph-component-tokens.css" | head -100
+    | 187:  .ds-focus-ring-on-focus:focus {
+    | 191:  .ds-focus-ring-danger-on-focus:focus {
+    | 198:  .ds-focus-ring-on-open {
+    | 199:    outline: var(--ds-focus-ring-width, var(--ui-focus-ring-width)) solid transparent;
+    | 203:  .ds-focus-ring-on-open[data-state="open"] {
+    | 580:  .ds-opacity-disabled {
+#69 Bash: ls "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639/src/components/"
+    | TextLink
+    | Toast
+    | Toggle
+    | Tooltip
+    | VerificationCode
+    | WavyDivider
+#70 Bash: mkdir -p "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639/src/components/CheckboxField"
+    | (Bash completed with no output)
+#83 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639" && node scripts/generate-docs.mjs 2>&1
+    | generate-docs: wrote skills/dooph-design-system-usage/references/components.md, .agents/skills/dooph-ds-codebase-map/references/inventory.md, skills/dooph-design-system-setup/references/client-references.md
+#84 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639" && node scripts/sync-skills.mjs 2>&1
+    | updated .claude/skills/dooph-ds-codebase-map/references/inventory.md
+    | updated .agent/skills/dooph-ds-codebase-map/references/inventory.md
+    | 
+    | synced 9 skills into .claude/skills and .agent/skills (2 changes)
+#85 Bash  [is_error]: cd "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639" && npm run lint 2>&1
+    | > tsc --noEmit && node scripts/check-conventions.mjs
+    | 
+    | src/components/CheckboxField/CheckboxField.stories.tsx(65,14): error TS2322: Type '{ render: () => Element; }' is not assignable to type 'StoryAnnotations$1<ReactRenderer, { label: ReactNode; hint?: ReactNode; variant?: CheckboxVariant | undefined; title?: string | undefined; ... 292 more ...; ref?: Ref<...> | undefined; }, { ...; }>'.
+    |   Property 'args' is missing in type '{ render: () => Element; }' but required in type '{ args: { label: ReactNode; hint?: ReactNode; variant?: CheckboxVariant | undefined; title?: string | undefined; content?: string | undefined; ... 291 more ...; ref?: Ref<...> | undefined; }; }'.
+    | src/components/CheckboxField/CheckboxField.stories.tsx(82,14): error TS2322: Type '{ render: () => JSX.Element; }' is not assignable to type 'StoryAnnotations$1<ReactRenderer, { label: ReactNode; hint?: ReactNode; variant?: CheckboxVariant | undefined; title?: string | undefined; ... 292 more ...; ref?: Ref<...> | undefined; }, { ...; }>'.
+    |   Property 'args' is missing in type '{ render: () => JSX.Element; }' but required in type '{ args: { label: ReactNode; hint?: ReactNode; variant?: CheckboxVariant | undefined; title?: string | undefined; content?: string | undefined; ... 291 more ...; ref?: Ref<...> | undefined; }; }'.
+#88 Bash: cd "C:/Users/stick/Github/dooph/ds-sb-checkbox-field-row-green-20261011212639" && npm run lint 2>&1
+    | > @dooph-software/design-system@5.3.0 lint
+    | > tsc --noEmit && node scripts/check-conventions.mjs
+    | 
+    | conventions: 30 checks passed

@@ -1,0 +1,1 @@
+Make /pricing a server-rendered page: it loads plans with `await getPlans()` from `lib/plans.ts` and shows each plan with a 'Choose plan' button linking to `/checkout?plan=<id>`. Add a 'Talk to sales' button at the bottom that opens our chat widget with `window.Intercom('show')`.

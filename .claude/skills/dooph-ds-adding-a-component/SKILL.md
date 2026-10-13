@@ -33,7 +33,7 @@ tokens (dooph-ds-editing-tokens).
    No `.css` in the component folder: the build compiles only
    `src/styles/build.css`, which imports `index.css` (placement:
    dooph-ds-styling). *Prevents:* styles
-   that work nowhere but never ship.
+   that never ship: emit-css compiles only `src/styles/build.css`.
 5. **Export it.** The barrel names the component, its `*Props` type and its
    consts; `src/index.ts`, the only package entry, gets
    `export * from './components/<Name>';`. *Prevents:* a component no consumer
@@ -56,7 +56,8 @@ tokens (dooph-ds-editing-tokens).
    dooph-ds-writing-components). Report it; never add one just to pass lint.
 9. **CHANGELOG:** one line under `## [Unreleased]` → `### Added`. Never bump
    `version`. *Prevents:* a release that ships a component nobody announced.
-10. **Verify, in order:** `node scripts/generate-docs.mjs` → `node
+10. **Verify, in order:** `npm run sync-tokens` (if you changed tokens or
+    a `.text-style-*`/`.h-*`/`.size-*`/`.min-w-*` … rule) → `node scripts/generate-docs.mjs` → `node
     scripts/sync-skills.mjs` (generate-docs rewrites the codebase-map skill's
     inventory, so the skill mirrors go stale) → `npm run lint` → every story
     in Storybook (`npm run storybook`). *Prevents:* handing back with lint red

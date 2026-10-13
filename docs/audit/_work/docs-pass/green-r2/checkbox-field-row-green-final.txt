@@ -1,0 +1,48 @@
+RUN OK
+subtype: success  is_error: false  turns: 39  cost_usd: 1.2320767000000001  duration_ms: 255476
+permission_denials (0):
+
+--- final text ---
+Everything is clean. Here's the hand-back:
+
+---
+
+```
+Lint:              npm run lint → exit 0, "conventions: 30 checks passed"
+Generated docs:    node scripts/generate-docs.mjs → components.md, inventory.md, client-references.md
+Skill mirrors:     node scripts/sync-skills.mjs → updated inventory.md in .claude/skills and .agent/skills (2 changes)
+Stories:           Default (unchecked with label), WithHint (label + hint), Checked, CheckedWithHint,
+                   Primary (primary variant checked), Disabled (with hint), DisabledChecked,
+                   Controlled (label toggles with state), AllVariants (both variants checked with hints)
+Header contract:   None — no invariant a reasonable edit would break. The component is a thin
+                   composition of Checkbox + LabelText + BodyText with no tricky geometry or
+                   switchable detail.
+Design decisions:
+  - Label text role: LabelText (the label role), matching the existing Checkbox WithLabel story.
+    Alternative: BodyText. Settled by convention (the root is a <label>).
+  - Hint text role: BodyText in text-text-secondary. Alternative: LabelText in secondary.
+    Open — no Figma spec was available, so this follows the common "secondary body"
+    pattern for form hints.
+  - Checkbox vertical alignment: mt-xxxs (2px) on the checkbox, with items-start on the row.
+    This centres the 16px checkbox against the ~20px label line-height ((20-16)/2 = 2).
+    Alternative: items-center (works without hint, breaks with multi-line hint).
+    Settled by the hint requirement.
+  - Gap between checkbox and text column: gap-sm (8px). Open.
+  - Gap between label and hint: gap-xxs (4px). Open.
+  - Ref target: the wrapping <label>, not the checkbox. className and style also land on the
+    label. Every checkbox prop (checked, onCheckedChange, variant, disabled) forwards to the
+    inner Checkbox. Settled — the consumer needs to position the row, and can access the
+    checkbox via Radix's data attributes or a separate ref if needed.
+  - disabled styling: ds-disabled-state on the label (fades the whole row); disabled also
+    forwards to Checkbox which handles its own disabled paint.
+New dependency / allowlist entry: none
+```
+
+**Files created:**
+- `src/components/CheckboxField/CheckboxField.tsx` — the component
+- `src/components/CheckboxField/index.ts` — barrel
+- `src/components/CheckboxField/CheckboxField.stories.tsx` — 9 stories
+
+**Files edited:**
+- `src/index.ts` — added `export * from './components/CheckboxField'`
+- `CHANGELOG.md` — added entry under `### Added`

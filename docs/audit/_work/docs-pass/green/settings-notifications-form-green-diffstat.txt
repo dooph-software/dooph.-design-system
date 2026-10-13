@@ -1,0 +1,2 @@
+A	app/settings/notifications/notifications-form.tsx
+A	app/settings/notifications/page.tsx

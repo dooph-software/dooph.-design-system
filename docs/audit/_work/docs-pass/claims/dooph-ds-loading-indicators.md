@@ -5,7 +5,7 @@ One factual claim per line, with its evidence (file:line in the working tree of 
 ## SKILL.md
 
 - S: Geometry is plain numbers in user units; clocks are CSS on tokens. Evidence: LS:7-9, 30-32; SG:12-13; MRS:33-38; IC:885-892.
-- S: Rendered size is the --ui-size-spinner-* token. Evidence: SG:38-43, 135-156; LS:157-161; PI:141-148, 243-247; SMS:66-67.
+- S: The rendered size of LoadingSpinner, ProgressIndicator and ShapeMorphSpinner is the --ui-size-spinner-* token (MorphRotationShape fills its box; WavyDivider is width 100%, height 12: MRS:29-30; WD:62-63). Evidence: SG:38-43, 135-156; LS:157-161; PI:141-148, 243-247; SMS:66-67.
 - S: LinearProgressIndicator has its own header contract. Evidence: .agents/skills/dooph-ds-codebase-map/references/inventory.md:264 (behavior, constraints).
 - S: LoadingSpinner variants flat, spokes, star; CSS only via .ds-spinner-*. Evidence: src/components/LoadingSpinner/constants.ts:4-19; LS:7-9, 160, 163, 223, 259.
 - S: ProgressIndicator variants flat, wavy; flat transitions one number --ds-pi-progress; wavy dash not transitioned, consumer drives progress. Evidence: src/components/ProgressIndicator/constants.ts:9-18; PI:99-103, 151; CT:280-283; constants.ts:11-16 ("The dash is not transitioned, so drive `progress` gradually").
@@ -69,7 +69,7 @@ One factual claim per line, with its evidence (file:line in the working tree of 
 - G: .ds-spinner-flat-turn rotates one turn per --ui-spinner-rotate-duration (1400ms), linear, independent loop. Evidence: IC:893-894, 920-925; TK:231; IC:900-901 ("two independent loops").
 - G: reduced motion: animations stop; grow 1, tail 0; arc rests at 0.72 from 12 o'clock. Evidence: IC:973-983; LS:24-25; IC:927-934 (sweep = min(max, 1 − 0)).
 - G: spokes: eight stroked paths, 24-unit viewBox, stroke = var(--ui-icon-stroke-width), colour on stroke. Evidence: LS:207, 216-217, 224-231.
-- G: star: STAR_SHAPE_PATH bounds, filled with color, STAR_FIT_TRANSFORM scale about (12,12) ≈ 0.905; tips set bounds, stays in box at any angle. Evidence: SG:81-95; LS:19-21, 260; computed STAR_FIT_SCALE 0.90504.
+- G: star: STAR_SHAPE_PATH bounds, filled with color, STAR_FIT_TRANSFORM scale about (12,12) ≈ 0.905 = (38/48) × 24 / 20.9936; tips set bounds, stays in box at any angle. Evidence: SG:81-95; LS:19-21, 260; computed STAR_FIT_SCALE 0.90504.
 - G: spokes and star turn via .ds-spinner-spin, ds-spinner-rotate over spokes-duration × time-scale, linear; reduced motion no turn. Evidence: IC:966-971, 979-982; LS:196, 223, 246, 259.
 - G: flat ring svg carries .ds-progress-ring and inline --ds-pi-progress, -c, -gap (user units), -gap-on = progress > 0. Evidence: PI:144-158.
 - G: --ds-pi-progress registered <number>; only transitioned value, slow (300ms) on standard. Evidence: CT:21-29, 280-283; TK:207, 215.
@@ -113,7 +113,7 @@ One factual claim per line, with its evidence (file:line in the working tree of 
 - M: paths in 0..100 units, 2 decimals, viewBox 0 0 100 100, overflow visible, fill currentColor. Evidence: engine/pathD.ts:3-10; MRS:361-364.
 - M: autoplay loader fit: bounds-normalized; rotationSafeScale = min over shapes of max(bw/mw, bh/mh); × ACTIVE_INDICATOR_SCALE 38/48; re-centred on frame bounds. Evidence: MRS:22-23, 139, 200; MG:4-5, 37-46, 63-73.
 - M: outer <g> spins once per --ui-shape-morph-passive-spin-duration in autoplay. Evidence: MRS:362; IC:867-872.
-- M: frame fit: 24-unit scale about a fixed centre, rotate(angle 50 50) only, pixel-identical at rest, ~9% spill reserved as padding. Evidence: MRS:23-26; MG:63-69; MorphRotationShape.stories.tsx:24-26, 33, 41 (an 11px inset in a 120px frame, as `style`).
+- M: frame fit: 24-unit scale about a fixed centre, rotate(angle 50 50) only, pixel-identical at rest, spill past the box depends on the shapes (rotation alone: Triple 13.5%, Double 10%, the rest 8% or less; overshoot adds more; the caret's shapes stay within about 9%), so frames reserve padding for the shapes in play; the stories inset 11px in a 120px frame. Evidence: MRS:23-27 (header updated to match); checker rotation-spill measurement 2026-10-11; MG:63-69; MorphRotationShape.stories.tsx:24-26, 33, 41 (an 11px inset in a 120px frame, as `style`).
 - M: polygonFromSvgPath normalizes by viewBox 24, centred at (0.5,0.5), never by bounds; Pentagon 23 units tall. Evidence: engine/svgPath.ts:9-15, 111, 127-128.
 - M: token defaults 498ms, linear() with 65 stops peaking ≈1.095, 650ms, 4666ms, 0.15. Evidence: TK:331-341; scripts/shapeMorphSpring.mjs:19, 75-87 (64 samples → 65 stops); computed max 1.0947.
 - M: timing prop writes inline custom properties; duration/ease in all modes; interval/passiveSpinDuration in autoplay; numbers are ms. Evidence: src/components/MorphRotationShape/timing.ts:1-30; MRS:102, 115, 121, 347.

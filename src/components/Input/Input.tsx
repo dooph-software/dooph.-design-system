@@ -187,6 +187,9 @@ export type InputProps =
       icon: ReactElement;
     });
 
+/** Text or number field whose `className` lands on the field chrome (the
+ * `<input>` itself for the text variant, the wrapper otherwise), while `ref`,
+ * `style` and every other prop land on the `<input>`. */
 const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {

@@ -1,0 +1,20 @@
+searchbox-icon-hover-nudge exit=3
+textlink-wavy-underline exit=1
+tabs-medium-size exit=1
+checkbox-field-row exit=1
+service-status-polling exit=1
+button-height-40 exit=1
+radix-collapsible exit=1
+checkbox-checked-classname exit=1
+chat-code-well-dark exit=1
+ALL-DONE
+--- r2 retry
+textlink-wavy-underline exit=0
+tabs-medium-size exit=3
+checkbox-field-row exit=0
+service-status-polling exit=0
+button-height-40 exit=0
+radix-collapsible exit=0
+checkbox-checked-classname exit=0
+chat-code-well-dark exit=0
+ALL-DONE

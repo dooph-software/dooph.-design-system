@@ -1,0 +1,8 @@
+#15 Edit C:\Users\stick\Github\dooph\ds-consumer-sb-3c81e84b1ef0\app\page.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-consumer-sb-3c81e84b1ef0\\app\\page.tsx",
+  "old_string": "      <section id=\"pricing\" className=\"flex flex-col items-center gap-xl px-xl py-xxxl\">",
+  "new_string": "      <section id=\"pricing\" className=\"dark flex flex-col items-center gap-xl px-xl py-xxxl bg-surface-page text-text\">"
+}
+

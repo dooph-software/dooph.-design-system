@@ -1,0 +1,56 @@
+#38 Edit C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\src\styles\tokens.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\\src\\styles\\tokens.css",
+  "old_string": "  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */\n}",
+  "new_string": "  --ui-caret-nudge: var(--ui-shape-morph-nudge); /* expression */\n  /* SearchBox magnifier lean on hover; 0deg = no lean. */\n  --ui-searchbox-icon-lean: -6deg; /* expression */\n}"
+}
+
+#39 Edit C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\src\styles\tokens.css
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\\src\\styles\\tokens.css",
+  "old_string": "    --ui-caret-nudge: 0;\n  }",
+  "new_string": "    --ui-caret-nudge: 0;\n    --ui-searchbox-icon-lean: 0deg;\n  }"
+}
+
+#40 Edit C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\src\styles\index.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\\src\\styles\\index.css",
+  "old_string": "  /* RevealChangeText — a slot that slides its content out from one edge and",
+  "new_string": "  /* ── SearchBox ──────────────────────────────────────────────────────────\n   * Expressive detail: a subtle lean on the magnifier icon when hovering\n   * the search field. Read from --ui-searchbox-icon-lean (expression token;\n   * the practical preset sets it to 0deg). */\n  .ds-searchbox-host:not([data-disabled]):hover .ds-expr-searchbox-icon-lean {\n    rotate: var(--ui-searchbox-icon-lean);\n  }\n\n  /* RevealChangeText — a slot that slides its content out from one edge and"
+}
+
+#41 Edit C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\src\components\SearchBox\SearchBox.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\\src\\components\\SearchBox\\SearchBox.tsx",
+  "old_string": "/**\n * A search input field styled per the design system.\n * Larger corner radius (rounded-soft) and leading search icon distinguish it from Input.\n * Accepts an optional keyboard shortcut indicator on the trailing edge.\n * Twin of `DropdownMenuSearch` (same icon + input + hotkey row, no menu): apply row fixes to both.\n * `className` styles the bordered field `<div>`; `ref`, `style` and every other prop go to the `<input>`.\n *\n * @example\n * <SearchBox placeholder=\"Search...\" shortcut={['⌘', 'K']} />\n */",
+  "new_string": "/**\n * A search input field styled per the design system.\n * Larger corner radius (rounded-soft) and leading search icon distinguish it from Input.\n * On hover the magnifier icon leans slightly (expressive detail, token `--ui-searchbox-icon-lean`).\n * Accepts an optional keyboard shortcut indicator on the trailing edge.\n * Twin of `DropdownMenuSearch` (same icon + input + hotkey row, no menu): apply row fixes to both.\n * `className` styles the bordered field `<div>`; `ref`, `style` and every other prop go to the `<input>`.\n *\n * ## constraints\n * - The icon lean must stay neutralisable by the practical preset (`--ui-searchbox-icon-lean: 0deg`).\n *   Failure: a practical product still showing the hover lean.\n *\n * @example\n * <SearchBox placeholder=\"Search...\" shortcut={['⌘', 'K']} />\n */"
+}
+
+#42 Edit C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\src\components\SearchBox\SearchBox.tsx
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\\src\\components\\SearchBox\\SearchBox.tsx",
+  "old_string": "        className={cn(\n          'flex items-center gap-sm',",
+  "new_string": "        className={cn(\n          'ds-searchbox-host flex items-center gap-sm',"
+}
+
+#43 Edit C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\src\components\SearchBox\SearchBox.tsx
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\\src\\components\\SearchBox\\SearchBox.tsx",
+  "old_string": "        <SearchIcon size={IconSize.md} className=\"shrink-0 text-text-tertiary\" />",
+  "new_string": "        <SearchIcon size={IconSize.md} className=\"shrink-0 text-text-tertiary ds-motion-state ds-expr-searchbox-icon-lean\" />"
+}
+
+#44 Edit C:\Users\stick\Github\dooph\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\src\components\SearchBox\SearchBox.stories.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:\\Users\\stick\\Github\\dooph\\ds-sb-searchbox-icon-hover-nudge-green-20261011171204\\src\\components\\SearchBox\\SearchBox.stories.tsx",
+  "old_string": "export const AllStates: Story = {\n  render: () => (\n    <div className=\"flex flex-col gap-md p-lg\">\n      <SearchBox placeholder=\"Default\" />\n      <SearchBox placeholder=\"With shortcut\" shortcut={['⌘', 'K']} />\n      <SearchBox placeholder=\"Disabled\" shortcut={['⌘', 'K']} disabled />\n    </div>\n  ),\n};",
+  "new_string": "export const AllStates: Story = {\n  render: () => (\n    <div className=\"flex flex-col gap-md p-lg\">\n      <SearchBox placeholder=\"Default\" />\n      <SearchBox placeholder=\"With shortcut\" shortcut={['⌘', 'K']} />\n      <SearchBox placeholder=\"Disabled\" shortcut={['⌘', 'K']} disabled />\n    </div>\n  ),\n};\n\n/** Hover the boxes: the left column leans the magnifier, the right does not. */\nexport const Practical: Story = {\n  render: () => (\n    <div className=\"flex gap-xl p-lg\">\n      <div className=\"flex flex-col gap-md\">\n        <SearchBox placeholder=\"Default (signature)\" shortcut={['⌘', 'K']} />\n      </div>\n      <div className=\"flex flex-col gap-md\" data-ds-expression=\"practical\">\n        <SearchBox placeholder=\"Practical\" shortcut={['⌘', 'K']} />\n      </div>\n    </div>\n  ),\n};"
+}
+

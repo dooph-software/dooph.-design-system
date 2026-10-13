@@ -1,0 +1,48 @@
+#48 Edit C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/index.css  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/styles/index.css",
+  "old_string": "  .size-button-micro {\n    width: var(--ui-height-button-micro);\n    height: var(--ui-height-button-micro);\n  }",
+  "new_string": "  .size-button-medium {\n    width: var(--ui-height-button-medium);\n    height: var(--ui-height-button-medium);\n  }\n  .size-button-micro {\n    width: var(--ui-height-button-micro);\n    height: var(--ui-height-button-micro);\n  }"
+}
+
+#49 Edit C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Tabs/constants.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Tabs/constants.ts",
+  "old_string": "  /** 38px — Figma `buttonSizes/buttonHeight`, `rg` (10px) horizontal padding. */\n  standard: \"standard\",\n  /** 34px — Figma `buttonSizes/smallButtonHeight`, `rg` (10px) padding. */\n  sm: \"sm\",\n  /** 28px compact item — Figma Toggle Option \"Micro\", radius-mini. */\n  micro: \"micro\",",
+  "new_string": "  /** 46px — sits beside hero-section 46px Buttons. */\n  medium: \"medium\",\n  /** 38px — Figma `buttonSizes/buttonHeight`, `rg` (10px) horizontal padding. */\n  standard: \"standard\",\n  /** 34px — Figma `buttonSizes/smallButtonHeight`, `rg` (10px) padding. */\n  sm: \"sm\",\n  /** 28px compact item — Figma Toggle Option \"Micro\", radius-mini. */\n  micro: \"micro\","
+}
+
+#50 Edit C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Tabs/constants.ts
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Tabs/constants.ts",
+  "old_string": "  /** 38×38 icon-only tab. */\n  icon: \"icon\",\n  /** 34×34 icon-only tab, pairing with the small variants. */\n  iconSm: \"icon-sm\",",
+  "new_string": "  /** 46×46 icon-only tab, pairing with medium. */\n  iconMedium: \"icon-medium\",\n  /** 38×38 icon-only tab. */\n  icon: \"icon\",\n  /** 34×34 icon-only tab, pairing with the small variants. */\n  iconSm: \"icon-sm\","
+}
+
+#51 Edit C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Toggle/toggleOption.ts  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Toggle/toggleOption.ts",
+  "old_string": "      size: {\n        /** 38px — Figma Standard. */\n        standard: \"h-button rounded-tight px-rg\",\n        /** 34px — Figma Small. */\n        sm: \"h-button-sm rounded-tight px-rg\",\n        /** 28px — Figma Micro, radius-mini. */\n        micro: \"h-button-micro rounded-mini px-rg\",\n        /** Follows the parent's height (nested segmented rows). */\n        fill: \"h-full rounded-tight px-rg\",\n        /** 38×38 icon-only. */\n        icon: \"size-button p-0 rounded-tight\",\n        /** 34×34 icon-only. */\n        \"icon-sm\": \"size-button-sm p-0 rounded-tight\",\n        /** 28×28 icon-only — Figma Micro icon. */\n        \"icon-micro\": \"size-button-micro p-0 rounded-mini\",\n      },",
+  "new_string": "      size: {\n        /** 46px — pairs with hero-section 46px Buttons. */\n        medium: \"h-button-medium rounded-tight px-md\",\n        /** 38px — Figma Standard. */\n        standard: \"h-button rounded-tight px-rg\",\n        /** 34px — Figma Small. */\n        sm: \"h-button-sm rounded-tight px-rg\",\n        /** 28px — Figma Micro, radius-mini. */\n        micro: \"h-button-micro rounded-mini px-rg\",\n        /** Follows the parent's height (nested segmented rows). */\n        fill: \"h-full rounded-tight px-rg\",\n        /** 46×46 icon-only — pairs with medium. */\n        \"icon-medium\": \"size-button-medium p-0 rounded-tight\",\n        /** 38×38 icon-only. */\n        icon: \"size-button p-0 rounded-tight\",\n        /** 34×34 icon-only. */\n        \"icon-sm\": \"size-button-sm p-0 rounded-tight\",\n        /** 28×28 icon-only — Figma Micro icon. */\n        \"icon-micro\": \"size-button-micro p-0 rounded-mini\",\n      },"
+}
+
+#52 Edit C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Tabs/Tabs.stories.tsx  FIRST
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Tabs/Tabs.stories.tsx",
+  "old_string": "          {([TabSize.standard, TabSize.sm, TabSize.micro] as const).map((size) => (",
+  "new_string": "          {([TabSize.medium, TabSize.standard, TabSize.sm, TabSize.micro] as const).map((size) => ("
+}
+
+#53 Edit C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Tabs/Tabs.stories.tsx
+{
+  "replace_all": false,
+  "file_path": "C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021/src/components/Tabs/Tabs.stories.tsx",
+  "old_string": "          {([TabSize.icon, TabSize.iconSm, TabSize.iconMicro] as const).map((size) => (",
+  "new_string": "          {([TabSize.iconMedium, TabSize.icon, TabSize.iconSm, TabSize.iconMicro] as const).map((size) => ("
+}
+

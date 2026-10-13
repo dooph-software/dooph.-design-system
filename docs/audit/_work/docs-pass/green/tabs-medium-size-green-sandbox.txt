@@ -1,0 +1,5 @@
+Preparing worktree (detached HEAD 8493906)
+Updating files:  96% (2291/2362)Updating files:  97% (2292/2362)Updating files:  98% (2315/2362)Updating files:  99% (2339/2362)Updating files: 100% (2362/2362)Updating files: 100% (2362/2362), done.
+sandbox:       C:/Users/stick/Github/dooph/ds-sb-tabs-medium-size-green-20261011172021 (with-skills)
+snapshot tree: 082e401f937f9f77ec7bec5df87f97a4fb918d8c (main working tree)
+start tree:    118508b3b109f9fecde26783f7cb75432de1c20c (sandbox at hand-over; recorded in C:/Users/stick/Github/dooph/dooph-Design-System/.git/worktrees/ds-sb-tabs-medium-size-green-20261011172021/sandbox-start-tree)

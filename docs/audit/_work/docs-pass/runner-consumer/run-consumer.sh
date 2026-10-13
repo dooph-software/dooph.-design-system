@@ -72,9 +72,9 @@ P="$OUT/$ID-$MODE"
 if [ -n "${SCENARIO_PROMPT:-}" ]; then
   PROMPT=$SCENARIO_PROMPT
 else
-  SIDE=$(node "$HERE/scenario-prompt.mjs" --side "$ID") || exit 2
+  SIDE=$(node "$HERE/../scenario-prompt.mjs" --side "$ID") || exit 2
   [ "$SIDE" = consumer ] || { echo "refusing: $ID is a $SIDE scenario; run it with run-scenario.sh" >&2; exit 2; }
-  PROMPT=$(node "$HERE/scenario-prompt.mjs" "$ID") || exit 2
+  PROMPT=$(node "$HERE/../scenario-prompt.mjs" "$ID") || exit 2
 fi
 printf '%s\n' "$PROMPT" > "$P-prompt.txt"
 
@@ -144,7 +144,7 @@ echo "running $ID ($MODE, consumer) in $SB ..."
 CLAUDE_EXIT=$?
 echo "claude exit: $CLAUDE_EXIT" >> "$P-stderr.txt"
 
-node "$HERE/extract-run.mjs" "$P.jsonl" "$P" "$MODE" "$CLAUDE_EXIT" "$CANARY_JSON" "$P-debug.log"
+node "$HERE/../extract-run.mjs" "$P.jsonl" "$P" "$MODE" "$CLAUDE_EXIT" "$CANARY_JSON" "$P-debug.log"
 EXTRACT_EXIT=$?
 
 STEP_FAILS=()

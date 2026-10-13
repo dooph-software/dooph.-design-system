@@ -1,0 +1,55 @@
+#5 Bash: find /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components -type f -name "*.ts*" | head -30
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AnimatedText/RollingDigitsText.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AnimatedText/ShimmerText.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AnimatedText/UnderlineLinkText.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AnimatedText/useChangeSwap.ts
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/Avatar/Avatar.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/Avatar/Avatar.tsx
+#6 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/ 2>/dev/null | head -20
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 21:12 HotkeyIndicator
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 21:12 Icons
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 21:12 Input
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 21:12 LinearProgressIndicator
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 21:12 LoadingSpinner
+    | drwxr-xr-x 1 stick 197609 0 Oct 11 21:12 Menu
+#7 Bash: find /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat -type f
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIToolPart.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AITurnSummary.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/ChatDivider.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/index.ts
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/UserMessageHeader.tsx
+#12 Bash: find /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250 -name "*.css" -type f
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/scripts/check-conventions.fixtures/styles/tokens.css
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/styles/build.css
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/styles/dooph-component-tokens.css
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/styles/index.css
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/styles/theme.css
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/styles/tokens.css
+#18 Bash: grep -r "code\|CodeBlock\|pre\|well" /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/*.stories.tsx | head -30
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIChatStreaming.stories.tsx: * as the code a consuming app writes:
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIChatStreaming.stories.tsx:              const previous = turns[index - 1]?.[0];
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIChatStreaming.stories.tsx:                previous &&
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIChatStreaming.stories.tsx:                (previous.meta.modelId !== head.meta.modelId ||
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIChatStreaming.stories.tsx:                  previous.meta.effort !== head.meta.effort);
+    | /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIChatStreaming.stories.tsx: * switch divider; press stop mid-stream to see what a stop leaves behind. */
+#19 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/*.stories.tsx
+    | -rw-r--r-- 1 stick 197609  7217 Oct 11 21:12 /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIChatParts.stories.tsx
+    | -rw-r--r-- 1 stick 197609 22304 Oct 11 21:12 /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIChatStreaming.stories.tsx
+    | -rw-r--r-- 1 stick 197609  8106 Oct 11 21:12 /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIModelSelect.stories.tsx
+    | -rw-r--r-- 1 stick 197609  5559 Oct 11 21:12 /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/components/AIChat/AIPromptInput.stories.tsx
+#21 Bash: grep -A 100 "^.dark {" /c/Users/stick/Github/dooph/ds-sb-chat-code-well-dark-green-20261011211250/src/styles/tokens.css | grep -i "code\|background"
+    | (Bash completed with no output)
+#39 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-chat-code-well-dark-green-20261011211250" && npm run sync-tokens 2>&1
+    | > @dooph-software/design-system@5.3.0 sync-tokens
+    | > node scripts/sync-theme.mjs
+    | 
+    | ✓  @theme inline regenerated — 137 tokens mapped (index.css + theme.css + utils/twMergeTheme.ts).
+#40 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-chat-code-well-dark-green-20261011211250" && node scripts/generate-docs.mjs 2>&1 && node scripts/sync-skills.mjs 2>&1
+    | generate-docs: wrote skills/dooph-design-system-theming/references/token-contract.md
+    | skill mirrors already match .agents/skills
+#41 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-chat-code-well-dark-green-20261011211250" && npm run lint 2>&1
+    | > @dooph-software/design-system@5.3.0 lint
+    | > tsc --noEmit && node scripts/check-conventions.mjs
+    | 
+    | conventions: 30 checks passed

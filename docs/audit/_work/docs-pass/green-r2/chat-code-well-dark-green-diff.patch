@@ -1,0 +1,71 @@
+diff --git a/scripts/sync-theme.mjs b/scripts/sync-theme.mjs
+index 58bb158..9644805 100644
+--- a/scripts/sync-theme.mjs
++++ b/scripts/sync-theme.mjs
+@@ -254,6 +254,8 @@ const EXCLUDED = new Set([
+   "ui-color-focus-ring-prominent",
+   "ui-color-focus-ring-primary",
+   "ui-color-focus-ring-danger",
++  // Chat code-block well — raw var() in ds-chat-prose pre only
++  "ui-color-chat-code-well",
+ ]);
+ 
+ // ── Derive the @theme key for a given --ui-* variable name ───────────────────
+diff --git a/skills/dooph-design-system-theming/references/token-contract.md b/skills/dooph-design-system-theming/references/token-contract.md
+index b2a2889..261fdd3 100644
+--- a/skills/dooph-design-system-theming/references/token-contract.md
++++ b/skills/dooph-design-system-theming/references/token-contract.md
+@@ -8,8 +8,8 @@ Every DS token (a custom property) in `@dooph-software/design-system/styles.css`
+ 
+ | Block | Selector | Cascade layer | Declarations |
+ | --- | --- | --- | --- |
+-| light | `:root, .light` | `ds.tokens` | 289 |
+-| dark | `.dark` | `ds.tokens` | 84 |
++| light | `:root, .light` | `ds.tokens` | 290 |
++| dark | `.dark` | `ds.tokens` | 85 |
+ | reduced motion | `@media (prefers-reduced-motion: reduce) > :root, .light` | `ds.tokens` | 7 |
+ | expression defaults | `:root` | `ds.tokens` | 2 |
+ | practical preset | `[data-ds-expression="practical"]` | `ds.expression` | 2 |
+@@ -224,6 +224,7 @@ AI chat parts (AIToolPart, AIThinkingPart, AITurnSummary, AIPromptInput…).
+ | `--ui-chat-model-swatch-radius` | `3px` | same |  |  |  |
+ | `--ui-width-chat-model-tooltip` | `242px` | same |  |  | AIModelTooltipContent panel (Figma 761:2843). |
+ | `--ui-chat-prose-code-radius` | `4px` | same |  |  | Inline code inside ds-chat-prose. |
++| `--ui-color-chat-code-well` | `var(--ui-color-surface-secondary)` | `#0e0e10` | alias |  | Code-block well inside ds-chat-prose (pre). |
+ | `--ui-chat-prose-link-offset` | `3px` | same |  |  | Links and blockquotes inside ds-chat-prose. |
+ | `--ui-chat-prose-quote-border-width` | `2px` | same |  |  |  |
+ 
+diff --git a/src/styles/dooph-component-tokens.css b/src/styles/dooph-component-tokens.css
+index 7dafd0c..9ff2fc4 100644
+--- a/src/styles/dooph-component-tokens.css
++++ b/src/styles/dooph-component-tokens.css
+@@ -915,7 +915,7 @@
+   .ds-chat-prose pre {
+     overflow-x: auto;
+     border-radius: var(--ui-radius-tight);
+-    background-color: var(--ui-color-surface-secondary);
++    background-color: var(--ui-color-chat-code-well);
+     padding: var(--ui-spacing-rg);
+     box-shadow: var(--ui-shadow-button);
+   }
+diff --git a/src/styles/tokens.css b/src/styles/tokens.css
+index 7abe3f5..b8f8140 100644
+--- a/src/styles/tokens.css
++++ b/src/styles/tokens.css
+@@ -277,6 +277,8 @@
+   --ui-width-chat-model-tooltip: 242px;
+   /* Inline code inside ds-chat-prose. */
+   --ui-chat-prose-code-radius: 4px;
++  /* Code-block well inside ds-chat-prose (pre). */
++  --ui-color-chat-code-well: var(--ui-color-surface-secondary);
+   /* Links and blockquotes inside ds-chat-prose. */
+   --ui-chat-prose-link-offset: 3px;
+   --ui-chat-prose-quote-border-width: 2px;
+@@ -787,6 +789,8 @@
+   --ui-color-surface-primary: #000000;
+   --ui-color-surface-secondary: #242425;
+ 
++  --ui-color-chat-code-well: #0e0e10;
++
+   --ui-color-modal-surface: #212124;
+   --ui-color-modal-backdrop: rgba(0, 0, 0, 0.7);
+ 

@@ -1,0 +1,7 @@
+#2 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-4bfade9232a0 -type f \( -name "*.tsx" -o -name "*.jsx" -o -name "*.ts" -o -name "*.js" \) | head -30
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-4bfade9232a0/node_modules/@dooph-software/design-system/dist/chunk-4EAZJOAA.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-4bfade9232a0/node_modules/@dooph-software/design-system/dist/chunk-4H5HNCEW.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-4bfade9232a0/node_modules/@dooph-software/design-system/dist/chunk-4M4QAFR2.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-4bfade9232a0/node_modules/@dooph-software/design-system/dist/chunk-4NPDOA3I.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-4bfade9232a0/node_modules/@dooph-software/design-system/dist/chunk-4SMVL4Z3.js
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-4bfade9232a0/node_modules/@dooph-software/design-system/dist/chunk-4TPI6IUA.js

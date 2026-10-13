@@ -7,8 +7,8 @@ Every factual claim in `.agents/skills/dooph-ds-editing-tokens/SKILL.md` (S) and
 | # | Claim | Evidence |
 |---|---|---|
 | S0a | A `.dark .x` rule in component CSS still applies inside a `.light` island under `<html class="dark">` (descendant selector matches any `.dark` ancestor), and no consumer token override reaches a literal paint | tokens.css:7-11 (`.light` / `.dark` classes as theme scopes); tokens.css:19-22 (consumer overrides act on `--ui-*`, which a literal bypasses) |
-| S1 | tokens.css holds every `--ui-*` value, one block per mode and preset | src/styles/tokens.css:35-36 (light), :765 (dark), :923-934 (reduced motion), :939-947 (expression defaults), :957-962 (practical preset); scripts/generate-docs.mjs:369-375 (these five blocks are the only kinds allowed) |
-| S2 | The theme utilities, theme.css and cn's merge lists are generated from tokens.css | scripts/sync-theme.mjs:3-7, :50, :316-319, :353, :386, :457 |
+| S1 | tokens.css defines every `--ui-*` token, one block per mode and preset; elsewhere in src/styles only the ShimmerText re-bases in dooph-component-tokens.css set one (claim-fix round, 2026-10-11) | src/styles/dooph-component-tokens.css:641-648 (the only `--ui-*` declarations in src/styles outside tokens.css; the only TS set is a story, OutlineButton.stories.tsx:74); src/styles/tokens.css:35-36 (light), :765 (dark), :923-934 (reduced motion), :939-947 (expression defaults), :957-962 (practical preset); scripts/generate-docs.mjs:369-375 (these five blocks are the only kinds allowed) |
+| S2 | The theme utilities, theme.css and the token contract are generated from tokens.css; cn's merge lists are generated from tokens.css together with the class rules in index.css (claim-fix round, 2026-10-11) | scripts/sync-theme.mjs:386-397 (text-style and size lists read index.css); scripts/sync-theme.mjs:3-7, :50, :316-319, :353, :386, :457 |
 | S3 | The token contract is generated from tokens.css | scripts/generate-docs.mjs:5, :24-25, :394-396 |
 | S4 | Light block selector `:root, .light`, layer `ds.tokens` | tokens.css:33-36 |
 | S5 | sync-theme reads only the light block | sync-theme.mjs:20-23, :295-313 (regex takes the first `:root`/`:root, .light` match) |
@@ -24,6 +24,7 @@ Every factual claim in `.agents/skills/dooph-ds-editing-tokens/SKILL.md` (S) and
 | S12c | An allowlisted stylesheet hex line counts only in comment-blanked code, so a commented-out line reads as stale | scripts/check-conventions.mjs:370-372 (`codeLines` from `f.code`), :375, :385; fixture `styles/dark-outside-tokens.commented.css` |
 | S13 | No `.dark` selector exists in src/ CSS outside tokens.css (red flag basis) | `grep -rn "\.dark\b" src --include=*.css` → only src/styles/tokens.css |
 | S14 | A light-block alias to the current paint leaves light unchanged | tokens.css:859-891 comment at :849-856 (aliases resolve where declared); worked precedent: the disabled aliases tokens.css:49, :80 |
+| S15a | Rule 3: grep the old literal across `src/` and flag, never reword, every comment that states the old value or a sum that no longer balances (task 11, 2026-10-11) | maintainer rule: AGENTS.md Guardrails ("Changing a token's value…"); dooph-ds-codebase-map SKILL.md Rules; worked case: src/components/SegmentedTabSelect/SegmentedTabSelect.tsx:67 (inline sum) |
 | S15 | Blast radius items: aliases, utility, raw var() reads, `DS_COLOR_TOKENS` | tokens.css (aliases e.g. :48-49, :94-103); sync-theme.mjs:259-293 (utility mapping); dooph-component-tokens.css:911, :918 (raw reads); src/utils/color.ts:21-38 |
 | S16 | Alias/color-mix/shadow reaching a dark-changed token must be repeated verbatim in `.dark` | check-conventions.mjs:323-342 (any `var(--ui-` in the value counts; transitive via `reachesDark`); tokens.css:849-856 |
 | S17 | A `.dark` literal equal to its light value fails lint | check-conventions.mjs:336-339 |
@@ -34,6 +35,7 @@ Every factual claim in `.agents/skills/dooph-ds-editing-tokens/SKILL.md` (S) and
 | S22 | Lint check name "generated theme out of date" | check-conventions.mjs:681 |
 | S23 | Only `--ui-color-*`, `--ui-shadow-*`, `--ui-radius-*`, `--ui-font-<role>`, `--ui-text-*`, `--ui-spacing-*`, plus the names in `ALIASES`, map to theme keys | sync-theme.mjs:259-293 (prefix rules); :84-98 (ALIASES, incl. the `ui-prominent-color*` trio at :94-97), checked before the prefix rules at :264 |
 | S24 | `EXCLUDED` keeps a token out of the theme | sync-theme.mjs:100-104, :261 |
+| S24a | Rule 7 inlines the four steps: marker on one line in the `:root` expression block, neutral value in the preset, name in the "Expression tokens" group of `EXCLUDED`, read only in a `.ds-expr-*` rule; no lint check sees a missing `EXCLUDED` entry (task 11, 2026-10-11) | tokens.css:938-947, :957-962; sync-theme.mjs:215-218; check-conventions.mjs:244-284 (expressionSystem reads tokens.css and stylesheets, never sync-theme.mjs) |
 | S25 | Expression lint check name "expression tokens set or read outside the expression system" | check-conventions.mjs:651 |
 | S26 | Failure prevented: a detail the practical preset cannot switch | check-conventions.mjs:652 |
 | S27 | A component's own motion token only for loops, staggers, the generated spring | tokens.css:193-195 |
@@ -43,23 +45,24 @@ Every factual claim in `.agents/skills/dooph-ds-editing-tokens/SKILL.md` (S) and
 | S31 | The comment above a token is published in the token contract | scripts/generate-docs.mjs:507 (Comment column = first sentence of the comment above), :414-419 (`above`) |
 | S32 | `node scripts/generate-docs.mjs` regenerates it; lint check "generated doc references out of date" | generate-docs.mjs:9-10; check-conventions.mjs:702 |
 | S33 | Values marked PLACEHOLDER in tokens.css are the maintainer's to tune, pending the dark pass | tokens.css:803-806, :833-836, :843-847 (each "PLACEHOLDER … pending the maintainer's dark pass" / "until the dark pass") |
-| S34 | Rationalization quotes (chat-code-well-dark thinking [26] in full, text [29], final; disabled-fill-darker text [45]) | docs/audit/_work/docs-pass/baseline/SCORES.md:174-176, :157 |
+| S34 | Rationalization quotes, with the scenario's selectors stripped from the first row (task 11, 2026-10-11); source: chat-code-well-dark thinking [26], text [29], final; disabled-fill-darker text [45] | docs/audit/_work/docs-pass/baseline/SCORES.md:174-176, :157 |
 | S35 | Storybook runs via `npm run storybook` | package.json:59 |
 | S36 | The Theme toolbar's Dark toggles `.dark` on `<html>` | .storybook/preview.ts:6-24 |
 | S37 | `data-ds-expression="practical"` is the preset attribute | tokens.css:958 |
+| S37a | Verify order: sync-tokens, then generate-docs, then sync-skills, because generate-docs rewrites the codebase-map inventory and lint fails on stale mirrors; lint's last line is `conventions: N checks passed` (task 11, 2026-10-11) | scripts/generate-docs.mjs:6, :573; scripts/check-conventions.mjs:710-712, :754 |
 | S38 | `npm run lint` = tsc then check-conventions | package.json:61 |
 
 ## references/recipes.md
 
 | # | Claim | Evidence |
 |---|---|---|
-| R1 | `.ds-chat-prose pre` paints `var(--ui-color-surface-secondary)` | src/styles/dooph-component-tokens.css:915-918 |
-| R2 | Inline `code` in the prose paints it too | dooph-component-tokens.css:903, :911 |
-| R3 | Avatar uses `bg-surface-secondary` | src/components/Avatar/Avatar.tsx:16; index.css:136 maps it |
-| R4 | `surface-secondary` is a `DS_COLOR_TOKENS` name | src/utils/color.ts:34 |
+| R1 | `.ds-chat-prose :is(td, th)` draws its borders in `var(--ui-color-border-primary)` (task 11, 2026-10-11) | src/styles/dooph-component-tokens.css:930-931 |
+| R2 | The prose's link underline, blockquote rule and `hr` use it too (task 11, 2026-10-11) | dooph-component-tokens.css:883, :890-891, :898 |
+| R3 | The `border-border-primary` utility is used across many component files (task 11, 2026-10-11) | `grep -rl border-border-primary src --include=*.ts --include=*.tsx` (13 non-story files on 2026-10-11); index.css:147 maps `--color-border-primary` |
+| R4 | `border-primary` is a `DS_COLOR_TOKENS` name (task 11, 2026-10-11) | src/utils/color.ts:31 |
 | R5 | Chat-prose tokens sit in the light block (placement "beside the other chat-prose tokens") | tokens.css:278-282 |
 | R6 | A `.dark` line with its own (different) value satisfies the dark check without an alias-group copy | check-conventions.mjs:335-342 (only identical non-alias literals or missing aliases fail) |
-| R7 | `pre code` is transparent, so only `pre` paints the block well | dooph-component-tokens.css:922-923 |
+| R7 | `--ui-color-chat-table-border` and `border-chat-table-border` are hypothetical: no such token or class exists (task 11, 2026-10-11) | `grep -rn chat-table src` → none |
 | R8 | `--ui-color-*` maps to `--color-*` | sync-theme.mjs:266-268 |
 | R9 | Slider paints are raw-var colours listed in `EXCLUDED` | sync-theme.mjs:149-154 |
 | R10 | Never invent a design value | docs/audit/_work/agent-rules.md:42 rule text ("Never guess a design value") — maintainer intent |

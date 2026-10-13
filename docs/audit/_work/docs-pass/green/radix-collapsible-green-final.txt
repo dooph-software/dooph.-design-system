@@ -1,0 +1,40 @@
+RUN OK
+subtype: success  is_error: false  turns: 50  cost_usd: 1.5649198500000006  duration_ms: 327635
+permission_denials (0):
+
+--- final text ---
+---
+
+## Hand-back
+
+```
+Lint:              npm run lint → exit 0, "conventions: 30 checks passed"
+Generated docs:    node scripts/generate-docs.mjs → wrote components.md, inventory.md, client-references.md
+Skill mirrors:     node scripts/sync-skills.mjs → updated inventory.md in .claude/skills and .agent/skills (2 changes)
+Stories:           Default (collapsed, single content block)
+                   DefaultOpen (starts open via defaultOpen)
+                   Disabled (trigger not interactive)
+                   Controlled (open/onOpenChange with state display)
+                   Multiple (three stacked collapsibles)
+Header contract:   None — no invariant a reasonable edit would break. The component is a thin
+                   Radix wrapper with standard styling; no fixed geometry, no expressive detail.
+Design decisions:
+  - Trigger text role: LabelText — matches the pattern of section-label toggles. ButtonText
+    was the alternative; LabelText fits better for a disclosure heading.
+  - Chevron size: IconSize.sm (14px) — matches the DropdownCaret's chevron scale. IconSize.rg
+    was the alternative.
+  - Chevron rotation: 180° via group-data-[state=open]:rotate-180 with ds-motion-state transition.
+    A CSS-only approach reading the parent's Radix data-state — no JS state needed.
+  - Content animation: grid-template-rows 0fr↔1fr transition (same technique as ds-chat-disclosure).
+    Duration: --ui-motion-duration-base on --ui-motion-ease-standard. No opacity fade — the
+    content simply grows/shrinks. Alternative was Radix's --radix-collapsible-content-height
+    with a height animation, but grid-rows avoids JS height measurement and matches the
+    existing disclosure pattern.
+  - Trigger surface: bg-transparent with hover:bg-secondary. Rounded-tight, px-rg py-sm padding.
+    No border. The trigger is a full-width flex row (chevron + label + optional children).
+  - No "use client" directive: the component is a thin Radix wrapper with no useState, useRef,
+    effects or browser APIs — same pattern as Popover and Tooltip.
+  - No constants.ts: no discrete option sets (no variant or size props).
+New dependency:    @radix-ui/react-collapsible — required for the Radix Collapsible primitive.
+                   No allowlist entry needed (no "use client", no timers).
+```

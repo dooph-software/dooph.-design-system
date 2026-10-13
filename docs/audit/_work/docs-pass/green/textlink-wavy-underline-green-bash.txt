@@ -1,0 +1,50 @@
+#15 Bash: find /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642 -name "*constants*" -type f | head -20
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/node_modules/react-remove-scroll-bar/dist/es2019/constants.js
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/node_modules/react-remove-scroll-bar/dist/es5/constants.d.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/node_modules/react-remove-scroll-bar/dist/es5/constants.js
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/node_modules/storybook/node_modules/semver/internal/constants.js
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/node_modules/vite/dist/node/constants.js
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/node_modules/ws/lib/constants.js
+#17 Bash: find /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/components -name "constants.ts" -type f
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/components/Tabs/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/components/Text/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/components/Toast/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/components/Toggle/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/components/Tooltip/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/components/WavyDivider/constants.ts
+#26 Bash: grep -r "text-decoration.*wavy\|text-decoration-style.*wavy" /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src --include="*.tsx" --include="*.ts" --include="*.css" 2>/dev/null
+    | (Bash completed with no output)
+#27 Bash: grep -i "green\|success" /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/styles/tokens.css
+    | (Bash completed with no output)
+#28 Bash: grep -r "13c29f\|color.*green" /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src --include="*.tsx" --include="*.ts" --include="*.css" 2>/dev/null | head -20
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/styles/tokens.css:  --ui-prominent-color-alt: #13c29f;
+#29 Bash: grep -n "text-decoration\|wavy" /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/styles/index.css | head -30
+    | 555:   * gradient in background (not text-decoration or a pseudo-element) so it
+    | 562:   * sits just under the em square like a native text-decoration underline —
+#31 Bash  [is_error]: head -50 /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/components/Text/Text.tsx
+    | Exit code 1
+    | head: cannot open '/c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011172642/src/components/Text/Text.tsx' for reading: No such file or directory
+#47 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642" && npm run sync-tokens 2>&1
+    | > @dooph-software/design-system@5.3.0 sync-tokens
+    | > node scripts/sync-theme.mjs
+    | 
+    | ✓  @theme inline regenerated — 137 tokens mapped (index.css + theme.css + utils/twMergeTheme.ts).
+#48 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642" && node scripts/generate-docs.mjs 2>&1
+    | generate-docs: wrote skills/dooph-design-system-usage/references/components.md, skills/dooph-design-system-theming/references/token-contract.md, .agents/skills/dooph-ds-codebase-map/references/inventory.md
+#49 Bash  [is_error]: cd "C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642" && npm run lint 2>&1
+    | FAIL skill mirrors out of sync with .agents/skills: .claude/skills/dooph-ds-codebase-map/references/inventory.md:1 out of date; run node scripts/sync-skills.mjs
+    | FAIL skill mirrors out of sync with .agents/skills: .agent/skills/dooph-ds-codebase-map/references/inventory.md:1 out of date; run node scripts/sync-skills.mjs
+    | 
+    | why (skill mirrors out of sync with .agents/skills): agents load skills from .claude/skills and .agent/skills, which are real copies of .agents/skills made by sync-skills.mjs; a stale, missing or symlinked mirror makes an agent follow an outdated skill or none at all.
+    | 
+    | conventions: 1 of 30 checks failed
+#50 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642" && node scripts/sync-skills.mjs 2>&1
+    | updated .claude/skills/dooph-ds-codebase-map/references/inventory.md
+    | updated .agent/skills/dooph-ds-codebase-map/references/inventory.md
+    | 
+    | synced 9 skills into .claude/skills and .agent/skills (2 changes)
+#51 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011172642" && npm run lint 2>&1
+    | > @dooph-software/design-system@5.3.0 lint
+    | > tsc --noEmit && node scripts/check-conventions.mjs
+    | 
+    | conventions: 30 checks passed

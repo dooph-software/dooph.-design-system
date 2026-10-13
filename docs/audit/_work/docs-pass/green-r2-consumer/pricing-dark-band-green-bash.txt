@@ -1,0 +1,16 @@
+#2 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-3c81e84b1ef0 -type f -name "*.json" -o -name "*.tsx" -o -name "*.ts" -o -name "*.jsx" | head -20
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-3c81e84b1ef0/node_modules/@dooph-software/design-system/dist/components/AIChat/AIToolPart.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-3c81e84b1ef0/node_modules/@dooph-software/design-system/dist/components/AIChat/AITurnSummary.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-3c81e84b1ef0/node_modules/@dooph-software/design-system/dist/components/AIChat/ChatDivider.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-3c81e84b1ef0/node_modules/@dooph-software/design-system/dist/components/AIChat/constants.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-3c81e84b1ef0/node_modules/@dooph-software/design-system/dist/components/AIChat/index.d.ts
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-3c81e84b1ef0/node_modules/@dooph-software/design-system/dist/components/AIChat/UserMessageHeader.d.ts
+#11 Bash: find /c/Users/stick/Github/dooph/ds-consumer-sb-3c81e84b1ef0 -maxdepth 1 -name "tailwind*" -o -name "next.config*"
+    | /c/Users/stick/Github/dooph/ds-consumer-sb-3c81e84b1ef0/next.config.ts
+#13 Bash: cat /c/Users/stick/Github/dooph/ds-consumer-sb-3c81e84b1ef0/package.json | grep -A 20 '"name"'
+    |   },
+    |   "devDependencies": {
+    |     "@tailwindcss/turbopack": "^4",
+    |     "@types/node": "^20",
+    |     "@types/react": "^19",
+    |     "@types/react-dom": "^19",

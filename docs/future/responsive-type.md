@@ -1,9 +1,9 @@
 # Responsive type — future idea
 
-> **Not implemented. Not current behaviour.** This is the maintainer's design note for a possible future version. Today, typography is set with Text component props only; there is no responsive mechanism.
+> **Not implemented. Not current behaviour.** This is the maintainer's design note for a possible future version. Today, typography is set with Text component props only; the DS has no responsive mechanism.
 
 ## The gap
-Text roles have fixed sizes (hero 55px, title 40px, heading 20px). Text components set typography through props, which render as inline style, and inline style can't contain a media query. So nothing can make a title smaller on a phone. An app's only workarounds are rendering two copies and hiding one per breakpoint (double DOM, both read by screen readers), or reading the window width in JS (client-only, and it flickers on first paint).
+Text roles have fixed sizes (hero 55px, title 40px, heading 20px). Text components set typography through props, which render as inline style, and inline style can't contain a media query. So no Text prop and no DS mechanism changes a size with the width. The one lever an app has today is redefining a role token (e.g. `--ui-text-title`) inside a media query in its own CSS. That moves every use of the role at once, never one instance, and it is not a documented responsive mechanism. To size one instance per breakpoint, an app must render two copies and hide one per breakpoint (double DOM: the text ships twice and the two copies must be kept in sync; a copy hidden with `display: none` is not read by screen readers), or read the window width in JS (client-only, and it flickers on first paint).
 
 ## What it needs to be effective
 - **Stay on the role scale.** Responsiveness should switch between *roles*, never accept arbitrary sizes. Otherwise it reopens the off-scale typography the Text rule exists to prevent.

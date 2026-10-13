@@ -1,6 +1,6 @@
 ---
 name: dooph-design-system-v3-migration
-description: Use when upgrading a consuming project from @dooph-software/design-system v2.x to v3.x, after the new version is installed. Symptoms that signal it: build breaks or silently-unstyled elements from removed v2 names — bare border/surface utilities, destructive/logo/accent-color tokens, or ButtonVariant.destructive. A one-time breaking upgrade; follow the skill's steps in order. No longer applies once the app builds clean with no stale names.
+description: 'Use when upgrading a consuming project from @dooph-software/design-system v2.x to v3.x, after the new version is installed. Symptoms that signal it: build breaks or silently-unstyled elements from removed v2 names — bare border/surface utilities, destructive/logo/accent-color tokens, or ButtonVariant.destructive. A one-time breaking upgrade; follow the skill''s steps in order. No longer applies once the app builds clean with no stale names.'
 metadata:
   short-description: Upgrade a consuming app from dooph DS v2 to v3
 ---
@@ -8,12 +8,14 @@ metadata:
 # Upgrading @dooph-software/design-system v2 → v3
 
 v3 is a **breaking release** with no back-compat aliases: old token names and the
-`destructive` variant are **deleted**, not deprecated. This is a mechanical
-rename sweep across three surfaces:
+`destructive` variant are **deleted**, not deprecated. This is mostly a rename
+sweep across three surfaces:
 
 1. Your app's `--ui-*` token overrides (usually one `theme.css`).
 2. dooph Tailwind utility classes you wrote in your own JSX.
-3. `ButtonVariant.destructive` in your TSX.
+3. The component API in your TSX (`ButtonVariant.destructive`, `ToastTypes`, the
+   Text constants, and some icon names). One of these, the sidebar icons, is a
+   semantic change, not a rename (step 3).
 
 Assume the new version is already installed. Nothing here modifies the package —
 you're only updating your app's overrides and usages. Work top-to-bottom; the
@@ -22,10 +24,14 @@ verification grep at the end is the done-check.
 This skill covers v2.x → v3.4.0, the last v3 release. Most changes landed in
 3.0.0; the few that landed in a later v3 minor are labelled with their version.
 
-> Landing on a later major? Do this migration first, then the later migration
-> skills in order: `dooph-design-system-v5-migration`, then the v6 migration
-> skill when it ships. The names below are v3's; v5 removes the danger family
-> (see the v5 migration skill).
+> Landing on a later major? Do this migration first, done-check (step 6)
+> included, then the later migration skills in order:
+> `dooph-design-system-v5-migration`, then `dooph-design-system-v6-migration`.
+> The names below are v3's. v5 removes the danger family; v6 renames several of
+> these targets again (`--ui-color-page-background` back to
+> `--ui-color-surface-page`, the brand names to `prominent`, `rounded-standard`
+> to `rounded-normal`) and brings back `surface-page` and `--ui-color-danger*`
+> names. So run step 6 here, before the next skill, never after the v6 one.
 
 ## Prerequisite: import the Tailwind preset (mandatory)
 
@@ -37,7 +43,7 @@ utility topic doesn't apply).
 
 Your app's Tailwind build doesn't know dooph's token scale on its own. Without
 the preset, authoring classes like `p-md`, `gap-rg`, `rounded-standard`,
-`bg-primary`, or `font-label` **never generate** — you're forced into ugly
+or `bg-primary` **never generate** — you're forced into ugly
 arbitrary values (`gap-[var(--ui-spacing-rg)]`) or, worse, a same-named Tailwind
 default silently wins (`font-sans`, the numeric spacing scale). The package ships
 a preset (`@dooph-software/design-system/theme.css`) — a standalone
@@ -65,12 +71,15 @@ Once imported, use the ergonomic utilities instead of arbitrary values:
 | spacing (`xxs xs sm rg md lg xl xxl`) | `p-md`, `px-rg`, `gap-rg`, `m-xs`, `space-y-sm` |
 | radius (`tight standard soft`) | `rounded-tight`, `rounded-standard`, `rounded-soft` |
 | color | `bg-primary`, `text-danger-fg`, `border-border-primary`, `bg-surface-primary` |
-| font role | `font-body`, `font-button`, `font-label`, `font-heading` |
-| font size | `text-body`, `text-label`, `text-heading`, `text-title`, `text-hero` |
 
 So `gap-[var(--ui-spacing-rg)]` becomes `gap-rg`, and `p-[var(--ui-spacing-md)]`
-becomes `p-md`. (Composite typography classes like `text-style-button` ship
-precompiled in `styles.css` and work with or without the preset.)
+becomes `p-md`.
+
+Typography is not in this table on purpose: v2 → v3 renamed no font or text
+utility, so there is nothing to migrate. Set typography through Text component
+props (`font`, `fontSize`, `fontWeight`, `lineHeight`, `letterSpacing`; step 3),
+not utility classes. The current package's rule is the same: typography only
+through those props (see `dooph-design-system-usage`).
 
 ## 0. Find the files that need editing
 
@@ -223,16 +232,18 @@ all other component names are unchanged.
 - **Text has no line-height** (since v3.4.0). v2 pinned every text role to `line-height: 1`;
   v3 sets none and leaves leading to inherit, so copy that was set solid now
   renders at whatever your app's base line-height is (1.5 under Tailwind's
-  preflight). Set a baseline in your app CSS — fixed-height controls (buttons,
-  inputs) are unaffected either way.
+  preflight). Set a baseline in your app CSS. `Button` and `Input` keep their
+  fixed height either way, and their text stays centred to within half a pixel.
 - **`leading-*` / `tracking-*` classNames on text components now apply** (since
   v3.4.0). In v2
   the role class was emitted after your utilities and silently beat them; in v3
   it moved to the `components` layer, so overrides that looked dead suddenly
-  take effect. Audit those call sites rather than assuming they were no-ops.
-- **Danger button text is now dark-on-red in light mode** (uses the primary text
-  token; white in dark mode), matching Figma — v2 was white in both. If you want
-  white, override `--ui-color-danger-foreground`.
+  take effect. Check each one: delete it if you do not want the effect, or move
+  it to the Text component's `lineHeight` / `letterSpacing` prop if you do.
+- **Danger button text is now dark-on-red in light mode** (`#161616`, the same
+  colour as the primary text token but set separately, so retuning
+  `--ui-color-text` does not move it; white in dark mode), matching Figma — v2
+  was white in both. If you want white, override `--ui-color-danger-foreground`.
 - If you rely on **dooph default colors** (no overrides), the danger red shifted
   (~`#e93b3b` → `#ec5555`) and the standard border tone changed slightly. If you
   override these tokens, your values are unaffected — only the names changed.
@@ -249,9 +260,10 @@ ship inside the package — they install transitively, nothing to add.
 
 ## 6. Verify (the done-check)
 
-Rebuild the app, then grep your source (exclude `node_modules`). Two passes,
-because the bare `border`/`surface` tokens need a negative-lookahead that plain
-ripgrep doesn't support:
+Rebuild the app, then grep your source (exclude `node_modules`). A clean build
+alone proves nothing here: an override of a deleted token and a class with no
+rule both fail silently. Two passes, because the bare names need a
+negative-lookahead that plain ripgrep doesn't support:
 
 **Pass A — unambiguous survivors (plain ripgrep):**
 
@@ -259,19 +271,22 @@ ripgrep doesn't support:
 rg -n -e "destructive|surface-page|--ui-accent-color|--ui-color-logo|avatar-bg|text-logo|shadow-focus-destructive" .
 ```
 
-**Pass B — the bare border/surface tokens (needs PCRE2, the `-P` flag):**
+**Pass B — the bare names (needs PCRE2, the `-P` flag):**
 
 ```
-rg -nP -e "--ui-color-border(?![-\w])|--ui-color-surface(?![-\w])|bg-surface(?![-\w])" .
+rg -nP -e "--ui-color-border(?![-\w])|--ui-color-surface(?![-\w])|--ui-color-focus-ring(?![-\w])|--ui-width-toast(?![-\w])|--ui-width-toast-action|bg-surface(?![-\w])|border-border(?![-\w])" .
 ```
 
 The `-e` is required because the pattern begins with `--`, which ripgrep would
 otherwise read as a flag.
 
 If your ripgrep has no `-P` support, grep plain `--ui-color-border`,
-`--ui-color-surface` and `bg-surface` instead and confirm by eye that every hit
-is an allowed longer name (`-primary`, `-secondary`, `-popovers`, `-focus`;
-`bg-surface-primary`, `bg-surface-secondary`) rather than the bare token.
+`--ui-color-surface`, `--ui-color-focus-ring`, `--ui-width-toast`, `bg-surface`
+and `border-border` instead and confirm by eye that every hit is an allowed
+longer name rather than the bare one: `-primary`, `-secondary`, `-popovers`,
+`-focus` for the border names (`border-border-primary` and so on); `-primary`,
+`-secondary` for the surface names; `-brand`, `-error`, `-primary` for the
+focus ring; `-simple`, `-complex`, `-viewport` for the toast width.
 
 Zero hits from both passes + a clean build = migration complete. This skill no
 longer applies to the project once that holds.

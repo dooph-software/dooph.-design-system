@@ -1,0 +1,22 @@
+RUN OK
+subtype: success  is_error: false  turns: 31  cost_usd: 0.9905784000000003  duration_ms: 263185
+permission_denials (0):
+
+--- final text ---
+All clean — `conventions: 30 checks passed`.
+
+Here's what was done:
+
+**Token** (`src/styles/tokens.css`): Added `--ui-textlink-underline: underline` as an expression token. The practical preset sets it to `none`.
+
+**CSS rule** (`src/styles/index.css`): Added `.ds-expr-textlink-underline` — reads the token into `text-decoration-line`, with `text-decoration-style: wavy` hardcoded and `text-decoration-color: currentColor` so it tracks the link's colour. When the token is `none`, the line is removed and the style property is inert.
+
+**Component** (`src/components/TextLink/TextLink.tsx`): Added the `ds-expr-textlink-underline` class. Added a header contract stating the underline must stay neutralisable by the practical preset.
+
+**Story** (`src/components/TextLink/TextLink.stories.tsx`): Added a `Practical` story showing the default (wavy underline) beside a `data-ds-expression="practical"` wrapper (no underline).
+
+**Excluded** (`scripts/sync-theme.mjs`): Added `"ui-textlink-underline"` to the expression-tokens group so sync-theme skips it.
+
+**Design decisions to surface:**
+- `text-underline-offset: 0.15em` and `text-decoration-thickness: from-font` — these aren't token-driven; the offset is a fixed fraction of the em square and the thickness defers to font metrics. If the spec calls for specific values, these should be adjusted.
+- I have not viewed the Practical story in Storybook, so I cannot confirm visually that the practical column shows no trace of the underline.

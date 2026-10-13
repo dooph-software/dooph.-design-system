@@ -1,0 +1,70 @@
+#2 Bash: find /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029 -type f -name "*.ts" -o -name "*.tsx" -o -name "*.css" -o -name "*.json" | head -50
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/node_modules/@babel/types/lib/index.d.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/node_modules/@babel/types/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/node_modules/@esbuild/win32-x64/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/node_modules/@floating-ui/core/dist/floating-ui.core.d.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/node_modules/@floating-ui/core/package.json
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/node_modules/@floating-ui/dom/dist/floating-ui.dom.d.ts
+#3 Bash: ls -la /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/ 2>/dev/null | head -30
+    | drwxr-xr-x 1 stick 197609    0 Oct 11 22:10 .
+    | drwxr-xr-x 1 stick 197609    0 Oct 11 22:10 ..
+    | drwxr-xr-x 1 stick 197609    0 Oct 11 22:10 components
+    | -rw-r--r-- 1 stick 197609 1928 Oct 11 22:10 index.ts
+    | drwxr-xr-x 1 stick 197609    0 Oct 11 22:10 styles
+    | drwxr-xr-x 1 stick 197609    0 Oct 11 22:10 utils
+#10 Bash: find /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/DropdownCaret -type f
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/DropdownCaret/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/DropdownCaret/DropdownCaret.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/DropdownCaret/DropdownCaret.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/DropdownCaret/index.ts
+#12 Bash: find /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/TextLink -type f
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/TextLink/index.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/TextLink/TextLink.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/TextLink/TextLink.tsx
+#16 Bash: grep -n "expression\|--ui-caret\|--ui-expr" /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/styles/tokens.css | head -50
+    | 953: * `<html data-ds-expression="practical">` in a Next.js app/layout.tsx, or
+    | 955: * discouraged. Every expression-marked token above MUST appear here with
+    | 957:@layer ds.expression {
+    | 958:  [data-ds-expression="practical"] {
+    | 959:    --ui-caret-shape-scale: 0;
+    | 960:    --ui-caret-nudge: 0;
+#18 Bash: grep -ri "wavy\|wave\|underline\|decoration" /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src --include="*.tsx" --include="*.ts" --include="*.css" | grep -v node_modules | head -40
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/AnimatedText/AnimatedText.stories.tsx:export const UnderlineLinkControlledActive: Story = {
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/AnimatedText/AnimatedText.stories.tsx:          <UnderlineLinkText active={active}>Changelog</UnderlineLinkText>
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/AnimatedText/AnimatedText.stories.tsx:        title="UnderlineLinkText"
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/AnimatedText/AnimatedText.stories.tsx:        summary="An underline that wipes out to the right and redraws from the left. The line uses `currentColor`, so set the color on this element or above it — a child that sets its own color paints the glyphs and not the line."
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/AnimatedText/AnimatedText.stories.tsx:          UnderlineLinkStandalone,
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/AnimatedText/AnimatedText.stories.tsx:          UnderlineLinkThickness,
+#19 Bash: find /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components -name "*Wavy*" -o -name "*wavy*"
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/WavyDivider
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/WavyDivider/WavyDivider.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/WavyDivider/WavyDivider.tsx
+#21 Bash: find /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components -name "*UnderlineLink*"
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/AnimatedText/UnderlineLinkText.tsx
+#25 Bash: find /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/WavyDivider -type f
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/WavyDivider/constants.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/WavyDivider/index.ts
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/WavyDivider/WavyDivider.stories.tsx
+    | /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/components/WavyDivider/WavyDivider.tsx
+#27 Bash: grep -n "\.ds-expr-" /c/Users/stick/Github/dooph/ds-sb-textlink-wavy-underline-green-20261011221029/src/styles/index.css
+    | 1002:   * lives in a .ds-expr-caret-shape rule.
+    | 1013:  .ds-expr-caret-shape {
+    | 1023:  .ds-expr-caret-shape .ds-dropdown-caret-frame {
+    | 1027:  .ds-expr-caret-shape .ds-dropdown-caret-chevron {
+    | 1039:    .ds-expr-caret-nudge {
+#52 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029" && npm run sync-tokens 2>&1
+    | > @dooph-software/design-system@5.3.0 sync-tokens
+    | > node scripts/sync-theme.mjs
+    | 
+    | ✓  @theme inline regenerated — 137 tokens mapped (index.css + theme.css + utils/twMergeTheme.ts).
+#53 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029" && node scripts/generate-docs.mjs 2>&1 && node scripts/sync-skills.mjs 2>&1
+    | generate-docs: wrote skills/dooph-design-system-theming/references/token-contract.md, .agents/skills/dooph-ds-codebase-map/references/inventory.md
+    | updated .claude/skills/dooph-ds-codebase-map/references/inventory.md
+    | updated .agent/skills/dooph-ds-codebase-map/references/inventory.md
+    | 
+    | synced 9 skills into .claude/skills and .agent/skills (2 changes)
+#54 Bash: cd "C:\Users\stick\Github\dooph\ds-sb-textlink-wavy-underline-green-20261011221029" && npm run lint 2>&1
+    | > @dooph-software/design-system@5.3.0 lint
+    | > tsc --noEmit && node scripts/check-conventions.mjs
+    | 
+    | conventions: 30 checks passed

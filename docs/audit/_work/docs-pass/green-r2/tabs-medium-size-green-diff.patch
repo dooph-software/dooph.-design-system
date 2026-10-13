@@ -1,0 +1,99 @@
+diff --git a/skills/dooph-design-system-usage/references/components.md b/skills/dooph-design-system-usage/references/components.md
+index bcd5808..ab709b0 100644
+--- a/skills/dooph-design-system-usage/references/components.md
++++ b/skills/dooph-design-system-usage/references/components.md
+@@ -1949,8 +1949,10 @@ Inherits 291 more props from `@radix-ui/react-primitive`, `@radix-ui/react-tabs`
+   | --- | --- |
+   | `fill` | `"fill"` |
+   | `icon` | `"icon"` |
++  | `iconMedium` | `"icon-medium"` |
+   | `iconMicro` | `"icon-micro"` |
+   | `iconSm` | `"icon-sm"` |
++  | `medium` | `"medium"` |
+   | `micro` | `"micro"` |
+   | `sm` | `"sm"` |
+   | `standard` | `"standard"` |
+@@ -1965,13 +1967,13 @@ Inherits 291 more props from `@radix-ui/react-primitive`, `@radix-ui/react-tabs`
+ 
+ ### Types
+ 
+-- `TabSize` = `"fill" \| "icon" \| "icon-micro" \| "icon-sm" \| "micro" \| "sm" \| "standard"`
++- `TabSize` = `"fill" \| "icon" \| "icon-medium" \| "icon-micro" \| "icon-sm" \| "medium" \| "micro" \| "sm" \| "standard"`
+ - `TabVariant` = `"ghost" \| "primary" \| "unselected"`
+ - `TabsTriggerProps`
+ 
+ ### Functions
+ 
+-- `tabTriggerVariants(props?: ({ variant?: "primary" \| "ghost" \| "unselected" \| null \| undefined; size?: "fill" \| "standard" \| "sm" \| "icon" \| "icon-sm" \| "icon-micro" \| "micro" \| null \| undefined; } & ClassProp) \| undefined): string`
++- `tabTriggerVariants(props?: ({ variant?: "primary" \| "ghost" \| "unselected" \| null \| undefined; size?: "fill" \| "medium" \| "standard" \| "sm" \| "icon" \| "icon-sm" \| "icon-micro" \| "micro" \| "icon-medium" \| null \| undefined; } & ClassProp) \| undefined): string`
+ 
+ ## Text
+ 
+diff --git a/src/components/Tabs/constants.ts b/src/components/Tabs/constants.ts
+index d8c44b9..181d765 100644
+--- a/src/components/Tabs/constants.ts
++++ b/src/components/Tabs/constants.ts
+@@ -10,6 +10,8 @@ export const TabSize = {
+   standard: "standard",
+   /** 34px — Figma `buttonSizes/smallButtonHeight`, `rg` (10px) padding. */
+   sm: "sm",
++  /** 46px — matches the hero section's 46px Buttons (`h-button-medium`). */
++  medium: "medium",
+   /** 28px compact item — Figma Toggle Option "Micro", radius-mini. */
+   micro: "micro",
+   /**
+@@ -17,6 +19,8 @@ export const TabSize = {
+    * nested in a control whose own height is authoritative.
+    */
+   fill: "fill",
++  /** 46×46 icon-only tab, pairing with the medium text variant. */
++  iconMedium: "icon-medium",
+   /** 38×38 icon-only tab. */
+   icon: "icon",
+   /** 34×34 icon-only tab, pairing with the small variants. */
+diff --git a/src/components/Toggle/toggleOption.ts b/src/components/Toggle/toggleOption.ts
+index 503a534..167891d 100644
+--- a/src/components/Toggle/toggleOption.ts
++++ b/src/components/Toggle/toggleOption.ts
+@@ -55,10 +55,14 @@ export const toggleOptionVariants = cva(
+         standard: "h-button rounded-tight px-rg",
+         /** 34px — Figma Small. */
+         sm: "h-button-sm rounded-tight px-rg",
++        /** 46px — matches the hero section's 46px Buttons. */
++        medium: "h-button-medium rounded-tight px-rg",
+         /** 28px — Figma Micro, radius-mini. */
+         micro: "h-button-micro rounded-mini px-rg",
+         /** Follows the parent's height (nested segmented rows). */
+         fill: "h-full rounded-tight px-rg",
++        /** 46×46 icon-only. */
++        "icon-medium": "size-button-medium p-0 rounded-tight",
+         /** 38×38 icon-only. */
+         icon: "size-button p-0 rounded-tight",
+         /** 34×34 icon-only. */
+diff --git a/src/styles/index.css b/src/styles/index.css
+index 0eb8643..6b4d47b 100644
+--- a/src/styles/index.css
++++ b/src/styles/index.css
+@@ -417,6 +417,10 @@
+   .min-w-menu {
+     min-width: var(--ui-min-w-menu);
+   }
++  .size-button-medium {
++    width: var(--ui-height-button-medium);
++    height: var(--ui-height-button-medium);
++  }
+   .size-button-micro {
+     width: var(--ui-height-button-micro);
+     height: var(--ui-height-button-micro);
+diff --git a/src/utils/twMergeTheme.ts b/src/utils/twMergeTheme.ts
+index 284d7ce..6d09338 100644
+--- a/src/utils/twMergeTheme.ts
++++ b/src/utils/twMergeTheme.ts
+@@ -99,6 +99,7 @@ export const DS_SIZE_UTILITIES: Readonly<Record<"h" | "w" | "size" | "min-h" | "
+     "avatar",
+     "avatar-sm",
+     "shape-button",
++    "button-medium",
+     "button-micro"
+   ],
+   "min-h": [

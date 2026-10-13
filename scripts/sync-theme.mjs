@@ -33,8 +33,9 @@
  *    changes, or an alias (var(--ui-…)) of a token .dark changes. Such an alias
  *    is repeated word for word in .dark, because an alias resolves where it is
  *    declared and a nested .dark island would otherwise keep the light value.
- *    Never repeat a non-alias value that is the same in both: that line blocks
- *    a consumer's :root override inside .dark. Lint enforces both halves
+ *    Never repeat a non-alias value that is the same in both: that line pins
+ *    the DS value on nested .dark islands, so a consumer's :root override never
+ *    reaches them. Lint enforces both halves
  *    ("dark aliases missing from .dark, and redundant .dark lines").
  * 2. Run `node scripts/sync-theme.mjs`  — done.
  *
@@ -373,9 +374,12 @@ const themePreset = [
   ' *   @import "@dooph-software/design-system/styles.css";',
   ' *   @import "@dooph-software/design-system/theme.css";',
   " *",
-  " * This registers every --ui-* token in your Tailwind build so utilities like",
-  " * p-md, gap-sm, rounded-normal, font-label and bg-primary all generate and",
-  " * resolve to design-system tokens. Token VALUES still come from styles.css at",
+  " * This registers the design system's color, shadow, radius, font, text-size and",
+  " * spacing tokens (plus a few named aliases) in your Tailwind build, so utilities",
+  " * like p-md, gap-sm, rounded-normal, font-label and bg-primary all generate and",
+  " * resolve to design-system tokens. Other tokens (weights, font axes, tracking,",
+  " * icon sizes, component-only tokens) get no utility; use var(--ui-…) for them.",
+  " * Token VALUES still come from styles.css at",
   " * runtime (these are `inline` var() references), so overriding --ui-* in your",
   " * own CSS keeps working. Apps that do not use Tailwind can ignore this file.",
   " */",
