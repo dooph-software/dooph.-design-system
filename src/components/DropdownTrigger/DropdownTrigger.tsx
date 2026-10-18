@@ -76,7 +76,7 @@ const DropdownTriggerBase = forwardRef<
     >
       {/* flex-1 pushes the caret to the far edge; Slottable marks the asChild target. */}
       <Slottable child={children}>
-        {(child) => <span className="flex-1 text-left">{child}</span>}
+        {(child) => <ButtonText className="flex-1 text-left">{child}</ButtonText>}
       </Slottable>
       <DropdownCaret variant={DropdownCaretVariant.dropdown} />
     </ButtonText>
@@ -306,13 +306,13 @@ const TextDropdownTriggerBase = forwardRef<
     ref,
   ) => {
     const Comp = (asChild ? Slot : "button") as ElementType;
+    const role =
+      size === TextDropdownSize.sm ? TextVariant.label : TextVariant.button;
     return (
       <BaseText
         as={Comp}
         ref={ref as ForwardedRef<HTMLElement>}
-        variant={
-          size === TextDropdownSize.sm ? TextVariant.label : TextVariant.button
-        }
+        variant={role}
         className={cn(
           "inline-flex items-center gap-sm",
           "rounded-tight border border-transparent bg-transparent",
@@ -329,7 +329,9 @@ const TextDropdownTriggerBase = forwardRef<
       >
         {/* Keeps multi-node children one inline run, so the root's gap sits
          * only between the label and the chevron. Slottable marks the asChild target. */}
-        <Slottable child={children}>{(child) => <span>{child}</span>}</Slottable>
+        <Slottable child={children}>
+          {(child) => <BaseText variant={role}>{child}</BaseText>}
+        </Slottable>
         <ChevronDownIcon
           size={
             size === TextDropdownSize.sm ? IconSize.sm : IconSize.rg

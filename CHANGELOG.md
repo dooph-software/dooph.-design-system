@@ -291,21 +291,21 @@ look you tuned around them.
   | `--ui-color-brand` | `--ui-color-prominent` | #4f666d grey-blue → #340fd9 violet |
   | `--ui-color-brand-hover` | `--ui-color-prominent-hover` | #45555b → #2406ac |
   | `--ui-color-brand-active` | `--ui-color-prominent-active` | #323d41 → #1a0189 |
-  | `--ui-color-brand-foreground` | `--ui-color-prominent-foreground` | #ffffff (same) |
+  | `--ui-color-brand-foreground` | `--ui-color-prominent-foreground` | #ffffff → #f8f8f8 |
   | `--ui-color-brand-border` | `--ui-color-prominent-border` | alias of the fill (same rule) |
   | `--ui-color-brand-border-hover` | `--ui-color-prominent-border-hover` | alias (same rule) |
   | `--ui-color-brand-border-active` | `--ui-color-prominent-border-active` | alias (same rule) |
   | `--ui-color-brand-border-disabled` | `--ui-color-prominent-border-disabled` | transparent → the secondary disabled border |
   | `--ui-brand-color` | `--ui-prominent-color` | #46565c → #390ef8 |
   | `--ui-brand-color-alt` | `--ui-prominent-color-ter` | #44c0e5 (same). `--ui-prominent-color-alt` is a new teal, not this one |
-  | `--ui-color-error-primary` | `--ui-color-danger-primary` | #ea3f3f (same) |
-  | `--ui-color-error-secondary` | `--ui-color-danger-secondary` | #ff5858 (same) |
-  | `--ui-color-page-background` | `--ui-color-surface-page` | same, light and dark |
-  | `--ui-color-border-focus` | `--ui-color-input-border-focus` | now the prominent hover border (light) and the prominent active border (dark) |
-  | `--ui-color-trigger-border-hover` | `--ui-color-input-border-hover` | same, light and dark |
+  | `--ui-color-error-primary` | `--ui-color-danger-primary` | #ea3f3f (same); dark now #e31515 (5.3.0 had no dark value) |
+  | `--ui-color-error-secondary` | `--ui-color-danger-secondary` | #ff5858 (same); dark now #e02e2e (5.3.0 had no dark value) |
+  | `--ui-color-page-background` | `--ui-color-surface-page` | same in light; dark #131c1d → #000000 |
+  | `--ui-color-border-focus` | `--ui-color-input-border-focus` | now the prominent hover border, in light and dark |
+  | `--ui-color-trigger-border-hover` | `--ui-color-input-border-hover` | same in light; dark #3a3b3f → #333333 |
   | `--ui-color-trigger-border-error-focus` | `--ui-color-input-border-danger-focus` | same (danger primary) |
-  | `--ui-color-focus-ring-brand` | `--ui-color-focus-ring-prominent` | rgba(70,86,92,.35) → rgba(36,6,172,.35); dark .15 → rgba(52,15,217,.15) |
-  | `--ui-color-focus-ring-error` | `--ui-color-focus-ring-danger` | rgba(236,85,85,.35) → rgba(234,63,63,.35); dark .15 likewise |
+  | `--ui-color-focus-ring-brand` | `--ui-color-focus-ring-prominent` | rgba(70,86,92,.35) → rgba(36,6,172,.35); dark rgba(70,86,92,.15) → rgba(52,15,217,.45) |
+  | `--ui-color-focus-ring-error` | `--ui-color-focus-ring-danger` | rgba(236,85,85,.35) → rgba(234,63,63,.35); dark rgba(236,85,85,.15) → rgba(227,21,21,.45) |
   | `--ui-shadow-focus-brand` | `--ui-shadow-focus-prominent` | 4px ring in the prominent colour |
   | `--ui-radius-standard` | `--ui-radius-normal` | 18px (same) |
   | `--ui-icon-tiny`, `--ui-icon-standard`, `--ui-icon-medium` | `--ui-icon-sm`, `--ui-icon-rg`, `--ui-icon-md` | 12 / 14 / 16px (same) |
@@ -813,11 +813,42 @@ new menu items and submenu parts, the two toolbar halves (they share
   registered with CSS `@property`.
 - **The prominent colour is violet** (#340fd9 in place of the 5.3.0 grey-blue
   brand colour), with its hover, active and focus-ring shades.
-- **Dark theme:** `--ui-color-text-tertiary` is #8b8b8b (was #717171), so
-  dark placeholders and meta text read better.
-- **Dark theme:** the primary focus ring `--ui-color-focus-ring-primary` is
-  rgba(249,249,249,.15) (was rgba(23,23,23,.15), almost invisible on a dark
-  page). Re-check a custom dark ring built on it.
+- **Button text and button shadows follow Figma in light:**
+  `--ui-color-primary-foreground` is #f8f8f8 (was #ffffff), and
+  `--ui-shadow-button`, `-button-secondary`, `-button-hover` and
+  `-button-active` keep their alphas in rgb(56,56,56) (was black).
+- **The dark theme follows the Figma dark mode.**
+  Dark values that changed (renamed tokens under their v6 name; the focus
+  rings and the danger colours are in the token table under Breaking >
+  Tokens). Re-check any dark override you tuned against 5.3.0:
+
+  | Token | 5.3.0 dark | v6 dark |
+  |---|---|---|
+  | `--ui-color-primary-foreground` | #000000 | #161616 |
+  | `--ui-color-secondary` | #1d1d1f | #0f0f0f |
+  | `--ui-color-secondary-foreground` | #ffffff | #f8f8f8 |
+  | `--ui-color-secondary-hover` | #2b2b2d | #171717 |
+  | `--ui-color-secondary-active` | #313235 | #161616 |
+  | `--ui-color-secondary-disabled` | #222224 | #191919 |
+  | `--ui-color-secondary-border` | #303235 | #222222 |
+  | `--ui-color-secondary-border-hover` | #313235 | #2d2d2d |
+  | `--ui-color-secondary-border-active` | #3a3b3f | #2b2b2b |
+  | `--ui-color-secondary-border-disabled` | #1f1f21 | #1b1b1b |
+  | `--ui-color-ghost-foreground-active` | #ffffff | #f8f8f8 |
+  | `--ui-color-surface-primary` | #000000 | #0c0c0c |
+  | `--ui-color-surface-secondary` | #242425 | #1b1b1b |
+  | `--ui-color-modal-surface` | #212124 | #070707 |
+  | `--ui-color-modal-backdrop` | rgba(0,0,0,.7) | rgba(0,0,0,.25) |
+  | `--ui-color-border-primary` | #333437 | #363636 |
+  | `--ui-color-border-secondary` | #3e3f42 | #3b3b3b |
+  | `--ui-color-border-popovers` | #36363b | #212121 |
+  | `--ui-color-text` | #ffffff | #f8f8f8 |
+  | `--ui-color-focus-ring-primary` | rgba(23,23,23,.15) | rgba(249,249,249,.25) |
+  | `--ui-shadow-menu`, `--ui-shadow-cta` | black at .7 / .65 | rgba(11,11,11,.85) |
+
+  The other dark shadows keep their alphas and take Figma's rgb(11,11,11).
+  Text tertiary (#717171), text secondary (#afafaf), the primary button
+  paints and the ghost hover and active washes are unchanged.
 - **Ghost text is the text colour:** `--ui-color-ghost-foreground` is
   `var(--ui-color-text)` (was #4a4a4a light / #afafaf dark), so everything
   painted with it is darker at rest: `ghost` and `text` Buttons (and
@@ -834,7 +865,7 @@ new menu items and submenu parts, the two toolbar halves (they share
   button colour, and the label is a semibold `CTAText`. Its new measurements
   are under Breaking > Layout.
 - **`PopoverContent`** (and the DatePicker panel) use the floating-panel look
-  of the menus: the popover border, the modal surface (dark #212124 in place
+  of the menus: the popover border, the modal surface (dark #070707 in place
   of #000000) and the menu shadow. The new offset is under Breaking > Layout.
 - **`SearchBox`** draws the DS `SearchIcon` (16px, stroke 2) in place of its
   own thinner glyph.

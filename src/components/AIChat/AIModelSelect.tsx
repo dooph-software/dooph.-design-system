@@ -70,7 +70,7 @@ const AIModelSelectTrigger = forwardRef<
     {...props}
   >
     {/* Keeps the model name on one line in the primary text tone; the detail span below uses the ghost tone. */}
-    <span className="whitespace-nowrap text-text">{children}</span>
+    <ButtonText className="whitespace-nowrap text-text">{children}</ButtonText>
     {detail != null && detail !== false ? (
       <BodyText className="whitespace-nowrap text-ghost-fg">
         {detail}
@@ -107,7 +107,7 @@ const AIModelSelectItem = forwardRef<
   >
     <span aria-hidden className="ds-chat-model-swatch" />
     {/* min-w-0 + truncate lets a long model name ellipsize beside the swatch instead of widening the menu. */}
-    <span className="min-w-0 flex-1 truncate">{children}</span>
+    <BodyText className="min-w-0 flex-1 truncate">{children}</BodyText>
   </DropdownMenuRadioSelectItem>
 ));
 AIModelSelectItem.displayName = "AIModelSelectItem";

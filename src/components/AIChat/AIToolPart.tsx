@@ -71,7 +71,7 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
             {children}
           </ShimmerText>
         ) : (
-          <span
+          <BodyText
             className={cn(
               "shrink-0 whitespace-nowrap",
               "text-text-secondary group-data-[state=error]/tool:text-danger-primary",
@@ -79,17 +79,17 @@ const AIToolPart = forwardRef<HTMLDivElement, AIToolPartProps>(
             )}
           >
             {children}
-          </span>
+          </BodyText>
         )}
         {showMeta ? (
-          <span
+          <BodyText
             className={cn(
               "min-w-0 truncate text-text-secondary",
               !isActive && "ds-chat-reveal",
             )}
           >
             {meta}
-          </span>
+          </BodyText>
         ) : null}
       </BodyText>
     );

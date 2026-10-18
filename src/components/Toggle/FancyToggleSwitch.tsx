@@ -118,7 +118,6 @@ const FancyToggleSwitchItem = forwardRef<
           {hasIcon ? icon : <CheckIcon className={fancyToggleCheckClass} />}
         </span>
       </span>
-      {/* <span className="text-style-hero-button">{children}</span> */}
       <BaseText variant={TextVariant.button}>{children}</BaseText>
     </ToggleGroup.Item>
   );

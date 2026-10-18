@@ -116,9 +116,9 @@ override always wins, whatever the import order (see the end of this step).
 | `--ui-color-brand` (`-hover`, `-active`, `-foreground`, `-border`, `-border-hover`, `-border-active`, `-border-disabled`) | `--ui-color-prominent` (same suffixes) | grey-blue #4f666d → violet #340fd9; `-border-disabled` transparent → the secondary disabled border |
 | `--ui-brand-color` | `--ui-prominent-color` | #46565c → #390ef8 |
 | `--ui-brand-color-alt` | `--ui-prominent-color-ter` | #44c0e5 (same). `--ui-prominent-color-alt` is a new teal, not this one |
-| `--ui-color-error-primary`, `--ui-color-error-secondary` | `--ui-color-danger-primary`, `--ui-color-danger-secondary` | same |
+| `--ui-color-error-primary`, `--ui-color-error-secondary` | `--ui-color-danger-primary`, `--ui-color-danger-secondary` | same in light; dark now #e31515 / #e02e2e |
 | `--ui-color-page-background` | `--ui-color-surface-page` | same |
-| `--ui-color-border-focus` | `--ui-color-input-border-focus` | now the prominent hover border (light) and the prominent active border (dark) |
+| `--ui-color-border-focus` | `--ui-color-input-border-focus` | now the prominent hover border, in light and dark |
 | `--ui-color-trigger-border-hover` | `--ui-color-input-border-hover` | same |
 | `--ui-color-trigger-border-error-focus` | `--ui-color-input-border-danger-focus` | same |
 | `--ui-color-focus-ring-brand`, `--ui-color-focus-ring-error` | `--ui-color-focus-ring-prominent`, `--ui-color-focus-ring-danger` | re-tinted to the new colours |
@@ -178,8 +178,8 @@ applies again. Check each one, or delete it.
 
 - `--ui-height-button-micro` is 28px (was 26px): micro icon buttons grow 2px.
 
-Two colour retunes are under "Visual changes to expect" below: the ghost
-foreground and the dark primary focus ring.
+Colour retunes are under "Visual changes to expect" below: the ghost
+foreground and the dark theme.
 
 **Overrides now always win, which changes two things** (silent):
 
@@ -500,9 +500,11 @@ Not breaking, but re-check any custom look built on them:
 - With the preset, a `shadow-standard` class, which generated nothing in v5,
   now draws a soft shadow (the new `--shadow-standard` key). Remove it where
   you do not want one.
-- Dark `--ui-color-text-tertiary` is #8b8b8b (was #717171).
-- Dark `--ui-color-focus-ring-primary` is rgba(249,249,249,.15) (was
-  rgba(23,23,23,.15), nearly invisible). Re-check a dark ring built on it.
+- The dark theme follows the Figma dark mode: most dark surfaces, borders,
+  text colours, focus rings and the danger colours changed (the CHANGELOG
+  lists every value). A dark override you tuned against v5 needs a look.
+  In light, primary and prominent button text is #f8f8f8 (was #ffffff) and
+  the button shadows are rgb(56,56,56) rather than black.
 
 ## Package
 

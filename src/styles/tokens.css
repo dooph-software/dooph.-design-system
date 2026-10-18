@@ -43,7 +43,7 @@
   --ui-color-primary-border-hover: var(--ui-color-primary-hover);
   --ui-color-primary-active: #3d3d3d;
   --ui-color-primary-border-active: var(--ui-color-primary-active);
-  --ui-color-primary-foreground: #ffffff;
+  --ui-color-primary-foreground: #f8f8f8;
   /* Disabled paints alias secondary so all solid buttons share one disabled look;
    * token names stay so consumers can still override primary-disabled alone. */
   --ui-color-primary-disabled: var(--ui-color-secondary-disabled);
@@ -63,19 +63,15 @@
   /* Prominent (deep violet) — Figma ButtonProminent/*. Borders alias bg per
    * state. Its own paints are mode-invariant, so they have no .dark override
    * (the two disabled aliases are repeated in the .dark alias group): the
-   * Figma group carries identical values in both modes, INCLUDING the
-   * content colour. That last part is worth stating because the Figma export
-   * aliases the content to Text/text-inverted, which flips to black in dark —
-   * black on #340fd9 is 2.2:1 and unreadable, and the export's own resolved
-   * values report white for both modes. White is the intended paint; do not
-   * "fix" this into an inverted alias. */
+   * Figma group carries identical values in both modes, including the light
+   * content colour on the violet. */
   --ui-color-prominent: #340fd9;
   --ui-color-prominent-border: var(--ui-color-prominent);
   --ui-color-prominent-hover: #2406ac;
   --ui-color-prominent-border-hover: var(--ui-color-prominent-hover);
   --ui-color-prominent-active: #1a0189;
   --ui-color-prominent-border-active: var(--ui-color-prominent-active);
-  --ui-color-prominent-foreground: #ffffff;
+  --ui-color-prominent-foreground: #f8f8f8;
   /* Disabled aliases secondary, matching every other solid button (Figma). */
   --ui-color-prominent-disabled: var(--ui-color-secondary-disabled);
   --ui-color-prominent-border-disabled: var(
@@ -564,12 +560,7 @@
    * read ON the filled track, so it does not follow `color`.
    *
    * Each pair is selected by `SliderVariant`; `color` still overrides the hue
-   * on top of whichever pair is in play.
-   *
-   * The prominent dark step is white, departing from the Figma export, which
-   * resolves it to text-inverted = black. Black at 40% on a #340fd9 track is
-   * invisible; see the note on the prominent family above for why that content
-   * alias is white in both modes. */
+   * on top of whichever pair is in play. */
   --ui-slider-track-primary-active-opacity: 50%;
   --ui-slider-track-prominent-active-opacity: 70%;
   --ui-color-slider-step-primary-active: rgba(22, 22, 22, 0.5);
@@ -625,11 +616,11 @@
 
   /* ── Shadows ─────────────────────────────────────────────────────────── */
 
-  --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.1);
-  --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.1);
-  --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --ui-shadow-button: 0 1px 2px rgba(56, 56, 56, 0.1);
+  --ui-shadow-button-secondary: 0 1px 4px rgba(56, 56, 56, 0.1);
+  --ui-shadow-button-hover: 0 1px 2px rgba(56, 56, 56, 0.2);
   /* defaults to hover shadow — kept as a separate token for manual override */
-  --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --ui-shadow-button-active: 0 1px 2px rgba(56, 56, 56, 0.2);
   --ui-shadow-menu: 0 1px 4px 0 rgba(56, 56, 56, 0.15);
   /* Figma "Shadow Standard" — a soft all-round halo (UserMessageHeader). */
   --ui-shadow-standard: 0 0 4px 0 rgba(56, 56, 56, 0.1);
@@ -763,88 +754,83 @@
 /* ── Dark mode — class on app root (<html>) · consuming app attaches/removes ─ */
 
 .dark {
+  /* Values follow the Figma dark mode (Colors - Statics / Interactables). */
   --ui-color-primary: #f9f9f9;
-  --ui-color-primary-foreground: #000000;
+  --ui-color-primary-foreground: #161616;
   --ui-color-primary-hover: #f0f0f0;
   --ui-color-primary-active: #cdcdcd;
 
-  --ui-color-secondary: #1d1d1f;
-  --ui-color-secondary-foreground: #ffffff;
-  --ui-color-secondary-hover: #2b2b2d;
-  --ui-color-secondary-active: #313235;
-  --ui-color-secondary-disabled: #222224;
-  --ui-color-secondary-border: #303235;
-  --ui-color-secondary-border-hover: #313235;
-  --ui-color-secondary-border-active: #3a3b3f;
-  --ui-color-secondary-border-disabled: #1f1f21;
+  --ui-color-secondary: #0f0f0f;
+  --ui-color-secondary-foreground: #f8f8f8;
+  --ui-color-secondary-hover: #171717;
+  --ui-color-secondary-active: #161616;
+  --ui-color-secondary-disabled: #191919;
+  --ui-color-secondary-border: #222222;
+  --ui-color-secondary-border-hover: #2d2d2d;
+  --ui-color-secondary-border-active: #2b2b2b;
+  --ui-color-secondary-border-disabled: #1b1b1b;
+
+  --ui-color-danger-primary: #e31515;
+  --ui-color-danger-secondary: #e02e2e;
 
   --ui-color-ghost-hover: rgba(255, 255, 255, 0.04);
   --ui-color-ghost-active: rgba(255, 255, 255, 0.08);
   --ui-color-ghost-foreground: var(--ui-color-text);
-  --ui-color-ghost-foreground-active: #ffffff;
+  --ui-color-ghost-foreground-active: #f8f8f8;
 
-  --ui-color-surface-page: #131c1d;
-  --ui-color-surface-primary: #000000;
-  --ui-color-surface-secondary: #242425;
+  --ui-color-surface-page: #000000;
+  --ui-color-surface-primary: #0c0c0c;
+  --ui-color-surface-secondary: #1b1b1b;
 
-  --ui-color-modal-surface: #212124;
-  --ui-color-modal-backdrop: rgba(0, 0, 0, 0.7);
+  --ui-color-modal-surface: #070707;
+  --ui-color-modal-backdrop: rgba(0, 0, 0, 0.25);
 
-  --ui-color-border-primary: #333437;
-  --ui-color-border-secondary: #3e3f42;
-  --ui-color-border-popovers: #36363b;
+  --ui-color-border-primary: #363636;
+  --ui-color-border-secondary: #3b3b3b;
+  --ui-color-border-popovers: #212121;
   --ui-color-border-cta: rgba(255, 255, 255, 0.35);
-  --ui-color-input-border-hover: #3a3b3f;
+  --ui-color-input-border-hover: #333333;
 
   --ui-color-ai-openai: #ffffff;
   --ui-color-ai-spacexai: #ffffff;
 
-  --ui-color-text: #ffffff;
+  --ui-color-text: #f8f8f8;
   --ui-color-text-secondary: #afafaf;
-  /* PLACEHOLDER (2026-10-07), pending the maintainer's dark pass: light
-   * enough to read at 3:1 or more on the menu hotkey chip (secondary-hover). */
-  --ui-color-text-tertiary: #8b8b8b;
+  --ui-color-text-tertiary: #717171;
 
   /* The prominent ring keys to the rest paint (not :hover) in dark, per Figma. */
-  --ui-color-focus-ring-prominent: rgba(52, 15, 217, 0.15);
-  --ui-color-focus-ring-primary: rgba(249, 249, 249, 0.15);
-  --ui-color-focus-ring-danger: rgba(234, 63, 63, 0.15);
-  --ui-color-input-border-focus: var(--ui-color-prominent-border-active);
+  --ui-color-focus-ring-prominent: rgba(52, 15, 217, 0.45);
+  --ui-color-focus-ring-primary: rgba(249, 249, 249, 0.25);
+  --ui-color-focus-ring-danger: rgba(227, 21, 21, 0.45);
 
-  --ui-shadow-button: 0 1px 2px rgba(0, 0, 0, 0.65);
-  --ui-shadow-button-secondary: 0 1px 4px rgba(0, 0, 0, 0.65);
-  --ui-shadow-button-hover: 0 1px 2px rgba(0, 0, 0, 0.85);
-  --ui-shadow-button-active: 0 1px 2px rgba(0, 0, 0, 0.85);
-  --ui-shadow-menu: 0 2px 8px rgba(0, 0, 0, 0.7);
-  --ui-shadow-standard: 0 0 4px 0 rgba(0, 0, 0, 0.65);
-  --ui-shadow-cta: 0 1px 2px rgba(0, 0, 0, 0.65);
+  /* Figma shadow-black (0.65) and shadow-strong-black (0.85) in dark. */
+  --ui-shadow-button: 0 1px 2px rgba(11, 11, 11, 0.65);
+  --ui-shadow-button-secondary: 0 1px 4px rgba(11, 11, 11, 0.65);
+  --ui-shadow-button-hover: 0 1px 2px rgba(11, 11, 11, 0.85);
+  --ui-shadow-button-active: 0 1px 2px rgba(11, 11, 11, 0.85);
+  --ui-shadow-menu: 0 2px 8px rgba(11, 11, 11, 0.85);
+  --ui-shadow-standard: 0 0 4px 0 rgba(11, 11, 11, 0.65);
+  --ui-shadow-cta: 0 1px 2px rgba(11, 11, 11, 0.85);
 
-  /* Both variants converge at 60% in dark, per Figma. */
-  --ui-slider-track-primary-active-opacity: 60%;
+  /* Figma: primary track 65%, prominent 60%; the prominent step dot is
+   * text-primary at 50%. The primary step dot (text-inverted at 50%) resolves
+   * to its light value, so it has no line here. */
+  --ui-slider-track-primary-active-opacity: 65%;
   --ui-slider-track-prominent-active-opacity: 60%;
-  --ui-color-slider-step-primary-active: rgba(0, 0, 0, 0.4);
-  --ui-color-slider-step-prominent-active: rgba(255, 255, 255, 0.4);
+  --ui-color-slider-step-prominent-active: rgba(248, 248, 248, 0.5);
 
   --ui-opacity-disabled: 0.5;
 
-  /* The dark secondary WASH does not read --ui-sticker-bg-opacity-secondary
-   * (80%, light only) — Figma binds `color-sticker-bg-secondary` to the shared
-   * 20% opacity in dark.
-   * Danger: PLACEHOLDER (2026-10-07), pending the maintainer's dark pass.
-   * Figma's dark values, a literal white for both content and wash, make the
-   * sticker invisible. So the content takes the lighter danger-secondary, and
-   * the wash keeps the light formula (danger-secondary at the shared
-   * opacity). */
-  --ui-color-sticker-bg-secondary: color-mix(
+  /* Figma's secondary sticker wash is 60% in dark (80% in light). The
+   * prominent sticker takes the brighter --ui-prominent-color for its content
+   * and wash in dark, for readability on dark surfaces. */
+  --ui-sticker-bg-opacity-secondary: 60%;
+  --ui-color-sticker-prominent: var(--ui-prominent-color);
+  --ui-color-sticker-bg-prominent: color-mix(
     in srgb,
-    var(--ui-color-secondary-border-active) var(--ui-sticker-bg-opacity),
+    var(--ui-prominent-color) var(--ui-sticker-bg-opacity),
     transparent
   );
-  --ui-color-sticker-danger: var(--ui-color-danger-secondary);
-  /* PLACEHOLDER (2026-10-07): the :root content, --ui-color-prominent
-   * (#340fd9), reads at 1.75:1 on its own wash over dark surfaces, so dark
-   * takes a lifted violet until the dark pass. */
-  --ui-color-sticker-prominent: #8c7bff;
 
   /* ── Alias re-declarations ─────────────────────────────────────────────
    * A var() inside a custom property is resolved on the element that
@@ -865,6 +851,11 @@
   --ui-color-prominent-border-disabled: var(--ui-color-secondary-border-disabled);
   --ui-color-danger: var(--ui-color-secondary);
   --ui-color-danger-border: var(--ui-color-secondary-border);
+  --ui-color-danger-hover: var(--ui-color-danger-secondary);
+  --ui-color-danger-border-hover: var(--ui-color-danger-secondary);
+  --ui-color-danger-active: var(--ui-color-danger-primary);
+  --ui-color-danger-border-active: var(--ui-color-danger-primary);
+  --ui-color-danger-foreground: var(--ui-color-danger-primary);
   --ui-color-danger-foreground-active: var(--ui-color-secondary-foreground);
   --ui-color-danger-disabled: var(--ui-color-secondary-disabled);
   --ui-color-danger-border-disabled: var(--ui-color-secondary-border-disabled);
@@ -883,12 +874,25 @@
   --ui-chat-thinking-shimmer-base: var(--ui-color-text-secondary);
   --ui-chat-thinking-shimmer-highlight: color-mix(in srgb, var(--ui-color-text-secondary) 35%, transparent);
   --ui-color-slider-step-inactive: var(--ui-color-secondary-border);
+  --ui-color-input-border-danger-focus: var(--ui-color-danger-primary);
   --ui-shadow-focus-prominent: 0 0 0 4px var(--ui-color-focus-ring-prominent);
   --ui-shadow-focus-primary: 0 0 0 4px var(--ui-color-focus-ring-primary);
   --ui-shadow-focus-danger: 0 0 0 4px var(--ui-color-focus-ring-danger);
   --ui-shadow-press-prominent: var(--ui-shadow-focus-prominent);
   --ui-shadow-press-primary: var(--ui-shadow-focus-primary);
   --ui-color-sticker-secondary: var(--ui-color-text-tertiary);
+  --ui-color-sticker-danger: var(--ui-color-danger-primary);
+  --ui-color-sticker-bg-secondary: color-mix(
+    in srgb,
+    var(--ui-color-secondary-border-active)
+      var(--ui-sticker-bg-opacity-secondary),
+    transparent
+  );
+  --ui-color-sticker-bg-danger: color-mix(
+    in srgb,
+    var(--ui-color-danger-secondary) var(--ui-sticker-bg-opacity),
+    transparent
+  );
 }
 
 /* ── Reduced motion — the ONE place it is handled ───────────────────────────

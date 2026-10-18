@@ -270,9 +270,9 @@ const OutlineButtonBase = forwardRef<HTMLElement, OutlineButtonProps<"button">>(
            * label still layers above the orbs when slotted. */}
           <Slottable child={children}>
             {(child) => (
-              <span className="relative z-10 inline-flex items-center gap-sm">
+              <ButtonText className="relative z-10 inline-flex items-center gap-sm">
                 {child}
-              </span>
+              </ButtonText>
             )}
           </Slottable>
         </ButtonText>

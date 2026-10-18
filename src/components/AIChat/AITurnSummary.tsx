@@ -43,10 +43,10 @@ const AITurnSummary = forwardRef<HTMLDivElement, AITurnSummaryProps>(
       {...props}
     >
       {label != null && label !== false ? (
-        <span className="ds-chat-lift shrink-0 whitespace-nowrap text-text-secondary">{label}</span>
+        <BodyText className="ds-chat-lift shrink-0 whitespace-nowrap text-text-secondary">{label}</BodyText>
       ) : null}
       {meta != null && meta !== false ? (
-        <span className="min-w-0 truncate text-text-secondary">{meta}</span>
+        <BodyText className="min-w-0 truncate text-text-secondary">{meta}</BodyText>
       ) : null}
       {copyValue !== undefined ? (
         <CopyButton

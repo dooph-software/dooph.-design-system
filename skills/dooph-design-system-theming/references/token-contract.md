@@ -9,7 +9,7 @@ Every DS token (a custom property) in `@dooph-software/design-system/styles.css`
 | Block | Selector | Cascade layer | Declarations |
 | --- | --- | --- | --- |
 | light | `:root, .light` | `ds.tokens` | 289 |
-| dark | `.dark` | `ds.tokens` | 84 |
+| dark | `.dark` | `ds.tokens` | 93 |
 | reduced motion | `@media (prefers-reduced-motion: reduce) > :root, .light` | `ds.tokens` | 7 |
 | expression defaults | `:root` | `ds.tokens` | 2 |
 | practical preset | `[data-ds-expression="practical"]` | `ds.expression` | 2 |
@@ -31,13 +31,13 @@ Primary (dark neutral) — borders alias bg per state (Figma)
 
 | Token | Light | Dark | Alias | Expression | Comment |
 | --- | --- | --- | --- | --- | --- |
-| `--ui-color-primary` | `#171717` | `#f9f9f9` |  |  |  |
+| `--ui-color-primary` | `#171717` | `#f9f9f9` |  |  | Dark: Values follow the Figma dark mode (Colors - Statics / Interactables). |
 | `--ui-color-primary-border` | `var(--ui-color-primary)` | repeated | alias |  | Dark: A var() inside a custom property is resolved on the element that DECLARES it. |
 | `--ui-color-primary-hover` | `#2c2c2c` | `#f0f0f0` |  |  |  |
 | `--ui-color-primary-border-hover` | `var(--ui-color-primary-hover)` | repeated | alias |  |  |
 | `--ui-color-primary-active` | `#3d3d3d` | `#cdcdcd` |  |  |  |
 | `--ui-color-primary-border-active` | `var(--ui-color-primary-active)` | repeated | alias |  |  |
-| `--ui-color-primary-foreground` | `#ffffff` | `#000000` |  |  |  |
+| `--ui-color-primary-foreground` | `#f8f8f8` | `#161616` |  |  |  |
 | `--ui-color-primary-disabled` | `var(--ui-color-secondary-disabled)` | repeated | alias |  | Disabled paints alias secondary so all solid buttons share one disabled look; token names stay so consumers can still override primary-disabled alone. |
 | `--ui-color-primary-border-disabled` | `var(--ui-color-secondary-border-disabled)` | repeated | alias |  |  |
 
@@ -45,15 +45,15 @@ Secondary (light surface) — borders are distinct Figma literals
 
 | Token | Light | Dark | Alias | Expression | Comment |
 | --- | --- | --- | --- | --- | --- |
-| `--ui-color-secondary` | `#fdfdfd` | `#1d1d1f` |  |  |  |
-| `--ui-color-secondary-border` | `#e2e3e4` | `#303235` |  |  |  |
-| `--ui-color-secondary-hover` | `#efefef` | `#2b2b2d` |  |  |  |
-| `--ui-color-secondary-border-hover` | `#e2e3e4` | `#313235` |  |  |  |
-| `--ui-color-secondary-active` | `#e3e3e3` | `#313235` |  |  |  |
-| `--ui-color-secondary-border-active` | `#e2e3e4` | `#3a3b3f` |  |  |  |
-| `--ui-color-secondary-foreground` | `#161616` | `#ffffff` |  |  |  |
-| `--ui-color-secondary-disabled` | `#f5f5f5` | `#222224` |  |  |  |
-| `--ui-color-secondary-border-disabled` | `#e9e9e9` | `#1f1f21` |  |  |  |
+| `--ui-color-secondary` | `#fdfdfd` | `#0f0f0f` |  |  |  |
+| `--ui-color-secondary-border` | `#e2e3e4` | `#222222` |  |  |  |
+| `--ui-color-secondary-hover` | `#efefef` | `#171717` |  |  |  |
+| `--ui-color-secondary-border-hover` | `#e2e3e4` | `#2d2d2d` |  |  |  |
+| `--ui-color-secondary-active` | `#e3e3e3` | `#161616` |  |  |  |
+| `--ui-color-secondary-border-active` | `#e2e3e4` | `#2b2b2b` |  |  |  |
+| `--ui-color-secondary-foreground` | `#161616` | `#f8f8f8` |  |  |  |
+| `--ui-color-secondary-disabled` | `#f5f5f5` | `#191919` |  |  |  |
+| `--ui-color-secondary-border-disabled` | `#e9e9e9` | `#1b1b1b` |  |  |  |
 
 Prominent (deep violet) — Figma ButtonProminent/*.
 
@@ -65,7 +65,7 @@ Prominent (deep violet) — Figma ButtonProminent/*.
 | `--ui-color-prominent-border-hover` | `var(--ui-color-prominent-hover)` | same | alias |  |  |
 | `--ui-color-prominent-active` | `#1a0189` | same |  |  |  |
 | `--ui-color-prominent-border-active` | `var(--ui-color-prominent-active)` | same | alias |  |  |
-| `--ui-color-prominent-foreground` | `#ffffff` | same |  |  |  |
+| `--ui-color-prominent-foreground` | `#f8f8f8` | same |  |  |  |
 | `--ui-color-prominent-disabled` | `var(--ui-color-secondary-disabled)` | repeated | alias |  | Disabled aliases secondary, matching every other solid button (Figma). |
 | `--ui-color-prominent-border-disabled` | `var(--ui-color-secondary-border-disabled)` | repeated | alias |  |  |
 
@@ -73,8 +73,8 @@ Danger — the raw destructive palette (Figma danger-primary / -secondary).
 
 | Token | Light | Dark | Alias | Expression | Comment |
 | --- | --- | --- | --- | --- | --- |
-| `--ui-color-danger-primary` | `#ea3f3f` | same |  |  |  |
-| `--ui-color-danger-secondary` | `#ff5858` | same |  |  |  |
+| `--ui-color-danger-primary` | `#ea3f3f` | `#e31515` |  |  |  |
+| `--ui-color-danger-secondary` | `#ff5858` | `#e02e2e` |  |  |  |
 
 Danger button (Figma ButtonDanger/*) — a full state family so consumers can retune the danger button without touching the secondary family it defaults to.
 
@@ -82,11 +82,11 @@ Danger button (Figma ButtonDanger/*) — a full state family so consumers can re
 | --- | --- | --- | --- | --- | --- |
 | `--ui-color-danger` | `var(--ui-color-secondary)` | repeated | alias |  |  |
 | `--ui-color-danger-border` | `var(--ui-color-secondary-border)` | repeated | alias |  |  |
-| `--ui-color-danger-hover` | `var(--ui-color-danger-secondary)` | same | alias |  |  |
-| `--ui-color-danger-border-hover` | `var(--ui-color-danger-secondary)` | same | alias |  |  |
-| `--ui-color-danger-active` | `var(--ui-color-danger-primary)` | same | alias |  |  |
-| `--ui-color-danger-border-active` | `var(--ui-color-danger-primary)` | same | alias |  |  |
-| `--ui-color-danger-foreground` | `var(--ui-color-danger-primary)` | same | alias |  |  |
+| `--ui-color-danger-hover` | `var(--ui-color-danger-secondary)` | repeated | alias |  |  |
+| `--ui-color-danger-border-hover` | `var(--ui-color-danger-secondary)` | repeated | alias |  |  |
+| `--ui-color-danger-active` | `var(--ui-color-danger-primary)` | repeated | alias |  |  |
+| `--ui-color-danger-border-active` | `var(--ui-color-danger-primary)` | repeated | alias |  |  |
+| `--ui-color-danger-foreground` | `var(--ui-color-danger-primary)` | repeated | alias |  |  |
 | `--ui-color-danger-foreground-active` | `var(--ui-color-secondary-foreground)` | repeated | alias |  |  |
 | `--ui-color-danger-disabled` | `var(--ui-color-secondary-disabled)` | repeated | alias |  |  |
 | `--ui-color-danger-border-disabled` | `var(--ui-color-secondary-border-disabled)` | repeated | alias |  |  |
@@ -98,15 +98,15 @@ Ghost (no rest bg; hover/active are translucent overlays)
 | `--ui-color-ghost-foreground` | `var(--ui-color-text)` | repeated | alias |  |  |
 | `--ui-color-ghost-hover` | `rgba(0, 0, 0, 0.04)` | `rgba(255, 255, 255, 0.04)` |  |  |  |
 | `--ui-color-ghost-active` | `rgba(0, 0, 0, 0.08)` | `rgba(255, 255, 255, 0.08)` |  |  |  |
-| `--ui-color-ghost-foreground-active` | `#161616` | `#ffffff` |  |  |  |
+| `--ui-color-ghost-foreground-active` | `#161616` | `#f8f8f8` |  |  |  |
 
 Surfaces (Figma: surface-page / surface-primary / surface-secondary)
 
 | Token | Light | Dark | Alias | Expression | Comment |
 | --- | --- | --- | --- | --- | --- |
-| `--ui-color-surface-page` | `#fdfeff` | `#131c1d` |  |  |  |
-| `--ui-color-surface-primary` | `#ffffff` | `#000000` |  |  |  |
-| `--ui-color-surface-secondary` | `#fcfcfc` | `#242425` |  |  |  |
+| `--ui-color-surface-page` | `#fdfeff` | `#000000` |  |  |  |
+| `--ui-color-surface-primary` | `#ffffff` | `#0c0c0c` |  |  |  |
+| `--ui-color-surface-secondary` | `#fcfcfc` | `#1b1b1b` |  |  |  |
 
 Text selection (::selection).
 
@@ -119,8 +119,8 @@ Modals
 
 | Token | Light | Dark | Alias | Expression | Comment |
 | --- | --- | --- | --- | --- | --- |
-| `--ui-color-modal-surface` | `#fdfdfd` | `#212124` |  |  |  |
-| `--ui-color-modal-backdrop` | `rgba(0, 0, 0, 0.35)` | `rgba(0, 0, 0, 0.7)` |  |  |  |
+| `--ui-color-modal-surface` | `#fdfdfd` | `#070707` |  |  |  |
+| `--ui-color-modal-backdrop` | `rgba(0, 0, 0, 0.35)` | `rgba(0, 0, 0, 0.25)` |  |  |  |
 
 Tooltips
 
@@ -137,21 +137,21 @@ Borders (Figma: border-primary / border-secondary; popovers is the DS name for F
 
 | Token | Light | Dark | Alias | Expression | Comment |
 | --- | --- | --- | --- | --- | --- |
-| `--ui-color-border-primary` | `#dddddd` | `#333437` |  |  |  |
-| `--ui-color-border-secondary` | `#dfdfdf` | `#3e3f42` |  |  |  |
-| `--ui-color-border-popovers` | `#ebebeb` | `#36363b` |  |  |  |
-| `--ui-color-input-border-focus` | `var(--ui-color-prominent-border-hover)` | `var(--ui-color-prominent-border-active)` | alias |  |  |
+| `--ui-color-border-primary` | `#dddddd` | `#363636` |  |  |  |
+| `--ui-color-border-secondary` | `#dfdfdf` | `#3b3b3b` |  |  |  |
+| `--ui-color-border-popovers` | `#ebebeb` | `#212121` |  |  |  |
+| `--ui-color-input-border-focus` | `var(--ui-color-prominent-border-hover)` | same | alias |  |  |
 | `--ui-color-border-cta` | `rgba(56, 56, 56, 0.5)` | `rgba(255, 255, 255, 0.35)` |  |  | CTAButton padded outline ring (primary variant only) |
-| `--ui-color-input-border-hover` | `#b4b4b4` | `#3a3b3f` |  |  |  |
-| `--ui-color-input-border-danger-focus` | `var(--ui-color-danger-primary)` | same | alias |  |  |
+| `--ui-color-input-border-hover` | `#b4b4b4` | `#333333` |  |  |  |
+| `--ui-color-input-border-danger-focus` | `var(--ui-color-danger-primary)` | repeated | alias |  |  |
 
 Text
 
 | Token | Light | Dark | Alias | Expression | Comment |
 | --- | --- | --- | --- | --- | --- |
-| `--ui-color-text` | `#161616` | `#ffffff` |  |  |  |
+| `--ui-color-text` | `#161616` | `#f8f8f8` |  |  |  |
 | `--ui-color-text-secondary` | `#4a4a4a` | `#afafaf` |  |  |  |
-| `--ui-color-text-tertiary` | `#606060` | `#8b8b8b` |  |  | Dark: PLACEHOLDER (2026-10-07), pending the maintainer's dark pass: light enough to read at 3:1 or more on the menu hotkey chip (secondary-hover). |
+| `--ui-color-text-tertiary` | `#606060` | `#717171` |  |  |  |
 
 Focus rings (Figma: Inputs/focus-ring-prominent\|-primary\|-danger).
 
@@ -159,9 +159,9 @@ Focus rings (Figma: Inputs/focus-ring-prominent\|-primary\|-danger).
 | --- | --- | --- | --- | --- | --- |
 | `--ui-focus-ring-width` | `4px` | same |  |  | Focus-ring outline width (Figma buttonSizes/focus-ring-spread), and the small step for compact controls such as Checkbox, where 4px reads as huge. |
 | `--ui-focus-ring-width-sm` | `2px` | same |  |  |  |
-| `--ui-color-focus-ring-prominent` | `rgba(36, 6, 172, 0.35)` | `rgba(52, 15, 217, 0.15)` |  |  | Dark: The prominent ring keys to the rest paint (not :hover) in dark, per Figma. |
-| `--ui-color-focus-ring-primary` | `rgba(23, 23, 23, 0.25)` | `rgba(249, 249, 249, 0.15)` |  |  |  |
-| `--ui-color-focus-ring-danger` | `rgba(234, 63, 63, 0.35)` | `rgba(234, 63, 63, 0.15)` |  |  |  |
+| `--ui-color-focus-ring-prominent` | `rgba(36, 6, 172, 0.35)` | `rgba(52, 15, 217, 0.45)` |  |  | Dark: The prominent ring keys to the rest paint (not :hover) in dark, per Figma. |
+| `--ui-color-focus-ring-primary` | `rgba(23, 23, 23, 0.25)` | `rgba(249, 249, 249, 0.25)` |  |  |  |
+| `--ui-color-focus-ring-danger` | `rgba(234, 63, 63, 0.35)` | `rgba(227, 21, 21, 0.45)` |  |  |  |
 
 Prominent identity (Figma: color-prominent / -alt / -ter) — the brand-identity trio, distinct from the --ui-color-prominent BUTTON family above.
 
@@ -402,10 +402,10 @@ Slider paints (Figma SliderPrimary/* and SliderProminent/*).
 
 | Token | Light | Dark | Alias | Expression | Comment |
 | --- | --- | --- | --- | --- | --- |
-| `--ui-slider-track-primary-active-opacity` | `50%` | `60%` |  |  | Dark: Both variants converge at 60% in dark, per Figma. |
+| `--ui-slider-track-primary-active-opacity` | `50%` | `65%` |  |  | Dark: Figma: primary track 65%, prominent 60%; the prominent step dot is text-primary at 50%. |
 | `--ui-slider-track-prominent-active-opacity` | `70%` | `60%` |  |  |  |
-| `--ui-color-slider-step-primary-active` | `rgba(22, 22, 22, 0.5)` | `rgba(0, 0, 0, 0.4)` |  |  |  |
-| `--ui-color-slider-step-prominent-active` | `rgba(22, 22, 22, 0.6)` | `rgba(255, 255, 255, 0.4)` |  |  |  |
+| `--ui-color-slider-step-primary-active` | `rgba(22, 22, 22, 0.5)` | same |  |  |  |
+| `--ui-color-slider-step-prominent-active` | `rgba(22, 22, 22, 0.6)` | `rgba(248, 248, 248, 0.5)` |  |  |  |
 | `--ui-color-slider-step-inactive` | `var(--ui-color-secondary-border)` | repeated | alias |  |  |
 
 ## Spacing
@@ -463,13 +463,13 @@ Declared in `:root, .light`.
 
 | Token | Light | Dark | Alias | Expression | Comment |
 | --- | --- | --- | --- | --- | --- |
-| `--ui-shadow-button` | `0 1px 2px rgba(0, 0, 0, 0.1)` | `0 1px 2px rgba(0, 0, 0, 0.65)` |  |  |  |
-| `--ui-shadow-button-secondary` | `0 1px 4px rgba(0, 0, 0, 0.1)` | `0 1px 4px rgba(0, 0, 0, 0.65)` |  |  |  |
-| `--ui-shadow-button-hover` | `0 1px 2px rgba(0, 0, 0, 0.2)` | `0 1px 2px rgba(0, 0, 0, 0.85)` |  |  |  |
-| `--ui-shadow-button-active` | `0 1px 2px rgba(0, 0, 0, 0.2)` | `0 1px 2px rgba(0, 0, 0, 0.85)` |  |  | defaults to hover shadow — kept as a separate token for manual override |
-| `--ui-shadow-menu` | `0 1px 4px 0 rgba(56, 56, 56, 0.15)` | `0 2px 8px rgba(0, 0, 0, 0.7)` |  |  |  |
-| `--ui-shadow-standard` | `0 0 4px 0 rgba(56, 56, 56, 0.1)` | `0 0 4px 0 rgba(0, 0, 0, 0.65)` |  |  | Figma "Shadow Standard" — a soft all-round halo (UserMessageHeader). |
-| `--ui-shadow-cta` | `0 1px 2px rgba(56, 56, 56, 0.15)` | `0 1px 2px rgba(0, 0, 0, 0.65)` |  |  |  |
+| `--ui-shadow-button` | `0 1px 2px rgba(56, 56, 56, 0.1)` | `0 1px 2px rgba(11, 11, 11, 0.65)` |  |  | Dark: Figma shadow-black (0.65) and shadow-strong-black (0.85) in dark. |
+| `--ui-shadow-button-secondary` | `0 1px 4px rgba(56, 56, 56, 0.1)` | `0 1px 4px rgba(11, 11, 11, 0.65)` |  |  |  |
+| `--ui-shadow-button-hover` | `0 1px 2px rgba(56, 56, 56, 0.2)` | `0 1px 2px rgba(11, 11, 11, 0.85)` |  |  |  |
+| `--ui-shadow-button-active` | `0 1px 2px rgba(56, 56, 56, 0.2)` | `0 1px 2px rgba(11, 11, 11, 0.85)` |  |  | defaults to hover shadow — kept as a separate token for manual override |
+| `--ui-shadow-menu` | `0 1px 4px 0 rgba(56, 56, 56, 0.15)` | `0 2px 8px rgba(11, 11, 11, 0.85)` |  |  |  |
+| `--ui-shadow-standard` | `0 0 4px 0 rgba(56, 56, 56, 0.1)` | `0 0 4px 0 rgba(11, 11, 11, 0.65)` |  |  | Figma "Shadow Standard" — a soft all-round halo (UserMessageHeader). |
+| `--ui-shadow-cta` | `0 1px 2px rgba(56, 56, 56, 0.15)` | `0 1px 2px rgba(11, 11, 11, 0.85)` |  |  |  |
 | `--ui-shadow-focus-prominent` | `0 0 0 4px var(--ui-color-focus-ring-prominent)` | repeated | derived |  |  |
 | `--ui-shadow-focus-primary` | `0 0 0 4px var(--ui-color-focus-ring-primary)` | repeated | derived |  |  |
 | `--ui-shadow-focus-danger` | `0 0 0 4px var(--ui-color-focus-ring-danger)` | repeated | derived |  |  |
@@ -540,18 +540,18 @@ Declared in `:root, .light`.
 
 | Token | Light | Dark | Alias | Expression | Comment |
 | --- | --- | --- | --- | --- | --- |
-| `--ui-color-sticker-prominent` | `var(--ui-color-prominent)` | `#8c7bff` | alias |  | Dark: PLACEHOLDER (2026-10-07): the :root content, --ui-color-prominent (#340fd9), reads at 1.75:1 on its own wash over dark surfaces, so dark takes a lifted violet until the dark pass. |
+| `--ui-color-sticker-prominent` | `var(--ui-color-prominent)` | `var(--ui-prominent-color)` | alias |  |  |
 | `--ui-color-sticker-secondary` | `var(--ui-color-text-tertiary)` | repeated | alias |  |  |
 | `--ui-color-sticker-alternate` | `var(--ui-prominent-color-alt)` | same | alias |  |  |
 | `--ui-color-sticker-tertiary` | `var(--ui-prominent-color-ter)` | same | alias |  |  |
-| `--ui-color-sticker-danger` | `var(--ui-color-danger-primary)` | `var(--ui-color-danger-secondary)` | alias |  |  |
+| `--ui-color-sticker-danger` | `var(--ui-color-danger-primary)` | repeated | alias |  |  |
 | `--ui-sticker-bg-opacity` | `20%` | same |  |  |  |
-| `--ui-sticker-bg-opacity-secondary` | `80%` | same |  |  |  |
-| `--ui-color-sticker-bg-prominent` | `color-mix(in srgb, var(--ui-color-prominent) var(--ui-sticker-bg-opacity), transparent)` | same | derived |  |  |
-| `--ui-color-sticker-bg-secondary` | `color-mix(in srgb, var(--ui-color-secondary-border-active) var(--ui-sticker-bg-opacity-secondary), transparent)` | `color-mix(in srgb, var(--ui-color-secondary-border-active) var(--ui-sticker-bg-opacity), transparent)` | derived |  | Dark: The dark secondary WASH does not read --ui-sticker-bg-opacity-secondary (80%, light only) — Figma binds `color-sticker-bg-secondary` to the shared 20% opacity in dark. |
+| `--ui-sticker-bg-opacity-secondary` | `80%` | `60%` |  |  | Dark: Figma's secondary sticker wash is 60% in dark (80% in light). |
+| `--ui-color-sticker-bg-prominent` | `color-mix(in srgb, var(--ui-color-prominent) var(--ui-sticker-bg-opacity), transparent)` | `color-mix(in srgb, var(--ui-prominent-color) var(--ui-sticker-bg-opacity), transparent)` | derived |  |  |
+| `--ui-color-sticker-bg-secondary` | `color-mix(in srgb, var(--ui-color-secondary-border-active) var(--ui-sticker-bg-opacity-secondary), transparent)` | repeated | derived |  |  |
 | `--ui-color-sticker-bg-alternate` | `color-mix(in srgb, var(--ui-prominent-color-alt) var(--ui-sticker-bg-opacity), transparent)` | same | derived |  |  |
 | `--ui-color-sticker-bg-tertiary` | `color-mix(in srgb, var(--ui-prominent-color-ter) var(--ui-sticker-bg-opacity), transparent)` | same | derived |  |  |
-| `--ui-color-sticker-bg-danger` | `color-mix(in srgb, var(--ui-color-danger-secondary) var(--ui-sticker-bg-opacity), transparent)` | same | derived |  |  |
+| `--ui-color-sticker-bg-danger` | `color-mix(in srgb, var(--ui-color-danger-secondary) var(--ui-sticker-bg-opacity), transparent)` | repeated | derived |  |  |
 | `--ui-spacing-sticker-y` | `6px` | same |  |  | Figma's sticker vertical padding is a raw 6px, off the spacing scale. |
 
 ## Disabled

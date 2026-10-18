@@ -239,7 +239,7 @@ const DropdownMenuSubTrigger = forwardRef<
     className={cn(itemBase, "data-[state=open]:bg-ghost-active", className)}
     {...props}
   >
-    <span className="flex flex-1 items-center gap-rg">{children}</span>
+    <BodyText className="flex flex-1 items-center gap-rg">{children}</BodyText>
     <span className="flex shrink-0" aria-hidden>
       <ChevronRightIcon size={IconSize.rg} />
     </span>
@@ -346,7 +346,7 @@ const DropdownMenuRadioSelectItem = forwardRef<
     )}
     {...props}
   >
-    <span className="flex flex-1 items-center gap-rg">{children}</span>
+    <BodyText className="flex flex-1 items-center gap-rg">{children}</BodyText>
     <DropdownMenuPrimitive.ItemIndicator className="flex shrink-0">
       <CheckIcon />
     </DropdownMenuPrimitive.ItemIndicator>
@@ -405,7 +405,7 @@ const DropdownMenuMultiSelectItem = forwardRef<
         className="pointer-events-none ml-xxxs data-disabled:opacity-100!"
       />
       {/* flex-1 fills the row beside the leading checkbox, so the label takes the remaining width. */}
-      <span className="flex flex-1 items-center gap-rg">{children}</span>
+      <BodyText className="flex flex-1 items-center gap-rg">{children}</BodyText>
     </BodyText>
   );
 });
