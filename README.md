@@ -1,13 +1,19 @@
 # @dooph-software/design-system
 
+design system we use here at dooph for our products and projects! we pride ourselves on the signature colors and shapes that define the language
+
 The dooph. design system: React components, the `--ui-*` design tokens they are
 built on, and a Tailwind v4 preset that makes those tokens usable in your own
 classes. It also ships agent skills that teach setup, usage and theming.
+
+<img width="1310" height="950" alt="design system 6 bento" src="https://github.com/user-attachments/assets/f262d106-be68-4805-923a-7e352445ef14" />
 
 - Storybook: <https://dooph-software.github.io/dooph.-design-system/>
 - npm: <https://www.npmjs.com/package/@dooph-software/design-system>
 
 *This is a read-only publication of the design system we use at Dooph LLC. Licensed with MIT. Usage of this design system never grants you access or rights to Dooph LLC intellectual property including but not limited to the trade name "dooph." or any variation therein, brand names of dooph. products, wordmarks and logomarks associated with any and all Dooph LLC intellectual property, and anything else reasonably attributed to the company or brand.*
+
+
 
 ## Install
 
